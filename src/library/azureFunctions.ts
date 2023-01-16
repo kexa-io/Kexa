@@ -100,7 +100,7 @@ export async function networkSecurityGroup_analyse(nsglist: Array<NetworkSecurit
             if(item.securityRules) {
                 for(let secrules of item.securityRules) {
                     //check for blocking rules in and out
-                    
+                    secrules.
                 }
             }
         }
