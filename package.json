@@ -6,6 +6,7 @@
     "@azure/arm-storage": "^18.1.0",
     "@azure/logger": "^1.0.3",
     "@azure/ms-rest-js": "^2.6.4",
+    "@types/js-yaml": "^4.0.5",
     "dotenv": "^16.0.3"
   },
   "devDependencies": {
