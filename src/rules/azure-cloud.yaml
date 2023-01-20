@@ -1,0 +1,23 @@
+- version: 0.1
+  date: 20012023
+- rules:
+  - name: azure-disk-orphan
+    description : "this rules is to check if disk is orphan"
+    applied: yes
+    level: 1
+    conditions:
+      - cloudprovider: azure
+        objectName : disk
+        function : count
+        condition : egal
+        value : 0
+  - name: azure-ippublic-orphan
+    description : "this rules is to check if ippublic is orphan"
+    applied: yes
+    level: 1
+    conditions:
+      - cloudprovider: azure
+        objectName : ippublic
+        function : count
+        condition : egal
+        value : 0          

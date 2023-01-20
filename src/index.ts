@@ -10,9 +10,10 @@ import * as azureFunctions from "./library/azureFunctions";
 let computeclient: ComputeManagementClient;
 let resourcesClient : ResourceManagementClient ;
 let networkclient: NetworkManagementClient;
-env.config(); // reading environnement vars
+env.config();                                             // reading environnement vars
 const subscriptionId = process.env.SUBSCRIPTIONID;
 const credential = new DefaultAzureCredential();
+const rulesDirectory:string = "./rules";                  //the directory where to find the rules
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 let vm_list                   = new Array();
 let rg_list                   = new Array();

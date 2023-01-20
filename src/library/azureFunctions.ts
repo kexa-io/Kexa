@@ -2,6 +2,7 @@ import { NetworkManagementClient, VirtualNetwork, Subnet, NetworkInterface, Netw
 import { ComputeManagementClient, Disk, VirtualMachine } from "@azure/arm-compute";
 import { ResourceManagementClient , ResourceGroup } from "@azure/arm-resources";
 import * as azureClass from "./azureClass";
+import * as yamlClass from "./yamlClass";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING CLOUD RESOURCES
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -87,6 +88,14 @@ export async function resourceGroup_listing(client:ResourceManagementClient) {
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 //Analyse  list
+// read the yaml file with rules
+// exam each rules and raise alarm or not
+export async function mainAnalyse() {
+    
+}
+
+
+
 export async function networkSecurityGroup_analyse(nsglist: Array<NetworkSecurityGroup>) {
     try {
         const result_list = new Array<azureClass.CkiNetworkSecurityGroup>;
