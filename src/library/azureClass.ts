@@ -21,3 +21,21 @@ export class CkiNetworkSecurityGroupClass implements CkiNetworkSecurityGroup {
         this.securityLevel = 0;
     }
 }
+
+export interface cloudRules {
+    listRules:rules[];
+  }
+  
+  export interface  rules {
+    name?:string;
+    description?:string;
+    applied?:Boolean;
+    conditions?: rulesConditions[];
+  }
+  export interface  rulesConditions {
+    cloudprovider?:string;
+    objectName?:string;
+    function?:string;
+    condition?:string;
+    value?:Uint16Array;
+  }

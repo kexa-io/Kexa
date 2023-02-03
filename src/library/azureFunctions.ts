@@ -5,6 +5,7 @@ import * as azureClass from "./azureClass";
 import * as yamlClass from "./yamlClass";
 import { Logger } from "tslog";
 import fs from "fs";
+import yaml from "js-yaml";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let debug_mode                = 2;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });
@@ -108,13 +109,29 @@ export async function mainAnalyse(rulesDirectory:string) {
     for(const p of paths) {
         logger.debug("getting "+rulesDirectory+"/"+p.name+" rules.");
         let fileContent = fs.readFileSync(rulesDirectory+"/"+p.name, 'utf8');
-        analyseRule(fileContent);
+        analyseRule(rulesDirectory+"/"+p.name);
     }
 }
 
-export async function analyseRule(rule:string) {
-    logger.debug("analyse:");
-    logger.debug(rule);
+export async function analyseRule(ruleFilePath:string) {
+    logger.debug("analyse:"+ruleFilePath);
+    try {
+        const doc = yaml.load(fs.readFileSync(ruleFilePath, 'utf8')) as azureClass.cloudRules;
+        let compt=0;
+        for( let i in doc.listRules) {
+            let ruletemp:azureClass.rules;
+            ruletemp=<azureClass.rules>doc.listRules[compt];
+            console.log("name:"+ruletemp.name);
+            console.log("description:"+ruletemp.description);
+            console.log("applied:"+ruletemp.applied);
+        
+            compt++;
+        }
+    
+    
+    } catch (e) {
+        console.log(e);
+    }    
 }
 
 export async function networkSecurityGroup_analyse(nsglist: Array<NetworkSecurityGroup>) {
