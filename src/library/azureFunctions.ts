@@ -38,7 +38,7 @@ export async function virtualNetworks_listing(client:NetworkManagementClient) {
 
         return result_list;
     } catch (err) {
-        console.error(err);
+        logger.error("error in virtualNetworks_listing:"+err);
         return null;
     }
 }
@@ -52,7 +52,7 @@ export async function networkInterfaces_listing(client:NetworkManagementClient) 
         }
         return result_list;
     } catch (err) {
-        console.error(err);
+        logger.error("error in networkInterfaces_listing:"+err);
         return null;
     }
 }
@@ -66,7 +66,7 @@ export async function disks_listing(client:ComputeManagementClient) {
         }
         return result_list;
     } catch (err) {
-        console.error(err);
+        logger.error("error in disks_listing:"+err);
         return null;
     }    
 }
@@ -80,7 +80,7 @@ export async function virtualMachines_listing(client:ComputeManagementClient) {
         }
         return result_list;
     }catch (err) {
-        console.error(err);
+        logger.error("error in virtualMachines_listing:"+err);
         return null;
     } 
 }
@@ -94,7 +94,7 @@ export async function resourceGroup_listing(client:ResourceManagementClient) {
         }
         return result_list;
     }catch (err) {
-        console.error(err);
+        logger.error("error in resourceGroup_listing:"+err);
         return null;
     }     
 }
@@ -121,16 +121,16 @@ export async function analyseRule(ruleFilePath:string) {
         for( let i in doc.listRules) {
             let ruletemp:azureClass.rules;
             ruletemp=<azureClass.rules>doc.listRules[compt];
-            console.log("name:"+ruletemp.name);
-            console.log("description:"+ruletemp.description);
-            console.log("applied:"+ruletemp.applied);
+            logger.debug("name:"+ruletemp.name);
+            logger.debug("description:"+ruletemp.description);
+            logger.debug("applied:"+ruletemp.applied);
         
             compt++;
         }
     
     
     } catch (e) {
-        console.log(e);
+        logger.error("error"+e);
     }    
 }
 
@@ -151,8 +151,8 @@ export async function networkSecurityGroup_analyse(nsglist: Array<NetworkSecurit
             }
         }
         return result_list;
-    }catch (err) {
-        console.error(err);
+    }catch (e) {
+        logger.error("error"+e);
         return null;
     }  
 }
