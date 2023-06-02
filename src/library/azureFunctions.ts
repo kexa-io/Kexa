@@ -1,18 +1,27 @@
-import { NetworkManagementClient, VirtualNetwork, Subnet, NetworkInterface, NetworkSecurityGroup, SecurityRule } from "@azure/arm-network";
+import { 
+    NetworkManagementClient,
+    VirtualNetwork,
+    //Subnet,
+    NetworkInterface,
+    NetworkSecurityGroup,
+    //SecurityRule
+} from "@azure/arm-network";
 import { ComputeManagementClient, Disk, VirtualMachine } from "@azure/arm-compute";
 import { ResourceManagementClient , ResourceGroup } from "@azure/arm-resources";
 import * as azureClass from "./azureClass";
-import * as yamlClass from "./yamlClass";
+//import * as yamlClass from "./yamlClass";
 import { Logger } from "tslog";
 import fs from "fs";
 import yaml from "js-yaml";
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let debug_mode                = 2;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING CLOUD RESOURCES
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-//networksecuritygroup list
+//network security group list
 export async function networkSecurityGroup_listing(client:NetworkManagementClient) {
     logger.info("starting networkSecurityGroup_listing");
     try {
@@ -27,7 +36,8 @@ export async function networkSecurityGroup_listing(client:NetworkManagementClien
         return null;
     }
 }
-//virtualnetwork list
+
+//virtual network list
 export async function virtualNetworks_listing(client:NetworkManagementClient) {
     logger.info("starting virtualNetworks_listing");
     try {
@@ -42,6 +52,7 @@ export async function virtualNetworks_listing(client:NetworkManagementClient) {
         return null;
     }
 }
+
 //network list
 export async function networkInterfaces_listing(client:NetworkManagementClient) {
     logger.info("starting networkInterfaces_listing");
@@ -56,6 +67,7 @@ export async function networkInterfaces_listing(client:NetworkManagementClient) 
         return null;
     }
 }
+
 //disks.list
 export async function disks_listing(client:ComputeManagementClient) {
     logger.info("starting disks_listing");
@@ -70,6 +82,7 @@ export async function disks_listing(client:ComputeManagementClient) {
         return null;
     }    
 }
+
 //virtualMachines.listAll
 export async function virtualMachines_listing(client:ComputeManagementClient) {
     logger.info("starting virtualMachines_listing");
@@ -84,7 +97,8 @@ export async function virtualMachines_listing(client:ComputeManagementClient) {
         return null;
     } 
 }
-  
+
+//resourceGroups.list
 export async function resourceGroup_listing(client:ResourceManagementClient) {
     logger.info("starting resourceGroup_listing");
     try {
@@ -98,6 +112,7 @@ export async function resourceGroup_listing(client:ResourceManagementClient) {
         return null;
     }     
 }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 //Analyse  list
 // read the yaml file with rules
@@ -108,36 +123,32 @@ export async function mainAnalyse(rulesDirectory:string) {
     logger.debug("listing rules files.");
     for(const p of paths) {
         logger.debug("getting "+rulesDirectory+"/"+p.name+" rules.");
-        let fileContent = fs.readFileSync(rulesDirectory+"/"+p.name, 'utf8');
-        analyseRule(rulesDirectory+"/"+p.name);
+        //let fileContent = fs.readFileSync(rulesDirectory+"/"+p.name, 'utf8');
+        await analyseRule(rulesDirectory+"/"+p.name);
     }
 }
 
 export async function analyseRule(ruleFilePath:string) {
     logger.debug("analyse:"+ruleFilePath);
     try {
-        const doc = yaml.load(fs.readFileSync(ruleFilePath, 'utf8')) as azureClass.cloudRules;
-        let compt=0;
-        for( let i in doc.listRules) {
-            let ruletemp:azureClass.rules;
-            ruletemp=<azureClass.rules>doc.listRules[compt];
-            logger.debug("name:"+ruletemp.name);
-            logger.debug("description:"+ruletemp.description);
-            logger.debug("applied:"+ruletemp.applied);
-        
-            compt++;
+        const doc = yaml.load(fs.readFileSync(ruleFilePath, 'utf8')) as any;
+
+        //TODO : be more precise on the type of doc
+        console.log(doc);
+        for( let rule of doc[1].rules) {
+            logger.debug("name:"+rule.name);
+            logger.debug("description:"+rule.description);
+            logger.debug("applied:"+rule.applied);
         }
-    
-    
     } catch (e) {
         logger.error("error"+e);
     }    
 }
 
-export async function networkSecurityGroup_analyse(nsglist: Array<NetworkSecurityGroup>) {
+export async function networkSecurityGroup_analyse(nsgList: Array<NetworkSecurityGroup>) {
     try {
         const result_list = new Array<azureClass.CkiNetworkSecurityGroup>;
-        for await (let item of nsglist){
+        for await (let item of nsgList){
             let nsgAnalysed = new azureClass.CkiNetworkSecurityGroupClass();
             nsgAnalysed.analysed= true;
             nsgAnalysed.scanningDate=new Date();

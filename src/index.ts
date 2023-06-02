@@ -17,6 +17,7 @@ const credential = new DefaultAzureCredential();
 const rulesDirectory:string = "./src/rules";                  //the directory where to find the rules
 let debug_mode                = 2;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "globalLogger" });
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 let vm_list                   = new Array();
 let rg_list                   = new Array();
@@ -25,6 +26,7 @@ let nsg_list                  = new Array();
 let virtualnetwork_list       = new Array();
 let networkInterfaces_list    = new Array();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 async function main() {
   logger.info("___________________________________________________________________________________________________"); 
   logger.info("___________________________________-= running checkinfra scan =-___________________________________");
@@ -45,18 +47,23 @@ async function main() {
   let disk_list = await azureFunctions.disks_listing(computeclient);
   let virtualnetwork_list = await azureFunctions.virtualNetworks_listing(networkclient);
   let networkInterfaces_list = await azureFunctions.networkSecurityGroup_listing(networkclient);
+
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // listing nsg
   // logger.debug("listing nsg");
   // logger.debug(nsg_list);
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   // Analyse rules
   let analyse_list = await azureFunctions.mainAnalyse(rulesDirectory);
+  
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   logger.info("___________________________________________________________________________________________________"); 
   logger.info("_______________________________________-= End checkinfra scan =-___________________________________");
   logger.info("___________________________________________________________________________________________________");  
 }
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 logger.info("Main.");
 main();

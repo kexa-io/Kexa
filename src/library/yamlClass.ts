@@ -1,21 +1,23 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// Class to cast object for yaml files
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-export interface settingFile {
+export interface SettingFile {
     version: string;
     date: Date;
-    listRules:rules[];
+    listRules:Rules[];
 }
-export interface  rules {
+
+export interface  Rules {
     name?:string;
     description?:string;
     urlDescription?:string;             // the url to explain why we should do this or documentation
-    applied?:Boolean;                   // should we analyse this rule ?
+    applied?:boolean;                   // should we analyse this rule ?
     level:number;                       // the level of the rule: 0 information , 1 warning, 2 error, 3 critical
-    conditions?: rulesConditions[];     // the conditions to create the rule
+    conditions?: RulesConditions[];     // the conditions to create the rule
 }
-export interface  rulesConditions {
-    cloudprovider?:string;              // the cloud provider : azure, gcp, aws, ovh
+
+export interface  RulesConditions {
+    cloudProvider?:string;              // the cloud provider : azure, gcp, aws, ovh
     objectName?:string;                 // the name of the object in this cloud provider
     function?:string;                   // count , sum , is 
     condition?:string;                  // == , > , < , >= , <= , !=
