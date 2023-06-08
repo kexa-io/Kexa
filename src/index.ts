@@ -5,7 +5,7 @@ import { DefaultAzureCredential } from "@azure/identity";
 import { info } from "console";
 const { setLogLevel } = require("@azure/logger");
 import env from "dotenv";
-import * as azureFunctions from "./services/azureFunctions";
+import * as azureFunctions from "./services/azureGathering.service";
 import { Logger } from "tslog";
 import * as analyse from "./services/analyse.service";
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,16 +52,12 @@ async function main() {
   console.log("rgList",rgList);
   console.log("diskList",diskList);
   console.log("nsgList",nsgList);
-  console.log("virtualnetworkList",virtualNetworkList);
+  console.log("virtualNetworkList",virtualNetworkList);
   console.log("networkInterfacesList",networkInterfacesList);
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // listing nsg
-  // logger.debug("listing nsg");
-  // logger.debug(nsgList);
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // Analyse rules
-  await analyse.mainAnalyse(rulesDirectory);
+  let settings = await analyse.mainAnalyse(rulesDirectory);
+  console.log("settings",settings);
   
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   logger.info("___________________________________________________________________________________________________"); 

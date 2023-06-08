@@ -19,7 +19,7 @@ const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functio
 //// LISTING CLOUD RESOURCES
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //network security group list
-export async function networkSecurityGroupListing(client:NetworkManagementClient) {
+export async function networkSecurityGroupListing(client:NetworkManagementClient): Promise<Array<NetworkSecurityGroup>|null> {
     logger.info("starting networkSecurityGroupListing");
     try {
         const resultList = new Array<NetworkSecurityGroup>;
@@ -35,7 +35,7 @@ export async function networkSecurityGroupListing(client:NetworkManagementClient
 }
 
 //virtual network list
-export async function virtualNetworksListing(client:NetworkManagementClient) {
+export async function virtualNetworksListing(client:NetworkManagementClient): Promise<Array<VirtualNetwork>|null> {
     logger.info("starting virtualNetworksListing");
     try {
         const resultList = new Array<VirtualNetwork>;
@@ -51,7 +51,7 @@ export async function virtualNetworksListing(client:NetworkManagementClient) {
 }
 
 //network list
-export async function networkInterfacesListing(client:NetworkManagementClient) {
+export async function networkInterfacesListing(client:NetworkManagementClient): Promise<Array<NetworkInterface>|null> {
     logger.info("starting networkInterfacesListing");
     try {
         const resultList = new Array<NetworkInterface>;
@@ -66,7 +66,7 @@ export async function networkInterfacesListing(client:NetworkManagementClient) {
 }
 
 //disks.list
-export async function disksListing(client:ComputeManagementClient) {
+export async function disksListing(client:ComputeManagementClient): Promise<Array<Disk>|null> {
     logger.info("starting disksListing");
     try {
         const resultList = new Array<Disk>;
@@ -81,7 +81,7 @@ export async function disksListing(client:ComputeManagementClient) {
 }
 
 //virtualMachines.listAll
-export async function virtualMachinesListing(client:ComputeManagementClient) {
+export async function virtualMachinesListing(client:ComputeManagementClient): Promise<Array<VirtualMachine>|null> {
     logger.info("starting virtualMachinesListing");
     try {
         const resultList = new Array<VirtualMachine>;
@@ -96,7 +96,7 @@ export async function virtualMachinesListing(client:ComputeManagementClient) {
 }
 
 //resourceGroups.list
-export async function resourceGroupListing(client:ResourceManagementClient) {
+export async function resourceGroupListing(client:ResourceManagementClient): Promise<Array<ResourceGroup>|null> {
     logger.info("starting resourceGroupListing");
     try {
         const resultList = new Array<ResourceGroup>;
@@ -115,7 +115,7 @@ export async function resourceGroupListing(client:ResourceManagementClient) {
 
 
 
-export async function networkSecurityGroup_analyse(nsgList: Array<NetworkSecurityGroup>) {
+export async function networkSecurityGroup_analyse(nsgList: Array<NetworkSecurityGroup>): Promise<Array<ckiNetworkSecurityClass.CkiNetworkSecurityGroupClass>|null> {
     try {
         const resultList = new Array<ckiNetworkSecurityClass.CkiNetworkSecurityGroupClass>;
         for await (let item of nsgList){
