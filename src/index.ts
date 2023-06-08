@@ -5,12 +5,13 @@ import { DefaultAzureCredential } from "@azure/identity";
 import { info } from "console";
 const { setLogLevel } = require("@azure/logger");
 import env from "dotenv";
-import * as azureFunctions from "./library/azureFunctions";
+import * as azureFunctions from "./services/azureFunctions";
 import { Logger } from "tslog";
+import * as analyse from "./services/analyse.service";
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-let computeclient: ComputeManagementClient;
+let computeClient: ComputeManagementClient;
 let resourcesClient : ResourceManagementClient ;
-let networkclient: NetworkManagementClient;
+let networkClient: NetworkManagementClient;
 env.config();                                             // reading environnement vars
 const subscriptionId = process.env.SUBSCRIPTIONID;
 const credential = new DefaultAzureCredential();
@@ -19,12 +20,12 @@ let debug_mode                = 2;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "globalLogger" });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-let vm_list                   = new Array();
-let rg_list                   = new Array();
-let disk_list                 = new Array();
-let nsg_list                  = new Array();
-let virtualnetwork_list       = new Array();
-let networkInterfaces_list    = new Array();
+let vmList                   = new Array();
+let rgList                   = new Array();
+let diskList                 = new Array();
+let nsgList                  = new Array();
+let virtualNetworkList       = new Array();
+let networkInterfacesList    = new Array();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 async function main() {
@@ -36,26 +37,31 @@ async function main() {
   }else{
     //getting clients for azure
     resourcesClient = new ResourceManagementClient(credential, subscriptionId);
-    computeclient   = new ComputeManagementClient(credential, subscriptionId);
-    networkclient   = new NetworkManagementClient(credential, subscriptionId);
+    computeClient   = new ComputeManagementClient(credential, subscriptionId);
+    networkClient   = new NetworkManagementClient(credential, subscriptionId);
   }
   logger.info("- loading client microsoft azure done-");
   ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
-  let nsg_list = await azureFunctions.networkSecurityGroup_listing(networkclient);
-  let vm_list = await azureFunctions.virtualMachines_listing(computeclient);
-  let rg_list = await azureFunctions.resourceGroup_listing(resourcesClient);
-  let disk_list = await azureFunctions.disks_listing(computeclient);
-  let virtualnetwork_list = await azureFunctions.virtualNetworks_listing(networkclient);
-  let networkInterfaces_list = await azureFunctions.networkSecurityGroup_listing(networkclient);
-
+  let nsgList = await azureFunctions.networkSecurityGroupListing(networkClient);
+  let vmList = await azureFunctions.virtualMachinesListing(computeClient);
+  let rgList = await azureFunctions.resourceGroupListing(resourcesClient);
+  let diskList = await azureFunctions.disksListing(computeClient);
+  let virtualNetworkList = await azureFunctions.virtualNetworksListing(networkClient);
+  let networkInterfacesList = await azureFunctions.networkSecurityGroupListing(networkClient);
+  console.log("vmList",vmList);
+  console.log("rgList",rgList);
+  console.log("diskList",diskList);
+  console.log("nsgList",nsgList);
+  console.log("virtualnetworkList",virtualNetworkList);
+  console.log("networkInterfacesList",networkInterfacesList);
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // listing nsg
   // logger.debug("listing nsg");
-  // logger.debug(nsg_list);
+  // logger.debug(nsgList);
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   // Analyse rules
-  let analyse_list = await azureFunctions.mainAnalyse(rulesDirectory);
+  await analyse.mainAnalyse(rulesDirectory);
   
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   logger.info("___________________________________________________________________________________________________"); 
