@@ -8,6 +8,8 @@ import env from "dotenv";
 import * as azureFunctions from "./services/azureGathering.service";
 import { Logger } from "tslog";
 import * as analyse from "./services/analyse.service";
+import { AzureResources } from "./models/azure/resource.models";
+import { ProviderResource } from "./models/providerResource.models";
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 let computeClient: ComputeManagementClient;
 let resourcesClient : ResourceManagementClient ;
@@ -31,7 +33,8 @@ let networkInterfacesList    = new Array();
 async function main() {
   logger.info("___________________________________________________________________________________________________"); 
   logger.info("___________________________________-= running checkinfra scan =-___________________________________");
-  logger.info("___________________________________________________________________________________________________");   
+  logger.info("___________________________________________________________________________________________________"); 
+  let azureResource: AzureResources;  
   if(!subscriptionId) {
     throw new Error("- Please pass SUBSCRIPTIONID as env var");
   }else{
@@ -39,25 +42,40 @@ async function main() {
     resourcesClient = new ResourceManagementClient(credential, subscriptionId);
     computeClient   = new ComputeManagementClient(credential, subscriptionId);
     networkClient   = new NetworkManagementClient(credential, subscriptionId);
+    logger.info("- loading client microsoft azure done-");
+    ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
+    let nsgList = await azureFunctions.networkSecurityGroupListing(networkClient);
+    let vmList = await azureFunctions.virtualMachinesListing(computeClient);
+    let rgList = await azureFunctions.resourceGroupListing(resourcesClient);
+    let diskList = await azureFunctions.disksListing(computeClient);
+    let virtualNetworkList = await azureFunctions.virtualNetworksListing(networkClient);
+    let networkInterfacesList = await azureFunctions.networkSecurityGroupListing(networkClient);
+    console.log("vmList",vmList);
+    console.log("rgList",rgList);
+    console.log("diskList",diskList);
+    console.log("nsgList",nsgList);
+    console.log("virtualNetworkList",virtualNetworkList);
+    console.log("networkInterfacesList",networkInterfacesList);
+    azureResource = {
+      "vm": vmList,
+      "rg": rgList,
+      "disk": diskList,
+      "nsg": nsgList,
+      "virtualNetwork": virtualNetworkList,
+      "networkInterfaces": networkInterfacesList
+    } as AzureResources;
   }
-  logger.info("- loading client microsoft azure done-");
-  ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
-  let nsgList = await azureFunctions.networkSecurityGroupListing(networkClient);
-  let vmList = await azureFunctions.virtualMachinesListing(computeClient);
-  let rgList = await azureFunctions.resourceGroupListing(resourcesClient);
-  let diskList = await azureFunctions.disksListing(computeClient);
-  let virtualNetworkList = await azureFunctions.virtualNetworksListing(networkClient);
-  let networkInterfacesList = await azureFunctions.networkSecurityGroupListing(networkClient);
-  console.log("vmList",vmList);
-  console.log("rgList",rgList);
-  console.log("diskList",diskList);
-  console.log("nsgList",nsgList);
-  console.log("virtualNetworkList",virtualNetworkList);
-  console.log("networkInterfacesList",networkInterfacesList);
+
+  let resources = {
+    "azure": azureResource??null,
+    "gcp": null,
+    "aws": null,
+    "ovh": null
+  } as ProviderResource;
 
   // Analyse rules
-  let settings = await analyse.mainAnalyse(rulesDirectory);
-  console.log("settings",settings);
+  let settings = analyse.gatheringRules(rulesDirectory);
+  let result = analyse.checkRules(settings, resources);
   
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   logger.info("___________________________________________________________________________________________________"); 

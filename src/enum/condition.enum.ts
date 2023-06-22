@@ -1,0 +1,14 @@
+export enum ConditionEnum {
+    EQUAL = "EQUAL",
+    DIFFERENT = "DIFFERENT",
+    INCLUDE = "INCLUDE",
+    NOT_INCLUDE = "NOT_INCLUDE",
+    SUP = "SUP",
+    INF = "INF",
+    SUP_OR_EQUAL = "SUP_OR_EQUAL",
+    INF_OR_EQUAL = "INF_OR_EQUAL",
+    STARTS_WITH = "STARTS_WITH",
+    NOT_STARTS_WITH = "NOT_STARTS_WITH",
+    ENDS_WITH = "ENDS_WITH",
+    NOT_ENDS_WITH = "NOT_ENDS_WITH",
+}

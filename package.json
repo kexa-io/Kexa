@@ -41,7 +41,7 @@
     "test:dev": "jest --watchAll"
   },
   "keywords": [],
-  "author": "",
+  "author": "4urcloud",
   "license": "ISC",
   "description": ""
 }

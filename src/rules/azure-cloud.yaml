@@ -1,23 +1,99 @@
-- version: 0.2
+- version: 0.3.0
   date: 20012023
+  alert:
+    fatal:
+      enabled: true
+      type: email
+      to:
+        - esteban.mathia@innovtech.eu
+    error:
+      enabled: true
+      type: email
+      to:
+        - esteban.mathia@innovtech.eu
+    warning:
+      enabled: true
+      type: email
+      to:
+        - esteban.mathia@innovtech.eu
+    info:
+      enabled: true
+      type: email
+      to:
+        - esteban.mathia@innovtech.eu
+    global:
+      enabled: true
+      type: email
+      to:
+        - esteban.mathia@innovtech.eu
+      conditions:
+        - level: 1
+          min: 20
+        - level: 2
+          min: 10
+        - level: 3
+          min: 5
+        - level: 4
+          min: 1
+        - operator: AND
+          rules:
+            - level: 1
+              min: 20
+            - level: 2
+              min: 10
+            - level: 3
+              min: 5
+            - level: 4
+              min: 1
   rules:
     - name: azure-disk-orphan
-      description : "this rules is to check if disk is orphan"
+      description : "this rules is to check if disk is orphan and disk size is greater than 5GB"
       applied: yes
       level: 1
+      cloudProvider: azure
+      objectName : disk
       conditions:
-        - cloudprovider: azure
-          objectName : disk
-          function : count
-          condition : egal
-          value : 0
-    - name: azure-ippublic-orphan
-      description : "this rules is to check if ippublic is orphan"
+        - property : creationData.createOption
+          condition : EQUAL
+          value : Empty
+        - property : diskSizeGB
+          condition : SUP_OR_EQUAL
+          value : 5
+    - name: azure-disk-orphan v2
+      description : "this rules is to check if disk is orphan or disk size is greater than 5GB"
       applied: yes
-      level: 1
+      level: 2
+      cloudProvider: azure
+      objectName : disk
       conditions:
-        - cloudprovider: azure
-          objectName : ippublic
-          function : count
-          condition : egal
-          value : 0          
+        - operator : OR
+          rules:
+            - property : creationData.createOption
+              condition : EQUAL
+              value : Empty
+            - property : diskSizeGB
+              condition : SUP_OR_EQUAL
+              value : 5
+    - name: azure-disk-orphan v3
+      description : "this rules is to check if disk is orphan or disk size is greater than 5GB"
+      applied: yes
+      level: 2
+      cloudProvider: azure
+      objectName : disk
+      conditions:
+        - operator : AND
+          rules:
+            - property : creationData.createOption
+              condition : EQUAL
+              value : Empty
+            - property : diskSizeGB
+              condition : SUP_OR_EQUAL
+              value : 4
+            - operator : NOR
+              rules:
+                - property : creationData.createOption
+                  condition : EQUAL
+                  value : Empty
+                - property : diskSizeGB
+                  condition : SUP_OR_EQUAL
+                  value : 5
