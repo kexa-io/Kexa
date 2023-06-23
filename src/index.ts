@@ -75,7 +75,10 @@ async function main() {
 
   // Analyse rules
   let settings = analyse.gatheringRules(rulesDirectory);
-  let result = analyse.checkRules(settings, resources);
+  settings.forEach(setting => {
+    let result = analyse.checkRules(setting.rules, resources, setting.alert);
+    logger.info("result:"+result);
+  });
   
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   logger.info("___________________________________________________________________________________________________"); 

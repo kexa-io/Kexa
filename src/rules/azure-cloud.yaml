@@ -4,28 +4,28 @@
     fatal:
       enabled: true
       type: email
-      to:
-        - esteban.mathia@innovtech.eu
+      to: 
+        - 2mars007@gmail.com
     error:
       enabled: true
       type: email
-      to:
-        - esteban.mathia@innovtech.eu
+      to: 
+        - 2mars007@gmail.com
     warning:
       enabled: true
       type: email
-      to:
-        - esteban.mathia@innovtech.eu
+      to: 
+        - 2mars007@gmail.com
     info:
       enabled: true
       type: email
-      to:
-        - esteban.mathia@innovtech.eu
+      to: 
+        - 2mars007@gmail.com
     global:
-      enabled: true
+      enabled: false
       type: email
-      to:
-        - esteban.mathia@innovtech.eu
+      to: 
+        - 2mars007@gmail.com
       conditions:
         - level: 1
           min: 20
@@ -53,13 +53,10 @@
       cloudProvider: azure
       objectName : disk
       conditions:
-        - property : creationData.createOption
-          condition : EQUAL
-          value : Empty
-        - property : diskSizeGB
-          condition : SUP_OR_EQUAL
-          value : 5
-    - name: azure-disk-orphan v2
+        - property : diskState
+          condition : DIFFERENT
+          value : Unattached
+    - name: azure-disk not to heavy
       description : "this rules is to check if disk is orphan or disk size is greater than 5GB"
       applied: yes
       level: 2
@@ -68,32 +65,24 @@
       conditions:
         - operator : OR
           rules:
-            - property : creationData.createOption
-              condition : EQUAL
+            - property : provisioningState
+              condition : Succeeded
               value : Empty
             - property : diskSizeGB
-              condition : SUP_OR_EQUAL
+              condition : INF_OR_EQUAL
               value : 5
-    - name: azure-disk-orphan v3
+    - name: azure-disk not public or encrypted
       description : "this rules is to check if disk is orphan or disk size is greater than 5GB"
       applied: yes
       level: 2
       cloudProvider: azure
       objectName : disk
       conditions:
-        - operator : AND
+        - operator : OR
           rules:
-            - property : creationData.createOption
+            - property : networkAccessPolicy
+              condition : DIFFERENT
+              value : AllowAll
+            - property : encryption.type
               condition : EQUAL
-              value : Empty
-            - property : diskSizeGB
-              condition : SUP_OR_EQUAL
-              value : 4
-            - operator : NOR
-              rules:
-                - property : creationData.createOption
-                  condition : EQUAL
-                  value : Empty
-                - property : diskSizeGB
-                  condition : SUP_OR_EQUAL
-                  value : 5
+              value : EncryptionAtRestWithPlatformKey

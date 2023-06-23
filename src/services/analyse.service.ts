@@ -8,68 +8,71 @@ import { ConditionEnum } from "../enum/condition.enum";
 import { ProviderResource } from "../models/providerResource.models";
 import { OperatorEnum } from "../enum/operator.enum";
 import { LevelEnum } from "../enum/level.enum";
+import { ResultScan, SubResultScan } from "../models/resultScan.models";
+import { alertFromRule } from "./alerte.service";
+import { Alert } from "../models/settingFile/alert.models";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-let debug_mode                = 2;
+let debug_mode = 2;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });
 
 //Analyse  list
 // read the yaml file with rules
 // exam each rules and raise alarm or not
-export function gatheringRules(rulesDirectory:string): Rules[] {
+export function gatheringRules(rulesDirectory:string): SettingFile[] {
     // list directory
     const paths = fs.readdirSync(rulesDirectory, { withFileTypes: true});
     logger.debug("listing rules files.");
-    let rulesList = new Array<Rules>;
+    let settingFileList = new Array<SettingFile>;
     for(const p of paths) {
         logger.debug("getting "+rulesDirectory+"/"+p.name+" rules.");
-
-        let rules = analyseRule(rulesDirectory+"/"+p.name);
-        if( rules) rulesList.push(...rules);
+        let setting = analyseRule(rulesDirectory+"/"+p.name);
+        if( setting) settingFileList.push(setting);
     }
-    logger.debug("rules list:"+rulesList);
-    return rulesList;
+    logger.debug("rules list:"+settingFileList);
+    return settingFileList;
 }
 
-export function analyseRule(ruleFilePath:string): Rules[]|null {
+export function analyseRule(ruleFilePath:string): SettingFile|null {
     logger.debug("analyse:"+ruleFilePath);
     try {
         const doc = (yaml.load(fs.readFileSync(ruleFilePath, 'utf8')) as SettingFile[])[0];
-
-        //TODO : be more precise on the type of doc
-        let rules = doc.rules;
-        return rules;
+        // TODO : check if the file is valid
+        return doc;
     } catch (e) {
         logger.error("error"+e);
         return null;
     }    
 }
 
-export function checkRules(rules:Rules[], resources:ProviderResource): boolean[][] {
+export function checkRules(rules:Rules[], resources:ProviderResource, alert: Alert): ResultScan[][] {
     logger.debug("check rules");
-    let result: boolean[][] = [];
+    let result: ResultScan[][] = [];
     rules.forEach(rule => {
         if(!rule.applied) return;
         logger.info("check rule:"+rule.name);
         let objectResources = resources[rule.cloudProvider][rule.objectName];
-        let subResult: boolean[] = [];
+        let subResult: ResultScan[] = [];
         objectResources.forEach((objectResource: any) => {
-            let microResult = checkRule(rule.conditions, objectResource).every((value) => value);
-            if(!microResult){
-                alertFromRule(rule, objectResource);
+            let subResultScan: SubResultScan[] = checkRule(rule.conditions, objectResource);
+            let error = subResultScan.filter((value) => !value.result);
+            if(error.length > 0){
+                alertFromRule(rule, subResultScan, objectResource, alert);
             }
-            subResult.push(microResult);
+            subResult.push({
+                objectContent: objectResource,
+                rule: rule,
+                error: error,
+            });
         });
         result.push(subResult);
     });
-    logger.debug("result:");
-    logger.debug(result);
     return result;
 }
 
-export function checkRule(conditions: RulesConditions[]|ParentRules[], resources:any): boolean[] {
+export function checkRule(conditions: RulesConditions[]|ParentRules[], resources:any): SubResultScan[] {
     logger.debug("check subrule");
-    let result: boolean[] = [];
+    let result: SubResultScan[] = [];
     conditions.forEach(condition => {
         if(condition.hasOwnProperty("rules")) {
             result.push(checkParentRule(condition as ParentRules, resources));
@@ -82,61 +85,94 @@ export function checkRule(conditions: RulesConditions[]|ParentRules[], resources
     return result;
 }
 
-export function checkParentRule(parentRule:ParentRules, resources:any): boolean {
+export function checkParentRule(parentRule:ParentRules, resources:any): SubResultScan {
     logger.debug("check parent rule");
-    let result: boolean[] = checkRule(parentRule.rules, resources);
+    let result: SubResultScan[] = checkRule(parentRule.rules, resources);
     switch(parentRule.operator){
         case OperatorEnum.AND:
-            return result.every((value) => value);
+            return parentResultScan(result, result.every((value) => value.result));
         case OperatorEnum.OR:
-            return result.some((value) => value);
+            return parentResultScan(result, result.some((value) => value.result));
         case OperatorEnum.XOR:
-            return result.filter((value) => value).length === 1;
+            return parentResultScan(result, result.filter((value) => value.result).length === 1);
         case OperatorEnum.NAND:
-            return !result.every((value) => value);
+            return parentResultScan(result, !result.every((value) => value.result));
         case OperatorEnum.NOR:
-            return !result.some((value) => value);
+            return parentResultScan(result, !result.some((value) => value.result));
         case OperatorEnum.XNOR:
-            return result.filter((value) => value).length !== 1;
+            return parentResultScan(result, result.filter((value) => value.result).length !== 1);
         default:
-            return false;
+            return {
+                value: resources,
+                condition: [],
+                result: false,
+                message : "operator not found in " + Object.keys(OperatorEnum).join(", ")
+            };
     }
 }
 
-export function checkCondition(condition:RulesConditions, resources:any): boolean {
+export function parentResultScan(subResultScans: SubResultScan[], result: boolean): SubResultScan {
+    return {
+        value: null,
+        condition: subResultScans.map((value) => value.condition).flat(),
+        result: result,
+        message : subResultScans.map((value) => value.message).join(" || ")
+    };
+}
+
+
+export function checkCondition(condition:RulesConditions, resource:any): SubResultScan {
     try{
-        let value = getSubProperty(resources, condition.property);
+        let value = getSubProperty(resource, condition.property);
         switch(condition.condition){
             case ConditionEnum.EQUAL:
-                return checkEqual(condition, value);
+                return resultScan(condition, value, [checkEqual]);
             case ConditionEnum.DIFFERENT:
-                return !checkEqual(condition, value);
+                return resultScan(condition, value, [checkEqual], true);
             case ConditionEnum.SUP:
-                return checkGreaterThan(condition, value);
+                return resultScan(condition, value, [checkGreaterThan]);
             case ConditionEnum.SUP_OR_EQUAL:
-                return checkGreaterThan(condition, value) || checkEqual(condition, value);
+                return resultScan(condition, value, [checkGreaterThan, checkEqual]);
             case ConditionEnum.INF:
-                return checkLessThan(condition, value);
+                return resultScan(condition, value, [checkLessThan]);
             case ConditionEnum.INF_OR_EQUAL:
-                return checkLessThan(condition, value) || checkEqual(condition, value);
+                return resultScan(condition, value, [checkLessThan, checkEqual]);
             case ConditionEnum.INCLUDE:
-                return checkInclude(condition, value);
+                return resultScan(condition, value, [checkInclude]);
             case ConditionEnum.NOT_INCLUDE:
-                return !checkInclude(condition, value);
+                return resultScan(condition, value, [checkInclude], true);
             case ConditionEnum.STARTS_WITH:
-                return checkStartsWith(condition, value);
+                return resultScan(condition, value, [checkStartsWith]);
             case ConditionEnum.NOT_STARTS_WITH:
-                return !checkStartsWith(condition, value);
+                return resultScan(condition, value, [checkStartsWith], true);
             case ConditionEnum.ENDS_WITH:
-                return checkEndsWith(condition, value);
+                return resultScan(condition, value, [checkEndsWith]);
             case ConditionEnum.NOT_ENDS_WITH:
-                return !checkEndsWith(condition, value);
+                return resultScan(condition, value, [checkEndsWith], true);
             default:
-                return false;
+                return {
+                    value,
+                    condition: [condition],
+                    result: false,
+                    message : "condition not found in " + Object.keys(ConditionEnum).join(", ")
+                };
         }
     }catch(err) {
         logger.error("error in checkCondition:"+err);
-        return false;
+        return {
+            value: resource,
+            condition: [condition],
+            result: false,
+            message : "property not found in resource"
+        };
+    }
+}
+
+export function resultScan(condition: RulesConditions, value: any, fs: Function[], reverse: boolean = false): SubResultScan{
+    return {
+        value,
+        condition: [condition],
+        result: (fs.map(f => f(condition, value)).some((value) => value) !== reverse)
     }
 }
 
@@ -183,32 +219,4 @@ export function checkEndsWith(condition:RulesConditions, value:any): boolean {
     logger.debug("check ends with");
     if(value.endsWith(condition.value)) return true;
     return false;
-}
-
-export function alertFromRule(rule:Rules, resource:any) {
-    switch(rule.level){
-        case LevelEnum.INFO:
-            logger.info("information:"+rule.name);
-            break;
-        case LevelEnum.WARNING:
-            logger.warn("warning:"+rule.name);
-            logger.warn("resource:");
-            logger.warn(resource);
-            break;
-        case LevelEnum.ERROR:
-            logger.error("error:"+rule.name);
-            logger.error("resource:");
-            logger.error(resource);
-            break;
-        case LevelEnum.FATAL:
-            logger.fatal("critical:"+rule.name);
-            logger.fatal("resource:");
-            logger.fatal(resource);
-            break;
-        default:
-            logger.error("error:"+rule.name);
-            logger.error("resource:");
-            logger.error(resource);
-            break;
-    }
 }
