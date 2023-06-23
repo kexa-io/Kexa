@@ -5,28 +5,28 @@
       enabled: true
       type: log
       to: 
-        - 2mars007@gmail.com
+        - esteban.mathia@innovtech.eu
     error:
       enabled: true
       type: log
       to: 
-        - 2mars007@gmail.com
+        - esteban.mathia@innovtech.eu
     warning:
       enabled: true
       type: log
       to: 
-        - 2mars007@gmail.com
+        - esteban.mathia@innovtech.eu
     info:
       enabled: true
       type: log
       to: 
-        - 2mars007@gmail.com
+        - esteban.mathia@innovtech.eu
     global:
       enabled: true
       type: email
       name: azure cloud
       to: 
-        - 2mars007@gmail.com
+        - esteban.mathia@innovtech.eu
       conditions:
         - level: 0
           min: 20
