@@ -115,7 +115,7 @@ export function parentResultScan(subResultScans: SubResultScan[], result: boolea
     return {
         value: null,
         condition: subResultScans.map((value) => value.condition).flat(),
-        result: result,
+        result,
         message : subResultScans.map((value) => value.message).join(" || ")
     };
 }

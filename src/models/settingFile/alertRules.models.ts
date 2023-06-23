@@ -5,8 +5,3 @@ export interface AlertRules {
     level: LevelEnum;
     min: number;
 }
-
-export interface ParentAlertRules {
-    operator: OperatorEnum;
-    rules: AlertRules[]|ParentAlertRules[];
-}

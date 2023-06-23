@@ -2,14 +2,14 @@ import { ComputeManagementClient, VirtualMachine } from "@azure/arm-compute";
 import { NetworkManagementClient, VirtualNetwork, Subnet, NetworkInterface } from "@azure/arm-network";
 import { ResourceManagementClient , ResourceGroup } from "@azure/arm-resources";
 import { DefaultAzureCredential } from "@azure/identity";
-import { info } from "console";
 const { setLogLevel } = require("@azure/logger");
 import env from "dotenv";
 import * as azureFunctions from "./services/azureGathering.service";
 import { Logger } from "tslog";
-import * as analyse from "./services/analyse.service";
 import { AzureResources } from "./models/azure/resource.models";
 import { ProviderResource } from "./models/providerResource.models";
+import { checkRules, gatheringRules } from "./services/analyse.service";
+import { alertGlobal } from "./services/alerte.service";
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 let computeClient: ComputeManagementClient;
 let resourcesClient : ResourceManagementClient ;
@@ -18,17 +18,9 @@ env.config();                                             // reading environneme
 const subscriptionId = process.env.SUBSCRIPTIONID;
 const credential = new DefaultAzureCredential();
 const rulesDirectory:string = "./src/rules";                  //the directory where to find the rules
-let debug_mode                = 2;
+let debug_mode = 2;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "globalLogger" });
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-let vmList                   = new Array();
-let rgList                   = new Array();
-let diskList                 = new Array();
-let nsgList                  = new Array();
-let virtualNetworkList       = new Array();
-let networkInterfacesList    = new Array();
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 async function main() {
   logger.info("___________________________________________________________________________________________________"); 
@@ -74,10 +66,12 @@ async function main() {
   } as ProviderResource;
 
   // Analyse rules
-  let settings = analyse.gatheringRules(rulesDirectory);
+  let settings = gatheringRules(rulesDirectory);
   settings.forEach(setting => {
-    let result = analyse.checkRules(setting.rules, resources, setting.alert);
-    logger.info("result:"+result);
+    let result = checkRules(setting.rules, resources, setting.alert);
+    if(setting.alert.global.enabled){
+      alertGlobal(result, setting.alert.global);
+    }
   });
   
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

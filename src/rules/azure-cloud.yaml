@@ -3,48 +3,39 @@
   alert:
     fatal:
       enabled: true
-      type: email
+      type: log
       to: 
         - 2mars007@gmail.com
     error:
       enabled: true
-      type: email
+      type: log
       to: 
         - 2mars007@gmail.com
     warning:
       enabled: true
-      type: email
+      type: log
       to: 
         - 2mars007@gmail.com
     info:
       enabled: true
-      type: email
+      type: log
       to: 
         - 2mars007@gmail.com
     global:
-      enabled: false
+      enabled: true
       type: email
+      name: azure cloud
       to: 
         - 2mars007@gmail.com
       conditions:
-        - level: 1
+        - level: 0
           min: 20
-        - level: 2
-          min: 10
-        - level: 3
-          min: 5
-        - level: 4
+        - level: 1
           min: 1
-        - operator: AND
-          rules:
-            - level: 1
-              min: 20
-            - level: 2
-              min: 10
-            - level: 3
-              min: 5
-            - level: 4
-              min: 1
+        - level: 2
+          min: 5
+        - level: 3
+          min: 1
   rules:
     - name: azure-disk-orphan
       description : "this rules is to check if disk is orphan and disk size is greater than 5GB"
