@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@azure/arm-compute": "^20.0.0",
+    "@azure/arm-hybridkubernetes": "^2.1.0",
     "@azure/arm-network": "^30.1.0",
     "@azure/arm-resources": "^5.1.0",
     "@azure/arm-storage": "^18.1.0",
@@ -8,6 +9,7 @@
     "@azure/ms-rest-js": "^2.6.4",
     "@azure/msal-node": "^1.14.6",
     "@kubernetes/client-node": "^0.18.1",
+    "@slack/bolt": "^3.13.1",
     "dotenv": "^16.0.3",
     "js-yaml": "^4.1.0",
     "nodemailer": "^6.9.3",

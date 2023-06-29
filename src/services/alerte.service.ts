@@ -8,6 +8,7 @@ import { Emails } from "./emails/emails";
 import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
 import { ConfigAlert } from "../models/settingFile/configAlert.models";
 import { Readable } from "stream";
+//import Slack from "@slack/bolt";
 
 let debug_mode = 2;
 const nodemailer = require("nodemailer");
@@ -16,7 +17,7 @@ const levelAlert = ["info", "warning", "error", "critical"];
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
 
 export function alertGlobal(allScan: ResultScan[][], alert: GlobalConfigAlert) {
-    //sendSMS("", "", "", "")
+    //sendSlack("test", "test")
     let compteError = [0,0,0,0];
     allScan.forEach((rule) => {
         rule.forEach((scan) => {
@@ -302,3 +303,20 @@ ${content}`,
         })
         //.done();
 }
+
+//async function sendSlack(subject: string, content:any){
+//    const SLACK_SIGNING_SECRET=""
+//    const SLACK_BOT_TOKEN=""
+//    const SLACK_CHANNEL="checkinfra"
+//    logger.warn("send slack");
+//    const app = new Slack.App({
+//        signingSecret: process.env.SLACK_SIGNING_SECRET??SLACK_SIGNING_SECRET,
+//        token: process.env.SLACK_BOT_TOKEN?? SLACK_BOT_TOKEN,
+//    });
+//
+//    await app.client.chat.postMessage({
+//        token: process.env.SLACK_BOT_TOKEN??SLACK_BOT_TOKEN,
+//        channel: process.env.SLACK_CHANNEL??SLACK_CHANNEL,
+//        text: subject,
+//    });
+//}

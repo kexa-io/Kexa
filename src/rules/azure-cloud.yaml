@@ -26,11 +26,11 @@
       to: 
         - esteban.mathia@innovtech.eu
     global:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- sms
-        - email
+        #- email
       name: azure cloud
       to: 
         - '+33675549372'

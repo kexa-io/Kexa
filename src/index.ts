@@ -2,6 +2,7 @@ import { ComputeManagementClient, VirtualMachine } from "@azure/arm-compute";
 import { NetworkManagementClient, VirtualNetwork, Subnet, NetworkInterface } from "@azure/arm-network";
 import { ResourceManagementClient , ResourceGroup } from "@azure/arm-resources";
 import { DefaultAzureCredential } from "@azure/identity";
+const { ConnectedKubernetesClient } = require("@azure/arm-hybridkubernetes");
 const { setLogLevel } = require("@azure/logger");
 import env from "dotenv";
 import * as azureFunctions from "./services/azureGathering.service";
@@ -15,8 +16,6 @@ let computeClient: ComputeManagementClient;
 let resourcesClient : ResourceManagementClient ;
 let networkClient: NetworkManagementClient;
 env.config();                                             // reading environnement vars
-const subscriptionId = process.env.SUBSCRIPTIONID;
-const credential = new DefaultAzureCredential();
 const rulesDirectory:string = "./src/rules";                  //the directory where to find the rules
 let debug_mode = 2;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "globalLogger" });
@@ -26,6 +25,8 @@ async function main() {
   logger.info("___________________________________________________________________________________________________"); 
   logger.info("___________________________________-= running checkinfra scan =-___________________________________");
   logger.info("___________________________________________________________________________________________________"); 
+  const subscriptionId = process.env.SUBSCRIPTIONID;
+  const credential = new DefaultAzureCredential();
   let azureResource: AzureResources;  
   if(!subscriptionId) {
     throw new Error("- Please pass SUBSCRIPTIONID as env var");
@@ -43,15 +44,31 @@ async function main() {
     let virtualNetworkList = await azureFunctions.virtualNetworksListing(networkClient);
     let networkInterfacesList = await azureFunctions.networkSecurityGroupListing(networkClient);
 
+    //const K8sClientAzurenpm = new ConnectedKubernetesClient(credential, subscriptionId);
+    //let k8sListAzurenpm = await K8sClientAzurenpm.connectedClusterOperations.listBySubscription();
+    //console.log("k8sListAzurenpm",k8sListAzurenpm);
+    //console.log("k8sListAzurenpm",k8sListAzurenpm.next);
+    //console.log("k8sListAzurenpm",k8sListAzurenpm.byPage);
+    //console.log("K8sClientAzurenpm",K8sClientAzurenpm);
+    //const resArray = new Array();
+    //for await (let item of K8sClientAzurenpm.connectedClusterOperations.listBySubscription()) {
+    //  resArray.push(item);
+    //}
+    //console.log(resArray);
+//
     //const k8s = require('@kubernetes/client-node');
 //
     //const kc = new k8s.KubeConfig();
     //kc.loadFromDefault();
 //
-    //const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
+    //const k8sApiCore = kc.makeApiClient(k8s.CoreV1Api);
+    //const k8sApApps = kc.makeApiClient(k8s.AppsV1Api);
+    //console.log("k8sApiCore",k8sApiCore.authentications.default);
+    //console.log("k8sApiList",await k8sApiCore.listNamespacedService("aks-dv-innovtech-global-01"));
+    //console.log("k8sApApps",k8sApApps);
 //
-    //k8sApi.listNamespacedPod('default').then((res:any) => {
-    //  console.log(res.body);
+    //k8sApiCore.listNamespacedPod("aks-dv-innovtech-global-01 ").then((res: any) => {
+    //    console.log(res.body);
     //});
 
     console.log("vmList",vmList);
