@@ -56,20 +56,24 @@ async function main() {
     //}
     //console.log(resArray);
 //
-    //const k8s = require('@kubernetes/client-node');
+    const k8s = require('@kubernetes/client-node');
 //
-    //const kc = new k8s.KubeConfig();
-    //kc.loadFromDefault();
+    const kc = new k8s.KubeConfig();
+    kc.loadFromDefault();
 //
-    //const k8sApiCore = kc.makeApiClient(k8s.CoreV1Api);
-    //const k8sApApps = kc.makeApiClient(k8s.AppsV1Api);
-    //console.log("k8sApiCore",k8sApiCore.authentications.default);
-    //console.log("k8sApiList",await k8sApiCore.listNamespacedService("aks-dv-innovtech-global-01"));
-    //console.log("k8sApApps",k8sApApps);
-//
-    //k8sApiCore.listNamespacedPod("aks-dv-innovtech-global-01 ").then((res: any) => {
-    //    console.log(res.body);
-    //});
+    const k8sApiCore = kc.makeApiClient(k8s.CoreV1Api);
+    const k8sApApps = kc.makeApiClient(k8s.AppsV1Api);
+    let namespaces = await k8sApiCore.listNamespace();
+    console.log("k8sApiCore",k8sApiCore.authentications.default);
+    console.log("k8sApiList",await k8sApiCore.listNamespacedService("aks-dv-innovtech-global-01"));
+    console.log("k8sApApps", namespaces.body.items);
+    namespaces.body.items.forEach((item: any) => {
+      console.log(item.metadata);
+      console.log(item);
+      k8sApiCore.listNamespacedPod(item.metadata.name).then((res: any) => {
+          console.log(res.body);
+      });
+    });
 
     console.log("vmList",vmList);
     console.log("rgList",rgList);
