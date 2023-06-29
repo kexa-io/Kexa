@@ -16,6 +16,7 @@ const levelAlert = ["info", "warning", "error", "critical"];
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
 
 export function alertGlobal(allScan: ResultScan[][], alert: GlobalConfigAlert) {
+    //sendSMS("", "", "", "")
     let compteError = [0,0,0,0];
     allScan.forEach((rule) => {
         rule.forEach((scan) => {
@@ -39,29 +40,31 @@ export function alertGlobal(allScan: ResultScan[][], alert: GlobalConfigAlert) {
 }
 
 export function alertFromGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
-    switch(alert.type){
-        case AlertEnum.LOG:
-            alertLogGlobal(alert, compteError, allScan);
-            break;
-        case AlertEnum.EMAIL:
-            alertEmailGlobal(alert, compteError, allScan);
-            break;
-        case AlertEnum.SMS:
-            throw new Error("not implemented");
-            break;
-        case AlertEnum.SLACK:
-            throw new Error("not implemented");
-            break;
-        case AlertEnum.TEAMS:
-            throw new Error("not implemented");
-            break;
-        case AlertEnum.WEBHOOK:
-            throw new Error("not implemented");
-            break;
-        default:
-            alertLogGlobal(alert, compteError, allScan);
-            break;
-    }
+    alert.type.forEach((type) => {
+        switch(type){
+            case AlertEnum.LOG:
+                alertLogGlobal(alert, compteError, allScan);
+                break;
+            case AlertEnum.EMAIL:
+                alertEmailGlobal(alert, compteError, allScan);
+                break;
+            case AlertEnum.SMS:
+                alertSMSGlobal(alert, compteError);
+                break;
+            case AlertEnum.SLACK:
+                throw new Error("not implemented");
+                break;
+            case AlertEnum.TEAMS:
+                throw new Error("not implemented");
+                break;
+            case AlertEnum.WEBHOOK:
+                throw new Error("not implemented");
+                break;
+            default:
+                alertLogGlobal(alert, compteError, allScan);
+                break;
+        }
+    });
 }
 
 export function alertLogGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
@@ -85,9 +88,23 @@ export function alertLogGlobal(alert: GlobalConfigAlert, compteError: number[], 
 export function alertEmailGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
     logger.debug("alert email");
     alert.to.forEach((email_to) => {
+        if(!email_to.includes("@")) return;
         logger.debug("send email to:"+email_to);
         let mail = Emails.GlobalAlert(email_to, compteError, allScan, alert);
-        SendMailWithAttachment(mail, email_to, "CheckInfra - Global Alert - "+alert.name??"Uname", compteRender(allScan));
+        SendMailWithAttachment(mail, email_to, "CheckInfra - Global Alert - "+(alert.name??"Uname"), compteRender(allScan));
+    });
+}
+
+export function alertSMSGlobal(alert: GlobalConfigAlert, compteError: number[]) {
+    logger.debug("alert sms");
+    let content = ""
+    compteError.forEach((value, index) => {
+        content += "number of "+levelAlert[index]+" :"+value+"\n";
+    });
+    alert.to.forEach((sms_to) => {
+        if(!sms_to.startsWith("+")) return;
+        logger.debug("send sms to:"+sms_to);
+        sendSMS(sms_to, "CheckInfra - Global Alert - "+ (alert.name??"Uname"), content);
     });
 }
 
@@ -125,31 +142,33 @@ export function compteRender(allScan: ResultScan[][]): any {
 export function alertFromRule(rule:Rules, conditions:SubResultScan[], objectResource:any, alert: Alert) {
     let detailAlert = alert[levelAlert[rule.level] as keyof typeof alert];
     if (!detailAlert.enabled) return
-    switch(detailAlert.type){
-        case AlertEnum.LOG:
-            alertLog(rule, conditions, objectResource);
-            break;
-        case AlertEnum.EMAIL:
-            alertEmail(detailAlert, rule, conditions, objectResource);
-            break;
-        case AlertEnum.SMS:
-            throw new Error("not implemented");
-            break;
-        case AlertEnum.SLACK:
-            throw new Error("not implemented");
-            break;
-        case AlertEnum.TEAMS:
-            throw new Error("not implemented");
-            break;
-        case AlertEnum.WEBHOOK:
-            throw new Error("not implemented");
-            break;
-        default:
-            logger.error("error:"+rule.name);
-            logger.error("resource:");
-            logger.error(conditions);
-            break;
-    }
+    detailAlert.type.forEach((type) => {
+        switch(type){
+            case AlertEnum.LOG:
+                alertLog(rule, conditions, objectResource);
+                break;
+            case AlertEnum.EMAIL:
+                alertEmail(detailAlert, rule, conditions, objectResource);
+                break;
+            case AlertEnum.SMS:
+                alertSMS(detailAlert, rule, objectResource);
+                break;
+            case AlertEnum.SLACK:
+                throw new Error("not implemented");
+                break;
+            case AlertEnum.TEAMS:
+                throw new Error("not implemented");
+                break;
+            case AlertEnum.WEBHOOK:
+                throw new Error("not implemented");
+                break;
+            default:
+                logger.error("error:"+rule.name);
+                logger.error("resource:");
+                logger.error(conditions);
+                break;
+        }
+    });
 }
 
 const sentenceConditionLog = (resource : string) => {
@@ -191,9 +210,20 @@ export function warnLog(rule: Rules, conditions:SubResultScan[], objectResource:
 export function alertEmail(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules, conditions:SubResultScan[], objectResource:any){
     logger.debug("alert email");
     detailAlert.to.forEach((email_to) => {
+        if(!email_to.includes("@")) return;
         logger.debug("send email to:"+email_to);
         let mail = Emails.OneAlert(email_to, objectResource, rule, conditions, colors[rule.level]);
         SendMail(mail, email_to, "CheckInfra - "+levelAlert[rule.level]+" - "+rule.name);
+    });
+}
+
+export function alertSMS(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules, objectResource:any){
+    logger.debug("alert sms");
+    detailAlert.to.forEach((sms_to) => {
+        if(!sms_to.startsWith("+")) return;
+        logger.debug("send sms to:"+sms_to);
+        let content = "error with : " + objectResource.id;
+        sendSMS(sms_to, "CheckInfra - "+levelAlert[rule.level]+" - "+rule.name, content);
     });
 }
 
@@ -253,4 +283,22 @@ async function SendMailWithAttachment(mail: string, to: string, subject: string,
     }catch (e) {
         return false;
     }
+}
+
+async function sendSMS(to: string, subject: string, content: any) {
+    const accountSid = process.env.SMS_ACCOUNTSID;
+    const authToken = process.env.SMS_AUTHTOKEN;
+    const client = require('twilio')(accountSid, authToken);
+
+    client.messages
+        .create({
+            body: `${subject}
+${content}`,
+            from: process.env.SMS_FROM,
+            to
+        })
+        .then((message:any) => {
+            logger.debug("send sms");
+        })
+        //.done();
 }

@@ -42,6 +42,18 @@ async function main() {
     let diskList = await azureFunctions.disksListing(computeClient);
     let virtualNetworkList = await azureFunctions.virtualNetworksListing(networkClient);
     let networkInterfacesList = await azureFunctions.networkSecurityGroupListing(networkClient);
+
+    //const k8s = require('@kubernetes/client-node');
+//
+    //const kc = new k8s.KubeConfig();
+    //kc.loadFromDefault();
+//
+    //const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
+//
+    //k8sApi.listNamespacedPod('default').then((res:any) => {
+    //  console.log(res.body);
+    //});
+
     console.log("vmList",vmList);
     console.log("rgList",rgList);
     console.log("diskList",diskList);

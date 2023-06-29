@@ -7,10 +7,12 @@
     "@azure/logger": "^1.0.3",
     "@azure/ms-rest-js": "^2.6.4",
     "@azure/msal-node": "^1.14.6",
+    "@kubernetes/client-node": "^0.18.1",
     "dotenv": "^16.0.3",
     "js-yaml": "^4.1.0",
     "nodemailer": "^6.9.3",
-    "tslog": "^4.7.1"
+    "tslog": "^4.7.1",
+    "twilio": "^4.13.0"
   },
   "devDependencies": {
     "@azure/identity": "^3.1.2",

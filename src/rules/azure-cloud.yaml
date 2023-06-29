@@ -2,30 +2,38 @@
   date: 20012023
   alert:
     fatal:
-      enabled: true
-      type: log
+      enabled: false
+      type: 
+        - log
       to: 
         - esteban.mathia@innovtech.eu
     error:
-      enabled: true
-      type: log
+      enabled: false
+      type: 
+        - log
       to: 
         - esteban.mathia@innovtech.eu
     warning:
-      enabled: true
-      type: log
+      enabled: false
+      type: 
+        - log
       to: 
         - esteban.mathia@innovtech.eu
     info:
-      enabled: true
-      type: log
+      enabled: false
+      type: 
+        - log
       to: 
         - esteban.mathia@innovtech.eu
     global:
-      enabled: true
-      type: email
+      enabled: false
+      type: 
+        - log
+        #- sms
+        - email
       name: azure cloud
       to: 
+        - '+33675549372'
         - esteban.mathia@innovtech.eu
       conditions:
         - level: 0
@@ -38,7 +46,7 @@
           min: 1
   rules:
     - name: azure-disk-orphan
-      description : "this rules is to check if disk is orphan and disk size is greater than 5GB"
+      description : "this rules is to check if disk is orphan"
       applied: yes
       level: 1
       cloudProvider: azure
@@ -63,7 +71,7 @@
               condition : INF_OR_EQUAL
               value : 5
     - name: azure-disk not public or encrypted
-      description : "this rules is to check if disk is orphan or disk size is greater than 5GB"
+      description : "this rules is to check if disk is not public or at least encrypted"
       applied: yes
       level: 2
       cloudProvider: azure
@@ -77,3 +85,13 @@
             - property : encryption.type
               condition : EQUAL
               value : EncryptionAtRestWithPlatformKey
+    - name: azure-disk-orphan 
+      description : "this rules is to check if disk is orphan"
+      applied: yes
+      level: 1
+      cloudProvider: azure
+      objectName : disk
+      conditions:
+        - property : diskState
+          condition : EQUAL
+          value : Unattached
