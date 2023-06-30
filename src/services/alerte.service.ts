@@ -2,7 +2,7 @@ import { AlertEnum } from "../enum/alert.enum";
 import { LevelEnum } from "../enum/level.enum";
 import { ResultScan, SubResultScan } from "../models/resultScan.models";
 import { Alert } from "../models/settingFile/alert.models";
-import { Rules } from "../models/settingFile/rules.model";
+import { Rules } from "../models/settingFile/rules.models";
 import { Logger } from "tslog";
 import { Emails } from "./emails/emails";
 import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";

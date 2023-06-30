@@ -1,9 +1,9 @@
 import { Logger } from "tslog";
 import fs from "fs";
 import yaml from "js-yaml";
-import { SettingFile } from "../models/settingFile/settingFile.model";
-import { Rules } from "../models/settingFile/rules.model";
-import { ParentRules, RulesConditions } from "../models/settingFile/conditions.model";
+import { SettingFile } from "../models/settingFile/settingFile.models";
+import { Rules } from "../models/settingFile/rules.models";
+import { ParentRules, RulesConditions } from "../models/settingFile/conditions.models";
 import { ConditionEnum } from "../enum/condition.enum";
 import { ProviderResource } from "../models/providerResource.models";
 import { OperatorEnum } from "../enum/operator.enum";
@@ -101,6 +101,8 @@ export function checkParentRule(parentRule:ParentRules, resources:any): SubResul
             return parentResultScan(result, !result.some((value) => value.result));
         case OperatorEnum.XNOR:
             return parentResultScan(result, result.filter((value) => value.result).length !== 1);
+        case OperatorEnum.NOT:
+            return parentResultScan(result, !result[0].result);
         default:
             return {
                 value: resources,

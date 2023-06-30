@@ -9,4 +9,7 @@ export interface AzureResources {
     nsg: Array<ResourceGroup>|null;
     virtualNetwork: Array<VirtualNetwork>|null;
     networkInterfaces: Array<NetworkSecurityGroup>|null;
+    namespaces: Array<any>|null;
+    pods: Array<any>|null;
+    aks: Array<any>|null;
 }

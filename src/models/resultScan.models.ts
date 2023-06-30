@@ -1,5 +1,5 @@
-import { RulesConditions } from "./settingFile/conditions.model";
-import { Rules } from "./settingFile/rules.model";
+import { RulesConditions } from "./settingFile/conditions.models";
+import { Rules } from "./settingFile/rules.models";
 
 export interface ResultScan {
     objectContent?: any;

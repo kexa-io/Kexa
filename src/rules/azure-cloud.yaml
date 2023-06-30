@@ -17,6 +17,7 @@
       enabled: false
       type: 
         - log
+        - email
       to: 
         - esteban.mathia@innovtech.eu
     info:
@@ -26,7 +27,7 @@
       to: 
         - esteban.mathia@innovtech.eu
     global:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- sms
@@ -45,7 +46,7 @@
         - level: 3
           min: 1
   rules:
-    - name: azure-disk-orphan
+    - name: "azure-disk-orphan"
       description : "this rules is to check if disk is orphan"
       applied: yes
       level: 1
@@ -55,43 +56,43 @@
         - property : diskState
           condition : DIFFERENT
           value : Unattached
-    - name: azure-disk not to heavy
-      description : "this rules is to check if disk is orphan or disk size is greater than 5GB"
+    - name: namespace-exist-dev-cloudprices-apiclient
+      description : "this rules is to check if namespace exist and notifiable if exist"
+      applied: yes
+      level: 0
+      cloudProvider: azure
+      objectName : namespaces
+      conditions:
+        - property : metadata.name
+          condition : DIFFERENT
+          value : dev-cloudprices-apiclient
+    - name: all-pods-running-dev-cloudprices-apiclient
+      description : "this rules is to check if all pods are running for a namespace"
       applied: yes
       level: 2
       cloudProvider: azure
-      objectName : disk
+      objectName : pods
       conditions:
-        - operator : OR
+        - operator: NAND
           rules:
-            - property : provisioningState
-              condition : Succeeded
-              value : Empty
-            - property : diskSizeGB
-              condition : INF_OR_EQUAL
-              value : 5
-    - name: azure-disk not public or encrypted
-      description : "this rules is to check if disk is not public or at least encrypted"
-      applied: yes
-      level: 2
-      cloudProvider: azure
-      objectName : disk
-      conditions:
-        - operator : OR
-          rules:
-            - property : networkAccessPolicy
+            - property : status.phase
               condition : DIFFERENT
-              value : AllowAll
-            - property : encryption.type
+              value : Running
+            - property : metadata.namespace
               condition : EQUAL
-              value : EncryptionAtRestWithPlatformKey
-    - name: azure-disk-orphan 
-      description : "this rules is to check if disk is orphan"
+              value : thecloudprices-manorga
+    - name: all-pods-not-running
+      description : "this rules is to be notifiable if pods are not running"
       applied: yes
       level: 1
       cloudProvider: azure
-      objectName : disk
+      objectName : pods
       conditions:
-        - property : diskState
-          condition : EQUAL
-          value : Unattached
+        - operator: OR
+          rules:
+            - property : status.phase
+              condition : EQUAL
+              value : Running
+            - property : status.phase
+              condition : EQUAL
+              value : Succeeded
