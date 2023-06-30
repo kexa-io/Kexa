@@ -8,7 +8,7 @@ import { Emails } from "./emails/emails";
 import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
 import { ConfigAlert } from "../models/settingFile/configAlert.models";
 import { Readable } from "stream";
-//import Slack from "@slack/bolt";
+import { App } from "@slack/bolt";
 
 let debug_mode = 2;
 const nodemailer = require("nodemailer");
@@ -304,19 +304,19 @@ ${content}`,
         //.done();
 }
 
-//async function sendSlack(subject: string, content:any){
-//    const SLACK_SIGNING_SECRET=""
-//    const SLACK_BOT_TOKEN=""
-//    const SLACK_CHANNEL="checkinfra"
-//    logger.warn("send slack");
-//    const app = new Slack.App({
-//        signingSecret: process.env.SLACK_SIGNING_SECRET??SLACK_SIGNING_SECRET,
-//        token: process.env.SLACK_BOT_TOKEN?? SLACK_BOT_TOKEN,
-//    });
-//
-//    await app.client.chat.postMessage({
-//        token: process.env.SLACK_BOT_TOKEN??SLACK_BOT_TOKEN,
-//        channel: process.env.SLACK_CHANNEL??SLACK_CHANNEL,
-//        text: subject,
-//    });
-//}
+async function sendSlack(subject: string, content:any){
+    const SLACK_SIGNING_SECRET="67cb23b62701a1d667c3c690abb5864b"
+    const SLACK_BOT_TOKEN="xoxb-5490486784887-5502151843717-ReMXLVnUdArhI5BK4VEszMfq"
+    const SLACK_CHANNEL="C05ENAX4N22"
+    logger.warn("send slack");
+    const app = new App({
+        signingSecret: process.env.SLACK_SIGNING_SECRET??SLACK_SIGNING_SECRET,
+        token: process.env.SLACK_BOT_TOKEN?? SLACK_BOT_TOKEN,
+    });
+
+    await app.client.chat.postMessage({
+        token: process.env.SLACK_BOT_TOKEN??SLACK_BOT_TOKEN,
+        channel: process.env.SLACK_CHANNEL??SLACK_CHANNEL,
+        text: subject,
+    });
+}

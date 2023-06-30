@@ -12,10 +12,11 @@ import * as ckiNetworkSecurityClass from "../class/azure/ckiNetworkSecurityGroup
 import { Logger } from "tslog";
 import { AzureResources } from "../models/azure/resource.models";
 import { DefaultAzureCredential } from "@azure/identity";
-import { ConnectedKubernetesClient } from "@azure/arm-hybridkubernetes";
+import helm from 'helm-ts';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let debug_mode = 2;
+const { ContainerServiceClient } = require("@azure/arm-containerservice");
 const k8s = require('@kubernetes/client-node');
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });
 let computeClient: ComputeManagementClient;
@@ -67,8 +68,10 @@ export async function collectAzureData(): Promise<AzureResources>{
             "networkInterfaces": networkInterfacesList,
             "namespaces": kubernetesList["namespaces"],
             "pods": kubernetesList["pods"],
+            "helm": kubernetesList["helm"],
             "aks": aksList,
         } as AzureResources;
+        console.log("helm",kubernetesList["helm"]);
     }
     return azureResource;
 }
@@ -76,13 +79,11 @@ export async function collectAzureData(): Promise<AzureResources>{
 //aks list
 export async function aksListing(credential: DefaultAzureCredential, subscriptionId: string): Promise<any> {
     logger.info("starting aksListing");
-    const client = new ConnectedKubernetesClient(credential, subscriptionId);
+    const client = new ContainerServiceClient(credential, subscriptionId);
     const resArray = new Array();
-    console.log("connected", client.connectedClusterOperations)
-    for await (let item of client.connectedClusterOperations.listBySubscription()) {
+    for await (let item of client.managedClusters.list()) {
         resArray.push(item);
     }
-    console.log("resArray", resArray);
     return resArray;
 }
 
@@ -96,7 +97,12 @@ export async function kubernetesListing(): Promise<any> {
     let kubResources: any = {};
     kubResources["namespaces"] = namespaces.body.items;
     kubResources["pods"] = [];
+    kubResources["helm"] = [];
     const namespacePromises = namespaces.body.items.map(async (item: any) => {
+        let helmData = await helm.list({ namespace: item.metadata.name });
+        helmData.forEach((helmItem: any) => {
+            kubResources["helm"].push(helmItem);
+        });
         const pods = await k8sApiCore.listNamespacedPod(item.metadata.name);
         pods.body.items.forEach((pod: any) => {
             pod.metadata.namespace = item.metadata.name;

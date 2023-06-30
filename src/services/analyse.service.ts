@@ -151,6 +151,12 @@ export function checkCondition(condition:RulesConditions, resource:any): SubResu
                 return resultScan(condition, value, [checkEndsWith]);
             case ConditionEnum.NOT_ENDS_WITH:
                 return resultScan(condition, value, [checkEndsWith], true);
+            case ConditionEnum.INCLUDE_NOT_SENSITIVE:
+                return resultScan(condition, value, [checkIncludeNS]);
+            case ConditionEnum.NOT_INCLUDE_NOT_SENSITIVE:
+                return resultScan(condition, value, [checkIncludeNS], true);
+            case ConditionEnum.REGEX:
+                return resultScan(condition, value, [checkRegex]);
             default:
                 return {
                     value,
@@ -208,6 +214,23 @@ export function checkLessThan(condition:RulesConditions, value:any): boolean {
 export function checkInclude(condition:RulesConditions, value:any): boolean {
     logger.debug("check include");
     if(value.includes(condition.value)) return true;
+    return false;
+}
+
+export function checkIncludeNS(condition:RulesConditions, value:any): boolean {
+    logger.debug("check include not sensitive");
+    try{
+        if(value.toLowerCase().includes(String(condition.value).toLowerCase())) return true;
+        return false;
+    }catch(err) {
+        logger.error("error in checkIncludeNS:"+err);
+        return false;
+    }
+}
+
+export function checkRegex(condition:RulesConditions, value:any): boolean {
+    logger.debug("check regex");
+    if(value.match(condition.value)) return true;
     return false;
 }
 
