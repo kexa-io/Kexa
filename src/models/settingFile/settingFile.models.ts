@@ -7,7 +7,7 @@ import { Rules } from "./rules.models";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 export interface SettingFile {
     version: string;
-    date: Date;
+    date: string;
     alert: Alert;
     rules:Rules[];
 }

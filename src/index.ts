@@ -5,6 +5,7 @@ import { Logger } from "tslog";
 import { ProviderResource } from "./models/providerResource.models";
 import { checkRules, gatheringRules } from "./services/analyse.service";
 import { alertGlobal } from "./services/alerte.service";
+import { collectGithubData } from "./services/githubGathering.service";
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 env.config();                                             // reading environnement vars
 const rulesDirectory:string = "./src/rules";                  //the directory where to find the rules
@@ -16,13 +17,13 @@ async function main() {
   logger.info("___________________________________________________________________________________________________"); 
   logger.info("___________________________________-= running checkinfra scan =-___________________________________");
   logger.info("___________________________________________________________________________________________________"); 
-  let azureResource = await collectAzureData();
 
   let resources = {
-    "azure": azureResource??null,
+    "azure": await collectAzureData()??null,
     "gcp": null,
     "aws": null,
-    "ovh": null
+    "ovh": null,
+    "git": await collectGithubData()??null
   } as ProviderResource;
 
   // Analyse rules
@@ -33,6 +34,7 @@ async function main() {
       alertGlobal(result, setting.alert.global);
     }
   });
+
   
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   logger.info("___________________________________________________________________________________________________"); 

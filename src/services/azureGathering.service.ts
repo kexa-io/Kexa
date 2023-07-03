@@ -71,7 +71,6 @@ export async function collectAzureData(): Promise<AzureResources>{
             "helm": kubernetesList["helm"],
             "aks": aksList,
         } as AzureResources;
-        console.log("helm",kubernetesList["helm"]);
     }
     return azureResource;
 }

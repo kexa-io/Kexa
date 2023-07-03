@@ -5,4 +5,8 @@ export enum ObjectNameEnum {
     NSG = "nsg",
     VIRTUALNETWORK = "virtualNetwork",
     NETWORKINTERFACE = "networkInterfaces",
+    NAMESPACE = "namespaces",
+    PODS = "pods",
+    HELM = "helm",
+    AKS = "aks"
 }

@@ -1,5 +1,5 @@
 - version: 1.0.0
-  date: 06302023
+  date: 06-12-2023
   alert:
     fatal:
       enabled: false
@@ -25,14 +25,14 @@
       to: 
         - esteban.mathia@innovtech.eu
     global:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- sms
-        - email
+        #- email
       name: azure cloud
       to: 
-        - esteban.mathia@innovtech.eu
+        #- esteban.mathia@innovtech.eu
       conditions:
         - level: 0
           min: 1
@@ -45,7 +45,7 @@
   rules:
     - name: "azure-disk-orphan"
       description : "this rules is to check if disk is orphan"
-      applied: yes
+      applied: true
       level: 1
       cloudProvider: azure
       objectName : disk
@@ -55,7 +55,7 @@
           value : Unattached
     - name: namespace-exist-dev-cloudprices-apiclient
       description : "this rules is to check if namespace exist and notifiable if exist"
-      applied: yes
+      applied: true
       level: 0
       cloudProvider: azure
       objectName : namespaces
@@ -65,7 +65,7 @@
           value : dev-cloudprices-apiclient
     - name: all-pods-running-thecloudprices-manorga
       description : "this rules is to check if all pods are running for a namespace"
-      applied: yes
+      applied: true
       level: 2
       cloudProvider: azure
       objectName : pods
@@ -80,7 +80,7 @@
               value : thecloudprices-manorga
     - name: all-pods-not-running
       description : "this rules is to be notifiable if pods are not running"
-      applied: yes
+      applied: true
       level: 0
       cloudProvider: azure
       objectName : pods
@@ -95,7 +95,7 @@
               value : Succeeded
     - name: check-aks-cluster
       description : "this rules is to check if aks cluster are conform to the norms"
-      applied: yes
+      applied: true
       level: 2
       cloudProvider: azure
       objectName : aks
@@ -120,7 +120,7 @@
           value : NULL
     - name: all-my-helm-is-deploy
       description : "this rules is to check if some helm are not deployed"
-      applied: yes
+      applied: true
       level: 2
       cloudProvider: azure
       objectName : helm
