@@ -23,7 +23,7 @@ async function main() {
     "gcp": null,
     "aws": null,
     "ovh": null,
-    "git": await collectGithubData()??null
+    "git": await collectGithubData()
   } as ProviderResource;
 
   // Analyse rules

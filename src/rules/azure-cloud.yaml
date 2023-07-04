@@ -25,13 +25,15 @@
       to: 
         - esteban.mathia@innovtech.eu
     global:
-      enabled: false
+      enabled: true
       type: 
         - log
+        - webhook
         #- sms
         #- email
       name: azure cloud
       to: 
+        - http://127.0.0.1:5000/test
         #- esteban.mathia@innovtech.eu
       conditions:
         - level: 0

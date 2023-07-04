@@ -11,6 +11,7 @@ import { Readable } from "stream";
 import { App } from "@slack/bolt";
 
 let debug_mode = 2;
+var request = require('request');
 const nodemailer = require("nodemailer");
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });
 const levelAlert = ["info", "warning", "error", "critical"];
@@ -59,7 +60,7 @@ export function alertFromGlobal(alert: GlobalConfigAlert, compteError: number[],
                 throw new Error("not implemented");
                 break;
             case AlertEnum.WEBHOOK:
-                throw new Error("not implemented");
+                alertWebhookGlobal(alert, compteError, allScan);
                 break;
             default:
                 alertLogGlobal(alert, compteError, allScan);
@@ -106,6 +107,28 @@ export function alertSMSGlobal(alert: GlobalConfigAlert, compteError: number[]) 
         if(!sms_to.startsWith("+")) return;
         logger.debug("send sms to:"+sms_to);
         sendSMS(sms_to, "CheckInfra - Global Alert - "+ (alert.name??"Uname"), content);
+    });
+}
+
+export function alertWebhookGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
+    logger.debug("alert webhook");
+    let content = compteRender(allScan);
+    let nbrError: { [x: string]: number; }[] = [];
+    compteError.forEach((value, index) => {
+        nbrError.push({
+            [levelAlert[index]] : value
+        });
+    });
+    content["nbrError"] = nbrError;
+    content["title"] = "CheckInfra - Global Alert - "+(alert.name??"Uname");
+    alert.to.forEach((webhook_to) => {
+        if(!webhook_to.includes("http")) return;
+        logger.debug("send webhook to:"+webhook_to);
+        request.post(webhook_to, { json: JSON.stringify(content) }, (res:any) => {
+            logger.debug(`webhook to: ${webhook_to} are send`)
+        }).on('error', (error:any) => {
+            logger.error(error)
+        });
     });
 }
 
@@ -161,7 +184,7 @@ export function alertFromRule(rule:Rules, conditions:SubResultScan[], objectReso
                 throw new Error("not implemented");
                 break;
             case AlertEnum.WEBHOOK:
-                throw new Error("not implemented");
+                sendWebhook(detailAlert, "CheckInfra - "+levelAlert[rule.level]+" - "+rule.name, conditions)
                 break;
             default:
                 logger.error("error:"+rule.name);
@@ -302,6 +325,20 @@ ${content}`,
             logger.debug("send sms");
         })
         //.done();
+}
+
+async function sendWebhook(alert: ConfigAlert, subject: string, content: any) {
+    content["title"] = subject;
+    logger.debug("send webhook");
+    alert.to.forEach((webhook_to) => {
+        if(!webhook_to.includes("http")) return;
+        logger.debug("send webhook to:"+webhook_to);
+        request.post(webhook_to, { json: JSON.stringify(content) }, (res:any) => {
+            logger.debug(`webhook to: ${webhook_to} are send`)
+        }).on('error', (error:any) => {
+            logger.error(error)
+        });
+    });
 }
 
 async function sendSlack(subject: string, content:any){
