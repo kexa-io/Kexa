@@ -4,5 +4,6 @@ export enum OperatorEnum {
     XOR = "XOR",
     NAND = "NAND",
     NOR = "NOR",
-    XNOR = "XNOR"
+    XNOR = "XNOR",
+    NOT = "NOT"
 }

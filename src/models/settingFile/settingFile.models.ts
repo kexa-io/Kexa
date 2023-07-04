@@ -2,12 +2,12 @@
 //// Class to cast object for yaml files
 
 import { Alert } from "./alert.models";
-import { Rules } from "./rules.model";
+import { Rules } from "./rules.models";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 export interface SettingFile {
     version: string;
-    date: Date;
+    date: string;
     alert: Alert;
     rules:Rules[];
 }

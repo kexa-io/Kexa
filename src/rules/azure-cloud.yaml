@@ -1,10 +1,11 @@
-- version: 0.3.0
-  date: 20012023
+- version: 1.0.0
+  date: 06-12-2023
   alert:
     fatal:
       enabled: false
       type: 
         - log
+        - email
       to: 
         - esteban.mathia@innovtech.eu
     error:
@@ -17,8 +18,6 @@
       enabled: false
       type: 
         - log
-      to: 
-        - esteban.mathia@innovtech.eu
     info:
       enabled: false
       type: 
@@ -26,28 +25,29 @@
       to: 
         - esteban.mathia@innovtech.eu
     global:
-      enabled: false
+      enabled: true
       type: 
         - log
+        - webhook
         #- sms
-        - email
+        #- email
       name: azure cloud
       to: 
-        - '+33675549372'
-        - esteban.mathia@innovtech.eu
+        - http://127.0.0.1:5000/test
+        #- esteban.mathia@innovtech.eu
       conditions:
         - level: 0
-          min: 20
+          min: 1
         - level: 1
           min: 1
         - level: 2
-          min: 5
+          min: 1
         - level: 3
           min: 1
   rules:
-    - name: azure-disk-orphan
+    - name: "azure-disk-orphan"
       description : "this rules is to check if disk is orphan"
-      applied: yes
+      applied: true
       level: 1
       cloudProvider: azure
       objectName : disk
@@ -55,43 +55,78 @@
         - property : diskState
           condition : DIFFERENT
           value : Unattached
-    - name: azure-disk not to heavy
-      description : "this rules is to check if disk is orphan or disk size is greater than 5GB"
-      applied: yes
+    - name: namespace-exist-dev-cloudprices-apiclient
+      description : "this rules is to check if namespace exist and notifiable if exist"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName : namespaces
+      conditions:
+        - property : metadata.name
+          condition : DIFFERENT
+          value : dev-cloudprices-apiclient
+    - name: all-pods-running-thecloudprices-manorga
+      description : "this rules is to check if all pods are running for a namespace"
+      applied: true
       level: 2
       cloudProvider: azure
-      objectName : disk
+      objectName : pods
       conditions:
-        - operator : OR
+        - operator: NAND
           rules:
-            - property : provisioningState
-              condition : Succeeded
-              value : Empty
-            - property : diskSizeGB
-              condition : INF_OR_EQUAL
-              value : 5
-    - name: azure-disk not public or encrypted
-      description : "this rules is to check if disk is not public or at least encrypted"
-      applied: yes
-      level: 2
-      cloudProvider: azure
-      objectName : disk
-      conditions:
-        - operator : OR
-          rules:
-            - property : networkAccessPolicy
+            - property : status.phase
               condition : DIFFERENT
-              value : AllowAll
-            - property : encryption.type
+              value : Running
+            - property : metadata.namespace
               condition : EQUAL
-              value : EncryptionAtRestWithPlatformKey
-    - name: azure-disk-orphan 
-      description : "this rules is to check if disk is orphan"
-      applied: yes
-      level: 1
+              value : thecloudprices-manorga
+    - name: all-pods-not-running
+      description : "this rules is to be notifiable if pods are not running"
+      applied: true
+      level: 0
       cloudProvider: azure
-      objectName : disk
+      objectName : pods
       conditions:
-        - property : diskState
+        - operator: OR
+          rules:
+            - property : status.phase
+              condition : EQUAL
+              value : Running
+            - property : status.phase
+              condition : EQUAL
+              value : Succeeded
+    - name: check-aks-cluster
+      description : "this rules is to check if aks cluster are conform to the norms"
+      applied: true
+      level: 2
+      cloudProvider: azure
+      objectName : aks
+      conditions:
+        - property : tags.environment
+          condition : DIFFERENT
+          value : NULL
+        - property : tags.status
+          condition : DIFFERENT
+          value : NULL
+        - property : tags.billing
+          condition : DIFFERENT
+          value : NULL
+        - property : sku.tier
           condition : EQUAL
-          value : Unattached
+          value : Free
+        - property : publicNetworkAccess
+          condition : EQUAL
+          value : Enable
+        - property : autoScalerProfile.scaleDownDelayAfterAdd
+          condition : DIFFERENT
+          value : NULL
+    - name: all-my-helm-is-deploy
+      description : "this rules is to check if some helm are not deployed"
+      applied: true
+      level: 2
+      cloudProvider: azure
+      objectName : helm
+      conditions:
+        - property : status
+          condition : EQUAL
+          value : deployed

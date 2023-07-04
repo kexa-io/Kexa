@@ -2,21 +2,23 @@ import { AlertEnum } from "../enum/alert.enum";
 import { LevelEnum } from "../enum/level.enum";
 import { ResultScan, SubResultScan } from "../models/resultScan.models";
 import { Alert } from "../models/settingFile/alert.models";
-import { Rules } from "../models/settingFile/rules.model";
+import { Rules } from "../models/settingFile/rules.models";
 import { Logger } from "tslog";
 import { Emails } from "./emails/emails";
 import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
 import { ConfigAlert } from "../models/settingFile/configAlert.models";
 import { Readable } from "stream";
+import { App } from "@slack/bolt";
 
 let debug_mode = 2;
+var request = require('request');
 const nodemailer = require("nodemailer");
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });
 const levelAlert = ["info", "warning", "error", "critical"];
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
 
 export function alertGlobal(allScan: ResultScan[][], alert: GlobalConfigAlert) {
-    //sendSMS("", "", "", "")
+    //sendSlack("test", "test")
     let compteError = [0,0,0,0];
     allScan.forEach((rule) => {
         rule.forEach((scan) => {
@@ -58,7 +60,7 @@ export function alertFromGlobal(alert: GlobalConfigAlert, compteError: number[],
                 throw new Error("not implemented");
                 break;
             case AlertEnum.WEBHOOK:
-                throw new Error("not implemented");
+                alertWebhookGlobal(alert, compteError, allScan);
                 break;
             default:
                 alertLogGlobal(alert, compteError, allScan);
@@ -105,6 +107,28 @@ export function alertSMSGlobal(alert: GlobalConfigAlert, compteError: number[]) 
         if(!sms_to.startsWith("+")) return;
         logger.debug("send sms to:"+sms_to);
         sendSMS(sms_to, "CheckInfra - Global Alert - "+ (alert.name??"Uname"), content);
+    });
+}
+
+export function alertWebhookGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
+    logger.debug("alert webhook");
+    let content = compteRender(allScan);
+    let nbrError: { [x: string]: number; }[] = [];
+    compteError.forEach((value, index) => {
+        nbrError.push({
+            [levelAlert[index]] : value
+        });
+    });
+    content["nbrError"] = nbrError;
+    content["title"] = "CheckInfra - Global Alert - "+(alert.name??"Uname");
+    alert.to.forEach((webhook_to) => {
+        if(!webhook_to.includes("http")) return;
+        logger.debug("send webhook to:"+webhook_to);
+        request.post(webhook_to, { json: JSON.stringify(content) }, (res:any) => {
+            logger.debug(`webhook to: ${webhook_to} are send`)
+        }).on('error', (error:any) => {
+            logger.error(error)
+        });
     });
 }
 
@@ -160,7 +184,7 @@ export function alertFromRule(rule:Rules, conditions:SubResultScan[], objectReso
                 throw new Error("not implemented");
                 break;
             case AlertEnum.WEBHOOK:
-                throw new Error("not implemented");
+                sendWebhook(detailAlert, "CheckInfra - "+levelAlert[rule.level]+" - "+rule.name, conditions)
                 break;
             default:
                 logger.error("error:"+rule.name);
@@ -301,4 +325,35 @@ ${content}`,
             logger.debug("send sms");
         })
         //.done();
+}
+
+async function sendWebhook(alert: ConfigAlert, subject: string, content: any) {
+    content["title"] = subject;
+    logger.debug("send webhook");
+    alert.to.forEach((webhook_to) => {
+        if(!webhook_to.includes("http")) return;
+        logger.debug("send webhook to:"+webhook_to);
+        request.post(webhook_to, { json: JSON.stringify(content) }, (res:any) => {
+            logger.debug(`webhook to: ${webhook_to} are send`)
+        }).on('error', (error:any) => {
+            logger.error(error)
+        });
+    });
+}
+
+async function sendSlack(subject: string, content:any){
+    const SLACK_SIGNING_SECRET="67cb23b62701a1d667c3c690abb5864b"
+    const SLACK_BOT_TOKEN="xoxb-5490486784887-5502151843717-ReMXLVnUdArhI5BK4VEszMfq"
+    const SLACK_CHANNEL="C05ENAX4N22"
+    logger.warn("send slack");
+    const app = new App({
+        signingSecret: process.env.SLACK_SIGNING_SECRET??SLACK_SIGNING_SECRET,
+        token: process.env.SLACK_BOT_TOKEN?? SLACK_BOT_TOKEN,
+    });
+
+    await app.client.chat.postMessage({
+        token: process.env.SLACK_BOT_TOKEN??SLACK_BOT_TOKEN,
+        channel: process.env.SLACK_CHANNEL??SLACK_CHANNEL,
+        text: subject,
+    });
 }
