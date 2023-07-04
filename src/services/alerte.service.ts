@@ -342,18 +342,15 @@ async function sendWebhook(alert: ConfigAlert, subject: string, content: any) {
 }
 
 async function sendSlack(subject: string, content:any){
-    const SLACK_SIGNING_SECRET="67cb23b62701a1d667c3c690abb5864b"
-    const SLACK_BOT_TOKEN="xoxb-5490486784887-5502151843717-ReMXLVnUdArhI5BK4VEszMfq"
-    const SLACK_CHANNEL="C05ENAX4N22"
     logger.warn("send slack");
     const app = new App({
-        signingSecret: process.env.SLACK_SIGNING_SECRET??SLACK_SIGNING_SECRET,
-        token: process.env.SLACK_BOT_TOKEN?? SLACK_BOT_TOKEN,
+        signingSecret: process.env.SLACK_SIGNING_SECRET??"",
+        token: process.env.SLACK_BOT_TOKEN?? "",
     });
 
     await app.client.chat.postMessage({
-        token: process.env.SLACK_BOT_TOKEN??SLACK_BOT_TOKEN,
-        channel: process.env.SLACK_CHANNEL??SLACK_CHANNEL,
+        token: process.env.SLACK_BOT_TOKEN??"",
+        channel: process.env.SLACK_CHANNEL??"",
         text: subject,
     });
 }
