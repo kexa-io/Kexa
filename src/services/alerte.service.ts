@@ -237,7 +237,8 @@ export function alertEmail(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rul
         if(!email_to.includes("@")) return;
         logger.debug("send email to:"+email_to);
         let mail = Emails.OneAlert(email_to, objectResource, rule, conditions, colors[rule.level]);
-        SendMail(mail, email_to, "CheckInfra - "+levelAlert[rule.level]+" - "+rule.name);
+        SendMailWithAttachment(mail, email_to, "CheckInfra - "+levelAlert[rule.level]+" - "+rule.name, objectResource);
+        //SendMail(mail, email_to, "CheckInfra - "+levelAlert[rule.level]+" - "+rule.name);
     });
 }
 
