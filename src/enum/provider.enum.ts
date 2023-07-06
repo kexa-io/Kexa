@@ -3,4 +3,5 @@ export enum ProviderEnum {
     AWS = "aws",
     GCP = "gcp",
     OVH = "ovh",
+    GIT = "git"
 }
