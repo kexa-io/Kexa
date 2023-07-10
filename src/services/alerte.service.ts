@@ -9,6 +9,7 @@ import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
 import { ConfigAlert } from "../models/settingFile/configAlert.models";
 import { Readable } from "stream";
 import { App } from "@slack/bolt";
+import { renderTableAllScan } from "./display.service";
 
 let debug_mode = 2;
 var request = require('request');
@@ -92,8 +93,9 @@ export function alertEmailGlobal(alert: GlobalConfigAlert, compteError: number[]
     alert.to.forEach((email_to) => {
         if(!email_to.includes("@")) return;
         logger.debug("send email to:"+email_to);
-        let mail = Emails.GlobalAlert(email_to, compteError, allScan, alert);
-        SendMailWithAttachment(mail, email_to, "CheckInfra - Global Alert - "+(alert.name??"Uname"), compteRender(allScan));
+        let render_table = renderTableAllScan(allScan.map(scan => scan.filter(value => value.error.length>0)));
+        let mail = Emails.GlobalAlert(email_to, compteError, render_table, alert);
+        SendMailWithAttachment(mail, email_to, "Kexa - Global Alert - "+(alert.name??"Uname"), compteRender(allScan));
     });
 }
 
@@ -106,7 +108,7 @@ export function alertSMSGlobal(alert: GlobalConfigAlert, compteError: number[]) 
     alert.to.forEach((sms_to) => {
         if(!sms_to.startsWith("+")) return;
         logger.debug("send sms to:"+sms_to);
-        sendSMS(sms_to, "CheckInfra - Global Alert - "+ (alert.name??"Uname"), content);
+        sendSMS(sms_to, "Kexa - Global Alert - "+ (alert.name??"Uname"), content);
     });
 }
 
@@ -120,7 +122,7 @@ export function alertWebhookGlobal(alert: GlobalConfigAlert, compteError: number
         });
     });
     content["nbrError"] = nbrError;
-    content["title"] = "CheckInfra - Global Alert - "+(alert.name??"Uname");
+    content["title"] = "Kexa - Global Alert - "+(alert.name??"Uname");
     alert.to.forEach((webhook_to) => {
         if(!webhook_to.includes("http")) return;
         logger.debug("send webhook to:"+webhook_to);
@@ -134,24 +136,14 @@ export function alertWebhookGlobal(alert: GlobalConfigAlert, compteError: number
 
 export function compteRender(allScan: ResultScan[][]): any {
     let result = {content : new Array<any>()};
-    logger.debug("allScan:");
-    logger.debug(allScan);
     allScan.forEach((rule) => {
-        logger.debug("rule:");
-        logger.debug(rule);
-        logger.debug({
-            rule: rule[0].rule,
-            result: rule.map((scan) => {
-                return {
-                    objectContent: scan.objectContent,
-                    error: scan.error
-                };
-            })
-        })
         return result.content.push(
             {
                 rule: rule[0].rule,
-                result: rule.map((scan) => {
+                result: rule.filter(value => 
+                    value.error.length > 0
+                )
+                .map((scan) => {
                     return {
                         objectContent: scan.objectContent,
                         error: scan.error
@@ -184,7 +176,7 @@ export function alertFromRule(rule:Rules, conditions:SubResultScan[], objectReso
                 throw new Error("not implemented");
                 break;
             case AlertEnum.WEBHOOK:
-                sendWebhook(detailAlert, "CheckInfra - "+levelAlert[rule.level]+" - "+rule.name, conditions)
+                sendWebhook(detailAlert, "Kexa - "+levelAlert[rule.level]+" - "+rule.name, conditions)
                 break;
             default:
                 logger.error("error:"+rule.name);
@@ -237,6 +229,7 @@ export function alertEmail(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rul
         if(!email_to.includes("@")) return;
         logger.debug("send email to:"+email_to);
         let mail = Emails.OneAlert(email_to, objectResource, rule, conditions, colors[rule.level]);
+        SendMail(mail, email_to, "Kexa - "+levelAlert[rule.level]+" - "+rule.name);
         SendMailWithAttachment(mail, email_to, "CheckInfra - "+levelAlert[rule.level]+" - "+rule.name, objectResource);
         //SendMail(mail, email_to, "CheckInfra - "+levelAlert[rule.level]+" - "+rule.name);
     });
@@ -248,7 +241,7 @@ export function alertSMS(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules
         if(!sms_to.startsWith("+")) return;
         logger.debug("send sms to:"+sms_to);
         let content = "error with : " + objectResource.id;
-        sendSMS(sms_to, "CheckInfra - "+levelAlert[rule.level]+" - "+rule.name, content);
+        sendSMS(sms_to, "Kexa - "+levelAlert[rule.level]+" - "+rule.name, content);
     });
 }
 
@@ -284,7 +277,6 @@ async function SendMail(mail: string, to: string, subject: string): Promise<bool
 
 async function SendMailWithAttachment(mail: string, to: string, subject: string, content: any): Promise<boolean> {
     try{
-        logger.debug(content);
         const jsonContent = JSON.stringify(content);
 
         const jsonStream = new Readable();

@@ -31,7 +31,7 @@
     global:
       enabled: false
       type: 
-        - log
+        #- log
         #- webhook
         #- sms
         - email
