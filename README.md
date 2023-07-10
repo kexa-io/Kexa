@@ -133,6 +133,8 @@ This is an example of how to list things you need to use the software and how to
 
 Kexa offers significant benefits in a number of areas, contributing to the efficiency and reliability of your environment. Here are the main areas where the tool adds value :
 
+### Utility
+
 1. **Cost savings**
 
 By automating the monitoring of your infrastructure's status and behaviour, our tool enables you to make significant savings. By detecting rule violations quickly, you can avoid the additional costs associated with prolonged problems and prevent costly malfunctions. For example, the tool will alert you to unallocated disks or ips.
@@ -160,7 +162,21 @@ The security of your infrastructure is paramount, and our tool enables you to en
 exemple of rule to verify:
 
 ```
-
+- name: azure-disk not public or encrypted
+  description : "this rules is to check if disk is either not public or encrypted by default"
+  applied: true
+  level: 2
+  cloudProvider: azure
+  objectName : disk
+  conditions:
+    - operator : OR
+      rules:
+        - property : networkAccessPolicy
+          condition : DIFFERENT
+          value : AllowAll
+        - property : encryption.type
+          condition : EQUAL
+          value : EncryptionAtRestWithPlatformKey
 ```
 
 3. **Standardisation**
@@ -196,32 +212,116 @@ Our tool provides a learning and sharing space where users can collaborate to cr
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+### How to create Yaml file
 
+```yml
+- version: /^[0-9]+\.[0-9]+\.[0-9]+$/
+  #to indicate the version of this yaml
+  date: /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-(19|20)\d\d$/
+  #to indicate the date of this yaml
+  alert:
+  #area to create your custom notification
+    info:
+    #alert for info (level 0)
+      enabled: ^(true|false)$
+      #to enable it
+      type:
+      #add every type of notification you want
+        - ^(email|sms|webhook|log)$
+      to:
+      #add all the endpoint you need according to the type of notification you have
+        - string
+    warn:
+    #alert for warn (level 1)
+      enabled: ^(true|false)$
+      type:
+        - ^(email|sms|webhook|log)$
+      to:
+        - string
+    error:
+    #alert for error (level 2)
+      enabled: ^(true|false)$
+      type:
+        - ^(email|sms|webhook|log)$
+      to:
+        - string
+    fatal:
+    #alert for fatal (level 3)
+      enabled: ^(true|false)$
+      type:
+        - ^(email|sms|webhook|log)$
+      to:
+        - string
+    global:
+    #alert for the sum up
+      enabled: ^(true|false)$
+      type:
+        - ^(email|sms|webhook|log)$
+      to:
+        - string
+      conditions:
+      #condition is for each level, how many is required before have the sum up
+        - level: 0
+          min: int
+        - level: 1
+          min: int
+        - level: 2
+          min: int
+        - level: 3
+          min: int
+  rules:
+    - name: string
+      description: string
+      applied: ^(true|false)$
+      level: ^(0|1|2|3)$
+      cloudProvider: ^(azure|git)$
+      objectName: ^(vm|rg|disk|nsg|virtualNetwork|networkInterfaces|namespaces|pods|helm|aks|repositories|branches|issues)$
+      conditions: 
+        - object -> RulesConditions | ParentRules
+```
+
+RulesConditions :
+```yml
+property: string
+condition: ^(EQUAL|DIFFERENT|INCLUDE|NOT_INCLUDE|INCLUDE_NOT_SENSITIVE|NOT_INCLUDE_NOT_SENSITIVE|SUP|INF|SUP_OR_EQUAL|INF_OR_EQUAL|STARTS_WITH|NOT_STARTS_WITH|ENDS_WITH|NOT_ENDS_WITH|REGEX)$
+value: int|string
+```
+
+ParentRules :
+```yml
+name: string
+description: string
+operator: ^(AND|OR|XOR|NAND|NOR|XNOR|NOT)$
+rules: 
+  - object -> RulesConditions | ParentRules
+```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- ROADMAP -->
 ## Roadmap
 
-- [X] Setting notification levels
-- [X] Azure check in:
-  - [X] virtual machine (vm)
-  - [X] resource groupe (rg)
-  - [X] disk (disk)
-  - [X] network security groupe (nsg)
-  - [X] virtual network (virtualNetwork)
-  - [X] network interfaces (networkInterfaces)
-  - [X] namespaces (namespaces)
-  - [X] pods (pods)
-  - [X] aks (aks)
-- [X] Github check in:
-  - [X] repositories
-  - [X] branches
-  - [X] issues
-- [X] Kubernetes check in:
-  - [X] namespaces
-  - [X] pods
-  - [X] helm
-- [ ] AWS
-- [ ] GCP
+* [X] Setting notification levels
+* [X] Azure check in:
+  * [X] virtual machine (vm)
+  * [X] resource groupe (rg)
+  * [X] disk (disk)
+  * [X] network security groupe (nsg)
+  * [X] virtual network (virtualNetwork)
+  * [X] network interfaces (networkInterfaces)
+  * [X] namespaces (namespaces)
+  * [X] pods (pods)
+  * [X] aks (aks)
+* [X] Github check in:
+  * [X] repositories
+  * [X] branches
+  * [X] issues
+* [X] Kubernetes check in:
+  * [X] namespaces
+  * [X] pods
+  * [X] helm
+* [ ] AWS
+* [ ] GCP
 
 See the [open issues](https://github.com/4urcloud/checkinfra/issues) for a full list of proposed features (and known issues).
 

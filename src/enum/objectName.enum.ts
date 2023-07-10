@@ -8,5 +8,8 @@ export enum ObjectNameEnum {
     NAMESPACE = "namespaces",
     PODS = "pods",
     HELM = "helm",
-    AKS = "aks"
+    AKS = "aks",
+    REPOSITORIES = "repositories",
+    BRANCHES = "branches",
+    ISSUES = "issues",
 }
