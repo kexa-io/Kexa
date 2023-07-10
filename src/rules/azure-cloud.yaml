@@ -9,15 +9,19 @@
       to: 
         - esteban.mathia@innovtech.eu
     error:
-      enabled: false
+      enabled: true
       type: 
         - log
+        - email
       to: 
         - esteban.mathia@innovtech.eu
     warning:
       enabled: false
       type: 
         - log
+        - email
+      to:
+        - esteban.mathia@innovtech.eu
     info:
       enabled: false
       type: 
@@ -25,7 +29,7 @@
       to: 
         - esteban.mathia@innovtech.eu
     global:
-      enabled: true
+      enabled: false
       type: 
         #- log
         #- webhook
@@ -97,20 +101,20 @@
               value : Succeeded
     - name: check-aks-cluster
       description : "this rules is to check if aks cluster are conform to the norms"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: azure
       objectName : aks
       conditions:
         - property : tags.environment
-          condition : DIFFERENT
-          value : NULL
-        - property : tags.status
+          condition : REGEX
+          value : ^(DEV|NPR|PROD)$
+        - property : tags.author
           condition : DIFFERENT
           value : NULL
         - property : tags.billing
-          condition : DIFFERENT
-          value : NULL
+          condition : REGEX
+          value : ^(VADOR|YODA|LUKE)$
         - property : sku.tier
           condition : EQUAL
           value : Free
@@ -130,3 +134,18 @@
         - property : status
           condition : EQUAL
           value : deployed
+    - name: azure-disk not public or encrypted
+      description : "this rules is to check if disk is either not public or encrypted by default"
+      applied: true
+      level: 2
+      cloudProvider: azure
+      objectName : disk
+      conditions:
+        - operator : OR
+          rules:
+            - property : networkAccessPolicy
+              condition : DIFFERENT
+              value : AllowAll
+            - property : encryption.type
+              condition : EQUAL
+              value : EncryptionAtRestWithPlatformKey

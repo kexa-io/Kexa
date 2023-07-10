@@ -153,11 +153,6 @@ export const Emails = {
                   </tr>
                 `}).join('')
             +`
-            <tr>
-              <td style="direction:ltr;;padding:20px 0;text-align:center" colspan="4">
-                Details resources: <p>`+ JSON.stringify(resource) +`</p>
-              </td>
-            </tr>
           </tbody>
         </table>
         </td>
