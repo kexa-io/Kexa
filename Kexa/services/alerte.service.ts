@@ -137,6 +137,7 @@ export function alertWebhookGlobal(alert: GlobalConfigAlert, compteError: number
 export function compteRender(allScan: ResultScan[][]): any {
     let result = {content : new Array<any>()};
     allScan.forEach((rule) => {
+        if (rule.length == 0) return;
         return result.content.push(
             {
                 rule: rule[0].rule,
