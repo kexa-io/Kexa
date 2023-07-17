@@ -4,7 +4,7 @@ import { Rules } from "../../models/settingFile/rules.models"
 const levelAlert = ["info", "warning", "error", "critical"];
 
 export const Emails = {
-    OneAlert : (receiver:string, resource: any, rule: Rules, conditions: SubResultScan[], color: string= "#4f5660") => {return `<!doctype html>
+    OneAlert : (receiver:string, rule: Rules, identification:string, color: string= "#4f5660") => {return `<!doctype html>
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
     <head>
       <title></title>
@@ -117,7 +117,7 @@ export const Emails = {
                 <tbody>
                   <tr>
                     <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center" colspan="4">
-                      <div style="font-family:Poppins,Helvetica Neue,Helvetica,Arial,Lucida Grande,sans-serif;font-size:24px;font-weight:bold;line-height:36px;text-align:center;color:`+ color +`"> `+ resource.id +` </div>
+                      <div style="font-family:Poppins,Helvetica Neue,Helvetica,Arial,Lucida Grande,sans-serif;font-size:24px;font-weight:bold;line-height:36px;text-align:center;color:`+ color +`"> `+ identification +` </div>
                     </td>
                   </tr>
                 </tbody>
@@ -137,22 +137,6 @@ export const Emails = {
                 Description :`+ rule.description +`
               </td>
             </tr>
-            `+
-              conditions.map((condition) => {
-                return `
-                  <tr>
-                    <td style="direction:ltr;;padding:20px 0;text-align:center"  colspan="`+ ((condition.message)?'2':'4') +`">
-                      Condition :`+ JSON.stringify(condition.condition) +`
-                    </td>
-                    `+ ((condition.message)?
-                      '<td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center"  colspan="2">'+
-                        'Message(optional) :' + condition.message +
-                      '</td>'
-                      :'') +
-                    `
-                  </tr>
-                `}).join('')
-            +`
           </tbody>
         </table>
         </td>

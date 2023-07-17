@@ -9,7 +9,7 @@ import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
 import { ConfigAlert } from "../models/settingFile/configAlert.models";
 import { Readable } from "stream";
 import { App } from "@slack/bolt";
-import { renderTableAllScan } from "./display.service";
+import { propertyToSend, renderTableAllScan } from "./display.service";
 
 let debug_mode = 2;
 var request = require('request');
@@ -137,6 +137,7 @@ export function alertWebhookGlobal(alert: GlobalConfigAlert, compteError: number
 export function compteRender(allScan: ResultScan[][]): any {
     let result = {content : new Array<any>()};
     allScan.forEach((rule) => {
+        if (rule.length == 0) return;
         return result.content.push(
             {
                 rule: rule[0].rule,
@@ -228,9 +229,8 @@ export function alertEmail(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rul
     detailAlert.to.forEach((email_to) => {
         if(!email_to.includes("@")) return;
         logger.debug("send email to:"+email_to);
-        let mail = Emails.OneAlert(email_to, objectResource, rule, conditions, colors[rule.level]);
-        SendMail(mail, email_to, "Kexa - "+levelAlert[rule.level]+" - "+rule.name);
-        SendMailWithAttachment(mail, email_to, "CheckInfra - "+levelAlert[rule.level]+" - "+rule.name, objectResource);
+        let mail = Emails.OneAlert(email_to, rule, propertyToSend(rule, objectResource), colors[rule.level]);
+        SendMailWithAttachment(mail, email_to, "Kexa - "+levelAlert[rule.level]+" - "+rule.name, objectResource);
         //SendMail(mail, email_to, "CheckInfra - "+levelAlert[rule.level]+" - "+rule.name);
     });
 }
@@ -240,7 +240,7 @@ export function alertSMS(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules
     detailAlert.to.forEach((sms_to) => {
         if(!sms_to.startsWith("+")) return;
         logger.debug("send sms to:"+sms_to);
-        let content = "error with : " + objectResource.id;
+        let content = "error with : https://portal.azure.com/#@/resource/" + objectResource.id;
         sendSMS(sms_to, "Kexa - "+levelAlert[rule.level]+" - "+rule.name, content);
     });
 }

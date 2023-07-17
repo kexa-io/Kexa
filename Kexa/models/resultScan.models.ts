@@ -3,7 +3,7 @@ import { Rules } from "./settingFile/rules.models";
 
 export interface ResultScan {
     objectContent?: any;
-    rule?: Rules;
+    rule: Rules;
     error: SubResultScan[];
     message?: string;
 }
