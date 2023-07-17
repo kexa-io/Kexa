@@ -10,9 +10,12 @@ import { ConfigAlert } from "../models/settingFile/configAlert.models";
 import { Readable } from "stream";
 import { App } from "@slack/bolt";
 import { propertyToSend, renderTableAllScan } from "./display.service";
+import { groupBy } from "../helpers/groupBy";
 
 let debug_mode = 2;
-var request = require('request');
+const jsome = require('jsome');
+jsome.level.show = true;
+const request = require('request');
 const nodemailer = require("nodemailer");
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });
 const levelAlert = ["info", "warning", "error", "critical"];
@@ -43,6 +46,7 @@ export function alertGlobal(allScan: ResultScan[][], alert: GlobalConfigAlert) {
 }
 
 export function alertFromGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
+    allScan = allScan.map(scan => scan.filter(value => value.error.length>0))
     alert.type.forEach((type) => {
         switch(type){
             case AlertEnum.LOG:
@@ -71,21 +75,23 @@ export function alertFromGlobal(alert: GlobalConfigAlert, compteError: number[],
 }
 
 export function alertLogGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
+    logger.info("_______________________________________-= Result Global scan =-___________________________________");
     compteError.forEach((value, index) => {
         logger.info("number of "+levelAlert[index]+" :"+value);
     });
-    logger.info("detail:");
-    allScan.forEach((rule) => {
-        rule.forEach((scan) => {
-            if(scan.error.length > 0){
-                logger.info("rule:"+scan.rule?.name);
-                logger.info("resource:");
-                logger.info(scan.objectContent);
-                logger.info("error:");
-                logger.info(scan.error);
-            }
+    logger.info("-= Detail for each Rules =-");
+    let allScanOneDimension = [];
+    for (let row of allScan) for (let e of row) allScanOneDimension.push(e);
+    let subResult = groupBy(allScanOneDimension, (scan) => scan.rule?.name);
+    Object.entries(subResult).forEach(([key, value]) => {
+        logger.info("rule:"+key);
+        logger.info("all resources who not respect the rules:");
+        value.map(scan => scan.objectContent).forEach((resource, index) => {
+            logger.info("resource " + (index+1) + ":");
+            logger.info(jsome.getColoredString(resource));
         });
     });
+    logger.info("_____________________________________-= End Result Global scan =-_________________________________");
 }
 
 export function alertEmailGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
@@ -197,7 +203,7 @@ export function alertLog(rule: Rules, conditions: SubResultScan[], objectResourc
         case LevelEnum.INFO:
             logger.info("information:"+rule.name);
             logger.info(sentenceConditionLog(objectResource.id));
-            logger.info(conditions);
+            logger.info(jsome.getColoredString(conditions));
             break;
         case LevelEnum.WARNING:
             warnLog(rule, conditions, objectResource);
@@ -205,12 +211,12 @@ export function alertLog(rule: Rules, conditions: SubResultScan[], objectResourc
         case LevelEnum.ERROR:
             logger.error("error:"+rule.name);
             logger.error(sentenceConditionLog(objectResource.id));
-            logger.error(conditions);
+            logger.info(jsome.getColoredString(conditions));
             break;
         case LevelEnum.FATAL:
             logger.fatal("critical:"+rule.name);
             logger.fatal(sentenceConditionLog(objectResource.id));
-            logger.fatal(conditions);
+            logger.info(jsome.getColoredString(conditions));
             break;
         default:
             warnLog(rule, conditions, objectResource);
@@ -221,7 +227,7 @@ export function alertLog(rule: Rules, conditions: SubResultScan[], objectResourc
 export function warnLog(rule: Rules, conditions:SubResultScan[], objectResource:any){
     logger.warn("warning:"+rule.name);
     logger.warn(sentenceConditionLog(objectResource.id));
-    logger.warn(conditions);
+    logger.info(jsome.getColoredString(conditions));
 }
 
 export function alertEmail(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules, conditions:SubResultScan[], objectResource:any){

@@ -18,6 +18,8 @@ import { AlertEnum } from '../enum/alert.enum';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let debug_mode = 2;
+const jsome = require('jsome');
+jsome.level.show = true;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });
 const varEnvMin = {
     "email": ["EMAIL_PORT", "EMAIL_HOST", "EMAIL_USER", "EMAIL_PwD", "EMAIL_FROM"],
@@ -38,7 +40,8 @@ export function gatheringRules(rulesDirectory:string): SettingFile[] {
         let setting = analyseRule(rulesDirectory+"/"+p.name);
         if( setting) settingFileList.push(setting);
     }
-    logger.debug("rules list:"+settingFileList);
+    logger.debug("rules list:");
+    logger.debug(jsome.getColoredString(settingFileList));
     return settingFileList;
 }
 
