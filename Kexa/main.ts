@@ -6,7 +6,6 @@ import { checkRules, gatheringRules } from "./services/analyse.service";
 import { alertGlobal } from "./services/alerte.service";
 import { collectGithubData } from "./services/githubGathering.service";
 import { AsciiArtText, talkAboutOtherProject} from "./services/display.service";
-const Listr = require('listr');
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 env.config();                                             // reading environnement vars
 const rulesDirectory:string = "./Kexa/rules";                  //the directory where to find the rules
