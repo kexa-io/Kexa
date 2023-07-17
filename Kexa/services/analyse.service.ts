@@ -21,7 +21,7 @@ let debug_mode = 2;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });
 const varEnvMin = {
     "email": ["EMAIL_PORT", "EMAIL_HOST", "EMAIL_USER", "EMAIL_PwD", "EMAIL_FROM"],
-    "sms": ["SMS_ACCOUNT_SID", "SMS_AUTH_TOKEN", "SMS_FROM"],
+    "sms": ["SMS_ACCOUNTSID", "SMS_AUTHTOKEN", "SMS_FROM"],
 }
 const levelAlert = ["info", "warning", "error", "critical"];
 

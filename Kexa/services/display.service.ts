@@ -2,6 +2,7 @@ import { ObjectNameEnum } from "../enum/objectName.enum";
 import { ProviderEnum } from "../enum/provider.enum";
 import { ResultScan } from "../models/resultScan.models";
 import { Logger } from "tslog";
+import { Rules } from "../models/settingFile/rules.models";
 
 let debug_mode = 2;
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
@@ -31,7 +32,7 @@ export function renderTableAllScan(allScan: ResultScan[][]): string{
             result += `
                 <tr>
                     <td style="direction:ltr;padding:20px 0;text-align:center" colspan="3">
-                        `+ propertyToSend(rule) +`
+                        `+ propertyToSend(rule.rule, rule.objectContent) +`
                     </td>
                 </tr>`;
             result += (mainRule[mainRule.length-1].objectContent === rule.objectContent)?'</tbody></table></td></tr>':'';
@@ -42,21 +43,21 @@ export function renderTableAllScan(allScan: ResultScan[][]): string{
     return result
 }
 
-export function propertyToSend(scan: ResultScan): string{
-    switch(scan.rule?.cloudProvider){
+export function propertyToSend(rule: Rules, objectContent: any): string{
+    switch(rule?.cloudProvider){
         case ProviderEnum.AZURE:
-            return azurePropertyToSend(scan)
+            return azurePropertyToSend(rule, objectContent)
         case ProviderEnum.GCP:
             //return gcpPropertyToSend(scan)
         case ProviderEnum.AWS:
             //return awsPropertyToSend(scan)
         default:
-            return `Id : ` + scan?.objectContent.id
+            return `Id : ` + objectContent.id
     }
 }
 
-export function azurePropertyToSend(scan: ResultScan): string{
-    switch(scan.rule?.objectName){
+export function azurePropertyToSend(rule: Rules, objectContent: any): string{
+    switch(rule?.objectName){
         case ObjectNameEnum.AKS:
         case ObjectNameEnum.RG:
         case ObjectNameEnum.VM:
@@ -64,15 +65,15 @@ export function azurePropertyToSend(scan: ResultScan): string{
         case ObjectNameEnum.NSG:
         case ObjectNameEnum.VIRTUALNETWORK:
         case ObjectNameEnum.NETWORKINTERFACE:
-            return `Id : <a href="https://portal.azure.com/#@/resource/`+ scan?.objectContent?.id +'">'+ scan?.objectContent?.id +`</a>`
+            return `Id : <a href="https://portal.azure.com/#@/resource/`+ objectContent?.id +'">'+ objectContent?.id +`</a>`
         case ObjectNameEnum.NAMESPACE:
-            logger.debug(scan.objectContent)
-            return `Name : ` + scan.objectContent.metadata.name
+            logger.debug(objectContent)
+            return `Name : ` + objectContent.metadata.name
         case ObjectNameEnum.PODS:
-            return `Name : ` + scan.objectContent.metadata.generateName + `</br>NameSpace : ` + scan.objectContent.metadata.namespace
+            return `Name : ` + objectContent.metadata.generateName + `</br>NameSpace : ` + objectContent.metadata.namespace
         case ObjectNameEnum.HELM:
-            return `Name : ` + scan.objectContent.metadata.generateName
+            return `Name : ` + objectContent.metadata.generateName
         default:
-            return `Id : ` + scan?.objectContent.id
+            return `Id : ` + objectContent.id
     }
 }

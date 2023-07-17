@@ -7,5 +7,6 @@ var ProviderEnum;
     ProviderEnum["AWS"] = "aws";
     ProviderEnum["GCP"] = "gcp";
     ProviderEnum["OVH"] = "ovh";
+    ProviderEnum["GIT"] = "git";
 })(ProviderEnum = exports.ProviderEnum || (exports.ProviderEnum = {}));
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHJvdmlkZXIuZW51bS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9lbnVtL3Byb3ZpZGVyLmVudW0udHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7O0FBQUEsSUFBWSxZQUtYO0FBTEQsV0FBWSxZQUFZO0lBQ3BCLCtCQUFlLENBQUE7SUFDZiwyQkFBVyxDQUFBO0lBQ1gsMkJBQVcsQ0FBQTtJQUNYLDJCQUFXLENBQUE7QUFDZixDQUFDLEVBTFcsWUFBWSxHQUFaLG9CQUFZLEtBQVosb0JBQVksUUFLdkIifQ==
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHJvdmlkZXIuZW51bS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uL0tleGEvZW51bS9wcm92aWRlci5lbnVtLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7OztBQUFBLElBQVksWUFNWDtBQU5ELFdBQVksWUFBWTtJQUNwQiwrQkFBZSxDQUFBO0lBQ2YsMkJBQVcsQ0FBQTtJQUNYLDJCQUFXLENBQUE7SUFDWCwyQkFBVyxDQUFBO0lBQ1gsMkJBQVcsQ0FBQTtBQUNmLENBQUMsRUFOVyxZQUFZLEdBQVosb0JBQVksS0FBWixvQkFBWSxRQU12QiJ9

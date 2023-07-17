@@ -5,14 +5,15 @@
       enabled: false
       type: 
         - log
-        - email
+        #- email
       to: 
         - esteban.mathia@innovtech.eu
     error:
-      enabled: true
+      enabled: false
       type: 
         - log
         - email
+        #- sms
       to: 
         - esteban.mathia@innovtech.eu
     warning:
@@ -52,16 +53,41 @@
     - name: "azure-disk-orphan"
       description : "this rules is to check if disk is orphan"
       applied: true
-      level: 1
+      level: 2
       cloudProvider: azure
       objectName : disk
       conditions:
         - property : diskState
           condition : DIFFERENT
           value : Unattached
+    - name: "Git repo check"
+      description: "this rules is to check if git repo is private"
+      applied: true
+      level: 0
+      cloudProvider: git
+      objectName: repositories
+      conditions:
+        - property: private
+          condition: EQUAL
+          value: true
+    - name: "Git_branch_protect"
+      description: "this rules is to check if git branch is protected"
+      applied: true
+      level: 0
+      cloudProvider: git
+      objectName: branches
+      conditions:
+        - operator: NAND
+          rules:
+            - property : protected
+              condition : DIFFERENT
+              value : true
+            - property : name
+              condition : EQUAL
+              value : master
     - name: namespace-exist-dev-cloudprices-apiclient
       description : "this rules is to check if namespace exist and notifiable if exist"
-      applied: true
+      applied: false
       level: 0
       cloudProvider: azure
       objectName : namespaces
@@ -71,7 +97,7 @@
           value : dev-cloudprices-apiclient
     - name: all-pods-running-thecloudprices-manorga
       description : "this rules is to check if all pods are running for a namespace"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: azure
       objectName : pods
@@ -86,8 +112,8 @@
               value : thecloudprices-manorga
     - name: all-pods-not-running
       description : "this rules is to be notifiable if pods are not running"
-      applied: true
-      level: 0
+      applied: false
+      level: 3
       cloudProvider: azure
       objectName : pods
       conditions:
@@ -126,7 +152,7 @@
           value : NULL
     - name: all-my-helm-is-deploy
       description : "this rules is to check if some helm are not deployed"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: azure
       objectName : helm
@@ -136,7 +162,7 @@
           value : deployed
     - name: azure-disk not public or encrypted
       description : "this rules is to check if disk is either not public or encrypted by default"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: azure
       objectName : disk
