@@ -1,4 +1,3 @@
-//const { setLogLevel } = require("@azure/logger");
 import env from "dotenv";
 import { collectAzureData } from "./services/azureGathering.service";
 import { Logger } from "tslog";
@@ -6,6 +5,8 @@ import { ProviderResource } from "./models/providerResource.models";
 import { checkRules, gatheringRules } from "./services/analyse.service";
 import { alertGlobal } from "./services/alerte.service";
 import { collectGithubData } from "./services/githubGathering.service";
+import { AsciiArtText, talkAboutOtherProject} from "./services/display.service";
+const Listr = require('listr');
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 env.config();                                             // reading environnement vars
 const rulesDirectory:string = "./Kexa/rules";                  //the directory where to find the rules
@@ -14,32 +15,41 @@ const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "globalL
 
 
 export async function main() {
+    AsciiArtText("Kexa");
     logger.info("___________________________________________________________________________________________________"); 
-    logger.info("___________________________________-= running checkinfra scan =-___________________________________");
+    logger.info("___________________________________-= running Kexa scan =-_________________________________________");
     logger.info("___________________________________________________________________________________________________"); 
-
+    
+    let settings = gatheringRules(rulesDirectory);
+    
+    const [azureData, githubData] = await Promise.all([
+        collectAzureData(),
+        collectGithubData()
+    ]);
+    
     let resources = {
-        "azure": await collectAzureData()??null,
+        "azure": azureData??null,
         "gcp": null,
         "aws": null,
         "ovh": null,
-        "git": await collectGithubData()
+        "git": githubData
     } as ProviderResource;
 
+    
+    
     // Analyse rules
-    let settings = gatheringRules(rulesDirectory);
     settings.forEach(setting => {
         let result = checkRules(setting.rules, resources, setting.alert);
         if(setting.alert.global.enabled){
-        alertGlobal(result, setting.alert.global);
+            alertGlobal(result, setting.alert.global);
         }
     });
-
     
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     logger.info("___________________________________________________________________________________________________"); 
-    logger.info("_______________________________________-= End checkinfra scan =-___________________________________");
+    logger.info("_______________________________________-= End Kexa scan =-_________________________________________");
     logger.info("___________________________________________________________________________________________________");
+    talkAboutOtherProject();
 }
 
 
