@@ -5,6 +5,8 @@ import { logger } from "@azure/identity";
 env.config();
 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
+
+//TODO: add logger
 export async function collectGithubData(): Promise<GitResources|null>{
     try {
         const allRepo = await collectRepo();

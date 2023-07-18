@@ -15,7 +15,7 @@ import { DefaultAzureCredential } from "@azure/identity";
 import helm from 'helm-ts';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-let debug_mode = 2;
+let debug_mode = Number(process.env.DEBUG_MODE)??3;
 const { ContainerServiceClient } = require("@azure/arm-containerservice");
 const k8s = require('@kubernetes/client-node');
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });

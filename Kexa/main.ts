@@ -7,9 +7,9 @@ import { alertGlobal } from "./services/alerte.service";
 import { collectGithubData } from "./services/githubGathering.service";
 import { AsciiArtText, talkAboutOtherProject} from "./services/display.service";
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-env.config();                                             // reading environnement vars
-const rulesDirectory:string = "./Kexa/rules";                  //the directory where to find the rules
-let debug_mode = 2;
+env.config();                                                                    // reading environnement vars
+const rulesDirectory:string = process.env.RULES_PATH??"./Kexa/rules";            //the directory where to find the rules
+let debug_mode = Number(process.env.DEBUG_MODE)??3;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "globalLogger" });
 
 
@@ -20,29 +20,32 @@ export async function main() {
     logger.info("___________________________________________________________________________________________________"); 
     
     let settings = gatheringRules(rulesDirectory);
-    
-    const [azureData, githubData] = await Promise.all([
-        collectAzureData(),
-        collectGithubData()
-    ]);
-    
-    let resources = {
-        "azure": azureData??null,
-        "gcp": null,
-        "aws": null,
-        "ovh": null,
-        "git": githubData
-    } as ProviderResource;
+    if(settings.length != 0){
+        const [azureData, githubData] = await Promise.all([
+            collectAzureData(),
+            collectGithubData()
+        ]);
+        
+        let resources = {
+            "azure": azureData??null,
+            "gcp": null,
+            "aws": null,
+            "ovh": null,
+            "git": githubData
+        } as ProviderResource;
+        // Analyse rules
+        settings.forEach(setting => {
+            let result = checkRules(setting.rules, resources, setting.alert);
+            if(setting.alert.global.enabled){
+                alertGlobal(result, setting.alert.global);
+            }
+        });
+    }else{
+        logger.error("No correct rules found, please check the rules directory or the rules files.");
+    }
 
     
     
-    // Analyse rules
-    settings.forEach(setting => {
-        let result = checkRules(setting.rules, resources, setting.alert);
-        if(setting.alert.global.enabled){
-            alertGlobal(result, setting.alert.global);
-        }
-    });
     
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     logger.info("___________________________________________________________________________________________________"); 

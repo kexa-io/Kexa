@@ -12,7 +12,7 @@ import { App } from "@slack/bolt";
 import { propertyToSend, renderTableAllScan } from "./display.service";
 import { groupBy } from "../helpers/groupBy";
 
-let debug_mode = 2;
+let debug_mode = Number(process.env.DEBUG_MODE)??3;
 const jsome = require('jsome');
 jsome.level.show = true;
 const request = require('request');
