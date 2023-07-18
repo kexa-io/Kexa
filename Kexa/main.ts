@@ -6,6 +6,7 @@ import { checkRules, gatheringRules } from "./services/analyse.service";
 import { alertGlobal } from "./services/alerte.service";
 import { collectGithubData } from "./services/githubGathering.service";
 import { AsciiArtText, talkAboutOtherProject} from "./services/display.service";
+import { getEnvVar } from "./services/manageVarEnvironnement.service";
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 env.config();                                                                    // reading environnement vars
 const rulesDirectory:string = process.env.RULES_PATH??"./Kexa/rules";            //the directory where to find the rules
@@ -52,6 +53,7 @@ export async function main() {
     logger.info("_______________________________________-= End Kexa scan =-_________________________________________");
     logger.info("___________________________________________________________________________________________________");
     talkAboutOtherProject();
+    logger.debug(await getEnvVar("test"));
 }
 
 
