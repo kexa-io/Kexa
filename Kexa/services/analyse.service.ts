@@ -17,7 +17,7 @@ import { ProviderEnum } from "../enum/provider.enum";
 import { AlertEnum } from '../enum/alert.enum';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-let debug_mode = 2;
+let debug_mode = Number(process.env.DEBUG_MODE)??3;
 const jsome = require('jsome');
 jsome.level.show = true;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });
@@ -219,7 +219,14 @@ export function checkSubRuleCondition(subRule:RulesConditions): string[] {
     else if(typeof subRule.property !== "string") result.push("error - property not string in sub rule condition : "+subRule.property);
     if(!subRule.hasOwnProperty("condition")) result.push("error - condition not found in sub rule condition");
     else if(!Object.values(ConditionEnum).includes(subRule.condition)) result.push("error - condition not valid in sub rule condition : " + subRule.condition);
-    if(!subRule.hasOwnProperty("value")) result.push("error - value not found in sub rule condition");
+    //if(!subRule.hasOwnProperty("value")) result.push("error - value not found in sub rule condition");
+    //else if(typeof subRule.value !== "string" && typeof subRule.value !== "number" && !Array.isArray(subRule.value)) result.push("error - value not valid in sub rule condition : " + subRule.value);
+    //else if(Array.isArray(subRule.value) && subRule.value.length === 0) result.push("error - value empty in sub rule condition");
+    //else if(Array.isArray(subRule.value)){
+    //    subRule.value.forEach((value) => {
+    //        checkRuleCondition(value).forEach((value) => result.push(value));
+    //    });
+    //}
     return result;
 }
 
@@ -231,21 +238,37 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
         logger.info("check rule:"+rule.name);
         let objectResources = resources[rule.cloudProvider][rule.objectName];
         let subResult: ResultScan[] = [];
-        objectResources.forEach((objectResource: any) => {
-            let subResultScan: SubResultScan[] = checkRule(rule.conditions, objectResource);
-            let error = subResultScan.filter((value) => !value.result);
-            if(error.length > 0){
-                alertFromRule(rule, subResultScan, objectResource, alert);
-            }
+        if(rule.conditions[0].hasOwnProperty("property") && (rule.conditions[0] as RulesConditions).property === "."){
+            console.log("global property");
             subResult.push({
-                objectContent: objectResource,
+                objectContent: {
+                    "id": "global property",
+                },
                 rule: rule,
-                error: error,
+                error: actionAfterCheckRule(rule, objectResources, alert),
             });
-        });
+        }else{
+            console.log("objectResource");
+            objectResources.forEach((objectResource: any) => {
+                subResult.push({
+                    objectContent: objectResource,
+                    rule: rule,
+                    error: actionAfterCheckRule(rule, objectResource, alert),
+                });
+            });
+        }
         result.push(subResult);
     });
     return result;
+}
+
+function actionAfterCheckRule(rule: Rules, objectResource: any, alert: Alert): SubResultScan[] {
+    let subResultScan: SubResultScan[] = checkRule(rule.conditions, objectResource);
+    let error = subResultScan.filter((value) => !value.result);
+    if(error.length > 0){
+        alertFromRule(rule, subResultScan, objectResource, alert);
+    }
+    return error;
 }
 
 export function checkRule(conditions: RulesConditions[]|ParentRules[], resources:any): SubResultScan[] {
@@ -335,6 +358,20 @@ export function checkCondition(condition:RulesConditions, resource:any): SubResu
                 return resultScan(condition, value, [checkIncludeNS], true);
             case ConditionEnum.REGEX:
                 return resultScan(condition, value, [checkRegex]);
+            case ConditionEnum.ALL:
+                console.log("all");
+                console.log(resultScan(condition, value, [checkAll]));
+                return resultScan(condition, value, [checkAll]);
+            case ConditionEnum.NOT_ANY:
+                return resultScan(condition, value, [checkAll], true);
+            case ConditionEnum.SOME:
+                console.log("some");
+                console.log(resultScan(condition, value, [checkSome]));
+                return resultScan(condition, value, [checkSome]);
+            case ConditionEnum.ONE:
+                return resultScan(condition, value, [checkOne]);
+            case ConditionEnum.COUNT:
+                return resultScan(condition, value, [checkCount]);
             default:
                 return {
                     value,
@@ -363,6 +400,7 @@ export function resultScan(condition: RulesConditions, value: any, fs: Function[
 }
 
 export function getSubProperty(object:any, property:string): any {
+    if (property === ".")  return object;
     let properties = property.split(".");
     let result = object;
     properties.forEach(prop => {
@@ -421,5 +459,39 @@ export function checkStartsWith(condition:RulesConditions, value:any): boolean {
 export function checkEndsWith(condition:RulesConditions, value:any): boolean {
     logger.debug("check ends with");
     if(value.endsWith(condition.value)) return true;
+    return false;
+}
+
+export function checkAll(condition:RulesConditions, value:any): boolean {
+    logger.debug("check any");
+    let result:SubResultScan[][] = [];
+    value.forEach((v:any) => {
+        result.push(checkRule(condition.value as RulesConditions[]|ParentRules[], v));
+    });
+    let finalResult:boolean[] = [];
+    for (let row of result) for (let e of row) finalResult.push(e.result);
+    return finalResult.every((v:boolean) => v);
+}
+
+export function checkSome(condition:RulesConditions, value:any): boolean {
+    logger.debug("check some");
+    let result:SubResultScan[][] = [];
+    value.forEach((v:any) => {
+        result.push(checkRule(condition.value as RulesConditions[]|ParentRules[], v));
+    });
+    let finalResult:boolean[] = [];
+    for (let row of result) for (let e of row) finalResult.push(e.result);
+    return finalResult.some((v:boolean) => v);
+}
+
+export function checkOne(condition:RulesConditions, value:any): boolean {
+    logger.debug("check one");
+    if(value.filter((v:any) => v === condition.value).length === 1) return true;
+    return false;
+}
+
+export function checkCount(condition:RulesConditions, value:any): boolean {
+    logger.debug("check count");
+    if(value.length === condition.value) return true;
     return false;
 }

@@ -1,0 +1,63 @@
+- version: 1.0.0
+  date: 07-18-2023
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - esteban.mathia@innovtech.eu
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - esteban.mathia@innovtech.eu
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - esteban.mathia@innovtech.eu
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - esteban.mathia@innovtech.eu
+    global:
+      enabled: true
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      name: azure cloud
+      to: 
+        #- http://127.0.0.1:5000/test
+        - esteban.mathia@innovtech.eu
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: NSG-subnet
+      description : "check if NSG have a valid subnet"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName : nsg
+      conditions: 
+        - property: agentPoolProfiles
+          condition: COUNT
+          value: 2

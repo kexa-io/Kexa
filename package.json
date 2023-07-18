@@ -6,6 +6,7 @@
     "@azure/arm-resources": "^5.1.0",
     "@azure/arm-storage": "^18.1.0",
     "@azure/functions": "^3.5.1",
+    "@azure/keyvault-secrets": "^4.7.0",
     "@azure/logger": "^1.0.3",
     "@azure/ms-rest-js": "^2.6.4",
     "@azure/msal-node": "^1.14.6",
@@ -23,10 +24,10 @@
     "twilio": "^4.13.0"
   },
   "devDependencies": {
-    "@azure/identity": "^3.1.2",
+    "@azure/identity": "^3.2.3",
     "@types/azure": "^0.9.20",
     "@types/js-yaml": "^4.0.5",
-    "@types/node": "^18.11.18",
+    "@types/node": "^18.16.19",
     "nodemon": "^2.0.20",
     "rimraf": "^5.0.1",
     "ts-node": "^10.9.1",
