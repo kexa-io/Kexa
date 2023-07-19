@@ -8,16 +8,17 @@ import {
 } from "@azure/arm-network";
 import { ComputeManagementClient, Disk, VirtualMachine } from "@azure/arm-compute";
 import { ResourceManagementClient , ResourceGroup } from "@azure/arm-resources";
+//import { Subscription, SubscriptionClient, Subscriptions } from "@azure/arm-resources-subscriptions";
 import * as ckiNetworkSecurityClass from "../class/azure/ckiNetworkSecurityGroup.class";
 import { Logger } from "tslog";
 import { AzureResources } from "../models/azure/resource.models";
 import { DefaultAzureCredential } from "@azure/identity";
-import helm from 'helm-ts';
+import { getEnvVar } from "./manageVarEnvironnement.service";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
 const { ContainerServiceClient } = require("@azure/arm-containerservice");
-const k8s = require('@kubernetes/client-node');
+
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });
 let computeClient: ComputeManagementClient;
 let resourcesClient : ResourceManagementClient ;
@@ -27,7 +28,7 @@ let networkClient: NetworkManagementClient;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function collectAzureData(): Promise<AzureResources|null>{
     try{
-        const subscriptionId = process.env.SUBSCRIPTIONID;
+        const subscriptionId = await getEnvVar("SUBSCRIPTIONID");
         const credential = new DefaultAzureCredential();
         let azureResource: AzureResources;  
         if(!subscriptionId) {
@@ -47,11 +48,11 @@ export async function collectAzureData(): Promise<AzureResources|null>{
                 disksListing(computeClient),
                 virtualNetworksListing(networkClient),
                 networkSecurityGroupListing(networkClient),
-                kubernetesListing(),
-                aksListing(credential, subscriptionId)
+                aksListing(credential, subscriptionId),
+                //subscriptionInformation(credential)
             ];
             
-            const [nsgList, vmList, rgList, diskList, virtualNetworkList, networkInterfacesList, kubernetesList, aksList] = await Promise.all(promises);
+            const [nsgList, vmList, rgList, diskList, virtualNetworkList, networkInterfacesList, aksList] = await Promise.all(promises);
             logger.info("- listing cloud resources done -");
             azureResource = {
                 "vm": vmList,
@@ -60,10 +61,8 @@ export async function collectAzureData(): Promise<AzureResources|null>{
                 "nsg": nsgList,
                 "virtualNetwork": virtualNetworkList,
                 "networkInterfaces": networkInterfacesList,
-                "namespaces": kubernetesList["namespaces"],
-                "pods": kubernetesList["pods"],
-                "helm": kubernetesList["helm"],
                 "aks": aksList,
+                //subscription
             } as AzureResources;
         }
         return azureResource;
@@ -72,6 +71,13 @@ export async function collectAzureData(): Promise<AzureResources|null>{
         return null;
     }
 }
+
+//subscription information
+//export async function subscriptionInformation(credential: DefaultAzureCredential): Promise<Subscriptions> {
+//    logger.info("starting subscriptionInformation");
+//    const client = new SubscriptionClient(credential);
+//    return client.subscriptions;
+//}
 
 //aks list
 export async function aksListing(credential: DefaultAzureCredential, subscriptionId: string): Promise<any> {
@@ -82,33 +88,6 @@ export async function aksListing(credential: DefaultAzureCredential, subscriptio
         resArray.push(item);
     }
     return resArray;
-}
-
-//kubernetes list
-export async function kubernetesListing(): Promise<any> {
-    logger.info("starting kubernetesListing");
-    const kc = new k8s.KubeConfig();
-    kc.loadFromDefault();
-    const k8sApiCore = kc.makeApiClient(k8s.CoreV1Api);
-    let namespaces = await k8sApiCore.listNamespace();
-    let kubResources: any = {};
-    kubResources["namespaces"] = namespaces.body.items;
-    kubResources["pods"] = [];
-    kubResources["helm"] = [];
-    const namespacePromises = namespaces.body.items.map(async (item: any) => {
-        let helmData = await helm.list({ namespace: item.metadata.name });
-        helmData.forEach((helmItem: any) => {
-            kubResources["helm"].push(helmItem);
-        });
-        const pods = await k8sApiCore.listNamespacedPod(item.metadata.name);
-        pods.body.items.forEach((pod: any) => {
-            pod.metadata.namespace = item.metadata.name;
-            kubResources["pods"].push(pod);
-        });
-    });
-
-    await Promise.all(namespacePromises);
-    return kubResources;
 }
 
 //network security group list

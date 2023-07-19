@@ -11,6 +11,7 @@ import { Readable } from "stream";
 import { App } from "@slack/bolt";
 import { propertyToSend, renderTableAllScan } from "./display.service";
 import { groupBy } from "../helpers/groupBy";
+import { getEnvVar } from "./manageVarEnvironnement.service";
 
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
 const jsome = require('jsome');
@@ -252,23 +253,23 @@ export function alertSMS(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules
 }
 
 
-function getTransporter() {
+async function getTransporter() {
     return nodemailer.createTransport({
-        host: process.env.EMAIL_HOST,
-        port: process.env.EMAIL_PORT,
-        secure: Number(process.env.EMAIL_PORT) == 465, // true for 465, false for other ports
+        host: await getEnvVar("EMAILHOST"),
+        port: await getEnvVar("EMAILPORT"),
+        secure: Number(await getEnvVar("EMAILPORT")) == 465, // true for 465, false for other ports
         auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PWD,
+            user: await getEnvVar("EMAILUSER"),
+            pass: await getEnvVar("EMAILPWD"),
         },
     });
 }
 
 async function SendMail(mail: string, to: string, subject: string): Promise<boolean> {
     try{
-        let transporter = getTransporter();
+        let transporter = await getTransporter();
         await transporter.sendMail({
-            from: process.env.EMAIL_FROM, // sender address
+            from: await getEnvVar("EMAILFROM"), // sender address
             to, // list of receivers
             subject, // Subject line
             html: mail, // html body
@@ -288,9 +289,9 @@ async function SendMailWithAttachment(mail: string, to: string, subject: string,
         const jsonStream = new Readable();
         jsonStream.push(jsonContent);
         jsonStream.push(null);
-        let transporter = getTransporter();
+        let transporter = await getTransporter();
         await transporter.sendMail({
-            from: process.env.EMAIL_FROM, // sender address
+            from: await getEnvVar("EMAILFROM"), // sender address
             to, // list of receivers
             subject, // Subject line
             html: mail, // html body
@@ -309,15 +310,15 @@ async function SendMailWithAttachment(mail: string, to: string, subject: string,
 }
 
 async function sendSMS(to: string, subject: string, content: any) {
-    const accountSid = process.env.SMS_ACCOUNTSID;
-    const authToken = process.env.SMS_AUTHTOKEN;
+    const accountSid = await getEnvVar("SMSACCOUNTSID");
+    const authToken = await getEnvVar("SMSAUTHTOKEN");
     const client = require('twilio')(accountSid, authToken);
 
     client.messages
         .create({
             body: `${subject}
 ${content}`,
-            from: process.env.SMS_FROM,
+            from: await getEnvVar("SMSFROM"),
             to
         })
         .then((message:any) => {
@@ -340,16 +341,16 @@ async function sendWebhook(alert: ConfigAlert, subject: string, content: any) {
     });
 }
 
-async function sendSlack(subject: string, content:any){
-    logger.warn("send slack");
-    const app = new App({
-        signingSecret: process.env.SLACK_SIGNING_SECRET??"",
-        token: process.env.SLACK_BOT_TOKEN?? "",
-    });
-
-    await app.client.chat.postMessage({
-        token: process.env.SLACK_BOT_TOKEN??"",
-        channel: process.env.SLACK_CHANNEL??"",
-        text: subject,
-    });
-}
+//async function sendSlack(subject: string, content:any){
+//    logger.warn("send slack");
+//    const app = new App({
+//        signingSecret: process.env.SLACK_SIGNING_SECRET??"",
+//        token: process.env.SLACK_BOT_TOKEN?? "",
+//    });
+//
+//    await app.client.chat.postMessage({
+//        token: process.env.SLACK_BOT_TOKEN??"",
+//        channel: process.env.SLACK_CHANNEL??"",
+//        text: subject,
+//    });
+//}

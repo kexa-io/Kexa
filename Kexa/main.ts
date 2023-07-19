@@ -7,31 +7,32 @@ import { alertGlobal } from "./services/alerte.service";
 import { collectGithubData } from "./services/githubGathering.service";
 import { AsciiArtText, talkAboutOtherProject} from "./services/display.service";
 import { getEnvVar } from "./services/manageVarEnvironnement.service";
+import { collectKubernetes } from "./services/KubernetesGathering.service";
+import { log } from "console";
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 env.config();                                                                    // reading environnement vars
-const rulesDirectory:string = process.env.RULES_PATH??"./Kexa/rules";            //the directory where to find the rules
-let debug_mode = Number(process.env.DEBUG_MODE)??3;
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "globalLogger" });
 
 
 export async function main() {
+    let logger = new Logger({ minLevel: Number(process.env.DEBUG_MODE)??4, type: "pretty", name: "globalLogger" });
     AsciiArtText("Kexa");
     logger.info("___________________________________________________________________________________________________"); 
     logger.info("___________________________________-= running Kexa scan =-_________________________________________");
     logger.info("___________________________________________________________________________________________________"); 
     
-    let settings = gatheringRules(rulesDirectory);
+    let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"./rules");
     if(settings.length != 0){
-        const [azureData, githubData] = await Promise.all([
+        const [azureData, githubData, kubernetesData] = await Promise.all([
             collectAzureData(),
-            collectGithubData()
+            collectGithubData(),
+            collectKubernetes()
         ]);
         
         let resources = {
             "azure": azureData??null,
             "gcp": null,
             "aws": null,
-            "ovh": null,
+            "kubernetes": kubernetesData,
             "git": githubData
         } as ProviderResource;
         // Analyse rules
@@ -45,9 +46,7 @@ export async function main() {
         logger.error("No correct rules found, please check the rules directory or the rules files.");
     }
 
-    
-    
-    
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     logger.info("___________________________________________________________________________________________________"); 
     logger.info("_______________________________________-= End Kexa scan =-_________________________________________");
@@ -58,5 +57,4 @@ export async function main() {
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-logger.info("Main.");
 main();

@@ -19,4 +19,8 @@ export enum ConditionEnum {
     SOME = "SOME",
     ONE = "ONE",
     COUNT = "COUNT",
+    COUNT_SUP = "COUNT_SUP",
+    COUNT_INF = "COUNT_INF",
+    COUNT_SUP_OR_EQUAL = "COUNT_SUP_OR_EQUAL",
+    COUNT_INF_OR_EQUAL = "COUNT_INF_OR_EQUAL",
 }

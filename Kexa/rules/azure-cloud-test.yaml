@@ -90,7 +90,7 @@
       description : "this rules is to check if namespace exist and notifiable if exist"
       applied: false
       level: 0
-      cloudProvider: azure
+      cloudProvider: kubernetes
       objectName : namespaces
       conditions:
         - property : metadata.name
@@ -100,7 +100,7 @@
       description : "this rules is to check if all pods are running for a namespace"
       applied: false
       level: 2
-      cloudProvider: azure
+      cloudProvider: kubernetes
       objectName : pods
       conditions:
         - operator: NAND
@@ -115,7 +115,7 @@
       description : "this rules is to be notifiable if pods are not running"
       applied: false
       level: 2
-      cloudProvider: azure
+      cloudProvider: kubernetes
       objectName : pods
       conditions:
         - operator: OR
@@ -155,7 +155,7 @@
       description : "this rules is to check if some helm are not deployed"
       applied: false
       level: 2
-      cloudProvider: azure
+      cloudProvider: kubernetes
       objectName : helm
       conditions:
         - property : status

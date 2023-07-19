@@ -51,13 +51,36 @@
         - level: 3
           min: 1
   rules:
-    - name: NSG-subnet
-      description : "check if NSG have a valid subnet"
-      applied: true
+    - name: VM-Reservation
+      description : "check if VM have a reservation"
+      applied: false
+      level: 0
+      cloudProvider: azure
+      objectName : vm
+      conditions: 
+        - property: priority
+          condition: REGEX
+          value: (?i)reservation
+    - name: "azure-disk-orphan"
+      description : "this rules is to check if disk is orphan"
+      applied: false
       level: 1
+      cloudProvider: azure
+      objectName : disk
+      conditions:
+        - property : diskState
+          condition : DIFFERENT
+          value : Unattached
+    - name: aks-scaleSet
+      description : "check if aks have a scaleSet"
+      applied: true
+      level: 0
       cloudProvider: azure
       objectName : aks
       conditions: 
         - property: agentPoolProfiles
-          condition: COUNT
-          value: 2
+          condition: ALL
+          value: 
+            - property: scaleSetEvictionPolicy
+              condition: EQUAL
+              value: Delete

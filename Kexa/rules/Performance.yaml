@@ -51,13 +51,16 @@
         - level: 3
           min: 1
   rules:
-    - name: NSG-subnet
-      description : "check if NSG have a valid subnet"
+    - name: aks-scaleSet
+      description : "check if aks have a scaleSet"
       applied: true
-      level: 1
+      level: 0
       cloudProvider: azure
       objectName : aks
       conditions: 
         - property: agentPoolProfiles
-          condition: COUNT
-          value: 2
+          condition: ALL
+          value: 
+            - property: scaleSetEvictionPolicy
+              condition: EQUAL
+              value: Delete

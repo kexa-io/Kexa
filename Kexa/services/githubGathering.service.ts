@@ -2,8 +2,8 @@ import { Octokit, App } from "octokit";
 import env from "dotenv";
 import { GitResources } from "../models/git/resource.models";
 import { logger } from "@azure/identity";
+import { getEnvVar } from "./manageVarEnvironnement.service";
 env.config();
-const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
 
 //TODO: add logger
@@ -35,12 +35,16 @@ export async function collectGithubData(): Promise<GitResources|null>{
     }
 }
 
+async function getOctokit(){
+    return new Octokit({ auth: await getEnvVar("GITHUBTOKEN") });
+}
+
 export async function collectRepo(){
-    return (await octokit.request('GET /user/repos')).data;
+    return (await (await getOctokit()).request('GET /user/repos')).data;
 }
 
 export async function collectBranch(repo: string, owner: string): Promise<any[]>{
-    return (await octokit.request('GET /repos/{owner}/{repo}/branches', {
+    return (await (await getOctokit()).request('GET /repos/{owner}/{repo}/branches', {
         owner: owner,
         repo: repo,
         headers: {
@@ -50,7 +54,7 @@ export async function collectBranch(repo: string, owner: string): Promise<any[]>
 }
 
 export async function collectIssues(repo: string, owner: string): Promise<any[]>{
-    return (await octokit.request('GET /repos/{owner}/{repo}/issues', {
+    return (await (await getOctokit()).request('GET /repos/{owner}/{repo}/issues', {
         owner: owner,
         repo: repo,
         headers: {

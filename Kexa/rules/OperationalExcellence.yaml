@@ -51,13 +51,13 @@
         - level: 3
           min: 1
   rules:
-    - name: NSG-subnet
-      description : "check if NSG have a valid subnet"
+    - name: VirtualNetwork-subnet-count
+      description : "check if NSG have a minimum of subnets"
       applied: true
       level: 1
       cloudProvider: azure
-      objectName : aks
+      objectName : virtualNetwork
       conditions: 
-        - property: agentPoolProfiles
-          condition: COUNT
-          value: 2
+        - property: subnets
+          condition: COUNT_SUP
+          value: 0

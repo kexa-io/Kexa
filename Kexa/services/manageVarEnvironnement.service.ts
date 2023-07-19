@@ -19,12 +19,12 @@ export async function getEnvVar(name:string) {
 }
 
 function possibleWithAzureKeyVault(){
-    return Boolean(process.env.AZURE_KEYVAULT_NAME);
+    return Boolean(process.env.AZUREKEYVAULTNAME);
 }
 
 async function getEnvVarWithAzureKeyVault(name:string){
     console.log("getEnvVarWithAzureKeyVault");
-    const url = `https://${process.env.AZURE_KEYVAULT_NAME}.vault.azure.net`;
+    const url = `https://${process.env.AZUREKEYVAULTNAME}.vault.azure.net`;
     const credential = new DefaultAzureCredential();
     const client = new SecretClient(url, credential);
     return (await client.getSecret(name)).value;
