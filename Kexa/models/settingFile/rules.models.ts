@@ -7,6 +7,7 @@ export interface  Rules {
     name?:string;
     description?:string;
     urlDescription?:string;                         // the url to explain why we should do this or documentation
+    notification?: string;                         // the notification to send if the rule is not respected
     applied:boolean;                               // should we analyse this rule ?
     level:LevelEnum;                                // the level of the rule: 0 information , 1 warning, 2 error, 3 critical
     cloudProvider:ProviderEnum;                     // the cloud provider : azure, gcp, aws, ovh

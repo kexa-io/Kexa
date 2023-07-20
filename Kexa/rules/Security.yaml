@@ -61,3 +61,28 @@
         - property: agentPoolProfiles
           condition: COUNT
           value: 2
+    - name: "Git repo check"
+      description: "this rules is to check if git repo is private"
+      applied: true
+      level: 0
+      cloudProvider: git
+      objectName: repositories
+      conditions:
+        - property: private
+          condition: EQUAL
+          value: true
+    - name: "Git_branch_protect"
+      description: "this rules is to check if git branch is protected"
+      applied: true
+      level: 0
+      cloudProvider: git
+      objectName: branches
+      conditions:
+        - operator: NAND
+          rules:
+            - property : protected
+              condition : DIFFERENT
+              value : true
+            - property : name
+              condition : EQUAL
+              value : master

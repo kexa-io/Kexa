@@ -1,3 +1,5 @@
+import { logger } from "@azure/identity";
+
 //const AWS = require('aws-sdk');
 const { SecretClient } = require("@azure/keyvault-secrets");
 const { DefaultAzureCredential } = require("@azure/identity");
@@ -13,7 +15,7 @@ export async function getEnvVar(name:string) {
             return await getEnvVarWithGoogleSecretManager(name);
         } 
     }catch(e){
-        console.log("error", e);
+        logger.info("Error while getting env var with secret manager. Trying with process.env")
     }
     return process.env[name];
 }
@@ -23,7 +25,6 @@ function possibleWithAzureKeyVault(){
 }
 
 async function getEnvVarWithAzureKeyVault(name:string){
-    console.log("getEnvVarWithAzureKeyVault");
     const url = `https://${process.env.AZUREKEYVAULTNAME}.vault.azure.net`;
     const credential = new DefaultAzureCredential();
     const client = new SecretClient(url, credential);

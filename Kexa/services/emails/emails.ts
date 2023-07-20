@@ -134,7 +134,7 @@ export const Emails = {
                 Name :`+ rule.name +`
               </td>
               <td style="direction:ltr;;padding:20px 0;text-align:center"  colspan="3">
-                Description :`+ rule.description +`
+                Info :`+ ((rule.notification)??rule.description) +`
               </td>
             </tr>
           </tbody>

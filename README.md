@@ -17,14 +17,14 @@
   <p align="center">
     Generic alert tools to ensure the quality of your infrastructure. Avoid wasting money on useless infrastructure, avoidable security breaches and service malfunctions.
     <br />
-    <a href="https://github.com/4urcloud/checkinfra"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/4urcloud/Kexa"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/4urcloud/checkinfra">View Demo</a>
+    <a href="https://github.com/4urcloud/Kexa">View Demo</a>
     ·
-    <a href="https://github.com/4urcloud/checkinfra/issues">Report Bug</a>
+    <a href="https://github.com/4urcloud/Kexa/issues">Report Bug</a>
     ·
-    <a href="https://github.com/4urcloud/checkinfra/issues">Request Feature</a>
+    <a href="https://github.com/4urcloud/Kexa/issues">Request Feature</a>
   </p>
 </div>
 
@@ -90,39 +90,73 @@ This is an example of how to list things you need to use the software and how to
 
 ### Installation
 
-1. Clone the repo
+#### Clone the repo
    ```sh
-   git clone https://github.com/4urcloud/checkinfra.git
+   git clone https://github.com/4urcloud/Kexa.git
    ```
-2. Install NPM packages
+#### Install NPM packages
    ```sh
    npm install
    ```
-3. Configure your environnement :
-  - add the following variables for each provider you want to test:
+#### Configure your environnement :
+  - Minumum Environnement variables you need : 
+    ```
+      RULESDIRECTORY=./Kexa/rules
+    ```
+  - Add the following variables for each provider you want to test:
     - Azure:
       ```
         SUBSCRIPTIONID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
       ```
     - GitHub:
       ```
-        GITHUB_TOKEN=github_pat_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        GITHUBTOKEN=github_pat_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+      ```
+    - Kubernetes:
+      ```
+        KUBECONFIG="./Path/to/my/config.yml"
       ```
   - add the following variables for each type of notification you have use in your rules:
     - email:
       ```
-        EMAIL_PORT=587
-        EMAIL_HOST=smtp.sendgrid.net
-        EMAIL_USER=didier
-        EMAIL_PWD=XXXXXXXXXXXXXXX
-        EMAIL_FROM='"Kexa" <noreply@4urcloud.eu>'
+        EMAILPORT=587
+        EMAILHOST=smtp.sendgrid.net
+        EMAILUSER=didier
+        EMAILPWD=XXXXXXXXXXXXXXX
+        EMAILFROM='"Kexa" <noreply@4urcloud.eu>'
       ```
     - sms with twilio:
       ```
-        SMS_FROM='+00000000000'
-        SMS_ACCOUNTSID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-        SMS_AUTHTOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        SMSFROM='+00000000000'
+        SMSACCOUNTSID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        SMSAUTHTOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
       ```
+    - You can optionally use a key manager:
+      - Azure:
+        To refer to your Key Vault add this following environnement variable :
+        ```
+          AZUREKEYVAULTNAME=MyKeyVault
+        ```
+        To authenticate you can use one of this combination :
+          - ```
+            AZURE_CLIENT_ID	ID of an Azure AD application
+            AZURE_TENANT_ID	ID of the application's Azure AD tenant
+            AZURE_CLIENT_SECRET	one of the application's client secrets
+            ```
+
+        - ```
+            AZURE_CLIENT_ID	ID of an Azure AD application
+            AZURE_TENANT_ID	ID of the application's Azure AD tenant
+            AZURE_CLIENT_CERTIFICATE_PATH	path to a PEM-encoded certificate file including private key
+            AZURE_CLIENT_CERTIFICATE_PASSWORD	password of the certificate file, if any
+          ```
+
+        - ```
+          AZURE_CLIENT_ID	ID of an Azure AD application
+          AZURE_TENANT_ID	ID of the application's Azure AD tenant
+          AZURE_USERNAME	a username (usually an email address)
+          AZURE_PASSWORD	that user's password
+          ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -283,8 +317,33 @@ Our tool provides a learning and sharing space where users can collaborate to cr
 RulesConditions :
 ```yml
 property: string
-condition: ^(EQUAL|DIFFERENT|INCLUDE|NOT_INCLUDE|INCLUDE_NOT_SENSITIVE|NOT_INCLUDE_NOT_SENSITIVE|SUP|INF|SUP_OR_EQUAL|INF_OR_EQUAL|STARTS_WITH|NOT_STARTS_WITH|ENDS_WITH|NOT_ENDS_WITH|REGEX)$
-value: int|string
+condition: ^(
+  EQUAL|
+  DIFFERENT|
+  INCLUDE|
+  NOT_INCLUDE|
+  INCLUDE_NOT_SENSITIVE|
+  NOT_INCLUDE_NOT_SENSITIVE|
+  SUP|
+  INF|
+  SUP_OR_EQUAL|
+  INF_OR_EQUAL|
+  STARTS_WITH|
+  NOT_STARTS_WITH|
+  ENDS_WITH|
+  NOT_ENDS_WITH|
+  REGEX
+  ALL|
+  NOT_ANY|
+  SOME|
+  ONE|
+  COUNT|
+  COUNT_SUP|
+  COUNT_INF|
+  COUNT_SUP_OR_EQUAL|
+  COUNT_INF_OR_EQUAL|
+)$
+value: int|string|RulesConditions|ParentRules
 ```
 
 ParentRules :
@@ -305,13 +364,13 @@ rules:
 * [X] Azure check in:
   * [X] virtual machine (vm)
   * [X] resource groupe (rg)
-  * [X] disk (disk)
+  * [X] disk
   * [X] network security groupe (nsg)
   * [X] virtual network (virtualNetwork)
   * [X] network interfaces (networkInterfaces)
   * [X] namespaces (namespaces)
-  * [X] pods (pods)
-  * [X] aks (aks)
+  * [X] pods
+  * [X] aks
 * [X] Github check in:
   * [X] repositories
   * [X] branches
@@ -323,7 +382,7 @@ rules:
 * [ ] AWS
 * [ ] GCP
 
-See the [open issues](https://github.com/4urcloud/checkinfra/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/4urcloud/Kexa/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -361,7 +420,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 contact@thecloudprices.com
 
-Project Link: [https://github.com/4urcloud/checkinfra](https://github.com/4urcloud/checkinfra)
+Project Link: [https://github.com/4urcloud/Kexa](https://github.com/4urcloud/Kexa)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -369,15 +428,15 @@ Project Link: [https://github.com/4urcloud/checkinfra](https://github.com/4urclo
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/4urcloud/checkinfra.svg?style=for-the-badge
-[contributors-url]: https://github.com/4urcloud/checkinfra/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/4urcloud/checkinfra.svg?style=for-the-badge
-[forks-url]: https://github.com/4urcloud/checkinfra/network/members
-[stars-shield]: https://img.shields.io/github/stars/4urcloud/checkinfra.svg?style=for-the-badge
-[stars-url]: https://github.com/4urcloud/checkinfra/stargazers
-[issues-shield]: https://img.shields.io/github/issues/4urcloud/checkinfra.svg?style=for-the-badge
-[issues-url]: https://github.com/4urcloud/checkinfra/issues
-[license-shield]: https://img.shields.io/github/license/4urcloud/checkinfra.svg?style=for-the-badge
-[license-url]: https://github.com/4urcloud/checkinfra/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/4urcloud/Kexa.svg?style=for-the-badge
+[contributors-url]: https://github.com/4urcloud/Kexa/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/4urcloud/Kexa.svg?style=for-the-badge
+[forks-url]: https://github.com/4urcloud/Kexa/network/members
+[stars-shield]: https://img.shields.io/github/stars/4urcloud/Kexa.svg?style=for-the-badge
+[stars-url]: https://github.com/4urcloud/Kexa/stargazers
+[issues-shield]: https://img.shields.io/github/issues/4urcloud/Kexa.svg?style=for-the-badge
+[issues-url]: https://github.com/4urcloud/Kexa/issues
+[license-shield]: https://img.shields.io/github/license/4urcloud/Kexa.svg?style=for-the-badge
+[license-url]: https://github.com/4urcloud/Kexa/blob/master/LICENSE.txt
 [NodeJs-url]:https://nodejs.org/en
 [NodeJs.com]:https://img.shields.io/badge/Nodejs-3c873a?style=for-the-badge&logo=node.js&logoColor=white

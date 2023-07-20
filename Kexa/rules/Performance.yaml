@@ -52,7 +52,7 @@
           min: 1
   rules:
     - name: aks-scaleSet
-      description : "check if aks have a scaleSet"
+      description : "check if aks have a scaleSet down"
       applied: true
       level: 0
       cloudProvider: azure
