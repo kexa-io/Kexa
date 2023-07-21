@@ -37,7 +37,7 @@
         #- webhook
         #- sms
         #- email
-      name: azure cloud
+      name: Security
       to: 
         #- http://127.0.0.1:5000/test
         - esteban.mathia@innovtech.eu
@@ -60,10 +60,10 @@
       conditions: 
         - property: agentPoolProfiles
           condition: COUNT
-          value: 4
+          value: 2
     - name: "Git repo check"
       description: "this rules is to check if git repo is private"
-      applied: false
+      applied: true
       level: 0
       cloudProvider: git
       objectName: repositories
@@ -73,7 +73,7 @@
           value: true
     - name: "Git_branch_protect"
       description: "this rules is to check if git branch is protected"
-      applied: false
+      applied: true
       level: 0
       cloudProvider: git
       objectName: branches

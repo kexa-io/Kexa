@@ -3,5 +3,5 @@ import { ConfigAlert } from "./configAlert.models";
 
 export interface GlobalConfigAlert extends ConfigAlert {
     conditions: AlertRules[];
-    name?: string;
+    name: string;
 }

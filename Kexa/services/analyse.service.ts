@@ -26,6 +26,7 @@ const varEnvMin = {
     "email": ["EMAILPORT", "EMAILHOST", "EMAILUSER", "EMAILPWD", "EMAILFROM"],
     "sms": ["SMSACCOUNTSID", "SMSAUTHTOKEN", "SMSFROM"],
 }
+const config = require('config');
 const levelAlert = ["info", "warning", "error", "critical"];
 
 //Analyse  list
@@ -148,7 +149,7 @@ export async function checkDocAlertGlobal(alertGlobal:GlobalConfigAlert): Promis
             else if(typeof condition.min !== "number" && condition.min >= 0) result.push("warn - min is not positive number in alert global config : "+condition.min);
         });
     }
-    if (!alertGlobal.hasOwnProperty("name")) result.push("info - name empty in alert global config");
+    if (!alertGlobal.hasOwnProperty("name")) result.push("error - name empty in alert global config");
     else if (typeof alertGlobal.name !== "string") result.push("warn - name not string in alert global config : "+alertGlobal.name);
     return result;
 }
@@ -238,10 +239,16 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
     rules.forEach(rule => {
         if(!rule.applied) return;
         logger.info("check rule:"+rule.name);
-        let objectResources = resources[rule.cloudProvider][rule.objectName];
+        const configAssign = config.get(rule.cloudProvider);
+        let objectResources:any = []
+        for(let i = 0; i < configAssign.length; i++){
+            if(configAssign[i].rules.includes(alert.global.name)){
+                logger.info("check rule with object with index :"+ i);
+                objectResources = [...objectResources, ...resources[rule.cloudProvider][i][rule.objectName]]
+            }
+        }
         let subResult: ResultScan[] = [];
         if(rule.conditions[0].hasOwnProperty("property") && (rule.conditions[0] as RulesConditions).property === "."){
-            console.log("global property");
             subResult.push({
                 objectContent: {
                     "id": "global property",
@@ -250,7 +257,6 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
                 error: actionAfterCheckRule(rule, objectResources, alert),
             });
         }else{
-            console.log("objectResource");
             objectResources.forEach((objectResource: any) => {
                 subResult.push({
                     objectContent: objectResource,

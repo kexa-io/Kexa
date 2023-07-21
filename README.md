@@ -288,6 +288,7 @@ Our tool provides a learning and sharing space where users can collaborate to cr
         - string
     global:
     #alert for the sum up
+      name: string
       enabled: ^(true|false)$
       type:
         - ^(email|sms|webhook|log)$

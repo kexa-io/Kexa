@@ -8,12 +8,12 @@ let debug_mode = Number(process.env.DEBUG_MODE)??3;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "KubernetesLogger" });
 const k8s = require('@kubernetes/client-node');
 const config = require('config');
-const gitConfig = config.get('git');
+const kubernetesConfig = (config.has('kubernetes'))?config.get('kubernetes'):null;
 
 export async function collectKubernetes(): Promise<KubernetesResources[]|null>{
     logger.info("starting collectKubernetes");
     let resources = new Array<KubernetesResources>();
-    for(let config of gitConfig){
+    for(let config of kubernetesConfig??[]){
         try {
             if(!config["config"]){
                 throw new Error("- Please pass CONFIG in your config file");

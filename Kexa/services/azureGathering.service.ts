@@ -20,7 +20,7 @@ let debug_mode = Number(process.env.DEBUG_MODE)??3;
 const { ContainerServiceClient } = require("@azure/arm-containerservice");
 
 const config = require('config');
-const azureConfig = config.get('azure');
+const azureConfig = (config.has('azure'))?config.get('azure'):null;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "AzureLogger" });
 let computeClient: ComputeManagementClient;
 let resourcesClient : ResourceManagementClient ;
@@ -30,7 +30,7 @@ let networkClient: NetworkManagementClient;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function collectAzureData(): Promise<AzureResources[]|null>{
     let resources = new Array<AzureResources>();
-    for(let config of azureConfig){
+    for(let config of azureConfig??[]){
         let azureResource = {
             "vm": null,
             "rg": null,
@@ -42,9 +42,8 @@ export async function collectAzureData(): Promise<AzureResources[]|null>{
         } as AzureResources;
         try{
             //TODO : gestion Nouvelle subscription auth gestion
-            let subscriptionId = config["subscriptionId"]??null;
+            let subscriptionId = config["SUBSCRIPTIONID"]??null;
             const credential = new DefaultAzureCredential();
-            logger.fatal(credential);
             if(!subscriptionId) {
                 throw new Error("- Please pass SUBSCRIPTIONID in your config file");
             }else{

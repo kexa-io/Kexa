@@ -1,20 +1,21 @@
 import { Octokit, App } from "octokit";
 import env from "dotenv";
 import { GitResources } from "../models/git/resource.models";
-import { getEnvVar } from "./manageVarEnvironnement.service";
+import { getEnvVar, setEnvVar } from "./manageVarEnvironnement.service";
 import { Logger } from "tslog";
 env.config();
 const config = require('config');
-const gitConfig = config.get('git');
+const gitConfig = (config.has('git'))?config.get('git'):null;
 let logger = new Logger({ minLevel: Number(process.env.DEBUG_MODE)??4, type: "pretty", name: "GithubLogger" });
 
 //TODO: add logger
 export async function collectGithubData(): Promise<GitResources[]|null>{
     let resources = new Array<GitResources>();
-    for(let config of gitConfig){
-        if(!config["token"]){
+    for(let config of gitConfig??[]){
+        if(!config["GITHUBTOKEN"]){
             throw new Error("- Please pass GITHUBTOKEN in your config file");
         }
+        setEnvVar("GITHUBTOKEN", config["GITHUBTOKEN"])
         try {
             logger.info("Gathering github data");
             const allRepo = await collectRepo();

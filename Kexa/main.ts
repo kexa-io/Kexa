@@ -20,7 +20,7 @@ export async function main() {
     logger.info("___________________________________-= running Kexa scan =-_________________________________________");
     logger.info("___________________________________________________________________________________________________"); 
     
-    let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"./rules");
+    let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"./Kexa/rules");
     if(settings.length != 0){
         const [azureData, githubData, kubernetesData] = await Promise.all([
             collectAzureData(),

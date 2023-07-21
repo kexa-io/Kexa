@@ -37,7 +37,7 @@
         #- webhook
         #- sms
         #- email
-      name: azure cloud
+      name: OperationExcellence
       to: 
         #- http://127.0.0.1:5000/test
         - esteban.mathia@innovtech.eu
@@ -53,7 +53,7 @@
   rules:
     - name: VirtualNetwork-subnet-count
       description : "check if NSG have a minimum of subnets"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName : virtualNetwork

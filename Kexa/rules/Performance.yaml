@@ -37,7 +37,7 @@
         #- webhook
         #- sms
         #- email
-      name: azure cloud
+      name: Performance
       to: 
         #- http://127.0.0.1:5000/test
         - esteban.mathia@innovtech.eu
@@ -53,7 +53,7 @@
   rules:
     - name: aks-scaleSet
       description : "check if aks have a scaleSet down"
-      applied: false
+      applied: true
       level: 0
       cloudProvider: azure
       objectName : aks

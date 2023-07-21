@@ -37,7 +37,7 @@
         #- webhook
         #- sms
         #- email
-      name: azure cloud
+      name: Economy
       to: 
         #- http://127.0.0.1:5000/test
         - esteban.mathia@innovtech.eu
@@ -53,7 +53,7 @@
   rules:
     - name: VM-Reservation
       description : "check if VM have a reservation"
-      applied: false
+      applied: true
       level: 0
       cloudProvider: azure
       objectName : vm
@@ -63,7 +63,7 @@
           value: (?i)reservation
     - name: "azure-disk-orphan"
       description : "this rules is to check if disk is orphan"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName : disk
@@ -73,7 +73,7 @@
           value : Unattached
     - name: aks-scaleSet
       description : "check if aks have a scaleSet"
-      applied: false
+      applied: true
       level: 0
       cloudProvider: azure
       objectName : aks
