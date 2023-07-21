@@ -1,6 +1,8 @@
-import { logger } from "@azure/identity";
+import { Logger } from "tslog";
 
 //const AWS = require('aws-sdk');
+let debug_mode = Number(process.env.DEBUG_MODE)??3;
+const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "KubernetesLogger" });
 const { SecretClient } = require("@azure/keyvault-secrets");
 const { DefaultAzureCredential } = require("@azure/identity");
 //const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
@@ -67,4 +69,8 @@ async function getEnvVarWithGoogleSecretManager(name:string){
     //    name: `projects/${process.env.GOOGLE_PROJECT_ID}/secrets/${process.env.GOOGLE_SECRET_NAME}/versions/latest`,
     //});
     //return version.payload.data[name].toString();
+}
+
+export async function setEnvVar(name:string, value:string){
+    process.env[name] = value;
 }

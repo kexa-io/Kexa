@@ -12,64 +12,81 @@ import { ResourceManagementClient , ResourceGroup } from "@azure/arm-resources";
 import * as ckiNetworkSecurityClass from "../class/azure/ckiNetworkSecurityGroup.class";
 import { Logger } from "tslog";
 import { AzureResources } from "../models/azure/resource.models";
-import { DefaultAzureCredential } from "@azure/identity";
-import { getEnvVar } from "./manageVarEnvironnement.service";
+import { DefaultAzureCredential, ClientSecretCredential } from "@azure/identity";
+import { getEnvVar, setEnvVar } from "./manageVarEnvironnement.service";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
 const { ContainerServiceClient } = require("@azure/arm-containerservice");
 
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });
+const config = require('config');
+const azureConfig = config.get('azure');
+const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "AzureLogger" });
 let computeClient: ComputeManagementClient;
 let resourcesClient : ResourceManagementClient ;
 let networkClient: NetworkManagementClient;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING CLOUD RESOURCES
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function collectAzureData(): Promise<AzureResources|null>{
-    try{
-        const subscriptionId = await getEnvVar("SUBSCRIPTIONID");
-        const credential = new DefaultAzureCredential();
-        let azureResource: AzureResources;  
-        if(!subscriptionId) {
-            throw new Error("- Please pass SUBSCRIPTIONID as env var");
-        }else{
-            //getting clients for azure
-            resourcesClient = new ResourceManagementClient(credential, subscriptionId);
-            computeClient   = new ComputeManagementClient(credential, subscriptionId);
-            networkClient   = new NetworkManagementClient(credential, subscriptionId);
-            logger.info("- loading client microsoft azure done-");
-            ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
-    
-            const promises = [
-                networkSecurityGroupListing(networkClient),
-                virtualMachinesListing(computeClient),
-                resourceGroupListing(resourcesClient),
-                disksListing(computeClient),
-                virtualNetworksListing(networkClient),
-                networkSecurityGroupListing(networkClient),
-                aksListing(credential, subscriptionId),
-                //subscriptionInformation(credential)
-            ];
-            
-            const [nsgList, vmList, rgList, diskList, virtualNetworkList, networkInterfacesList, aksList] = await Promise.all(promises);
-            logger.info("- listing cloud resources done -");
-            azureResource = {
-                "vm": vmList,
-                "rg": rgList,
-                "disk": diskList,
-                "nsg": nsgList,
-                "virtualNetwork": virtualNetworkList,
-                "networkInterfaces": networkInterfacesList,
-                "aks": aksList,
-                //subscription
-            } as AzureResources;
+export async function collectAzureData(): Promise<AzureResources[]|null>{
+    let resources = new Array<AzureResources>();
+    for(let config of azureConfig){
+        let azureResource = {
+            "vm": null,
+            "rg": null,
+            "disk": null,
+            "nsg": null,
+            "virtualNetwork": null,
+            "networkInterfaces": null,
+            "aks": null,
+        } as AzureResources;
+        try{
+            //TODO : gestion Nouvelle subscription auth gestion
+            let subscriptionId = config["subscriptionId"]??null;
+            const credential = new DefaultAzureCredential();
+            logger.fatal(credential);
+            if(!subscriptionId) {
+                throw new Error("- Please pass SUBSCRIPTIONID in your config file");
+            }else{
+                //getting clients for azure
+                resourcesClient = new ResourceManagementClient(credential, subscriptionId);
+                computeClient   = new ComputeManagementClient(credential, subscriptionId);
+                networkClient   = new NetworkManagementClient(credential, subscriptionId);
+                logger.info("- loading client microsoft azure done-");
+                ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
+        
+                const promises = [
+                    networkSecurityGroupListing(networkClient),
+                    virtualMachinesListing(computeClient),
+                    resourceGroupListing(resourcesClient),
+                    disksListing(computeClient),
+                    virtualNetworksListing(networkClient),
+                    networkSecurityGroupListing(networkClient),
+                    aksListing(credential, subscriptionId),
+                    //subscriptionInformation(credential)
+                ];
+                
+                const [nsgList, vmList, rgList, diskList, virtualNetworkList, networkInterfacesList, aksList] = await Promise.all(promises);
+                logger.info("- listing cloud resources done -");
+                azureResource = {
+                    "vm": [...azureResource["vm"]??[], ...vmList],
+                    "rg": [...azureResource["rg"]??[], ...rgList],
+                    "disk": [...azureResource["disk"]??[], ...diskList],
+                    "nsg": [...azureResource["nsg"]??[], ...nsgList],
+                    "virtualNetwork": [...azureResource["virtualNetwork"]??[], ...virtualNetworkList],
+                    "networkInterfaces": [...azureResource["networkInterfaces"]??[], ...networkInterfacesList],
+                    "aks": [...azureResource["aks"]??[], ...aksList],
+                    //subscription
+                } as AzureResources;
+            }
+            //return azureResource;
+        }catch(e){
+            logger.error("error in collectAzureData with the subscription ID: " + config["subscriptionId"]??null);
+            logger.error(e);
         }
-        return azureResource;
-    }catch(e){
-        logger.error(e);
-        return null;
+        resources.push(azureResource);
     }
+    return resources??null;
 }
 
 //subscription information

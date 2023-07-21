@@ -73,7 +73,7 @@
           value : Unattached
     - name: aks-scaleSet
       description : "check if aks have a scaleSet"
-      applied: true
+      applied: false
       level: 0
       cloudProvider: azure
       objectName : aks

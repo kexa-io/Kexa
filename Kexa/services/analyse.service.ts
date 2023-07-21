@@ -21,7 +21,7 @@ import { getEnvVar } from './manageVarEnvironnement.service';
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
 const jsome = require('jsome');
 jsome.level.show = true;
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });
+const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "AnalyseLogger" });
 const varEnvMin = {
     "email": ["EMAILPORT", "EMAILHOST", "EMAILUSER", "EMAILPWD", "EMAILFROM"],
     "sms": ["SMSACCOUNTSID", "SMSAUTHTOKEN", "SMSFROM"],

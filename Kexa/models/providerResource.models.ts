@@ -3,9 +3,9 @@ import { GitResources } from "./git/resource.models";
 import { KubernetesResources } from "./kubernetes/kubernetes.models";
 
 export interface ProviderResource {
-    azure: AzureResources;
+    azure: AzureResources[];
     gcp: any;
     aws: any;
-    kubernetes: KubernetesResources;
-    git: GitResources;
+    kubernetes: KubernetesResources[];
+    git: GitResources[];
 }

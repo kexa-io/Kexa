@@ -53,7 +53,7 @@
   rules:
     - name: aks-scaleSet
       description : "check if aks have a scaleSet down"
-      applied: true
+      applied: false
       level: 0
       cloudProvider: azure
       objectName : aks

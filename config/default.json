@@ -1,0 +1,32 @@
+{
+    "azure": [
+        {
+            "AZURECLIENTID": "e",
+            "AZURECLIENTSECRET": "e",
+            "AZURETENANTID": "e",
+            "AZURESUBSCRIPTIONID": "e",
+            "rules":[
+                "./Kexa/azure/Economy.yml",
+                "./Kexa/azure/Security.yml"
+            ]
+        },
+        {
+            "AZURECLIENTID": "e",
+            "AZURECLIENTSECRET": "e",
+            "AZURETENANTID": "e",
+            "AZURESUBSCRIPTIONID": "e",
+            "rules":[
+                "./Kexa/azure/OperationalExcellence.yml",
+                "./Kexa/azure/Security.yml"
+            ]
+        }
+    ],
+    "git": [
+        {
+            "GITHUBTOKEN":"e",
+            "rules":[
+                "./Kexa/git/Security.yml"
+            ]
+        }
+    ]
+}
