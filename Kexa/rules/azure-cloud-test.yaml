@@ -2,44 +2,45 @@
   date: 06-12-2023
   alert:
     fatal:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
       to: 
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     error:
-      enabled: false
+      enabled: true
       type: 
         - log
-        - email
+        #- email
         #- sms
       to: 
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     warning:
-      enabled: false
+      enabled: true
       type: 
         - log
-        - email
+        #- email
       to:
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     info:
-      enabled: false
+      enabled: true
       type: 
         - log
+        #- email
       to: 
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     global:
       enabled: false
       type: 
-        #- log
+        - log
         #- webhook
         #- sms
-        - email
+        #- email
       name: azure cloud
       to: 
         #- http://127.0.0.1:5000/test
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
       conditions:
         - level: 0
           min: 1
@@ -52,7 +53,7 @@
   rules:
     - name: "azure-disk-orphan"
       description : "this rules is to check if disk is orphan"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: azure
       objectName : disk
@@ -62,7 +63,7 @@
           value : Unattached
     - name: "Git repo check"
       description: "this rules is to check if git repo is private"
-      applied: true
+      applied: false
       level: 0
       cloudProvider: git
       objectName: repositories
@@ -72,7 +73,7 @@
           value: true
     - name: "Git_branch_protect"
       description: "this rules is to check if git branch is protected"
-      applied: true
+      applied: false
       level: 0
       cloudProvider: git
       objectName: branches
@@ -89,7 +90,7 @@
       description : "this rules is to check if namespace exist and notifiable if exist"
       applied: false
       level: 0
-      cloudProvider: azure
+      cloudProvider: kubernetes
       objectName : namespaces
       conditions:
         - property : metadata.name
@@ -99,7 +100,7 @@
       description : "this rules is to check if all pods are running for a namespace"
       applied: false
       level: 2
-      cloudProvider: azure
+      cloudProvider: kubernetes
       objectName : pods
       conditions:
         - operator: NAND
@@ -113,8 +114,8 @@
     - name: all-pods-not-running
       description : "this rules is to be notifiable if pods are not running"
       applied: false
-      level: 3
-      cloudProvider: azure
+      level: 2
+      cloudProvider: kubernetes
       objectName : pods
       conditions:
         - operator: OR
@@ -154,7 +155,7 @@
       description : "this rules is to check if some helm are not deployed"
       applied: false
       level: 2
-      cloudProvider: azure
+      cloudProvider: kubernetes
       objectName : helm
       conditions:
         - property : status
@@ -175,3 +176,49 @@
             - property : encryption.type
               condition : EQUAL
               value : EncryptionAtRestWithPlatformKey
+    - name: count-repo
+      description : "this rules is to count the number of repo in a git organization"
+      applied: false
+      level: 0
+      cloudProvider: git
+      objectName : repositories
+      conditions:
+        - property : topics
+          condition : COUNT
+          value : 0
+    - name: test-all-onList
+      description : "this rules is to test the onList function"
+      applied: false
+      level: 0
+      cloudProvider: azure
+      objectName : aks
+      conditions:
+        - property: agentPoolProfiles
+          condition: ALL
+          value: 
+            - property: osDiskSizeGB
+              condition: EQUAL
+              value: 128
+    - name: test-some-onList
+      description : "this rules is to test the onList function"
+      applied: false
+      level: 0
+      cloudProvider: azure
+      objectName : aks
+      conditions:
+        - property: agentPoolProfiles
+          condition: SOME
+          value: 
+            - property: vmSize
+              condition: EQUAL
+              value: Standard_B4ms
+    - name: test-count-onList
+      description : "this rules is to test the onList function"
+      applied: false
+      level: 0
+      cloudProvider: azure
+      objectName : aks
+      conditions:
+        - property: agentPoolProfiles
+          condition: COUNT
+          value: 2

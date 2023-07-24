@@ -13,5 +13,14 @@ export enum ConditionEnum {
     NOT_STARTS_WITH = "NOT_STARTS_WITH",
     ENDS_WITH = "ENDS_WITH",
     NOT_ENDS_WITH = "NOT_ENDS_WITH",
-    REGEX = "REGEX"
+    REGEX = "REGEX",
+    ALL = "ALL",
+    NOT_ANY = "NOT_ANY",
+    SOME = "SOME",
+    ONE = "ONE",
+    COUNT = "COUNT",
+    COUNT_SUP = "COUNT_SUP",
+    COUNT_INF = "COUNT_INF",
+    COUNT_SUP_OR_EQUAL = "COUNT_SUP_OR_EQUAL",
+    COUNT_INF_OR_EQUAL = "COUNT_INF_OR_EQUAL",
 }

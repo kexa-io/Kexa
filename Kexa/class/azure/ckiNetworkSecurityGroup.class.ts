@@ -1,6 +1,3 @@
-//import { ComputeManagementClient, Disk, VirtualMachine } from "@azure/arm-compute";
-//import { ResourceManagementClient , ResourceGroup } from "@azure/arm-resources";
-
 import { CkiNetworkSecurityGroup } from "../../models/azure/ckiNetwordSecurityGroup.models";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

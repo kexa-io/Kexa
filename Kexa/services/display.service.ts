@@ -4,9 +4,10 @@ import { ResultScan } from "../models/resultScan.models";
 import { Logger } from "tslog";
 import { Rules } from "../models/settingFile/rules.models";
 
-let debug_mode = 2;
+let debug_mode = Number(process.env.debug_mode)??0;
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });
+const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "DiplayLogger" });
+const cfonts = require('cfonts');
 
 export function renderTableAllScan(allScan: ResultScan[][]): string{
     let lastRule = ""
@@ -76,4 +77,25 @@ export function azurePropertyToSend(rule: Rules, objectContent: any): string{
         default:
             return `Id : ` + objectContent.id
     }
+}
+
+export function AsciiArtText(text:string){
+    cfonts.say(text, {
+        font: 'block',              // define the font face
+        align: 'center',            // define text alignment
+        colors: ['system'],         // define all colors
+        background: 'transparent',  // define the background color, you can also use `backgroundColor` here as key
+        letterSpacing: 1,           // define letter spacing
+        lineHeight: 1,              // define the line height
+        space: true,                // define if the output text should have empty lines on top and on the bottom
+        maxLength: '0',             // define how many character can be on one line
+        gradient: false,            // define your two gradient colors
+        independentGradient: false, // define if you want to recalculate the gradient for each new line
+        transitionGradient: false,  // define if this is a transition between colors directly
+        env: 'node'                 // define the environment cfonts is being executed in
+    });
+}
+
+export function talkAboutOtherProject(){
+    logger.info("You can go check our other project : https://www.thecloudprices.com/");
 }

@@ -15,38 +15,43 @@ import { ConfigAlert } from "../models/settingFile/configAlert.models";
 import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
 import { ProviderEnum } from "../enum/provider.enum";
 import { AlertEnum } from '../enum/alert.enum';
+import { getEnvVar } from './manageVarEnvironnement.service';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-let debug_mode = 2;
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });
+let debug_mode = Number(process.env.DEBUG_MODE)??3;
+const jsome = require('jsome');
+jsome.level.show = true;
+const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "AnalyseLogger" });
 const varEnvMin = {
-    "email": ["EMAIL_PORT", "EMAIL_HOST", "EMAIL_USER", "EMAIL_PwD", "EMAIL_FROM"],
-    "sms": ["SMS_ACCOUNTSID", "SMS_AUTHTOKEN", "SMS_FROM"],
+    "email": ["EMAILPORT", "EMAILHOST", "EMAILUSER", "EMAILPWD", "EMAILFROM"],
+    "sms": ["SMSACCOUNTSID", "SMSAUTHTOKEN", "SMSFROM"],
 }
+const config = require('config');
 const levelAlert = ["info", "warning", "error", "critical"];
 
 //Analyse  list
 // read the yaml file with rules
 // exam each rules and raise alarm or not
-export function gatheringRules(rulesDirectory:string): SettingFile[] {
+export async function gatheringRules(rulesDirectory:string): Promise<SettingFile[]> {
     // list directory
     const paths = fs.readdirSync(rulesDirectory, { withFileTypes: true});
     logger.debug("listing rules files.");
     let settingFileList = new Array<SettingFile>;
     for(const p of paths) {
         logger.debug("getting "+rulesDirectory+"/"+p.name+" rules.");
-        let setting = analyseRule(rulesDirectory+"/"+p.name);
+        let setting = await analyseRule(rulesDirectory+"/"+p.name);
         if( setting) settingFileList.push(setting);
     }
-    logger.debug("rules list:"+settingFileList);
+    logger.debug("rules list:");
+    logger.debug(settingFileList.map((value) => value.alert.global.name).join(", "));
     return settingFileList;
 }
 
-export function analyseRule(ruleFilePath:string): SettingFile|null {
+export async function analyseRule(ruleFilePath:string): Promise<SettingFile | null> {
     logger.debug("analyse:"+ruleFilePath);
     try {
         const doc = (yaml.load(fs.readFileSync(ruleFilePath, 'utf8')) as SettingFile[])[0];
-        let result = checkDoc(doc);
+        let result = await checkDoc(doc);
         logCheckDoc(result);
         result.forEach((value) => {
             if(value.startsWith("error")) throw new Error(value);
@@ -67,39 +72,39 @@ export function logCheckDoc(result:string[]): void {
     });
 }
 
-export function checkDoc(doc:SettingFile): string[] {
+export async function checkDoc(doc:SettingFile): Promise<string[]> {
     logger.debug("check doc");
     let result:string[] = [];
     if(!doc.hasOwnProperty("version")) result.push("info - version not found in doc");
     else if(doc.version.match(/^[0-9]+\.[0-9]+\.[0-9]+$/) === null) result.push("info - version not valid in doc : "+ doc.version);
     if(!doc.hasOwnProperty("date")) result.push("info - date not found in doc");
     else if(doc.date.match(/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-(19|20)\d\d$/) === null) result.push("info - date not valid in doc : "+ doc.date);
-    checkDocAlert(doc.alert).forEach((value) => result.push(value));
+    (await checkDocAlert(doc.alert)).forEach((value) => result.push(value));
     checkDocRules(doc.rules).forEach((value) => result.push(value));
     return result;
 }
 
-export function checkDocAlert(alert:Alert): string[] {
+export async function checkDocAlert(alert:Alert): Promise<string[]> {
     logger.debug("check Alert in doc");
     let result:string[] = [];
-    Object.keys(LevelEnum).forEach((level) => {
+    for(let level of Object.keys(LevelEnum)){
         if (!isNaN(Number(level))) {
-            return;
+            continue;
         }
         if(!alert.hasOwnProperty(level.toLowerCase())){
             result.push("error - "+level.toLowerCase()+" not found in alert");
-            return;
+            continue;
         }
         if(level.toLowerCase() != "global"){
-            checkDocAlertConfig(alert[level.toLowerCase() as keyof typeof alert], level.toLowerCase()).forEach((value) => result.push(value));
+            (await checkDocAlertConfig(alert[level.toLowerCase() as keyof typeof alert], level.toLowerCase())).forEach((value) => result.push(value));
         }else{
-            checkDocAlertGlobal(alert.global).forEach((value) => result.push(value));
+            (await checkDocAlertGlobal(alert.global)).forEach((value) => result.push(value));
         }
-    });
+    }
     return result;
 }
 
-export function checkDocAlertConfig(alertConfig:ConfigAlert, level:string): string[] {
+export async function checkDocAlertConfig(alertConfig:ConfigAlert, level:string): Promise<string[]> {
     logger.debug("check Alert config in doc");
     let result:string[] = [];
     if(!alertConfig.hasOwnProperty("enabled")) result.push("error - enabled not found in alert config for "+level);
@@ -107,15 +112,17 @@ export function checkDocAlertConfig(alertConfig:ConfigAlert, level:string): stri
     if(!alertConfig.hasOwnProperty("type")) result.push("error - type not found in alert config for "+level);
     else {
         if (alertConfig.type.length === 0) result.push("error - type empty in alert config for "+level);
-        alertConfig.type.forEach((type) => {
+        for(let type of alertConfig.type){
             if(!Object.values(AlertEnum).includes(type)){
                 result.push("warn - type not valid in alert config for "+level+" : "+type);
-                return;
+                continue;
             }
-            varEnvMin[type.toLowerCase() as keyof typeof varEnvMin]?.forEach((env) => {
-                if(!process.env.hasOwnProperty(env)) result.push("error - "+env+" not found in env for "+level);
-            });
-        });
+            try{
+                for(let env of varEnvMin[type.toLowerCase() as keyof typeof varEnvMin]){
+                    if(!(await getEnvVar(env))) result.push("error - "+env+" not found in env for "+level);
+                }
+            }catch(err){}
+        };
     }
     if(alertConfig.hasOwnProperty("type") && alertConfig.type.some((type: string) => type !== AlertEnum.LOG)){
         if(!alertConfig.hasOwnProperty("to")) result.push("error - to not found in alert config for "+level);
@@ -129,10 +136,10 @@ export function checkDocAlertConfig(alertConfig:ConfigAlert, level:string): stri
     return result;
 }
 
-export function checkDocAlertGlobal(alertGlobal:GlobalConfigAlert): string[] {
+export async function checkDocAlertGlobal(alertGlobal:GlobalConfigAlert): Promise<string[]> {
     logger.debug("check Alert global in doc");
     let result:string[] = [];
-    checkDocAlertConfig(alertGlobal, "global").forEach((value) => result.push(value));
+    (await checkDocAlertConfig(alertGlobal, "global")).forEach((value) => result.push(value));
     if(!alertGlobal.hasOwnProperty("conditions")) result.push("error - conditions not found in alert global config");
     else {
         if (alertGlobal.conditions.length === 0) result.push("error - conditions empty in alert global config");
@@ -143,7 +150,7 @@ export function checkDocAlertGlobal(alertGlobal:GlobalConfigAlert): string[] {
             else if(typeof condition.min !== "number" && condition.min >= 0) result.push("warn - min is not positive number in alert global config : "+condition.min);
         });
     }
-    if (!alertGlobal.hasOwnProperty("name")) result.push("info - name empty in alert global config");
+    if (!alertGlobal.hasOwnProperty("name")) result.push("error - name empty in alert global config");
     else if (typeof alertGlobal.name !== "string") result.push("warn - name not string in alert global config : "+alertGlobal.name);
     return result;
 }
@@ -216,7 +223,14 @@ export function checkSubRuleCondition(subRule:RulesConditions): string[] {
     else if(typeof subRule.property !== "string") result.push("error - property not string in sub rule condition : "+subRule.property);
     if(!subRule.hasOwnProperty("condition")) result.push("error - condition not found in sub rule condition");
     else if(!Object.values(ConditionEnum).includes(subRule.condition)) result.push("error - condition not valid in sub rule condition : " + subRule.condition);
-    if(!subRule.hasOwnProperty("value")) result.push("error - value not found in sub rule condition");
+    //if(!subRule.hasOwnProperty("value")) result.push("error - value not found in sub rule condition");
+    //else if(typeof subRule.value !== "string" && typeof subRule.value !== "number" && !Array.isArray(subRule.value)) result.push("error - value not valid in sub rule condition : " + subRule.value);
+    //else if(Array.isArray(subRule.value) && subRule.value.length === 0) result.push("error - value empty in sub rule condition");
+    //else if(Array.isArray(subRule.value)){
+    //    subRule.value.forEach((value) => {
+    //        checkRuleCondition(value).forEach((value) => result.push(value));
+    //    });
+    //}
     return result;
 }
 
@@ -226,23 +240,44 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
     rules.forEach(rule => {
         if(!rule.applied) return;
         logger.info("check rule:"+rule.name);
-        let objectResources = resources[rule.cloudProvider][rule.objectName];
-        let subResult: ResultScan[] = [];
-        objectResources.forEach((objectResource: any) => {
-            let subResultScan: SubResultScan[] = checkRule(rule.conditions, objectResource);
-            let error = subResultScan.filter((value) => !value.result);
-            if(error.length > 0){
-                alertFromRule(rule, subResultScan, objectResource, alert);
+        const configAssign = config.get(rule.cloudProvider);
+        let objectResources:any = []
+        for(let i = 0; i < configAssign.length; i++){
+            if(configAssign[i].rules.includes(alert.global.name)){
+                logger.info("check rule with object with index :"+ i);
+                objectResources = [...objectResources, ...resources[rule.cloudProvider][i][rule.objectName]]
             }
+        }
+        let subResult: ResultScan[] = [];
+        if(rule.conditions[0].hasOwnProperty("property") && (rule.conditions[0] as RulesConditions).property === "."){
             subResult.push({
-                objectContent: objectResource,
+                objectContent: {
+                    "id": "global property",
+                },
                 rule: rule,
-                error: error,
+                error: actionAfterCheckRule(rule, objectResources, alert),
             });
-        });
+        }else{
+            objectResources.forEach((objectResource: any) => {
+                subResult.push({
+                    objectContent: objectResource,
+                    rule: rule,
+                    error: actionAfterCheckRule(rule, objectResource, alert),
+                });
+            });
+        }
         result.push(subResult);
     });
     return result;
+}
+
+function actionAfterCheckRule(rule: Rules, objectResource: any, alert: Alert): SubResultScan[] {
+    let subResultScan: SubResultScan[] = checkRule(rule.conditions, objectResource);
+    let error = subResultScan.filter((value) => !value.result);
+    if(error.length > 0){
+        alertFromRule(rule, subResultScan, objectResource, alert);
+    }
+    return error;
 }
 
 export function checkRule(conditions: RulesConditions[]|ParentRules[], resources:any): SubResultScan[] {
@@ -332,6 +367,24 @@ export function checkCondition(condition:RulesConditions, resource:any): SubResu
                 return resultScan(condition, value, [checkIncludeNS], true);
             case ConditionEnum.REGEX:
                 return resultScan(condition, value, [checkRegex]);
+            case ConditionEnum.ALL:
+                return resultScan(condition, value, [checkAll]);
+            case ConditionEnum.NOT_ANY:
+                return resultScan(condition, value, [checkAll], true);
+            case ConditionEnum.SOME:
+                return resultScan(condition, value, [checkSome]);
+            case ConditionEnum.ONE:
+                return resultScan(condition, value, [checkOne]);
+            case ConditionEnum.COUNT:
+                return resultScan(condition, value.length, [checkEqual]);
+            case ConditionEnum.COUNT_SUP:
+                return resultScan(condition, value.length, [checkGreaterThan]);
+            case ConditionEnum.COUNT_SUP_OR_EQUAL:
+                return resultScan(condition, value.length, [checkGreaterThan, checkEqual]);
+            case ConditionEnum.COUNT_INF:
+                return resultScan(condition, value.length, [checkLessThan]);
+            case ConditionEnum.COUNT_INF_OR_EQUAL:
+                return resultScan(condition, value.length, [checkLessThan, checkEqual]);
             default:
                 return {
                     value,
@@ -360,6 +413,7 @@ export function resultScan(condition: RulesConditions, value: any, fs: Function[
 }
 
 export function getSubProperty(object:any, property:string): any {
+    if (property === ".")  return object;
     let properties = property.split(".");
     let result = object;
     properties.forEach(prop => {
@@ -418,5 +472,39 @@ export function checkStartsWith(condition:RulesConditions, value:any): boolean {
 export function checkEndsWith(condition:RulesConditions, value:any): boolean {
     logger.debug("check ends with");
     if(value.endsWith(condition.value)) return true;
+    return false;
+}
+
+export function checkAll(condition:RulesConditions, value:any): boolean {
+    logger.debug("check any");
+    let result:SubResultScan[][] = [];
+    value.forEach((v:any) => {
+        result.push(checkRule(condition.value as RulesConditions[]|ParentRules[], v));
+    });
+    let finalResult:boolean[] = [];
+    for (let row of result) for (let e of row) finalResult.push(e.result);
+    return finalResult.every((v:boolean) => v);
+}
+
+export function checkSome(condition:RulesConditions, value:any): boolean {
+    logger.debug("check some");
+    let result:SubResultScan[][] = [];
+    value.forEach((v:any) => {
+        result.push(checkRule(condition.value as RulesConditions[]|ParentRules[], v));
+    });
+    let finalResult:boolean[] = [];
+    for (let row of result) for (let e of row) finalResult.push(e.result);
+    return finalResult.some((v:boolean) => v);
+}
+
+export function checkOne(condition:RulesConditions, value:any): boolean {
+    logger.debug("check one");
+    if(value.filter((v:any) => v === condition.value).length === 1) return true;
+    return false;
+}
+
+export function checkCount(condition:RulesConditions, value:any): boolean {
+    logger.debug("check count");
+    if(value.length === condition.value) return true;
     return false;
 }

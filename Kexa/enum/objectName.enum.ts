@@ -12,4 +12,5 @@ export enum ObjectNameEnum {
     REPOSITORIES = "repositories",
     BRANCHES = "branches",
     ISSUES = "issues",
+    IP = "ip",
 }
