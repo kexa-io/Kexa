@@ -1,7 +1,6 @@
 import { Disk, VirtualMachine } from "@azure/arm-compute";
 import { NetworkSecurityGroup, VirtualNetwork } from "@azure/arm-network";
 import { ResourceGroup } from "@azure/arm-resources";
-import { Subscription } from "@azure/arm-resources-subscriptions";
 
 export interface AzureResources {
     vm: Array<NetworkSecurityGroup>|null;
@@ -13,5 +12,5 @@ export interface AzureResources {
     namespaces: Array<any>|null;
     pods: Array<any>|null;
     aks: Array<any>|null;
-    subscription: Subscription|null;
+    ip: Array<any>|null;
 }

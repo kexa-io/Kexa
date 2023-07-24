@@ -6,7 +6,7 @@ import { Rules } from "../models/settingFile/rules.models";
 
 let debug_mode = Number(process.env.debug_mode)??0;
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });
+const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "DiplayLogger" });
 const cfonts = require('cfonts');
 
 export function renderTableAllScan(allScan: ResultScan[][]): string{

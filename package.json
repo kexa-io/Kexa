@@ -15,6 +15,7 @@
     "@octokit/core": "^4.2.4",
     "@slack/bolt": "^3.13.1",
     "cfonts": "^3.2.0",
+    "config": "^3.3.9",
     "dotenv": "^16.0.3",
     "helm-ts": "^0.1.5",
     "js-yaml": "^4.1.0",

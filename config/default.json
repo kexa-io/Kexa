@@ -1,0 +1,23 @@
+{
+    "azure": [
+        {
+            "rules":[
+                "Economy",
+                "Security"
+            ]
+        },
+        {
+            "rules":[
+                "OperationalExcellence",
+                "Security"
+            ]
+        }
+    ],
+    "git": [
+        {
+            "rules":[
+                "Security"
+            ]
+        }
+    ]
+}

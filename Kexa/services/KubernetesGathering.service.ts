@@ -1,24 +1,40 @@
 import { Logger } from "tslog";
 import helm from 'helm-ts';
 import { KubernetesResources } from "../models/kubernetes/kubernetes.models";
+import { setEnvVar } from "./manageVarEnvironnement.service";
 
 
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });
+const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "KubernetesLogger" });
 const k8s = require('@kubernetes/client-node');
+const config = require('config');
+const kubernetesConfig = (config.has('kubernetes'))?config.get('kubernetes'):null;
 
-export async function collectKubernetes(): Promise<KubernetesResources|null>{
-    const promises = [
-        kubernetesListing(),
-    ];
+export async function collectKubernetes(): Promise<KubernetesResources[]|null>{
+    logger.info("starting collectKubernetes");
+    let resources = new Array<KubernetesResources>();
+    for(let config of kubernetesConfig??[]){
+        try {
+            if(!config["config"]){
+                throw new Error("- Please pass CONFIG in your config file");
+            }
+            setEnvVar("KUBECONFIG", config["config"]);
+            const promises = [
+                kubernetesListing(),
+            ];
 
-    const [kubernetesList] = await Promise.all(promises);
-    let kubernetesResource = {
-        "namespaces": kubernetesList["namespaces"],
-        "pods": kubernetesList["pods"],
-        "helm": kubernetesList["helm"],
-    } as KubernetesResources;
-    return kubernetesResource;
+            const [kubernetesList] = await Promise.all(promises);
+            let kubernetesResource = {
+                "namespaces": kubernetesList["namespaces"],
+                "pods": kubernetesList["pods"],
+                "helm": kubernetesList["helm"],
+            } as KubernetesResources;
+            resources.push(kubernetesResource);
+        }catch(e){
+            logger.error(e);
+        }
+    }
+    return resources??null;
 }
 
 //kubernetes list
