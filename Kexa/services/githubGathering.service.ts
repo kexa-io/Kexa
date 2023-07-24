@@ -8,7 +8,6 @@ const config = require('config');
 const gitConfig = (config.has('git'))?config.get('git'):null;
 let logger = new Logger({ minLevel: Number(process.env.DEBUG_MODE)??4, type: "pretty", name: "GithubLogger" });
 
-//TODO: add logger
 export async function collectGithubData(): Promise<GitResources[]|null>{
     let resources = new Array<GitResources>();
     for(let config of gitConfig??[]){

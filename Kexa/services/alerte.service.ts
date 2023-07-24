@@ -8,7 +8,6 @@ import { Emails } from "./emails/emails";
 import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
 import { ConfigAlert } from "../models/settingFile/configAlert.models";
 import { Readable } from "stream";
-import { App } from "@slack/bolt";
 import { propertyToSend, renderTableAllScan } from "./display.service";
 import { groupBy } from "../helpers/groupBy";
 import { getEnvVar } from "./manageVarEnvironnement.service";
@@ -23,7 +22,6 @@ const levelAlert = ["info", "warning", "error", "critical"];
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
 
 export function alertGlobal(allScan: ResultScan[][], alert: GlobalConfigAlert) {
-    //sendSlack("test", "test")
     let compteError = [0,0,0,0];
     allScan.forEach((rule) => {
         rule.forEach((scan) => {
@@ -238,7 +236,6 @@ export function alertEmail(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rul
         logger.debug("send email to:"+email_to);
         let mail = Emails.OneAlert(email_to, rule, propertyToSend(rule, objectResource), colors[rule.level]);
         SendMailWithAttachment(mail, email_to, "Kexa - "+levelAlert[rule.level]+" - "+rule.name, objectResource);
-        //SendMail(mail, email_to, "CheckInfra - "+levelAlert[rule.level]+" - "+rule.name);
     });
 }
 
@@ -324,7 +321,6 @@ ${content}`,
         .then((message:any) => {
             logger.debug("send sms");
         })
-        //.done();
 }
 
 async function sendWebhook(alert: ConfigAlert, subject: string, content: any) {
@@ -340,17 +336,3 @@ async function sendWebhook(alert: ConfigAlert, subject: string, content: any) {
         });
     });
 }
-
-//async function sendSlack(subject: string, content:any){
-//    logger.warn("send slack");
-//    const app = new App({
-//        signingSecret: process.env.SLACK_SIGNING_SECRET??"",
-//        token: process.env.SLACK_BOT_TOKEN?? "",
-//    });
-//
-//    await app.client.chat.postMessage({
-//        token: process.env.SLACK_BOT_TOKEN??"",
-//        channel: process.env.SLACK_CHANNEL??"",
-//        text: subject,
-//    });
-//}
