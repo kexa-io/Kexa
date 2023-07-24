@@ -43,6 +43,7 @@ export async function gatheringRules(rulesDirectory:string): Promise<SettingFile
         if( setting) settingFileList.push(setting);
     }
     logger.debug("rules list:");
+    logger.debug(settingFileList.map((value) => value.alert.global.name).join(", "));
     return settingFileList;
 }
 

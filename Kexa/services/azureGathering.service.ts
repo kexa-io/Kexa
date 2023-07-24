@@ -13,7 +13,7 @@ import * as ckiNetworkSecurityClass from "../class/azure/ckiNetworkSecurityGroup
 import { Logger } from "tslog";
 import { AzureResources } from "../models/azure/resource.models";
 import { DefaultAzureCredential, ClientSecretCredential } from "@azure/identity";
-import { getEnvVar, setEnvVar } from "./manageVarEnvironnement.service";
+import { getConfigOrEnvVar, getEnvVar, setEnvVar } from "./manageVarEnvironnement.service";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
@@ -41,8 +41,11 @@ export async function collectAzureData(): Promise<AzureResources[]|null>{
             "aks": null,
         } as AzureResources;
         try{
-            //TODO : gestion Nouvelle subscription auth gestion
-            let subscriptionId = config["SUBSCRIPTIONID"]??null;
+            let subscriptionId = await getConfigOrEnvVar(config, "SUBSCRIPTIONID", azureConfig.indexOf(config)+"-");
+            //setEnvVar("AZURE_CLIENT_ID", await getConfigOrEnvVar(config, "AZURECLIENTID", azureConfig.indexOf(config)+"-"))
+            //setEnvVar("AZURE_CLIENT_SECRET", await getConfigOrEnvVar(config, "AZURECLIENTSECRET", azureConfig.indexOf(config)+"-"))
+            //setEnvVar("AZURE_TENANT_ID", await getConfigOrEnvVar(config, "AZURETENANTID", azureConfig.indexOf(config)+"-"))
+
             const credential = new DefaultAzureCredential();
             if(!subscriptionId) {
                 throw new Error("- Please pass SUBSCRIPTIONID in your config file");
@@ -60,12 +63,12 @@ export async function collectAzureData(): Promise<AzureResources[]|null>{
                     resourceGroupListing(resourcesClient),
                     disksListing(computeClient),
                     virtualNetworksListing(networkClient),
-                    networkSecurityGroupListing(networkClient),
                     aksListing(credential, subscriptionId),
+                    ipListing(networkClient)
                     //subscriptionInformation(credential)
                 ];
                 
-                const [nsgList, vmList, rgList, diskList, virtualNetworkList, networkInterfacesList, aksList] = await Promise.all(promises);
+                const [nsgList, vmList, rgList, diskList, virtualNetworkList, aksList, ipList] = await Promise.all(promises);
                 logger.info("- listing cloud resources done -");
                 azureResource = {
                     "vm": [...azureResource["vm"]??[], ...vmList],
@@ -73,8 +76,8 @@ export async function collectAzureData(): Promise<AzureResources[]|null>{
                     "disk": [...azureResource["disk"]??[], ...diskList],
                     "nsg": [...azureResource["nsg"]??[], ...nsgList],
                     "virtualNetwork": [...azureResource["virtualNetwork"]??[], ...virtualNetworkList],
-                    "networkInterfaces": [...azureResource["networkInterfaces"]??[], ...networkInterfacesList],
                     "aks": [...azureResource["aks"]??[], ...aksList],
+                    "ip": [...azureResource["ip"]??[], ...ipList],
                     //subscription
                 } as AzureResources;
             }
@@ -86,6 +89,16 @@ export async function collectAzureData(): Promise<AzureResources[]|null>{
         resources.push(azureResource);
     }
     return resources??null;
+}
+
+//ip list
+export async function ipListing(client:NetworkManagementClient): Promise<Array<any>|null> {
+    logger.info("starting ipListing");
+    const resultList = new Array<any>;
+    for await (const item of client.publicIPAddresses.listAll()) {
+        resultList.push(item);
+    }
+    return resultList;
 }
 
 //subscription information

@@ -7,7 +7,7 @@
         - log
         #- email
       to: 
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     error:
       enabled: true
       type: 
@@ -15,23 +15,23 @@
         #- email
         #- sms
       to: 
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     warning:
       enabled: true
       type: 
         - log
         #- email
       to:
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     info:
       enabled: true
       type: 
         - log
         #- email
       to: 
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     global:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- webhook
@@ -40,7 +40,7 @@
       name: azure cloud
       to: 
         #- http://127.0.0.1:5000/test
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
       conditions:
         - level: 0
           min: 1

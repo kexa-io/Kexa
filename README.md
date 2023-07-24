@@ -103,19 +103,6 @@ This is an example of how to list things you need to use the software and how to
     ```
       RULESDIRECTORY=./Kexa/rules
     ```
-  - Add the following variables for each provider you want to test:
-    - Azure:
-      ```
-        SUBSCRIPTIONID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
-      ```
-    - GitHub:
-      ```
-        GITHUBTOKEN=github_pat_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-      ```
-    - Kubernetes:
-      ```
-        KUBECONFIG="./Path/to/my/config.yml"
-      ```
   - add the following variables for each type of notification you have use in your rules:
     - email:
       ```
@@ -131,32 +118,72 @@ This is an example of how to list things you need to use the software and how to
         SMSACCOUNTSID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         SMSAUTHTOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
       ```
-    - You can optionally use a key manager:
-      - Azure:
-        To refer to your Key Vault add this following environnement variable :
-        ```
-          AZUREKEYVAULTNAME=MyKeyVault
-        ```
-        To authenticate you can use one of this combination :
-          - ```
-            AZURE_CLIENT_ID	ID of an Azure AD application
-            AZURE_TENANT_ID	ID of the application's Azure AD tenant
-            AZURE_CLIENT_SECRET	one of the application's client secrets
-            ```
 
-        - ```
-            AZURE_CLIENT_ID	ID of an Azure AD application
-            AZURE_TENANT_ID	ID of the application's Azure AD tenant
-            AZURE_CLIENT_CERTIFICATE_PATH	path to a PEM-encoded certificate file including private key
-            AZURE_CLIENT_CERTIFICATE_PASSWORD	password of the certificate file, if any
-          ```
+#### Configure your config:
 
-        - ```
-          AZURE_CLIENT_ID	ID of an Azure AD application
-          AZURE_TENANT_ID	ID of the application's Azure AD tenant
-          AZURE_USERNAME	a username (usually an email address)
-          AZURE_PASSWORD	that user's password
-          ```
+  In the config folder, create a default.json file to inform the providers you want to test and the rules that will be applied to them.
+  The file will have the following format : 
+
+  ```js
+  {
+    "azure": [
+      {
+        "rules": [
+          "Name of my rule"
+        ]
+      },
+      {
+        "rules": [
+          "Name of my rule",
+          "Another rules"
+        ]
+      }
+    ]
+  }
+  ```
+
+
+    
+  Add the following variables for each provider you want to test:
+  - Azure:
+    ```
+      SUBSCRIPTIONID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+      AZURECLIENTID	ID of an Azure AD application
+      AZURETENANTID	ID of the application's Azure AD tenant
+      AZURECLIENTSECRET	one of the application's client secrets
+    ```
+  - GitHub:
+    ```
+      GITHUBTOKEN=github_pat_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    ```
+  - Kubernetes:
+    ```
+      KUBECONFIG="./Path/to/my/config.yml"
+    ```
+  Before each of this variable you must add a prefix which indicates which indexes the credentials refer to.
+  The prefix is the index (we start counting from zero) followed by a dash.
+  Example for my config in azure : 
+  ```
+    0-SUBSCRIPTIONID=XXXXXXXXXXXXXXXXXXXXX
+    0-AZURECLIENTID =XXXXXXXXXXXXXXXXXXXXX
+    0-AZURETENANTID=XXXXXXXXXXXXXXXXXXXXXX
+    0-AZURECLIENTSECRET=XXXXXXXXXXXXXXXXXX
+    1-SUBSCRIPTIONID=XXXXXXXXXXXXXXXXXXXXX
+    1-AZURECLIENTID =XXXXXXXXXXXXXXXXXXXXX
+    1-AZURETENANTID=XXXXXXXXXXXXXXXXXXXXXX
+    1-AZURECLIENTSECRET=XXXXXXXXXXXXXXXXXX
+  ```
+
+  You can optionally use a key manager:
+  - Azure:
+    To refer to your Key Vault add this following environnement variable :
+    ```
+      AZUREKEYVAULTNAME=MyKeyVault
+      AZURE_CLIENT_ID=XXXXXXXXXXXX
+      AZURE_TENANT_ID=XXXXXXXXXXXX
+      AZURE_CLIENT_SECRET=XXXXXXXX
+    ```
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -310,7 +337,7 @@ Our tool provides a learning and sharing space where users can collaborate to cr
       applied: ^(true|false)$
       level: ^(0|1|2|3)$
       cloudProvider: ^(azure|git)$
-      objectName: ^(vm|rg|disk|nsg|virtualNetwork|networkInterfaces|namespaces|pods|helm|aks|repositories|branches|issues)$
+      objectName: ^(vm|rg|disk|nsg|virtualNetwork|ip|namespaces|pods|helm|aks|repositories|branches|issues)$
       conditions: 
         - object -> RulesConditions | ParentRules
 ```
@@ -368,7 +395,7 @@ rules:
   * [X] disk
   * [X] network security groupe (nsg)
   * [X] virtual network (virtualNetwork)
-  * [X] network interfaces (networkInterfaces)
+  * [X] ip
   * [X] namespaces (namespaces)
   * [X] pods
   * [X] aks

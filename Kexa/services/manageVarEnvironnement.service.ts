@@ -8,6 +8,10 @@ const { DefaultAzureCredential } = require("@azure/identity");
 //const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
 
 export async function getEnvVar(name:string) {
+    return getFromManager(name)??process.env[name];
+}
+
+async function getFromManager(name:string){
     try{
         if(possibleWithAzureKeyVault()){
             return await getEnvVarWithAzureKeyVault(name);
@@ -15,11 +19,9 @@ export async function getEnvVar(name:string) {
             return await getEnvVarWithAwsSecretManager(name);
         } else if (possibleWithGoogleSecretManager()){
             return await getEnvVarWithGoogleSecretManager(name);
-        } 
-    }catch(e){
-        logger.info("Error while getting env var with secret manager. Trying with process.env")
-    }
-    return process.env[name];
+        }
+    }catch(e){}
+    return null;
 }
 
 function possibleWithAzureKeyVault(){
@@ -73,4 +75,8 @@ async function getEnvVarWithGoogleSecretManager(name:string){
 
 export async function setEnvVar(name:string, value:string){
     process.env[name] = value;
+}
+
+export async function getConfigOrEnvVar(config:any, name:string, optionalPrefix:string = ""){
+    return getFromManager(optionalPrefix+name)??config[name];
 }

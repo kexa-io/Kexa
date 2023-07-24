@@ -7,7 +7,7 @@
         - log
         #- email
       to: 
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     error:
       enabled: true
       type: 
@@ -15,21 +15,21 @@
         #- email
         #- sms
       to: 
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     warning:
       enabled: true
       type: 
         - log
         #- email
       to:
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     info:
       enabled: true
       type: 
         - log
         #- email
       to: 
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     global:
       enabled: true
       type: 
@@ -40,7 +40,7 @@
       name: Economy
       to: 
         #- http://127.0.0.1:5000/test
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
       conditions:
         - level: 0
           min: 1
@@ -73,7 +73,7 @@
           value : Unattached
     - name: aks-scaleSet
       description : "check if aks have a scaleSet"
-      applied: true
+      applied: false
       level: 0
       cloudProvider: azure
       objectName : aks
@@ -84,3 +84,23 @@
             - property: scaleSetEvictionPolicy
               condition: EQUAL
               value: Delete
+    - name: "Orphan nsg"
+      description : "this rules is to check if nsg is orphan"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName : nsg
+      conditions:
+        - property : networkInterfaces
+          condition : COUNT_SUP_OR_EQUAL
+          value : 1
+    - name: "Orphan virtualNetwork"
+      description : "this rules is to check if virtualNetwork is orphan"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName : virtualNetwork
+      conditions:
+        - property : subnets
+          condition : COUNT_SUP_OR_EQUAL
+          value : 1

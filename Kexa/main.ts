@@ -52,7 +52,7 @@ export async function main() {
     logger.info("_______________________________________-= End Kexa scan =-_________________________________________");
     logger.info("___________________________________________________________________________________________________");
     talkAboutOtherProject();
-    logger.debug(await getEnvVar("test"));
+    //logger.debug(await getEnvVar("test"));
 }
 
 
