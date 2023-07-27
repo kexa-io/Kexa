@@ -7,6 +7,7 @@
     "@azure/arm-resources-subscriptions": "^2.1.0",
     "@azure/arm-storage": "^18.1.0",
     "@azure/functions": "^3.5.1",
+    "@azure/graph": "^5.0.3",
     "@azure/keyvault-secrets": "^4.7.0",
     "@azure/logger": "^1.0.3",
     "@azure/ms-rest-js": "^2.6.4",
