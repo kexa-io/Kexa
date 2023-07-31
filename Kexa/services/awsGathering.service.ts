@@ -27,9 +27,6 @@ export async function collectAWSData(): Promise<AWSResources[] | null> {
         } as AWSResources;
         try {
             const credentials = new AWS.Credentials({
-                accessKeyId: "AKIA2K3BXGKYDJ32GREF",
-//                secretAccessKey: await getConfigOrEnvVar(config, "AWS_SECRET_ACCESS_KEY", awsConfig.indexOf(config) + "-"),
-                secretAccessKey: "DIwvdrJVSLUpKBJAZyPukXcgVl3vWSbaGowu0i03"
             });
             AWS.config.update({ credentials: credentials, region: "us-east-1" });
 
@@ -51,7 +48,7 @@ export async function collectAWSData(): Promise<AWSResources[] | null> {
                 "ec2SG": [...awsResource["ec2SG"] ?? [], ...ec2SG],
                 "ec2Volume": [...awsResource["ec2Volume"] ?? [], ...ec2Volumes],
                 "rds": [...awsResource["rds"] ?? [], ...rdsList],
-                "s3": [...awsResource["s3"] ?? [], ...s3List],
+           //     "s3": [...awsResource["s3"] ?? [], ...s3List],
             } as AWSResources;
             logger.info("- listing cloud resources done -");
 
@@ -71,12 +68,6 @@ export async function ec2SGListing(client: AWS.EC2): Promise<any> {
     try {
         const data = await client.describeSecurityGroups(params).promise();
         const jsonData = JSON.parse(JSON.stringify(data.SecurityGroups));
-        let i = 1;
-        jsonData.forEach((element: any) => {
-            console.log("Security Group " + i + " :");
-            console.log(element);
-            i++;
-        });
         logger.info("ec2SGListing Done");
         return jsonData;
     } catch (err) {
@@ -91,12 +82,6 @@ export async function ec2VolumesListing(client: AWS.EC2): Promise<any> {
     try {
         const data = await client.describeVolumes(params).promise();
         const jsonData = JSON.parse(JSON.stringify(data.Volumes));
-        let i = 1;
-        jsonData.forEach((element: any) => {
-            console.log("Volume " + i + " :");
-            console.log(element);
-            i++;
-        });
         logger.info("ec2VolumesListing Done");
         return jsonData;
     } catch (err) {
@@ -111,12 +96,6 @@ export async function ec2InstancesListing(client: AWS.EC2): Promise<Array<AWS.EC
     try {
         const data = await client.describeInstances(params).promise();
         const jsonData = JSON.parse(JSON.stringify(data.Reservations));
-        let i = 1;
-        jsonData.forEach((element: any) => {
-            console.log("Instance " + i + " :");
-            console.log(element);
-            i++;
-        });
         logger.info("ec2InstancesListing Done");
         return jsonData;
     } catch (err) {
@@ -132,12 +111,6 @@ export async function rdsInstancesListing(client: AWS.RDS): Promise<any> {
     try {
         const data = await client.describeDBInstances(params).promise();
         const jsonData = JSON.parse(JSON.stringify(data.DBInstances));
-        let i = 1;
-        jsonData.forEach((element: any) => {
-            console.log("RDS DB Instance " + i + " :");
-            console.log(element);
-            i++;
-        });
         logger.info("rdsInstancesListing Done");
         return jsonData;
     } catch (err) {
@@ -151,12 +124,6 @@ export async function s3BucketsListing(client: AWS.S3): Promise<Array<AWS.S3.Buc
     try {
         const data = await client.listBuckets().promise();
         const jsonData = JSON.parse(JSON.stringify(data.Buckets));
-        let i = 1;
-        jsonData.forEach((element: any) => {
-            console.log("Bucket S3 " + i + " :");
-            console.log(element);
-            i++;
-        });
         logger.info("s3BucketsListing Done");
         return jsonData;
     } catch (err) {

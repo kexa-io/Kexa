@@ -52,12 +52,22 @@
           min: 1
   rules:
     - name: "aws-ec2-public-ip-address"
-      description : "this rules is to check if an ec2 ip address is public"
+      description : "this rule is to check if an ec2 ip address is public"
       applied: true
       level: 3
       cloudProvider: aws
-      objectName : ec2Instance
+      objectName: ec2Instance
       conditions:
-        - property : PublicIp
-          condition : DIFFERENT
-          value : Undefined
+        - property: PublicIpAddress
+          condition: EQUAL
+          value: undefined
+    - name: "aws-ec2-volume-unattached"
+      description: "this rule is to check if an ec2 volume is unattached"
+      applied: true
+      level: 3
+      cloudProvider: aws
+      objectName: ec2Volume
+      conditions:
+        - property: Attachments
+          condition: EQUAL
+          value: 0
