@@ -240,6 +240,10 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
     rules.forEach(rule => {
         if(!rule.applied) return;
         logger.info("check rule:"+rule.name);
+        if(!config.has(rule.cloudProvider)){
+            logger.warn("cloud provider not found in config:"+rule.cloudProvider);
+            return;
+        }
         const configAssign = config.get(rule.cloudProvider);
         let objectResources:any = []
         for(let i = 0; i < configAssign.length; i++){

@@ -1,19 +1,5 @@
 {
-    "azure": [
-        {
-            "rules":[
-                "Economy",
-                "Security"
-            ]
-        },
-        {
-            "rules":[
-                "OperationalExcellence",
-                "Security"
-            ]
-        }
-    ],
-    "git": [
+    "aws": [
         {
             "rules":[
                 "Security"
