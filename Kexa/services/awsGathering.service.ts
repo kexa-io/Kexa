@@ -27,9 +27,10 @@ export async function collectAWSData(): Promise<AWSResources[] | null> {
         } as AWSResources;
         try {
             const credentials = new AWS.Credentials({
+                accessKeyId: await getConfigOrEnvVar(config, "AWS_ACCESS_KEY_ID", awsConfig.indexOf(config) + "-"),
+                secretAccessKey: await getConfigOrEnvVar(config, "AWS_SECRET_ACCESS_KEY", awsConfig.indexOf(config) + "-"),
             });
             AWS.config.update({ credentials: credentials, region: "us-east-1" });
-
             ec2Client = new AWS.EC2();
             rdsClient = new AWS.RDS();
             s3Client = new AWS.S3();
@@ -83,6 +84,9 @@ export async function ec2VolumesListing(client: AWS.EC2): Promise<any> {
         const data = await client.describeVolumes(params).promise();
         const jsonData = JSON.parse(JSON.stringify(data.Volumes));
         logger.info("ec2VolumesListing Done");
+        jsonData.forEach((element : any) => {
+          console.log(element);
+        })
         return jsonData;
     } catch (err) {
         logger.error("Error in ec2VolumesListing: ", err);

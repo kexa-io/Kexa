@@ -7,7 +7,7 @@
         - log
         #- email
       to: 
-        - myEmail@gmail.com
+        - adrien.eppling@supinfo.com
     error:
       enabled: true
       type: 
@@ -15,32 +15,32 @@
         #- email
         #- sms
       to: 
-        - myEmail@gmail.com
+        - adrien.eppling@supinfo.com
     warning:
       enabled: true
       type: 
         - log
         #- email
       to:
-        - myEmail@gmail.com
+        - adrien.eppling@supinfo.com
     info:
       enabled: true
       type: 
         - log
         #- email
       to: 
-        - myEmail@gmail.com
+        - adrien.eppling@supinfo.com
     global:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- webhook
         #- sms
         #- email
-      name: azure cloud
+      name: aws cloud
       to: 
         #- http://127.0.0.1:5000/test
-        - myEmail@gmail.com
+        - adrien.eppling@supinfo.com
       conditions:
         - level: 0
           min: 1
@@ -54,20 +54,53 @@
     - name: "aws-ec2-public-ip-address"
       description : "this rule is to check if an ec2 ip address is public"
       applied: true
-      level: 3
+      level: 1
       cloudProvider: aws
       objectName: ec2Instance
       conditions:
         - property: PublicIpAddress
-          condition: EQUAL
-          value: undefined
+          condition: DIFFERENT
+          value: null
     - name: "aws-ec2-volume-unattached"
       description: "this rule is to check if an ec2 volume is unattached"
       applied: true
-      level: 3
+      level: 1
       cloudProvider: aws
       objectName: ec2Volume
       conditions:
         - property: Attachments
-          condition: EQUAL
+          condition: COUNT_SUP
           value: 0
+    - name: "aws-ec2-volume-unavaible"
+      description: "this rule is to check if an ec2 volume is unattached"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: ec2Volume
+      conditions:
+        - property: State
+          condition: ALL
+          value: unavailable
+    - name: "aws-ec2-instance-restings"
+      description: "this rule is to check if an ec2 volume is unattached"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: ec2Volume
+      conditions:
+        - property: Instances
+          condition: ALL
+          value:
+            - property: InstanceType
+              condition: DIFFERENT
+              value: "t2.micro"
+    - name: "aws-ec2-volume-encrypted"
+      description: "this rule is to check if an ec2 volume isn't encrypted"
+      applied: true
+      level: 2
+      cloudProvider: aws
+      objectName: ec2Volume
+      conditions:
+        - property: Encrypted
+          condition: EQUAL
+          value: true

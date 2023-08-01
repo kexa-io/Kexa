@@ -39,7 +39,7 @@ export async function main() {
         } as ProviderResource;
 
        // DEBUG AWS
-        if (awsData) {
+ /*       if (awsData) {
             console.log("RESSOURCES GET : ");
             resources.aws.forEach((element: any) => {
                 logger.info(element)
@@ -47,7 +47,8 @@ export async function main() {
         }
         else
             console.log("Empty AWS data\n");
-        //
+        //*/
+
         // Analyse rules
         settings.forEach(setting => {
             let result = checkRules(setting.rules, resources, setting.alert);
