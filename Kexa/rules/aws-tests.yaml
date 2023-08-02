@@ -37,7 +37,7 @@
         #- webhook
         #- sms
         #- email
-      name: aws cloud
+      name: aws-cloud
       to: 
         #- http://127.0.0.1:5000/test
         - adrien.eppling@supinfo.com

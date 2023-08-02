@@ -3,7 +3,7 @@
         {
             "rules":[
                 "Security",
-                "aws-tests"
+                "aws-cloud"
             ]
         }
     ]

@@ -78,5 +78,5 @@ export async function setEnvVar(name:string, value:string){
 }
 
 export async function getConfigOrEnvVar(config:any, name:string, optionalPrefix:string = ""){
-    return (getFromManager(optionalPrefix+name)??config[name])??process.env[name];
+    return ((await getFromManager(optionalPrefix+name))??config[name])??process.env[name];
 }
