@@ -37,49 +37,24 @@ async function getEnvVarWithAzureKeyVault(name:string){
 }
 
 function possibleWithAwsSecretManager(){
-    return (
-        process.env.AWS_SECRET_NAME &&
-        process.env.AWS_REGION
-    );
+    return (Boolean(process.env.AWS_SECRET_NAME));
 }
 
-// AWS SECRET MANAGE
-/*import {
-    SecretsManagerClient,
-    GetSecretValueCommand,
-} from "@aws-sdk/client-secrets-manager";
-*/
 async function getEnvVarWithAwsSecretManager(name:string){
-    const client = new AWS.SecretsManagerClient({
-        region: "us-east-1",
+    const secretsmanager = new AWS.SecretsManager();
+    const secName = process.env.AWS_SECRET_NAME;
+    const params = { SecretId: secName };
+    secretsmanager.getSecretValue(params, function(err : any, data : any) {
+        if (err) {
+            console.log("Error when looking for AWS secrets");
+            console.log(err, err.stack); // an error occurred
+        }
+        else {
+            const secretData = JSON.parse(data.SecretString);
+            const value = secretData[name];
+            return (value);
+        }
     });
-    const secret_name = name;
-    console.log("Secret Name :")
-    console.log(name)
-    let response;
-    try {
-        response = await client.send(
-            new AWS.GetSecretValueCommand({
-                SecretId: secret_name,
-                VersionStage: "AWSCURRENT", // VersionStage defaults to AWSCURRENT if unspecified
-            })
-        );
-    } catch (error) {
-        throw error;
-    }
-    const secret = response.SecretString;
-    console.log("The Super Secret is : ");
-    console.log(secret);
-    /*    const client = new AWS.SecretsManager({
-            region: process.env.AWS_REGION
-        });
-    const getSecretValue = await client.getSecretValue({SecretId: name});
-    if ('SecretString' in getSecretValue) {
-       return getSecretValue.SecretString;
-    } else {
-       let buff = new Buffer(getSecretValue.SecretBinary, 'base64');
-        return buff.toString('ascii');
-    }*/
 }
 
 function possibleWithGoogleSecretManager(){

@@ -23,6 +23,8 @@ export async function collectAWSData(): Promise<AWSResources[] | null> {
             "ec2Volume": null,
             "rds": null,
             "s3": null,
+            "resourceGroup": null,
+            "tagsKeys": null
             // Add more AWS resource
         } as AWSResources;
         try {
@@ -34,22 +36,28 @@ export async function collectAWSData(): Promise<AWSResources[] | null> {
             ec2Client = new AWS.EC2();
             rdsClient = new AWS.RDS();
             s3Client = new AWS.S3();
+            const resourceGroups = new AWS.ResourceGroups();
+            const tags = new AWS.ResourceGroupsTaggingAPI();
             const promises = [
                 await ec2InstancesListing(ec2Client),
                 await ec2VolumesListing(ec2Client),
                 await ec2SGListing(ec2Client),
                 await rdsInstancesListing(rdsClient),
                 await s3BucketsListing(s3Client),
+                await resourceGroupsListing(resourceGroups),
+                await tagsKeyListing(tags)
                 // Add more AWS resource lists
             ];
             //
-            const [ec2Instances, ec2Volumes, ec2SG, rdsList, s3List] = await Promise.all(promises);
+            const [ec2Instances, ec2Volumes, ec2SG, rdsList, s3List, resourceGroup, tagsKeys] = await Promise.all(promises);
             awsResource = {
                 "ec2Instance": [...awsResource["ec2Instance"] ?? [], ...ec2Instances],
                 "ec2SG": [...awsResource["ec2SG"] ?? [], ...ec2SG],
                 "ec2Volume": [...awsResource["ec2Volume"] ?? [], ...ec2Volumes],
                 "rds": [...awsResource["rds"] ?? [], ...rdsList],
-           //     "s3": [...awsResource["s3"] ?? [], ...s3List],
+                "s3": [...awsResource["s3"] ?? [], ...s3List],
+                "resourceGroup": [...awsResource["resourceGroup"] ?? [], ...resourceGroup],
+                "tagsKeys": [...awsResource["tagsKeys"] ?? [], ...tagsKeys]
             } as AWSResources;
             logger.info("- listing cloud resources done -");
 
@@ -84,9 +92,6 @@ export async function ec2VolumesListing(client: AWS.EC2): Promise<any> {
         const data = await client.describeVolumes(params).promise();
         const jsonData = JSON.parse(JSON.stringify(data.Volumes));
         logger.info("ec2VolumesListing Done");
-        jsonData.forEach((element : any) => {
-          console.log(element);
-        })
         return jsonData;
     } catch (err) {
         logger.error("Error in ec2VolumesListing: ", err);
@@ -123,11 +128,43 @@ export async function rdsInstancesListing(client: AWS.RDS): Promise<any> {
     }
 }
 
-export async function s3BucketsListing(client: AWS.S3): Promise<Array<AWS.S3.Bucket> | null> {
-    logger.info("starting s3BucketsListing");
+export async function resourceGroupsListing(client: AWS.ResourceGroups): Promise<any> {
+    logger.info("starting Ressource Group Listing");
+    let params = {
+    };
     try {
-        const data = await client.listBuckets().promise();
-        const jsonData = JSON.parse(JSON.stringify(data.Buckets));
+        const data = await client.listGroups().promise();
+        const jsonData = JSON.parse(JSON.stringify(data.Groups));
+        logger.info("Ressource Group Done");
+        return jsonData;
+    } catch (err) {
+        logger.error("Error in Ressource Group Listing: ", err);
+        return null;
+    }
+}
+
+export async function tagsKeyListing(client: AWS.ResourceGroupsTaggingAPI): Promise<any> {
+    logger.info("starting Tags Keys Listing");
+    let params = {
+    };
+    try {
+        const data = await client.getTagKeys().promise();
+        const jsonData = JSON.parse(JSON.stringify(data.TagKeys));
+        logger.info("Tags Done");
+        return jsonData;
+    } catch (err) {
+        logger.error("Error in Tags Keys Listing: ", err);
+        return null;
+    }
+}
+
+export async function s3BucketsListing(client: AWS.S3): Promise<Array<AWS.S3.Object> | null> {
+    logger.info("starting s3BucketsListing");
+    let params = {
+    };
+    try {
+        const data = await client.listObjects().promise();
+        const jsonData = JSON.parse(JSON.stringify(data));
         logger.info("s3BucketsListing Done");
         return jsonData;
     } catch (err) {

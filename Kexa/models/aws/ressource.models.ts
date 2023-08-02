@@ -13,5 +13,6 @@ export interface AWSResources {
     rds: Array<AWS.RDS.DBInstance> | null;
     s3: Array<AWS.S3.Bucket> | null;
 
-
+    resourceGroup: Array<AWS.ResourceGroups> | null;
+    tagsKeys: Array<AWS.ResourceGroupsTaggingAPI> | null;
 }

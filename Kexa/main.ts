@@ -38,17 +38,6 @@ export async function main() {
             "git": githubData
         } as ProviderResource;
 
-       // DEBUG AWS
- /*       if (awsData) {
-            console.log("RESSOURCES GET : ");
-            resources.aws.forEach((element: any) => {
-                logger.info(element)
-            })
-        }
-        else
-            console.log("Empty AWS data\n");
-        //*/
-
         // Analyse rules
         settings.forEach(setting => {
             let result = checkRules(setting.rules, resources, setting.alert);

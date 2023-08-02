@@ -53,17 +53,17 @@
   rules:
     - name: "aws-ec2-public-ip-address"
       description : "this rule is to check if an ec2 ip address is public"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: aws
       objectName: ec2Instance
       conditions:
         - property: PublicIpAddress
-          condition: DIFFERENT
+          condition: EQUAL
           value: null
     - name: "aws-ec2-volume-unattached"
       description: "this rule is to check if an ec2 volume is unattached"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: aws
       objectName: ec2Volume
@@ -71,36 +71,31 @@
         - property: Attachments
           condition: COUNT_SUP
           value: 0
-    - name: "aws-ec2-volume-unavaible"
-      description: "this rule is to check if an ec2 volume is unattached"
-      applied: true
+    - name: "aws-ec2-instance-deallocated"
+      description: "this rule is to check if an ec2 instance is terminated"
+      applied: false
       level: 1
       cloudProvider: aws
-      objectName: ec2Volume
+      objectName: ec2Instance
       conditions:
-        - property: State
-          condition: ALL
-          value: unavailable
-    - name: "aws-ec2-instance-restings"
-      description: "this rule is to check if an ec2 volume is unattached"
-      applied: true
+        - operator: NAND
+          rules:
+            - property: State
+              condition: EQUAL
+              value: terminated
+            - property: PrivateIpAddress
+              condition: DIFFERENT
+              value: null
+    - name: "aws-ec2-securitygroup-all-traffic"
+      description: "this rule is to check if an ec2 security group has no traffic filter"
+      applied: false
       level: 1
       cloudProvider: aws
-      objectName: ec2Volume
+      objectName: ec2SG
       conditions:
-        - property: Instances
+        - property: IpPermissions
           condition: ALL
           value:
-            - property: InstanceType
+            - property: IpPermissions.IpProtocol
               condition: DIFFERENT
-              value: "t2.micro"
-    - name: "aws-ec2-volume-encrypted"
-      description: "this rule is to check if an ec2 volume isn't encrypted"
-      applied: true
-      level: 2
-      cloudProvider: aws
-      objectName: ec2Volume
-      conditions:
-        - property: Encrypted
-          condition: EQUAL
-          value: true
+              value: '-1'
