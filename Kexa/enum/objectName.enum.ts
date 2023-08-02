@@ -19,5 +19,7 @@ export enum ObjectNameEnum {
     EC2SG = "ec2SG",
     RDS = "rds",
     RESOURCEGROUPS = "resourceGroups",
-    TAGSKEYS = "tagsKeys"
+    TAGSKEYS = "tagsKeys",
+    ECSCLUSTER = "ecsCluster",
+    ECRIMAGE = "ecrImage"
 }
