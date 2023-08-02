@@ -2,5 +2,6 @@ node_modules
 .env
 build/*
 *.js
-
+.idea
 config/default.json
+build
