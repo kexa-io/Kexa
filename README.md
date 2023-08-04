@@ -12,6 +12,10 @@
 <br />
 <div align="center">
 
+  <a href="https://www.kexa.io/">
+    <img src="images/kexa-no-background-color.png" alt="Logo" width="100" height="100">
+  </a>
+
 # <h3 align="center">Kexa</h3>
 
   <p align="center">
@@ -60,7 +64,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-The Kexa tool is a powerful way to monitor and evaluate the behaviour of your cloud environment, Kubernetes clusters and GitHub repositories. Using a series of YAML files, you can configure specific rules to check specific elements and properties. 
+The Kexa tool is a powerful way to monitor and evaluate the behavior of your cloud environment, Kubernetes clusters and GitHub repositories. Using a series of YAML files, you can configure specific rules to check specific elements and properties. Kexa is an engine that allows you to add any APIsable service or sdk you want in order to extend its compliance capacity as far as possible.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -409,6 +413,11 @@ rules:
   * [X] helm
 * [ ] AWS
 * [ ] GCP
+* [ ] OVH
+* [ ] O365
+* [ ] VM Ware
+* [ ] Google Workspace
+* [ ] Oracle
 
 See the [open issues](https://github.com/4urcloud/Kexa/issues) for a full list of proposed features (and known issues).
 
@@ -446,9 +455,10 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-contact@thecloudprices.com
+contact@4urcloud.com
 
 Project Link: [https://github.com/4urcloud/Kexa](https://github.com/4urcloud/Kexa)
+Public site: [Kexa.io](www.kexa.io)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
