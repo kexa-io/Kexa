@@ -13,4 +13,13 @@ export enum ObjectNameEnum {
     BRANCHES = "branches",
     ISSUES = "issues",
     IP = "ip",
+    PUBLICIP = "PublicIp",
+    EC2INSTANCE = "ec2Instance",
+    EC2VOLUME = "ec2Volume",
+    EC2SG = "ec2SG",
+    RDS = "rds",
+    RESOURCEGROUPS = "resourceGroups",
+    TAGSVALUE = "tagsValue",
+    ECSCLUSTER = "ecsCluster",
+    ECRIMAGE = "ecrImage"
 }

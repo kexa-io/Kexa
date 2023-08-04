@@ -51,7 +51,7 @@ export function propertyToSend(rule: Rules, objectContent: any): string{
         case ProviderEnum.GCP:
             //return gcpPropertyToSend(scan)
         case ProviderEnum.AWS:
-            //return awsPropertyToSend(scan)
+            return awsPropertyToSend(rule, objectContent)
         default:
             return `Id : ` + objectContent.id
     }
@@ -76,6 +76,15 @@ export function azurePropertyToSend(rule: Rules, objectContent: any): string{
             return `Name : ` + objectContent.metadata.generateName
         default:
             return `Id : ` + objectContent.id
+    }
+}
+
+export function awsPropertyToSend(rules: Rules, objectContent: any): string {
+    switch (rules?.objectName) {
+        case ObjectNameEnum.EC2VOLUME:
+            return 'EC2VOLUME PROBLEM :\n'
+        default:
+            return 'AWS Scan : Id : ' + objectContent.id
     }
 }
 

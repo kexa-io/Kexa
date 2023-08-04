@@ -1,22 +1,8 @@
 {
-    "azure": [
+    "aws": [
         {
             "rules":[
-                "Economy",
-                "Security"
-            ]
-        },
-        {
-            "rules":[
-                "OperationalExcellence",
-                "Security"
-            ]
-        }
-    ],
-    "git": [
-        {
-            "rules":[
-                "Security"
+                "aws-cloud-tests"
             ]
         }
     ]

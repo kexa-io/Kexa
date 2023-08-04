@@ -16,6 +16,7 @@ import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
 import { ProviderEnum } from "../enum/provider.enum";
 import { AlertEnum } from '../enum/alert.enum';
 import { getEnvVar } from './manageVarEnvironnement.service';
+import moment, { Moment, unitOfTime } from 'moment';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
@@ -223,6 +224,7 @@ export function checkSubRuleCondition(subRule:RulesConditions): string[] {
     else if(typeof subRule.property !== "string") result.push("error - property not string in sub rule condition : "+subRule.property);
     if(!subRule.hasOwnProperty("condition")) result.push("error - condition not found in sub rule condition");
     else if(!Object.values(ConditionEnum).includes(subRule.condition)) result.push("error - condition not valid in sub rule condition : " + subRule.condition);
+    else if (subRule.condition.includes("DATE") && !subRule.hasOwnProperty("date")) result.push("error - date not found in sub rule condition");
     //if(!subRule.hasOwnProperty("value")) result.push("error - value not found in sub rule condition");
     //else if(typeof subRule.value !== "string" && typeof subRule.value !== "number" && !Array.isArray(subRule.value)) result.push("error - value not valid in sub rule condition : " + subRule.value);
     //else if(Array.isArray(subRule.value) && subRule.value.length === 0) result.push("error - value empty in sub rule condition");
@@ -231,6 +233,7 @@ export function checkSubRuleCondition(subRule:RulesConditions): string[] {
     //        checkRuleCondition(value).forEach((value) => result.push(value));
     //    });
     //}
+    
     return result;
 }
 
@@ -240,6 +243,10 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
     rules.forEach(rule => {
         if(!rule.applied) return;
         logger.info("check rule:"+rule.name);
+        if(!config.has(rule.cloudProvider)){
+            logger.warn("cloud provider not found in config:"+rule.cloudProvider);
+            return;
+        }
         const configAssign = config.get(rule.cloudProvider);
         let objectResources:any = []
         for(let i = 0; i < configAssign.length; i++){
@@ -385,6 +392,20 @@ export function checkCondition(condition:RulesConditions, resource:any): SubResu
                 return resultScan(condition, value.length, [checkLessThan]);
             case ConditionEnum.COUNT_INF_OR_EQUAL:
                 return resultScan(condition, value.length, [checkLessThan, checkEqual]);
+            case ConditionEnum.DATE_EQUAL:
+                return resultScan(condition, value.length, [checkEqualDate]);
+            case ConditionEnum.DATE_SUP:
+                return resultScan(condition, value.length, [checkGreaterThanDate]);
+            case ConditionEnum.DATE_SUP_OR_EQUAL:
+                return resultScan(condition, value.length, [checkGreaterThanDateOrEqual]);
+            case ConditionEnum.DATE_INF:
+                return resultScan(condition, value.length, [checkLessThanDate]);
+            case ConditionEnum.DATE_INF_OR_EQUAL:
+                return resultScan(condition, value.length, [checkLessThanDateOrEqual]);
+            case ConditionEnum.INTERVAL:
+                return resultScan(condition, value, [checkInterval]);
+            case ConditionEnum.DATE_INTERVAL:
+                return resultScan(condition, value, [checkIntervalDate]);
             default:
                 return {
                     value,
@@ -508,3 +529,91 @@ export function checkCount(condition:RulesConditions, value:any): boolean {
     if(value.length === condition.value) return true;
     return false;
 }
+
+export function checkEqualDate(condition:RulesConditions, value:any): boolean {
+    logger.debug("check equal date");
+    let value_date = moment(value, condition.date);
+    let condition_date = moment(condition.value as string, condition.date);
+    if(condition_date.isSame(value_date)) return true;
+    return false;
+}
+
+export function checkIntervalDate(condition:RulesConditions, value:any): boolean {
+    logger.debug("check interval date");
+    let condition_value = (condition.value as string).split(" ");
+    let value_date = moment(value, condition.date).toDate();
+    let condition_date_one = moment(condition_value[0], condition.date).toDate();
+    let condition_date_two = moment(condition_value[1], condition.date).toDate();
+    if(value_date >= condition_date_one && value_date <= condition_date_two) return true;
+    return false;
+}
+
+export function checkInterval(condition:RulesConditions, value:any): boolean {
+    logger.debug("check interval");
+    let condition_value = (condition.value as string).split(" ");
+    if(value >= condition_value[0] && value <= condition_value[1]) return true;
+    return false;
+}
+
+const unitTime: unitOfTime.DurationAs[] = ["seconds", "minutes", "hours", "days", "weeks", "months", "years"]
+function generateDate(differential: string, add:boolean=true): Moment {
+    let differentialList = differential.split(" ");
+    let date = moment();
+    for(let i = 0; i < differentialList.length; i++){
+        const unit = unitTime[i];
+        if(add){
+            date.add(Number(differentialList[i]), unit);
+        }else{
+            date.subtract(Number(differentialList[i]), unitTime[i]);
+        }
+    }
+    return date;
+}
+
+export function checkGreaterThanDateOrEqual(condition:RulesConditions, value:any): boolean {
+    logger.debug("check greater than date or equal");
+    return checkGreaterThanDate(condition, value) || checkEqualThanDate(condition, value);
+}
+
+export function checkLessThanDateOrEqual(condition:RulesConditions, value:any): boolean {
+    logger.debug("check less than date or equal");
+    return checkLessThanDate(condition, value) || checkEqualThanDate(condition, value, false);
+}
+
+export function checkGreaterThanDate(condition:RulesConditions, value:any): boolean {
+    logger.debug("check greater than date");
+    let dynamic_date = generateDate(condition.value as string);
+    let value_date = moment(value, condition.date).toDate();
+    if(value_date > dynamic_date.toDate()) return true;
+    return false;
+}
+
+export function checkLessThanDate(condition:RulesConditions, value:any): boolean {
+    logger.debug("check less than date");
+    let dynamic_date = generateDate(condition.value as string, false);
+    let value_date = moment(value, condition.date).toDate();
+    if(value_date < dynamic_date.toDate()) return true;
+    return false;
+}
+
+export function checkEqualThanDate(condition:RulesConditions, value:any, add:boolean=true): boolean {
+    logger.debug("check equal than date");
+    let dynamic_date = generateDate(condition.value as string, add);
+    let value_date = moment(value, condition.date);
+    if(dynamic_date.isSame(value_date, 'day')) return true;
+    return false;
+}
+
+//logger.fatal("test");
+//logger.fatal(checkEqualDate({property: "date", condition: ConditionEnum.DATE_COUNT, value: "01-01-2021", date: "DD-MM-YYYY"}, "01-01-2021"))
+//logger.fatal(checkEqualDate({property: "date", condition: ConditionEnum.DATE_COUNT, value: "02-01-2021", date: "DD-MM-YYYY"}, "01-01-2021"))
+//logger.fatal(checkIntervalDate({property: "date", condition: ConditionEnum.DATE_INTERVAL, value: "01-01-2021 02-01-2021", date: "DD-MM-YYYY"}, "01-01-2021"))
+//logger.fatal(checkIntervalDate({property: "date", condition: ConditionEnum.DATE_INTERVAL, value: "01-01-2021 02-01-2021", date: "DD-MM-YYYY"}, "03-01-2021"))
+//logger.fatal(checkInterval({property: "date", condition: ConditionEnum.INTERVAL, value: "1 3"}, 1))
+//logger.fatal(checkInterval({property: "date", condition: ConditionEnum.INTERVAL, value: "1 3"}, 4))
+//logger.fatal(checkGreaterThanDate({property: "date", condition: ConditionEnum.DATE_COUNT_SUP, value: "1 0 0 1", date: "DD-MM-YYYY"}, "01-01-2024"))
+//logger.fatal(checkGreaterThanDate({property: "date", condition: ConditionEnum.DATE_COUNT_SUP, value: "1 0 0 1", date: "DD-MM-YYYY"}, "01-01-2020"))
+//logger.fatal(checkLessThanDate({property: "date", condition: ConditionEnum.DATE_COUNT_INF, value: "0 0 0 1", date: "DD-MM-YYYY"}, "03-08-2023"))
+//logger.fatal(checkLessThanDate({property: "date", condition: ConditionEnum.DATE_COUNT_INF, value: "0 0 0 1", date: "DD-MM-YYYY"}, "04-08-2023"))
+//logger.fatal(checkEqualThanDate({property: "date", condition: ConditionEnum.DATE_INF_OR_EQUAL, value: "0 0 0 1", date: "DD-MM-YYYY"}, "03-08-2023", false))
+//logger.fatal(checkEqualThanDate({property: "date", condition: ConditionEnum.DATE_INF_OR_EQUAL, value: "0 0 0 1", date: "DD-MM-YYYY"}, "05-08-2023", false))

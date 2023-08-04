@@ -15,16 +15,19 @@
     "@kubernetes/client-node": "^0.18.1",
     "@octokit/core": "^4.2.4",
     "@slack/bolt": "^3.13.1",
+    "aws-sdk": "^2.1424.0",
     "cfonts": "^3.2.0",
     "config": "^3.3.9",
     "dotenv": "^16.0.3",
     "helm-ts": "^0.1.5",
     "js-yaml": "^4.1.0",
     "jsome": "^2.5.0",
+    "moment": "^2.29.4",
     "nodemailer": "^6.9.3",
     "octokit": "^2.1.0",
     "tslog": "^4.7.1",
-    "twilio": "^4.13.0"
+    "twilio": "^4.13.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@azure/identity": "^3.2.3",
