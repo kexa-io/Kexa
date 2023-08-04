@@ -39,7 +39,7 @@ export async function collectAWSData(): Promise<AWSResources[] | null> {
             AWS.config.update({ credentials: credentials, region: "us-east-1" });
             ec2Client = new AWS.EC2(config);
             rdsClient = new AWS.RDS(config);
-            s3Client = new AWS.S3(config);
+        //    s3Client = new AWS.S3(config);
             ecsClient = new AWS.ECS(config);
             ecrClient = new AWS.ECR(config);
             const resourceGroups = new AWS.ResourceGroups(config);
@@ -85,6 +85,9 @@ export async function ec2SGListing(client: AWS.EC2): Promise<any> {
     try {
         const data = await client.describeSecurityGroups().promise();
         const jsonData = JSON.parse(JSON.stringify(data.SecurityGroups));
+        jsonData.forEach((element:any) => {
+            console.log(element);
+        })
         logger.info("ec2SGListing Done");
         return jsonData;
     } catch (err) {
@@ -96,9 +99,6 @@ export async function ec2VolumesListing(client: AWS.EC2): Promise<any> {
     try {
         const data = await client.describeVolumes().promise();
         const jsonData = JSON.parse(JSON.stringify(data.Volumes));
-        jsonData.forEach((element: any) => {
-            console.log(element.tag);
-        })
         logger.info("ec2VolumesListing Done");
         return jsonData;
     } catch (err) {
@@ -110,9 +110,6 @@ export async function ec2InstancesListing(client: AWS.EC2): Promise<Array<AWS.EC
     try {
         const data = await client.describeInstances().promise();
         const jsonData = JSON.parse(JSON.stringify(data.Reservations));
-        jsonData.forEach((element: any) => {
-            console.log(element);
-        })
         logger.info("ec2InstancesListing Done");
         return jsonData;
     } catch (err) {
@@ -201,24 +198,6 @@ export async function ecrImagesListing(client: AWS.ECR): Promise<any> {
     try {
         const data = await client.describeRepositories().promise();
         const jsonData = JSON.parse(JSON.stringify(data.repositories));
-        logger.info("ECR Done");
-        return jsonData;
-    } catch (err) {
-        logger.error("Error in ECR Listing: ", err);
-        return null;
-    }
-}
-
-export async function costExplorerListing(client: AWS.CostExplorer): Promise<any> {
-    try {
-        let params = {
-            ResourceArn: "arn:aws:iam::710485160624:group/admininnovtech"
-        };
-        const data = await client.listTagsForResource(params).promise();
-        const jsonData = JSON.parse(JSON.stringify(data.ResourceTags));
-        jsonData.forEach((element: any) => {
-            console.log(element);
-        })
         logger.info("ECR Done");
         return jsonData;
     } catch (err) {

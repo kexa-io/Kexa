@@ -40,7 +40,7 @@
       name: aws-cloud-tests
       to: 
         #- http://127.0.0.1:5000/test
-        - adrien.eppling@supinfo.com
+        #- adrien.eppling@supinfo.com
       conditions:
         - level: 0
           min: 1
@@ -88,7 +88,7 @@
               value: null
     - name: "aws-ec2-securitygroup-all-traffic"
       description: "this rule is to check if an ec2 security group has no traffic filter"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: aws
       objectName: ec2SG
@@ -99,13 +99,21 @@
             - property: IpProtocol
               condition: DIFFERENT
               value: "-1"
-    - name: "aws-tags-resource-expiration-date"
-      description: "this rule is to check if resource tags contain expiration date"
+    - name: "ec2-security-group-all-ports"
+      description: "this rule is to check if ec2 security group has a defined port"
       applied: true
       level: 1
       cloudProvider: aws
-      objectName: tagsValue
+      objectName: ec2SG
       conditions:
-        - property: value
-          condition: REGEX
-          value: "\b\d{1,4}[-/]\d{1,4}[-/]\d{1,4}\b"
+        - property: IpPermissions
+          condition: ALL
+          value:
+            - operator: AND
+              rules:
+                - property: FromPort
+                  condition: REGEX
+                  value: '^\d+$'
+                - property: ToPort
+                  condition: REGEX
+                  value : '^\d+$'
