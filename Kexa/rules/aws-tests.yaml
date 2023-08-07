@@ -7,7 +7,7 @@
         - log
         #- email
       to: 
-        - adrien.eppling@supinfo.com
+        - yourmail@mail.com
     error:
       enabled: true
       type: 
@@ -15,21 +15,21 @@
         #- email
         #- sms
       to: 
-        - adrien.eppling@supinfo.com
+        - yourmail@mail.com
     warning:
       enabled: true
       type: 
         - log
         #- email
       to:
-        - adrien.eppling@supinfo.com
+        - yourmail@mail.com
     info:
       enabled: true
       type: 
         - log
         #- email
       to: 
-        - adrien.eppling@supinfo.com
+        - yourmail@mail.com
     global:
       enabled: true
       type: 
@@ -40,7 +40,7 @@
       name: aws-cloud-tests
       to: 
         #- http://127.0.0.1:5000/test
-        #- adrien.eppling@supinfo.com
+        #- yourmail@mail.com
       conditions:
         - level: 0
           min: 1
@@ -116,7 +116,10 @@
                   value: '^\d+$'
                 - property: ToPort
                   condition: REGEX
-                  value : '^\d+$'
+                  value: '^\d+$'
+                - property: FromPort
+                  condition: DIFFERENT
+                  value: NULL
     - name: "tagsvalue-check-for-expiration-date"
       description: "this rule is to check if tags contain an expiration date (separate with \"-\")"
       applied: false
@@ -127,15 +130,30 @@
         - property: name
           condition: REGEX
           value: '\b\d{1,4}[-]\d{1,4}[-]\d{1,4}\b'
-    - name: "ec2-volume-check-create-time-expiration"
+    - name: "ec2-volume-check-create-less-2-month-expiration"
       description: "this rule is to check for a ec2 volume create date inferior than 2 months"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: aws
       objectName: ec2Volume
       conditions:
         - property: CreateTime
           condition: DATE_INF
-          value: 0 0 2 0 0 0 0
-          date: "YYYY-MM-DDThh:mm:ss.SSS"
-          #"2023-07-31T08:35:08.000Z"
+          value: 0 0 0 0 0 2 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    - name: "ec2-security-groups-source-defined"
+      description: "this rule is to check if a ec2 SG has a defined source (not 0.0.0.0)"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: ec2SG
+      conditions:
+        - property: IpPermissions
+          condition: ALL
+          value:
+            - property: IpRanges
+              condition: ALL
+              value:
+                - property: CidrIp
+                  condition: DIFFERENT
+                  value: "0.0.0.0/0"
