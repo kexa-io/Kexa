@@ -393,15 +393,15 @@ export function checkCondition(condition:RulesConditions, resource:any): SubResu
             case ConditionEnum.COUNT_INF_OR_EQUAL:
                 return resultScan(condition, value.length, [checkLessThan, checkEqual]);
             case ConditionEnum.DATE_EQUAL:
-                return resultScan(condition, value.length, [checkEqualDate]);
+                return resultScan(condition, value, [checkEqualDate]);
             case ConditionEnum.DATE_SUP:
-                return resultScan(condition, value.length, [checkGreaterThanDate]);
+                return resultScan(condition, value, [checkGreaterThanDate]);
             case ConditionEnum.DATE_SUP_OR_EQUAL:
-                return resultScan(condition, value.length, [checkGreaterThanDateOrEqual]);
+                return resultScan(condition, value, [checkGreaterThanDateOrEqual]);
             case ConditionEnum.DATE_INF:
-                return resultScan(condition, value.length, [checkLessThanDate]);
+                return resultScan(condition, value, [checkLessThanDate]);
             case ConditionEnum.DATE_INF_OR_EQUAL:
-                return resultScan(condition, value.length, [checkLessThanDateOrEqual]);
+                return resultScan(condition, value, [checkLessThanDateOrEqual]);
             case ConditionEnum.INTERVAL:
                 return resultScan(condition, value, [checkInterval]);
             case ConditionEnum.DATE_INTERVAL:
@@ -572,7 +572,7 @@ export function generateDate(differential: string, add:boolean=true): Moment {
 
 export function checkGreaterThanDateOrEqual(condition:RulesConditions, value:any): boolean {
     logger.debug("check greater than date or equal");
-    return checkGreaterThanDate(condition, value) || checkEqualThanDate(condition, value);
+    return checkGreaterThanDate(condition, value) || checkEqualThanDate(condition, value, false);
 }
 
 export function checkLessThanDateOrEqual(condition:RulesConditions, value:any): boolean {
@@ -582,23 +582,16 @@ export function checkLessThanDateOrEqual(condition:RulesConditions, value:any): 
 
 export function checkGreaterThanDate(condition:RulesConditions, value:any): boolean {
     logger.debug("check greater than date");
-    let dynamic_date = generateDate(condition.value as string);
+    let dynamic_date = generateDate(condition.value as string, false);
     let value_date = moment(value, condition.date).toDate();
     if(value_date < dynamic_date.toDate()) return true;
     return false;
 }
 
 export function checkLessThanDate(condition:RulesConditions, value:any): boolean {
-    console.log("Dynamic date before " + condition.value as string);
     logger.debug("check less than date");
-    console.log("Date RECEIVED : " + condition.property);
     let dynamic_date = generateDate(condition.value as string, false);
-    console.log("Dynamic date : "+ dynamic_date);
-    console.log("Cnodition  date : "+ condition.date);
-    console.log("Value : " + value);
     let value_date = moment(value, condition.date).toDate();
-    console.log("Value date : "+ value_date);
-    console.log("Dybnamic to date : " + dynamic_date.toDate());
     if(value_date > dynamic_date.toDate()) return true;
     return false;
 }
