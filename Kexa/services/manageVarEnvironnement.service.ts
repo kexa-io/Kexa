@@ -67,16 +67,16 @@ function possibleWithGoogleSecretManager(){
     // GOOGLE_APPLICATION_CREDENTIALS
 }
 
-const {SecretManagerServiceClient} = require('@google-cloud/secret-manager').v1;
-async function getEnvVarWithGoogleSecretManager(name:string){
-    const client = new SecretManagerServiceClient();
-    const [version] = await client.accessSecretVersion({
-        name: `projects/${process.env.GCP_PROJECT}/secrets/secrets-prod/versions/latest`,
-    });
-    const responsePayload = version.payload.data.toString();
-    //secrets = JSON.parse(responsePayload);
-    return responsePayload;
-}
+//const {SecretManagerServiceClient} = require('@google-cloud/secret-manager').v1;
+//async function getEnvVarWithGoogleSecretManager(name:string){
+//    const client = new SecretManagerServiceClient();
+//    const [version] = await client.accessSecretVersion({
+//        name: `projects/${process.env.GCP_PROJECT}/secrets/secrets-prod/versions/latest`,
+//    });
+//    const responsePayload = version.payload.data.toString();
+//    //secrets = JSON.parse(responsePayload);
+//    return responsePayload;
+//}
 
 export async function setEnvVar(name:string, value:string){
     process.env[name] = value;

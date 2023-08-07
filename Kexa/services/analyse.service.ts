@@ -556,7 +556,7 @@ export function checkInterval(condition:RulesConditions, value:any): boolean {
 }
 
 const unitTime: unitOfTime.DurationAs[] = ["seconds", "minutes", "hours", "days", "weeks", "months", "years"]
-function generateDate(differential: string, add:boolean=true): Moment {
+export function generateDate(differential: string, add:boolean=true): Moment {
     let differentialList = differential.split(" ");
     let date = moment();
     for(let i = 0; i < differentialList.length; i++){
@@ -610,17 +610,3 @@ export function checkEqualThanDate(condition:RulesConditions, value:any, add:boo
     if(dynamic_date.isSame(value_date, 'day')) return true;
     return false;
 }
-
-//logger.fatal("test");
-//logger.fatal(checkEqualDate({property: "date", condition: ConditionEnum.DATE_COUNT, value: "01-01-2021", date: "DD-MM-YYYY"}, "01-01-2021"))
-//logger.fatal(checkEqualDate({property: "date", condition: ConditionEnum.DATE_COUNT, value: "02-01-2021", date: "DD-MM-YYYY"}, "01-01-2021"))
-//logger.fatal(checkIntervalDate({property: "date", condition: ConditionEnum.DATE_INTERVAL, value: "01-01-2021 02-01-2021", date: "DD-MM-YYYY"}, "01-01-2021"))
-//logger.fatal(checkIntervalDate({property: "date", condition: ConditionEnum.DATE_INTERVAL, value: "01-01-2021 02-01-2021", date: "DD-MM-YYYY"}, "03-01-2021"))
-//logger.fatal(checkInterval({property: "date", condition: ConditionEnum.INTERVAL, value: "1 3"}, 1))
-//logger.fatal(checkInterval({property: "date", condition: ConditionEnum.INTERVAL, value: "1 3"}, 4))
-//logger.fatal(checkGreaterThanDate({property: "date", condition: ConditionEnum.DATE_COUNT_SUP, value: "1 0 0 1", date: "DD-MM-YYYY"}, "01-01-2024"))
-//logger.fatal(checkGreaterThanDate({property: "date", condition: ConditionEnum.DATE_COUNT_SUP, value: "1 0 0 1", date: "DD-MM-YYYY"}, "01-01-2020"))
-//logger.fatal(checkLessThanDate({property: "date", condition: ConditionEnum.DATE_COUNT_INF, value: "0 0 0 1", date: "DD-MM-YYYY"}, "03-08-2023"))
-//logger.fatal(checkLessThanDate({property: "date", condition: ConditionEnum.DATE_COUNT_INF, value: "0 0 0 1", date: "DD-MM-YYYY"}, "04-08-2023"))
-//logger.fatal(checkEqualThanDate({property: "date", condition: ConditionEnum.DATE_INF_OR_EQUAL, value: "0 0 0 1", date: "DD-MM-YYYY"}, "03-08-2023", false))
-//logger.fatal(checkEqualThanDate({property: "date", condition: ConditionEnum.DATE_INF_OR_EQUAL, value: "0 0 0 1", date: "DD-MM-YYYY"}, "05-08-2023", false))
