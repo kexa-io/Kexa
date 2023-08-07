@@ -85,9 +85,15 @@ export async function ec2SGListing(client: AWS.EC2): Promise<any> {
     try {
         const data = await client.describeSecurityGroups().promise();
         const jsonData = JSON.parse(JSON.stringify(data.SecurityGroups));
+        let retValues: [] = [];
         jsonData.forEach((element:any) => {
-            console.log(element);
-        })
+            const stringify = (JSON.stringify(element.IpPermissions));
+            console.log(stringify);
+            const dataToInsert: object[] = JSON.parse(stringify);
+       //     element["IpRanges"] = dataToInsert["IpRanges"];
+         //   console.log(dataToInsert.IpRanges);
+           // element.push();
+        });
         logger.info("ec2SGListing Done");
         return jsonData;
     } catch (err) {
@@ -147,23 +153,13 @@ export async function tagsValueListing(client: AWS.ResourceGroupsTaggingAPI): Pr
         interface TagParams {Key: string;}
         const dataKeys = await client.getTagKeys().promise();
         const jsonDataKeys = JSON.parse(JSON.stringify(dataKeys.TagKeys));
-        let params: TagParams[] = [];
-        jsonDataKeys.forEach((element: any) => {
-            let tagParam: TagParams = {
-                Key: element
-            };
-            params.push(tagParam);
-        });
         let jsonData: any[] = [];
-        for (const element of params) {
-            const data = await client.getTagValues(element).promise();
-            const parsedData = JSON.parse(JSON.stringify(data.TagValues));
-            const newData = { value: parsedData }; // Add a new key-value pair
+        for (const element of jsonDataKeys) {
+            const newData = { name: element};
             jsonData.push(newData);
-//            jsonData.push(JSON.parse(JSON.stringify(data.TagValues)));
         }
         logger.info("Tags Done");
-        return jsonData;
+        return jsonDataKeys;
     } catch (err) {
         logger.error("Error in Tags Value Listing: ", err);
         return null;
