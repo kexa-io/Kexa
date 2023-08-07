@@ -28,7 +28,7 @@ export async function collectAWSData(): Promise<AWSResources[] | null> {
             "resourceGroup": null,
             "tagsValue": null,
             "ecsCluster": null,
-            "ecrImage": null
+            "ecrImage": null,
             // Add more AWS resource
         } as AWSResources;
         try {
@@ -85,15 +85,6 @@ export async function ec2SGListing(client: AWS.EC2): Promise<any> {
     try {
         const data = await client.describeSecurityGroups().promise();
         const jsonData = JSON.parse(JSON.stringify(data.SecurityGroups));
-        let retValues: [] = [];
-        jsonData.forEach((element:any) => {
-            const stringify = (JSON.stringify(element.IpPermissions));
-            console.log(stringify);
-            const dataToInsert: object[] = JSON.parse(stringify);
-       //     element["IpRanges"] = dataToInsert["IpRanges"];
-         //   console.log(dataToInsert.IpRanges);
-           // element.push();
-        });
         logger.info("ec2SGListing Done");
         return jsonData;
     } catch (err) {
