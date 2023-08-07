@@ -104,3 +104,28 @@
         - property : subnets
           condition : COUNT_SUP_OR_EQUAL
           value : 1
+    - name: "aws-ec2-instance-deallocated"
+      description: "this rule is to check if an ec2 instance is terminated"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: ec2Instance
+      conditions:
+        - operator: NAND
+          rules:
+            - property: State
+              condition: EQUAL
+              value: terminated
+            - property: PrivateIpAddress
+              condition: DIFFERENT
+              value: null
+    - name: "aws-ec2-volume-unattached"
+      description: "this rule is to check if an ec2 volume is unattached"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: ec2Volume
+      conditions:
+        - property: Attachments
+          condition: COUNT_SUP
+          value: 0

@@ -5,3 +5,4 @@ build/*
 .idea
 config/default.json
 build
+Kexa/rules/aws-tests.yaml
