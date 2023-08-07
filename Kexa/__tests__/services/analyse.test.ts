@@ -61,26 +61,27 @@ describe('analyse service', () => {
 
         describe("Greater than date", () => {
             it("should return true", () => {
-                const result = checkGreaterThanDate({property: "date", condition: ConditionEnum.DATE_SUP, value: "1 0 0 1", date: "DD-MM-YYYY"}, generateDate("0 0 0 2 0 0").format("DD-MM-YYYY"));
+                const result = checkGreaterThanDate({property: "date", condition: ConditionEnum.DATE_SUP, value: "1 0 0 1", date: "DD-MM-YYYY"}, generateDate("0 0 0 1 0 0").format("DD-MM-YYYY"));
                 expect(result).to.equal(true);
             });
-
+            
             it("should return false", () => {
-                const result = checkGreaterThanDate({property: "date", condition: ConditionEnum.DATE_SUP, value: "1 0 0 1", date: "DD-MM-YYYY"}, generateDate("0 0 0 1 0 0").format("DD-MM-YYYY"));
+                const result = checkGreaterThanDate({property: "date", condition: ConditionEnum.DATE_SUP, value: "1 0 0 1", date: "DD-MM-YYYY"}, generateDate("0 0 0 2 0 0").format("DD-MM-YYYY"));
                 expect(result).to.equal(false);
             });
         });
 
         describe("Less than date", () => {
             it("should return true", () => {
-                const result = checkLessThanDate({property: "date", condition: ConditionEnum.DATE_INF, value: "0 0 0 1", date: "DD-MM-YYYY"}, generateDate("0 0 0 1 0 0", false).format("DD-MM-YYYY"));
+                const result = checkLessThanDate({property: "date", condition: ConditionEnum.DATE_INF, value: "0 0 0 1", date: "DD-MM-YYYY"}, generateDate("0 0 0 0 1 0").format("DD-MM-YYYY"));
                 expect(result).to.equal(true);
             });
-
+            
             it("should return false", () => {
-                const result = checkLessThanDate({property: "date", condition: ConditionEnum.DATE_INF, value: "0 0 0 1", date: "DD-MM-YYYY"}, generateDate("0 0 0 0 1 0").format("DD-MM-YYYY"));
+                const result = checkLessThanDate({property: "date", condition: ConditionEnum.DATE_INF, value: "0 0 0 1", date: "DD-MM-YYYY"}, generateDate("0 0 0 1 0 0", false).format("DD-MM-YYYY"));
                 expect(result).to.equal(false);
             });
+
         });
 
         describe("Equal than date", () => {
