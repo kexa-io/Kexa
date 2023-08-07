@@ -584,7 +584,7 @@ export function checkGreaterThanDate(condition:RulesConditions, value:any): bool
     logger.debug("check greater than date");
     let dynamic_date = generateDate(condition.value as string);
     let value_date = moment(value, condition.date).toDate();
-    if(value_date > dynamic_date.toDate()) return true;
+    if(value_date < dynamic_date.toDate()) return true;
     return false;
 }
 
@@ -599,7 +599,7 @@ export function checkLessThanDate(condition:RulesConditions, value:any): boolean
     let value_date = moment(value, condition.date).toDate();
     console.log("Value date : "+ value_date);
     console.log("Dybnamic to date : " + dynamic_date.toDate());
-    if(value_date < dynamic_date.toDate()) return true;
+    if(value_date > dynamic_date.toDate()) return true;
     return false;
 }
 
