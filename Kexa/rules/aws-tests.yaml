@@ -101,7 +101,7 @@
               value: "-1"
     - name: "ec2-security-group-all-ports"
       description: "this rule is to check if ec2 security group has a defined port"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: aws
       objectName: ec2SG
@@ -117,3 +117,25 @@
                 - property: ToPort
                   condition: REGEX
                   value : '^\d+$'
+    - name: "tagsvalue-check-for-expiration-date"
+      description: "this rule is to check if tags contain an expiration date (separate with \"-\")"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: tagsValue
+      conditions:
+        - property: name
+          condition: REGEX
+          value: '\b\d{1,4}[-]\d{1,4}[-]\d{1,4}\b'
+    - name: "ec2-volume-check-create-time-expiration"
+      description: "this rule is to check for a ec2 volume create date inferior than 2 months"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: ec2Volume
+      conditions:
+        - property: CreateTime
+          condition: DATE_INF
+          value: 0 0 2 0 0 0 0
+          date: "YYYY-MM-DDThh:mm:ss.SSS"
+          #"2023-07-31T08:35:08.000Z"
