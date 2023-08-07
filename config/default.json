@@ -1,8 +1,8 @@
 {
-    "aws": [
+    "gcp": [
         {
             "rules":[
-                "aws-cloud-tests"
+                "gcp-cloud-tests"
             ]
         }
     ]
