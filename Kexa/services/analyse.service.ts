@@ -383,15 +383,15 @@ export function checkCondition(condition:RulesConditions, resource:any): SubResu
             case ConditionEnum.ONE:
                 return resultScan(condition, value, [checkOne]);
             case ConditionEnum.COUNT:
-                return resultScan(condition, value, [checkEqual]);
+                return resultScan(condition, value.length, [checkEqual]);
             case ConditionEnum.COUNT_SUP:
-                return resultScan(condition, value, [checkGreaterThan]);
+                return resultScan(condition, value.length, [checkGreaterThan]);
             case ConditionEnum.COUNT_SUP_OR_EQUAL:
-                return resultScan(condition, value, [checkGreaterThan, checkEqual]);
+                return resultScan(condition, value.length, [checkGreaterThan, checkEqual]);
             case ConditionEnum.COUNT_INF:
-                return resultScan(condition, value, [checkLessThan]);
+                return resultScan(condition, value.length, [checkLessThan]);
             case ConditionEnum.COUNT_INF_OR_EQUAL:
-                return resultScan(condition, value, [checkLessThan, checkEqual]);
+                return resultScan(condition, value.length, [checkLessThan, checkEqual]);
             case ConditionEnum.DATE_EQUAL:
                 return resultScan(condition, value, [checkEqualDate]);
             case ConditionEnum.DATE_SUP:
