@@ -374,8 +374,17 @@ condition: ^(
   COUNT_INF|
   COUNT_SUP_OR_EQUAL|
   COUNT_INF_OR_EQUAL|
+  DATE_EQUAL |
+  DATE_SUP |
+  DATE_INF |
+  DATE_SUP_OR_EQUAL |
+  DATE_INF_OR_EQUAL |
+  INTERVAL |
+  DATE_INTERVAL
 )$
 value: int|string|RulesConditions|ParentRules
+#date is the format of the date you want to parse. For example:
+date?: "YYYY-MM-DDThh:mm:ss.SSSZ"
 ```
 
 ParentRules :
@@ -411,7 +420,7 @@ rules:
   * [X] namespaces
   * [X] pods
   * [X] helm
-* [ ] AWS
+* [X] AWS
 * [ ] GCP
 * [ ] OVH
 * [ ] O365

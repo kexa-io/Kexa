@@ -10,7 +10,7 @@ import { ConfigAlert } from "../models/settingFile/configAlert.models";
 import { Readable } from "stream";
 import { propertyToSend, renderTableAllScan } from "./display.service";
 import { groupBy } from "../helpers/groupBy";
-import { getEnvVar } from "./manageVarEnvironnement.service";
+import { getConfigOrEnvVar } from "./manageVarEnvironnement.service";
 
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
 const jsome = require('jsome');
@@ -20,6 +20,7 @@ const nodemailer = require("nodemailer");
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });
 const levelAlert = ["info", "warning", "error", "critical"];
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
+const config = require('config');
 
 export function alertGlobal(allScan: ResultScan[][], alert: GlobalConfigAlert) {
     let compteError = [0,0,0,0];
@@ -234,7 +235,7 @@ export function alertEmail(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rul
     detailAlert.to.forEach((email_to) => {
         if(!email_to.includes("@")) return;
         logger.debug("send email to:"+email_to);
-        let mail = Emails.OneAlert(email_to, rule, propertyToSend(rule, objectResource), colors[rule.level]);
+        let mail = Emails.OneAlert(email_to, rule, propertyToSend(rule, objectResource, false), colors[rule.level]);
         SendMailWithAttachment(mail, email_to, "Kexa - "+levelAlert[rule.level]+" - "+rule.name, objectResource);
     });
 }
@@ -244,20 +245,20 @@ export function alertSMS(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules
     detailAlert.to.forEach((sms_to) => {
         if(!sms_to.startsWith("+")) return;
         logger.debug("send sms to:"+sms_to);
-        let content = "error with : https://portal.azure.com/#@/resource/" + objectResource.id;
-        sendSMS(sms_to, "Kexa - "+levelAlert[rule.level]+" - "+rule.name, content);
+        let content = "error with : " + propertyToSend(rule, objectResource, true);
+        sendSMS(sms_to, "Kexa - "+ levelAlert[rule.level]+ " - "+ rule.name, content);
     });
 }
 
 
 async function getTransporter() {
     return nodemailer.createTransport({
-        host: await getEnvVar("EMAILHOST"),
-        port: await getEnvVar("EMAILPORT"),
-        secure: Number(await getEnvVar("EMAILPORT")) == 465, // true for 465, false for other ports
+        host: await getConfigOrEnvVar(config, "EMAILHOST"),
+        port: await getConfigOrEnvVar(config, "EMAILPORT"),
+        secure: Number(await getConfigOrEnvVar(config, "EMAILPORT")) == 465, // true for 465, false for other ports
         auth: {
-            user: await getEnvVar("EMAILUSER"),
-            pass: await getEnvVar("EMAILPWD"),
+            user: await getConfigOrEnvVar(config, "EMAILUSER"),
+            pass: await getConfigOrEnvVar(config, "EMAILPWD"),
         },
     });
 }
@@ -266,7 +267,7 @@ async function SendMail(mail: string, to: string, subject: string): Promise<bool
     try{
         let transporter = await getTransporter();
         await transporter.sendMail({
-            from: await getEnvVar("EMAILFROM"), // sender address
+            from: await getConfigOrEnvVar(config, "EMAILFROM"), // sender address
             to, // list of receivers
             subject, // Subject line
             html: mail, // html body
@@ -288,7 +289,7 @@ async function SendMailWithAttachment(mail: string, to: string, subject: string,
         jsonStream.push(null);
         let transporter = await getTransporter();
         await transporter.sendMail({
-            from: await getEnvVar("EMAILFROM"), // sender address
+            from: await getConfigOrEnvVar(config, "EMAILFROM"), // sender address
             to, // list of receivers
             subject, // Subject line
             html: mail, // html body
@@ -307,15 +308,15 @@ async function SendMailWithAttachment(mail: string, to: string, subject: string,
 }
 
 async function sendSMS(to: string, subject: string, content: any) {
-    const accountSid = await getEnvVar("SMSACCOUNTSID");
-    const authToken = await getEnvVar("SMSAUTHTOKEN");
+    const accountSid = await getConfigOrEnvVar(config, "SMSACCOUNTSID");
+    const authToken = await getConfigOrEnvVar(config, "SMSAUTHTOKEN");
     const client = require('twilio')(accountSid, authToken);
 
     client.messages
         .create({
             body: `${subject}
 ${content}`,
-            from: await getEnvVar("SMSFROM"),
+            from: await getConfigOrEnvVar(config, "SMSFROM"),
             to
         })
         .then((message:any) => {

@@ -1,22 +1,22 @@
 {
-    "azure": [
+    "aws": [
         {
             "rules":[
-                "Economy",
-                "Security"
-            ]
-        },
-        {
-            "rules":[
-                "OperationalExcellence",
-                "Security"
+                "aws-cloud-tests"
             ]
         }
     ],
     "git": [
         {
-            "rules":[
-                "Security"
+            "rules": [
+                "aws-cloud-tests"
+            ]
+        }
+    ],
+    "kubernetes": [
+        {
+            "config": [
+                "config_kuber"
             ]
         }
     ]
