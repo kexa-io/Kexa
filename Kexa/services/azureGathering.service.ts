@@ -39,9 +39,9 @@ export async function collectAzureData(): Promise<AzureResources[]|null>{
         } as AzureResources;
         try{
             let subscriptionId = await getConfigOrEnvVar(config, "SUBSCRIPTIONID", azureConfig.indexOf(config)+"-");
-            //setEnvVar("AZURE_CLIENT_ID", await getConfigOrEnvVar(config, "AZURECLIENTID", azureConfig.indexOf(config)+"-"))
-            //setEnvVar("AZURE_CLIENT_SECRET", await getConfigOrEnvVar(config, "AZURECLIENTSECRET", azureConfig.indexOf(config)+"-"))
-            //setEnvVar("AZURE_TENANT_ID", await getConfigOrEnvVar(config, "AZURETENANTID", azureConfig.indexOf(config)+"-"))
+            setEnvVar("AZURE_CLIENT_ID", await getConfigOrEnvVar(config, "AZURECLIENTID", azureConfig.indexOf(config)+"-"))
+            setEnvVar("AZURE_CLIENT_SECRET", await getConfigOrEnvVar(config, "AZURECLIENTSECRET", azureConfig.indexOf(config)+"-"))
+            setEnvVar("AZURE_TENANT_ID", await getConfigOrEnvVar(config, "AZURETENANTID", azureConfig.indexOf(config)+"-"))
 
             const credential = new DefaultAzureCredential();
             if(!subscriptionId) {
