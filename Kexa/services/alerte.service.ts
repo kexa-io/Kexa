@@ -8,7 +8,7 @@ import { Emails } from "./emails/emails";
 import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
 import { ConfigAlert } from "../models/settingFile/configAlert.models";
 import { Readable } from "stream";
-import { propertyToSend, renderTableAllScan } from "./display.service";
+import { propertyToSend, propertyToSendSMS, renderTableAllScan } from "./display.service";
 import { groupBy } from "../helpers/groupBy";
 import { getConfigOrEnvVar } from "./manageVarEnvironnement.service";
 
@@ -245,8 +245,8 @@ export function alertSMS(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules
     detailAlert.to.forEach((sms_to) => {
         if(!sms_to.startsWith("+")) return;
         logger.debug("send sms to:"+sms_to);
-        let content = "error with : https://portal.azure.com/#@/resource/" + objectResource.id;
-        sendSMS(sms_to, "Kexa - "+levelAlert[rule.level]+" - "+rule.name, content);
+        let content = "error with : " + propertyToSendSMS(rule, objectResource);
+        sendSMS(sms_to, "Kexa - "+ levelAlert[rule.level]+ " - "+ rule.name, content);
     });
 }
 
