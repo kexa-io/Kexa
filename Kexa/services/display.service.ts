@@ -34,7 +34,7 @@ export function renderTableAllScan(allScan: ResultScan[][]): string{
             result += `
                 <tr>
                     <td style="direction:ltr;padding:20px 0;text-align:center" colspan="3">
-                        `+ propertyToSend(rule.rule, rule.objectContent) +`
+                        `+ propertyToSend(rule.rule, rule.objectContent, false) +`
                     </td>
                 </tr>`;
             result += (mainRule[mainRule.length-1].objectContent === rule.objectContent)?'</tbody></table></td></tr>':'';
@@ -45,31 +45,16 @@ export function renderTableAllScan(allScan: ResultScan[][]): string{
     return result
 }
 
-export function propertyToSend(rule: Rules, objectContent: any): string{
+export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean): string{
     switch(rule?.cloudProvider){
         case ProviderEnum.AZURE:
-            return azurePropertyToSend(rule, objectContent, false)
+            return azurePropertyToSend(rule, objectContent, isSms)
         case ProviderEnum.GCP:
             //return gcpPropertyToSend(scan, false)
         case ProviderEnum.AWS:
-            return awsPropertyToSend(rule, objectContent, false)
+            return awsPropertyToSend(rule, objectContent, isSms)
         case ProviderEnum.GIT:
-            return gitPropertyToSend(rule, objectContent, false)
-        default:
-            return `Id : ` + objectContent.id
-    }
-}
-
-export function propertyToSendSMS(rule: Rules, objectContent: any): string {
-    switch (rule?.cloudProvider) {
-        case ProviderEnum.AZURE:
-            return azurePropertyToSend(rule, objectContent, true)
-        case ProviderEnum.GCP:
-            //return gcpPropertyToSend
-        case ProviderEnum.AWS:
-            return awsPropertyToSend(rule, objectContent, true)
-        case ProviderEnum.GIT:
-            return gitPropertyToSend(rule, objectContent, true)
+            return gitPropertyToSend(rule, objectContent, isSms)
         default:
             return `Id : ` + objectContent.id
     }
@@ -141,19 +126,18 @@ export function awsPropertyToSend(rules: Rules, objectContent: any, isSms: boole
     }
 }
 
-/*export function kubPropertyToSend(rules: Rules, objectContent: any, isSms: boolean): string {
-    let link = "https://" + AWSRegion + ".console.aws.amazon.com/";
+export function kubPropertyToSend(rules: Rules, objectContent: any, isSms: boolean): string {
     switch (rules?.objectName) {
         case ObjectNameEnum.NAMESPACE:
-            return `Id : <a href="` + link + `ec2/home?region=` + cutAWSAvailabilityToRegion(objectContent?.AvailabilityZone) + `#VolumeDetails:volumeId=` + objectContent?.VolumeId + '">' + objectContent?.VolumeId + `</a>`
+            return `Namespace name : ` + objectContent?.metadata[0]?.name + ` with uid : ` + objectContent?.metadata[0]?.uid
         case ObjectNameEnum.PODS:
-            return `Id : <a href="` + link + `ec2/home?region=` + cutAWSAvailabilityToRegion(objectContent?.AvailabilityZone) + `#VolumeDetails:volumeId=` + objectContent?.VolumeId + '">' + objectContent?.VolumeId + `</a>`
+            return `Pod name : ` + objectContent?.metadata[0]?.name + ` with uid : ` + objectContent?.metadata[0]?.uid
         case ObjectNameEnum.HELM:
-            return `Id : <a href="` + link + `ec2/home?region=` + cutAWSAvailabilityToRegion(objectContent?.AvailabilityZone) + `#VolumeDetails:volumeId=` + objectContent?.VolumeId + '">' + objectContent?.VolumeId + `</a>`
+            return `Helm name : ` + objectContent?.metadata[0]?.name + ` with uid : ` + objectContent?.metadata[0]?.uid
         default:
             return 'AWS Scan : Id : ' + objectContent.id;
     }
-}*/
+}
 
 export function gitPropertyToSend(rules: Rules, objectContent: any, isSms: boolean): string {
     let link = "https://github.com/";

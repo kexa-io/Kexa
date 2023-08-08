@@ -12,5 +12,12 @@
                 "aws-cloud-tests"
             ]
         }
+    ],
+    "kubernetes": [
+        {
+            "config": [
+                "config_kuber"
+            ]
+        }
     ]
 }

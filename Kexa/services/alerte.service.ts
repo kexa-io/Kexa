@@ -8,7 +8,7 @@ import { Emails } from "./emails/emails";
 import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
 import { ConfigAlert } from "../models/settingFile/configAlert.models";
 import { Readable } from "stream";
-import { propertyToSend, propertyToSendSMS, renderTableAllScan } from "./display.service";
+import { propertyToSend, renderTableAllScan } from "./display.service";
 import { groupBy } from "../helpers/groupBy";
 import { getConfigOrEnvVar } from "./manageVarEnvironnement.service";
 
@@ -235,7 +235,7 @@ export function alertEmail(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rul
     detailAlert.to.forEach((email_to) => {
         if(!email_to.includes("@")) return;
         logger.debug("send email to:"+email_to);
-        let mail = Emails.OneAlert(email_to, rule, propertyToSend(rule, objectResource), colors[rule.level]);
+        let mail = Emails.OneAlert(email_to, rule, propertyToSend(rule, objectResource, false), colors[rule.level]);
         SendMailWithAttachment(mail, email_to, "Kexa - "+levelAlert[rule.level]+" - "+rule.name, objectResource);
     });
 }
@@ -245,7 +245,7 @@ export function alertSMS(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules
     detailAlert.to.forEach((sms_to) => {
         if(!sms_to.startsWith("+")) return;
         logger.debug("send sms to:"+sms_to);
-        let content = "error with : " + propertyToSendSMS(rule, objectResource);
+        let content = "error with : " + propertyToSend(rule, objectResource, true);
         sendSMS(sms_to, "Kexa - "+ levelAlert[rule.level]+ " - "+ rule.name, content);
     });
 }

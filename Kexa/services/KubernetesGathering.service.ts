@@ -59,7 +59,10 @@ export async function kubernetesListing(): Promise<any> {
             kubResources["pods"].push(pod);
         });
     });
-
+    console.log(kubResources["namespaces"][0]);
+    console.log(kubResources["pods"][0]);
+    console.log(kubResources["helm"]);
+    console.log("END OF KUB DISPLAY");
     await Promise.all(namespacePromises);
     return kubResources;
 }
