@@ -86,3 +86,50 @@
             - property : name
               condition : EQUAL
               value : master
+    - name: "ec2-security-groups-source-defined"
+      description: "this rule is to check if a ec2 SG has a defined source (not 0.0.0.0)"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: ec2SG
+      conditions:
+        - property: IpPermissions
+          condition: ALL
+          value:
+            - property: IpRanges
+              condition: ALL
+              value:
+                - property: CidrIp
+                  condition: DIFFERENT
+                  value: "0.0.0.0/0"
+    - name: "ec2-security-group-all-ports"
+      description: "this rule is to check if ec2 security group has a defined port"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: ec2SG
+      conditions:
+        - property: IpPermissions
+          condition: ALL
+          value:
+            - operator: AND
+              rules:
+                - property: FromPort
+                  condition: REGEX
+                  value: '^\d+$'
+                - property: ToPort
+                  condition: REGEX
+                  value: '^\d+$'
+                - property: FromPort
+                  condition: DIFFERENT
+                  value: NULL
+    - name: "aws-ec2-public-ip-address"
+      description : "this rule is to check if an ec2 ip address is public"
+      applied: false
+      level: 2
+      cloudProvider: aws
+      objectName: ec2Instance
+      conditions:
+        - property: PublicIpAddress
+          condition: EQUAL
+          value: null

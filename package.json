@@ -7,6 +7,7 @@
     "@azure/arm-resources-subscriptions": "^2.1.0",
     "@azure/arm-storage": "^18.1.0",
     "@azure/functions": "^3.5.1",
+    "@azure/graph": "^5.0.3",
     "@azure/keyvault-secrets": "^4.7.0",
     "@azure/logger": "^1.0.3",
     "@azure/ms-rest-js": "^2.6.4",
@@ -14,26 +15,33 @@
     "@kubernetes/client-node": "^0.18.1",
     "@octokit/core": "^4.2.4",
     "@slack/bolt": "^3.13.1",
+    "aws-sdk": "^2.1424.0",
     "cfonts": "^3.2.0",
     "config": "^3.3.9",
     "dotenv": "^16.0.3",
     "helm-ts": "^0.1.5",
     "js-yaml": "^4.1.0",
     "jsome": "^2.5.0",
+    "moment": "^2.29.4",
     "nodemailer": "^6.9.3",
     "octokit": "^2.1.0",
     "tslog": "^4.7.1",
-    "twilio": "^4.13.0"
+    "twilio": "^4.13.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@azure/identity": "^3.2.3",
     "@types/azure": "^0.9.20",
+    "@types/chai": "^4.3.5",
     "@types/js-yaml": "^4.0.5",
+    "@types/mocha": "^10.0.1",
     "@types/node": "^18.16.19",
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
     "nodemon": "^2.0.20",
     "rimraf": "^5.0.1",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.5"
   },
   "name": "checkinfra",
   "version": "1.0.0",
@@ -51,8 +59,7 @@
     "prettier-watch:win32": "onchange \"src/**/*.ts\" -- prettier --write {{changed}}",
     "prettier-watch:darwin:linux": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
     "prettier-watch:default": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
-    "test": "jest",
-    "test:dev": "jest --watchAll"
+    "test": "mocha --require ts-node/register --require source-map-support/register 'Kexa/__tests__/**/*.test.ts'"
   },
   "keywords": [],
   "author": "4urcloud",

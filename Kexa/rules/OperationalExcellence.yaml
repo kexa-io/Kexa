@@ -61,3 +61,24 @@
         - property: subnets
           condition: COUNT_SUP
           value: 0
+    - name: "ec2-volume-check-create-less-2-month-expiration"
+      description: "this rule is to check for a ec2 volume create date inferior than 2 months"
+      applied: false
+      level: 2
+      cloudProvider: aws
+      objectName: ec2Volume
+      conditions:
+        - property: CreateTime
+          condition: DATE_INF
+          value: 0 0 0 0 0 2 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    - name: "tagsvalue-check-for-expiration-date"
+      description: "this rule is to check if tags contain an expiration date (separate with \"-\")"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: tagsValue
+      conditions:
+        - property: name
+          condition: REGEX
+          value: '\b\d{1,4}[-]\d{1,4}[-]\d{1,4}\b'

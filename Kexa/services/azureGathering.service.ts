@@ -61,10 +61,12 @@ export async function collectAzureData(): Promise<AzureResources[]|null>{
                     disksListing(computeClient),
                     virtualNetworksListing(networkClient),
                     aksListing(credential, subscriptionId),
-                    ipListing(networkClient)
+                    ipListing(networkClient),
+                    getSPKeyInformation(credential, subscriptionId)
                 ];
                 
-                const [nsgList, vmList, rgList, diskList, virtualNetworkList, aksList, ipList] = await Promise.all(promises);
+                const [nsgList, vmList, rgList, diskList, virtualNetworkList, aksList, ipList, SPList] = await Promise.all(promises);
+
                 logger.info("- listing cloud resources done -");
                 azureResource = {
                     "vm": [...azureResource["vm"]??[], ...vmList],
@@ -83,6 +85,24 @@ export async function collectAzureData(): Promise<AzureResources[]|null>{
         resources.push(azureResource);
     }
     return resources??null;
+}
+
+//get service principal key information
+export async function getSPKeyInformation(credential: DefaultAzureCredential, tenantID: string): Promise<any> {
+    const { GraphRbacManagementClient } = require("@azure/graph");
+    logger.info("starting getSPKeyInformation");
+    try {
+        const client = new GraphRbacManagementClient(credential, "e17d1063-88c2-4368-9d08-203b84a1bb40");
+        logger.error(client.servicePrincipals);
+        const resultList = new Array<any>;
+        for await (const item of client.servicePrincipals.list()) {
+            resultList.push(item);
+        }
+        return resultList;
+    } catch (err) {
+        logger.error("error in getSPKeyInformation:"+err);
+        return null;
+    }
 }
 
 //ip list
