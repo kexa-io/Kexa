@@ -1,6 +1,7 @@
 import { Logger } from "tslog";
 import { getConfigOrEnvVar, getEnvVar, setEnvVar } from "./manageVarEnvironnement.service";
 import { GcpResources } from "../models/gcp/resource.models";
+const {GoogleAuth} = require('google-auth-library');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
@@ -13,7 +14,37 @@ const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "GcpLogg
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function collectGcpData(): Promise<GcpResources[]|null>{
     let resources = new Array<GcpResources>();
-    for(let config of gcpConfig??[]){
+
+/*    const auth = new GoogleAuth({
+        scopes: 'https://www.googleapis.com/auth/cloud-platform'
+    });
+    const client = await auth.getClient();
+    const projectId = await auth.getProjectId();
+    const url = `https://dns.googleapis.com/dns/v1/projects/${projectId}`;
+    const res = await client.request({ url });
+    console.log(res.data);*/
+    const { Storage } = require('@google-cloud/storage');
+    const storage = new Storage();
+    const [buckets] = await storage.getBuckets();
+
+    console.log("LOGGED");
+    console.log(storage);
+    console.log('Buckets:');
+    for(let i = 0; i < buckets.length; i++){
+        console.log(buckets[i].name);
+        const current_bucket = await storage.bucket(buckets[i].name).get();
+        const wtf = storage.bucket(buckets[i].name);
+        console.log(current_bucket);
+        console.log(wtf);
+        // List objects in the bucket
+        const [files] = await buckets[i].getFiles();
+
+        console.log('Objects in the bucket:');
+        files.forEach((file: any) => {
+            console.log(file.name);
+        });
+    }
+ /*   for(let config of gcpConfig??[]){
         let gcpResources = {
             
         } as GcpResources;
@@ -23,7 +54,7 @@ export async function collectGcpData(): Promise<GcpResources[]|null>{
             if(!projectId) {
                 throw new Error("- Please pass PROJECTID in your config file");
             }else{
-                logger.info("- loading client google cloud platform done-");
+                logger.info("- loading client Google Cloud Provider done-");
                 ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
         
                 const promises = [
@@ -46,7 +77,7 @@ export async function collectGcpData(): Promise<GcpResources[]|null>{
             logger.error(e);
         }
         resources.push(gcpResources);
-    }
+    }*/
     return resources??null;
 }
 

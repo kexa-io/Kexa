@@ -1,8 +1,7 @@
 {
     "gcp": [
         {
-            "rules":[
-                "gcp-cloud-tests"
+            "config": [
             ]
         }
     ]
