@@ -2,6 +2,7 @@
     "gcp": [
         {
             "config": [
+                "config_kuber"
             ]
         }
     ]

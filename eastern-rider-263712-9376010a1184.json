@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "eastern-rider-263712",
+  "private_key_id": "9376010a118462e87698fb593e2e3d6f95008ced",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDHdNisKeY66L3V\nuGlr9O5mgOHmocf1KOdNOdCB1Ttj4WkR58Zo7z6pKg4ZtDrZe+/LGKzO4cyKXlJQ\ne4xT6k/WPeojl4Q+t2OYTJF03YQZdoah+hixVe6KZ4AqNjAa/OZHRnzI17IVSb4O\nVP9MVE2s+GHq9/Oqo3Xqy9dsOU+gI39AESYhP+1ijQMSr8WG737fAxQ/+5vFHizK\nSOOJ0075hWxveb0AIvWusB6nkKXXfYN3uUldaA6LeHV9tTe+WECEXNg/6lYifpvk\n4E3P1/vuLu3ivb27JONhlGdcY1OYuHYttD6/lqVWHH841sCZ7yELaLzd5D1y+drZ\n107MFDipAgMBAAECggEAApYNhCfz7AIeCgIe3c86cxpLM4wX9WIPI7Vy8mgDId+n\nltuYOz6U46kfry4i0DSW7p12iiUr24RvEUuUzXa9i8PYQBdkF9MVZ8FgZnFD1/et\nNbbyMIRyeBlw9DspIwRx8O0lS45eaP/AhtuLxt/V9P7weBU4c9c0PXPgqm7QzTz6\nts1NJZ4pXmX3OvrXOwebpSlbrqrf6pAmIOOHNPgYjfohDcCm02BQwEebdUkonTPI\nIfzmWoe2fdWBUtVF88JGNE7mFXePioWFV5fmFvN3udu1eim4nuTtb9gJHrTa8Ror\nX6olW3EiETmTn8dmjtZk/OR9knb32BaF8HnLYUMV/QKBgQDyfbR/WlIcFjwOBy6T\n6x8+wVU80KjWaM0XBAnYgxEevLoGs7Pq81FDRaKBjWE9LeRa+08X7Ve+mt49t5GP\nI5xtHT13eKCSbcDUwk2PcQH+9lmQBNWWxsBc6s+Fl+mUd8plHI74jmC1D6C9G9ZP\nQEnn3Q8p3krDGPMh6SeIhy91DQKBgQDSkWbVpew9bymHLMXk5oAi9nA0Xg8JUIw5\n1utWfn7ZOaa1h3D9plizXF4OG+Hc/iJvIHGfMdUbbifXHdqEEPzCbow+GR0GL3z4\nu+t8g5KtaUeFOHPajJej+0I4FRJK7a5uglcNOgaP1oUkmFzBHRr+zL8cdtAjy95+\ny9yhkrSjDQKBgAk/F9nfVNAzXNjgFzuWtJtM/fYSss1yM5fUFJgH72gvpBxLT+n+\nmzOofRjZjkKp9FIv0QVFjJn9B8psrIU7w2Q5wDVFCUJsIvU574EvuvbA6Atg09Ar\nBfzFC2K5tzNtGe+fFiiOLUvaK7PqUtK0zdykhkZ/bnRgCC1b2aEQHpQlAoGAQETW\n8VDSWTHrp/F3eVUNOR6kwqcOydYG5sR9UgoL53tcMb3kM9co7Z28q2vBNXVvxyFM\n7L0GAXhOuq7G+lZA/4tETNPXcwLdjwG0b22tQDaI+NVxLvyIcCmJXZq42ZvQCLTJ\noyTZyd89Bh1m+h5LFggiMKrm/nYENAk/DyW68qUCgYEAypBpaFvUx5GCSfT+OH+M\nEOrEZm0efB+F61DtHtXmpTSQbx92/e2ZA3PtEVdnGGKM/pLvsAYHFzRFNLkuIOJp\ngMUvZx3p35noLxYnnjuRNGw5hxK9Nna7ge+fXjWDX9UPC1I4gXLALxQdsZiLQSqR\nKXjPKexY9OpWXuiP0CeivUw=\n-----END PRIVATE KEY-----\n",
+  "client_email": "kexa-test@eastern-rider-263712.iam.gserviceaccount.com",
+  "client_id": "118304597738061840512",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/kexa-test%40eastern-rider-263712.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
