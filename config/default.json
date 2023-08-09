@@ -3,6 +3,16 @@
         {
             "config": [
                 "config_kuber"
+            ],
+            "rules": [
+                "gcp-test"
+            ]
+        }
+    ],
+    "aws": [
+        {
+            "rules": [
+                "aws-tests"
             ]
         }
     ]

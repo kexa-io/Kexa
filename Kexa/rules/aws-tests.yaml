@@ -101,7 +101,7 @@
               value: "-1"
     - name: "ec2-security-group-all-ports"
       description: "this rule is to check if ec2 security group has a defined port"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: ec2SG
