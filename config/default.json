@@ -3,6 +3,9 @@
         {
             "config": [
                 "config_kuber"
+            ],
+            "rules": [
+                "gcp-test"
             ]
         }
     ]

@@ -2,6 +2,7 @@ import { Logger } from "tslog";
 import { getConfigOrEnvVar, getEnvVar, setEnvVar } from "./manageVarEnvironnement.service";
 import { GCPResources } from "../models/gcp/resource.models";
 import {Storage} from "@google-cloud/storage";
+import {AWSResources} from "../models/aws/ressource.models";
 const {GoogleAuth} = require('google-auth-library');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,22 +43,14 @@ export async function collectGcpData(): Promise<GCPResources[] | null> {
             const {CloudTasksClient} = require('@google-cloud/tasks').v2;
 
             logger.info("- loading client Google Cloud Provider done-");
+
             ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
 
-            const promises = [
-               // listTasks(projectId),
-                listAllComputes(projectId),
-                listAllBucket()
-            ];
-            const [compute, storage] = await Promise.all(promises);
-          /*  gcpResources = {
-                "compute": [...gcpResources["compute"] ?? [], ...compute],
-                "storage": [...gcpResources["storage"] ?? [], ...storage]
-            } as GCPResources;*/
-           await listAllBucket();
-           await listAllComputes(projectId);
+            const computeList = await listAllComputes(projectId);
+            const storageList = await listAllBucket();
 
-
+            gcpResources["storage"] = storageList;
+            gcpResources["compute"] = computeList;
 
             const tasksClient = new CloudTasksClient();
             console.log("LIST TASKS : ")
@@ -95,12 +88,12 @@ async function listTasks(projectId: string): Promise<Array<any>|null> {
     for await (const response of iterable) {
         result.push(response);
     }
+    logger.info("GCP Task Listing Done");
     return (result.length)?result:null;
 }
 
 const compute = require('@google-cloud/compute');
 async function listAllComputes(projectId: string): Promise<Array<any>|null> {
-  //  let result: any[] = [];
     let jsonData = [];
 
     const instancesClient = new compute.InstancesClient();
@@ -108,43 +101,30 @@ async function listAllComputes(projectId: string): Promise<Array<any>|null> {
         project: projectId,
         maxResults: 5,
     });
-    console.log('Instances found:');
     for await (const [zone, instancesObject] of aggListRequest) {
         const instances = instancesObject.instances;
 
         if (instances && instances.length > 0) {
-            jsonData = JSON.parse(JSON.stringify(instances));
-            jsonData.forEach((element: any) => {
-                console.log(element);
-            })
+            for (let i = 0; i < instances.length; i++) {
+                jsonData.push(JSON.parse(JSON.stringify(instances[i])))
+            }
         }
     }
+    logger.info("GCP Compute Listing Done");
     return (jsonData);
-   // return (result.length)?result:null;
 }
 
 async function listAllBucket(): Promise<Array<any>|null> {
     const storage = new Storage();
     const [buckets] = await storage.getBuckets();
-    console.log('Buckets:');
     let jsonReturn = [];
     for (let i = 0; i < buckets.length; i++) {
         console.log(buckets[i].name);
         const current_bucket = await storage.bucket(buckets[i].name).get();
-        const wtf = storage.bucket(buckets[i].name);
         const jsonData = JSON.parse(JSON.stringify(current_bucket));
-        jsonData.forEach((element : any) => {
-            console.log(element);
-        })
         jsonReturn.push(jsonData);
-       // const [files] = await buckets[i].getFiles();
-      /*  console.log('Objects in the bucket:');
-        files.forEach((file: any) => {
-            console.log(file.name);
-        });*/
+
     }
+    logger.info("GCP Buckets Listing Done");
     return (jsonReturn);
-/*    let result: string | any[] = [];
-    result = [...result, ...buckets];
-    return (result.length)?result:null;*/
 }

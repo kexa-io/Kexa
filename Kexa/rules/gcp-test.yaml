@@ -1,0 +1,77 @@
+- version: 1.0.0
+  date: 06-12-2023
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      name: azure cloud
+      to: 
+        #- http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "testing-rule"
+      description : "testing gcp"
+      applied: true
+      level: 2
+      cloudProvider: gcp
+      objectName : storage
+      conditions: ALL
+      value:
+        - property: metadata
+          condition: ALL
+          value:
+          - property: kind
+            condition: DIFFERENT
+            value: "storagezqzd#bucket"
+    - name: "testing-rule2"
+      description: "testing gc2"
+      applied: true
+      level: 2
+      cloudProvider: gcp
+      objectName: storage
+      conditions:
+        - property: _eventsCount
+          condition: SUP
+          value: 1
