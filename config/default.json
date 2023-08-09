@@ -8,5 +8,12 @@
                 "gcp-test"
             ]
         }
+    ],
+    "aws": [
+        {
+            "rules": [
+                "aws-tests"
+            ]
+        }
     ]
 }
