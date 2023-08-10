@@ -8,9 +8,9 @@ import { collectGithubData } from "./services/githubGathering.service";
 import { AsciiArtText, talkAboutOtherProject} from "./services/display.service";
 import { getEnvVar } from "./services/manageVarEnvironnement.service";
 import { collectKubernetes } from "./services/KubernetesGathering.service";
-import { log } from "console";
 import {collectAWSData} from "./services/awsGathering.service";
-import {collectGcpData} from "./services/gcpGathering.service";
+import { GCPResources } from "./models/gcp/resource.models";
+import { collectGcpData } from "./services/gcpGathering.service";
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 env.config();                                                                    // reading environnement vars
 
@@ -21,10 +21,16 @@ export async function main() {
     logger.info("___________________________________________________________________________________________________"); 
     logger.info("___________________________________-= running Kexa scan =-_________________________________________");
     logger.info("___________________________________________________________________________________________________"); 
-    
+
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"./Kexa/rules");
     if(settings.length != 0){
-        const [azureData, githubData, kubernetesData, awsData, gcpData] = await Promise.all([
+        const [
+            azureData,
+            githubData,
+            kubernetesData,
+            awsData,
+            gcpData
+        ] = await Promise.all([
             collectAzureData(),
             collectGithubData(),
             collectKubernetes(),
@@ -40,8 +46,6 @@ export async function main() {
             "git": githubData,
         } as ProviderResource;
 
-        console.log("Ressources : ")
-        console.log(resources.gcp[0]["storage"]);
         // Analyse rules
         settings.forEach(setting => {
             let result = checkRules(setting.rules, resources, setting.alert);

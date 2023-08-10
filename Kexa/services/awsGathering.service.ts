@@ -40,56 +40,51 @@ export async function collectAWSData(): Promise<AWSResources[] | null> {
             const client = new EC2Client(config);
             const command = new DescribeRegionsCommand({AllRegions: false,});
             const response = await client.send(command);
-            response.Regions?.forEach((element: any) => {
-                      console.log(element.RegionName);
-             })
             if (response.Regions) {
-            for (let i = 0; i < response.Regions?.length; i++) {
-                /*  response.Regions?.forEach((element: any) => {
-                      console.log(element.RegionName);
-                  })*/
-                try {
-                    logger.info("Retrieving AWS Region : " + response.Regions[i].RegionName);
-                    AWS.config.update({credentials: credentials, region: response.Regions[i].RegionName});
-                    ec2Client = new AWS.EC2(config);
-                    rdsClient = new AWS.RDS(config);
-                    //    s3Client = new AWS.S3(config);
-                    ecsClient = new AWS.ECS(config);
-                    ecrClient = new AWS.ECR(config);
-                    const resourceGroups = new AWS.ResourceGroups(config);
-                    const tags = new AWS.ResourceGroupsTaggingAPI(config);
-                    const promises = [
-                        await ec2InstancesListing(ec2Client),
-                        await ec2VolumesListing(ec2Client),
-                        await ec2SGListing(ec2Client),
-                        await rdsInstancesListing(rdsClient),
-                        //await s3BucketsListing(s3Client),
-                        await resourceGroupsListing(resourceGroups),
-                        await tagsValueListing(tags),
-                        await ecsClusterListing(ecsClient),
-                        await ecrImagesListing(ecrClient),
-                        // Add more AWS resource lists
-                    ];
-                    //
-                    const [ec2Instances, ec2Volumes, ec2SG, rdsList,/* s3List,*/ resourceGroup,
-                        tagsValue, ecsCluster, ecrImage] = await Promise.all(promises);
-                    awsResource = {
-                        "ec2Instance": [...awsResource["ec2Instance"] ?? [], ...ec2Instances],
-                        "ec2SG": [...awsResource["ec2SG"] ?? [], ...ec2SG],
-                        "ec2Volume": [...awsResource["ec2Volume"] ?? [], ...ec2Volumes],
-                        "rds": [...awsResource["rds"] ?? [], ...rdsList],
-                        //  "s3": [...awsResource["s3"] ?? [], ...s3List],
-                        "resourceGroup": [...awsResource["resourceGroup"] ?? [], ...resourceGroup],
-                        "tagsValue": [...awsResource["tagsValue"] ?? [], ...tagsValue],
-                        "ecsCluster": [...awsResource["ecsCluster"] ?? [], ...ecsCluster],
-                        "ecrImage": [...awsResource["ecrImage"] ?? [], ...ecrImage]
-                    } as AWSResources;
-                    logger.info("- listing cloud resources done -");
-                } catch (e) {
-                    logger.error("error in collectAWSData with AWS_ACCESS_KEY_ID: " + config["AWS_ACCESS_KEY_ID"] ?? null);
-                    logger.error(e);
-                }
-            }}
+                response.Regions.forEach(async (region: any) => {
+                    try {
+                        logger.info("Retrieving AWS Region : " + region.RegionName);
+                        AWS.config.update({credentials: credentials, region: region.RegionName});
+                        ec2Client = new AWS.EC2(config);
+                        rdsClient = new AWS.RDS(config);
+                        //    s3Client = new AWS.S3(config);
+                        ecsClient = new AWS.ECS(config);
+                        ecrClient = new AWS.ECR(config);
+                        const resourceGroups = new AWS.ResourceGroups(config);
+                        const tags = new AWS.ResourceGroupsTaggingAPI(config);
+                        const promises = [
+                            await ec2InstancesListing(ec2Client),
+                            await ec2VolumesListing(ec2Client),
+                            await ec2SGListing(ec2Client),
+                            await rdsInstancesListing(rdsClient),
+                            //await s3BucketsListing(s3Client),
+                            await resourceGroupsListing(resourceGroups),
+                            await tagsValueListing(tags),
+                            await ecsClusterListing(ecsClient),
+                            await ecrImagesListing(ecrClient),
+                            // Add more AWS resource lists
+                        ];
+                        //
+                        const [ec2Instances, ec2Volumes, ec2SG, rdsList,/* s3List,*/ resourceGroup,
+                            tagsValue, ecsCluster, ecrImage] = await Promise.all(promises);
+                        awsResource = {
+                            "ec2Instance": [...awsResource["ec2Instance"] ?? [], ...ec2Instances],
+                            "ec2SG": [...awsResource["ec2SG"] ?? [], ...ec2SG],
+                            "ec2Volume": [...awsResource["ec2Volume"] ?? [], ...ec2Volumes],
+                            "rds": [...awsResource["rds"] ?? [], ...rdsList],
+                            //  "s3": [...awsResource["s3"] ?? [], ...s3List],
+                            "resourceGroup": [...awsResource["resourceGroup"] ?? [], ...resourceGroup],
+                            "tagsValue": [...awsResource["tagsValue"] ?? [], ...tagsValue],
+                            "ecsCluster": [...awsResource["ecsCluster"] ?? [], ...ecsCluster],
+                            "ecrImage": [...awsResource["ecrImage"] ?? [], ...ecrImage]
+                        } as AWSResources;
+                        logger.info("- listing AWS resources done -");
+                    } catch (e) {
+                        logger.error("error in collectAWSData with AWS_ACCESS_KEY_ID: " + config["AWS_ACCESS_KEY_ID"] ?? null);
+                        logger.error(e);
+                    }
+                });
+            }
         } catch (e) {
             logger.error("error in AWS connect with AWS_ACCESS_KEY_ID: " + config["AWS_ACCESS_KEY_ID"] ?? null);
             logger.error(e);
