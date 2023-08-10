@@ -9,10 +9,6 @@ export function writeStringToJsonFile(data: string, filePath: string): boolean {
             const initialData = JSON.stringify({});
             fs.writeFileSync(filePath, initialData);
         }
-        logger.fatal("data")
-        logger.fatal(data)
-        logger.fatal(JSON.parse(data));
-        logger.fatal(JSON.stringify(JSON.parse(data), null, 4));
         fs.writeFileSync(filePath, JSON.stringify(JSON.parse(data), null, 4), 'utf8');
         return true;
     } catch (error) {
