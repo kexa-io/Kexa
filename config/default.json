@@ -1,18 +1,8 @@
 {
     "gcp": [
         {
-            "config": [
-                "config_kuber"
-            ],
             "rules": [
-                "gcp-test"
-            ]
-        }
-    ],
-    "aws": [
-        {
-            "rules": [
-                "aws-tests"
+                "aws-cloud-tests"
             ]
         }
     ]

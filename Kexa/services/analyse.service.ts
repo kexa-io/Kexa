@@ -15,7 +15,7 @@ import { ConfigAlert } from "../models/settingFile/configAlert.models";
 import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
 import { ProviderEnum } from "../enum/provider.enum";
 import { AlertEnum } from '../enum/alert.enum';
-import { getEnvVar } from './manageVarEnvironnement.service';
+import {getConfigOrEnvVar, getEnvVar} from './manageVarEnvironnement.service';
 import moment, { Moment, unitOfTime } from 'moment';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -120,7 +120,7 @@ export async function checkDocAlertConfig(alertConfig:ConfigAlert, level:string)
             }
             try{
                 for(let env of varEnvMin[type.toLowerCase() as keyof typeof varEnvMin]){
-                    if(!(await getEnvVar(env))) result.push("error - "+env+" not found in env for "+level);
+                    if(!(await getConfigOrEnvVar(config, env))) result.push("error - "+env+" not found in env for "+level);
                 }
             }catch(err){}
         };

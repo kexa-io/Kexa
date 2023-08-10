@@ -22,7 +22,7 @@ export enum ObjectNameEnum {
     TAGSVALUE = "tagsValue",
     ECSCLUSTER = "ecsCluster",
     ECRIMAGE = "ecrImage",
-    STORAGE = "storage",
+    BUCKET = "bucket",
     TASK = "task",
     COMPUTE = "compute"
 }

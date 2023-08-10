@@ -24,7 +24,6 @@ export async function collectGcpData(): Promise<GCPResources[] | null> {
             "compute": null,
         } as GCPResources;
         let projectId = await getConfigOrEnvVar(config, "PROJECTID", gcpConfig.indexOf(config)+"-");
-
         writeStringToJsonFile(await getConfigOrEnvVar(config, "GOOGLEJSON", gcpConfig.indexOf(config)+"-"), "./config/gcp.json");
         try {
             logger.info("- listing GCP resources -");
@@ -42,6 +41,17 @@ export async function collectGcpData(): Promise<GCPResources[] | null> {
                 compute : computeList,
                 bucket : bucketList,
             };
+            logger.info("- loading client Google Cloud Provider done-");
+
+            ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
+
+            const tasksClient = new CloudTasksClient();
+
+            // Run request
+            const iterable = await tasksClient.listTasksAsync();
+            for await (const response of iterable) {
+                console.log(response);
+            }
         }
         catch (e) {
             logger.error("error in collectGCPData: " + projectId);
@@ -99,7 +109,6 @@ async function listAllBucket(projectId: string): Promise<Array<Storage>|null> {
     const [buckets] = await storage.getBuckets();
     let jsonReturn = [];
     for (let i = 0; i < buckets.length; i++) {
-        console.log(buckets[i].name);
         const current_bucket = await storage.bucket(buckets[i].name).get();
         const jsonData = JSON.parse(JSON.stringify(current_bucket));
         jsonReturn.push(jsonData);

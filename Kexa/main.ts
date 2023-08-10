@@ -46,6 +46,7 @@ export async function main() {
             "git": githubData,
         } as ProviderResource;
 
+        console.log(resources.gcp[0].compute);
         // Analyse rules
         settings.forEach(setting => {
             let result = checkRules(setting.rules, resources, setting.alert);
