@@ -87,7 +87,8 @@ async function listAllComputes(projectId: string): Promise<Array<any>|null> {
     let jsonData = [];
 
     const instancesClient = new compute.InstancesClient();
-    const aggListRequest = instancesClient.aggregatedListAsync({
+    console.log("PROJCET ID : " + projectId);
+    const aggListRequest =  await instancesClient.aggregatedListAsync({
         project: projectId
     });
     for await (const [zone, instancesObject] of aggListRequest) {
