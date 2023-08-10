@@ -28,30 +28,30 @@ export async function collectGcpData(): Promise<GCPResources[] | null> {
         try {
             logger.info("- listing GCP resources -");
             const promises = [
-                listTasks(projectId),
-                listAllComputes(projectId),
-                listAllBucket(projectId),
+           //     listTasks(projectId),
+                await listAllComputes(projectId),
+                await listAllBucket(),
             ];
             
-            const [taskList, computeList, bucketList] = await Promise.all(promises);
+            const [/*taskList,*/ computeList, bucketList] = await Promise.all(promises);
 
             logger.info("- listing cloud resources done -");
-            gcpResources = {
-                task : taskList,
-                compute : computeList,
-                bucket : bucketList,
-            };
+           /* gcpResources = {
+               task : taskList,
+                compute : computeList?.at(0),
+                bucket : bucketList
+            };*/
+            gcpResources.bucket = bucketList;
+            gcpResources.compute = computeList;
             logger.info("- loading client Google Cloud Provider done-");
 
             ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
 
-            const tasksClient = new CloudTasksClient();
-
-            // Run request
+            /*const tasksClient = new CloudTasksClient();
             const iterable = await tasksClient.listTasksAsync();
             for await (const response of iterable) {
                 console.log(response);
-            }
+            }*/
         }
         catch (e) {
             logger.error("error in collectGCPData: " + projectId);
@@ -88,8 +88,7 @@ async function listAllComputes(projectId: string): Promise<Array<any>|null> {
 
     const instancesClient = new compute.InstancesClient();
     const aggListRequest = instancesClient.aggregatedListAsync({
-        project: projectId,
-        //credentials
+        project: projectId
     });
     for await (const [zone, instancesObject] of aggListRequest) {
         const instances = instancesObject.instances;
@@ -104,14 +103,16 @@ async function listAllComputes(projectId: string): Promise<Array<any>|null> {
     return (jsonData);
 }
 
-async function listAllBucket(projectId: string): Promise<Array<Storage>|null> {
+async function listAllBucket(): Promise<Array<any>|null> {
     const storage = new Storage();
     const [buckets] = await storage.getBuckets();
     let jsonReturn = [];
     for (let i = 0; i < buckets.length; i++) {
+        console.log(buckets[i].name);
         const current_bucket = await storage.bucket(buckets[i].name).get();
         const jsonData = JSON.parse(JSON.stringify(current_bucket));
         jsonReturn.push(jsonData);
+
     }
     logger.info("GCP Buckets Listing Done");
     return (jsonReturn);
