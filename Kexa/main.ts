@@ -23,7 +23,7 @@ export async function main() {
     logger.info("___________________________________________________________________________________________________"); 
 
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"./Kexa/rules");
-    if(settings.length != 0){
+    if (settings.length != 0) {
         const [
             azureData,
             githubData,
