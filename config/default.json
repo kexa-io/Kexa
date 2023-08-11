@@ -1,23 +1,25 @@
 {
-    "aws": [
-        {
-            "rules":[
-                "aws-cloud-tests"
-            ]
-        }
-    ],
-    "git": [
+    "http": [
         {
             "rules": [
-                "aws-cloud-tests"
+                "test-http"
             ]
-        }
-    ],
-    "kubernetes": [
+        },
         {
-            "config": [
-                "config_kuber"
+            "rules": [
+                "test-http"
             ]
+        },
+        {
+            "rules": [
+                "test-http"
+            ],
+            "header": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "licence": "KVXFHQ-JLWCAF-ZIXZJJI"
+            }
         }
     ]
 }

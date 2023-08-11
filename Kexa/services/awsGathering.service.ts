@@ -33,8 +33,8 @@ export async function collectAWSData(): Promise<AWSResources[] | null> {
         } as AWSResources;
         try {
             const credentials = new AWS.Credentials({
-                accessKeyId: await getConfigOrEnvVar(config, "AWS_ACCESS_KEY_ID", awsConfig.indexOf(config) + "-"),
-                secretAccessKey: await getConfigOrEnvVar(config, "AWS_SECRET_ACCESS_KEY", awsConfig.indexOf(config) + "-"),
+                accessKeyId: await getConfigOrEnvVar(config, "AWSACCESSKEYID", awsConfig.indexOf(config) + "-"),
+                secretAccessKey: await getConfigOrEnvVar(config, "AWSSECRETACCESSKEY", awsConfig.indexOf(config) + "-"),
             });
             AWS.config.update({ credentials: credentials, region: "us-east-1" });
             ec2Client = new AWS.EC2(config);
@@ -73,7 +73,7 @@ export async function collectAWSData(): Promise<AWSResources[] | null> {
             logger.info("- listing cloud resources done -");
 
         } catch (e) {
-            logger.error("error in collectAWSData with AWS_ACCESS_KEY_ID: " + config["AWS_ACCESS_KEY_ID"] ?? null);
+            logger.error("error in collectAWSData with AWSACCESSKEYID: " + config["AWSACCESSKEYID"] ?? null);
             logger.error(e);
         }
         resources.push(awsResource);

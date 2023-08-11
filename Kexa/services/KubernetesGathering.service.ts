@@ -1,7 +1,8 @@
 import { Logger } from "tslog";
 import helm from 'helm-ts';
 import { KubernetesResources } from "../models/kubernetes/kubernetes.models";
-import { setEnvVar } from "./manageVarEnvironnement.service";
+import { getConfigOrEnvVar, setEnvVar } from "./manageVarEnvironnement.service";
+import { deleteFile, writeStringToJsonFile } from "../helpers/files";
 
 
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
@@ -18,6 +19,7 @@ export async function collectKubernetes(): Promise<KubernetesResources[]|null>{
             if(!config["config"]){
                 throw new Error("- Please pass CONFIG in your config file");
             }
+            writeStringToJsonFile(await getConfigOrEnvVar(config, "KUBERNETESJSON", kubernetesConfig.indexOf(config)+"-"), "./config/kubernetes.json");
             setEnvVar("KUBECONFIG", config["config"]);
             const promises = [
                 kubernetesListing(),
@@ -33,6 +35,7 @@ export async function collectKubernetes(): Promise<KubernetesResources[]|null>{
         }catch(e){
             logger.error(e);
         }
+        deleteFile("./config/kubernetes.json");
     }
     return resources??null;
 }

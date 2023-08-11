@@ -55,6 +55,10 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean):
             return awsPropertyToSend(rule, objectContent, isSms)
         case ProviderEnum.GIT:
             return gitPropertyToSend(rule, objectContent, isSms)
+        case ProviderEnum.KUBERNETES:
+            return kubPropertyToSend(rule, objectContent, isSms)
+        case ProviderEnum.HTTP:
+            return httpPropertyToSend(rule, objectContent, isSms)
         default:
             return `Id : ` + objectContent.id
     }
@@ -156,6 +160,15 @@ export function gitPropertyToSend(rules: Rules, objectContent: any, isSms: boole
             return (isSms ? webLink : '') + objectContent?.html_url + (isSms ? ' ' : '">') + 'Issue id : ' + objectContent?.id + (isSms ? `.` : `</a>`)
         default:
             return 'GIT Scan : Id : ' + objectContent.id;
+    }
+}
+
+export function httpPropertyToSend(rules: Rules, objectContent: any, isSms: boolean): string {
+    switch (rules?.objectName) {
+        case ObjectNameEnum.REQUEST:
+            return `Url : ` + objectContent?.url + ` with status : ` + objectContent?.status
+        default:
+            return 'HTTP Scan : Id : ' + objectContent.id;
     }
 }
 

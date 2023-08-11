@@ -10,6 +10,7 @@ import { getEnvVar } from "./services/manageVarEnvironnement.service";
 import { collectKubernetes } from "./services/KubernetesGathering.service";
 import { log } from "console";
 import {collectAWSData} from "./services/awsGathering.service";
+import { collectHttpData } from "./services/http.service";
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 env.config();                                                                    // reading environnement vars
 
@@ -23,11 +24,12 @@ export async function main() {
     
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"./Kexa/rules");
     if(settings.length != 0){
-        const [azureData, githubData, kubernetesData, awsData] = await Promise.all([
+        const [azureData, githubData, kubernetesData, awsData, httpData] = await Promise.all([
             collectAzureData(),
             collectGithubData(),
             collectKubernetes(),
-            collectAWSData()
+            collectAWSData(),
+            collectHttpData()
         ]);
 
        let resources = {
@@ -35,7 +37,8 @@ export async function main() {
             "gcp": null,
             "aws": awsData??null,
             "kubernetes": kubernetesData,
-            "git": githubData
+            "git": githubData,
+            "http": httpData
         } as ProviderResource;
 
         // Analyse rules

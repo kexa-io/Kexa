@@ -21,5 +21,6 @@ export enum ObjectNameEnum {
     RESOURCEGROUPS = "resourceGroups",
     TAGSVALUE = "tagsValue",
     ECSCLUSTER = "ecsCluster",
-    ECRREPOSITORY = "ecrRepository"
+    ECRREPOSITORY = "ecrRepository",
+    REQUEST= "request",
 }
