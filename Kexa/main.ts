@@ -10,7 +10,7 @@ import { getEnvVar } from "./services/manageVarEnvironnement.service";
 import { collectKubernetes } from "./services/KubernetesGathering.service";
 import { log } from "console";
 import {collectAWSData} from "./services/awsGathering.service";
-import { collectHttpData } from "./services/http.service";
+import { collectHttpData } from "./services/httpGathering.service";
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 env.config();                                                                    // reading environnement vars
 
@@ -32,7 +32,7 @@ export async function main() {
             collectHttpData()
         ]);
 
-       let resources = {
+        let resources = {
             "azure": azureData??null,
             "gcp": null,
             "aws": awsData??null,
