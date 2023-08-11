@@ -20,7 +20,7 @@ export function writeStringToJsonFile(data: string, filePath: string): boolean {
 export function deleteFile(filePath: string): boolean {
     try {
         const fileExists = fs.existsSync(filePath);
-        if (!fileExists) {
+        if (fileExists) {
             fs.unlinkSync(filePath);
         }
         return true;
