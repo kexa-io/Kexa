@@ -1,4 +1,3 @@
-import { ObjectNameEnum } from "../../../enum/objectName.enum";
 import { Rules } from "../../../models/settingFile/rules.models";
 let AWSRegion = process.env.AWS_REGION ? process.env.AWS_REGION : "us-west-1";
 
