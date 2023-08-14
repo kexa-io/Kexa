@@ -25,4 +25,5 @@ export enum ObjectNameEnum {
     BUCKET = "bucket",
     TASK = "task",
     COMPUTE = "compute"
+
 }

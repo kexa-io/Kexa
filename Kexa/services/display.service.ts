@@ -110,6 +110,16 @@ export function azurePropertyToSend(rule: Rules, objectContent: any, isSms: bool
                 return `Id : `+ objectContent?.id + `https://portal.azure.com/#@/resource/` + objectContent?.id
             else
                 return `Id : <a href="https://portal.azure.com/#@/resource/` + objectContent?.id + '">' + objectContent?.id + `</a>`
+        case ObjectNameEnum.NAMESPACE:
+            logger.debug(objectContent)
+            return `Name : ` + objectContent.metadata.name
+        case ObjectNameEnum.PODS:
+            if (isSms)
+                return `Name : ` + objectContent.metadata.generateName + ` and NameSpace : ` + objectContent.metadata.namespace
+            else
+                return `Name : ` + objectContent.metadata.generateName + `</br>NameSpace : ` + objectContent.metadata.namespace
+        case ObjectNameEnum.HELM:
+            return `Name : ` + objectContent.metadata.generateName
         default:
             return `Id : ` + objectContent.id
     }

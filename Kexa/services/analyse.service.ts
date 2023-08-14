@@ -480,7 +480,14 @@ export function checkIncludeNS(condition:RulesConditions, value:any): boolean {
 
 export function checkRegex(condition:RulesConditions, value:any): boolean {
     logger.debug("check regex");
-    if(value.match(condition.value)) return true;
+    if (typeof value == "number") {
+        if (value.toString().match(condition.value.toString()))
+            return true;
+        else
+            return false;
+    }
+    if (value.match(condition.value))
+        return true;
     return false;
 }
 

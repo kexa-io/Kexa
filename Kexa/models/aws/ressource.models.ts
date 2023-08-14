@@ -14,5 +14,5 @@ export interface AWSResources {
     resourceGroup: Array<AWS.ResourceGroups> | null;
     tagsValue: Array<AWS.ResourceGroupsTaggingAPI.TagValue> | null;
     ecsCluster: Array<AWS.ECS> | null;
-    ecrImage: Array<AWS.ECR> | null;
+    ecrRepository: Array<AWS.ECR> | null;
 }

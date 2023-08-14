@@ -8,7 +8,7 @@ const { DefaultAzureCredential } = require("@azure/identity");
 //const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
 
 export async function getEnvVar(name:string) {
-    return getFromManager(name)??process.env[name];
+    return (await getFromManager(name))??process.env[name];
 }
 
 async function getFromManager(name:string){

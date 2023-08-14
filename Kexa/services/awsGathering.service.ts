@@ -25,11 +25,11 @@ export async function collectAWSData(): Promise<AWSResources[] | null> {
             "ec2SG": null,
             "ec2Volume": null,
             "rds": null,
-      //      "s3": null,
+            //      "s3": null,
             "resourceGroup": null,
             "tagsValue": null,
             "ecsCluster": null,
-            "ecrImage": null
+            "ecrRepository": null,
             // Add more AWS resource
         } as AWSResources;
         try {
@@ -98,15 +98,6 @@ export async function ec2SGListing(client: AWS.EC2): Promise<any> {
     try {
         const data = await client.describeSecurityGroups().promise();
         const jsonData = JSON.parse(JSON.stringify(data.SecurityGroups));
-        let retValues: [] = [];
-        jsonData.forEach((element:any) => {
-            const stringify = (JSON.stringify(element.IpPermissions));
-            console.log(stringify);
-            const dataToInsert: object[] = JSON.parse(stringify);
-       //     element["IpRanges"] = dataToInsert["IpRanges"];
-         //   console.log(dataToInsert.IpRanges);
-           // element.push();
-        });
         logger.info("ec2SGListing Done");
         return jsonData;
     } catch (err) {
@@ -203,7 +194,7 @@ export async function ecsClusterListing(client: AWS.ECS): Promise<any> {
     }
 }
 
-export async function ecrImagesListing(client: AWS.ECR): Promise<any> {
+export async function ecrRepositoryListing(client: AWS.ECR): Promise<any> {
     try {
         const data = await client.describeRepositories().promise();
         const jsonData = JSON.parse(JSON.stringify(data.repositories));

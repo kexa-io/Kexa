@@ -5,5 +5,19 @@
                 "aws-cloud-tests"
             ]
         }
+    ],
+    "git": [
+        {
+            "rules": [
+                "aws-cloud-tests"
+            ]
+        }
+    ],
+    "kubernetes": [
+        {
+            "config": [
+                "config_kuber"
+            ]
+        }
     ]
 }
