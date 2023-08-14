@@ -527,7 +527,13 @@ export function checkSome(condition:RulesConditions, value:any): boolean {
 
 export function checkOne(condition:RulesConditions, value:any): boolean {
     logger.debug("check one");
-    if(value.filter((v:any) => v === condition.value).length === 1) return true;
+    let result:SubResultScan[][] = [];
+    value.forEach((v:any) => {
+        result.push(checkRule(condition.value as RulesConditions[]|ParentRules[], v));
+    });
+    let finalResult:boolean[] = [];
+    for (let row of result) for (let e of row) finalResult.push(e.result);
+    if(finalResult.filter((v:any) => v).length === 1) return true;
     return false;
 }
 
@@ -591,6 +597,8 @@ export function checkGreaterThanDate(condition:RulesConditions, value:any): bool
     logger.debug("check greater than date");
     let dynamic_date = generateDate(condition.value as string, false);
     let value_date = moment(value, condition.date).toDate();
+    logger.debug(dynamic_date);
+    logger.debug(value_date);
     if(value_date < dynamic_date.toDate()) return true;
     return false;
 }
