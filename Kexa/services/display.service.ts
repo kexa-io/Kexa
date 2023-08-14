@@ -1,8 +1,8 @@
-import { ObjectNameEnum } from "../enum/objectName.enum";
-import { ProviderEnum } from "../enum/provider.enum";
-import { ResultScan } from "../models/resultScan.models";
-import { Logger } from "tslog";
-import { Rules } from "../models/settingFile/rules.models";
+import {ObjectNameEnum} from "../enum/objectName.enum";
+import {ProviderEnum} from "../enum/provider.enum";
+import {ResultScan} from "../models/resultScan.models";
+import {Logger} from "tslog";
+import {Rules} from "../models/settingFile/rules.models";
 
 let debug_mode = Number(process.env.debug_mode)??0;
 let AWSRegion = process.env.AWS_REGION ? process.env.AWS_REGION : "us-west-1";
@@ -45,16 +45,53 @@ export function renderTableAllScan(allScan: ResultScan[][]): string{
     return result
 }
 
-export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean): string{
+export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean= false): string{
     switch(rule?.cloudProvider){
         case ProviderEnum.AZURE:
             return azurePropertyToSend(rule, objectContent, isSms)
         case ProviderEnum.GCP:
-            //return gcpPropertyToSend(scan, false)
+            return gcpPropertyToSend(rule, objectContent, isSms)
         case ProviderEnum.AWS:
             return awsPropertyToSend(rule, objectContent, isSms)
         case ProviderEnum.GIT:
             return gitPropertyToSend(rule, objectContent, isSms)
+        case ProviderEnum.KUBERNETES:
+            return kubernetesPropertyToSend(rule, objectContent, isSms)
+        default:
+            return `Id : ` + objectContent.id
+    }
+}
+
+function getGCPRegionFromUrl(url: string): string | null {
+    const segments = url.split('/');
+    if (segments.length > 0)
+        return segments[segments.length - 1];
+    return null;
+}
+
+function getGCPProjectFromUrl(url: string): string | null {
+    const match = url.match(/\/projects\/([^\/]+)/);
+
+    if (match && match[1])
+        return match[1];
+    return null;
+}
+
+export function gcpPropertyToSend(rule: Rules, objectContent: any, isSms: boolean): string {
+    const zone = getGCPRegionFromUrl(objectContent?.zone);
+    const project = getGCPProjectFromUrl(objectContent?.zone);
+    let link : string;
+    if (isSms)
+        link = `Id : ` + objectContent?.name + ` : https://console.cloud.google.com/`;
+    else
+        link = `Id : ` + objectContent?.name + ` : <a href="https://console.cloud.google.com/`;
+    switch (rule?.objectName) {
+        case ObjectNameEnum.BUCKET:
+            return link + `storage/browser/` + objectContent?.id + (isSms ? ' ' : '">') + ' ' + objectContent?.name + (isSms ? `.` : `</a>`)
+        case ObjectNameEnum.COMPUTE:
+            return link + `compute/instancesDetail/zones/` + zone + `/instances/` + objectContent?.name + `?authuser=1&project=` + project + (isSms ? ' ' : '">') + ' ' + objectContent?.name + (isSms ? `.` : `</a>`)
+        case ObjectNameEnum.TASK:
+            return `Id : ` + objectContent?.id
         default:
             return `Id : ` + objectContent.id
     }
@@ -115,7 +152,7 @@ export function awsPropertyToSend(rules: Rules, objectContent: any, isSms: boole
             return fullLink + `rds/home?region=` + AWSRegion + `#InstanceDetails:instanceId=`+ objectContent?.Instances[0]?.InstanceId + (isSms ? ' ' : '">') + objectContent?.Instances[0]?.InstanceId + (isSms ? `.` : `</a>`)
         case ObjectNameEnum.TAGSVALUE:
             return fullLink + `resource-groups/tag-editor/find-resources?region=` + AWSRegion + (isSms ? ' ' : '">') + objectContent?.name + (isSms ? `.` : `</a>`)
-        case ObjectNameEnum.ECRREPOSITORY:
+        case ObjectNameEnum.ECRIMAGE:
             return fullLink + objectContent?.repositoryUri + (isSms ? ' ' : '">') + objectContent?.repositoryName + (isSms ? `.` : `</a>`)
         case ObjectNameEnum.ECSCLUSTER:
             return 'ClutserArn :' + objectContent?.clusterArn;
@@ -156,6 +193,23 @@ export function gitPropertyToSend(rules: Rules, objectContent: any, isSms: boole
             return (isSms ? webLink : '') + objectContent?.html_url + (isSms ? ' ' : '">') + 'Issue id : ' + objectContent?.id + (isSms ? `.` : `</a>`)
         default:
             return 'GIT Scan : Id : ' + objectContent.id;
+    }
+}
+
+export function kubernetesPropertyToSend(rules: Rules, objectContent: any, isSms: boolean): string {
+    switch (rules?.objectName) {
+        case ObjectNameEnum.NAMESPACE:
+            logger.debug(objectContent)
+            return `Name : ` + objectContent.metadata.name
+        case ObjectNameEnum.PODS:
+            if (isSms)
+                return `Name : ` + objectContent.metadata.generateName + ` and NameSpace : ` + objectContent.metadata.namespace
+            else
+                return `Name : ` + objectContent.metadata.generateName + `</br>NameSpace : ` + objectContent.metadata.namespace
+        case ObjectNameEnum.HELM:
+            return `Name : ` + objectContent.metadata.generateName
+        default:
+            return 'Kubernetes Scan : Id : ' + objectContent.id;
     }
 }
 

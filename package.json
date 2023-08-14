@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@aws-sdk/client-ec2": "^3.387.0",
     "@azure/arm-compute": "^20.0.0",
     "@azure/arm-containerservice": "^19.0.0",
     "@azure/arm-network": "^30.1.0",
@@ -10,11 +11,16 @@
     "@azure/graph": "^5.0.3",
     "@azure/keyvault-secrets": "^4.7.0",
     "@azure/logger": "^1.0.3",
-    "@azure/ms-rest-js": "^2.6.4",
-    "@azure/msal-node": "^1.14.6",
+    "@google-cloud/compute": "^3.10.0",
+    "@google-cloud/secret-manager": "^5.0.0",
+    "@google-cloud/storage": "^7.0.0",
+    "@google-cloud/tasks": "^3.2.0",
     "@kubernetes/client-node": "^0.18.1",
+    "@microsoft/teams-js": "^2.14.0",
     "@octokit/core": "^4.2.4",
-    "@slack/bolt": "^3.13.1",
+    "@types/glob": "^8.1.0",
+    "@types/minimatch": "^5.1.2",
+    "@types/rimraf": "^4.0.5",
     "aws-sdk": "^2.1424.0",
     "cfonts": "^3.2.0",
     "config": "^3.3.9",
@@ -43,9 +49,9 @@
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
   },
-  "name": "checkinfra",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "Kexa",
+  "version": "1.1.0",
+  "main": "./Kexa/main.ts",
   "scripts": {
     "build": "rimraf ./build && tsc",
     "start:dev": "npx nodemon",
@@ -62,7 +68,7 @@
     "test": "mocha --require ts-node/register --require source-map-support/register 'Kexa/__tests__/**/*.test.ts'"
   },
   "keywords": [],
-  "author": "4urcloud",
-  "license": "ISC",
-  "description": ""
+  "author": "4urcloud | Esteban MATHIA | Adrien EPPLING",
+  "license": "MIT",
+  "description": "Kexa vous permet d'économiser de l'argent et d'automatiser la normalisation, la sécurité et les vérifications de vos déploiements cloud."
 }
