@@ -29,7 +29,7 @@ export async function collectAWSData(): Promise<AWSResources[] | null> {
             "resourceGroup": null,
             "tagsValue": null,
             "ecsCluster": null,
-            "ecrRepository": null,
+         //   "ecrImage": null
             // Add more AWS resource
         } as AWSResources;
         try {
@@ -61,12 +61,12 @@ export async function collectAWSData(): Promise<AWSResources[] | null> {
                             await resourceGroupsListing(resourceGroups),
                             await tagsValueListing(tags),
                             await ecsClusterListing(ecsClient),
-                            await ecrImagesListing(ecrClient),
+                           // await ecrImagesListing(ecrClient),
                             // Add more AWS resource lists
                         ];
                         //
                         const [ec2Instances, ec2Volumes, ec2SG, rdsList,/* s3List,*/ resourceGroup,
-                            tagsValue, ecsCluster, ecrImage] = await Promise.all(promises);
+                            tagsValue, ecsCluster,/* ecrImage*/] = await Promise.all(promises);
                         awsResource = {
                             "ec2Instance": [...(awsResource["ec2Instance"] ?? []), ...ec2Instances],
                             "ec2SG": [...(awsResource["ec2SG"] ?? []), ...ec2SG],
@@ -76,7 +76,7 @@ export async function collectAWSData(): Promise<AWSResources[] | null> {
                             "resourceGroup": [...(awsResource["resourceGroup"] ?? []), ...resourceGroup],
                             "tagsValue": [...(awsResource["tagsValue"] ?? []), ...tagsValue],
                             "ecsCluster": [...(awsResource["ecsCluster"] ?? []), ...ecsCluster],
-                            "ecrImage": [...(awsResource["ecrImage"] ?? []), ...ecrImage]
+                            //"ecrImage": [...(awsResource["ecrImage"] ?? []), ...ecrImage]
                         } as AWSResources;
                         logger.info("- listing AWS resources done -");
                     } catch (e) {
@@ -93,7 +93,6 @@ export async function collectAWSData(): Promise<AWSResources[] | null> {
     }
     return resources ?? null;
 }
-
 export async function ec2SGListing(client: AWS.EC2): Promise<any> {
     try {
         const data = await client.describeSecurityGroups().promise();
@@ -194,7 +193,7 @@ export async function ecsClusterListing(client: AWS.ECS): Promise<any> {
     }
 }
 
-export async function ecrRepositoryListing(client: AWS.ECR): Promise<any> {
+export async function ecrImagesListing(client: AWS.ECR): Promise<any> {
     try {
         const data = await client.describeRepositories().promise();
         const jsonData = JSON.parse(JSON.stringify(data.repositories));
