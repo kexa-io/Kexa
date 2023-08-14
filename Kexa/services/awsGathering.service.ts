@@ -68,15 +68,15 @@ export async function collectAWSData(): Promise<AWSResources[] | null> {
                         const [ec2Instances, ec2Volumes, ec2SG, rdsList,/* s3List,*/ resourceGroup,
                             tagsValue, ecsCluster, ecrImage] = await Promise.all(promises);
                         awsResource = {
-                            "ec2Instance": [...awsResource["ec2Instance"] ?? [], ...ec2Instances],
-                            "ec2SG": [...awsResource["ec2SG"] ?? [], ...ec2SG],
-                            "ec2Volume": [...awsResource["ec2Volume"] ?? [], ...ec2Volumes],
-                            "rds": [...awsResource["rds"] ?? [], ...rdsList],
+                            "ec2Instance": [...(awsResource["ec2Instance"] ?? []), ...ec2Instances],
+                            "ec2SG": [...(awsResource["ec2SG"] ?? []), ...ec2SG],
+                            "ec2Volume": [...(awsResource["ec2Volume"] ?? []), ...ec2Volumes],
+                            "rds": [...(awsResource["rds"] ?? []), ...rdsList],
                             //  "s3": [...awsResource["s3"] ?? [], ...s3List],
-                            "resourceGroup": [...awsResource["resourceGroup"] ?? [], ...resourceGroup],
-                            "tagsValue": [...awsResource["tagsValue"] ?? [], ...tagsValue],
-                            "ecsCluster": [...awsResource["ecsCluster"] ?? [], ...ecsCluster],
-                            "ecrImage": [...awsResource["ecrImage"] ?? [], ...ecrImage]
+                            "resourceGroup": [...(awsResource["resourceGroup"] ?? []), ...resourceGroup],
+                            "tagsValue": [...(awsResource["tagsValue"] ?? []), ...tagsValue],
+                            "ecsCluster": [...(awsResource["ecsCluster"] ?? []), ...ecsCluster],
+                            "ecrImage": [...(awsResource["ecrImage"] ?? []), ...ecrImage]
                         } as AWSResources;
                         logger.info("- listing AWS resources done -");
                     } catch (e) {

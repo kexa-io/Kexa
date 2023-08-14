@@ -3,7 +3,7 @@ import { collectAzureData } from "./services/azureGathering.service";
 import { Logger } from "tslog";
 import { ProviderResource } from "./models/providerResource.models";
 import { checkRules, gatheringRules } from "./services/analyse.service";
-import { alertGlobal } from "./services/alerte.service";
+import {alertGlobal, getAccessToken, sendCardMessageToTeamsChannel} from "./services/alerte.service";
 import { collectGithubData } from "./services/githubGathering.service";
 import { AsciiArtText, talkAboutOtherProject} from "./services/display.service";
 import { getEnvVar } from "./services/manageVarEnvironnement.service";
@@ -11,6 +11,7 @@ import { collectKubernetes } from "./services/KubernetesGathering.service";
 import {collectAWSData} from "./services/awsGathering.service";
 import { GCPResources } from "./models/gcp/resource.models";
 import { collectGcpData } from "./services/gcpGathering.service";
+import { sendMessageToTeamsChannel } from "./services/alerte.service";
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 env.config();                                                                    // reading environnement vars
 
@@ -45,8 +46,6 @@ export async function main() {
             "kubernetes": kubernetesData,
             "git": githubData,
         } as ProviderResource;
-
-        console.log(resources.gcp[0].compute);
         // Analyse rules
         settings.forEach(setting => {
             let result = checkRules(setting.rules, resources, setting.alert);
@@ -54,7 +53,7 @@ export async function main() {
                 alertGlobal(result, setting.alert.global);
             }
         });
-    }else{
+    }else {
         logger.error("No correct rules found, please check the rules directory or the rules files.");
     }
 

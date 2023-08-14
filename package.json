@@ -16,6 +16,7 @@
     "@google-cloud/storage": "^7.0.0",
     "@google-cloud/tasks": "^3.2.0",
     "@kubernetes/client-node": "^0.18.1",
+    "@microsoft/teams-js": "^2.14.0",
     "@octokit/core": "^4.2.4",
     "@types/glob": "^8.1.0",
     "@types/minimatch": "^5.1.2",

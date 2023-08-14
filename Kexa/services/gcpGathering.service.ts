@@ -46,9 +46,18 @@ export async function collectGcpData(): Promise<GCPResources[] | null> {
             logger.info("- loading client Google Cloud Provider done-");
 
             ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
+            /*const client = new CloudTasksClient();
 
-            /*const tasksClient = new CloudTasksClient();
-            const iterable = await tasksClient.listTasksAsync();
+
+           const location = 'us-central1';
+            const queueParent = `projects/${projectId}/locations/${location}`;
+
+            //await listQueues(client, projectId);
+            const tasksParent = client.queuePath(projectId, location, "queueName");
+
+
+            const tasksClient = new CloudTasksClient();
+            const iterable = await tasksClient.listTasksAsync(tasksParent);
             for await (const response of iterable) {
                 console.log(response);
             }*/
@@ -80,6 +89,23 @@ async function listTasks(projectId: string): Promise<Array<any>|null> {
     }
     logger.info("GCP Task Listing Done");
     return (result.length)?result:null;
+}
+
+async function listQueues(client: any, projectId: string) {
+    // Get the fully qualified path to the region
+    //const parent = client.locationPath(projectId);
+
+    // list all fo the queues
+    const [queues] = await client.listQueues({client});
+
+    if (queues.length > 0) {
+        console.log('Queues:');
+        queues.forEach((queue: any) => {
+            console.log(`  ${queue.name}`);
+        });
+    } else {
+        console.log('No queues found!');
+    }
 }
 
 const compute = require('@google-cloud/compute');

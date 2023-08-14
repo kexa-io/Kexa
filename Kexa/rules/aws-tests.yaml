@@ -3,44 +3,40 @@
   alert:
     fatal:
       enabled: true
-      type: 
+      type:
         - log
-        - email
+        - teams
       to: 
-        - adrien.eppling@supinfo.com
+        - "https://innovtecheu.webhook.office.com/webhookb2/d1e6f097-8ece-4b79-9b18-a4d1e2f005e1@e17d1063-88c2-4368-9d08-203b84a1bb40/IncomingWebhook/79fd0693bde5400b99b2622144d3c0ae/9bb0a529-c19a-478f-afd3-04a338037922"
     error:
       enabled: true
-      type: 
+      type:
         - log
-        - email
-        #- sms
+        - teams
       to: 
-        - adrien.eppling@supinfo.com
+        - "https://innovtecheu.webhook.office.com/webhookb2/d1e6f097-8ece-4b79-9b18-a4d1e2f005e1@e17d1063-88c2-4368-9d08-203b84a1bb40/IncomingWebhook/79fd0693bde5400b99b2622144d3c0ae/9bb0a529-c19a-478f-afd3-04a338037922"
     warning:
       enabled: true
-      type: 
+      type:
         - log
-        - email
+        - teams
       to:
-        - adrien.eppling@supinfo.com
+        - "https://innovtecheu.webhook.office.com/webhookb2/d1e6f097-8ece-4b79-9b18-a4d1e2f005e1@e17d1063-88c2-4368-9d08-203b84a1bb40/IncomingWebhook/79fd0693bde5400b99b2622144d3c0ae/9bb0a529-c19a-478f-afd3-04a338037922"
     info:
       enabled: true
-      type: 
+      type:
         - log
-        - email
+        - teams
       to: 
-        - adrien.eppling@supinfo.com
+        - "https://innovtecheu.webhook.office.com/webhookb2/d1e6f097-8ece-4b79-9b18-a4d1e2f005e1@e17d1063-88c2-4368-9d08-203b84a1bb40/IncomingWebhook/79fd0693bde5400b99b2622144d3c0ae/9bb0a529-c19a-478f-afd3-04a338037922"
     global:
       enabled: true
-      type: 
+      type:
         - log
-        #- webhook
-        #- sms
-        - email
+        - teams
       name: aws-cloud-tests
-      to: 
-        #- http://127.0.0.1:5000/test
-        - adrien.eppling@supinfo.com
+      to:
+        - "https://innovtecheu.webhook.office.com/webhookb2/d1e6f097-8ece-4b79-9b18-a4d1e2f005e1@e17d1063-88c2-4368-9d08-203b84a1bb40/IncomingWebhook/79fd0693bde5400b99b2622144d3c0ae/9bb0a529-c19a-478f-afd3-04a338037922"
       conditions:
         - level: 0
           min: 1
