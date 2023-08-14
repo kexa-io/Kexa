@@ -24,7 +24,7 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean){
         case "ecrRepository":
             return fullLink + objectContent?.repositoryUri + (isSms ? ' ' : '">') + objectContent?.repositoryName + (isSms ? `.` : `</a>`)
         case "ecsCluster":
-            return 'ClutserArn :' + objectContent?.clusterArn;
+            return 'ClusterArn :' + objectContent?.clusterArn;
         case "resourceGroups":
             return 'GroupArn :' + objectContent?.GroupArn;
         default:
