@@ -1,8 +1,16 @@
+/*
+    * Provider : gcp
+    * Creation date : 2023-08-14
+    * Note : 
+    * Resources :
+    *     - task
+*/
+
 import { Logger } from "tslog";
-import { getConfigOrEnvVar, setEnvVar } from "./manageVarEnvironnement.service";
-import { GCPResources } from "../models/gcp/resource.models";
+import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
+import { GCPResources } from "../../models/gcp/resource.models";
 import {Storage} from "@google-cloud/storage";
-import { deleteFile, writeStringToJsonFile } from "../helpers/files";
+import { deleteFile, writeStringToJsonFile } from "../../helpers/files";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
@@ -14,7 +22,7 @@ const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "GcpLogg
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING CLOUD RESOURCES
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function collectGcpData(): Promise<GCPResources[] | null> {
+export async function collectData(): Promise<GCPResources[] | null> {
     let resources = new Array<GCPResources>();
     setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", "./config/gcp.json");
     for (let config of gcpConfig??[]) {

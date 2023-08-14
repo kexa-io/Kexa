@@ -1,23 +1,25 @@
 {
-    "gcp": [
+    "http": [
         {
             "rules": [
-                "aws-cloud-tests"
+                "test-http"
             ]
-        }
-    ],
-    "git": [
+        },
         {
             "rules": [
-                "aws-cloud-tests"
+                "test-http"
             ]
-        }
-    ],
-    "kubernetes": [
+        },
         {
-            "config": [
-                "config_kuber"
-            ]
+            "rules": [
+                "test-http"
+            ],
+            "header": {
+                "Content-Type": "application/json"
+            },
+            "body": {
+                "licence": "KVXFHQ-JLWCAF-ZIXZJJI"
+            }
         }
     ]
 }

@@ -1,20 +1,12 @@
 import env from "dotenv";
-import { collectAzureData } from "./services/azureGathering.service";
 import { Logger } from "tslog";
-import { ProviderResource } from "./models/providerResource.models";
 import { checkRules, gatheringRules } from "./services/analyse.service";
-import {alertGlobal, getAccessToken, sendCardMessageToTeamsChannel} from "./services/alerte.service";
-import { collectGithubData } from "./services/githubGathering.service";
+import { alertGlobal } from "./services/alerte.service";
 import { AsciiArtText, talkAboutOtherProject} from "./services/display.service";
 import { getEnvVar } from "./services/manageVarEnvironnement.service";
-import { collectKubernetes } from "./services/KubernetesGathering.service";
-import {collectAWSData} from "./services/awsGathering.service";
-import { GCPResources } from "./models/gcp/resource.models";
-import { collectGcpData } from "./services/gcpGathering.service";
-import { sendMessageToTeamsChannel } from "./services/alerte.service";
+import { loadAddOns } from "./services/addOn.service";
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-env.config();                                                                    // reading environnement vars
-
+env.config();                                                                    // reading environnement vars                                                       // file system
 
 export async function main() {
     let logger = new Logger({ minLevel: Number(process.env.DEBUG_MODE)??4, type: "pretty", name: "globalLogger" });
@@ -24,28 +16,12 @@ export async function main() {
     logger.info("___________________________________________________________________________________________________"); 
 
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"./Kexa/rules");
-    if (settings.length != 0) {
-        const [
-            azureData,
-            githubData,
-            kubernetesData,
-            awsData,
-            gcpData
-        ] = await Promise.all([
-            collectAzureData(),
-            collectGithubData(),
-            collectKubernetes(),
-            collectAWSData(),
-            collectGcpData()
-        ]);
 
-        let resources = {
-            "azure": azureData??null,
-            "gcp": gcpData??null,
-            "aws": awsData??null,
-            "kubernetes": kubernetesData,
-            "git": githubData,
-        } as ProviderResource;
+    if(settings.length != 0){
+
+        let resources = {};
+        resources = await loadAddOns(resources);
+
         // Analyse rules
         settings.forEach(setting => {
             let result = checkRules(setting.rules, resources, setting.alert);
@@ -65,7 +41,6 @@ export async function main() {
     talkAboutOtherProject();
     //logger.debug(await getEnvVar("test"));
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 main();

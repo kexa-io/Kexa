@@ -132,11 +132,15 @@ This is an example of how to list things you need to use the software and how to
   {
     "azure": [
       {
+        "name": "Project A",
+        "description": "First subscription (0) : Project A subscription",
         "rules": [
           "Name of my rule"
         ]
       },
       {
+        "name": "Project B",
+        "description": "Second subscription (1) : Project B subscription",
         "rules": [
           "Name of my rule",
           "Another rules"
@@ -145,7 +149,7 @@ This is an example of how to list things you need to use the software and how to
     ]
   }
   ```
-
+  Please note that the "name" and "description" attributes are entirely optional and serve only to ensure the maintainability of the configuration.
 
     
   Add the following variables for each provider you want to test:
@@ -164,6 +168,29 @@ This is an example of how to list things you need to use the software and how to
     ```
       KUBECONFIG="./Path/to/my/config.yml"
     ```
+  - AWS:
+    ```
+      AWSACCESSKEYID
+      AWSSECRETACCESSKEY
+    ```
+  - GCP:
+    ```
+      GOOGLEJSON of your google json credential
+      PROJECTID ID of a gcp project
+    ```
+  - HTTP:
+    at least you must add this following var :
+    ```
+      URL=https://www.kexa.io
+      METHOD=GET
+    ```
+    You can optionally add this variable to add more context:
+    ```
+      AUTHORIZATION=Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJLZXhhIiwiaWF0IjoxNjkxNzY1MTUwLCJleHAiOjE5MTI2MDMzMzAsImF1ZCI6Ind3dy5rZXhhLmlvIiwic3ViIjoiZXN0ZWJhbi5tYXRoaWFAc3VwaW5mby5jb20iLCJtZXNzYWdlIjoiRsOpbGljaXRhdGlvbiB0dSBhcyBkw6ljb3V2ZXJ0IGxlIG1lc3NhZ2UgY2FjaMOpLCBlbnZvaWUgbW9pIHVuIHBldGl0IG1lc3NhZ2UifQ.tOT5jPHngkXgjGoJsedxk9mQx3wWr_ENusX_Ab2zs1s
+      header:{"content-type":"application/json"}
+      body:{"name": "Toto"}
+    ```
+  
   Before each of this variable you must add a prefix which indicates which indexes the credentials refer to.
   The prefix is the index (we start counting from zero) followed by a dash.
   Example for my config in azure : 
@@ -186,6 +213,16 @@ This is an example of how to list things you need to use the software and how to
       AZURE_CLIENT_ID=XXXXXXXXXXXX
       AZURE_TENANT_ID=XXXXXXXXXXXX
       AZURE_CLIENT_SECRET=XXXXXXXX
+    ```
+  - AWS:
+    To refer to your Key Vault add this following environnement variable :
+    ```
+      AWS_SECRET_NAME=XXXXXXXXX
+    ```
+  - GCP:
+    To refer to your Key Vault add this following environnement variable :
+    ```
+      GOOGLE_APPLICATION_CREDENTIALS=PATH_TO_JSON_CRED
     ```
 
 
@@ -319,7 +356,7 @@ Our tool provides a learning and sharing space where users can collaborate to cr
         - string
     global:
     #alert for the sum up
-      name: string
+      name: string  #name of your rule for config
       enabled: ^(true|false)$
       type:
         - ^(email|sms|webhook|log)$
@@ -340,8 +377,40 @@ Our tool provides a learning and sharing space where users can collaborate to cr
       description: string
       applied: ^(true|false)$
       level: ^(0|1|2|3)$
-      cloudProvider: ^(azure|git)$
-      objectName: ^(vm|rg|disk|nsg|virtualNetwork|ip|namespaces|pods|helm|aks|repositories|branches|issues)$
+      cloudProvider: ^(
+          azure|
+          git|
+          aws|
+          kubernetes|
+          gcp|
+          http
+        )$
+      objectName: ^(
+          vm|
+          rg|
+          disk|
+          nsg|
+          virtualNetwork|
+          ip|
+          namespaces|
+          pods|
+          helm|
+          aks|
+          repositories|
+          branches|
+          issues|
+          ip|
+          PublicIp|
+          ec2Instance|
+          ec2Volume|
+          ec2SG|
+          rds|
+          resourceGroups|
+          tagsValue|
+          ecsCluster|
+          ecrRepository|
+          request
+        )$
       conditions: 
         - object -> RulesConditions | ParentRules
 ```
@@ -420,7 +489,16 @@ rules:
   * [X] namespaces
   * [X] pods
   * [X] helm
-* [X] AWS
+* [X] AWS :
+  * [X] EC2 Instance (ec2Instance)
+  * [X] EC2 Volume (ec2Volume)
+  * [X] EC2 Security group (ec2SG)
+  * [X] Relational Database Service (rds)
+  * [X] Resource Groups (resourceGroups)
+  * [X] Tags (tagsValue)
+  * [X] Elastic Container Service CLUSTER (ecsCluster)
+  * [X] Elastic Container Repository(ecrRepository)
+* [X] HTTP and HTTPS request
 * [ ] GCP
 * [ ] OVH
 * [ ] O365

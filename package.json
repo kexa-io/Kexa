@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@aws-sdk/client-ec2": "^3.387.0",
+    "@aws-sdk/client-ec2": "^3.390.0",
     "@azure/arm-compute": "^20.0.0",
     "@azure/arm-containerservice": "^19.0.0",
     "@azure/arm-network": "^30.1.0",
@@ -65,7 +65,7 @@
     "prettier-watch:win32": "onchange \"src/**/*.ts\" -- prettier --write {{changed}}",
     "prettier-watch:darwin:linux": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
     "prettier-watch:default": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
-    "test": "mocha --require ts-node/register --require source-map-support/register 'Kexa/__tests__/**/*.test.ts'"
+    "test": "npm run build && mocha --require ts-node/register --require source-map-support/register 'Kexa/__tests__/**/*.test.ts'"
   },
   "keywords": [],
   "author": "4urcloud | Esteban MATHIA | Adrien EPPLING",
