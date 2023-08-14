@@ -1,7 +1,4 @@
-import { EC2 } from "aws-sdk";
-import { RDS } from "aws-sdk";
 import * as AWS from "aws-sdk";
-import {tagsValueListing} from "../../services/awsGathering.service";
 
 
 export interface AWSResources {

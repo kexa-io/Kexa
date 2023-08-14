@@ -1,6 +1,6 @@
-import { ResultScan, SubResultScan } from "../../models/resultScan.models"
-import { GlobalConfigAlert } from "../../models/settingFile/globalAlert.models"
-import { Rules } from "../../models/settingFile/rules.models"
+import { ResultScan, SubResultScan } from "../models/resultScan.models"
+import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models"
+import { Rules } from "../models/settingFile/rules.models"
 const levelAlert = ["info", "warning", "error", "critical"];
 
 export const Emails = {

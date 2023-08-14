@@ -1,14 +1,24 @@
+/*
+    * Provider : git
+    * Creation date : 2023-08-14
+    * Note : 
+    * Resources :
+    *     - repositories
+    *     - branches
+    *     - issues
+*/
+
 import { Octokit, App } from "octokit";
 import env from "dotenv";
-import { GitResources } from "../models/git/resource.models";
-import { getConfigOrEnvVar, getEnvVar, setEnvVar } from "./manageVarEnvironnement.service";
+import { GitResources } from "../../models/git/resource.models";
+import { getConfigOrEnvVar, getEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
 import { Logger } from "tslog";
 env.config();
 const config = require('config');
 const gitConfig = (config.has('git'))?config.get('git'):null;
 let logger = new Logger({ minLevel: Number(process.env.DEBUG_MODE)??4, type: "pretty", name: "GithubLogger" });
 
-export async function collectGithubData(): Promise<GitResources[]|null>{
+export async function collectData(): Promise<GitResources[]|null>{
     let resources = new Array<GitResources>();
     for(let config of gitConfig??[]){
         let githubToken = await getConfigOrEnvVar(config, "GITHUBTOKEN", gitConfig.indexOf(config)+"-");

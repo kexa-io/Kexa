@@ -1,3 +1,17 @@
+/*
+    * Provider : azure
+    * Creation date : 2023-08-14
+    * Note : 
+    * Resources :
+    *     - vm
+    *     - rg
+    *     - disk
+    *     - nsg
+    *     - virtualNetwork
+    *     - networkInterfaces
+    *     - aks
+*/
+
 import { 
     NetworkManagementClient,
     VirtualNetwork,
@@ -6,11 +20,11 @@ import {
 } from "@azure/arm-network";
 import { ComputeManagementClient, Disk, VirtualMachine } from "@azure/arm-compute";
 import { ResourceManagementClient , ResourceGroup } from "@azure/arm-resources";
-import * as ckiNetworkSecurityClass from "../class/azure/ckiNetworkSecurityGroup.class";
+import * as ckiNetworkSecurityClass from "../../class/azure/ckiNetworkSecurityGroup.class";
 import { Logger } from "tslog";
-import { AzureResources } from "../models/azure/resource.models";
-import { DefaultAzureCredential, ClientSecretCredential } from "@azure/identity";
-import { getConfigOrEnvVar, getEnvVar, setEnvVar } from "./manageVarEnvironnement.service";
+import { AzureResources } from "../../models/azure/resource.models";
+import { DefaultAzureCredential } from "@azure/identity";
+import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
@@ -25,7 +39,7 @@ let networkClient: NetworkManagementClient;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING CLOUD RESOURCES
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function collectAzureData(): Promise<AzureResources[]|null>{
+export async function collectData(): Promise<AzureResources[]|null>{
     let resources = new Array<AzureResources>();
     for(let config of azureConfig??[]){
         let azureResource = {

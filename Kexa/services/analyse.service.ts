@@ -17,6 +17,7 @@ import { ProviderEnum } from "../enum/provider.enum";
 import { AlertEnum } from '../enum/alert.enum';
 import { getEnvVar } from './manageVarEnvironnement.service';
 import moment, { Moment, unitOfTime } from 'moment';
+import { ObjectNameEnum } from '../enum/objectName.enum';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
@@ -172,9 +173,9 @@ export function checkDocRules(rules:Rules[]): string[] {
         if(!rule.hasOwnProperty("level")) result.push("error - level not found in rule");
         else if(!Object.values(LevelEnum).includes(rule.level)) result.push("warn - level not valid in rule -> default info : "+rule.level);
         if(!rule.hasOwnProperty("cloudProvider")) result.push("error - cloudProvider not found in rule");
-        else if(!Object.values(ProviderEnum).includes(rule.cloudProvider)) result.push("error - cloudProvider not valid in rule : "+rule.cloudProvider);
+        //else if(!Object.values(ProviderEnum).includes(rule.cloudProvider)) result.push("error - cloudProvider not valid in rule : "+rule.cloudProvider);
         if(!rule.hasOwnProperty("objectName")) result.push("error - objectName not found in rule");
-        else if(!Object.values(ProviderEnum).includes(rule.cloudProvider)) result.push("error - objectName not valid in rule : "+rule.objectName);
+        //else if(!Object.values(ObjectNameEnum).includes(rule.objectName)) result.push("error - objectName not valid in rule : "+rule.objectName);
         if(!rule.hasOwnProperty("conditions")) result.push("error - conditions not found in rule");
         else {
             if (rule.conditions.length === 0) result.push("error - conditions empty in rule");
@@ -225,7 +226,7 @@ export function checkSubRuleCondition(subRule:RulesConditions): string[] {
     if(!subRule.hasOwnProperty("condition")) result.push("error - condition not found in sub rule condition");
     else if(!Object.values(ConditionEnum).includes(subRule.condition)) result.push("error - condition not valid in sub rule condition : " + subRule.condition);
     else if (subRule.condition.includes("DATE") && !subRule.hasOwnProperty("date")) result.push("error - date not found in sub rule condition");
-    //if(!subRule.hasOwnProperty("value")) result.push("error - value not found in sub rule condition");
+    if(!subRule.hasOwnProperty("value")) result.push("error - value not found in sub rule condition");
     //else if(typeof subRule.value !== "string" && typeof subRule.value !== "number" && !Array.isArray(subRule.value)) result.push("error - value not valid in sub rule condition : " + subRule.value);
     //else if(Array.isArray(subRule.value) && subRule.value.length === 0) result.push("error - value empty in sub rule condition");
     //else if(Array.isArray(subRule.value)){
@@ -597,8 +598,6 @@ export function checkGreaterThanDate(condition:RulesConditions, value:any): bool
     logger.debug("check greater than date");
     let dynamic_date = generateDate(condition.value as string, false);
     let value_date = moment(value, condition.date).toDate();
-    logger.debug(dynamic_date);
-    logger.debug(value_date);
     if(value_date < dynamic_date.toDate()) return true;
     return false;
 }

@@ -1,6 +1,14 @@
+/*
+    * Provider : gcp
+    * Creation date : 2023-08-14
+    * Note : 
+    * Resources :
+    *     - task
+*/
+
 import { Logger } from "tslog";
-import { getConfigOrEnvVar, getEnvVar, setEnvVar } from "./manageVarEnvironnement.service";
-import { GcpResources } from "../models/gcp/resource.models";
+import { getConfigOrEnvVar, getEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
+import { GcpResources } from "../../models/gcp/resource.models";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
@@ -11,7 +19,7 @@ const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "AzureLo
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING CLOUD RESOURCES
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function collectAzureData(): Promise<GcpResources[]|null>{
+export async function collectData(): Promise<GcpResources[]|null>{
     let resources = new Array<GcpResources>();
     for(let config of gcpConfig??[]){
         let gcpResources = {

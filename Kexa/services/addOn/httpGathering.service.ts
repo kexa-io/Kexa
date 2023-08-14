@@ -1,9 +1,17 @@
+/*
+    * Provider : http
+    * Creation date : 2023-08-14
+    * Note : 
+    * Resources :
+    *     - request
+*/
+
 import dns from 'dns';
-import { HttpResources } from "../models/http/resource.model";
+import { HttpResources } from "../../models/http/resource.model";
 import { Logger } from "tslog";
-import { getConfigOrEnvVar } from "./manageVarEnvironnement.service";
-import { HttpConfig } from "../models/http/config.models";
-import { isEmpty } from "../helpers/isEmpty";
+import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
+import { HttpConfig } from "../../models/http/config.models";
+import { isEmpty } from "../../helpers/isEmpty";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import https from 'https';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
@@ -22,7 +30,7 @@ const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "HttpLog
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING HTTP RESOURCES
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function collectHttpData() {
+export async function collectData() {
     let resources = new Array<HttpResources>();
     logger.info("- loading client http -");
     for(let config of httpConfig??[]){
@@ -47,8 +55,6 @@ export async function collectHttpData() {
         resources.push({ request: [httpResources] });
     }
     logger.info("- listing http resources done -");
-    logger.debug("http resources: ");
-    logger.debug(resources);
     return resources??null;
 }
 
@@ -69,7 +75,7 @@ function getBody(config: HttpConfig): any{
 }
 
 import tls, { TLSSocket } from 'tls';
-import { HttpRequest } from "../models/http/request.models";
+import { HttpRequest } from "../../models/http/request.models";
 const URL = require('url')
 
 async function makeHttpRequest<T>(

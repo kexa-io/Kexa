@@ -10,7 +10,7 @@ export interface  Rules {
     notification?: string;                         // the notification to send if the rule is not respected
     applied:boolean;                               // should we analyse this rule ?
     level:LevelEnum;                                // the level of the rule: 0 information , 1 warning, 2 error, 3 critical
-    cloudProvider:ProviderEnum;                     // the cloud provider : azure, gcp, aws, ovh
-    objectName:ObjectNameEnum;                      // the name of the object in this cloud provider
+    cloudProvider:ProviderEnum|string;             // the cloud provider : azure, gcp, aws, ovh
+    objectName:ObjectNameEnum|string;               // the name of the object in this cloud provider
     conditions: RulesConditions[]|ParentRules[];    // the conditions to create the rule
 }

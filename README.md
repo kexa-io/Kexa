@@ -377,7 +377,14 @@ Our tool provides a learning and sharing space where users can collaborate to cr
       description: string
       applied: ^(true|false)$
       level: ^(0|1|2|3)$
-      cloudProvider: ^(azure|git)$
+      cloudProvider: ^(
+          azure|
+          git|
+          aws|
+          kubernetes|
+          gcp|
+          http
+        )$
       objectName: ^(
           vm|
           rg|

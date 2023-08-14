@@ -1,8 +1,18 @@
+/*
+    * Provider : kubernetes
+    * Creation date : 2023-08-14
+    * Note : 
+    * Resources :
+    *     - namespaces
+    *     - pods
+    *     - helm
+*/
+
 import { Logger } from "tslog";
 import helm from 'helm-ts';
-import { KubernetesResources } from "../models/kubernetes/kubernetes.models";
-import { getConfigOrEnvVar, setEnvVar } from "./manageVarEnvironnement.service";
-import { deleteFile, writeStringToJsonFile } from "../helpers/files";
+import { KubernetesResources } from "../../models/kubernetes/kubernetes.models";
+import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
+import { deleteFile, writeStringToJsonFile } from "../../helpers/files";
 
 
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
@@ -11,7 +21,7 @@ const k8s = require('@kubernetes/client-node');
 const config = require('config');
 const kubernetesConfig = (config.has('kubernetes'))?config.get('kubernetes'):null;
 
-export async function collectKubernetes(): Promise<KubernetesResources[]|null>{
+export async function collectData(): Promise<KubernetesResources[]|null>{
     logger.info("starting collectKubernetes");
     let resources = new Array<KubernetesResources>();
     for(let config of kubernetesConfig??[]){

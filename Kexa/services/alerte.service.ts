@@ -4,7 +4,7 @@ import { ResultScan, SubResultScan } from "../models/resultScan.models";
 import { Alert } from "../models/settingFile/alert.models";
 import { Rules } from "../models/settingFile/rules.models";
 import { Logger } from "tslog";
-import { Emails } from "./emails/emails";
+import { Emails } from "../emails/emails";
 import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
 import { ConfigAlert } from "../models/settingFile/configAlert.models";
 import { Readable } from "stream";
