@@ -1,6 +1,6 @@
 import { Rules } from "../../../models/settingFile/rules.models";
 
-export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean): string {
+export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false): string {
     let link = "https://github.com/";
     let webLink = `Id : <a href="`;
     let fullLink;

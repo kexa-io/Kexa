@@ -62,7 +62,7 @@ export function alertFromGlobal(alert: GlobalConfigAlert, compteError: number[],
                 throw new Error("not implemented");
                 break;
             case AlertEnum.TEAMS:
-                throw new Error("not implemented");
+                alertTeamsGlobal(alert, compteError, allScan);
                 break;
             case AlertEnum.WEBHOOK:
                 alertWebhookGlobal(alert, compteError, allScan);
@@ -140,6 +140,24 @@ export function alertWebhookGlobal(alert: GlobalConfigAlert, compteError: number
     });
 }
 
+export function alertTeamsGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
+    logger.debug("alert Teams Global");
+    let content = compteRender(allScan);
+    let nbrError: { [x: string]: number; }[] = [];
+    compteError.forEach((value, index) => {
+        nbrError.push({
+            [levelAlert[index]] : value
+        });
+    });
+    content["nbrError"] = nbrError;
+    content["title"] = "Kexa - Global Alert - "+(alert.name??"Uname");
+    for (const teams_to of alert.to) {
+        if (!teams_to.startsWith("+")) return;
+        logger.debug("send teams to:"+teams_to);
+        sendCardMessageToTeamsChannel(teams_to, "Kexa - Global Alert - "+ (alert.name??"Uname"), content);
+    }
+}
+
 export function compteRender(allScan: ResultScan[][]): any {
     let result = {content : new Array<any>()};
     allScan.forEach((rule) => {
@@ -166,6 +184,7 @@ export function alertFromRule(rule:Rules, conditions:SubResultScan[], objectReso
     let detailAlert = alert[levelAlert[rule.level] as keyof typeof alert];
     if (!detailAlert.enabled) return
     detailAlert.type.forEach((type) => {
+        console.log("Alert Type : " + type)
         switch(type){
             case AlertEnum.LOG:
                 alertLog(rule, conditions, objectResource);
@@ -180,7 +199,7 @@ export function alertFromRule(rule:Rules, conditions:SubResultScan[], objectReso
                 throw new Error("not implemented");
                 break;
             case AlertEnum.TEAMS:
-                throw new Error("not implemented");
+                alertTeams(detailAlert, rule, objectResource);
                 break;
             case AlertEnum.WEBHOOK:
                 sendWebhook(detailAlert, "Kexa - "+levelAlert[rule.level]+" - "+rule.name, conditions)
@@ -230,10 +249,18 @@ export function warnLog(rule: Rules, conditions:SubResultScan[], objectResource:
     logger.info(jsome.getColoredString(conditions));
 }
 
+export function alertTeams(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules, objectResource:any) {
+    logger.debug("alert Teams");
+    for (const teams_to of detailAlert.to) {
+        if (!teams_to.includes("http")) continue;
+        let content = propertyToSend(rule, objectResource);
+        sendCardMessageToTeamsChannel(teams_to, "Kexa - "+levelAlert[rule.level]+" - "+rule.name, content);
+    }
+}
 export function alertEmail(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules, conditions:SubResultScan[], objectResource:any){
     logger.debug("alert email");
     detailAlert.to.forEach((email_to) => {
-        if(!email_to.includes("@")) return;
+        if (!email_to.includes("@")) return;
         logger.debug("send email to:"+email_to);
         let mail = Emails.OneAlert(email_to, rule, propertyToSend(rule, objectResource, false), colors[rule.level]);
         SendMailWithAttachment(mail, email_to, "Kexa - "+levelAlert[rule.level]+" - "+rule.name, objectResource);
@@ -243,13 +270,12 @@ export function alertEmail(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rul
 export function alertSMS(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules, objectResource:any){
     logger.debug("alert sms");
     detailAlert.to.forEach((sms_to) => {
-        if(!sms_to.startsWith("+")) return;
+        if (!sms_to.startsWith("+")) return;
         logger.debug("send sms to:"+sms_to);
         let content = "error with : " + propertyToSend(rule, objectResource, true);
         sendSMS(sms_to, "Kexa - "+ levelAlert[rule.level]+ " - "+ rule.name, content);
     });
 }
-
 
 async function getTransporter() {
     return nodemailer.createTransport({
@@ -327,13 +353,44 @@ ${content}`,
 async function sendWebhook(alert: ConfigAlert, subject: string, content: any) {
     content["title"] = subject;
     logger.debug("send webhook");
-    alert.to.forEach((webhook_to) => {
-        if(!webhook_to.includes("http")) return;
-        logger.debug("send webhook to:"+webhook_to);
-        request.post(webhook_to, { json: JSON.stringify(content) }, (res:any) => {
-            logger.debug(`webhook to: ${webhook_to} are send`)
-        }).on('error', (error:any) => {
-            logger.error(error)
-        });
-    });
+    for (const webhook_to of alert.to) {
+        if(!webhook_to.includes("http")) continue;
+        const payload = {
+            title: "Kexa scan : ",
+            text: content.content,
+        };
+        try {
+            const response = await axios.post(webhook_to, payload);
+            if (response.status === 200) {
+                logger.info('Teams Card sent successfully!');
+            } else {
+                logger.error('Failed to send Teams card.');
+            }
+        } catch (error) {
+            logger.error('Teams webhook : An error occurred:', error);
+        }
+    }
+}
+
+import axios from 'axios';
+
+export async function sendCardMessageToTeamsChannel(channelWebhook: string, subject: string, content: any): Promise<void> {
+    if (!channelWebhook) {
+        logger.error("Cannot retrieve TEAMS_CHANNEL_WEBHOOK_URL from env");
+        throw("Error on TEAMS_CHANNEL_WEBHOOK_URL retrieve");
+    }
+    const payload = {
+        title: subject,
+        text: content,
+    };
+    try {
+        const response = await axios.post(channelWebhook, payload);
+        if (response.status === 200) {
+            console.log('Card sent successfully!');
+        } else {
+            console.log('Failed to send card.');
+        }
+    } catch (error) {
+        console.error('An error occurred:', error);
+    }
 }

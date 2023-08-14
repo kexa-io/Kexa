@@ -23,4 +23,8 @@ export enum ObjectNameEnum {
     ECSCLUSTER = "ecsCluster",
     ECRREPOSITORY = "ecrRepository",
     REQUEST= "request",
+    ECRIMAGE = "ecrImage",
+    BUCKET = "bucket",
+    TASK = "task",
+    COMPUTE = "compute"
 }

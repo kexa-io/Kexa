@@ -1,7 +1,7 @@
 import { Rules } from "../../../models/settingFile/rules.models";
 let AWSRegion = process.env.AWS_REGION ? process.env.AWS_REGION : "us-west-1";
 
-export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean){
+export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false){
     let link = "https://" + AWSRegion + ".console.aws.amazon.com/";
     let webLink = `Id : <a href="`;
     let fullLink;

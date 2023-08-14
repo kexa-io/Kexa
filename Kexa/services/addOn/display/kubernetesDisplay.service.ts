@@ -1,6 +1,6 @@
 import { Rules } from "../../../models/settingFile/rules.models";
 
-export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean): string {
+export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false): string {
     switch (rule?.objectName) {
         case "namespaces":
             return `Namespace name : ` + objectContent?.metadata[0]?.name + ` with uid : ` + objectContent?.metadata[0]?.uid

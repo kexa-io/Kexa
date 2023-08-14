@@ -1,6 +1,5 @@
 import env from "dotenv";
 import { Logger } from "tslog";
-import { ProviderResource } from "./models/providerResource.models";
 import { checkRules, gatheringRules } from "./services/analyse.service";
 import { alertGlobal } from "./services/alerte.service";
 import { AsciiArtText, talkAboutOtherProject} from "./services/display.service";
@@ -15,8 +14,9 @@ export async function main() {
     logger.info("___________________________________________________________________________________________________"); 
     logger.info("___________________________________-= running Kexa scan =-_________________________________________");
     logger.info("___________________________________________________________________________________________________"); 
-    
+
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"./Kexa/rules");
+
     if(settings.length != 0){
 
         let resources = {};
@@ -29,7 +29,7 @@ export async function main() {
                 alertGlobal(result, setting.alert.global);
             }
         });
-    }else{
+    }else {
         logger.error("No correct rules found, please check the rules directory or the rules files.");
     }
 

@@ -28,7 +28,6 @@ describe('Add On', () => {
 
                 it(`File ${file} should contain a valid header`, async () => {
                     let header = hasValidHeader(`./${mainFolder}/services/addOn/${file}`);
-                    logger.debug(header);
                     expect(Array.isArray(header)).to.equal(true);
                 });
             });
@@ -38,7 +37,7 @@ describe('Add On', () => {
     it(`File AWS and git test`, async () => {
         // pre load few modules to avoid timeout
         const moduleExportsAws = await import(`../../services/addOn/awsGathering.service`);
-        const moduleExportsGit = await import(`../../services/addOn/gitGathering.service`);
+        const moduleExportsGcp = await import(`../../services/addOn/gcpGathering.service`);
         expect(true).to.equal(true);
     });
 });

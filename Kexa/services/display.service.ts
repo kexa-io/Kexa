@@ -46,7 +46,7 @@ export function renderTableAllScan(allScan: ResultScan[][]): string{
     return result
 }
 
-export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean): string{
+export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false): string{
     try{
         return addOnPropertyToSend[rule?.objectName](rule, objectContent, isSms);
     }catch(e){
