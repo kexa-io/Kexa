@@ -499,11 +499,16 @@ rules:
   * [X] Elastic Container Service CLUSTER (ecsCluster)
   * [X] Elastic Container Repository(ecrRepository)
 * [X] HTTP and HTTPS request
+  * [X] request
+    * [X] certificate
+    * [X] body
+    * [X] headers
+    * [X] http code(code)
 * [ ] GCP
-* [ ] OVH
 * [ ] O365
-* [ ] VM Ware
 * [ ] Google Workspace
+* [ ] OVH
+* [ ] VM Ware
 * [ ] Oracle
 
 See the [open issues](https://github.com/4urcloud/Kexa/issues) for a full list of proposed features (and known issues).
@@ -526,6 +531,92 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+### How to add new functionality ?
+
+We've set up a system to facilitate the development of new features. This system is based on the "addOn" system. To develop a new feature, you don't need to know the whole project. You can develop additional services to collect additional data, among which you can make rules.
+
+To create an addOn, you'll need to create 2 files. 
+
+#### Gathering Data
+
+A file to collect data whose path will be "./Kexa/services/addOn". It is named as follows: [extension's name]Gathering.service.ts . The entry point for this file is a function named "collectData", which takes no arguments. The return format of this function is as shown in the following example. 
+exemple :
+```json
+[
+  {
+    categoryItem1: [
+      {},
+      {},
+      {}
+    ],
+    categoryItem2: [
+      {},
+      {}
+    ]
+  },
+  {
+    categoryItem1: [
+      {}
+    ],
+    categoryItem2: [
+      {},
+      {},
+      {}
+    ]
+  }
+]
+```
+
+The data format is the following for several reasons. The first list corresponds to the different subscriptions or accounts in a sector. To illustrate, in the case of a cloud provider such as Azure, we might need different identifiers to scan all our accounts, and each account scan result is an item in the list. The dictionaries in the main list correspond to your dictionary that you find relevant to create to identify the different resources of your addOn, in the rules this corresponds to your "objectName". Finally, the lowest-level lists correspond to the list of items collected by your addOn.
+
+For project maintainability, we require addOn modules to contain a header to quickly identify certain information.
+This header is a comment that must contain at least 2 pieces of information: the name of the module and the "categoryItems" you've included in your module.
+example for an "azureComplement" module:
+file name : azureComplementGathering.service.ts
+```ts
+/*
+    * Provider : azure
+    * Creation date : 2023-08-14
+    * Note : Important note for understand what's going on here
+    * Resources :
+    *     - secretManager
+    *     - SP
+    *     - azFunction
+*/
+
+export async function collectData(){
+  //insert your stuff here
+}
+
+//can add other function here
+```
+
+#### Display data
+
+The display data file a pour schema de nom : [same extension's name]Display.service.ts, its path will be: "./Kexa/services/addOn/display". This file is used to display precise attributes of an object to quickly identify it in its environment. This return is done by returning a string, with the possibility of putting html in this sting. The function used as an entry point is named "propertyToSend". It takes 3 arguments. The first is a "Rules", and the relative path to the object definition is
+```ts
+import { Rules } from "../../../models/settingFile/rules.models";
+```
+The second is an "any", corresponding to an object you've collected previously.
+Finally, the last element is a boolean, which you'll set to false by default. It corresponds to your obligation not to put html in your string.
+example for an "azureComplement" module:
+file name : azureComplementGathering.service.ts
+```ts
+
+import { Rules } from "../../../models/settingFile/rules.models";
+
+export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false): string{
+    //you can also use a switch on rule.objectName to perform a specific return for each type of objectName you create with your addOn
+    //it is advisable to make a default return to cover all possible cases.
+    if (isSms)
+        return `Id : `+ objectContent?.id + `https://portal.azure.com/#@/resource/` + objectContent?.id
+    else
+        return `Id : <a href="https://portal.azure.com/#@/resource/` + objectContent?.id + '">' + objectContent?.id + `</a>`
+}
+
+//can add other function here
+```
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
@@ -533,7 +624,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the MIT License. See [`LICENSE.txt`](https://github.com/4urcloud/Kexa/blob/main/LICENCE.txt) for more information just [here](https://github.com/4urcloud/Kexa/blob/main/LICENCE.txt).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
