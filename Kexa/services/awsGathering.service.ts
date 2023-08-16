@@ -5,6 +5,7 @@ import { AWSResources } from "../models/aws/ressource.models";
 import { getConfigOrEnvVar, getEnvVar, setEnvVar } from "./manageVarEnvironnement.service";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const debug_mode = Number(process.env.DEBUG_MODE) ?? 3;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "AWSLogger" });
 const config = require('config');
@@ -14,9 +15,11 @@ let rdsClient: AWS.RDS;
 let s3Client: AWS.S3;
 let ecsClient: AWS.ECS;
 let ecrClient: AWS.ECR;
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-//// LISTING CLOUD RESOURCES
+//// LISTING CLOUD RESOURCES ///////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 export async function collectAWSData(): Promise<AWSResources[] | null> {
     let resources = new Array<AWSResources>();
     for (let config of awsConfig ?? []) {
@@ -29,19 +32,19 @@ export async function collectAWSData(): Promise<AWSResources[] | null> {
             "resourceGroup": null,
             "tagsValue": null,
             "ecsCluster": null,
-         //   "ecrImage": null
+            //   "ecrImage": null
             // Add more AWS resource
         } as AWSResources;
         try {
             const credentials = new AWS.Credentials({
                 accessKeyId: await getConfigOrEnvVar(config, "AWS_ACCESS_KEY_ID", awsConfig.indexOf(config) + "-"),
-                secretAccessKey: await getConfigOrEnvVar(config, "AWS_SECRET_ACCESS_KEY", awsConfig.indexOf(config) + "-"),
+                secretAccessKey: await getConfigOrEnvVar(config, "AWS_SECRET_ACCESS_KEY", awsConfig.indexOf(config) + "-")
             });
-            const client = new EC2Client(config);
+            const client = new EC2Client({region: "us-east-1", credentials: credentials});
             const command = new DescribeRegionsCommand({AllRegions: false,});
             const response = await client.send(command);
             if (response.Regions) {
-                response.Regions.forEach(async (region: any) => {
+                const promises = response.Regions.map(async (region) => {
                     try {
                         logger.info("Retrieving AWS Region : " + region.RegionName);
                         AWS.config.update({credentials: credentials, region: region.RegionName});
@@ -52,74 +55,82 @@ export async function collectAWSData(): Promise<AWSResources[] | null> {
                         ecrClient = new AWS.ECR(config);
                         const resourceGroups = new AWS.ResourceGroups(config);
                         const tags = new AWS.ResourceGroupsTaggingAPI(config);
-                        const promises = [
-                            await ec2InstancesListing(ec2Client),
-                            await ec2VolumesListing(ec2Client),
-                            await ec2SGListing(ec2Client),
-                            await rdsInstancesListing(rdsClient),
-                            //await s3BucketsListing(s3Client),
-                            await resourceGroupsListing(resourceGroups),
-                            await tagsValueListing(tags),
-                            await ecsClusterListing(ecsClient),
-                           // await ecrImagesListing(ecrClient),
-                            // Add more AWS resource lists
-                        ];
-                        //
-                        const [ec2Instances, ec2Volumes, ec2SG, rdsList,/* s3List,*/ resourceGroup,
-                            tagsValue, ecsCluster,/* ecrImage*/] = await Promise.all(promises);
-                        awsResource = {
-                            "ec2Instance": [...(awsResource["ec2Instance"] ?? []), ...ec2Instances],
-                            "ec2SG": [...(awsResource["ec2SG"] ?? []), ...ec2SG],
-                            "ec2Volume": [...(awsResource["ec2Volume"] ?? []), ...ec2Volumes],
-                            "rds": [...(awsResource["rds"] ?? []), ...rdsList],
-                            //  "s3": [...awsResource["s3"] ?? [], ...s3List],
-                            "resourceGroup": [...(awsResource["resourceGroup"] ?? []), ...resourceGroup],
-                            "tagsValue": [...(awsResource["tagsValue"] ?? []), ...tagsValue],
-                            "ecsCluster": [...(awsResource["ecsCluster"] ?? []), ...ecsCluster],
-                            //"ecrImage": [...(awsResource["ecrImage"] ?? []), ...ecrImage]
-                        } as AWSResources;
-                        logger.info("- listing AWS resources done -");
+
+                        const ec2InstancesPromise = ec2InstancesListing(ec2Client, region.RegionName as string);
+                        const ec2VolumesPromise = ec2VolumesListing(ec2Client, region.RegionName as string);
+                        const ec2SGPromise = ec2SGListing(ec2Client, region.RegionName as string);
+                        const rdsListPromise = rdsInstancesListing(rdsClient, region.RegionName as string);
+                        const resourceGroupPromise = resourceGroupsListing(resourceGroups, region.RegionName as string);
+                        const tagsValuePromise = tagsValueListing(tags, region.RegionName as string);
+                        const ecsClusterPromise = ecsClusterListing(ecsClient, region.RegionName as string);
+
+                        const [ec2Instances, ec2Volumes, ec2SG, rdsList, resourceGroup, tagsValue, ecsCluster] =
+                            await Promise.all([ec2InstancesPromise, ec2VolumesPromise, ec2SGPromise, rdsListPromise, resourceGroupPromise, tagsValuePromise, ecsClusterPromise]);
+                        return {
+                            ec2Instance: ec2Instances,
+                            ec2SG: ec2SG,
+                            ec2Volume: ec2Volumes,
+                            rds: rdsList,
+                            resourceGroup: resourceGroup,
+                            tagsValue: tagsValue,
+                            ecsCluster: ecsCluster
+                        };
                     } catch (e) {
                         logger.error("error in collectAWSData with AWS_ACCESS_KEY_ID: " + config["AWS_ACCESS_KEY_ID"] ?? null);
                         logger.error(e);
                     }
                 });
+                const awsResourcesPerRegion = await Promise.all(promises);
+                const awsResource: { [key: string]: any[] } = {};
+                awsResourcesPerRegion.forEach((regionResources) => {
+                    if (regionResources) {
+                        Object.keys(regionResources).forEach((resourceType) => {
+                            const key = resourceType.toString();
+                            const regionKey = resourceType.toString();
+                            awsResource[key] = [...(awsResource[key] || []), ...regionResources[regionKey as keyof typeof regionResources]];
+                        //    console.log("KEY : " + key);
+                      //      console.log(awsResource.ec2Volume);
+                        });
+                    }
+                });
+                logger.info("- Listing AWS resources done -");
+                resources.push(awsResource as any);
             }
         } catch (e) {
             logger.error("error in AWS connect with AWS_ACCESS_KEY_ID: " + config["AWS_ACCESS_KEY_ID"] ?? null);
             logger.error(e);
         }
-        resources.push(awsResource);
     }
     return resources ?? null;
 }
-export async function ec2SGListing(client: AWS.EC2): Promise<any> {
+
+export async function ec2SGListing(client: AWS.EC2, region: string): Promise<any> {
     try {
         const data = await client.describeSecurityGroups().promise();
         const jsonData = JSON.parse(JSON.stringify(data.SecurityGroups));
-        logger.info("ec2SGListing Done");
+        logger.info(region + " - ec2SGListing Done");
         return jsonData;
     } catch (err) {
         logger.error("Error in ec2SGListing: ", err);
         return null;
     }
 }
-export async function ec2VolumesListing(client: AWS.EC2): Promise<any> {
+export async function ec2VolumesListing(client: AWS.EC2, region: string): Promise<any> {
     try {
         const data = await client.describeVolumes().promise();
         const jsonData = JSON.parse(JSON.stringify(data.Volumes));
-        logger.info("ec2VolumesListing Done");
+        logger.info(region, " - ec2VolumesListing Done");
         return jsonData;
     } catch (err) {
         logger.error("Error in ec2VolumesListing: ", err);
         return null;
     }
 }
-export async function ec2InstancesListing(client: AWS.EC2): Promise<Array<AWS.EC2.Instance> | null> {
+export async function ec2InstancesListing(client: AWS.EC2, region: string): Promise<Array<AWS.EC2.Instance> | null> {
     try {
         const data = await client.describeInstances().promise();
         const jsonData = JSON.parse(JSON.stringify(data.Reservations));
-        logger.info("ec2InstancesListing Done");
+        logger.info(region + " - ec2InstancesListing Done");
         return jsonData;
     } catch (err) {
         logger.error("Error in ec2InstancesListing: ", err);
@@ -127,11 +138,11 @@ export async function ec2InstancesListing(client: AWS.EC2): Promise<Array<AWS.EC
     }
 }
 
-export async function rdsInstancesListing(client: AWS.RDS): Promise<any> {
+export async function rdsInstancesListing(client: AWS.RDS, region: string): Promise<any> {
     try {
         const data = await client.describeDBInstances().promise();
         const jsonData = JSON.parse(JSON.stringify(data.DBInstances));
-        logger.info("rdsInstancesListing Done");
+        logger.info(region + " - rdsInstancesListing Done");
         return jsonData;
     } catch (err) {
         logger.error("Error in rdsInstancesListing: ", err);
@@ -139,11 +150,11 @@ export async function rdsInstancesListing(client: AWS.RDS): Promise<any> {
     }
 }
 
-export async function resourceGroupsListing(client: AWS.ResourceGroups): Promise<any> {
+export async function resourceGroupsListing(client: AWS.ResourceGroups, region: string): Promise<any> {
     try {
         const data = await client.listGroups().promise();
         const jsonData = JSON.parse(JSON.stringify(data.Groups));
-        logger.info("Ressource Group Done");
+        logger.info(region + " - Ressource Group Done");
         return jsonData;
     } catch (err) {
         logger.error("Error in Ressource Group Listing: ", err);
@@ -151,7 +162,7 @@ export async function resourceGroupsListing(client: AWS.ResourceGroups): Promise
     }
 }
 
-export async function tagsValueListing(client: AWS.ResourceGroupsTaggingAPI): Promise<any> {
+export async function tagsValueListing(client: AWS.ResourceGroupsTaggingAPI, region: string): Promise<any> {
     try {
         interface TagParams {Key: string;}
         const dataKeys = await client.getTagKeys().promise();
@@ -161,7 +172,7 @@ export async function tagsValueListing(client: AWS.ResourceGroupsTaggingAPI): Pr
             const newData = { name: element};
             jsonData.push(newData);
         }
-        logger.info("Tags Done");
+        logger.info(region + " - Tags Done");
         return jsonDataKeys;
     } catch (err) {
         logger.error("Error in Tags Value Listing: ", err);
@@ -169,11 +180,11 @@ export async function tagsValueListing(client: AWS.ResourceGroupsTaggingAPI): Pr
     }
 }
 
-export async function s3BucketsListing(client: AWS.S3): Promise<Array<AWS.S3> | null> {
+export async function s3BucketsListing(client: AWS.S3, region: string): Promise<Array<AWS.S3> | null> {
     try {
         const data = await client.listBuckets().promise();
         const jsonData = JSON.parse(JSON.stringify(data.Buckets));
-        logger.info("s3BucketsListing Done");
+        logger.info(region + " - s3BucketsListing Done");
         return jsonData;
     } catch (err) {
         logger.error("Error in s3BucketsListing: ", err);
@@ -181,11 +192,11 @@ export async function s3BucketsListing(client: AWS.S3): Promise<Array<AWS.S3> | 
     }
 }
 
-export async function ecsClusterListing(client: AWS.ECS): Promise<any> {
+export async function ecsClusterListing(client: AWS.ECS, region: string): Promise<any> {
     try {
         const data = await client.describeClusters().promise();
         const jsonData = JSON.parse(JSON.stringify(data.clusters));
-        logger.info("ECS Done");
+        logger.info(region + " - ECS Done");
         return jsonData;
     } catch (err) {
         logger.error("Error in ECS Listing: ", err);
@@ -193,11 +204,11 @@ export async function ecsClusterListing(client: AWS.ECS): Promise<any> {
     }
 }
 
-export async function ecrImagesListing(client: AWS.ECR): Promise<any> {
+export async function ecrImagesListing(client: AWS.ECR, region: string): Promise<any> {
     try {
         const data = await client.describeRepositories().promise();
         const jsonData = JSON.parse(JSON.stringify(data.repositories));
-        logger.info("ECR Done");
+        logger.info(region + " - ECR Done");
         return jsonData;
     } catch (err) {
         logger.error("Error in ECR Listing: ", err);

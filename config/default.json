@@ -2,21 +2,15 @@
     "gcp": [
         {
             "rules": [
-                "aws-cloud-tests"
+                "azure cloud"
             ]
         }
     ],
-    "git": [
+    "aws": [
         {
             "rules": [
-                "aws-cloud-tests"
-            ]
-        }
-    ],
-    "kubernetes": [
-        {
-            "config": [
-                "config_kuber"
+                "Security",
+                "Economy"
             ]
         }
     ]

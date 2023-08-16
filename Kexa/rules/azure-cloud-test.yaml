@@ -51,6 +51,16 @@
         - level: 3
           min: 1
   rules:
+    - name: "testing-rule2"
+      description: "testing gc2"
+      applied: false
+      level: 2
+      cloudProvider: gcp
+      objectName: compute
+      conditions:
+        - property: id
+          condition: EQUAL
+          value: "6546461646"
     - name: "azure-disk-orphan"
       description : "this rules is to check if disk is orphan"
       applied: false
