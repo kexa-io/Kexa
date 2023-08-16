@@ -8,5 +8,5 @@ build
 Kexa/rules/aws-tests.yaml
 config_kuber
 eastern-rider-263712-9376010a1184.json
-*.json
+config/*.json
 config_kuber
