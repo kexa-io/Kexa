@@ -125,7 +125,7 @@
                   value: NULL
     - name: "aws-ec2-public-ip-address"
       description : "this rule is to check if an ec2 ip address is public"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: aws
       objectName: ec2Instance
