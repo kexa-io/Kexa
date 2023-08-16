@@ -44,8 +44,8 @@ export async function collectData(): Promise<GCPResources[] | null> {
             const [/*taskList,*/ computeList, bucketList] = await Promise.all(promises);
 
             logger.info("- listing cloud resources done -");
-           /* gcpResources = {
-               task : taskList,
+            /* gcpResources = {
+                task : taskList,
                 compute : computeList?.at(0),
                 bucket : bucketList
             };*/

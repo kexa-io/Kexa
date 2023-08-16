@@ -44,11 +44,10 @@ async function loadAddOn(file: string): Promise<{ key: string; data: Provider|nu
 }
 
 export function loadAddOnsDisplay() : { [key: string]: Function; }{
-    logger.info("Loading addOns Display");
     let dictFunc: { [key: string]: Function; } = {};
     const files = fs.readdirSync(serviceAddOnPath + "/display");
     files.map((file: string) => {
-        let result = loadAddOnDisplay(file);
+        let result = loadAddOnDisplay(file.replace(".ts", ".js"));
         if(result?.data){
             dictFunc[result.key] = result.data;
         }
@@ -58,8 +57,8 @@ export function loadAddOnsDisplay() : { [key: string]: Function; }{
 
 function loadAddOnDisplay(file: string): { key: string; data: Function; } | null {
     try{
-        if (file.endsWith('Gathering.service.js')){
-            let nameAddOn = file.split('Gathering.service.js')[0];
+        if (file.endsWith('Display.service.js')){
+            let nameAddOn = file.split('Display.service.js')[0];
             const moduleExports = require(`./addOn/display/${nameAddOn}Display.service.js`);
             const displayFn = moduleExports.propertyToSend;
             return { key: nameAddOn, data:displayFn};

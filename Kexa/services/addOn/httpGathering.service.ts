@@ -32,28 +32,39 @@ const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "HttpLog
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function collectData() {
     let resources = new Array<HttpResources>();
+    let promises = []
     logger.info("- loading client http -");
     for(let config of httpConfig??[]){
-        let httpResources = {
-            certificate: null,
-            body: null,
-            headers: null,
-            code: null,
-        } as HttpRequest;
-        try{
-            let url = await getConfigOrEnvVar(config, "URL", httpConfig.indexOf(config)+"-");
-            if(!url) {
-                throw new Error("- Please pass URL in your config file");
-            }
-
-            httpResources = await getDataHttp(url, config);
-
-        }catch(e){
-            logger.error("error in collectHttpData with the url: " + ((await getConfigOrEnvVar(config, "URL", httpConfig.indexOf(config)+"-"))??null));
-            logger.error(e);
-        }
-        resources.push({ request: [httpResources] });
+        promises.push(
+            (async () => {
+                let httpResources = {
+                    certificate: null,
+                    body: null,
+                    headers: null,
+                    code: null,
+                } as HttpRequest;
+    
+                try {
+                    const url = await getConfigOrEnvVar(config, "URL", httpConfig.indexOf(config) + "-");
+    
+                    if (!url) {
+                        throw new Error("- Please pass URL in your config file");
+                    }
+    
+                    httpResources = await getDataHttp(url, config);
+    
+                } catch (e) {
+                    logger.error("error in collectHttpData with the url: " + ((await getConfigOrEnvVar(config, "URL", httpConfig.indexOf(config) + "-")) ?? null));
+                    logger.error(e);
+                }
+    
+                return { request: [httpResources] };
+            })()
+        );
     }
+    const results = await Promise.all(promises);
+    resources.push(...results);
+
     logger.info("- listing http resources done -");
     return resources??null;
 }

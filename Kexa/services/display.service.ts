@@ -48,9 +48,9 @@ export function renderTableAllScan(allScan: ResultScan[][]): string{
 
 export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false): string{
     try{
-        return addOnPropertyToSend[rule?.objectName](rule, objectContent, isSms);
+        return addOnPropertyToSend[rule?.cloudProvider](rule, objectContent, isSms);
     }catch(e){
-        logger.warn("Error while loading addOn display for rule : " + rule?.name + " with error : " + e);
+        logger.warn("Error while loading addOn display for rule : " + rule?.name);
         return `Id : ` + objectContent.id
     }
 }
