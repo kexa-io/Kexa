@@ -20,6 +20,11 @@
     *     - secret
     *     - connectivity_test
     *     - catalog
+    *     - resource_settings
+    *     - redis_instance
+    *     - os_config
+    *     - org_policy_constraint
+    *     - airflow_image_version
 */
 
 import { Logger } from "tslog";
@@ -59,7 +64,18 @@ export async function collectData(): Promise<GCPResources[] | null> {
             "certificate": null,
             "secret": null,
             "connectivity_test": null,
-            "catalog": null
+            "catalog": null,
+            "resource_settings": null,
+            "redis_instance": null,
+            "os_config": null,
+            "org_policy_contraint": null,
+            "airflow_image_version": null,
+            "notebook": null,
+            "lineage_process": null,
+            "dashboard": null,
+            "identity_domain": null,
+            "kms_crypto_key": null,
+            "kms_key_ring": null,
         } as GCPResources;
         let projectId = await getConfigOrEnvVar(config, "PROJECTID", gcpConfig.indexOf(config)+"-");
         writeStringToJsonFile(await getConfigOrEnvVar(config, "GOOGLEJSON", gcpConfig.indexOf(config)+"-"), "./config/gcp.json");
@@ -82,12 +98,26 @@ export async function collectData(): Promise<GCPResources[] | null> {
                 await listCertificates(projectId),
                 await listSecrets(projectId),
                 await listConnectivityTests(projectId),
-                await listCatalogs(projectId)
+                await listCatalogs(projectId),
+                await listResourceSettings(projectId),
+                await listRedisInstances(projectId),
+                await listOSConfig(projectId),
+                await listOrgPolicyContraints(projectId),
+                await listOrchestrationAirflow(projectId),
+                await listNotebookInstances(projectId),
+                await listLineageProcesses(projectId),
+                await listDashboards(projectId),
+                await listIdentitiesDomain(projectId),
+                await listKMSCryptoKeys(projectId),
+                await listKMSKeyRings(projectId)
         ];
             const [taskList, computeList, bucketList/*, projectList, billingAccountList,
              clusterList*/, workstationList, workflowList, webSecurityList, connectorList,
                 engineList, storageConfigList, namespaceList, certificateList, secretList,
-                connectivityTestList, catalogList] = await Promise.all(promises);
+                connectivityTestList, catalogList, resourceSettingsList, redisIntanceList,
+                os_configList, org_policy_contraintList, airflow_image_versionList,
+                notebookList, lineage_processList, dashboardList, identity_domainList,
+                kms_crypto_keyList, kms_key_ringList] = await Promise.all(promises);
 
             logger.info("- listing cloud resources done -");
 
@@ -108,7 +138,18 @@ export async function collectData(): Promise<GCPResources[] | null> {
                 certificate: certificateList,
                 secret: secretList,
                 connectivity_test: connectivityTestList,
-                catalog: catalogList
+                catalog: catalogList,
+                resource_settings: resourceSettingsList,
+                redis_instance: redisIntanceList,
+                os_config: os_configList,
+                org_policy_contraint: org_policy_contraintList,
+                airflow_image_version: airflow_image_versionList,
+                notebook: notebookList,
+                lineage_process: lineage_processList,
+                dashboard: dashboardList,
+                identity_domain: identity_domainList,
+                kms_crypto_key: kms_crypto_keyList,
+                kms_key_ring: kms_key_ringList
             };
             // gcpResources.bucket = bucketList;
 //            gcpResources.compute = computeList;
@@ -447,7 +488,6 @@ async function listSecrets(projectId: any): Promise<Array<any>|null> {
 
 async function listConnectivityTests(projectId: any): Promise<Array<any>|null>  {
     const {ReachabilityServiceClient} = require('@google-cloud/network-management');
-    const parent = 'projects/' + projectId + '/locations/-';
     let jsonData = [];
 
     try {
@@ -472,11 +512,215 @@ async function listCatalogs(projectId: any): Promise<Array<any>|null> {
         const catalogs = await client.listCatalogs({
             parent: `projects/${projectId}/locations/global`,
         });
-        console.info(catalogs);
         jsonData = JSON.parse(JSON.stringify(catalogs));
     } catch (e) {
         logger.error(e);
     }
     logger.info("GCP Catalogs Listing Done");
+    return jsonData ?? null;
+}
+
+async function listResourceSettings(projectId: any): Promise<Array<any>|null> {
+    let jsonData = [];
+
+    const { ResourceSettingsServiceClient } = require('@google-cloud/resource-settings');
+
+    try {
+        const client = new ResourceSettingsServiceClient();
+        const settings = await client.listSettings({
+            parent: `projects/${projectId}`,
+        });
+        jsonData = JSON.parse(JSON.stringify(settings));
+    } catch (e) {
+        logger.error(e);
+    }
+    logger.info("GCP Resources Settings Listing Done");
+    return jsonData ?? null;
+}
+
+async function listRedisInstances(projectId: any): Promise<Array<any>|null> {
+    const {CloudRedisClient} = require('@google-cloud/redis');
+    let jsonData = [];
+
+    try {
+        const client = new CloudRedisClient();
+        const formattedParent = client.locationPath(projectId, "global");
+        const request = {
+            parent: formattedParent,
+        };
+        const resp = (await client.listInstances(request))[0];
+        jsonData = JSON.parse(JSON.stringify(resp));
+    } catch (e) {
+        logger.error(e);
+    }
+    logger.info("GCP Redis Instances Listing Done");
+    return jsonData ?? null;
+}
+
+async function listOSConfig(projectId: any): Promise<Array<any>|null> {
+    const {OsConfigServiceClient} = require('@google-cloud/os-config');
+    let jsonData = [];
+
+    try {
+        const client = new OsConfigServiceClient();
+        const [deployments] = await client.listPatchDeployments({
+            parent: `projects/${projectId}`,
+        });
+        jsonData = JSON.parse(JSON.stringify(deployments));
+    } catch (e) {
+        logger.error(e);
+    }
+    logger.info("GCP OS Config Listing Done");
+    return jsonData ?? null;
+}
+
+async function listOrgPolicyContraints(projectId: any): Promise<Array<any>|null> {
+    const {OrgPolicyClient} = require('@google-cloud/org-policy');
+    let jsonData = [];
+
+    try {
+        const client = new OrgPolicyClient();
+        const constraints = await client.listConstraints({
+            parent: `projects/${projectId}`,
+        });
+        jsonData = JSON.parse(JSON.stringify(constraints));
+    } catch (e) {
+        logger.error(e);
+    }
+    logger.info("GCP OrgPolicy Contraints Listing Done");
+    return jsonData ?? null;
+}
+
+async function listOrchestrationAirflow(projectId: any): Promise<Array<any> | null> {
+    const {ImageVersionsClient} = require('@google-cloud/orchestration-airflow');
+    let jsonData = [];
+
+    try {
+        const client = new ImageVersionsClient();
+        const [versions] = await client.listImageVersions({
+            parent: `projects/${projectId}/locations/-`,
+        });
+        jsonData = JSON.parse(JSON.stringify(versions));
+    } catch (e) {
+        logger.error(e);
+    }
+    logger.info("GCP OrgPolicy Contraints Listing Done");
+    return jsonData ?? null;
+}
+
+async function listNotebookInstances(projectId: any): Promise<Array<any> | null> {
+    const {NotebookServiceClient} = require('@google-cloud/notebooks');
+    let jsonData = [];
+
+    try {
+        const client = new NotebookServiceClient();
+        const [instances] = await client.listInstances({
+            parent: `projects/${projectId}/locations/-`,
+        });
+        for (const instance of instances) {
+            jsonData = JSON.parse(JSON.stringify(instance));
+        }
+    } catch (e) {
+        logger.error(e);
+    }
+    logger.info("GCP Notebook Instances Listing Done");
+    return jsonData ?? null;
+}
+
+async function listDashboards(projectId: any): Promise<Array<any> | null> {
+    const { DashboardsServiceClient } = require('@google-cloud/monitoring-dashboards');
+    const parent = 'projects/' + projectId;
+    let jsonData = [];
+
+    try {
+        const ds = new DashboardsServiceClient();
+        const [dashboards] = await ds.listDashboards({parent,});
+        console.info('Listing Dashboards:');
+        for (const dashboard of dashboards) {
+            jsonData = JSON.parse(JSON.stringify(dashboard));
+        }
+    } catch (e) {
+        logger.error(e);
+    }
+    logger.info("GCP Dashboards Listing Done");
+    return jsonData ?? null;
+}
+
+async function listIdentitiesDomain(projectId: any): Promise<Array<any> | null> {
+    const { ManagedIdentitiesServiceClient } = require('@google-cloud/managed-identities');
+    let jsonData = [];
+
+    try {
+        const client = new ManagedIdentitiesServiceClient();
+        const domains = await client.listDomains({
+            parent: `projects/${projectId}/locations/global`,
+        });
+        jsonData = JSON.parse(JSON.stringify(domains));
+    } catch (e) {
+        logger.error(e)
+    }
+    logger.info("GCP Identities Domains Listing Done");
+    return jsonData ?? null;
+}
+
+async function listLineageProcesses(projectId: any): Promise<Array<any> | null> {
+    const {LineageClient} = require('@google-cloud/lineage').v1;
+    const parent = 'projects/' + projectId + '/locations/global';
+    let jsonData = [];
+
+    try {
+        const lineageClient = new LineageClient();
+        // Construct request
+        const request = {
+            parent,
+        };
+        const iterable = await lineageClient.listProcessesAsync(request);
+        for await (const response of iterable) {
+            jsonData = JSON.parse(JSON.stringify(response));
+        }
+    } catch (e) {
+        logger.error(e);
+    }
+    logger.info("GCP Lineage Processes Listing Done");
+    return jsonData ?? null;
+}
+
+async function listKMSCryptoKeys(projectId: any): Promise<Array<any> | null> {
+    const {KeyDashboardServiceClient} = require('@google-cloud/kms-inventory').v1;
+    let jsonData = [];
+    const parent = 'projects/' + projectId;
+
+    try {
+        const inventoryClient = new KeyDashboardServiceClient();
+        const request = {parent};
+        const [response] = await inventoryClient.listCryptoKeys(request, {
+            maxResults: 50,
+            autoPaginate: false,
+        });
+        jsonData = JSON.parse(JSON.stringify(response));
+    } catch (e) {
+        logger.error(e);
+    }
+    logger.info("GCP KMS Crypto Keys Listing Done");
+    return jsonData ?? null;
+}
+
+async function listKMSKeyRings(projectId: any): Promise<Array<any> | null> {
+    const {KeyManagementServiceClient} = require('@google-cloud/kms');
+    let jsonData = [];
+
+    try {
+        const client = new KeyManagementServiceClient();
+        const locationName = client.locationPath(projectId, "global");
+        const [keyRings] = await client.listKeyRings({
+            parent: locationName
+        });
+        for (const keyRing of keyRings) {
+            jsonData = JSON.parse(JSON.stringify(keyRing));
+        }
+    } catch (e) {
+        logger.error(e);
+    }
+    logger.info("GCP KMS Key Rings Listing Done");
     return jsonData ?? null;
 }

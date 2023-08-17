@@ -23,5 +23,17 @@ export interface GCPResources {
 
     connectivity_test: Array<any> | null;
     catalog: Array<any> | null;
+    resource_settings: Array<any> | null;
+    redis_instance: Array<any> | null;
+    os_config: Array<any> | null;
+    org_policy_contraint: Array<any> | null;
+    airflow_image_version: Array<any> | null;
+    notebook: Array<any> | null;
+
+    lineage_process: Array<any> | null;
+    dashboard: Array<any> | null;
+    identity_domain: Array<any> | null;
+    kms_crypto_key: Array<any> | null;
+    kms_key_ring: Array<any> | null;
 
 }
