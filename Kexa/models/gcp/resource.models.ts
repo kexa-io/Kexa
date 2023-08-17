@@ -17,7 +17,7 @@ export interface GCPResources {
     storage_config: Array<any> | null;
     namespace: Array<any> | null;
 
-    certificate: Array<any> | null;
+    private_certificate: Array<any> | null;
 
     secret: Array<any> | null;
 
@@ -36,4 +36,12 @@ export interface GCPResources {
     kms_crypto_key: Array<any> | null;
     kms_key_ring: Array<any> | null;
 
+    domain_registration: Array<any> | null;
+    dns_zone: Array<any> | null;
+    pipeline: Array<any> | null;
+    certificate: Array<any> | null;
+    batch_job: Array<any> | null;
+    workload: Array<any> | null;
+    artifact_repository: Array<any> | null;
+    app_gateway: Array<any> | null;
 }
