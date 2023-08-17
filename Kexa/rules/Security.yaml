@@ -125,7 +125,7 @@
                   value: NULL
     - name: "aws-ec2-public-ip-address"
       description : "this rule is to check if an ec2 ip address is public"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: aws
       objectName: ec2Instance
@@ -133,3 +133,13 @@
         - property: PublicIpAddress
           condition: EQUAL
           value: null
+    - name: "gcp-testing-rule"
+      description : "test gather"
+      applied: true
+      level: 2
+      cloudProvider: gcp
+      objectName: compute
+      conditions:
+        - property: startRestricted
+          condition: DIFFERENT
+          value: false

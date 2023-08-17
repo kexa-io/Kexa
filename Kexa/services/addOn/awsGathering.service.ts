@@ -126,7 +126,7 @@ async function ec2SGListing(client: EC2, region: string): Promise<any> {
         const data = await client.describeSecurityGroups().promise();
         let jsonData = JSON.parse(JSON.stringify(data.SecurityGroups));
         jsonData = addRegion(jsonData, region);
-        logger.info(region + " - ec2SGListing Done");
+        logger.debug(region + " - ec2SGListing Done");
         return jsonData;
     } catch (err) {
         logger.error("Error in ec2SGListing: ", err);
@@ -139,7 +139,7 @@ async function ec2VolumesListing(client: EC2, region: string): Promise<any> {
         const data = await client.describeVolumes().promise();
         let jsonData = JSON.parse(JSON.stringify(data.Volumes));
         jsonData = addRegion(jsonData, region);
-        logger.info(region, " - ec2VolumesListing Done");
+        logger.debug(region, " - ec2VolumesListing Done");
         return jsonData;
     } catch (err) {
         logger.error("Error in ec2VolumesListing: ", err);
@@ -152,7 +152,7 @@ async function ec2InstancesListing(client: EC2, region: string): Promise<Array<E
         const data = await client.describeInstances().promise();
         let jsonData = JSON.parse(JSON.stringify(data.Reservations));
         jsonData = addRegion(jsonData, region);
-        logger.info(region + " - ec2InstancesListing Done");
+        logger.debug(region + " - ec2InstancesListing Done");
         return jsonData;
     } catch (err) {
         logger.error("Error in ec2InstancesListing: ", err);
@@ -165,7 +165,7 @@ async function rdsInstancesListing(client: RDS, region: string): Promise<any> {
         const data = await client.describeDBInstances().promise();
         let jsonData = JSON.parse(JSON.stringify(data.DBInstances));
         jsonData = addRegion(jsonData, region);
-        logger.info(region + " - rdsInstancesListing Done");
+        logger.debug(region + " - rdsInstancesListing Done");
         return jsonData;
     } catch (err) {
         logger.error("Error in rdsInstancesListing: ", err);
@@ -178,7 +178,7 @@ async function resourceGroupsListing(client: ResourceGroups, region: string): Pr
         const data = await client.listGroups().promise();
         let jsonData = JSON.parse(JSON.stringify(data.Groups));
         jsonData = addRegion(jsonData, region);
-        logger.info(region + " - Ressource Group Done");
+        logger.debug(region + " - Ressource Group Done");
         return jsonData;
     } catch (err) {
         logger.error("Error in Ressource Group Listing: ", err);
@@ -199,7 +199,7 @@ async function tagsValueListing(client: ResourceGroupsTaggingAPI, region: string
             };
             jsonData.push(newData);
         }
-        logger.info(region + " - Tags Done");
+        logger.debug(region + " - Tags Done");
         return jsonDataKeys;
     } catch (err) {
         logger.error("Error in Tags Value Listing: ", err);
@@ -212,7 +212,7 @@ async function s3BucketsListing(client: S3, region: string): Promise<Array<S3> |
         const data = await client.listBuckets().promise();
         let jsonData = JSON.parse(JSON.stringify(data.Buckets));
         jsonData = addRegion(jsonData, region);
-        logger.info(region + " - s3BucketsListing Done");
+        logger.debug(region + " - s3BucketsListing Done");
         return jsonData;
     } catch (err) {
         logger.error("Error in s3BucketsListing: ", err);
@@ -225,7 +225,7 @@ async function ecsClusterListing(client: ECS, region: string): Promise<any> {
         const data = await client.describeClusters().promise();
         let jsonData = JSON.parse(JSON.stringify(data.clusters));
         jsonData = addRegion(jsonData, region);
-        logger.info(region + " - ECS Done");
+        logger.debug(region + " - ECS Done");
         return jsonData;
     } catch (err) {
         logger.error("Error in ECS Listing: ", err);
@@ -238,7 +238,7 @@ async function ecrImagesListing(client: ECR, region: string): Promise<any> {
         const data = await client.describeRepositories().promise();
         let jsonData = JSON.parse(JSON.stringify(data.repositories));
         jsonData = addRegion(jsonData, region);
-        logger.info(region + " - ECR Done");
+        logger.debug(region + " - ECR Done");
         return jsonData;
     } catch (err) {
         logger.error("Error in ECR Listing: ", err);

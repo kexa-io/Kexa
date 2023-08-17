@@ -94,7 +94,7 @@
               value: "-1"
     - name: "ec2-security-group-all-ports"
       description: "this rule is to check if ec2 security group has a defined port"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: aws
       objectName: ec2SG
@@ -110,3 +110,9 @@
                 - property: ToPort
                   condition: REGEX
                   value : '^\d+$'
+  #  - name: "gcp-test-rule"
+  #    description: "testing gcp gather"
+  #    applied: true
+  #    level: 1
+  #    cloudProvider: gcp
+  #    conditions:

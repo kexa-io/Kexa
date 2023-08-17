@@ -121,7 +121,7 @@
               value: null
     - name: "aws-ec2-volume-unattached"
       description: "this rule is to check if an ec2 volume is unattached"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: aws
       objectName: ec2Volume
