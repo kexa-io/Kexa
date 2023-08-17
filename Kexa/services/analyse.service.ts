@@ -18,7 +18,7 @@ import { AlertEnum } from '../enum/alert.enum';
 import {getConfigOrEnvVar, getEnvVar} from './manageVarEnvironnement.service';
 import moment, { Moment, unitOfTime } from 'moment';
 import { ObjectNameEnum } from '../enum/objectName.enum';
-import { beHaviorEnum } from '../enum/beHavior.enum';
+import { BeHaviorEnum } from '../enum/beHavior.enum';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
@@ -174,8 +174,10 @@ export function checkDocRules(rules:Rules[]): string[] {
         if(!rule.hasOwnProperty("level")) result.push("error - level not found in rule");
         else if(!Object.values(LevelEnum).includes(rule.level)) result.push("warn - level not valid in rule -> default info : "+rule.level);
         if(!rule.hasOwnProperty("cloudProvider")) result.push("error - cloudProvider not found in rule");
+        //TODO : check if cloudProvider in the rules present in the header.json 
         //else if(!Object.values(ProviderEnum).includes(rule.cloudProvider)) result.push("error - cloudProvider not valid in rule : "+rule.cloudProvider);
         if(!rule.hasOwnProperty("objectName")) result.push("error - objectName not found in rule");
+        //TODO : check if objectName in the rules present in the header.json
         //else if(!Object.values(ObjectNameEnum).includes(rule.objectName)) result.push("error - objectName not valid in rule : "+rule.objectName);
         if(!rule.hasOwnProperty("conditions")) result.push("error - conditions not found in rule");
         else {
@@ -239,24 +241,24 @@ export function checkSubRuleCondition(subRule:RulesConditions): string[] {
     return result;
 }
 
-function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, index: number): beHaviorEnum {
+function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, index: number): BeHaviorEnum {
     if(!resources[rule.cloudProvider]){
         logger.warn("This cloud provider is not supported:"+rule.cloudProvider + "\nDon't forget to add this addOn");
-        return beHaviorEnum.RETURN;
+        return BeHaviorEnum.RETURN;
     }
     if(!Array.isArray(resources[rule.cloudProvider]) || resources[rule.cloudProvider].length === 0){
         logger.warn("the addOn for : "+rule.cloudProvider+" are not supported multi-configuration");
-        return beHaviorEnum.NONE;
+        return BeHaviorEnum.NONE;
     }
     if(!resources[rule.cloudProvider][index].hasOwnProperty(rule.objectName)){
         logger.warn("object name : "+rule.objectName + "not found in your provider " + rule.cloudProvider + " with configuration index " + index + "\nMake sure you have the right addOn or the right spelling in your rules");
-        return beHaviorEnum.CONTINUE;
+        return BeHaviorEnum.CONTINUE;
     }
     if(resources[rule.cloudProvider][index][rule.objectName] === null){
         logger.warn("No " + rule.objectName + " found in your provider " + rule.cloudProvider + " with configuration index " + index);
-        return beHaviorEnum.NONE;
+        return BeHaviorEnum.NONE;
     }
-    return beHaviorEnum.NONE;
+    return BeHaviorEnum.NONE;
 }
 
 export function checkRules(rules:Rules[], resources:ProviderResource, alert: Alert): ResultScan[][] {
@@ -275,9 +277,9 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
             if(configAssign[i].rules.includes(alert.global.name)){
                 logger.info("check rule with object with index :"+ i);
                 switch(checkMatchConfigAndResource(rule, resources, i)){
-                    case beHaviorEnum.RETURN:
+                    case BeHaviorEnum.RETURN:
                         return;
-                    case beHaviorEnum.CONTINUE:
+                    case BeHaviorEnum.CONTINUE:
                         continue;
                 }
                 objectResources = [...objectResources, ...resources[rule.cloudProvider][i][rule.objectName]]

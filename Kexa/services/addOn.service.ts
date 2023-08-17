@@ -1,5 +1,8 @@
 import { Logger } from "tslog";
 import { Provider, ProviderResource } from "../models/providerResource.models";
+import { Header } from "../models/settingFile/header.models";
+import { writeStringToJsonFile } from "../helpers/files"
+const configuration = require('config');
 
 const mainFolder = 'Kexa';
 const serviceAddOnPath = './' + mainFolder + '/services/addOn';
@@ -26,13 +29,14 @@ async function loadAddOn(file: string): Promise<{ key: string; data: Provider|nu
         if (file.endsWith('Gathering.service.ts')){
             let nameAddOn = file.split('Gathering.service.ts')[0];
             let header = hasValidHeader(serviceAddOnPath + "/" + file);
-            if (Array.isArray(header) !== true) {
+            if (typeof header === "string") {
                 logger.warn(header);
                 return null;
             }
             const { collectData } = await import(`./addOn/${file.replace(".ts", ".js") }`);
             let start = Date.now();
-            const data = await collectData();
+            const addOnConfig = (configuration.has(nameAddOn))?configuration.get(nameAddOn):null;
+            const data = await collectData(addOnConfig);
             let delta = Date.now() - start;
             logger.info(`AddOn ${nameAddOn} collect in ${delta}ms`);
             return { key: nameAddOn, data:(checkIfDataIsProvider(data) ? data : null)};
@@ -86,10 +90,14 @@ function checkIfDataIsProvider(data: any): data is Provider {
     return true;
 }
 
-export function hasValidHeader(filePath: string): string | string[] {
+export function hasValidHeader(filePath: string): string | Header {
     try {
         const fileContent = fs.readFileSync(filePath, 'utf-8');
         const lines = fileContent.split('\n');
+        let header:Header = {
+            provider: '',
+            resources: []
+        };
 
         let hasProvider = false;
         let hasResources = false;
@@ -101,6 +109,7 @@ export function hasValidHeader(filePath: string): string | string[] {
 
             if (trimmedLine.startsWith('*Provider')) {
                 hasProvider = true;
+                header.provider = trimmedLine.split(':')[1];
                 continue;
             }
 
@@ -112,7 +121,7 @@ export function hasValidHeader(filePath: string): string | string[] {
 
             if (nextLineIsResources) {
                 if (/\s*\*\s*-\s*\s*[a-zA-Z0-9]+\s*/.test(trimmedLine)) {
-                    countResources.push(trimmedLine.split('-')[1]);
+                    countResources.push(trimmedLine.split('-')[1].trim().replace(" ", "").replace("\t", ""));
                     continue;
                 }
                 nextLineIsResources = false;
@@ -120,7 +129,8 @@ export function hasValidHeader(filePath: string): string | string[] {
             }
 
             if(hasProvider && hasResources && countResources.length > 0) {
-                return countResources;
+                header.resources = countResources;
+                return header;
             }
         }
 
@@ -128,4 +138,34 @@ export function hasValidHeader(filePath: string): string | string[] {
     } catch (error) {
         return 'Error reading file:' + error;
     }
+}
+
+export async function extractHeaders(){
+    const files = fs.readdirSync(serviceAddOnPath);
+    const promises = files.map(async (file: string) => {
+        return await extractHeader(file);
+    });
+    const results = await Promise.all(promises);
+    let finalData:any = {};
+    results.forEach((result: any) => {
+        finalData[result.provider] = result.resources;
+    });
+    writeStringToJsonFile(JSON.stringify(finalData), "./config/headers.json");
+}
+
+async function extractHeader(file: string): Promise<Header|null> {
+    try{
+        if (file.endsWith('Gathering.service.ts')){
+            let nameAddOn = file.split('Gathering.service.ts')[0];
+            let header = hasValidHeader(serviceAddOnPath + "/" + file);
+            if (typeof header === "string") {
+                return null;
+            }
+            header.provider = nameAddOn;
+            return header;
+        }
+    }catch(e){
+        logger.warn(e);
+    }
+    return null;
 }

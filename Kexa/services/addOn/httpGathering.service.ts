@@ -15,7 +15,7 @@ import { isEmpty } from "../../helpers/isEmpty";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import https from 'https';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
+let httpConfig: HttpConfig[] = [];
 
 const jsome = require('jsome');
 jsome.level.show = true;
@@ -24,15 +24,16 @@ jsome.level.show = true;
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
 
 const config = require('config');
-const httpConfig = (config.has('http'))?config.get('http'):null;
+//const httpConfig = (config.has('http'))?config.get('http'):null;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "HttpLogger" });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING HTTP RESOURCES
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function collectData() {
+export async function collectData(_httpConfig:HttpConfig[]) {
+    httpConfig = _httpConfig;
     let resources = new Array<HttpResources>();
-    let promises = []
+    let promises: any = []
     logger.info("- loading client http -");
     for(let config of httpConfig??[]){
         promises.push(
@@ -43,23 +44,23 @@ export async function collectData() {
                     headers: null,
                     code: null,
                 } as HttpRequest;
-    
+
                 try {
                     const url = await getConfigOrEnvVar(config, "URL", httpConfig.indexOf(config) + "-");
-    
+
                     if (!url) {
                         throw new Error("- Please pass URL in your config file");
                     }
-    
+
                     httpResources = await getDataHttp(url, config);
-    
+
                 } catch (e) {
                     logger.error("error in collectHttpData with the url: " + ((await getConfigOrEnvVar(config, "URL", httpConfig.indexOf(config) + "-")) ?? null));
                     logger.error(e);
                 }
-    
+
                 return { request: [httpResources] };
-            })()
+            })
         );
     }
     const results = await Promise.all(promises);

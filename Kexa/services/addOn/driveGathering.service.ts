@@ -13,7 +13,7 @@ import { deleteFile, writeStringToJsonFile } from "../../helpers/files";
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "AzureLogger" });
 const config = require('config');
-const googleWorkspaceConfig = (config.has('drive'))?config.get('drive'):null;
+//const driveConfig = (config.has('drive'))?config.get('drive'):null;
 const fs = require('fs').promises;
 const path = require('path');
 const {authenticate} = require('@google-cloud/local-auth');
@@ -24,9 +24,9 @@ const SCOPES = ['https://www.googleapis.com/auth/drive.readonly'];
 const TOKEN_PATH = path.join(process.cwd(), '/config/token_drive.json');
 const CREDENTIALS_PATH = path.join(process.cwd(), '/config/credentials_drive.json');
 
-export async function collectData(){
+export async function collectData(driveConfig: any){
     let resources = []
-    for(let config of googleWorkspaceConfig??[]){
+    for(let config of driveConfig??[]){
         logger.error("config : ", config);
         //writeStringToJsonFile(await getConfigOrEnvVar(config, "DRIVECRED", googleWorkspaceConfig.indexOf(config)+"-"), "./config/credentials_drive.json");
         //writeStringToJsonFile(await getConfigOrEnvVar(config, "DRIVETOKEN", googleWorkspaceConfig.indexOf(config)+"-"), "./config/token_drive.json");

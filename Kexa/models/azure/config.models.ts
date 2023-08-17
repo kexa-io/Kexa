@@ -5,4 +5,5 @@ export interface AzureConfig extends Config {
     AZURECLIENTSECRET?: string;
     AZURETENANTID?: string;
     AZURESUBSCRIPTIONID?: string;
+    SUBSCRIPTIONID?: string;
 }
