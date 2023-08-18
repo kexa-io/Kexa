@@ -62,10 +62,10 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
                         ec2Client = new EC2();
                         rdsClient = new RDS();
                         //    s3Client = new AWS.S3(config);
-                        ecsClient = new ECS(oneConfig);
-                        ecrClient = new ECR(oneConfig);
-                        const resourceGroups = new ResourceGroups(oneConfig);
-                        const tags = new ResourceGroupsTaggingAPI(oneConfig);
+                        ecsClient = new ECS();
+                        ecrClient = new ECR();
+                        const resourceGroups = new ResourceGroups();
+                        const tags = new ResourceGroupsTaggingAPI();
 
                         const ec2InstancesPromise = ec2InstancesListing(ec2Client, region.RegionName as string);
                         const ec2VolumesPromise = ec2VolumesListing(ec2Client, region.RegionName as string);
