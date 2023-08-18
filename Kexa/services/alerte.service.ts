@@ -184,6 +184,7 @@ export function compteRender(allScan: ResultScan[][]): any {
 export function alertFromRule(rule:Rules, conditions:SubResultScan[], objectResource:any, alert: Alert) {
     let detailAlert = alert[levelAlert[rule.level] as keyof typeof alert];
     if (!detailAlert.enabled) return
+    if(rule.level > LevelEnum.FATAL) rule.level = LevelEnum.INFO;
     detailAlert.type.forEach((type) => {
         switch(type){
             case AlertEnum.LOG:

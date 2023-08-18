@@ -1,5 +1,5 @@
 /*
-    * Provider : git
+    * Provider : github
     * Creation date : 2023-08-14
     * Note : 
     * Resources :

@@ -1,5 +1,5 @@
 /*
-* Provider : drive
+* Provider : googleDrive
 * Creation date : 2023-08-16
 * Note : 
 * Resources :
@@ -7,33 +7,31 @@
 */
 const process = require('process');
 import { Logger } from "tslog";
-import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
+import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { deleteFile, writeStringToJsonFile } from "../../helpers/files";
 
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "AzureLogger" });
-const config = require('config');
-//const driveConfig = (config.has('drive'))?config.get('drive'):null;
+const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "GoogleDriveLogger" });
 const fs = require('fs').promises;
 const path = require('path');
 const {authenticate} = require('@google-cloud/local-auth');
-const {google} = require('googleapis');
+const {auth, drive} = require('googleapis');
 
 
 const SCOPES = ['https://www.googleapis.com/auth/drive.readonly'];
 const TOKEN_PATH = path.join(process.cwd(), '/config/token_drive.json');
 const CREDENTIALS_PATH = path.join(process.cwd(), '/config/credentials_drive.json');
 
-export async function collectData(driveConfig: any){
+export async function collectData(googleDriveConfig: any){
     let resources = []
-    for(let config of driveConfig??[]){
+    for(let config of googleDriveConfig??[]){
         logger.error("config : ", config);
-        //writeStringToJsonFile(await getConfigOrEnvVar(config, "DRIVECRED", googleWorkspaceConfig.indexOf(config)+"-"), "./config/credentials_drive.json");
-        //writeStringToJsonFile(await getConfigOrEnvVar(config, "DRIVETOKEN", googleWorkspaceConfig.indexOf(config)+"-"), "./config/token_drive.json");
+        writeStringToJsonFile(await getConfigOrEnvVar(config, "DRIVECRED", googleDriveConfig.indexOf(config)+"-"), "./config/credentials_drive.json");
+        writeStringToJsonFile(await getConfigOrEnvVar(config, "DRIVETOKEN", googleDriveConfig.indexOf(config)+"-"), "./config/token_drive.json");
         let auth = await authorize()
         let files = await listFiles(auth);
-        //deleteFile("./config/credentials_drive.json");
-        //deleteFile("./config/token_drive.json");
+        deleteFile("./config/credentials_drive.json");
+        deleteFile("./config/token_drive.json");
         resources.push({
             "files": files
         });
@@ -45,7 +43,7 @@ async function loadSavedCredentialsIfExist() {
     try {
         const content = await fs.readFile(TOKEN_PATH);
         const credentials = JSON.parse(content);
-        return google.auth.fromJSON(credentials);
+        return auth.fromJSON(credentials);
     } catch (err) {
         return null;
     }
@@ -57,7 +55,7 @@ async function loadSavedCredentialsIfExist() {
  * @param {OAuth2Client} client
  * @return {Promise<void>}
  */
-async function saveCredentials(client: any ) {
+async function saveCredentials(client: any ):Promise<void> {
     const content = await fs.readFile(CREDENTIALS_PATH);
     const keys = JSON.parse(content);
     const key = keys.installed || keys.web;
@@ -91,9 +89,9 @@ async function authorize() {
 
 
 async function listFiles(auth:any) {
-    const drive = google.drive({ version: "v3", auth });
+    const driveData = drive({ version: "v3", auth });
     try {
-        const response = await drive.files.list({
+        const response = await driveData.files.list({
             q: "'root' in parents",
             fields: "files(*)",
         });

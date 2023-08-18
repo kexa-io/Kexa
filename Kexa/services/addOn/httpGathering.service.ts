@@ -60,7 +60,7 @@ export async function collectData(_httpConfig:HttpConfig[]) {
                 }
 
                 return { request: [httpResources] };
-            })
+            })()
         );
     }
     const results = await Promise.all(promises);

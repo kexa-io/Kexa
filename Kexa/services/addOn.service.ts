@@ -11,9 +11,10 @@ let logger = new Logger({ minLevel: Number(process.env.DEBUG_MODE)??4, type: "pr
 
 export async function loadAddOns(resources: ProviderResource){
     logger.info("Loading addOns");
+    const addOnNeed = require('../../config/addOnNeed.json');
     const files = fs.readdirSync(serviceAddOnPath);
     const promises = files.map(async (file: string) => {
-        return await loadAddOn(file);
+        return await loadAddOn(file, addOnNeed);
     });
     const results = await Promise.all(promises);
     results.forEach((result: { key: string; data: Provider[]; }) => {
@@ -24,10 +25,11 @@ export async function loadAddOns(resources: ProviderResource){
     return resources;
 }
 
-async function loadAddOn(file: string): Promise<{ key: string; data: Provider|null; } | null> {
+async function loadAddOn(file: string, addOnNeed: any): Promise<{ key: string; data: Provider|null; } | null> {
     try{
         if (file.endsWith('Gathering.service.ts')){
             let nameAddOn = file.split('Gathering.service.ts')[0];
+            if(!addOnNeed["addOn"].includes(nameAddOn)) return null;
             let header = hasValidHeader(serviceAddOnPath + "/" + file);
             if (typeof header === "string") {
                 logger.warn(header);
@@ -74,17 +76,12 @@ function loadAddOnDisplay(file: string): { key: string; data: Function; } | null
 }
 
 function checkIfDataIsProvider(data: any): data is Provider {
-    if (typeof data !== 'object' || data === null) {
+    if (data === null || !Array.isArray(data)) {
         return false;
     }
-    for (const key in data) {
-        if (typeof data[key] !== 'object' || data[key] === null) {
+    for (const index in data) {
+        if (data[index] === null) {
             return false;
-        }
-        for (const keySecondary in data[key]) {
-            if (!Array.isArray(data[key][keySecondary])) {
-                return false;
-            } 
         }
     }
     return true;
@@ -148,7 +145,7 @@ export async function extractHeaders(){
     const results = await Promise.all(promises);
     let finalData:any = {};
     results.forEach((result: any) => {
-        finalData[result.provider] = result.resources;
+        if(result && result.provider && result.resources) finalData[result.provider] = result.resources;
     });
     writeStringToJsonFile(JSON.stringify(finalData), "./config/headers.json");
 }

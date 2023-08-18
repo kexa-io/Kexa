@@ -4,7 +4,6 @@ import { Rules } from "../models/settingFile/rules.models";
 import { loadAddOnsDisplay } from "./addOn.service";
 
 let debug_mode = Number(process.env.debug_mode)??0;
-let AWSRegion = process.env.AWS_REGION ? process.env.AWS_REGION : "us-west-1";
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "DiplayLogger" });
 const cfonts = require('cfonts');
