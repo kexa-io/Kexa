@@ -16,9 +16,6 @@ import { GcpConfig } from "../../models/gcp/config.models";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
 
-const config = require('config');
-
-//const gcpConfig = (config.has('gcp'))?config.get('gcp'):null;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "GcpLogger" });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING CLOUD RESOURCES

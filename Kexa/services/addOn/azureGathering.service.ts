@@ -31,8 +31,6 @@ import { AzureConfig } from "../../models/azure/config.models";
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
 const { ContainerServiceClient } = require("@azure/arm-containerservice");
 
-const config = require('config');
-//const azureConfig = (config.has('azure'))?config.get('azure'):null;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "AzureLogger" });
 let computeClient: ComputeManagementClient;
 let resourcesClient : ResourceManagementClient ;

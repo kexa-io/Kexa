@@ -17,7 +17,6 @@ const path = require('path');
 const {authenticate} = require('@google-cloud/local-auth');
 const {auth, drive} = require('googleapis');
 
-
 const SCOPES = ['https://www.googleapis.com/auth/drive.readonly'];
 const TOKEN_PATH = path.join(process.cwd(), '/config/token_drive.json');
 const CREDENTIALS_PATH = path.join(process.cwd(), '/config/credentials_drive.json');

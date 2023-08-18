@@ -23,8 +23,6 @@ import { AwsConfig } from "../../models/aws/config.models";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 const debug_mode = Number(process.env.DEBUG_MODE) ?? 3;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "AWSLogger" });
-const configuration = require('config');
-//const awsConfig = (configuration.has('aws'))?configuration.get('aws'):null;
 let ec2Client: EC2;
 let rdsClient: RDS;
 let s3Client: S3;
