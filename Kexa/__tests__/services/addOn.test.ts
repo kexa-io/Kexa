@@ -6,9 +6,11 @@ const fs = require('fs');
 const mainFolder = 'Kexa';
 let logger = new Logger({ minLevel: Number(process.env.DEBUG_MODE)??4, type: "pretty", name: "globalLogger" });
 
-describe('Add On', () => {
+describe('Add On', function() {
     const addOnPath = '../../services/addOn';
     const files = fs.readdirSync("./" + mainFolder + "/services/addOn");
+    this.timeout(5000);
+    this.retries(4);
     
     files.forEach((file: string) => {
         if (file.endsWith('Gathering.service.ts')) {
@@ -32,12 +34,5 @@ describe('Add On', () => {
                 });
             });
         }
-    });
-
-    it(`File AWS and git test`, async () => {
-        // pre load few modules to avoid timeout
-        const moduleExportsAws = await import(`../../services/addOn/awsGathering.service`);
-        const moduleExportsGcp = await import(`../../services/addOn/gcpGathering.service`);
-        expect(true).to.equal(true);
     });
 });

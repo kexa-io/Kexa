@@ -4,7 +4,7 @@ import { checkRules, gatheringRules } from "./services/analyse.service";
 import { alertGlobal } from "./services/alerte.service";
 import { AsciiArtText, talkAboutOtherProject} from "./services/display.service";
 import { getEnvVar } from "./services/manageVarEnvironnement.service";
-import { extractHeaders, loadAddOns } from "./services/addOn.service";
+import { loadAddOns } from "./services/addOn.service";
 import { deleteFile } from "./helpers/files";
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 env.config();                                                                    // reading environnement vars                                                       // file system
@@ -15,7 +15,6 @@ export async function main() {
     logger.info("___________________________________________________________________________________________________"); 
     logger.info("___________________________________-= running Kexa scan =-_________________________________________");
     logger.info("___________________________________________________________________________________________________"); 
-    extractHeaders();
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"./Kexa/rules");
 
     if(settings.length != 0){

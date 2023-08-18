@@ -18,6 +18,7 @@ import {getConfigOrEnvVar} from './manageVarEnvironnement.service';
 import moment, { Moment, unitOfTime } from 'moment';
 import { BeHaviorEnum } from '../enum/beHavior.enum';
 import { writeStringToJsonFile } from '../helpers/files';
+import { extractHeaders } from './addOn.service';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
@@ -34,7 +35,8 @@ let headers: any;
 //Analyse  list
 // read the yaml file with rules
 // exam each rules and raise alarm or not
-export async function gatheringRules(rulesDirectory:string): Promise<SettingFile[]> {
+export async function gatheringRules(rulesDirectory:string, getAll:boolean=false): Promise<SettingFile[]> {
+    extractHeaders();
     headers = require('../../config/headers.json');
     // list directory
     const paths = fs.readdirSync(rulesDirectory, { withFileTypes: true});
@@ -43,7 +45,7 @@ export async function gatheringRules(rulesDirectory:string): Promise<SettingFile
     let listNeedRules = getListNeedRules();
     for(const p of paths) {
         logger.debug("getting "+rulesDirectory+"/"+p.name+" rules.");
-        let setting = await analyseRule(rulesDirectory+"/"+p.name, listNeedRules);
+        let setting = await analyseRule(rulesDirectory+"/"+p.name, listNeedRules, true);
         if(setting) settingFileList.push(setting);
     }
     extractAddOnNeed(settingFileList);
@@ -76,11 +78,11 @@ function getListNeedRules(): string[]{
     return listNeedRules;
 }
 
-export async function analyseRule(ruleFilePath:string, listNeedRules:string[]): Promise<SettingFile | null> {
+export async function analyseRule(ruleFilePath:string, listNeedRules:string[], getAll:boolean=false): Promise<SettingFile | null> {
     logger.debug("analyse:"+ruleFilePath);
     try {
         const doc = (yaml.load(fs.readFileSync(ruleFilePath, 'utf8')) as SettingFile[])[0];
-        if(!listNeedRules.includes(doc?.alert?.global?.name)){
+        if(!listNeedRules.includes(doc?.alert?.global?.name) && !getAll){
             logger.info("rule not needed:"+doc?.alert?.global?.name);
             return null;
         }
