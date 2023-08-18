@@ -36,12 +36,12 @@ let headers: any;
 // read the yaml file with rules
 // exam each rules and raise alarm or not
 export async function gatheringRules(rulesDirectory:string, getAll:boolean=false): Promise<SettingFile[]> {
-    extractHeaders();
-    headers = require('../../config/headers.json');
+    await extractHeaders();
     // list directory
     const paths = fs.readdirSync(rulesDirectory, { withFileTypes: true});
     logger.debug("listing rules files.");
     let settingFileList = new Array<SettingFile>;
+    headers = require('../../config/headers.json');
     let listNeedRules = getListNeedRules();
     for(const p of paths) {
         logger.debug("getting "+rulesDirectory+"/"+p.name+" rules.");
