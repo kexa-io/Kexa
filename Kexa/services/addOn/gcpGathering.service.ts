@@ -34,12 +34,12 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
         try {
             logger.info("- listing GCP resources -");
             const promises = [
-           //     listTasks(projectId),
+                await listTasks(projectId),
                 await listAllComputes(projectId),
                 await listAllBucket(),
             ];
             
-            const [/*taskList,*/ computeList, bucketList] = await Promise.all(promises);
+            const [taskList, computeList, bucketList] = await Promise.all(promises);
 
             logger.info("- listing cloud resources done -");
             /* gcpResources = {
@@ -52,21 +52,21 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
             logger.info("- loading client Google Cloud Provider done-");
 
             ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
-            /*const client = new CloudTasksClient();
+            const client = new CloudTasksClient();
+
+            gcpResources = {
+                task : taskList,
+                compute : computeList,
+                bucket : bucketList
+            };
+           // gcpResources.bucket = bucketList;
+//            gcpResources.compute = computeList;
 
 
-           const location = 'us-central1';
-            const queueParent = `projects/${projectId}/locations/${location}`;
+            logger.info("- loading client Google Cloud Provider done-");
 
-            //await listQueues(client, projectId);
-            const tasksParent = client.queuePath(projectId, location, "queueName");
+            ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
 
-
-            const tasksClient = new CloudTasksClient();
-            const iterable = await tasksClient.listTasksAsync(tasksParent);
-            for await (const response of iterable) {
-                console.log(response);
-            }*/
         }
         catch (e) {
             logger.error("error in collectGCPData: " + projectId);
@@ -81,37 +81,54 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
 const {CloudTasksClient} = require('@google-cloud/tasks').v2;
 async function listTasks(projectId: string): Promise<Array<any>|null> {
     // Instantiates a client
+    let jsonData = [];
+    console.log("GCP TASKS LISTING : ");
+    const parent = 'projects/YOUR_PROJECT_ID/locations/YOUR_LOCATION_ID/queues/YOUR_QUEUE_ID';
     const tasksClient = new CloudTasksClient();
-    // Construct request
-    const request = {
-        projectId,
-    };
-
-    // Run request
-    const iterable = await tasksClient.listTasksAsync(request);
-    let result = [];
-    for await (const response of iterable) {
-        result.push(response);
+    try {
+        const request = {
+            parent,
+        };
+        const iterable = await tasksClient.listTasksAsync(request);
+        for await (const response of iterable) {
+            jsonData.push(JSON.parse(JSON.stringify(response)));
+            console.log(response);
+        }
+    } catch (e) {
+        logger.error("Error while retrieving GCP Tasks queues")
     }
-    logger.info("GCP Task Listing Done");
-    return (result.length)?result:null;
+    try {
+        const request = {
+            parent,
+        };
+        const iterable = await tasksClient.listQueuesAsync(request);
+        for await (const response of iterable) {
+            jsonData.push(JSON.parse(JSON.stringify(response)));
+            console.log(response);
+        }
+    } catch (e) {
+        logger.error("Error while retrieving GCP Tasks")
+    }
+    return (jsonData);
 }
 
-async function listQueues(client: any, projectId: string) {
+async function listQueues(client: any, projectId: string): Promise<Array<any>|null> {
     // Get the fully qualified path to the region
     //const parent = client.locationPath(projectId);
-
     // list all fo the queues
     const [queues] = await client.listQueues({client});
-
+    let jsonData;
     if (queues.length > 0) {
+
         console.log('Queues:');
         queues.forEach((queue: any) => {
+            jsonData.push(JSON.parse(JSON.stringify(queue)));
             console.log(`  ${queue.name}`);
         });
     } else {
         console.log('No queues found!');
     }
+    return jsonData ?? null;
 }
 
 const compute = require('@google-cloud/compute');
@@ -128,7 +145,7 @@ async function listAllComputes(projectId: string): Promise<Array<any>|null> {
 
         if (instances && instances.length > 0) {
             for (let i = 0; i < instances.length; i++) {
-                jsonData.push(JSON.parse(JSON.stringify(instances[i])))
+                jsonData.push(JSON.parse(JSON.stringify(instances[i])));
             }
         }
     }

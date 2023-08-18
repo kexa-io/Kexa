@@ -1,25 +1,10 @@
 {
-    "http": [
+    "aws": [
         {
             "rules": [
-                "test-http"
+                "Security",
+                "Economy"
             ]
-        },
-        {
-            "rules": [
-                "test-http"
-            ]
-        },
-        {
-            "rules": [
-                "test-http"
-            ],
-            "header": {
-                "Content-Type": "application/json"
-            },
-            "body": {
-                "licence": "KVXFHQ-JLWCAF-ZIXZJJI"
-            }
         }
     ],
     "drive": [
