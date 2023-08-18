@@ -1,0 +1,96 @@
+- version: 1.0.0
+  date: 06-12-2023
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: false
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      name: test-drive
+      to: 
+        #- http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "check drive files name"
+      description : "check drive files name"
+      applied: true
+      level: 0
+      cloudProvider: drive
+      objectName : files
+      conditions:
+        - property: name
+          condition: REGEX
+          value: /^(PUBLIC|PRIVATE)\s[A-Za-z]+/
+    - name: "check drive files stay private"
+      description : "check drive files name private"
+      applied: true
+      level: 0
+      cloudProvider: drive
+      objectName : files
+      conditions:
+        - operator: NAND
+          rules:
+            - property : shared
+              condition : DIFFERENT
+              value : false
+            - property : name
+              condition : REGEX
+              value : /PRIVATE\s[A-Za-z]+/
+    - name: "shared only by domaine"
+      description : "shared only by domaine"
+      applied: true
+      level: 0
+      cloudProvider: drive
+      objectName : files
+      conditions:
+        - property : permissions
+          condition : ALL
+          value : 
+            - operator: NAND
+              rules:
+                - property : type
+                  condition : EQUAL
+                  value : user
+                - property : role
+                  condition : DIFFERENT
+                  value : owner

@@ -1,11 +1,11 @@
-import { AzureResources } from "./azure/resource.models";
-import { GitResources } from "./git/resource.models";
-import { KubernetesResources } from "./kubernetes/kubernetes.models";
-
 export interface ProviderResource {
-    azure: AzureResources[];
-    gcp: any;
-    aws: any;
-    kubernetes: KubernetesResources[];
-    git: GitResources[];
+    [provider: string]: Provider[];
+}
+
+export interface Provider {
+    [key: string]: Resource[]; 
+}
+
+export interface Resource {
+    [key: string]: any;
 }

@@ -1,22 +1,16 @@
 {
     "aws": [
         {
-            "rules":[
-                "aws-cloud-tests"
+            "rules": [
+                "Security",
+                "Economy"
             ]
         }
     ],
-    "git": [
+    "drive": [
         {
             "rules": [
-                "aws-cloud-tests"
-            ]
-        }
-    ],
-    "kubernetes": [
-        {
-            "config": [
-                "config_kuber"
+                "test-drive"
             ]
         }
     ]

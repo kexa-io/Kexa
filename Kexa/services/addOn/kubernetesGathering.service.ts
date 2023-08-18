@@ -1,24 +1,35 @@
+/*
+    * Provider : kubernetes
+    * Creation date : 2023-08-14
+    * Note : 
+    * Resources :
+    *     - namespaces
+    *     - pods
+    *     - helm
+*/
+
 import { Logger } from "tslog";
 import helm from 'helm-ts';
-import { KubernetesResources } from "../models/kubernetes/kubernetes.models";
-import { setEnvVar } from "./manageVarEnvironnement.service";
+import { KubernetesResources } from "../../models/kubernetes/kubernetes.models";
+import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
+import { deleteFile, writeStringToJsonFile } from "../../helpers/files";
+import { KubernetesConfig } from "../../models/kubernetes/config.models";
 
 
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "KubernetesLogger" });
 const k8s = require('@kubernetes/client-node');
-const config = require('config');
-const kubernetesConfig = (config.has('kubernetes'))?config.get('kubernetes'):null;
 
-export async function collectKubernetes(): Promise<KubernetesResources[]|null>{
+export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<KubernetesResources[]|null>{
     logger.info("starting collectKubernetes");
     let resources = new Array<KubernetesResources>();
     for(let config of kubernetesConfig??[]){
         try {
-            if(!config["config"]){
+            if(!config.KUBECONFIG){
                 throw new Error("- Please pass CONFIG in your config file");
             }
-            setEnvVar("KUBECONFIG", config["config"]);
+            writeStringToJsonFile(await getConfigOrEnvVar(config, "KUBERNETESJSON", kubernetesConfig.indexOf(config)+"-"), "./config/kubernetes.json");
+            setEnvVar("KUBECONFIG", config.KUBECONFIG);
             const promises = [
                 kubernetesListing(),
             ];
@@ -33,6 +44,7 @@ export async function collectKubernetes(): Promise<KubernetesResources[]|null>{
         }catch(e){
             logger.error(e);
         }
+        deleteFile("./config/kubernetes.json");
     }
     return resources??null;
 }

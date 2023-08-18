@@ -1,18 +1,13 @@
 import env from "dotenv";
-import { collectAzureData } from "./services/azureGathering.service";
 import { Logger } from "tslog";
-import { ProviderResource } from "./models/providerResource.models";
 import { checkRules, gatheringRules } from "./services/analyse.service";
 import { alertGlobal } from "./services/alerte.service";
-import { collectGithubData } from "./services/githubGathering.service";
 import { AsciiArtText, talkAboutOtherProject} from "./services/display.service";
 import { getEnvVar } from "./services/manageVarEnvironnement.service";
-import { collectKubernetes } from "./services/KubernetesGathering.service";
-import { log } from "console";
-import {collectAWSData} from "./services/awsGathering.service";
+import { loadAddOns } from "./services/addOn.service";
+import { deleteFile } from "./helpers/files";
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-env.config();                                                                    // reading environnement vars
-
+env.config();                                                                    // reading environnement vars                                                       // file system
 
 export async function main() {
     let logger = new Logger({ minLevel: Number(process.env.DEBUG_MODE)??4, type: "pretty", name: "globalLogger" });
@@ -20,24 +15,13 @@ export async function main() {
     logger.info("___________________________________________________________________________________________________"); 
     logger.info("___________________________________-= running Kexa scan =-_________________________________________");
     logger.info("___________________________________________________________________________________________________"); 
-    
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"./Kexa/rules");
+
     if(settings.length != 0){
-        const [azureData, githubData, kubernetesData, awsData] = await Promise.all([
-            collectAzureData(),
-            collectGithubData(),
-            collectKubernetes(),
-            collectAWSData()
-        ]);
 
-       let resources = {
-            "azure": azureData??null,
-            "gcp": null,
-            "aws": awsData??null,
-            "kubernetes": kubernetesData,
-            "git": githubData
-        } as ProviderResource;
-
+        let resources = {};
+        resources = await loadAddOns(resources);
+        logger.debug(resources);
         // Analyse rules
         settings.forEach(setting => {
             let result = checkRules(setting.rules, resources, setting.alert);
@@ -45,11 +29,12 @@ export async function main() {
                 alertGlobal(result, setting.alert.global);
             }
         });
-    }else{
+    }else {
         logger.error("No correct rules found, please check the rules directory or the rules files.");
     }
 
-
+    deleteFile("./config/headers.json");
+    deleteFile("./config/addOnNeed.json");
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     logger.info("___________________________________________________________________________________________________"); 
     logger.info("_______________________________________-= End Kexa scan =-_________________________________________");
@@ -57,7 +42,6 @@ export async function main() {
     talkAboutOtherProject();
     //logger.debug(await getEnvVar("test"));
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 main();

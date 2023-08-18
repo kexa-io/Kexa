@@ -1,0 +1,45 @@
+name: cicd
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+
+  ci:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}   # checkout the correct branch name
+          fetch-depth: 0     
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 19
+
+      - name: Installing dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Git Version
+        id: versionning
+        uses: codacy/git-version@2.8.0
+        with:
+          release-branch: main
+          dev-branch: dev
+          log-paths: Kexa/
+          minor-identifier: 'feat:'
+      
+      - name: Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: "${{ steps.versionning.outputs.version }}"

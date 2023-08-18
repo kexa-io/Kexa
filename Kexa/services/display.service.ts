@@ -1,14 +1,14 @@
-import { ObjectNameEnum } from "../enum/objectName.enum";
-import { ProviderEnum } from "../enum/provider.enum";
 import { ResultScan } from "../models/resultScan.models";
 import { Logger } from "tslog";
 import { Rules } from "../models/settingFile/rules.models";
+import { loadAddOnsDisplay } from "./addOn.service";
 
 let debug_mode = Number(process.env.debug_mode)??0;
-let AWSRegion = process.env.AWS_REGION ? process.env.AWS_REGION : "us-west-1";
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "DiplayLogger" });
 const cfonts = require('cfonts');
+
+const addOnPropertyToSend: { [key: string]: Function; } = loadAddOnsDisplay();
 
 export function renderTableAllScan(allScan: ResultScan[][]): string{
     let lastRule = ""
@@ -45,117 +45,12 @@ export function renderTableAllScan(allScan: ResultScan[][]): string{
     return result
 }
 
-export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean): string{
-    switch(rule?.cloudProvider){
-        case ProviderEnum.AZURE:
-            return azurePropertyToSend(rule, objectContent, isSms)
-        case ProviderEnum.GCP:
-            //return gcpPropertyToSend(scan, false)
-        case ProviderEnum.AWS:
-            return awsPropertyToSend(rule, objectContent, isSms)
-        case ProviderEnum.GIT:
-            return gitPropertyToSend(rule, objectContent, isSms)
-        default:
-            return `Id : ` + objectContent.id
-    }
-}
-
-export function azurePropertyToSend(rule: Rules, objectContent: any, isSms: boolean): string{
-    switch(rule?.objectName){
-        case ObjectNameEnum.AKS:
-        case ObjectNameEnum.RG:
-        case ObjectNameEnum.VM:
-        case ObjectNameEnum.DISK:
-        case ObjectNameEnum.NSG:
-        case ObjectNameEnum.VIRTUALNETWORK:
-        case ObjectNameEnum.NETWORKINTERFACE:
-            if (isSms)
-                return `Id : `+ objectContent?.id + `https://portal.azure.com/#@/resource/` + objectContent?.id
-            else
-                return `Id : <a href="https://portal.azure.com/#@/resource/` + objectContent?.id + '">' + objectContent?.id + `</a>`
-        case ObjectNameEnum.NAMESPACE:
-            logger.debug(objectContent)
-            return `Name : ` + objectContent.metadata.name
-        case ObjectNameEnum.PODS:
-            if (isSms)
-                return `Name : ` + objectContent.metadata.generateName + ` and NameSpace : ` + objectContent.metadata.namespace
-            else
-                return `Name : ` + objectContent.metadata.generateName + `</br>NameSpace : ` + objectContent.metadata.namespace
-        case ObjectNameEnum.HELM:
-            return `Name : ` + objectContent.metadata.generateName
-        default:
-            return `Id : ` + objectContent.id
-    }
-}
-function cutAWSAvailabilityToRegion(inputString: string): string {
-    const regionNumber = inputString.search(/\d+(?![\d])/);
-    if (regionNumber !== -1) {
-        console.log("Region AWS : " + inputString.substring(0, regionNumber + 1));
-        return inputString.substring(0, regionNumber + 1);
-    }
-    return inputString;
-}
-
-export function awsPropertyToSend(rules: Rules, objectContent: any, isSms: boolean): string {
-    let link = "https://" + AWSRegion + ".console.aws.amazon.com/";
-    let webLink = `Id : <a href="`;
-    let fullLink;
-    if (isSms)
-        fullLink = link;
-    else
-        fullLink = webLink.concat(link.toString());
-    switch (rules?.objectName) {
-        case ObjectNameEnum.EC2VOLUME:
-            return fullLink + `ec2/home?region=` + cutAWSAvailabilityToRegion(objectContent?.AvailabilityZone) + `#VolumeDetails:volumeId=`+ objectContent?.VolumeId + (isSms ? ' ' : '">') + objectContent?.VolumeId + (isSms ? `.` : `</a>`)
-        case ObjectNameEnum.EC2SG:
-            return fullLink + `ec2/home?region=` + AWSRegion + `#SecurityGroup:groupId=`+ objectContent?.GroupId + (isSms ? ' ' : '">') + objectContent?.GroupId + (isSms ? `.` : `</a>`)
-        case ObjectNameEnum.EC2INSTANCE:
-            return fullLink + `ec2/home?region=` + AWSRegion + `#InstanceDetails:instanceId=`+ objectContent?.Instances[0]?.InstanceId + (isSms ? ' ' : '">') + objectContent?.Instances[0]?.InstanceId + (isSms ? `.` : `</a>`)
-        case ObjectNameEnum.RDS:
-            return fullLink + `rds/home?region=` + AWSRegion + `#InstanceDetails:instanceId=`+ objectContent?.Instances[0]?.InstanceId + (isSms ? ' ' : '">') + objectContent?.Instances[0]?.InstanceId + (isSms ? `.` : `</a>`)
-        case ObjectNameEnum.TAGSVALUE:
-            return fullLink + `resource-groups/tag-editor/find-resources?region=` + AWSRegion + (isSms ? ' ' : '">') + objectContent?.name + (isSms ? `.` : `</a>`)
-        case ObjectNameEnum.ECRREPOSITORY:
-            return fullLink + objectContent?.repositoryUri + (isSms ? ' ' : '">') + objectContent?.repositoryName + (isSms ? `.` : `</a>`)
-        case ObjectNameEnum.ECSCLUSTER:
-            return 'ClutserArn :' + objectContent?.clusterArn;
-        case ObjectNameEnum.RESOURCEGROUPS:
-            return 'GroupArn :' + objectContent?.GroupArn;
-        default:
-            return 'AWS Scan : Id : ' + objectContent.id;
-    }
-}
-
-export function kubPropertyToSend(rules: Rules, objectContent: any, isSms: boolean): string {
-    switch (rules?.objectName) {
-        case ObjectNameEnum.NAMESPACE:
-            return `Namespace name : ` + objectContent?.metadata[0]?.name + ` with uid : ` + objectContent?.metadata[0]?.uid
-        case ObjectNameEnum.PODS:
-            return `Pod name : ` + objectContent?.metadata[0]?.name + ` with uid : ` + objectContent?.metadata[0]?.uid
-        case ObjectNameEnum.HELM:
-            return `Helm name : ` + objectContent?.metadata[0]?.name + ` with uid : ` + objectContent?.metadata[0]?.uid
-        default:
-            return 'AWS Scan : Id : ' + objectContent.id;
-    }
-}
-
-export function gitPropertyToSend(rules: Rules, objectContent: any, isSms: boolean): string {
-    let link = "https://github.com/";
-    let webLink = `Id : <a href="`;
-    let fullLink;
-    if (isSms)
-        fullLink = link;
-    else
-        fullLink = webLink.concat(link.toString());
-    switch (rules?.objectName) {
-        case ObjectNameEnum.REPOSITORIES:
-            return fullLink + objectContent?.full_name + (isSms ? ' ' : '">') + objectContent?.id + (isSms ? `.` : `</a>`)
-        case ObjectNameEnum.BRANCHES:
-            return (isSms ? webLink : '') + objectContent?.repoUrl + (isSms ? ' ' : '">') + 'Branche name : ' + objectContent?.name + (isSms ? `.` : `</a>`)
-        case ObjectNameEnum.ISSUES:
-            return (isSms ? webLink : '') + objectContent?.html_url + (isSms ? ' ' : '">') + 'Issue id : ' + objectContent?.id + (isSms ? `.` : `</a>`)
-        default:
-            return 'GIT Scan : Id : ' + objectContent.id;
+export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false): string{
+    try{
+        return addOnPropertyToSend[rule?.cloudProvider](rule, objectContent, isSms);
+    }catch(e){
+        logger.warn("Error while loading addOn display for rule : " + rule?.name);
+        return `Id : ` + objectContent.id
     }
 }
 

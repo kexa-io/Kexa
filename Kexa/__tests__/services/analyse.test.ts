@@ -1,5 +1,6 @@
 import { ConditionEnum } from "../../enum/condition.enum";
-import { checkEndsWith, checkEqual, checkEqualDate, checkEqualThanDate, checkGreaterThan, checkGreaterThanDate, checkInclude, checkIncludeNS, checkInterval, checkIntervalDate, checkLessThan, checkLessThanDate, checkRegex, checkStartsWith, gatheringRules, generateDate } from "../../services/analyse.service";
+import { RulesConditions } from "../../models/settingFile/conditions.models";
+import { checkAll, checkCount, checkEndsWith, checkEqual, checkEqualDate, checkEqualThanDate, checkGreaterThan, checkGreaterThanDate, checkInclude, checkIncludeNS, checkInterval, checkIntervalDate, checkLessThan, checkLessThanDate, checkOne, checkRegex, checkSome, checkStartsWith, gatheringRules, generateDate } from "../../services/analyse.service";
 
 const { expect } = require('chai');
 
@@ -11,7 +12,7 @@ describe('analyse service', () => {
         });
 
         it('should return a multiple rules', async () => {
-            const result = await gatheringRules("./Kexa/__tests__/rules/test2");
+            const result = await gatheringRules("./Kexa/__tests__/rules/test2", true);
             expect(result.length).to.be.above(1);
         });
 
@@ -61,12 +62,12 @@ describe('analyse service', () => {
 
         describe("Greater than date", () => {
             it("should return true", () => {
-                const result = checkGreaterThanDate({property: "date", condition: ConditionEnum.DATE_SUP, value: "1 0 0 1", date: "DD-MM-YYYY"}, generateDate("0 0 0 1 0 0").format("DD-MM-YYYY"));
+                const result = checkGreaterThanDate({property: "date", condition: ConditionEnum.DATE_SUP, value: "0 0 0 1", date: "DD-MM-YYYY"}, generateDate("0 0 0 0 1 0", false).format("DD-MM-YYYY"));
                 expect(result).to.equal(true);
             });
             
             it("should return false", () => {
-                const result = checkGreaterThanDate({property: "date", condition: ConditionEnum.DATE_SUP, value: "1 0 0 1", date: "DD-MM-YYYY"}, generateDate("0 0 0 2 0 0").format("DD-MM-YYYY"));
+                const result = checkGreaterThanDate({property: "date", condition: ConditionEnum.DATE_SUP, value: "0 0 0 1", date: "DD-MM-YYYY"}, generateDate("0 0 0 0 1 0").format("DD-MM-YYYY"));
                 expect(result).to.equal(false);
             });
         });
@@ -203,15 +204,160 @@ describe('analyse service', () => {
             });
         });
 
+        describe("count", () => {
+            it("should return true", () => {
+                const result = checkCount({property: "date", condition: ConditionEnum.COUNT, value: 3}, [1, 2, 3]);
+                expect(result).to.equal(true);
+            });
+
+            it("should return false", () => {
+                const result = checkCount({property: "date", condition: ConditionEnum.COUNT, value: 3}, [1, 2]);
+                expect(result).to.equal(false);
+            });
+        });
+
+        describe("count sup", () => {
+            it("should return true", () => {
+                const result = checkGreaterThan({property: "date", condition: ConditionEnum.COUNT_SUP, value: 3}, [1, 2, 3, 4].length);
+                expect(result).to.equal(true);
+            });
+
+            it("should return true", () => {
+                const result = checkGreaterThan({property: "date", condition: ConditionEnum.COUNT_SUP, value: 3}, [1, 2, 3].length);
+                expect(result).to.equal(false);
+            });
+
+            it("should return false", () => {
+                const result = checkGreaterThan({property: "date", condition: ConditionEnum.COUNT_SUP, value: 3}, [1, 2].length);
+                expect(result).to.equal(false);
+            });
+        });
+
+        describe("count inf", () => {
+            it("should return true", () => {
+                const result = checkLessThan({property: "date", condition: ConditionEnum.COUNT_INF, value: 3}, [1, 2].length);
+                expect(result).to.equal(true);
+            });
+
+            it("should return true", () => {
+                const result = checkLessThan({property: "date", condition: ConditionEnum.COUNT_INF, value: 3}, [1, 2, 3].length);
+                expect(result).to.equal(false);
+            });
+
+            it("should return false", () => {
+                const result = checkLessThan({property: "date", condition: ConditionEnum.COUNT_INF, value: 3}, [1, 2, 3, 4].length);
+                expect(result).to.equal(false);
+            });
+        });
+
+        describe("all", () => {
+            it("should return true", () => {
+                const result = checkAll({
+                    property: "date",
+                    condition: ConditionEnum.ALL,
+                    value: [{
+                        property: "a",
+                        condition: ConditionEnum.EQUAL,
+                        value: 1
+                    }] as RulesConditions[]
+                }, [{"a": 1}, {"a":1}, {"a":1}]);
+                expect(result).to.equal(true);
+            });
+
+            it("should return false", () => {
+                const result = checkAll({
+                    property: "date",
+                    condition: ConditionEnum.ALL,
+                    value: [{
+                        property: "a",
+                        condition: ConditionEnum.EQUAL,
+                        value: 1
+                    }] as RulesConditions[]
+                }, [{"a": 2}, {"a":1}, {"a":1}]);
+                expect(result).to.equal(false);
+            });
+        });
+    });
+
+    describe("Some", () => {
+        it("should return true", () => {
+            const result = checkSome({
+                property: "date",
+                condition: ConditionEnum.ALL,
+                value: [{
+                    property: "a",
+                    condition: ConditionEnum.EQUAL,
+                    value: 1
+                }] as RulesConditions[]
+            }, [{"a": 2}, {"a":3}, {"a":1}]);
+            expect(result).to.equal(true);
+        });
+
+        it("should return true", () => {
+            const result = checkSome({
+                property: "date",
+                condition: ConditionEnum.ALL,
+                value: [{
+                    property: "a",
+                    condition: ConditionEnum.EQUAL,
+                    value: 1
+                }] as RulesConditions[]
+            }, [{"a": 2}, {"a":3}, {"a":1}]);
+            expect(result).to.equal(true);
+        });
+
+        it("should return false", () => {
+            const result = checkSome({
+                property: "date",
+                condition: ConditionEnum.ALL,
+                value: [{
+                    property: "a",
+                    condition: ConditionEnum.EQUAL,
+                    value: 1
+                }] as RulesConditions[]
+            }, [{"a": 2}, {"a":3}, {"a":4}]);
+            expect(result).to.equal(false);
+        });
+    });
+
+    describe("One", () => {
+        it("should return true", () => {
+            const result = checkOne({
+                property: "date",
+                condition: ConditionEnum.ALL,
+                value: [{
+                    property: "a",
+                    condition: ConditionEnum.EQUAL,
+                    value: 1
+                }] as RulesConditions[]
+            }, [{"a": 2}, {"a":3}, {"a":1}]);
+            expect(result).to.equal(true);
+        });
+
+        it("should return false", () => {
+            const result = checkOne({
+                property: "date",
+                condition: ConditionEnum.ALL,
+                value: [{
+                    property: "a",
+                    condition: ConditionEnum.EQUAL,
+                    value: 1
+                }] as RulesConditions[]
+            }, [{"a": 2}, {"a":1}, {"a":1}]);
+            expect(result).to.equal(false);
+        });
+
+        it("should return false", () => {
+            const result = checkOne({
+                property: "date",
+                condition: ConditionEnum.ALL,
+                value: [{
+                    property: "a",
+                    condition: ConditionEnum.EQUAL,
+                    value: 1
+                }] as RulesConditions[]
+            }, [{"a": 2}, {"a":3}, {"a":4}]);
+            expect(result).to.equal(false);
+        });
     });
 });
-
-//ALL
-//NOT_ANY
-//SOME
-//ONE
-//COUNT
-//COUNT_SUP
-//COUNT_SUP_OR_EQUAL
-//COUNT_INF
-//COUNT_INF_OR_EQUAL

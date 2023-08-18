@@ -13,10 +13,12 @@ import { alertFromRule } from "./alerte.service";
 import { Alert } from "../models/settingFile/alert.models";
 import { ConfigAlert } from "../models/settingFile/configAlert.models";
 import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
-import { ProviderEnum } from "../enum/provider.enum";
 import { AlertEnum } from '../enum/alert.enum';
-import { getEnvVar } from './manageVarEnvironnement.service';
+import {getConfigOrEnvVar} from './manageVarEnvironnement.service';
 import moment, { Moment, unitOfTime } from 'moment';
+import { BeHaviorEnum } from '../enum/beHavior.enum';
+import { writeStringToJsonFile } from '../helpers/files';
+import { extractHeaders } from './addOn.service';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
@@ -29,29 +31,61 @@ const varEnvMin = {
 }
 const config = require('config');
 const levelAlert = ["info", "warning", "error", "critical"];
-
+let headers: any;
 //Analyse  list
 // read the yaml file with rules
 // exam each rules and raise alarm or not
-export async function gatheringRules(rulesDirectory:string): Promise<SettingFile[]> {
+export async function gatheringRules(rulesDirectory:string, getAll:boolean=false): Promise<SettingFile[]> {
+    await extractHeaders();
     // list directory
     const paths = fs.readdirSync(rulesDirectory, { withFileTypes: true});
     logger.debug("listing rules files.");
     let settingFileList = new Array<SettingFile>;
+    headers = require('../../config/headers.json');
+    let listNeedRules = getListNeedRules();
     for(const p of paths) {
         logger.debug("getting "+rulesDirectory+"/"+p.name+" rules.");
-        let setting = await analyseRule(rulesDirectory+"/"+p.name);
-        if( setting) settingFileList.push(setting);
+        let setting = await analyseRule(rulesDirectory+"/"+p.name, listNeedRules, true);
+        if(setting) settingFileList.push(setting);
     }
+    extractAddOnNeed(settingFileList);
     logger.debug("rules list:");
     logger.debug(settingFileList.map((value) => value.alert.global.name).join(", "));
     return settingFileList;
 }
 
-export async function analyseRule(ruleFilePath:string): Promise<SettingFile | null> {
+function extractAddOnNeed(settingFileList: SettingFile[]){
+    let providerList = new Array<string>();
+    settingFileList.forEach((ruleFile) => {
+        ruleFile.rules.forEach((rule) => {
+            if(!providerList.includes(rule.cloudProvider)) providerList.push(rule.cloudProvider);
+        });
+    });
+    writeStringToJsonFile(JSON.stringify({ "addOn" : providerList}), "./config/addOnNeed.json");
+}
+
+function getListNeedRules(): string[]{
+    const config = require('config');
+    let listNeedRules = new Array<string>();
+    for(let cloudProvider of Object.keys(config)){
+        let configAssign = config.get(cloudProvider);
+        for(let config of configAssign){
+            for(let rule of config.rules){
+                if(!listNeedRules.includes(rule)) listNeedRules.push(rule);
+            }
+        }
+    }
+    return listNeedRules;
+}
+
+export async function analyseRule(ruleFilePath:string, listNeedRules:string[], getAll:boolean=false): Promise<SettingFile | null> {
     logger.debug("analyse:"+ruleFilePath);
     try {
         const doc = (yaml.load(fs.readFileSync(ruleFilePath, 'utf8')) as SettingFile[])[0];
+        if(!listNeedRules.includes(doc?.alert?.global?.name) && !getAll){
+            logger.info("rule not needed:"+doc?.alert?.global?.name);
+            return null;
+        }
         let result = await checkDoc(doc);
         logCheckDoc(result);
         result.forEach((value) => {
@@ -120,7 +154,7 @@ export async function checkDocAlertConfig(alertConfig:ConfigAlert, level:string)
             }
             try{
                 for(let env of varEnvMin[type.toLowerCase() as keyof typeof varEnvMin]){
-                    if(!(await getEnvVar(env))) result.push("error - "+env+" not found in env for "+level);
+                    if(!(await getConfigOrEnvVar(config, env))) result.push("error - "+env+" not found in env for "+level);
                 }
             }catch(err){}
         };
@@ -172,9 +206,9 @@ export function checkDocRules(rules:Rules[]): string[] {
         if(!rule.hasOwnProperty("level")) result.push("error - level not found in rule");
         else if(!Object.values(LevelEnum).includes(rule.level)) result.push("warn - level not valid in rule -> default info : "+rule.level);
         if(!rule.hasOwnProperty("cloudProvider")) result.push("error - cloudProvider not found in rule");
-        else if(!Object.values(ProviderEnum).includes(rule.cloudProvider)) result.push("error - cloudProvider not valid in rule : "+rule.cloudProvider);
+        else if(!Object.keys(headers).includes(rule.cloudProvider)) result.push("error - cloudProvider not valid in rule : "+rule.cloudProvider + "\nYou have to add this addOn to validate the rules");
         if(!rule.hasOwnProperty("objectName")) result.push("error - objectName not found in rule");
-        else if(!Object.values(ProviderEnum).includes(rule.cloudProvider)) result.push("error - objectName not valid in rule : "+rule.objectName);
+        else if(!headers[rule.cloudProvider]?.includes(rule.objectName)) result.push("error - objectName not valid in rule : "+rule.objectName+ "\nYou have to verify your addOn gathering data about it");
         if(!rule.hasOwnProperty("conditions")) result.push("error - conditions not found in rule");
         else {
             if (rule.conditions.length === 0) result.push("error - conditions empty in rule");
@@ -225,7 +259,7 @@ export function checkSubRuleCondition(subRule:RulesConditions): string[] {
     if(!subRule.hasOwnProperty("condition")) result.push("error - condition not found in sub rule condition");
     else if(!Object.values(ConditionEnum).includes(subRule.condition)) result.push("error - condition not valid in sub rule condition : " + subRule.condition);
     else if (subRule.condition.includes("DATE") && !subRule.hasOwnProperty("date")) result.push("error - date not found in sub rule condition");
-    //if(!subRule.hasOwnProperty("value")) result.push("error - value not found in sub rule condition");
+    if(!subRule.hasOwnProperty("value")) result.push("error - value not found in sub rule condition");
     //else if(typeof subRule.value !== "string" && typeof subRule.value !== "number" && !Array.isArray(subRule.value)) result.push("error - value not valid in sub rule condition : " + subRule.value);
     //else if(Array.isArray(subRule.value) && subRule.value.length === 0) result.push("error - value empty in sub rule condition");
     //else if(Array.isArray(subRule.value)){
@@ -235,6 +269,26 @@ export function checkSubRuleCondition(subRule:RulesConditions): string[] {
     //}
     
     return result;
+}
+
+function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, index: number): BeHaviorEnum {
+    if(!resources[rule.cloudProvider]){
+        logger.warn("This cloud provider is not supported:"+rule.cloudProvider + "\nDon't forget to add this addOn");
+        return BeHaviorEnum.RETURN;
+    }
+    if(!Array.isArray(resources[rule.cloudProvider]) || resources[rule.cloudProvider].length === 0){
+        logger.warn("the addOn for : "+rule.cloudProvider+" are not supported multi-configuration");
+        return BeHaviorEnum.NONE;
+    }
+    if(!resources[rule.cloudProvider][index].hasOwnProperty(rule.objectName)){
+        logger.warn("object name : "+rule.objectName + "not found in your provider " + rule.cloudProvider + " with configuration index " + index + "\nMake sure you have the right addOn or the right spelling in your rules");
+        return BeHaviorEnum.CONTINUE;
+    }
+    if(resources[rule.cloudProvider][index][rule.objectName] === null){
+        logger.warn("No " + rule.objectName + " found in your provider " + rule.cloudProvider + " with configuration index " + index);
+        return BeHaviorEnum.NONE;
+    }
+    return BeHaviorEnum.NONE;
 }
 
 export function checkRules(rules:Rules[], resources:ProviderResource, alert: Alert): ResultScan[][] {
@@ -252,6 +306,12 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
         for(let i = 0; i < configAssign.length; i++){
             if(configAssign[i].rules.includes(alert.global.name)){
                 logger.info("check rule with object with index :"+ i);
+                switch(checkMatchConfigAndResource(rule, resources, i)){
+                    case BeHaviorEnum.RETURN:
+                        return;
+                    case BeHaviorEnum.CONTINUE:
+                        continue;
+                }
                 objectResources = [...objectResources, ...resources[rule.cloudProvider][i][rule.objectName]]
             }
         }
@@ -527,7 +587,13 @@ export function checkSome(condition:RulesConditions, value:any): boolean {
 
 export function checkOne(condition:RulesConditions, value:any): boolean {
     logger.debug("check one");
-    if(value.filter((v:any) => v === condition.value).length === 1) return true;
+    let result:SubResultScan[][] = [];
+    value.forEach((v:any) => {
+        result.push(checkRule(condition.value as RulesConditions[]|ParentRules[], v));
+    });
+    let finalResult:boolean[] = [];
+    for (let row of result) for (let e of row) finalResult.push(e.result);
+    if(finalResult.filter((v:any) => v).length === 1) return true;
     return false;
 }
 
