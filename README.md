@@ -539,7 +539,7 @@ To create an addOn, you'll need to create 2 files.
 
 #### Gathering Data
 
-A file to collect data whose path will be "./Kexa/services/addOn". It is named as follows: [extension's name]Gathering.service.ts . The entry point for this file is a function named "collectData", which takes no arguments. The return format of this function is as shown in the following example. 
+A file to collect data whose path will be "./Kexa/services/addOn". It is named as follows: [extension's name]Gathering.service.ts . The entry point for this file is a function named "collectData", which takes one arguments. The argument is a list containing all the configs for your addOn. The return format of this function is as shown in the following example. 
 exemple :
 ```json
 [
@@ -569,7 +569,7 @@ exemple :
 
 The data format is the following for several reasons. The first list corresponds to the different subscriptions or accounts in a sector. To illustrate, in the case of a cloud provider such as Azure, we might need different identifiers to scan all our accounts, and each account scan result is an item in the list. The dictionaries in the main list correspond to your dictionary that you find relevant to create to identify the different resources of your addOn, in the rules this corresponds to your "objectName". Finally, the lowest-level lists correspond to the list of items collected by your addOn.
 
-For project maintainability, we require addOn modules to contain a header to quickly identify certain information.
+For project maintainability, we require addOn modules to contain a header to quickly identify certain information. It's also important to update this header according to the capabilities of your addOn. In fact, this header serves as a basis for checking the feasibility of certain rules.
 This header is a comment that must contain at least 2 pieces of information: the name of the module and the "categoryItems" you've included in your module.
 example for an "azureComplement" module:
 file name : azureComplementGathering.service.ts

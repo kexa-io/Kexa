@@ -11,18 +11,16 @@ import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service"
 import { GCPResources } from "../../models/gcp/resource.models";
 import {Storage} from "@google-cloud/storage";
 import { deleteFile, writeStringToJsonFile } from "../../helpers/files";
+import { GcpConfig } from "../../models/gcp/config.models";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 let debug_mode = Number(process.env.DEBUG_MODE)??3;
 
-const config = require('config');
-
-const gcpConfig = (config.has('gcp'))?config.get('gcp'):null;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "GcpLogger" });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING CLOUD RESOURCES
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function collectData(): Promise<GCPResources[] | null> {
+export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[] | null> {
     let resources = new Array<GCPResources>();
     setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", "./config/gcp.json");
     for (let config of gcpConfig??[]) {
@@ -44,6 +42,17 @@ export async function collectData(): Promise<GCPResources[] | null> {
             const [taskList, computeList, bucketList] = await Promise.all(promises);
 
             logger.info("- listing cloud resources done -");
+            /* gcpResources = {
+                task : taskList,
+                compute : computeList?.at(0),
+                bucket : bucketList
+            };*/
+            gcpResources.bucket = bucketList;
+            gcpResources.compute = computeList;
+            logger.info("- loading client Google Cloud Provider done-");
+
+            ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
+            const client = new CloudTasksClient();
 
             gcpResources = {
                 task : taskList,

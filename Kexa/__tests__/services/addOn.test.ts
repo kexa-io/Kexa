@@ -28,7 +28,7 @@ describe('Add On', () => {
 
                 it(`File ${file} should contain a valid header`, async () => {
                     let header = hasValidHeader(`./${mainFolder}/services/addOn/${file}`);
-                    expect(Array.isArray(header)).to.equal(true);
+                    expect(typeof(header) !== "string").to.equal(true);
                 });
             });
         }

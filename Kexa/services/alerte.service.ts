@@ -152,7 +152,8 @@ export function alertTeamsGlobal(alert: GlobalConfigAlert, compteError: number[]
     content["nbrError"] = nbrError;
     content["title"] = "Kexa - Global Alert - "+(alert.name??"Uname");
     for (const teams_to of alert.to) {
-        if (!teams_to.startsWith("+")) return;
+        const regex = /^https:\/\/(?:[a-zA-Z0-9_-]+\.)?webhook\.office\.com\/[^\s"]+$/;
+        if(regex.test(teams_to)) return;
         logger.debug("send teams to:"+teams_to);
         sendCardMessageToTeamsChannel(teams_to, "Kexa - Global Alert - "+ (alert.name??"Uname"), content);
     }
@@ -183,8 +184,8 @@ export function compteRender(allScan: ResultScan[][]): any {
 export function alertFromRule(rule:Rules, conditions:SubResultScan[], objectResource:any, alert: Alert) {
     let detailAlert = alert[levelAlert[rule.level] as keyof typeof alert];
     if (!detailAlert.enabled) return
+    if(rule.level > LevelEnum.FATAL) rule.level = LevelEnum.INFO;
     detailAlert.type.forEach((type) => {
-        console.log("Alert Type : " + type)
         switch(type){
             case AlertEnum.LOG:
                 alertLog(rule, conditions, objectResource);
@@ -252,7 +253,8 @@ export function warnLog(rule: Rules, conditions:SubResultScan[], objectResource:
 export function alertTeams(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules, objectResource:any) {
     logger.debug("alert Teams");
     for (const teams_to of detailAlert.to) {
-        if (!teams_to.includes("http")) continue;
+        const regex = /^https:\/\/(?:[a-zA-Z0-9_-]+\.)?webhook\.office\.com\/[^\s"]+$/;
+        if(regex.test(teams_to)) return;
         let content = propertyToSend(rule, objectResource);
         sendCardMessageToTeamsChannel(teams_to, "Kexa - "+levelAlert[rule.level]+" - "+rule.name, content);
     }
@@ -386,9 +388,9 @@ export async function sendCardMessageToTeamsChannel(channelWebhook: string, subj
     try {
         const response = await axios.post(channelWebhook, payload);
         if (response.status === 200) {
-            console.log('Card sent successfully!');
+            logger.info('Card sent successfully!');
         } else {
-            console.log('Failed to send card.');
+            logger.info('Failed to send card.');
         }
     } catch (error) {
         console.error('An error occurred:', error);

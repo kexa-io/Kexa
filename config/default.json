@@ -6,5 +6,12 @@
                 "Economy"
             ]
         }
+    ],
+    "drive": [
+        {
+            "rules": [
+                "test-drive"
+            ]
+        }
     ]
 }
