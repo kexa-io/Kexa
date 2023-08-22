@@ -74,16 +74,6 @@ function checkIfDataIsProvider(data: any): data is Provider {
     if (typeof data !== 'object' || data === null) {
         return false;
     }
-    for (const key in data) {
-        if (typeof data[key] !== 'object' || data[key] === null) {
-            return false;
-        }
-        for (const keySecondary in data[key]) {
-            if (!Array.isArray(data[key][keySecondary])) {
-                return false;
-            } 
-        }
-    }
     return true;
 }
 

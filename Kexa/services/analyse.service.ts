@@ -251,41 +251,25 @@ export enum beHaviorEnum {
 
 }
 function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, index: number): beHaviorEnum {
-
+    console.log(rule.cloudProvider);
     if(!resources[rule.cloudProvider]){
-
+        console.log(resources[rule.cloudProvider]);
         logger.warn("This cloud provider is not supported:"+rule.cloudProvider + "\nDon't forget to add this addOn");
-
         return beHaviorEnum.RETURN;
-
     }
-
     if(!Array.isArray(resources[rule.cloudProvider]) || resources[rule.cloudProvider].length === 0){
-
         logger.warn("the addOn for : "+rule.cloudProvider+" are not supported multi-configuration");
-
         return beHaviorEnum.NONE;
-
     }
-
     if(!resources[rule.cloudProvider][index].hasOwnProperty(rule.objectName)){
-
         logger.warn("object name : "+rule.objectName + "not found in your provider " + rule.cloudProvider + " with configuration index " + index + "\nMake sure you have the right addOn or the right spelling in your rules");
-
         return beHaviorEnum.CONTINUE;
-
     }
-
     if(resources[rule.cloudProvider][index][rule.objectName] === null){
-
         logger.warn("No " + rule.objectName + " found in your provider " + rule.cloudProvider + " with configuration index " + index);
-
         return beHaviorEnum.NONE;
-
     }
-
     return beHaviorEnum.NONE;
-
 }
 
 
@@ -293,93 +277,49 @@ function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, ind
 export function checkRules(rules:Rules[], resources:ProviderResource, alert: Alert): ResultScan[][] {
 
     logger.debug("check rules");
-
     let result: ResultScan[][] = [];
-
     rules.forEach(rule => {
-
         if(!rule.applied) return;
-
-        logger.info("check rule:"+rule.name);
-
+            logger.info("check rule:"+rule.name);
         if(!config.has(rule.cloudProvider)){
-
             logger.warn("cloud provider not found in config:"+rule.cloudProvider);
-
             return;
-
         }
-
         const configAssign = config.get(rule.cloudProvider);
-
         let objectResources:any = []
-
         for(let i = 0; i < configAssign.length; i++){
-
             if(configAssign[i].rules.includes(alert.global.name)){
-
                 logger.info("check rule with object with index :"+ i);
-
                 switch(checkMatchConfigAndResource(rule, resources, i)){
-
                     case beHaviorEnum.RETURN:
-
                         return;
-
                     case beHaviorEnum.CONTINUE:
-
                         continue;
-
                 }
-
                 objectResources = [...objectResources, ...resources[rule.cloudProvider][i][rule.objectName]]
-
             }
-
         }
-
         let subResult: ResultScan[] = [];
-
         if(rule.conditions[0].hasOwnProperty("property") && (rule.conditions[0] as RulesConditions).property === "."){
-
             subResult.push({
-
                 objectContent: {
-
                     "id": "global property",
-
                 },
-
                 rule: rule,
-
                 error: actionAfterCheckRule(rule, objectResources, alert),
-
             });
-
         }else{
-
             objectResources.forEach((objectResource: any) => {
-
                 subResult.push({
-
                     objectContent: objectResource,
-
                     rule: rule,
-
                     error: actionAfterCheckRule(rule, objectResource, alert),
-
                 });
-
             });
-
         }
-
         result.push(subResult);
-
     });
-
     return result;
-
 }
 function actionAfterCheckRule(rule: Rules, objectResource: any, alert: Alert): SubResultScan[] {
     let subResultScan: SubResultScan[] = checkRule(rule.conditions, objectResource);

@@ -12,6 +12,9 @@
             "rules": [
                 "Security",
                 "Economy"
+            ],
+            "regions": [
+                ""
             ]
         }
     ]
