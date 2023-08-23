@@ -270,6 +270,18 @@ export function checkSubRuleCondition(subRule:RulesConditions): string[] {
     
     return result;
 }
+export enum beHaviorEnum {
+    BREAK,
+
+    CONTINUE,
+
+    RETURN,
+
+    THROW,
+
+    NONE
+
+}
 
 function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, index: number): BeHaviorEnum {
     if(!resources[rule.cloudProvider]){
@@ -292,11 +304,12 @@ function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, ind
 }
 
 export function checkRules(rules:Rules[], resources:ProviderResource, alert: Alert): ResultScan[][] {
+
     logger.debug("check rules");
     let result: ResultScan[][] = [];
     rules.forEach(rule => {
         if(!rule.applied) return;
-        logger.info("check rule:"+rule.name);
+            logger.info("check rule:"+rule.name);
         if(!config.has(rule.cloudProvider)){
             logger.warn("cloud provider not found in config:"+rule.cloudProvider);
             return;
@@ -337,7 +350,6 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
     });
     return result;
 }
-
 function actionAfterCheckRule(rule: Rules, objectResource: any, alert: Alert): SubResultScan[] {
     let subResultScan: SubResultScan[] = checkRule(rule.conditions, objectResource);
     let error = subResultScan.filter((value) => !value.result);

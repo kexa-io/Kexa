@@ -2,15 +2,22 @@
     "aws": [
         {
             "rules": [
-                "Security",
-                "Economy"
+                "Security"
+            ],
+            "regions": [
+                "us-east-1"
             ]
         }
     ],
-    "drive": [
+    "gcp": [
         {
             "rules": [
-                "test-drive"
+                "Security",
+                "Economy"
+            ],
+            "regions": [
+                  "us-east1",
+                "us-east4"
             ]
         }
     ]
