@@ -4,7 +4,6 @@ import { Rules } from "../models/settingFile/rules.models";
 import { loadAddOnsDisplay } from "./addOn.service";
 
 let debug_mode = Number(process.env.debug_mode)??0;
-let AWSRegion = process.env.AWS_REGION ? process.env.AWS_REGION : "us-west-1";
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "DiplayLogger" });
 const cfonts = require('cfonts');
@@ -48,9 +47,9 @@ export function renderTableAllScan(allScan: ResultScan[][]): string{
 
 export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false): string{
     try{
-        return addOnPropertyToSend[rule?.objectName](rule, objectContent, isSms);
+        return addOnPropertyToSend[rule?.cloudProvider](rule, objectContent, isSms);
     }catch(e){
-        logger.warn("Error while loading addOn display for rule : " + rule?.name + " with error : " + e);
+        logger.warn("Error while loading addOn display for rule : " + rule?.name);
         return `Id : ` + objectContent.id
     }
 }

@@ -12,7 +12,7 @@ describe('analyse service', () => {
         });
 
         it('should return a multiple rules', async () => {
-            const result = await gatheringRules("./Kexa/__tests__/rules/test2");
+            const result = await gatheringRules("./Kexa/__tests__/rules/test2", true);
             expect(result.length).to.be.above(1);
         });
 

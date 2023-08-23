@@ -59,6 +59,7 @@
     "cfonts": "^3.2.0",
     "config": "^3.3.9",
     "dotenv": "^16.0.3",
+    "googleapis": "^105.0.0",
     "helm-ts": "^0.1.5",
     "js-yaml": "^4.1.0",
     "jsome": "^2.5.0",
@@ -84,7 +85,7 @@
     "typescript": "^4.9.5"
   },
   "name": "Kexa",
-  "version": "1.1.0",
+  "version": "1.3.0",
   "main": "./Kexa/main.ts",
   "scripts": {
     "build": "rimraf ./build && tsc",

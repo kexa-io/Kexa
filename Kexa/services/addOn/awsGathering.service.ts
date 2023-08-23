@@ -17,13 +17,12 @@ import { Logger } from "tslog";
 import { AWSResources } from "../../models/aws/ressource.models";
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { EC2Client, DescribeRegionsCommand } from "@aws-sdk/client-ec2";
+import { AwsConfig } from "../../models/aws/config.models";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const debug_mode = Number(process.env.DEBUG_MODE) ?? 3;
 const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "AWSLogger" });
-const configuration = require('config');
-const awsConfig = (configuration.has('aws'))?configuration.get('aws'):null;
 let ec2Client: EC2;
 let rdsClient: RDS;
 let s3Client: S3;
@@ -32,7 +31,7 @@ let ecrClient: ECR;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING CLOUD RESOURCES ///////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function collectData(): Promise<AWSResources[] | null> {
+export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[] | null> {
     let resources = new Array<AWSResources>();
     for (let oneConfig of awsConfig ?? []) {
         let awsResource = {
@@ -60,13 +59,13 @@ export async function collectData(): Promise<AWSResources[] | null> {
                     try {
                         logger.info("Retrieving AWS Region : " + region.RegionName);
                         config.update({credentials: credentials, region: region.RegionName});
-                        ec2Client = new EC2(oneConfig);
-                        rdsClient = new RDS(oneConfig);
+                        ec2Client = new EC2();
+                        rdsClient = new RDS();
                         //    s3Client = new AWS.S3(config);
-                        ecsClient = new ECS(oneConfig);
-                        ecrClient = new ECR(oneConfig);
-                        const resourceGroups = new ResourceGroups(oneConfig);
-                        const tags = new ResourceGroupsTaggingAPI(oneConfig);
+                        ecsClient = new ECS();
+                        ecrClient = new ECR();
+                        const resourceGroups = new ResourceGroups();
+                        const tags = new ResourceGroupsTaggingAPI();
 
                         const ec2InstancesPromise = ec2InstancesListing(ec2Client, region.RegionName as string);
                         const ec2VolumesPromise = ec2VolumesListing(ec2Client, region.RegionName as string);
