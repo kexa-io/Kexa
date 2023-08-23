@@ -283,30 +283,6 @@ export enum beHaviorEnum {
 
 }
 
-function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, index: number): beHaviorEnum {
-    console.log(rule.cloudProvider);
-    if(!resources[rule.cloudProvider]){
-        console.log(resources[rule.cloudProvider]);
-        logger.warn("This cloud provider is not supported:"+rule.cloudProvider + "\nDon't forget to add this addOn");
-        return beHaviorEnum.RETURN;
-    }
-    if(!Array.isArray(resources[rule.cloudProvider]) || resources[rule.cloudProvider].length === 0){
-        logger.warn("the addOn for : "+rule.cloudProvider+" are not supported multi-configuration");
-        return beHaviorEnum.NONE;
-    }
-    if(!resources[rule.cloudProvider][index].hasOwnProperty(rule.objectName)){
-        logger.warn("object name : "+rule.objectName + "not found in your provider " + rule.cloudProvider + " with configuration index " + index + "\nMake sure you have the right addOn or the right spelling in your rules");
-        return beHaviorEnum.CONTINUE;
-    }
-    if(resources[rule.cloudProvider][index][rule.objectName] === null){
-        logger.warn("No " + rule.objectName + " found in your provider " + rule.cloudProvider + " with configuration index " + index);
-        return beHaviorEnum.NONE;
-    }
-    return beHaviorEnum.NONE;
-}
-
-
-
 function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, index: number): BeHaviorEnum {
     if(!resources[rule.cloudProvider]){
         logger.warn("This cloud provider is not supported:"+rule.cloudProvider + "\nDon't forget to add this addOn");

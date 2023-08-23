@@ -1,12 +1,4 @@
 {
-    "aws": [
-        {
-            "rules": [
-                "Security",
-                "Economy"
-            ]
-        }
-    ],
     "gcp": [
         {
             "rules": [
@@ -14,7 +6,8 @@
                 "Economy"
             ],
             "regions": [
-                  "us-east-1"
+                  "us-east1",
+                "us-east4"
             ]
         }
     ]

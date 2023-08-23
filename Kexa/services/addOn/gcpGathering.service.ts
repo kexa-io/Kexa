@@ -86,6 +86,20 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
         writeStringToJsonFile(await getConfigOrEnvVar(config, "GOOGLE_APPLICATION_CREDENTIALS", gcpConfig.indexOf(config)+"-"), "./config/gcp.json");
         let regionsList = new Array<string>();
         await retrieveAllRegions(projectId, regionsList);
+        console.log("GCP CONFIG : ");
+        console.log(config);
+        let userRegions;
+        if ('regions' in config) {
+            const userRegions = config.regions;
+            console.log('Regions:', userRegions);
+            if (!(compareUserAndValidRegions(userRegions as Array<string>, regionsList, gcpConfig, config)))
+                continue;
+            else {
+                regionsList = userRegions as Array<string>;
+            }
+        } else {
+            console.log('No regions data found.');
+        }
         try {
             logger.info("- listing GCP resources -");
             const promises = [
@@ -132,11 +146,6 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 pipelineList, certificateList, batchJobList, workloadList, artifactRepoList, app_gatewayList] = await Promise.all(promises);
 
             logger.info("- listing cloud resources done -");
-            /* gcpResources = {
-                task : taskList,
-                compute : computeList?.at(0),
-                bucket : bucketList
-            };*/
             gcpResources.bucket = bucketList;
             gcpResources.compute = computeList;
             logger.info("- loading client Google Cloud Provider done-");
@@ -193,6 +202,23 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
 ///////////////////////////////////////////////     The following functions are used to gather informations
 ///// FUNCTIONS FOR ALL REGIONS GATHERING /////     from all required regions.
 ///////////////////////////////////////////////
+
+function compareUserAndValidRegions(userRegions: Array<any>, validRegions: Array<string>, gcpConfig: any, config: any) {
+    console.log("USER:");
+    console.log(userRegions);
+    console.log("VALID:");
+    console.log(validRegions);
+    for (let i = 0; i < userRegions.length; i++) {
+        if (validRegions.includes(userRegions[i]))
+            continue;
+        else {
+            logger.error("GCP - Config '" + gcpConfig.indexOf(config) + "' Skipped - Regions '" + userRegions[i] + "' is not a valid GCP region.");
+            return (false);
+        }
+    }
+    logger.info("GCP - Config '" + gcpConfig.indexOf(config) + "' Loaded user Regions.");
+    return (true);
+}
 function addRegionGCP(response: any, region: string) {
     response.region = region;
     return response;

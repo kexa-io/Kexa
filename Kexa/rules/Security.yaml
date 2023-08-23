@@ -53,19 +53,19 @@
   rules:
     - name: NSG-subnet
       description : "check if NSG have a valid subnet"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: azure
       objectName : aks
-      conditions: 
+      conditions:
         - property: agentPoolProfiles
           condition: COUNT
           value: 2
     - name: "Git repo check"
       description: "this rules is to check if git repo is private"
-      applied: true
+      applied: false
       level: 0
-      cloudProvider: git
+      cloudProvider: github
       objectName: repositories
       conditions:
         - property: private
@@ -73,9 +73,9 @@
           value: true
     - name: "Git_branch_protect"
       description: "this rules is to check if git branch is protected"
-      applied: true
+      applied: false
       level: 0
-      cloudProvider: git
+      cloudProvider: github
       objectName: branches
       conditions:
         - operator: NAND
