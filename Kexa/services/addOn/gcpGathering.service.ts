@@ -22,6 +22,8 @@
     *     - os_config
     *     - org_policy_constraint
     *     - airflow_image_version
+    *     - disk
+    *     - compute_item
 */
 
 import { Logger } from "tslog";
@@ -80,7 +82,9 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
             "batch_job": null,
             "workload": null,
             "artifact_repository": null,
-            "app_gateway": null
+            "app_gateway": null,
+            "disk": null,
+            "compute_item": null
         } as GCPResources;
         let projectId = await getConfigOrEnvVar(config, "GOOGLE_PROJECT_ID", gcpConfig.indexOf(config)+"-");
         writeStringToJsonFile(await getConfigOrEnvVar(config, "GOOGLE_APPLICATION_CREDENTIALS", gcpConfig.indexOf(config)+"-"), "./config/gcp.json");
@@ -130,7 +134,9 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 await listBatchJobs(projectId, regionsList),
                 await listWorkloads(projectId),
                 await listArtifactsRepositories(projectId, regionsList),
-                await listAppGateways(projectId, regionsList)
+                await listAppGateways(projectId, regionsList),
+                await listPersistentDisks(projectId),
+                await listSSHKey(projectId)
         ];
             const [taskList, computeList, bucketList, projectList, billingAccountList,
              clusterList, workflowList, webSecurityList, connectorList,
@@ -139,7 +145,8 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 os_configList, org_policy_contraintList, airflow_image_versionList,
                 notebookList, lineage_processList, dashboardList, identity_domainList,
                 kms_crypto_keyList, kms_key_ringList, domain_registrationList, dns_zoneList,
-                pipelineList, certificateList, batchJobList, workloadList, artifactRepoList, app_gatewayList] = await Promise.all(promises);
+                pipelineList, certificateList, batchJobList, workloadList, artifactRepoList,
+                app_gatewayList, diskList, compute_itemList] = await Promise.all(promises);
 
             logger.info("- listing cloud resources done -");
             gcpResources.bucket = bucketList;
@@ -181,7 +188,9 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 batch_job: batchJobList,
                 workload: workloadList,
                 artifact_repository: artifactRepoList,
-                app_gateway: app_gatewayList
+                app_gateway: app_gatewayList,
+                disk: diskList,
+                compute_item: compute_itemList
             };
             logger.info("- loading client Google Cloud Provider done-");
         }
@@ -231,42 +240,6 @@ async function retrieveAllRegions(projectId: number, regionsList: Array<string>)
     }
 }
 
-/////////////////////////////////////////////////////////     This function is the old region gather, to be used
-/////   OLD REGIONS GATHERING ( SLOWER EXECUTION )  /////     for easier debugging if needed
-/////////////////////////////////////////////////////////
-
-/*async function executeAllRegions(projectId: number, serviceFunction: Function, client: any,
-                                 regionsList: Array<string>, isIterable: Boolean) {
-
-    let jsonData = [];
-
-    for (let i = 0; i < regionsList.length; i++) {
-        const currentRegion = regionsList[i];
-        const parent = 'projects/' + projectId + '/locations/' + currentRegion;
-        try {
-            const request = {parent};
-            if (!isIterable) {
-                let response = await serviceFunction.call(client, request);
-                let jsonTmp = JSON.parse(JSON.stringify(response));
-                if ((jsonTmp != null) && (jsonTmp.length > 0))
-                    jsonData.push(addRegionGCP(jsonTmp, currentRegion));
-            }
-            else {
-                const iterable = await serviceFunction.call(client, request);
-                for await (const response of iterable) {
-                    let jsonTmp = JSON.parse(JSON.stringify(response));
-                    if ((jsonTmp != null) && (jsonTmp.length > 0))
-                        jsonData.push(addRegionGCP(jsonTmp, currentRegion));
-                }
-            }
-        } catch (e) {
-            logger.error("GCP : Error while retrieving data in multiple regions - Region :" + regionsList[i] + " not found or access not authorized");
-            continue;
-        }
-    }
-    return jsonData ?? null;
-}*/
-
 /////////////////////////////////////////////////////////    This function is the main gathering function,
 /////  ASYNC REGIONS GATHERING FOR FASTER EXECUTION /////    it iterate async to gather all.
 /////////////////////////////////////////////////////////
@@ -291,7 +264,7 @@ async function executeAllRegions(projectId: number, serviceFunction: Function, c
                         jsonResponses.push(addRegionGCP(jsonTmp, currentRegion));
                     }
                 }
-            } /// GCP STORAGE DEADLINE EXCEDDED // GCP PRIVATE CA timeout API // GCP SECRET -> PERMISSIONS NO
+            }
             return jsonResponses;
         } catch (e) {
             logger.warn(`GCP : Error while retrieving data in multiple regions - Region: ${currentRegion} not found or access not authorized for ${serviceFunction.name}`);
@@ -362,11 +335,51 @@ async function listAllComputes(projectId: string): Promise<Array<any>|null> {
 
         if (instances && instances.length > 0) {
             for (let i = 0; i < instances.length; i++) {
-                jsonData.push(JSON.parse(JSON.stringify(instances[i])));
+                jsonData.push(JSON.parse(JSON.stringify(instances[i].metadata.items.length)));
             }
         }
     }
     logger.info("GCP Compute Listing Done");
+    return jsonData ?? null;
+}
+
+async function listSSHKey(projectId: string): Promise<Array<any>|null> {
+    let jsonData = [];
+
+    const instancesClient = new compute.InstancesClient();
+    const aggListRequest = await instancesClient.aggregatedListAsync({
+        project: projectId
+    });
+    for await (const [zone, instancesObject] of aggListRequest) {
+        const instances = instancesObject.instances;
+        if (instances && instances.length > 0) {
+            for (let i = 0; i < instances.length; i++) {
+                console.log("Separator");
+                console.log(instances[i].metadata?.items);
+                console.log("key:");
+                jsonData.push(JSON.parse(JSON.stringify(instances[i].metadata?.items)));
+            }
+        }
+    }
+    console.log(jsonData);
+    return jsonData ?? null;
+}
+async function listPersistentDisks(projectId: any) {
+    let jsonData = [];
+    const disksClient = new compute.DisksClient();
+    const aggListRequest =  await disksClient.aggregatedListAsync({
+        project: projectId
+    });
+    for await (const [zone, diskObject] of aggListRequest) {
+        const disks = diskObject.disks;
+
+        if (disks && disks.length > 0) {
+            for (let i = 0; i < disks.length; i++) {
+                jsonData.push(JSON.parse(JSON.stringify(disks[i])));
+            }
+        }
+    }
+    logger.info("GCP Persistent Disks Listing Done");
     return jsonData ?? null;
 }
 

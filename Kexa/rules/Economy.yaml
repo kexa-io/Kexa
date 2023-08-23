@@ -111,14 +111,9 @@
       cloudProvider: aws
       objectName: ec2Instance
       conditions:
-        - operator: NAND
-          rules:
-            - property: State
-              condition: EQUAL
-              value: terminated
-            - property: PrivateIpAddress
-              condition: DIFFERENT
-              value: null
+          - property: State
+            condition: DIFFERENT
+            value: running
     - name: "aws-ec2-volume-unattached"
       description: "this rule is to check if an ec2 volume is unattached"
       applied: false
@@ -129,3 +124,29 @@
         - property: Attachments
           condition: COUNT_SUP
           value: 0
+    - name: "gcp-vm-deallocated"
+      description: "this rule is to check if a VM is deallocated"
+      applied: false
+      level: 1
+      cloudProvider: gcp
+      objectName: compute
+      conditions:
+        - operator: AND
+          rules:
+            - property: status
+              condition: DIFFERENT
+              value: SUSPENDED
+            - property: status
+              condition: DIFFERENT
+              value: RUNNING
+    - name: "gcp-disk-check-create-date-2-month-expiration"
+      description: "this rule is to check for a persistent disk create date is inferior than 2 months ago"
+      applied: false
+      level: 2
+      cloudProvider: gcp
+      objectName: disk
+      conditions:
+        - property: creationTimestamp
+          condition: DATE_INF
+          value: 0 0 0 0 0 2 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"

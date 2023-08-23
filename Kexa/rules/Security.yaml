@@ -135,7 +135,7 @@
           value: null
     - name: "gcp-testing-rule"
       description : "test gather"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: gcp
       objectName: compute

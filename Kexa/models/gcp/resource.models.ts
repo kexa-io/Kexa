@@ -39,4 +39,8 @@ export interface GCPResources {
     workload: Array<any> | null;
     artifact_repository: Array<any> | null;
     app_gateway: Array<any> | null;
+
+    disk: Array<any> | null;
+
+    compute_item: Array<any> | null;
 }
