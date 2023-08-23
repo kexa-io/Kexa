@@ -86,19 +86,15 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
         writeStringToJsonFile(await getConfigOrEnvVar(config, "GOOGLE_APPLICATION_CREDENTIALS", gcpConfig.indexOf(config)+"-"), "./config/gcp.json");
         let regionsList = new Array<string>();
         await retrieveAllRegions(projectId, regionsList);
-        console.log("GCP CONFIG : ");
-        console.log(config);
-        let userRegions;
         if ('regions' in config) {
             const userRegions = config.regions;
-            console.log('Regions:', userRegions);
             if (!(compareUserAndValidRegions(userRegions as Array<string>, regionsList, gcpConfig, config)))
                 continue;
             else {
                 regionsList = userRegions as Array<string>;
             }
         } else {
-            console.log('No regions data found.');
+            logger.info("GCP - No Regions found in Config, gathering all regions...")
         }
         try {
             logger.info("- listing GCP resources -");
@@ -204,10 +200,6 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
 ///////////////////////////////////////////////
 
 function compareUserAndValidRegions(userRegions: Array<any>, validRegions: Array<string>, gcpConfig: any, config: any) {
-    console.log("USER:");
-    console.log(userRegions);
-    console.log("VALID:");
-    console.log(validRegions);
     for (let i = 0; i < userRegions.length; i++) {
         if (validRegions.includes(userRegions[i]))
             continue;

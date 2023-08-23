@@ -54,9 +54,28 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
             const client = new EC2Client({region: "us-east-1", credentials: credentials});
             const command = new DescribeRegionsCommand({AllRegions: false,});
             const response = await client.send(command);
+            let gatherAll = false;
             if (response.Regions) {
                 const promises = response.Regions.map(async (region) => {
                     try {
+                        if (!gatherAll) {
+                            if ('regions' in config) {
+                                let check = false;
+                                gatherAll = false;
+                                const configWithRegions = config as { regions: string[] };
+                                configWithRegions.regions.forEach((element: any) => {
+                                    if (element === region)
+                                        check = true;
+                                });
+                                if (check == false) {
+                                    logger.error("AWS - Region '" + "' is not a valid AWS region name. Skipping...");
+                                    return ;
+                                }
+                            } else {
+                                gatherAll = true;
+                                logger.info("GCP - No Regions found in Config, gathering all regions...");
+                            }
+                        }
                         logger.info("Retrieving AWS Region : " + region.RegionName);
                         config.update({credentials: credentials, region: region.RegionName});
                         ec2Client = new EC2();
