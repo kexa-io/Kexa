@@ -44,7 +44,8 @@ const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "GcpLogg
 /////////////////////////////////////////
 //////   LISTING CLOUD RESOURCES    /////
 /////////////////////////////////////////
-export async function collectData(): Promise<GCPResources[] | null> {
+
+export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[] | null> {
     let resources = new Array<GCPResources>();
     setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", "./config/gcp.json");
     for (let config of gcpConfig??[]) {

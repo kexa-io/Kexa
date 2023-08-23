@@ -238,7 +238,6 @@ export function checkSubRuleCondition(subRule:RulesConditions): string[] {
     return result;
 }
 export enum beHaviorEnum {
-
     BREAK,
 
     CONTINUE,
@@ -250,6 +249,7 @@ export enum beHaviorEnum {
     NONE
 
 }
+
 function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, index: number): beHaviorEnum {
     console.log(rule.cloudProvider);
     if(!resources[rule.cloudProvider]){

@@ -18,6 +18,7 @@
     "@google-cloud/billing": "^4.0.0",
     "@google-cloud/certificate-manager": "^1.0.0",
     "@google-cloud/compute": "^3.10.0",
+    "@google-cloud/local-auth": "^2.1.0",
     "@google-cloud/container": "^5.1.0",
     "@google-cloud/deploy": "^3.0.0",
     "@google-cloud/dns": "^4.0.0",
