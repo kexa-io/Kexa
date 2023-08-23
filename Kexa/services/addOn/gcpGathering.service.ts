@@ -208,7 +208,7 @@ function compareUserAndValidRegions(userRegions: Array<any>, validRegions: Array
             return (false);
         }
     }
-    logger.info("GCP - Config '" + gcpConfig.indexOf(config) + "' Loaded user Regions.");
+    logger.info("GCP - Config n°" + gcpConfig.indexOf(config) + " correctly loaded user regions.");
     return (true);
 }
 function addRegionGCP(response: any, region: string) {

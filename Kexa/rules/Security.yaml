@@ -104,7 +104,7 @@
                   value: "0.0.0.0/0"
     - name: "ec2-security-group-all-ports"
       description: "this rule is to check if ec2 security group has a defined port"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: ec2SG
@@ -125,7 +125,7 @@
                   value: NULL
     - name: "aws-ec2-public-ip-address"
       description : "this rule is to check if an ec2 ip address is public"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: aws
       objectName: ec2Instance
