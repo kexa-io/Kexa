@@ -1,16 +1,12 @@
 {
-    "aws": [
+    "gcp": [
         {
             "rules": [
                 "Security",
                 "Economy"
-            ]
-        }
-    ],
-    "drive": [
-        {
-            "rules": [
-                "test-drive"
+            ],
+            "regions": [
+
             ]
         }
     ]

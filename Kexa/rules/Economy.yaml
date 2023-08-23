@@ -53,7 +53,7 @@
   rules:
     - name: VM-Reservation
       description : "check if VM have a reservation"
-      applied: true
+      applied: false
       level: 0
       cloudProvider: azure
       objectName : vm
@@ -63,7 +63,7 @@
           value: (?i)reservation
     - name: "azure-disk-orphan"
       description : "this rules is to check if disk is orphan"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: azure
       objectName : disk
@@ -86,7 +86,7 @@
               value: Delete
     - name: "Orphan nsg"
       description : "this rules is to check if nsg is orphan"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: azure
       objectName : nsg
@@ -96,7 +96,7 @@
           value : 1
     - name: "Orphan virtualNetwork"
       description : "this rules is to check if virtualNetwork is orphan"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: azure
       objectName : virtualNetwork
@@ -121,7 +121,7 @@
               value: null
     - name: "aws-ec2-volume-unattached"
       description: "this rule is to check if an ec2 volume is unattached"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: aws
       objectName: ec2Volume

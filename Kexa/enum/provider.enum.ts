@@ -3,6 +3,6 @@ export enum ProviderEnum {
     AWS = "aws",
     GCP = "gcp",
     KUBERNETES = "kubernetes",
-    GIT = "git",
+    GITHUB = "github",
     HTTP = "http"
 }

@@ -151,6 +151,38 @@ This is an example of how to list things you need to use the software and how to
   ```
   Please note that the "name" and "description" attributes are entirely optional and serve only to ensure the maintainability of the configuration.
 
+  For Amazon Web Services and Google Cloud Provider, you can choose to select specifics regions in your config to avoid checking all regions if
+  it's not in your needs. Without "regions" property (or empty "regions property), all the regions will be checked.
+  
+  ```js
+  {
+    "aws": [
+      {
+        "name": "Project A",
+        "description": "First subscription (0) : Project A subscription",
+        "rules": [
+          "Name of my rule"
+        ],
+        "regions": [
+          "us-east-1"
+        ]
+      }
+    ],
+    "gcp": [
+      {
+        "name": "Project A",
+        "description": "First subscription (0) : Project A subscription",
+        "rules": [
+          "Name of my rule",
+          "Another rules"
+        ],
+        "regions": [
+          "us-east1"
+        ]
+      }
+    ]
+  }
+  ```
     
   Add the following variables for each provider you want to test:
   - Azure:
