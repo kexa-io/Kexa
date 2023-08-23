@@ -366,6 +366,8 @@ async function listAllComputes(projectId: string): Promise<Array<any>|null> {
             }
         }
     }
+    console.log("Computes : ");
+    console.log(jsonData);
     logger.info("GCP Compute Listing Done");
     return jsonData ?? null;
 }

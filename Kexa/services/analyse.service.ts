@@ -270,18 +270,6 @@ export function checkSubRuleCondition(subRule:RulesConditions): string[] {
     
     return result;
 }
-export enum beHaviorEnum {
-    BREAK,
-
-    CONTINUE,
-
-    RETURN,
-
-    THROW,
-
-    NONE
-
-}
 
 function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, index: number): BeHaviorEnum {
     if(!resources[rule.cloudProvider]){
