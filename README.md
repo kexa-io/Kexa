@@ -305,10 +305,10 @@ exemple of rule to verify:
   conditions:
     - operator : OR
       rules:
-        - property : networkAccessPolicy
+    [ ] property : networkAccessPolicy
           condition : DIFFERENT
           value : AllowAll
-        - property : encryption.type
+    [ ] property : encryption.type
           condition : EQUAL
           value : EncryptionAtRestWithPlatformKey
 ```
@@ -326,13 +326,13 @@ exemple of rule to normalise names among tags:
     cloudProvider: azure
     objectName : aks
     conditions:
-      - property : tags.environment
+  [ ] property : tags.environment
         condition : REGEX
         value : ^(DEV|NPR|PROD)$
-      - property : tags.author
+  [ ] property : tags.author
         condition : DIFFERENT
         value : NULL
-      - property : tags.billing
+  [ ] property : tags.billing
         condition : REGEX
         value : ^(VADOR|YODA|LUKE)$
 ```
@@ -361,48 +361,48 @@ Our tool provides a learning and sharing space where users can collaborate to cr
       #to enable it
       type:
       #add every type of notification you want
-        - ^(email|sms|webhook|log)$
+    [ ] ^(email|sms|webhook|log)$
       to:
       #add all the endpoint you need according to the type of notification you have
-        - string
+    [ ] string
     warn:
     #alert for warn (level 1)
       enabled: ^(true|false)$
       type:
-        - ^(email|sms|webhook|log)$
+    [ ] ^(email|sms|webhook|log)$
       to:
-        - string
+    [ ] string
     error:
     #alert for error (level 2)
       enabled: ^(true|false)$
       type:
-        - ^(email|sms|webhook|log)$
+    [ ] ^(email|sms|webhook|log)$
       to:
-        - string
+    [ ] string
     fatal:
     #alert for fatal (level 3)
       enabled: ^(true|false)$
       type:
-        - ^(email|sms|webhook|log)$
+    [ ] ^(email|sms|webhook|log)$
       to:
-        - string
+    [ ] string
     global:
     #alert for the sum up
       name: string  #name of your rule for config
       enabled: ^(true|false)$
       type:
-        - ^(email|sms|webhook|log)$
+    [ ] ^(email|sms|webhook|log)$
       to:
-        - string
+    [ ] string
       conditions:
       #condition is for each level, how many is required before have the sum up
-        - level: 0
+    [ ] level: 0
           min: int
-        - level: 1
+    [ ] level: 1
           min: int
-        - level: 2
+    [ ] level: 2
           min: int
-        - level: 3
+    [ ] level: 3
           min: int
   rules:
     - name: string
@@ -444,7 +444,7 @@ Our tool provides a learning and sharing space where users can collaborate to cr
           request
         )$
       conditions: 
-        - object -> RulesConditions | ParentRules
+    [ ] object -> RulesConditions | ParentRules
 ```
 
 RulesConditions :
@@ -536,9 +536,31 @@ rules:
     * [X] body
     * [X] headers
     * [X] http code(code)
-* [ ] GCP
+* [X] GCP
+  * [X] tasks_queue
+  * [X] compute
+  * [X] storage
+  * [X] project
+  * [X] billingAccount
+  * [X] cluster
+  * [X] workflows
+  * [X] websecurity
+  * [X] connector
+  * [X] vmware-engine
+  * [X] namespace
+  * [X] certificate
+  * [X] secret
+  * [X] connectivity_test
+  * [X] resource_settings
+  * [X] redis_instance
+  * [X] os_config
+  * [X] org_policy_constraint
+  * [X] airflow_image_version
+  * [X] disk
+  * [X] compute_item
+* [X] Google Workspace
+  * [X] files
 * [ ] O365
-* [ ] Google Workspace
 * [ ] OVH
 * [ ] VM Ware
 * [ ] Oracle
@@ -576,21 +598,21 @@ exemple :
 ```json
 [
   {
-    categoryItem1: [
+    "categoryItem1": [
       {},
       {},
       {}
     ],
-    categoryItem2: [
+    "categoryItem2": [
       {},
       {}
     ]
   },
   {
-    categoryItem1: [
+    "categoryItem1": [
       {}
     ],
-    categoryItem2: [
+    "categoryItem2": [
       {},
       {},
       {}
@@ -611,12 +633,14 @@ file name : azureComplementGathering.service.ts
     * Creation date : 2023-08-14
     * Note : Important note for understand what's going on here
     * Resources :
-    *     - secretManager
-    *     - SP
-    *     - azFunction
+    * [ ] secretManager
+    * [ ] SP
+    * [ ] azFunction
 */
 
-export async function collectData(){
+export async function collectData(myGlobalConfig: any[]){
+  //the type of myGlobalConfig is any but you can make an interface if you want
+
   //insert your stuff here
 }
 
