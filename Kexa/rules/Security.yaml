@@ -102,27 +102,6 @@
                 - property: CidrIp
                   condition: DIFFERENT
                   value: "0.0.0.0/0"
-    - name: "ec2-security-group-all-ports"
-      description: "this rule is to check if ec2 security group has a defined port"
-      applied: true
-      level: 1
-      cloudProvider: aws
-      objectName: ec2SG
-      conditions:
-        - property: IpPermissions
-          condition: ALL
-          value:
-            - operator: AND
-              rules:
-                - property: FromPort
-                  condition: REGEX
-                  value: '^\d+$'
-                - property: ToPort
-                  condition: REGEX
-                  value: '^\d+$'
-                - property: FromPort
-                  condition: DIFFERENT
-                  value: NULL
     - name: "aws-ec2-public-ip-address"
       description : "this rule is to check if an ec2 ip address is public"
       applied: true
@@ -133,13 +112,3 @@
         - property: PublicIpAddress
           condition: EQUAL
           value: null
-    - name: "gcp-testing-rule"
-      description : "test gather"
-      applied: true
-      level: 2
-      cloudProvider: gcp
-      objectName: compute
-      conditions:
-        - property: startRestricted
-          condition: DIFFERENT
-          value: false

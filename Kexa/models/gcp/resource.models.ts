@@ -3,7 +3,7 @@ import  Compute from '@google-cloud/compute';
 import { CloudTasksClient } from '@google-cloud/tasks';
 
 export interface GCPResources {
-    task: Array<typeof Compute> | null;
+    tasks_queue: Array<typeof Compute> | null;
     bucket: Array<Storage> | null;
     compute: Array<CloudTasksClient> | null;
     project: Array<any> | null;
@@ -39,4 +39,8 @@ export interface GCPResources {
     workload: Array<any> | null;
     artifact_repository: Array<any> | null;
     app_gateway: Array<any> | null;
+
+    disk: Array<any> | null;
+
+    compute_item: Array<any> | null;
 }
