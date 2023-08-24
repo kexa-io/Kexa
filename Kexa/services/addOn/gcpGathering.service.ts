@@ -52,7 +52,7 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
     for (let config of gcpConfig??[]) {
         let gcpResources = {
             "bucket": null,
-            "task": null,
+            "tasks_queue": null,
             "compute": null,
             "project": null,
             "billingAccount": null,
@@ -91,8 +91,11 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
         let regionsList = new Array<string>();
         await retrieveAllRegions(projectId, regionsList);
         if ('regions' in config) {
-            const userRegions = config.regions;
-            if (!(compareUserAndValidRegions(userRegions as Array<string>, regionsList, gcpConfig, config)))
+            const userRegions = config.regions as Array<string>;
+            if (userRegions.length <= 0) {
+                logger.info("GCP - No Regions found in Config, gathering all regions...");
+            }
+            else if (!(compareUserAndValidRegions(userRegions as Array<string>, regionsList, gcpConfig, config)))
                 continue;
             else {
                 regionsList = userRegions as Array<string>;
@@ -103,7 +106,7 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
         try {
             logger.info("- listing GCP resources -");
             const promises = [
-                await listTasks(projectId),
+                await listTasks(projectId, regionsList),
                 await listAllComputes(projectId),
                 await listAllBucket(),
                 await listAllProject(),
@@ -157,7 +160,7 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
             const client = new CloudTasksClient();
 
             gcpResources = {
-                task: taskList,
+                tasks_queue: taskList,
                 compute: computeList,
                 bucket: bucketList,
                 project : projectList,
@@ -291,33 +294,14 @@ async function executeAllRegions(projectId: number, serviceFunction: Function, c
 ////////////////////////////////////////////////////////////////
 
 const {CloudTasksClient} = require('@google-cloud/tasks').v2;
-async function listTasks(projectId: string): Promise<Array<any>|null> {
+async function listTasks(projectId: number, regionsList: Array<string>): Promise<Array<any>|null> {
     let jsonData = [];
-    const parent = 'projects/'+  projectId + '/locations/-';
-    const tasksClient = new CloudTasksClient();
     try {
-        const request = {
-            parent,
-        };
-        const iterable = await tasksClient.listQueuesAsync(request);
-        for await (const response of iterable) {
-            jsonData.push(JSON.parse(JSON.stringify(response)));
-        }
+        const tasksClient = new CloudTasksClient();
+        jsonData = await executeAllRegions(projectId, tasksClient.listQueuesAsync, tasksClient, regionsList, true);
     } catch (e) {
-        logger.error("Error while retrieving GCP Tasks");
+        logger.error("Error while retrieving GCP Tasks Queues");
     }
-
-    /*  try {
-          const request = {
-              parent,
-          };
-          const iterable = await tasksClient.listTasksAsync(request);
-          for await (const response of iterable) {
-              jsonData.push(JSON.parse(JSON.stringify(response)));
-          }
-      } catch (e) {
-          logger.error("Error while retrieving GCP Tasks queues")
-      }*/
     return jsonData ?? null;
 }
 
@@ -354,14 +338,10 @@ async function listSSHKey(projectId: string): Promise<Array<any>|null> {
         const instances = instancesObject.instances;
         if (instances && instances.length > 0) {
             for (let i = 0; i < instances.length; i++) {
-                console.log("Separator");
-                console.log(instances[i].metadata?.items);
-                console.log("key:");
                 jsonData.push(JSON.parse(JSON.stringify(instances[i].metadata?.items)));
             }
         }
     }
-    console.log(jsonData);
     return jsonData ?? null;
 }
 async function listPersistentDisks(projectId: any) {
@@ -864,7 +844,6 @@ async function listWorkloads(projectId: any): Promise<Array<any> | null> {
     try {
      /*   const resource = new ProjectsClient();
         const response = await resource.getProject(projectId);
-        console.log(response.metadata.organization);
         const client = new AssuredWorkloadsServiceClient();
         const [workloads] = await client.listWorkloads({
             parent: `organizations/${projectId}`,

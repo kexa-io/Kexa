@@ -82,18 +82,3 @@
         - property: name
           condition: REGEX
           value: '\b\d{1,4}[-]\d{1,4}[-]\d{1,4}\b'
-    - name: "gcp-check-ssh-key-public"
-      description : "this rule is to check if there is public ssh keys"
-      applied: true
-      level: 2
-      cloudProvider: gcp
-      objectName : compute_item
-      conditions:
-        - operator: XOR
-          rules:
-            - property: key
-              condition: EQUAL
-              value: ssh-keys
-            - property: value
-              condition: REGEX
-              value: '.*ssh-rsa.*'
