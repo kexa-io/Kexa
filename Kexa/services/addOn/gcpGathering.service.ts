@@ -3,7 +3,7 @@
     * Creation date : 2023-08-14
     * Note : 
     * Resources :
-    *     - task
+    *     - tasks_queue
     *     - compute
     *     - storage
     *     - project
@@ -152,9 +152,6 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 app_gatewayList, diskList, compute_itemList] = await Promise.all(promises);
 
             logger.info("- listing cloud resources done -");
-            gcpResources.bucket = bucketList;
-            gcpResources.compute = computeList;
-            logger.info("- loading client Google Cloud Provider done-");
 
             ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
             const client = new CloudTasksClient();
@@ -195,7 +192,6 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 disk: diskList,
                 compute_item: compute_itemList
             };
-            logger.info("- loading client Google Cloud Provider done-");
         }
         catch (e) {
             logger.error("error in collectGCPData: " + projectId);
