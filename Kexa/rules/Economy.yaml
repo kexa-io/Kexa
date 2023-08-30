@@ -125,3 +125,23 @@
           condition: DATE_INF
           value: 0 0 0 2 0 0 0
           date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    - name: "o365-check-jobtitle-defined"
+      description: "this rule is to check for unused subscriptions"
+      applied: false
+      level: 2
+      cloudProvider: o365
+      objectName: skus
+      conditions:
+        - property: jobTitle
+          condition: DIFFERENT
+          value: null
+    - name: "o365-is-simple-member"
+      description: "this rule is to check for simple members"
+      applied: true
+      level: 2
+      cloudProvider: o365
+      objectName: user
+      conditions:
+        - property: userType
+          condition: EQUAL
+          value: Member

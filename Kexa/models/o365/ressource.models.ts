@@ -1,0 +1,13 @@
+export interface o365Resources {
+    skus: Array<any> | null;
+    user: Array<any> | null;
+
+    domain: Array<any> | null;
+    secure_score: Array<any> | null;
+    auth_methods: Array<any> | null;
+    organization: Array<any> | null;
+    directory: Array<any> | null;
+    sp: Array<any> | null;
+    alert: Array<any> | null;
+    incident: Array<any> | null;
+}

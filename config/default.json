@@ -1,13 +1,8 @@
 {
-    "gcp": [
+    "o365": [
         {
             "rules": [
-                "Security",
-                "Economy",
-                "OperationExcellence"
-            ],
-            "regions": [
-
+                "Economy"
             ]
         }
     ]
