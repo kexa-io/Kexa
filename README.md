@@ -51,7 +51,23 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
+    <li>
+      <a href="#how-to-launch-Kexa">How to launch Kexa</a>
+      <ul>
+        <li><a href="#local">Local</a></li>
+        <li><a href="#local-docker">Local docker</a></li>
+        <li><a href="#azure-function">Azure function</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#usage">Usage</a>
+      <ul>
+        <li><a href="#cost-saving">Cost saving</a></li>
+        <li><a href="#safety-guarantee">Safety guarantee</a></li>
+        <li><a href="#standardisation">Standardisation</a></li>
+        <li><a href="#community">Community</a></li>
+      </ul>
+    </li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -170,8 +186,8 @@ This is an example of how to list things you need to use the software and how to
     ],
     "gcp": [
       {
-        "name": "Project A",
-        "description": "First subscription (0) : Project A subscription",
+        "name": "Project B",
+        "description": "First subscription (0) : Project B subscription",
         "rules": [
           "Name of my rule",
           "Another rules"
@@ -260,7 +276,55 @@ This is an example of how to list things you need to use the software and how to
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+<!-- How to launch -->
+## How to launch Kexa
 
+Whichever way you want to launch Kexa, you need to go through the configuration phase. 
+
+<div id="local"></div>
+
+### Local
+
+Use this command to launch scans:
+
+```bash
+npm run start
+```
+
+<div id="local-docker"></div>
+
+### Local docker
+
+Build the image
+```bash
+docker build -t kexa:latest .
+```
+
+Run the image
+```bash
+docker run -d kexa:latest
+```
+
+<div id="azure-function"></div>
+
+### Azure function
+
+To run the deployment commands, make sure that your "func" command is functional. If it is not, you can install it with this command:
+```bash
+npm install -g azure-functions-core-tools@4 --unsafe-perm true
+``` 
+
+To test azure function locally :
+```bash
+func start
+```
+
+To publish Kexa to your azure function
+```bash
+func azure functionapp publish [Name of your function app]
+```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -268,6 +332,8 @@ This is an example of how to list things you need to use the software and how to
 Kexa offers significant benefits in a number of areas, contributing to the efficiency and reliability of your environment. Here are the main areas where the tool adds value :
 
 ### Utility
+
+<div id="cost-saving"></div>
 
 1. **Cost savings**
 
@@ -288,6 +354,7 @@ example of rules for alerting in the event of an orphan disk:
       value : Unattached
 ```
 
+<div id="safety-guarantee"></div>
 
 2. **Safety guarantee**
 
@@ -305,13 +372,15 @@ exemple of rule to verify:
   conditions:
     - operator : OR
       rules:
-        - property : networkAccessPolicy
+    - property : networkAccessPolicy
           condition : DIFFERENT
           value : AllowAll
-        - property : encryption.type
+    - property : encryption.type
           condition : EQUAL
           value : EncryptionAtRestWithPlatformKey
 ```
+
+<div id="standardisation"></div>
 
 3. **Standardisation**
 
@@ -326,17 +395,18 @@ exemple of rule to normalise names among tags:
     cloudProvider: azure
     objectName : aks
     conditions:
-      - property : tags.environment
+  - property : tags.environment
         condition : REGEX
         value : ^(DEV|NPR|PROD)$
-      - property : tags.author
+  - property : tags.author
         condition : DIFFERENT
         value : NULL
-      - property : tags.billing
+  - property : tags.billing
         condition : REGEX
         value : ^(VADOR|YODA|LUKE)$
 ```
 
+<div id="community"></div>
 
 4. **Community**
 
@@ -361,48 +431,48 @@ Our tool provides a learning and sharing space where users can collaborate to cr
       #to enable it
       type:
       #add every type of notification you want
-        - ^(email|sms|webhook|log)$
+    - ^(email|sms|webhook|log)$
       to:
       #add all the endpoint you need according to the type of notification you have
-        - string
+    - string
     warn:
     #alert for warn (level 1)
       enabled: ^(true|false)$
       type:
-        - ^(email|sms|webhook|log)$
+    - ^(email|sms|webhook|log)$
       to:
-        - string
+    - string
     error:
     #alert for error (level 2)
       enabled: ^(true|false)$
       type:
-        - ^(email|sms|webhook|log)$
+    - ^(email|sms|webhook|log)$
       to:
-        - string
+    - string
     fatal:
     #alert for fatal (level 3)
       enabled: ^(true|false)$
       type:
-        - ^(email|sms|webhook|log)$
+    - ^(email|sms|webhook|log)$
       to:
-        - string
+    - string
     global:
     #alert for the sum up
       name: string  #name of your rule for config
       enabled: ^(true|false)$
       type:
-        - ^(email|sms|webhook|log)$
+    - ^(email|sms|webhook|log)$
       to:
-        - string
+    - string
       conditions:
       #condition is for each level, how many is required before have the sum up
-        - level: 0
+    - level: 0
           min: int
-        - level: 1
+    - level: 1
           min: int
-        - level: 2
+    - level: 2
           min: int
-        - level: 3
+    - level: 3
           min: int
   rules:
     - name: string
@@ -444,7 +514,7 @@ Our tool provides a learning and sharing space where users can collaborate to cr
           request
         )$
       conditions: 
-        - object -> RulesConditions | ParentRules
+    - object -> RulesConditions | ParentRules
 ```
 
 RulesConditions :
@@ -536,9 +606,31 @@ rules:
     * [X] body
     * [X] headers
     * [X] http code(code)
-* [ ] GCP
+* [X] GCP
+  * [X] tasks_queue
+  * [X] compute
+  * [X] storage
+  * [X] project
+  * [X] billingAccount
+  * [X] cluster
+  * [X] workflows
+  * [X] websecurity
+  * [X] connector
+  * [X] vmware-engine
+  * [X] namespace
+  * [X] certificate
+  * [X] secret
+  * [X] connectivity_test
+  * [X] resource_settings
+  * [X] redis_instance
+  * [X] os_config
+  * [X] org_policy_constraint
+  * [X] airflow_image_version
+  * [X] disk
+  * [X] compute_item
+* [X] Google Workspace
+  * [X] files
 * [ ] O365
-* [ ] Google Workspace
 * [ ] OVH
 * [ ] VM Ware
 * [ ] Oracle
@@ -563,11 +655,14 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 ### How to add new functionality ?
 
 We've set up a system to facilitate the development of new features. This system is based on the "addOn" system. To develop a new feature, you don't need to know the whole project. You can develop additional services to collect additional data, among which you can make rules.
 
 To create an addOn, you'll need to create 2 files. 
+
 
 #### Gathering Data
 
@@ -576,21 +671,21 @@ exemple :
 ```json
 [
   {
-    categoryItem1: [
+    "categoryItem1": [
       {},
       {},
       {}
     ],
-    categoryItem2: [
+    "categoryItem2": [
       {},
       {}
     ]
   },
   {
-    categoryItem1: [
+    "categoryItem1": [
       {}
     ],
-    categoryItem2: [
+    "categoryItem2": [
       {},
       {},
       {}
@@ -611,17 +706,20 @@ file name : azureComplementGathering.service.ts
     * Creation date : 2023-08-14
     * Note : Important note for understand what's going on here
     * Resources :
-    *     - secretManager
-    *     - SP
-    *     - azFunction
+    *    - secretManager
+    *    - SP
+    *    - azFunction
 */
 
-export async function collectData(){
+export async function collectData(myGlobalConfig: any[]){
+  //the type of myGlobalConfig is any but you can make an interface if you want
+
   //insert your stuff here
 }
 
 //can add other function here
 ```
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 #### Display data
 
@@ -650,6 +748,15 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
 ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+#### Test
+
+We've set up some tests you can use to validate the integration of your addOn:
+```bash
+npm run test
+```
+
+Other checks are carried out at various stages to validate the integration of your addOn and the rules you can design. However, these checks are only carried out during software execution. Indeed, due to the nature of certain data collections, it is not possible to carry out "cold" tests without having access to dedicated environments.
 
 
 

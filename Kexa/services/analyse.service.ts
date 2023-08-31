@@ -286,7 +286,7 @@ function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, ind
     }
     if(resources[rule.cloudProvider][index][rule.objectName] === null){
         logger.warn("No " + rule.objectName + " found in your provider " + rule.cloudProvider + " with configuration index " + index);
-        return BeHaviorEnum.NONE;
+        return BeHaviorEnum.CONTINUE;
     }
     return BeHaviorEnum.NONE;
 }
@@ -297,7 +297,7 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
     let result: ResultScan[][] = [];
     rules.forEach(rule => {
         if(!rule.applied) return;
-            logger.info("check rule:"+rule.name);
+        logger.info("check rule:"+rule.name);
         if(!config.has(rule.cloudProvider)){
             logger.warn("cloud provider not found in config:"+rule.cloudProvider);
             return;

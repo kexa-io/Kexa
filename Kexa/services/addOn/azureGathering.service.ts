@@ -75,11 +75,10 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
                     virtualNetworksListing(networkClient),
                     aksListing(credential, subscriptionId),
                     ipListing(networkClient),
-                    getSPKeyInformation(credential, subscriptionId)
+                    //getSPKeyInformation(credential, subscriptionId)
                 ];
                 
-                const [nsgList, vmList, rgList, diskList, virtualNetworkList, aksList, ipList, SPList] = await Promise.all(promises);
-
+                const [nsgList, vmList, rgList, diskList, virtualNetworkList, aksList, ipList] = await Promise.all(promises); //, SPList
                 logger.info("- listing cloud resources done -");
                 azureResource = {
                     "vm": [...azureResource["vm"]??[], ...vmList],
@@ -89,6 +88,7 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
                     "virtualNetwork": [...azureResource["virtualNetwork"]??[], ...virtualNetworkList],
                     "aks": [...azureResource["aks"]??[], ...aksList],
                     "ip": [...azureResource["ip"]??[], ...ipList],
+                    //"sp": [...azureResource["sp"]??[], ...SPList],
                 } as AzureResources;
             }
         }catch(e){
@@ -121,22 +121,32 @@ export async function getSPKeyInformation(credential: DefaultAzureCredential, te
 //ip list
 export async function ipListing(client:NetworkManagementClient): Promise<Array<any>|null> {
     logger.info("starting ipListing");
-    const resultList = new Array<any>;
-    for await (const item of client.publicIPAddresses.listAll()) {
-        resultList.push(item);
+    try{
+        const resultList = new Array<any>;
+        for await (const item of client.publicIPAddresses.listAll()) {
+            resultList.push(item);
+        }
+        return resultList;
+    }catch(e){
+        logger.error("error in ipListing:"+e);
+        return null;
     }
-    return resultList;
 }
 
 //aks list
 export async function aksListing(credential: DefaultAzureCredential, subscriptionId: string): Promise<any> {
     logger.info("starting aksListing");
-    const client = new ContainerServiceClient(credential, subscriptionId);
-    const resArray = new Array();
-    for await (let item of client.managedClusters.list()) {
-        resArray.push(item);
+    try{
+        const client = new ContainerServiceClient(credential, subscriptionId);
+        const resArray = new Array();
+        for await (let item of client.managedClusters.list()) {
+            resArray.push(item);
+        }
+        return resArray;
+    }catch(e){
+        logger.error("error in aksListing:"+e);
+        return null;
     }
-    return resArray;
 }
 
 //network security group list
@@ -244,11 +254,7 @@ export async function networkSecurityGroup_analyse(nsgList: Array<NetworkSecurit
             //rising default security to low level . 0 is low security
             nsgAnalysed.securityLevel=0;
             //check default rules
-            if(item.securityRules) {
-                for(let rule of item.securityRules) {
-                    //check for blocking rules in and out
-                }
-            }
+            resultList.push(nsgAnalysed);
         }
         return resultList;
     }catch (e) {
