@@ -186,8 +186,8 @@ This is an example of how to list things you need to use the software and how to
     ],
     "gcp": [
       {
-        "name": "Project A",
-        "description": "First subscription (0) : Project A subscription",
+        "name": "Project B",
+        "description": "First subscription (0) : Project B subscription",
         "rules": [
           "Name of my rule",
           "Another rules"
