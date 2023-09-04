@@ -126,22 +126,45 @@
           value: 0 0 0 2 0 0 0
           date: "YYYY-MM-DDThh:mm:ss.SSSZ"
     - name: "o365-check-jobtitle-defined"
-      description: "this rule is to check for unused subscriptions"
+      description: "this rule is to check for non defined job title"
       applied: false
-      level: 2
+      level: 1
       cloudProvider: o365
-      objectName: skus
+      objectName: user
       conditions:
         - property: jobTitle
           condition: DIFFERENT
           value: null
     - name: "o365-is-simple-member"
       description: "this rule is to check for simple members"
-      applied: true
-      level: 2
+      applied: false
+      level: 1
       cloudProvider: o365
       objectName: user
       conditions:
         - property: userType
           condition: EQUAL
           value: Member
+    - name: "o365-is-skus-not-used"
+      description: "this rule is if a subscribed sku is not being used"
+      applied: false
+      level: 1
+      cloudProvider: o365
+      objectName: sku
+      conditions:
+        - property: consumedUnits
+          condition: SUP
+          value: 0
+    - name: "o365-is-mfa-activated-on-user"
+      description: "check if at least 2 auth factors are active"
+      applied: false
+      level: 2
+      cloudProvider: o365
+      objectName: auth_methods
+      conditions:
+          - property: methods
+            condition: ONE
+            value:
+              - property: dataType
+                condition: EQUAL
+                value: "#microsoft.graph.microsoftAuthenticatorAuthenticationMethod"

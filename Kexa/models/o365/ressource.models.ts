@@ -1,5 +1,5 @@
 export interface o365Resources {
-    skus: Array<any> | null;
+    sku: Array<any> | null;
     user: Array<any> | null;
 
     domain: Array<any> | null;

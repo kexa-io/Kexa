@@ -3,7 +3,7 @@
     * Creation date : 2023-08-24
     * Note :
     * Resources :
-    *       - skus
+    *       - sku
     *       - user
     *       - domain
     *       - secure_score
@@ -19,7 +19,6 @@ import { Logger } from "tslog";
 import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
 import { o365Resources } from "../../models/o365/ressource.models";
 import { o365Config } from "../../models/o365/config.models";
-import {DefaultAzureCredential} from "@azure/identity";
 
 ////////////////////////////////
 //////   INITIALIZATION   //////
@@ -38,7 +37,7 @@ export async function collectData(o365Config:o365Config[]): Promise<o365Resource
 
     for (let config of o365Config??[]) {
         let o365Resources = {
-            "skus": null,
+            "sku": null,
             "user": null,
             "domain": null,
             "secure_score": null,
@@ -51,12 +50,10 @@ export async function collectData(o365Config:o365Config[]): Promise<o365Resource
         } as o365Resources;
         try {
             let subscriptionId = await getConfigOrEnvVar(config, "SUBSCRIPTIONID", o365Config.indexOf(config)+"-");
-            setEnvVar("AZURE_CLIENT_ID", await getConfigOrEnvVar(config, "AZURECLIENTID", o365Config.indexOf(config)+"-"))
-            setEnvVar("AZURE_CLIENT_SECRET", await getConfigOrEnvVar(config, "AZURECLIENTSECRET", o365Config.indexOf(config)+"-"))
-            setEnvVar("AZURE_TENANT_ID", await getConfigOrEnvVar(config, "AZURETENANTID", o365Config.indexOf(config)+"-"))
+            await setEnvVar("AZURE_CLIENT_ID", await getConfigOrEnvVar(config, "AZURECLIENTID", o365Config.indexOf(config)+"-"))
+            await setEnvVar("AZURE_CLIENT_SECRET", await getConfigOrEnvVar(config, "AZURECLIENTSECRET", o365Config.indexOf(config)+"-"))
+            await setEnvVar("AZURE_TENANT_ID", await getConfigOrEnvVar(config, "AZURETENANTID", o365Config.indexOf(config)+"-"))
 
-            const credential = new DefaultAzureCredential();
-            const tenantId = process.env["0-AZURETENANTID"];
             const graphApiEndpoint = 'https://graph.microsoft.com/v1.0';
             let accessToken = await getToken();
             if (accessToken == null) {
@@ -64,31 +61,27 @@ export async function collectData(o365Config:o365Config[]): Promise<o365Resource
             }
             const headers = new Headers();
             headers.append('Authorization', `Bearer ${accessToken}`);
-            const requestOptions = {
-                method: 'GET',
-                headers: headers,
-            };
             if(!subscriptionId) {
                 throw new Error("- Please pass SUBSCRIPTIONID in your config file");
             } else {
                 logger.info("- listing O365 resources -");
+                const userList = await listUsers(graphApiEndpoint, accessToken, headers);
                 const promises = [
                     await listSubscribedSkus(graphApiEndpoint, accessToken, headers),
-                    await listUsers(graphApiEndpoint, accessToken, headers),
                     await listDomains(graphApiEndpoint, accessToken, headers),
                     await listSecureScore(graphApiEndpoint, accessToken, headers),
-                    await listAuthMethods(graphApiEndpoint, accessToken, headers),
+                    await listAuthMethods(graphApiEndpoint, accessToken, userList),
                     await listOrganization(graphApiEndpoint, accessToken, headers),
                     await listDirectory(graphApiEndpoint, accessToken, headers),
                     await listServicePrincipal(graphApiEndpoint, accessToken, headers),
                     await listAlerts(graphApiEndpoint, accessToken, headers),
                     await listIncidents(graphApiEndpoint, accessToken, headers)
             ];
-                const [skusList, userList, domainList, secure_scoreList, auth_methodsList,
+                const [skuList, domainList, secure_scoreList, auth_methodsList,
                     organizationList, directoryList, spList, alertList, incidentList] = await Promise.all(promises);
 
                 o365Resources = {
-                    skus: skusList,
+                    sku: skuList,
                     user: userList,
                     domain: domainList,
                     secure_score: secure_scoreList,
@@ -123,7 +116,6 @@ async function getToken() {
         requestBody.append('client_id', clientId);
         requestBody.append('client_secret', clientSecret);
         requestBody.append('scope', 'https://graph.microsoft.com/.default');
-        // requestBody.append('scope', 'https://manage.office.com/.default');
     }
     let accessToken;
     try {
@@ -142,7 +134,7 @@ async function getToken() {
 }
 async function  listUsers(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null> {
     const axios = require("axios");
-    let jsonData;
+    let jsonData = [];
 
         try {
             const response = await axios.get(`${endpoint}/users`, {
@@ -192,7 +184,7 @@ async function  listUsers(endpoint: string, accessToken: string, headers: Header
 }
 
 async function  listSubscribedSkus(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null> {
-    let jsonData;
+    let jsonData = [];
 
 
         try {
@@ -222,15 +214,6 @@ async function  listSubscribedSkus(endpoint: string, accessToken: string, header
                     assignedLicenses: user.assignedLicenses,
                 }));
                 jsonData.usersLicenses = JSON.parse(JSON.stringify(adaptedResponse));
-          /*      jsonData.usersLicenses.forEach((element: any) => {
-                    console.log(element);
-                });
-
-                jsonData.forEach((element: any) => {
-                    console.log(element.skuId);
-
-                });*/
-              //  console.log('Unused Licenses:', unusedLicenses);
             }
 
         } catch (e: any) {
@@ -239,10 +222,33 @@ async function  listSubscribedSkus(endpoint: string, accessToken: string, header
     return jsonData ?? null;
 }
 
-async function listDomains(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null>  {
-    let jsonData;
+async function genericListing(endpoint: string, accessToken: string, queryEndpoint: string, operationName: string): Promise<Array<any> | null> {
+    let jsonData = [];
 
     try {
+        const response = await axios.get(`${endpoint}/${queryEndpoint}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+        if (response.status != 200) {
+            logger.warn("O365 - Error when calling graph API for " + operationName);
+            return null;
+        }
+        else {
+            jsonData = JSON.parse(JSON.stringify(response.data.value));
+        }
+    } catch (e: any) {
+        logger.error(e.response.data);
+    }
+    return jsonData ?? null;
+}
+
+async function listDomains(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null>  {
+    let jsonData : any[] | null;
+
+    jsonData = await genericListing(endpoint, accessToken, "domains", "Domains");
+  /*  try {
         const response = await axios.get(`${endpoint}/domains`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
@@ -257,14 +263,16 @@ async function listDomains(endpoint: string, accessToken: string, headers: Heade
         }
     } catch (e: any) {
         logger.error(e.response.data);
-    }
+    }*/
     return jsonData ?? null;
 }
 
 async function listSecureScore(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null>  {
-    let jsonData;
+    let jsonData : any[] | null;
 
-    try {
+    jsonData = await genericListing(endpoint, accessToken, "security/secureScores", "Secure scores");
+
+/*    try {
         const response = await axios.get(`${endpoint}/security/secureScores`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
@@ -279,36 +287,50 @@ async function listSecureScore(endpoint: string, accessToken: string, headers: H
         }
     } catch (e: any) {
         logger.error(e.response.data);
-    }
+    }*/
     return jsonData ?? null;
 }
 
-async function listAuthMethods(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null>  {
-    let jsonData;
+async function listAuthMethods(endpoint: string, accessToken: string, userList: any): Promise<Array<any> | null>  {
+    let jsonData = [];
 
-    try {//users/0e736261-b29d-43e3-a7d0-f592d4a9a1a5/authentication/methods
-        const response = await axios.get(`${endpoint}/users/0e736261-b29d-43e3-a7d0-f592d4a9a1a5/authentication/methods`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        })
-        if (response.status != 200) {
-            logger.warn("O365 - Error when calling graph API for Auth Methods ");
-            return null;
+    for (let i = 0; i < userList.length; i++) {
+            try {
+                const response = await axios.get(`${endpoint}/users/${userList[i].id}/authentication/methods`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                })
+                if (response.status != 200) {
+                    logger.warn("O365 - Error when calling graph API for Auth Methods ");
+                    return null;
+                } else {
+                    let tmpJson = {methods: [], userId: {}, userName: {}};
+                    tmpJson.methods = JSON.parse(JSON.stringify(response.data.value));
+                    tmpJson.userId = userList[i].id;
+                    tmpJson.userName = userList[i].displayName;
+                    tmpJson.methods.forEach((method: any) => {
+                        method.dataType = method['@odata.type'];
+                        method.userId = userList[i].id;
+                        delete method['@odata.type'];
+                    })
+                    jsonData.push(tmpJson);
+                }
+        } catch (e: any) {
+            logger.error(e.response.data);
         }
-        else {
-            jsonData = JSON.parse(JSON.stringify(response.data.value));
-        }
-    } catch (e: any) {
-        logger.error(e.response.data);
     }
     return jsonData ?? null;
 }
 
 async function listOrganization(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null> {
-    let jsonData;
+    //let jsonData = [];
 
-    headers.append('Authorization', `Bearer ${accessToken}`);
+    let jsonData : any[] | null;
+
+    jsonData = await genericListing(endpoint, accessToken, "organization", "Organization");
+
+  /*headers.append('Authorization', `Bearer ${accessToken}`);
     try {
         const response = await axios.get(`${endpoint}/organization`, {
             headers: {
@@ -324,15 +346,19 @@ async function listOrganization(endpoint: string, accessToken: string, headers: 
         }
     } catch (e: any) {
         logger.error(e.response.data);
-    }
+    }*/
     return jsonData ?? null;
 }
 
 async function listDirectory(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null> {
-    let jsonData;
+    //let jsonData = [];
 
-    headers.append('Authorization', `Bearer ${accessToken}`);
-    try {
+    let jsonData : any[] | null;
+
+    jsonData = await genericListing(endpoint, accessToken, "directoryRoles", "Directory roles");
+
+  //  headers.append('Authorization', `Bearer ${accessToken}`);
+    /*try {
         const response = await axios.get(`${endpoint}/directoryRoles`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
@@ -347,14 +373,19 @@ async function listDirectory(endpoint: string, accessToken: string, headers: Hea
         }
     } catch (e: any) {
         logger.error(e.response.data);
-    }
+    }*/
+
     return jsonData ?? null;
 }
 
 async function listServicePrincipal(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null> {
-    let jsonData;
+   // let jsonData = [];
 
-    try {
+    let jsonData : any[] | null;
+
+    jsonData = await genericListing(endpoint, accessToken, "servicePrincipals", "Service principals");
+
+/*    try {
         const response = await axios.get(`${endpoint}/servicePrincipals`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
@@ -369,14 +400,18 @@ async function listServicePrincipal(endpoint: string, accessToken: string, heade
         }
     } catch (e: any) {
         logger.error(e.response.data);
-    }
+    }*/
     return jsonData ?? null;
 }
 
 async function listAlerts(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null> {
-    let jsonData;
+  //  let jsonData = [];
 
-    try {
+    let jsonData : any[] | null;
+
+    jsonData = await genericListing(endpoint, accessToken, "security/alerts_v2", "Security alerts");
+
+   /* try {
         const response = await axios.get(`${endpoint}/security/alerts_v2`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
@@ -391,19 +426,23 @@ async function listAlerts(endpoint: string, accessToken: string, headers: Header
         }
     } catch (e: any) {
         logger.error(e.response.data);
-    }
+    }*/
     return jsonData ?? null;
 }
 
 async function listIncidents(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null> {
-    let jsonData;
+   // let jsonData = [];
 
-    try {
+    let jsonData : any[] | null;
+
+    jsonData = await genericListing(endpoint, accessToken, "security/incidents", "Security incidents");
+
+   /* try {
         const response = await axios.get(`${endpoint}/security/incidents`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`
             }
-        })
+        });
         if (response.status != 200) {
             logger.warn("O365 - Error when calling graph API for Directory sync status ");
             return null;
@@ -413,6 +452,6 @@ async function listIncidents(endpoint: string, accessToken: string, headers: Hea
         }
     } catch (e: any) {
         logger.error(e.response.data);
-    }
+    }*/
     return jsonData ?? null;
 }
