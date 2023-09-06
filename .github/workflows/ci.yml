@@ -53,11 +53,10 @@ jobs:
           context: ./
           push: true
           tags: |
-            ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa:${{ steps.versionning.outputs.version }}
-            ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa:latest
+            ${{ secrets.DOCKER_REGISTRY_NAME}}/innovtech/kexa:${{ steps.versionning.outputs.version }}
+            ${{ secrets.DOCKER_REGISTRY_NAME}}/innovtech/kexa:latest
       
       - name: Release
         uses: ncipollo/release-action@v1
         with:
           tag: "${{ steps.versionning.outputs.version }}"
-          
