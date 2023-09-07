@@ -46,7 +46,10 @@ export async function gatheringRules(rulesDirectory:string, getAll:boolean=false
     for(const p of paths) {
         logger.debug("getting "+rulesDirectory+"/"+p.name+" rules.");
         let setting = await analyseRule(rulesDirectory+"/"+p.name, listNeedRules, true);
-        if(setting) settingFileList.push(setting);
+        if(setting){
+            setting.alert.global.name = p.name.split(".")[0];
+            settingFileList.push(setting);
+        }
     }
     extractAddOnNeed(settingFileList);
     logger.debug("rules list:");
@@ -185,8 +188,8 @@ export async function checkDocAlertGlobal(alertGlobal:GlobalConfigAlert): Promis
             else if(typeof condition.min !== "number" && condition.min >= 0) result.push("warn - min is not positive number in alert global config : "+condition.min);
         });
     }
-    if (!alertGlobal.hasOwnProperty("name")) result.push("error - name empty in alert global config");
-    else if (typeof alertGlobal.name !== "string") result.push("warn - name not string in alert global config : "+alertGlobal.name);
+    //if (!alertGlobal.hasOwnProperty("name")) result.push("error - name empty in alert global config");
+    //else if (typeof alertGlobal.name !== "string") result.push("warn - name not string in alert global config : "+alertGlobal.name);
     return result;
 }
 
