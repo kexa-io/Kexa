@@ -253,7 +253,7 @@ This is an example of how to list things you need to use the software and how to
     ```
   
   Before each of this variable you must add a prefix which indicates to which "environment" this refers. The default prefix is the index in the provider's config (we start counting from zero) followed by a dash.
-  Example for my config in azure : 
+  Example of my environnement variable for __Azure config exemple__ previously show : 
   ```
     PROJECTA-SUBSCRIPTIONID=XXXXXXXXXXXXXXXXXXXXX
     PROJECTA-AZURECLIENTID =XXXXXXXXXXXXXXXXXXXXX
