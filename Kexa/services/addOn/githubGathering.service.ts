@@ -20,7 +20,8 @@ let logger = new Logger({ minLevel: Number(process.env.DEBUG_MODE)??4, type: "pr
 export async function collectData(gitConfig:GitConfig[]): Promise<GitResources[]|null>{
     let resources = new Array<GitResources>();
     for(let config of gitConfig??[]){
-        let githubToken = await getConfigOrEnvVar(config, "GITHUBTOKEN", gitConfig.indexOf(config)+"-");
+        let prefix = config.prefix??(gitConfig.indexOf(config)+"-");
+        let githubToken = await getConfigOrEnvVar(config, "GITHUBTOKEN", prefix);
         if(!githubToken){
             throw new Error("- Please pass GITHUBTOKEN in your config file");
         }
