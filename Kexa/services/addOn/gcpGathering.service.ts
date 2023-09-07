@@ -50,6 +50,7 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
     let resources = new Array<GCPResources>();
     setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", "./config/gcp.json");
     for (let config of gcpConfig??[]) {
+        let prefix = config.prefix??(gcpConfig.indexOf(config)+"-");
         let gcpResources = {
             "bucket": null,
             "tasks_queue": null,
@@ -86,8 +87,8 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
             "disk": null,
             "compute_item": null
         } as GCPResources;
-        let projectId = await getConfigOrEnvVar(config, "GOOGLE_PROJECT_ID", gcpConfig.indexOf(config)+"-");
-        writeStringToJsonFile(await getConfigOrEnvVar(config, "GOOGLE_APPLICATION_CREDENTIALS", gcpConfig.indexOf(config)+"-"), "./config/gcp.json");
+        let projectId = await getConfigOrEnvVar(config, "GOOGLE_PROJECT_ID", prefix);
+        writeStringToJsonFile(await getConfigOrEnvVar(config, "GOOGLE_APPLICATION_CREDENTIALS", prefix), "./config/gcp.json");
         let regionsList = new Array<string>();
         await retrieveAllRegions(projectId, regionsList);
         if ('regions' in config) {
@@ -106,43 +107,43 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
         try {
             logger.info("- listing GCP resources -");
             const promises = [
-                await listTasks(projectId, regionsList),
-                await listAllComputes(projectId),
-                await listAllBucket(),
-                await listAllProject(),
-                await getBillingAccount(projectId),
-                await listAllClusters(),
-                 await listWorkflows(projectId),
-                await listWebSecurityConfig(projectId),
-                await listVpcConnectors(projectId, regionsList),
-                await listVMWareEngine(projectId),
-                await listNamespaces(projectId, regionsList),
-                await listSecrets(projectId),
-                await listConnectivityTests(projectId),
-                await listResourceSettings(projectId),
-                await listRedisInstances(projectId, regionsList),
-                await listOSConfig(projectId),
-                await listOrgPolicyContraints(projectId),
-                await listOrchestrationAirflow(projectId, regionsList),
-                await listNotebookInstances(projectId),
-                await listLineageProcesses(projectId),
-                await listDashboards(projectId),
-                await listIdentitiesDomain(projectId),
-                await listKMSCryptoKeys(projectId),
-                await listKMSKeyRings(projectId),
-                await listDomainsRegistration(projectId),
-                await listDnsZones(projectId),
-                await listDeliveryPipelines(projectId, regionsList),
-                await listCertificates(projectId),
-                await listBatchJobs(projectId, regionsList),
-                await listWorkloads(projectId),
-                await listArtifactsRepositories(projectId, regionsList),
-                await listAppGateways(projectId, regionsList),
-                await listPersistentDisks(projectId),
-                await listSSHKey(projectId)
+                listTasks(projectId, regionsList),
+                listAllComputes(projectId),
+                listAllBucket(),
+                listAllProject(),
+                getBillingAccount(projectId),
+                listAllClusters(),
+                listWorkflows(projectId),
+                listWebSecurityConfig(projectId),
+                listVpcConnectors(projectId, regionsList),
+                listVMWareEngine(projectId),
+                listNamespaces(projectId, regionsList),
+                listSecrets(projectId),
+                listConnectivityTests(projectId),
+                listResourceSettings(projectId),
+                listRedisInstances(projectId, regionsList),
+                listOSConfig(projectId),
+                listOrgPolicyContraints(projectId),
+                listOrchestrationAirflow(projectId, regionsList),
+                listNotebookInstances(projectId),
+                listLineageProcesses(projectId),
+                listDashboards(projectId),
+                listIdentitiesDomain(projectId),
+                listKMSCryptoKeys(projectId),
+                listKMSKeyRings(projectId),
+                listDomainsRegistration(projectId),
+                listDnsZones(projectId),
+                listDeliveryPipelines(projectId, regionsList),
+                listCertificates(projectId),
+                listBatchJobs(projectId, regionsList),
+                listWorkloads(projectId),
+                listArtifactsRepositories(projectId, regionsList),
+                listAppGateways(projectId, regionsList),
+                listPersistentDisks(projectId),
+                listSSHKey(projectId)
         ];
             const [taskList, computeList, bucketList, projectList, billingAccountList,
-             clusterList, workflowList, webSecurityList, connectorList,
+                clusterList, workflowList, webSecurityList, connectorList,
                 engineList, namespaceList, secretList,
                 connectivityTestList, resourceSettingsList, redisIntanceList,
                 os_configList, org_policy_contraintList, airflow_image_versionList,
@@ -154,7 +155,7 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
             logger.info("- listing cloud resources done -");
 
             ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
-            const client = new CloudTasksClient();
+            //const client = new CloudTasksClient();
 
             gcpResources = {
                 tasks_queue: taskList,

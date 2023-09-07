@@ -31,6 +31,7 @@ export async function collectData(_httpConfig:HttpConfig[]) {
     let promises: any = []
     logger.info("- loading client http -");
     for(let config of httpConfig??[]){
+        let prefix = config.prefix??(httpConfig.indexOf(config)+"-");
         promises.push(
             (async () => {
                 let httpResources = {
@@ -41,7 +42,7 @@ export async function collectData(_httpConfig:HttpConfig[]) {
                 } as HttpRequest;
 
                 try {
-                    const url = await getConfigOrEnvVar(config, "URL", httpConfig.indexOf(config) + "-");
+                    const url = await getConfigOrEnvVar(config, "URL", prefix);
 
                     if (!url) {
                         throw new Error("- Please pass URL in your config file");
@@ -50,7 +51,7 @@ export async function collectData(_httpConfig:HttpConfig[]) {
                     httpResources = await getDataHttp(url, config);
 
                 } catch (e) {
-                    logger.error("error in collectHttpData with the url: " + ((await getConfigOrEnvVar(config, "URL", httpConfig.indexOf(config) + "-")) ?? null));
+                    logger.error("error in collectHttpData with the url: " + ((await getConfigOrEnvVar(config, "URL", prefix)) ?? null));
                     logger.error(e);
                 }
 
@@ -66,7 +67,7 @@ export async function collectData(_httpConfig:HttpConfig[]) {
 }
 
 async function getHeader(config: HttpConfig): Promise<Record<string, string>|null>{
-    let authorization = await getConfigOrEnvVar(config, "AUTHORIZATION", httpConfig.indexOf(config)+"-");
+    let authorization = await getConfigOrEnvVar(config, "AUTHORIZATION", config.prefix??(httpConfig.indexOf(config)+"-"));
     let header = { ...config.header };
     if(authorization){
         header["Authorization"] = authorization;
@@ -143,7 +144,7 @@ async function dnsLookup(hostname: string): Promise<string[]|string|null> {
 }
 
 async function doRequest(url: string, config: HttpConfig): Promise<any> {
-    let method = await getConfigOrEnvVar(config, "METHOD", httpConfig.indexOf(config)+"-");
+    let method = await getConfigOrEnvVar(config, "METHOD", config.prefix??(httpConfig.indexOf(config)+"-"));
     let header = await getHeader(config);
     let body = getBody(config);
     if(!header) return await makeHttpRequest<any>(method, url, body);

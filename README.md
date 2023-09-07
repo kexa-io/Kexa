@@ -49,6 +49,12 @@
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
+        <ul>
+          <li><a href="#clone-the-repo">Clone the repo</a></li>
+          <li><a href="#install-NPM-packages">Install NPM packages</a></li>
+          <li><a href="#configure-your-config">Configure your config</a></li>
+          <li><a href="#configure-your-variable-environnement">Configure your variable environnement</a></li>
+        </ul>
       </ul>
     </li>
     <li>
@@ -118,10 +124,78 @@ This is an example of how to list things you need to use the software and how to
    ```sh
    npm install
    ```
-#### Configure your environnement :
-  - Minumum Environnement variables you need : 
+
+#### Configure your config:
+
+  In the config folder, create a default.json file to inform the providers you want to test and the rules that will be applied to them. Each key at the root of the json refers to the provider you wish to use. In the following example, we wish to use only "azure". Each item in this list refers to a "subscription"/"environment". It's a good idea to give each item a name and a description, to make it easier to understand. The "rules" key is mandatory to specify the rules to be applied to each environment. Finally, a key called "prefix" will allow you to identify the variables used to log on to the environment among your environment variables or your secret manager. The attribute of this value should preferably be unique, unless you want to use the same identifiers more than once on several environments. If you haven't specified a prefix, a default value is assigned. It corresponds to the environment index followed by a "-".
+  The file will have the following format : 
+  __Azure config exemple__
+  ```js
+  {
+    "azure": [
+      {
+        "name": "Project A",
+        "prefix": "PROJECTA-", #(if not specify it would have been: '0-')
+        "description": "First subscription (0) : Project A subscription",
+        "rules": [
+          "Name of my rule"
+        ]
+      },
+      {
+        "name": "Project B",
+        "prefix": "PROJECTB-", #(if not specify it would have been: '1-')
+        "description": "Second subscription (1) : Project B subscription",
+        "rules": [
+          "Name of my rule",
+          "Another rules"
+        ]
+      }
+    ]
+  }
+  ```
+  
+
+  For Amazon Web Services and Google Cloud Provider, you can choose to select specifics regions in your config to avoid checking all regions if it's not in your needs. Without "regions" property (or empty "regions property), all the regions will be checked.
+  __An other config exemple__
+  ```js
+  {
+    "aws": [
+      {
+        "name": "Project A",
+        "prefix": "AWSPROJECTA-", #(if not specify it would have been: '0-')
+        "description": "First subscription (0) : Project A subscription",
+        "rules": [
+          "Name of my rule"
+        ],
+        "regions": [
+          "us-east-1"
+        ]
+      }
+    ],
+    "gcp": [
+      {
+        "name": "Project B",
+        "prefix": "GCPPROJECTB-", #(if not specify it would have been: '0-')
+        "description": "First subscription (0) : Project B subscription",
+        "rules": [
+          "Name of my rule",
+          "Another rules"
+        ],
+        "regions": [
+          "us-east1"
+        ]
+      }
+    ]
+  }
+  ```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+#### Configure your environnement variable:
+
+- Minumum Environnement variables you need, if you want to specify a folder to store rules: 
     ```
-      RULESDIRECTORY=./Kexa/rules
+      RULESDIRECTORY=./Kexa/rules (default value)
     ```
   - add the following variables for each type of notification you have use in your rules:
     - email:
@@ -139,74 +213,13 @@ This is an example of how to list things you need to use the software and how to
         SMSAUTHTOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
       ```
 
-#### Configure your config:
-
-  In the config folder, create a default.json file to inform the providers you want to test and the rules that will be applied to them.
-  The file will have the following format : 
-
-  ```js
-  {
-    "azure": [
-      {
-        "name": "Project A",
-        "description": "First subscription (0) : Project A subscription",
-        "rules": [
-          "Name of my rule"
-        ]
-      },
-      {
-        "name": "Project B",
-        "description": "Second subscription (1) : Project B subscription",
-        "rules": [
-          "Name of my rule",
-          "Another rules"
-        ]
-      }
-    ]
-  }
-  ```
-  Please note that the "name" and "description" attributes are entirely optional and serve only to ensure the maintainability of the configuration.
-
-  For Amazon Web Services and Google Cloud Provider, you can choose to select specifics regions in your config to avoid checking all regions if
-  it's not in your needs. Without "regions" property (or empty "regions property), all the regions will be checked.
-  
-  ```js
-  {
-    "aws": [
-      {
-        "name": "Project A",
-        "description": "First subscription (0) : Project A subscription",
-        "rules": [
-          "Name of my rule"
-        ],
-        "regions": [
-          "us-east-1"
-        ]
-      }
-    ],
-    "gcp": [
-      {
-        "name": "Project B",
-        "description": "First subscription (0) : Project B subscription",
-        "rules": [
-          "Name of my rule",
-          "Another rules"
-        ],
-        "regions": [
-          "us-east1"
-        ]
-      }
-    ]
-  }
-  ```
-    
-  Add the following variables for each provider you want to test:
+  Add the following variables for each provider you want to test preceded by the prefix mentioned in the previous section:
   - Azure:
     ```
       SUBSCRIPTIONID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
-      AZURECLIENTID	ID of an Azure AD application
-      AZURETENANTID	ID of the application's Azure AD tenant
-      AZURECLIENTSECRET	one of the application's client secrets
+      AZURECLIENTID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX	(ID of an Azure AD application)
+      AZURETENANTID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX	(ID of the application's Azure AD tenant)
+      AZURECLIENTSECRET=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX	(one of the application's client secrets)
     ```
   - GitHub:
     ```
@@ -223,8 +236,8 @@ This is an example of how to list things you need to use the software and how to
     ```
   - GCP:
     ```
-      GOOGLEJSON of your google json credential
-      PROJECTID ID of a gcp project
+      GOOGLE_APPLICATION_CREDENTIALS (id your google json credential)
+      GOOGLE_PROJECT_ID (ID of a gcp project)
     ```
   - HTTP:
     at least you must add this following var :
@@ -239,21 +252,20 @@ This is an example of how to list things you need to use the software and how to
       body:{"name": "Toto"}
     ```
   
-  Before each of this variable you must add a prefix which indicates which indexes the credentials refer to.
-  The prefix is the index (we start counting from zero) followed by a dash.
+  Before each of this variable you must add a prefix which indicates to which "environment" this refers. The default prefix is the index in the provider's config (we start counting from zero) followed by a dash.
   Example for my config in azure : 
   ```
-    0-SUBSCRIPTIONID=XXXXXXXXXXXXXXXXXXXXX
-    0-AZURECLIENTID =XXXXXXXXXXXXXXXXXXXXX
-    0-AZURETENANTID=XXXXXXXXXXXXXXXXXXXXXX
-    0-AZURECLIENTSECRET=XXXXXXXXXXXXXXXXXX
-    1-SUBSCRIPTIONID=XXXXXXXXXXXXXXXXXXXXX
-    1-AZURECLIENTID =XXXXXXXXXXXXXXXXXXXXX
-    1-AZURETENANTID=XXXXXXXXXXXXXXXXXXXXXX
-    1-AZURECLIENTSECRET=XXXXXXXXXXXXXXXXXX
+    PROJECTA-SUBSCRIPTIONID=XXXXXXXXXXXXXXXXXXXXX
+    PROJECTA-AZURECLIENTID =XXXXXXXXXXXXXXXXXXXXX
+    PROJECTA-AZURETENANTID=XXXXXXXXXXXXXXXXXXXXXX
+    PROJECTA-AZURECLIENTSECRET=XXXXXXXXXXXXXXXXXX
+    PROJECTB-SUBSCRIPTIONID=XXXXXXXXXXXXXXXXXXXXX
+    PROJECTB-AZURECLIENTID =XXXXXXXXXXXXXXXXXXXXX
+    PROJECTB-AZURETENANTID=XXXXXXXXXXXXXXXXXXXXXX
+    PROJECTB-AZURECLIENTSECRET=XXXXXXXXXXXXXXXXXX
   ```
 
-  You can optionally use a key manager:
+  You can optionally use a key manager; for these variables no prefix must be set:
   - Azure:
     To refer to your Key Vault add this following environnement variable :
     ```
@@ -297,12 +309,17 @@ npm run start
 
 Build the image
 ```bash
-docker build -t kexa:latest .
+docker build -t kexa .
+```
+
+Or pull it from our repository [here](https://hub.docker.com/r/innovtech/kexa)
+```
+docker pull innovtech/kexa
 ```
 
 Run the image
 ```bash
-docker run -d kexa:latest
+docker run -d kexa
 ```
 
 <div id="azure-function"></div>
@@ -372,10 +389,10 @@ exemple of rule to verify:
   conditions:
     - operator : OR
       rules:
-    - property : networkAccessPolicy
+        - property : networkAccessPolicy
           condition : DIFFERENT
           value : AllowAll
-    - property : encryption.type
+        - property : encryption.type
           condition : EQUAL
           value : EncryptionAtRestWithPlatformKey
 ```
@@ -395,13 +412,13 @@ exemple of rule to normalise names among tags:
     cloudProvider: azure
     objectName : aks
     conditions:
-  - property : tags.environment
+      - property : tags.environment
         condition : REGEX
         value : ^(DEV|NPR|PROD)$
-  - property : tags.author
+      - property : tags.author
         condition : DIFFERENT
         value : NULL
-  - property : tags.billing
+      - property : tags.billing
         condition : REGEX
         value : ^(VADOR|YODA|LUKE)$
 ```
@@ -431,48 +448,48 @@ Our tool provides a learning and sharing space where users can collaborate to cr
       #to enable it
       type:
       #add every type of notification you want
-    - ^(email|sms|webhook|log)$
+        - ^(email|sms|webhook|log)$
       to:
       #add all the endpoint you need according to the type of notification you have
-    - string
+        - string
     warn:
     #alert for warn (level 1)
       enabled: ^(true|false)$
       type:
-    - ^(email|sms|webhook|log)$
+        - ^(email|sms|webhook|log)$
       to:
-    - string
+        - string
     error:
     #alert for error (level 2)
       enabled: ^(true|false)$
       type:
-    - ^(email|sms|webhook|log)$
+        - ^(email|sms|webhook|log)$
       to:
-    - string
+        - string
     fatal:
     #alert for fatal (level 3)
       enabled: ^(true|false)$
       type:
-    - ^(email|sms|webhook|log)$
+        - ^(email|sms|webhook|log)$
       to:
-    - string
+        - string
     global:
     #alert for the sum up
       name: string  #name of your rule for config
       enabled: ^(true|false)$
       type:
-    - ^(email|sms|webhook|log)$
+        - ^(email|sms|webhook|log)$
       to:
-    - string
+        - string
       conditions:
       #condition is for each level, how many is required before have the sum up
-    - level: 0
+        - level: 0
           min: int
-    - level: 1
+        - level: 1
           min: int
-    - level: 2
+        - level: 2
           min: int
-    - level: 3
+        - level: 3
           min: int
   rules:
     - name: string
@@ -514,7 +531,7 @@ Our tool provides a learning and sharing space where users can collaborate to cr
           request
         )$
       conditions: 
-    - object -> RulesConditions | ParentRules
+        - object -> RulesConditions | ParentRules
 ```
 
 RulesConditions :
@@ -633,6 +650,9 @@ rules:
 * [ ] O365
 * [ ] OVH
 * [ ] VM Ware
+* [ ] Postgres
+* [ ] SQL
+* [ ] Mysql/MariaDB
 * [ ] Oracle
 
 See the [open issues](https://github.com/4urcloud/Kexa/issues) for a full list of proposed features (and known issues).
