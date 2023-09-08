@@ -63,6 +63,7 @@
         <li><a href="#local">Local</a></li>
         <li><a href="#local-docker">Local docker</a></li>
         <li><a href="#azure-function">Azure function</a></li>
+        <li><a href="#kubernetes">Kubernetes</a></li>
       </ul>
     </li>
     <li>
@@ -339,6 +340,85 @@ func start
 To publish Kexa to your azure function
 ```bash
 func azure functionapp publish [Name of your function app]
+```
+
+### Kubernetes
+
+Build the image
+```bash
+docker build -t kexa .
+```
+
+create a yaml file named "kexa.yaml" such as: 
+
+```yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: kexacronjob
+  namespace: kexa
+spec:
+  schedule: "0 0 * * *"  # Planning for a daily run at midnight
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: mykexacontainer
+            image: kexa:latest
+            env:
+              # all the environment variables needed by the container according to the previous example configuration
+              - name: PROJECTA-SUBSCRIPTIONID
+                value: XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+              - name: PROJECTA-AZURECLIENTID
+                value: XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+              - name: PROJECTA-AZURETENANTID
+                value: XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+              - name: PROJECTA-AZURECLIENTSECRET
+                value: XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+              - name: PROJECTB-SUBSCRIPTIONID
+                value: XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+              - name: PROJECTB-AZURECLIENTID
+                value: XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+              - name: PROJECTB-AZURETENANTID
+                value: XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+              - name: PROJECTB-AZURECLIENTSECRET
+                value: XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+              - name: EMAILPORT
+                value: "587"
+              - name: EMAILHOST
+                value: smtp.sendgrid.net
+              - name: EMAILUSER
+                value: didier
+              - name: EMAILPWD
+                value: XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+              - name: EMAILFROM
+                value: '"Kexa" <noreply@4urcloud.eu>'
+```
+
+create the namespace:
+
+```bash
+kubectl create namespace kexa
+```
+
+deploy it:
+
+```bash
+kubectl apply -f kexa.yaml
+```
+
+Checked that everything went smoothly :
+
+```bash
+kubectl get cronjob kexacronjob -n kexa
+```
+
+You're supposed to have something like: 
+```
+NAME          SCHEDULE    SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+kexacronjob   0 0 * * *   False     0        <none>          3m33s
 ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
