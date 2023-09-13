@@ -24,11 +24,12 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
     logger.info("starting collectKubernetes");
     let resources = new Array<KubernetesResources>();
     for(let config of kubernetesConfig??[]){
+        let prefix = config.prefix??(kubernetesConfig.indexOf(config)+"-");
         try {
             if(!config.KUBECONFIG){
                 throw new Error("- Please pass CONFIG in your config file");
             }
-            writeStringToJsonFile(await getConfigOrEnvVar(config, "KUBERNETESJSON", kubernetesConfig.indexOf(config)+"-"), "./config/kubernetes.json");
+            writeStringToJsonFile(await getConfigOrEnvVar(config, "KUBERNETESJSON", prefix), "./config/kubernetes.json");
             setEnvVar("KUBECONFIG", config.KUBECONFIG);
             const promises = [
                 kubernetesListing(),
@@ -71,10 +72,6 @@ export async function kubernetesListing(): Promise<any> {
             kubResources["pods"].push(pod);
         });
     });
-    console.log(kubResources["namespaces"][0]);
-    console.log(kubResources["pods"][0]);
-    console.log(kubResources["helm"]);
-    console.log("END OF KUB DISPLAY");
     await Promise.all(namespacePromises);
     return kubResources;
 }

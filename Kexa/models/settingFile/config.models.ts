@@ -26,4 +26,5 @@ export interface Config {
     rules : Array<string>;
     name?: string;
     description?: string;
+    prefix?: string;
 }

@@ -7,7 +7,7 @@
         - log
         - email
       to: 
-        - adrien.eppling@supinfo.com
+        - myEmail@gmail.comm
     error:
       enabled: true
       type: 
@@ -15,21 +15,21 @@
         - email
         #- sms
       to:
-        - adrien.eppling@supinfo.com
+        - myEmail@gmail.comm
     warning:
       enabled: true
       type: 
         - log
         - email
       to:
-        - adrien.eppling@supinfo.com
+        - myEmail@gmail.comm
     info:
       enabled: true
       type: 
         - log
         - email
       to:
-        - adrien.eppling@supinfo.com
+        - myEmail@gmail.comm
     global:
       enabled: true
       type: 
@@ -37,10 +37,9 @@
         #- webhook
         #- sms
         - email
-      name: azure cloud
       to: 
         #- http://127.0.0.1:5000/test
-        - adrien.eppling@supinfo.com
+        - myEmail@gmail.comm
       conditions:
         - level: 0
           min: 1

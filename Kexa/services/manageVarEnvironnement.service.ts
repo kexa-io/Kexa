@@ -59,9 +59,9 @@ import {listSecrets} from "./addOn/gcpGathering.service";
 import {deleteFile, writeStringToJsonFile} from "../helpers/files";
 import {Storage} from "@google-cloud/storage";
 async function possibleWithGoogleSecretManager(projectId: any): Promise<boolean> {
-    // HRERE LIST AND CHECK FOR NAME ///
-    if ((process.env["0-GOOGLE_APPLICATION_CREDENTIALS"]
-        && process.env["0-GOOGLE_STORAGE_PROJECT_ID"]))
+    // HERE LIST AND CHECK FOR NAME ///
+    if ((process.env["GOOGLE_APPLICATION_CREDENTIALS"]
+        && process.env["GOOGLE_STORAGE_PROJECT_ID"]))
     {
         /*console.log("OUI OUI");
         const config = require('config');
@@ -78,7 +78,6 @@ async function possibleWithGoogleSecretManager(projectId: any): Promise<boolean>
         return false;
     }
     else {
-        console.log("NO NO");
         return false;
     }
 }
