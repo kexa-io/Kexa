@@ -6,5 +6,8 @@ export enum ProviderEnum {
     GITHUB = "github",
     HTTP = "http",
 
-    O365 = "o365"
+    O365 = "o365",
+
+    TEST365 = "test365",
+    GOOGLEWORKSPACE = "googleWorkspace"
 }

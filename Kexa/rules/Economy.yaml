@@ -147,7 +147,7 @@
           value: Member
     - name: "o365-is-skus-not-used"
       description: "this rule is if a subscribed sku is not being used"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: o365
       objectName: sku
@@ -157,7 +157,7 @@
           value: 0
     - name: "o365-is-mfa-activated-on-user"
       description: "check if at least 2 auth factors are active"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: o365
       objectName: auth_methods
@@ -168,3 +168,13 @@
               - property: dataType
                 condition: EQUAL
                 value: "#microsoft.graph.microsoftAuthenticatorAuthenticationMethod"
+    - name: "workspace-user-mfa-activated"
+      description: "verify if mfa is activated on user account"
+      applied: true
+      level: 2
+      cloudProvider: googleWorkspace
+      objectName: user
+      conditions:
+        - property: isEnrolledIn2Sv
+          condition: EQUAL
+          value: true
