@@ -1,8 +1,11 @@
 {
-    "googleWorkspace": [
+    "gcp": [
         {
+            "prefix": "projetA-",
             "rules": [
-                "Economy"
+                "Security",
+                "Economy",
+                "OperationExcellence"
             ]
         }
     ]
