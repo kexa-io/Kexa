@@ -13,6 +13,7 @@
     *       - sp
     *       - alert
     *       - incident
+    *       - app_access_policy
 */
 
 import { Logger } from "tslog";
@@ -46,7 +47,8 @@ export async function collectData(o365Config:o365Config[]): Promise<o365Resource
             "directory": null,
             "sp": null,
             "alert": null,
-            "incident": null
+            "incident": null,
+            "app_access_policy": null
         } as o365Resources;
         try {
             let subscriptionId = await getConfigOrEnvVar(config, "SUBSCRIPTIONID", o365Config.indexOf(config)+"-");
@@ -60,9 +62,6 @@ export async function collectData(o365Config:o365Config[]): Promise<o365Resource
             await setEnvVar("AZURE_TENANT_ID", await getConfigOrEnvVar(config, tenantId));
 
             const graphApiEndpoint = 'https://graph.microsoft.com/v1.0';
-         /*   const tenantId = process.env["0-AZURETENANTID"];
-            const clientId = process.env["0-AZURECLIENTID"];
-            const clientSecret = process.env["0-AZURECLIENTSECRET"];*/
             let accessToken;
             if (tenantId && clientId && clientSecret)
                 accessToken = await getToken(tenantId, clientId, clientSecret);
@@ -87,10 +86,11 @@ export async function collectData(o365Config:o365Config[]): Promise<o365Resource
                     await listDirectory(graphApiEndpoint, accessToken, headers),
                     await listServicePrincipal(graphApiEndpoint, accessToken, headers),
                     await listAlerts(graphApiEndpoint, accessToken, headers),
-                    await listIncidents(graphApiEndpoint, accessToken, headers)
+                    await listIncidents(graphApiEndpoint, accessToken, headers),
+                    await listAppAccessPolicy(graphApiEndpoint, accessToken, headers, userList)
             ];
                 const [skuList, domainList, secure_scoreList, auth_methodsList,
-                    organizationList, directoryList, spList, alertList, incidentList] = await Promise.all(promises);
+                    organizationList, directoryList, spList, alertList, incidentList, app_access_policyList] = await Promise.all(promises);
 
                 o365Resources = {
                     sku: skuList,
@@ -102,7 +102,8 @@ export async function collectData(o365Config:o365Config[]): Promise<o365Resource
                     directory: directoryList,
                     sp: spList,
                     alert: alertList,
-                    incident: incidentList
+                    incident: incidentList,
+                    app_access_policy: app_access_policyList
                 };
                 logger.info("- listing O365 resources done -");
             }
@@ -163,13 +164,8 @@ async function  listUsers(endpoint: string, accessToken: string, headers: Header
                             Authorization: `Bearer ${accessToken}`
                         }
                     });
-                    if (licenseResponse.status != 200) {
-                        logger.warn("O365 - Error when calling graph API for user " + jsonData[i].displayName);
-                        jsonData[i].licenses = null;
-                        continue;
-                    }
                     jsonData[i].licenses = licenseResponse.data.value;
-                    const userTypeResponse = await axios.get(`${endpoint}/users/${jsonData[i].id}?$select=userType,id`, {
+                    const userTypeResponse = await axios.get(`${endpoint}/users/${jsonData[i].id}?$select=userType,id,passwordPolicies`, {
                         headers: {
                             Authorization: `Bearer ${accessToken}`
                         }
@@ -180,6 +176,7 @@ async function  listUsers(endpoint: string, accessToken: string, headers: Header
                         continue;
                     }
                     jsonData[i].userType = userTypeResponse.data.userType;
+                    jsonData[i].passwordPolicies = userTypeResponse.data.passwordPolicies;
                 } catch (e) {
                     logger.error('O365 - Error fetching user ');
                     logger.error(e);
@@ -302,7 +299,8 @@ async function listAuthMethods(endpoint: string, accessToken: string, userList: 
 async function listOrganization(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null> {
     let jsonData : any[] | null;
 
-    jsonData = await genericListing(endpoint, accessToken, "organization", "Organization");
+    jsonData = await genericListing(endpoint, accessToken, "organization?$select=passwordPolicies", "Organization");
+    //console.log(jsonData);
     return jsonData ?? null;
 }
 
@@ -331,5 +329,32 @@ async function listIncidents(endpoint: string, accessToken: string, headers: Hea
     let jsonData : any[] | null;
 
     jsonData = await genericListing(endpoint, accessToken, "security/incidents", "Security incidents");
+    return jsonData ?? null;
+}
+
+async function listAppAccessPolicy(endpoint: string, accessToken: string, headers: Headers, userList: any): Promise<Array<any> | null> {
+    const axios = require("axios");
+    let jsonData: any | [];
+        for (let i = 0; i < userList.length; i++) {
+            try {
+                const licenseResponse = await axios.get(`${endpoint}/users/${userList[i].id}/memberOf`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                });
+                if (licenseResponse.status != 200) {
+                    logger.warn("O365 - Error when calling graph API for user " + jsonData[i].displayName);
+                    continue;
+                }
+             //   console.log(userList[i].displayName);
+               // console.log(licenseResponse.data.value);
+                jsonData = licenseResponse.data.value;
+            } catch (e) {
+                logger.error('O365 - Error fetching user ');
+                logger.error(e);
+            }
+        }
+  //  roles_endpoint = f'https://graph.microsoft.com/v1.0/{tenant_id}/users/{user_id}/memberOf'
+
     return jsonData ?? null;
 }

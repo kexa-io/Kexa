@@ -37,6 +37,7 @@
         #- webhook
         #- sms
         #- email
+      name: Economy
       to: 
         #- http://127.0.0.1:5000/test
         - myEmail@gmail.com
@@ -167,3 +168,53 @@
               - property: dataType
                 condition: EQUAL
                 value: "#microsoft.graph.microsoftAuthenticatorAuthenticationMethod"
+    - name: "workspace-user-mfa-activated"
+      description: "verify if mfa is activated on user account"
+      applied: false
+      level: 2
+      cloudProvider: googleWorkspace
+      objectName: user
+      conditions:
+        - property: isEnrolledIn2Sv
+          condition: EQUAL
+          value: true
+    - name: "workspace-user-mfa-enforced"
+      description: "verify if mfa is enforced for user account"
+      applied: false
+      level: 2
+      cloudProvider: googleWorkspace
+      objectName: user
+      conditions:
+        - property: isEnforcedIn2Sv
+          condition: EQUAL
+          value: true
+    - name: "workspace-user-change-passwd-next-login"
+      description: "verify if there is at least one super admin for OU"
+      applied: false
+      level: 2
+      cloudProvider: googleWorkspace
+      objectName: user
+      conditions:
+        - property: changePasswordAtNextLogin
+          condition: EQUAL
+          value: true
+    - name: "workspace-at-least-one-super-admin"
+      description: "verify if there is at least one super admin for OU"
+      applied: false
+      level: 2
+      cloudProvider: googleWorkspace
+      objectName: user
+      conditions:
+        - property: totalSuperAdmin
+          condition: SUP_OR_EQUAL
+          value: 1
+    - name: "workspace-no-more-than-four-super-admin"
+      description: "verify if there is no more than four super admin for OU"
+      applied: false
+      level: 2
+      cloudProvider: googleWorkspace
+      objectName: user
+      conditions:
+        - property: totalSuperAdmin
+          condition: INF_OR_EQUAL
+          value: 4

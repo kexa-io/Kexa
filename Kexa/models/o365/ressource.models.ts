@@ -10,4 +10,6 @@ export interface o365Resources {
     sp: Array<any> | null;
     alert: Array<any> | null;
     incident: Array<any> | null;
+
+    app_access_policy: Array<any> | null;
 }
