@@ -6,9 +6,10 @@ const configuration = require('config');
 
 const mainFolder = 'Kexa';
 const serviceAddOnPath = './' + mainFolder + '/services/addOn';
-const fs = require('fs'); 
-let logger = new Logger({ minLevel: Number(process.env.DEBUG_MODE)??4, type: "pretty", name: "LoaderAddOnLogger" });
+const fs = require('fs');
 
+import {getNewLogger} from "./logger.service";
+const logger = getNewLogger("LoaderAddOnLogger");
 export async function loadAddOns(resources: ProviderResource){
     logger.info("Loading addOns");
     const addOnNeed = require('../../config/addOnNeed.json');

@@ -111,3 +111,16 @@
         - property: PublicIpAddress
           condition: EQUAL
           value: null
+    - name: "o365-is-mfa-activated-on-user"
+      description: "check if at least 2 auth factors are active"
+      applied: false
+      level: 2
+      cloudProvider: o365
+      objectName: auth_methods
+      conditions:
+        - property: methods
+          condition: ONE
+          value:
+            - property: dataType
+              condition: EQUAL
+              value: "#microsoft.graph.microsoftAuthenticatorAuthenticationMethod"
