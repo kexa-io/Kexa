@@ -21,8 +21,9 @@ import { AwsConfig } from "../../models/aws/config.models";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const debug_mode = Number(process.env.DEBUG_MODE) ?? 3;
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "AWSLogger" });
+import {getNewLogger} from "../logger.service";
+const logger = getNewLogger("AWSLogger");
+
 let ec2Client: EC2;
 let rdsClient: RDS;
 let s3Client: S3;

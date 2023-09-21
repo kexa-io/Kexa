@@ -27,11 +27,12 @@ import { DefaultAzureCredential } from "@azure/identity";
 import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
 import { AzureConfig } from "../../models/azure/config.models";
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-let debug_mode = Number(process.env.DEBUG_MODE)??3;
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 const { ContainerServiceClient } = require("@azure/arm-containerservice");
 
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "AzureLogger" });
+import {getNewLogger} from "../logger.service";
+const logger = getNewLogger("AzureLogger");
+
 let computeClient: ComputeManagementClient;
 let resourcesClient : ResourceManagementClient ;
 let networkClient: NetworkManagementClient;

@@ -25,9 +25,8 @@ import { o365Config } from "../../models/o365/config.models";
 //////   INITIALIZATION   //////
 ////////////////////////////////
 
-let debug_mode = Number(process.env.DEBUG_MODE)??3;
-
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "o365Logger" });
+import {getNewLogger} from "../logger.service";
+const logger = getNewLogger("o365Logger");
 
 /////////////////////////////////////////
 //////   LISTING CLOUD RESOURCES    /////
@@ -44,7 +43,7 @@ export async function collectData(o365Config:o365Config[]): Promise<o365Resource
             "secure_score": null,
             "auth_methods": null,
             "organization": null,
-            "directory": null,
+            "directory_role": null,
             "sp": null,
             "alert": null,
             "incident": null,
@@ -83,7 +82,7 @@ export async function collectData(o365Config:o365Config[]): Promise<o365Resource
                     await listSecureScore(graphApiEndpoint, accessToken, headers),
                     await listAuthMethods(graphApiEndpoint, accessToken, userList),
                     await listOrganization(graphApiEndpoint, accessToken, headers),
-                    await listDirectory(graphApiEndpoint, accessToken, headers),
+                    await listDirectoryRole(graphApiEndpoint, accessToken, headers),
                     await listServicePrincipal(graphApiEndpoint, accessToken, headers),
                     await listAlerts(graphApiEndpoint, accessToken, headers),
                     await listIncidents(graphApiEndpoint, accessToken, headers),
@@ -99,7 +98,7 @@ export async function collectData(o365Config:o365Config[]): Promise<o365Resource
                     secure_score: secure_scoreList,
                     auth_methods: auth_methodsList,
                     organization: organizationList,
-                    directory: directoryList,
+                    directory_role: directoryList,
                     sp: spList,
                     alert: alertList,
                     incident: incidentList,
@@ -300,11 +299,10 @@ async function listOrganization(endpoint: string, accessToken: string, headers: 
     let jsonData : any[] | null;
 
     jsonData = await genericListing(endpoint, accessToken, "organization?$select=passwordPolicies", "Organization");
-    //console.log(jsonData);
     return jsonData ?? null;
 }
 
-async function listDirectory(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null> {
+async function listDirectoryRole(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null> {
     let jsonData : any[] | null;
 
     jsonData = await genericListing(endpoint, accessToken, "directoryRoles", "Directory roles");
@@ -346,15 +344,11 @@ async function listAppAccessPolicy(endpoint: string, accessToken: string, header
                     logger.warn("O365 - Error when calling graph API for user " + jsonData[i].displayName);
                     continue;
                 }
-             //   console.log(userList[i].displayName);
-               // console.log(licenseResponse.data.value);
                 jsonData = licenseResponse.data.value;
             } catch (e) {
                 logger.error('O365 - Error fetching user ');
                 logger.error(e);
             }
         }
-  //  roles_endpoint = f'https://graph.microsoft.com/v1.0/{tenant_id}/users/{user_id}/memberOf'
-
     return jsonData ?? null;
 }

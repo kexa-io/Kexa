@@ -81,3 +81,23 @@
         - property: name
           condition: REGEX
           value: '\b\d{1,4}[-]\d{1,4}[-]\d{1,4}\b'
+    - name: "o365-check-jobtitle-defined"
+      description: "this rule is to check for non defined job title"
+      applied: false
+      level: 1
+      cloudProvider: o365
+      objectName: user
+      conditions:
+        - property: jobTitle
+          condition: DIFFERENT
+          value: null
+    - name: "o365-is-simple-member"
+      description: "this rule is to check for simple members"
+      applied: false
+      level: 1
+      cloudProvider: o365
+      objectName: user
+      conditions:
+        - property: userType
+          condition: EQUAL
+          value: Member

@@ -6,7 +6,7 @@ export interface o365Resources {
     secure_score: Array<any> | null;
     auth_methods: Array<any> | null;
     organization: Array<any> | null;
-    directory: Array<any> | null;
+    directory_role: Array<any> | null;
     sp: Array<any> | null;
     alert: Array<any> | null;
     incident: Array<any> | null;

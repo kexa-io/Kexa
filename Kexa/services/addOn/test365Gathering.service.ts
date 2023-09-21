@@ -15,9 +15,8 @@ import { test365Config } from "../../models/test365/config.models";
 //////   INITIALIZATION   //////
 ////////////////////////////////
 
-let debug_mode = Number(process.env.DEBUG_MODE)??3;
-
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "o365Logger" });
+import {getNewLogger} from "../logger.service";
+const logger = getNewLogger("o365Logger");
 
 /////////////////////////////////////////
 //////   LISTING CLOUD RESOURCES    /////

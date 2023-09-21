@@ -9,7 +9,8 @@
     *       - role
     *       - orgaunit
     *       - calendar
-    *       - test
+    *       - file
+    *       - drive
 */
 
 const process = require('process');
@@ -24,9 +25,8 @@ import {deleteFile, writeStringToJsonFile} from "../../helpers/files";
 //////   INITIALIZATION   //////
 ////////////////////////////////
 
-let debug_mode = Number(process.env.DEBUG_MODE)??3;
-
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "googleWorkspaceLogger" });
+import {getNewLogger} from "../logger.service";
+const logger = getNewLogger("googleWorkspaceLogger");
 
 const fs = require('fs').promises;
 const path = require('path');
@@ -37,7 +37,11 @@ const {google} = require('googleapis');
 //////   LISTING CLOUD RESOURCES    /////
 /////////////////////////////////////////
 
-const SCOPES = ['https://www.googleapis.com/auth/admin.directory.user',
+
+//////////////////////////////////
+// DELETE NOT READ ONLY AND TRY //
+//////////////////////////////////
+const SCOPES = [
     'https://www.googleapis.com/auth/admin.directory.user.readonly',
     'https://www.googleapis.com/auth/admin.directory.domain.readonly',
     'https://www.googleapis.com/auth/admin.directory.group.readonly',
@@ -45,7 +49,7 @@ const SCOPES = ['https://www.googleapis.com/auth/admin.directory.user',
     'https://www.googleapis.com/auth/admin.directory.orgunit.readonly',
     'https://www.googleapis.com/auth/calendar.readonly',
     'https://www.googleapis.com/auth/calendar.settings.readonly',
-    'https://www.googleapis.com/auth/calendar.acls',
+    'https://www.googleapis.com/auth/calendar.acls.readonly',
     'https://www.googleapis.com/auth/admin.directory.resource.calendar.readonly',
     'https://www.googleapis.com/auth/drive.readonly'];
 
@@ -65,7 +69,8 @@ export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[])
             "role": null,
             "orgaunit": null,
             "calendar": null,
-            "test": null
+            "file": null,
+            "drive": null
         } as googleWorkspaceResources;
         try {
             writeStringToJsonFile(await getConfigOrEnvVar(config, "WORKSPACECRED", googleWorkspaceConfig.indexOf(config)+"-"), path.join(process.cwd(), '/config/credentials_workspace.json'));
@@ -79,9 +84,10 @@ export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[])
                     await listRoles(auth),
                     await listOrganizationalUnits(auth),
                     await listCalendars(auth),
+                    await listFiles(auth),
                     await listDrive(auth)
                 ];
-                const [userList, domainList, groupList, roleList, orgaunitList, calendarList, testList] = await Promise.all(promises);
+                const [userList, domainList, groupList, roleList, orgaunitList, calendarList, fileList, driveList] = await Promise.all(promises);
 
                 googleWorkspaceResources = {
                     user: userList,
@@ -90,7 +96,8 @@ export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[])
                     role: roleList,
                     orgaunit: orgaunitList,
                     calendar: calendarList,
-                    test: testList
+                    file: fileList,
+                    drive: driveList
                 };
                 logger.info("- listing googleWorkspace resources done -");
             }
@@ -228,7 +235,7 @@ async function listGroups(auth: any): Promise<Array<any> | null> {
         const groupResponse = await admin.groups.list({
             customer: 'my_customer',
         });
-        const groups = groupResponse.data.groups;
+        const groups = groupResponse.data;
         if (groups)
             jsonData = JSON.parse(JSON.stringify(groups));
         else
@@ -266,49 +273,13 @@ async function listOrganizationalUnits(auth: any): Promise<Array<any> | null> {
         const orgUnits = await service.orgunits.list({
             customerId: 'my_customer',
         });
-        const orgUnitList = orgUnits.data.organizationUnits;
-        if (orgUnitList)
-            jsonData = JSON.parse(JSON.stringify(orgUnitList))
-        else
-            return null;
+        const orgUnitList = orgUnits.data;
+        jsonData = JSON.parse(JSON.stringify(orgUnitList));
     } catch (error) {
         console.error('Error listing organizational units:', error);
     }
     return jsonData ?? null;
 }
-
-async function listUserSettings(auth: any): Promise<Array<any> | null> {
-    let jsonData = [];
-
-    try {
-        const service = google.admin({
-            version: 'directory_v1',
-            auth,
-        });
-        const res = await service.users.get({
-            userKey: "xxxxxxx@innovtech.eu",
-            customer: 'my_customer',
-        });
-        const gmailSettings = res.data.emails || [];
-        console.log(gmailSettings);
-        for (const emailSettings of gmailSettings) {
-            if (emailSettings.type === 'delegate') {
-                const delegatePermissions =
-                    emailSettings.customAttributes?.delegatePermissions || '';
-
-                if (delegatePermissions === 'allowed') {
-                    console.log(`User is allowed to delegate access to their mailbox.`);
-                } else {
-                    console.log(`User is not allowed to delegate access to their mailbox.`);
-                }
-            }
-        }
-    } catch (error) {
-        console.error("Error retrieving user settings:" + error);
-    }
-    return null;
-}
-
 async function listCalendars(auth: any): Promise<Array<any> | null> {
     let jsonData = [];
 
@@ -317,7 +288,6 @@ async function listCalendars(auth: any): Promise<Array<any> | null> {
         const response = await calendar.calendarList.list({
             customer: "my_customer"
         });
-        /// VERIF I GATHER ALL IN ADMIN HERE
         const calendars = response.data.items;
         jsonData = JSON.parse(JSON.stringify(calendars))
         for (let i = 0; i < jsonData.length; i++) {
@@ -334,7 +304,7 @@ async function listCalendars(auth: any): Promise<Array<any> | null> {
     return jsonData ?? null;
 }
 
-async function listDrive(auth: any): Promise<Array<any> | null> {
+async function listFiles(auth: any): Promise<Array<any> | null> {
     let jsonData = [];
 
     try {
@@ -352,6 +322,26 @@ async function listDrive(auth: any): Promise<Array<any> | null> {
     } catch (e) {
         logger.error(e);
     }
-   console.log(jsonData);
+    return jsonData ?? null;
+}
+
+async function listDrive(auth: any): Promise<Array<any> | null> {
+    let jsonData = [];
+
+    try {
+        const drive = google.drive({ version: 'v3', auth });
+
+        const response = await drive.drives.list();
+        const drives = response.data.drives;
+        for (let i = 0; i < drives.length; i++) {
+            const res = await drive.drives.get({
+                driveId: drives[i].id,
+                fields: '*'
+            });
+            jsonData.push(JSON.parse(JSON.stringify(res.data)));
+        }
+    } catch (e) {
+        logger.error(e);
+    }
     return jsonData ?? null;
 }

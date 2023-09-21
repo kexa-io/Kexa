@@ -16,8 +16,9 @@ import { deleteFile, writeStringToJsonFile } from "../../helpers/files";
 import { KubernetesConfig } from "../../models/kubernetes/config.models";
 
 
-let debug_mode = Number(process.env.DEBUG_MODE)??3;
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "KubernetesLogger" });
+import {getNewLogger} from "../logger.service";
+const logger = getNewLogger("KubernetesLogger");
+
 const k8s = require('@kubernetes/client-node');
 
 export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<KubernetesResources[]|null>{

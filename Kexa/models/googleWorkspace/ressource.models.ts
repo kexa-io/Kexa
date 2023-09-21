@@ -9,5 +9,7 @@ export interface googleWorkspaceResources {
 
     orgaunit: Array<any> | null;
     calendar: Array<any> | null;
-    test: Array<any> | null;
+    file: Array<any> | null;
+
+    drive: Array<any> | null;
 }

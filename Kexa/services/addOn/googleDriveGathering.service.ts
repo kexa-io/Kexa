@@ -10,8 +10,9 @@ import { Logger } from "tslog";
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { deleteFile, writeStringToJsonFile } from "../../helpers/files";
 
-let debug_mode = Number(process.env.DEBUG_MODE)??3;
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "GoogleDriveLogger" });
+import {getNewLogger} from "../logger.service";
+const logger = getNewLogger("GoogleDriveLogger");
+
 const fs = require('fs').promises;
 const path = require('path');
 const {authenticate} = require('@google-cloud/local-auth');

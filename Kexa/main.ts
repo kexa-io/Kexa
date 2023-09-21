@@ -6,11 +6,18 @@ import { AsciiArtText, talkAboutOtherProject} from "./services/display.service";
 import { getEnvVar } from "./services/manageVarEnvironnement.service";
 import { loadAddOns } from "./services/addOn.service";
 import { deleteFile } from "./helpers/files";
+import {getNewLogger} from "./services/logger.service";
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 env.config();                                                                    // reading environnement vars                                                       // file system
 
 export async function main() {
-    let logger = new Logger({ minLevel: Number(process.env.DEBUG_MODE)??4, type: "pretty", name: "globalLogger" });
+    const logger = getNewLogger("MainLogger");
+
+    if (process.env.DEV)
+        if (process.env.DEV == "true") {
+            logger.settings.minLevel = 2;
+            console.log("DEBUG");
+        }
     AsciiArtText("Kexa");
     logger.info("___________________________________________________________________________________________________"); 
     logger.info("___________________________________-= running Kexa scan =-_________________________________________");

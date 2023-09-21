@@ -20,8 +20,9 @@ let httpConfig: HttpConfig[] = [];
 const jsome = require('jsome');
 jsome.level.show = true;
 
-let debug_mode = Number(process.env.DEBUG_MODE)??3;
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "HttpLogger" });
+import {getNewLogger} from "../logger.service";
+const logger = getNewLogger("HttpLogger");
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING HTTP RESOURCES
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
