@@ -1,8 +1,11 @@
 import { Logger } from "tslog";
 
 const AWS = require('aws-sdk');
-let debug_mode = Number(process.env.DEBUG_MODE)??3;
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "KubernetesLogger" });
+
+import {getNewLogger} from "./logger.service";
+const logger = getNewLogger("KubernetesLogger");
+
+
 const { SecretClient } = require("@azure/keyvault-secrets");
 const { DefaultAzureCredential } = require("@azure/identity");
 //const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');

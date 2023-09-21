@@ -19,12 +19,15 @@ import moment, { Moment, unitOfTime } from 'moment';
 import { BeHaviorEnum } from '../enum/beHavior.enum';
 import { writeStringToJsonFile } from '../helpers/files';
 import { extractHeaders } from './addOn.service';
+import {DebugEnum} from "../enum/debug.enum";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-let debug_mode = Number(process.env.DEBUG_MODE)??3;
+
+import {getNewLogger} from "./logger.service";
+const logger = getNewLogger("AnalyseLogger");
+
 const jsome = require('jsome');
 jsome.level.show = true;
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "AnalyseLogger" });
 const varEnvMin = {
     "email": ["EMAILPORT", "EMAILHOST", "EMAILUSER", "EMAILPWD", "EMAILFROM"],
     "sms": ["SMSACCOUNTSID", "SMSAUTHTOKEN", "SMSFROM"],

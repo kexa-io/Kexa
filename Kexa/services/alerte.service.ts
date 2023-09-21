@@ -12,16 +12,16 @@ import { propertyToSend, renderTableAllScan } from "./display.service";
 import { groupBy } from "../helpers/groupBy";
 import { getConfigOrEnvVar } from "./manageVarEnvironnement.service";
 
-let debug_mode = Number(process.env.DEBUG_MODE)??3;
 const jsome = require('jsome');
 jsome.level.show = true;
 const request = require('request');
 const nodemailer = require("nodemailer");
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "functionLogger" });
 const levelAlert = ["info", "warning", "error", "critical"];
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
 const config = require('config');
 
+import {getNewLogger} from "./logger.service";
+const logger = getNewLogger("functionLogger");
 export function alertGlobal(allScan: ResultScan[][], alert: GlobalConfigAlert) {
     let compteError = [0,0,0,0];
     allScan.forEach((rule) => {

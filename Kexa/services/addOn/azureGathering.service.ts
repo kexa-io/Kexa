@@ -27,11 +27,12 @@ import { DefaultAzureCredential } from "@azure/identity";
 import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
 import { AzureConfig } from "../../models/azure/config.models";
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-let debug_mode = Number(process.env.DEBUG_MODE)??3;
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 const { ContainerServiceClient } = require("@azure/arm-containerservice");
 
-const logger = new Logger({ minLevel: debug_mode, type: "pretty", name: "AzureLogger" });
+import {getNewLogger} from "../logger.service";
+const logger = getNewLogger("AzureLogger");
+
 let computeClient: ComputeManagementClient;
 let resourcesClient : ResourceManagementClient ;
 let networkClient: NetworkManagementClient;
@@ -102,14 +103,13 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
 }
 
 //get service principal key information
-export async function getSPKeyInformation(credential: DefaultAzureCredential, tenantID: string): Promise<any> {
-    const { GraphRbacManagementClient } = require("@azure/graph");
+export async function getSPKeyInformation(credential: DefaultAzureCredential, subscriptionId: string): Promise<any> {
+   const { GraphRbacManagementClient } = require("@azure/graph");
     logger.info("starting getSPKeyInformation");
     try {
-        const client = new GraphRbacManagementClient(credential, "e17d1063-88c2-4368-9d08-203b84a1bb40");
-        logger.error(client.servicePrincipals);
+        const client = new GraphRbacManagementClient(credential,subscriptionId);
         const resultList = new Array<any>;
-        for await (const item of client.servicePrincipals.list()) {
+        for await (const item of client.servicePrincipals.list('')) {
             resultList.push(item);
         }
         return resultList;
@@ -117,6 +117,7 @@ export async function getSPKeyInformation(credential: DefaultAzureCredential, te
         logger.error("error in getSPKeyInformation:"+err);
         return null;
     }
+   return null;
 }
 
 //ip list

@@ -15,7 +15,9 @@ import { getConfigOrEnvVar, getEnvVar, setEnvVar } from "../manageVarEnvironneme
 import { Logger } from "tslog";
 import { GitConfig } from "../../models/git/config.models";
 env.config();
-let logger = new Logger({ minLevel: Number(process.env.DEBUG_MODE)??4, type: "pretty", name: "GithubLogger" });
+
+import {getNewLogger} from "../logger.service";
+const logger = getNewLogger("GithubLogger");
 
 export async function collectData(gitConfig:GitConfig[]): Promise<GitResources[]|null>{
     let resources = new Array<GitResources>();
