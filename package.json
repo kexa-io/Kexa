@@ -86,12 +86,13 @@
     "typescript": "^4.9.5"
   },
   "name": "Kexa",
-  "version": "1.4.3",
+  "version": "1.7",
   "main": "./Kexa/main.ts",
   "scripts": {
     "build": "rimraf ./build && tsc",
     "start:dev": "npx nodemon",
     "start": "npm run build && node build/index.js",
+    "update": "npm run build && node build/services/updateCapability.service.js",
     "lint": "eslint . --ext .ts",
     "prettier-format": "run-script-os",
     "prettier-format:win32": "prettier --config .prettierrc \"./src/**/*.ts\" --write",

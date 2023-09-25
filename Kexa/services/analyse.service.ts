@@ -1,5 +1,4 @@
 import { LevelEnum } from './../enum/level.enum';
-import { Logger } from "tslog";
 import fs from "fs";
 import yaml from "js-yaml";
 import { SettingFile } from "../models/settingFile/settingFile.models";
@@ -19,7 +18,6 @@ import moment, { Moment, unitOfTime } from 'moment';
 import { BeHaviorEnum } from '../enum/beHavior.enum';
 import { writeStringToJsonFile } from '../helpers/files';
 import { extractHeaders } from './addOn.service';
-import {DebugEnum} from "../enum/debug.enum";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -60,7 +58,7 @@ export async function gatheringRules(rulesDirectory:string, getAll:boolean=false
     return settingFileList;
 }
 
-function extractAddOnNeed(settingFileList: SettingFile[]){
+export function extractAddOnNeed(settingFileList: SettingFile[]){
     let providerList = new Array<string>();
     settingFileList.forEach((ruleFile) => {
         ruleFile.rules.forEach((rule) => {

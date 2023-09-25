@@ -104,7 +104,7 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
 
 //get service principal key information
 export async function getSPKeyInformation(credential: DefaultAzureCredential, subscriptionId: string): Promise<any> {
-   const { GraphRbacManagementClient } = require("@azure/graph");
+    const { GraphRbacManagementClient } = require("@azure/graph");
     logger.info("starting getSPKeyInformation");
     try {
         const client = new GraphRbacManagementClient(credential,subscriptionId);
@@ -117,7 +117,6 @@ export async function getSPKeyInformation(credential: DefaultAzureCredential, su
         logger.error("error in getSPKeyInformation:"+err);
         return null;
     }
-   return null;
 }
 
 //ip list

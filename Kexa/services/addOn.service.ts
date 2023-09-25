@@ -138,7 +138,7 @@ export function hasValidHeader(filePath: string): string | Header {
     }
 }
 
-export async function extractHeaders(){
+export async function extractHeaders(): Promise<any>{
     const files = fs.readdirSync(serviceAddOnPath);
     const promises = files.map(async (file: string) => {
         return await extractHeader(file);
@@ -149,6 +149,7 @@ export async function extractHeaders(){
         if(result && result.provider && result.resources) finalData[result.provider] = result.resources;
     });
     writeStringToJsonFile(JSON.stringify(finalData), "./config/headers.json");
+    return finalData;
 }
 
 async function extractHeader(file: string): Promise<Header|null> {
