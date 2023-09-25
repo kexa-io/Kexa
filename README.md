@@ -240,6 +240,17 @@ This is an example of how to list things you need to use the software and how to
       GOOGLE_APPLICATION_CREDENTIALS (id your google json credential)
       GOOGLE_PROJECT_ID (ID of a gcp project)
     ```
+  - O365:
+    ```
+      AZURECLIENTID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX	(ID of an Azure AD application)
+      AZURETENANTID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX	(ID of the application's Azure AD tenant)
+      AZURECLIENTSECRET=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX	(one of the application's client secrets)
+    ```
+  - WORKSPACE:
+    ```
+      WORKSPACECRED: (the credentials required)
+      WORKSPACETOKEN: (your google app credentials)
+    ```
   - HTTP:
     at least you must add this following var :
     ```
@@ -285,8 +296,13 @@ This is an example of how to list things you need to use the software and how to
     ```
       GOOGLE_APPLICATION_CREDENTIALS=PATH_TO_JSON_CRED
     ```
-
-
+  You can also choose the minimum log level in your environment variables
+    ```
+      DEBUG_MODE=DEBUG
+    ```
+  The logger is working with Tslog, which work with 7 different levels of log :  SILLY = 0,  TRACE = 1, DEBUG = 2, INFO = 3, WARN = 4, ERROR = 5, FATAL = 6
+  By default, the minimum log level will be INFO (3).
+  
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- How to launch -->
