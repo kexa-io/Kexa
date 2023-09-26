@@ -31,7 +31,7 @@ jobs:
         run: npm run test
 
       - name: Run extract Addon
-        run: npm run upgrade
+        run: npm run update
       
       - name: commit changes
         uses: EndBug/add-and-commit@v4

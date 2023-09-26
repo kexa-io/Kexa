@@ -1,5 +1,7 @@
 /*
     * Provider : googleWorkspace
+    * Thumbnail : https://lh3.googleusercontent.com/sYGCKFdty43En6yLGeV94mfNGHXfVj-bQYitHRndarB7tHmQq_kyVxhlPejeCBVEEYUbnKG2_jUzgNXoPoer6XJm71V3uz2Z6q0CmNw=w0
+    * Documentation : https://developers.google.com/workspace?hl=fr
     * Creation date : 2023-08-24
     * Note :
     * Resources :

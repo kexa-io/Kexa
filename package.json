@@ -87,7 +87,7 @@
   },
   "name": "Kexa",
   "version": "1.7",
-  "main": "./Kexa/main.ts",
+  "main": "./build/index.js",
   "scripts": {
     "build": "rimraf ./build && tsc",
     "start:dev": "npx nodemon",
@@ -107,5 +107,5 @@
   "keywords": [],
   "author": "4urcloud | Esteban MATHIA | Adrien EPPLING",
   "license": "MIT",
-  "description": "Kexa vous permet d'économiser de l'argent et d'automatiser la normalisation, la sécurité et les vérifications de vos déploiements cloud."
+  "description": "Kexa helps you save money and automate the standardization, security and verification of your cloud deployments."
 }

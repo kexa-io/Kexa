@@ -329,7 +329,7 @@ docker run -d kexa
 
 To run the deployment commands, make sure that your "func" command is functional. If it is not, you can install it with this command:
 ```bash
-npm install -g azure-functions-core-tools@4 --unsafe-perm true
+npm i -g azure-functions-core-tools@4 --unsafe-perm true
 ``` 
 
 To test azure function locally :

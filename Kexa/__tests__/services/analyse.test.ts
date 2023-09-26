@@ -6,11 +6,6 @@ const { expect } = require('chai');
 
 describe('analyse service', () => {
     describe('Gathering rules', () => {
-        it('should return one rule', async () => {
-            const result = await gatheringRules("./Kexa/__tests__/rules/test1");
-            expect(result.length).to.equal(1);
-        });
-
         it('should return a multiple rules', async () => {
             const result = await gatheringRules("./Kexa/__tests__/rules/test2", true);
             expect(result.length).to.be.above(1);

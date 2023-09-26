@@ -46,7 +46,7 @@ export async function gatheringRules(rulesDirectory:string, getAll:boolean=false
     let listNeedRules = getListNeedRules();
     for(const p of paths) {
         logger.debug("getting "+rulesDirectory+"/"+p.name+" rules.");
-        let setting = await analyseRule(rulesDirectory+"/"+p.name, listNeedRules, true);
+        let setting = await analyseRule(rulesDirectory+"/"+p.name, listNeedRules, getAll);
         if(setting){
             setting.alert.global.name = p.name.split(".")[0];
             settingFileList.push(setting);
@@ -212,7 +212,7 @@ export function checkDocRules(rules:Rules[]): string[] {
         if(!rule.hasOwnProperty("cloudProvider")) result.push("error - cloudProvider not found in rule");
         else if(!Object.keys(headers).includes(rule.cloudProvider)) result.push("error - cloudProvider not valid in rule : "+rule.cloudProvider + "\nYou have to add this addOn to validate the rules");
         if(!rule.hasOwnProperty("objectName")) result.push("error - objectName not found in rule");
-        else if(!headers[rule.cloudProvider]?.includes(rule.objectName)) result.push("error - objectName not valid in rule : "+rule.objectName+ "\nYou have to verify your addOn gathering data about it");
+        else if(!Object.keys(headers).includes(rule.cloudProvider) || !headers[rule.cloudProvider]["resources"]?.includes(rule.objectName)) result.push("error - objectName not valid in rule : "+rule.objectName+ "\nYou have to verify your addOn gathering data about it");
         if(!rule.hasOwnProperty("conditions")) result.push("error - conditions not found in rule");
         else {
             if (rule.conditions.length === 0) result.push("error - conditions empty in rule");
