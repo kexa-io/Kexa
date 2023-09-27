@@ -18,7 +18,6 @@
     *       - app_access_policy
 */
 
-import { Logger } from "tslog";
 import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
 import { o365Resources } from "../../models/o365/ressource.models";
 import { o365Config } from "../../models/o365/config.models";
@@ -52,15 +51,12 @@ export async function collectData(o365Config:o365Config[]): Promise<o365Resource
             "app_access_policy": null
         } as o365Resources;
         try {
-            let subscriptionId = await getConfigOrEnvVar(config, "SUBSCRIPTIONID", o365Config.indexOf(config)+"-");
+            let prefix = config.prefix??(o365Config.indexOf(config)+"-");
+            let subscriptionId = await getConfigOrEnvVar(config, "SUBSCRIPTIONID", prefix);
 
-            const clientId = await getConfigOrEnvVar(config, "AZURECLIENTID", o365Config.indexOf(config)+"-");
-            const clientSecret = await getConfigOrEnvVar(config, "AZURECLIENTSECRET", o365Config.indexOf(config)+"-");
-            const tenantId = await getConfigOrEnvVar(config, "AZURETENANTID", o365Config.indexOf(config)+"-");
-
-            await setEnvVar("AZURE_CLIENT_ID", await getConfigOrEnvVar(config, clientId));
-            await setEnvVar("AZURE_CLIENT_SECRET", await getConfigOrEnvVar(config, clientSecret));
-            await setEnvVar("AZURE_TENANT_ID", await getConfigOrEnvVar(config, tenantId));
+            const clientId = await getConfigOrEnvVar(config, "AZURECLIENTID", prefix);
+            const clientSecret = await getConfigOrEnvVar(config, "AZURECLIENTSECRET", prefix);
+            const tenantId = await getConfigOrEnvVar(config, "AZURETENANTID", prefix);
 
             const graphApiEndpoint = 'https://graph.microsoft.com/v1.0';
             let accessToken;
@@ -117,7 +113,6 @@ export async function collectData(o365Config:o365Config[]): Promise<o365Resource
     return resources ?? null;
 }
 
-import { Client } from '@microsoft/microsoft-graph-client';
 import axios from "axios";
 
 async function getToken(tenantId: string, clientId: string, clientSecret: string) {
@@ -158,26 +153,26 @@ async function  listUsers(endpoint: string, accessToken: string, headers: Header
                 return null;
             }
             jsonData = JSON.parse(JSON.stringify(response.data.value));
-            for (let i = 0; i < jsonData.length; i++) {
+            for (const element of jsonData) {
                 try {
-                    const licenseResponse = await axios.get(`${endpoint}/users/${jsonData[i].id}/licenseDetails`, {
+                    const licenseResponse = await axios.get(`${endpoint}/users/${element.id}/licenseDetails`, {
                         headers: {
                             Authorization: `Bearer ${accessToken}`
                         }
                     });
-                    jsonData[i].licenses = licenseResponse.data.value;
-                    const userTypeResponse = await axios.get(`${endpoint}/users/${jsonData[i].id}?$select=userType,id,passwordPolicies`, {
+                    element.licenses = licenseResponse.data.value;
+                    const userTypeResponse = await axios.get(`${endpoint}/users/${element.id}?$select=userType,id,passwordPolicies`, {
                         headers: {
                             Authorization: `Bearer ${accessToken}`
                         }
                     });
                     if (userTypeResponse.status != 200) {
-                        logger.warn("O365 - Error when calling graph API for user " + jsonData[i].displayName);
-                        jsonData[i].userType = null;
+                        logger.warn("O365 - Error when calling graph API for user " + element.displayName);
+                        element.userType = null;
                         continue;
                     }
-                    jsonData[i].userType = userTypeResponse.data.userType;
-                    jsonData[i].passwordPolicies = userTypeResponse.data.passwordPolicies;
+                    element.userType = userTypeResponse.data.userType;
+                    element.passwordPolicies = userTypeResponse.data.passwordPolicies;
                 } catch (e) {
                     logger.error('O365 - Error fetching user ');
                     logger.error(e);
@@ -268,9 +263,9 @@ async function listSecureScore(endpoint: string, accessToken: string, headers: H
 async function listAuthMethods(endpoint: string, accessToken: string, userList: any): Promise<Array<any> | null>  {
     let jsonData = [];
 
-    for (let i = 0; i < userList.length; i++) {
+    for (const element of userList) {
             try {
-                const response = await axios.get(`${endpoint}/users/${userList[i].id}/authentication/methods`, {
+                const response = await axios.get(`${endpoint}/users/${element.id}/authentication/methods`, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     }
@@ -281,11 +276,11 @@ async function listAuthMethods(endpoint: string, accessToken: string, userList: 
                 } else {
                     let tmpJson = {methods: [], userId: {}, userName: {}};
                     tmpJson.methods = JSON.parse(JSON.stringify(response.data.value));
-                    tmpJson.userId = userList[i].id;
-                    tmpJson.userName = userList[i].displayName;
+                    tmpJson.userId = element.id;
+                    tmpJson.userName = element.displayName;
                     tmpJson.methods.forEach((method: any) => {
                         method.dataType = method['@odata.type'];
-                        method.userId = userList[i].id;
+                        method.userId = element.id;
                         delete method['@odata.type'];
                     })
                     jsonData.push(tmpJson);

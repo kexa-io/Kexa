@@ -75,9 +75,10 @@ export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[])
             "drive": null
         } as googleWorkspaceResources;
         try {
-            writeStringToJsonFile(await getConfigOrEnvVar(config, "WORKSPACECRED", googleWorkspaceConfig.indexOf(config)+"-"), path.join(process.cwd(), '/config/credentials_workspace.json'));
+            let prefix = config.prefix??(googleWorkspaceConfig.indexOf(config)+"-");
+            writeStringToJsonFile(await getConfigOrEnvVar(config, "WORKSPACECRED", prefix), path.join(process.cwd(), '/config/credentials_workspace.json'));
             if (process.env[googleWorkspaceConfig.indexOf(config)+"-WORKSPACETOKEN"])
-                writeStringToJsonFile(await getConfigOrEnvVar(config, "WORKSPACETOKEN", googleWorkspaceConfig.indexOf(config)+"-"), "./config/token_workspace.json");
+                writeStringToJsonFile(await getConfigOrEnvVar(config, "WORKSPACETOKEN", prefix), "./config/token_workspace.json");
             const auth = await authorize();
                 const promises = [
                     await listUsers(auth),

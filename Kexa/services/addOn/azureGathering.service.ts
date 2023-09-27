@@ -53,12 +53,17 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
             "networkInterfaces": null,
             "aks": null,
         } as AzureResources;
+        logger.debug("config: ");
+        logger.debug(JSON.stringify(config));
+        let prefix = config.prefix??(azureConfig.indexOf(config)+"-");
         try{
-            let prefix = config.prefix??(azureConfig.indexOf(config)+"-");
+            logger.debug("prefix: "+prefix);
+            logger.debug("process: ");
+            logger.debug(JSON.stringify(process.env));
             let subscriptionId = await getConfigOrEnvVar(config, "SUBSCRIPTIONID", prefix);
-            setEnvVar("AZURE_CLIENT_ID", await getConfigOrEnvVar(config, "AZURECLIENTID", prefix))
-            setEnvVar("AZURE_CLIENT_SECRET", await getConfigOrEnvVar(config, "AZURECLIENTSECRET", prefix))
-            setEnvVar("AZURE_TENANT_ID", await getConfigOrEnvVar(config, "AZURETENANTID", prefix))
+            setEnvVar("AZURE_CLIENT_ID", await getConfigOrEnvVar(config, "AZURECLIENTID", prefix));
+            setEnvVar("AZURE_CLIENT_SECRET", await getConfigOrEnvVar(config, "AZURECLIENTSECRET", prefix));
+            setEnvVar("AZURE_TENANT_ID", await getConfigOrEnvVar(config, "AZURETENANTID", prefix));
 
             const credential = new DefaultAzureCredential();
             if(!subscriptionId) {
@@ -96,7 +101,7 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
                 } as AzureResources;
             }
         }catch(e){
-            logger.error("error in collectAzureData with the subscription ID: " + config.SUBSCRIPTIONID??null);
+            logger.error("error in collectAzureData with the subscription ID: " + (await getConfigOrEnvVar(config, "SUBSCRIPTIONID", prefix))??null);
             logger.error(e);
         }
         resources.push(azureResource);

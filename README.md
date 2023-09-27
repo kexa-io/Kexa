@@ -60,6 +60,7 @@
     <li>
       <a href="#how-to-launch-Kexa">How to launch Kexa</a>
       <ul>
+        <li><a href="#quick-launch">Quick Launch</a></li>
         <li><a href="#local">Local</a></li>
         <li><a href="#local-docker">Local docker</a></li>
         <li><a href="#azure-function">Azure function</a></li>
@@ -292,7 +293,304 @@ This is an example of how to list things you need to use the software and how to
 <!-- How to launch -->
 ## How to launch Kexa
 
-Whichever way you want to launch Kexa, you need to go through the configuration phase. 
+Whichever way you want to launch Kexa, you need to go through the configuration phase. Except if you use a quick launch configuration, with this way you only need your credential
+
+<div id="quick-launch"></div>
+
+### Quick launch
+
+<details>
+  <summary>Which provider quick check</summary>
+  <br>
+  <p>
+    For a quick launch, we're going to use docker.
+    To do this, create a folder called "config", for example.
+    In this folder, create a "default.json" file.
+    This file will be populated according to the provider you want to test, as follows.
+  </p>
+  <ul>
+    <li>
+      <details>
+        <summary>Azure</summary>
+        default.json:  
+        ```json
+        {
+            "azure": [
+                {
+                    "name": "Project A",
+                    "prefix": "A-",
+                    "description": "Project A is a quick-launch test",
+                    "rules": [
+                        "Economy",
+                        "OperationalExcellence",
+                        "Security",
+                        "rules-testing",
+                        "Performance"
+                    ]
+                }
+            ]
+        }
+        ```
+        Then paste this command fill with your credential: 
+        ```bash
+        docker run -v Absolute/Path/To/config:/app/config /
+        -e A-AZURE_CLIENT_ID= /
+        -e A-AZURE_TENANT_ID= /
+        -e A-AZURE_CLIENT_SECRET= /
+        -e A-SUBSCRIPTIONID= /
+        innovtech/kexa
+        ```
+      </details>
+    </li>
+    <li>
+      <details>
+        <summary>AWS</summary>
+        default.json: 
+        ```
+          {
+              "aws": [
+                  {
+                      "name": "Project A",
+                      "prefix": "A-",
+                      "description": "Project A is a quick-launch test",
+                      "rules": [
+                          "Economy",
+                          "OperationalExcellence",
+                          "Security",
+                          "rules-testing",
+                          "Performance"
+                      ]
+                  }
+              ]
+          }
+        ```
+        Then paste this command fill with your credential: 
+        ```bash
+        docker run -v Absolute/Path/To/config:/app/config /
+        -e A-AWS_SECRET_NAME= /
+        -e A-AWS_REGION= /
+        -e A-AWS_ACCESS_KEY_ID= /
+        -e A-AWS_SECRET_ACCESS_KEY= /
+        innovtech/kexa
+        ```
+      </details>
+    </li>
+    <li>
+      <details>
+        <summary>GCP</summary>
+        default.json: 
+        ```
+          {
+              "gcp": [
+                  {
+                      "name": "Project A",
+                      "prefix": "A-",
+                      "description": "Project A is a quick-launch test",
+                      "rules": [
+                          "Economy",
+                          "OperationalExcellence",
+                          "Security",
+                          "rules-testing",
+                          "Performance"
+                      ]
+                  }
+              ]
+          }
+        ```
+        Then paste this command fill with your credential: 
+        ```bash
+        docker run -v Absolute/Path/To/config:/app/config /
+        -e A-GOOGLE_APPLICATION_CREDENTIALS= /
+        -e A-GOOGLE_PROJECT_ID= /
+        innovtech/kexa
+        ```
+      </details>
+    </li>
+    <li>
+      <details>
+        <summary>Github</summary>
+        default.json: 
+        ```
+          {
+              "github": [
+                  {
+                      "name": "Project A",
+                      "prefix": "A-",
+                      "description": "Project A is a quick-launch test",
+                      "rules": [
+                          "Economy",
+                          "OperationalExcellence",
+                          "Security",
+                          "rules-testing",
+                          "Performance"
+                      ]
+                  }
+              ]
+          }
+        ```
+        Then paste this command fill with your credential: 
+        ```bash
+        docker run -v Absolute/Path/To/config:/app/config /
+        -e A-GITHUBTOKEN= /
+        innovtech/kexa
+        ```
+      </details>
+    </li>
+    <li>
+      <details>
+        <summary>Google drive</summary>
+        default.json: 
+        ```
+          {
+              "googleDrive": [
+                  {
+                      "name": "Project A",
+                      "prefix": "A-",
+                      "description": "Project A is a quick-launch test",
+                      "rules": [
+                          "driveRules"
+                      ]
+                  }
+              ]
+          }
+        ```
+        Then paste this command fill with your credential: 
+        ```bash
+        docker run -v Absolute/Path/To/config:/app/config /
+        -e A-AWS_SECRET_NAME= /
+        -e A-AWS_REGION= /
+        -e A-AWS_ACCESS_KEY_ID= /
+        -e A-AWS_SECRET_ACCESS_KEY= /
+        innovtech/kexa
+        ```
+      </details>
+    </li>
+    <li>
+      <details>
+        <summary>Google Workspace</summary>
+        default.json: 
+        ```
+          {
+              "googleWorkspace": [
+                  {
+                      "name": "Project A",
+                      "prefix": "A-",
+                      "description": "Project A is a quick-launch test",
+                      "rules": [
+                          "BenchmarkWorkspace"
+                      ]
+                  }
+              ]
+          }
+        ```
+        Then paste this command fill with your credential: 
+        ```bash
+        docker run -v Absolute/Path/To/config:/app/config /
+        -e A-AWS_SECRET_NAME= /
+        -e A-AWS_REGION= /
+        -e A-AWS_ACCESS_KEY_ID= /
+        -e A-AWS_SECRET_ACCESS_KEY= /
+        innovtech/kexa
+        ```
+      </details>
+    </li>
+    <li>
+      <details>
+        <summary>API: HTTP/HTTPS</summary>
+        default.json: 
+        ```
+          {
+              "http": [
+                  {
+                      "name": "Project A",
+                      "prefix": "A-",
+                      "description": "Project A is a quick-launch test",
+                      "rules": [
+                          "HTTPRules"
+                      ]
+                  }
+              ]
+          }
+        ```
+        Then paste this command fill with your credential: 
+        ```bash
+        docker run -v Absolute/Path/To/config:/app/config /
+        -e A-AWS_SECRET_NAME= /
+        -e A-AWS_REGION= /
+        -e A-AWS_ACCESS_KEY_ID= /
+        -e A-AWS_SECRET_ACCESS_KEY= /
+        innovtech/kexa
+        ```
+      </details>
+    </li>
+    <li>
+      <details>
+        <summary>Kubernetes</summary>
+        default.json: 
+        ```
+          {
+              "kubernetes": [
+                  {
+                      "name": "Project A",
+                      "prefix": "A-",
+                      "description": "Project A is a quick-launch test",
+                      "rules": [
+                          "Economy",
+                          "OperationalExcellence",
+                          "Security",
+                          "rules-testing",
+                          "Performance"
+                      ]
+                  }
+              ]
+          }
+        ```
+        Then paste this command fill with your credential: 
+        ```bash
+        docker run -v Absolute/Path/To/config:/app/config /
+        -e A-AWS_SECRET_NAME= /
+        -e A-AWS_REGION= /
+        -e A-AWS_ACCESS_KEY_ID= /
+        -e A-AWS_SECRET_ACCESS_KEY= /
+        innovtech/kexa
+        ```
+      </details>
+    </li>
+    <li>
+      <details>
+        <summary>Office 365</summary>
+        default.json: 
+        ```
+          {
+              "o365": [
+                  {
+                      "name": "Project A",
+                      "prefix": "A-",
+                      "description": "Project A is a quick-launch test",
+                      "rules": [
+                          "Economy",
+                          "OperationalExcellence",
+                          "Security",
+                          "rules-testing",
+                          "Performance"
+                      ]
+                  }
+              ]
+          }
+        ```
+        Then paste this command fill with your credential: 
+        ```bash
+        docker run -v Absolute/Path/To/config:/app/config /
+        -e A-AWS_SECRET_NAME= /
+        -e A-AWS_REGION= /
+        -e A-AWS_ACCESS_KEY_ID= /
+        -e A-AWS_SECRET_ACCESS_KEY= /
+        innovtech/kexa
+        ```
+      </details>
+    </li>
+  </ul>
+</details>
 
 <div id="local"></div>
 

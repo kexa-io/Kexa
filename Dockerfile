@@ -11,3 +11,4 @@ COPY . .
 RUN npm run build
 
 CMD ["node", "build/index.js"]
+#CMD ["sleep","infinity"]

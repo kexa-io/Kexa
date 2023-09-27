@@ -86,8 +86,9 @@ export async function analyseRule(ruleFilePath:string, listNeedRules:string[], g
     logger.debug("analyse:"+ruleFilePath);
     try {
         const doc = (yaml.load(fs.readFileSync(ruleFilePath, 'utf8')) as SettingFile[])[0];
-        if(!listNeedRules.includes(doc?.alert?.global?.name) && !getAll){
-            logger.info("rule not needed:"+doc?.alert?.global?.name);
+        const name = ruleFilePath.split('/')[ruleFilePath.split('/').length -1].split(".")[0];
+        if(!listNeedRules.includes(name) && !getAll){
+            logger.info("rule not needed:"+name);
             return null;
         }
         let result = await checkDoc(doc);
