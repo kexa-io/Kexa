@@ -3,7 +3,7 @@ import { ObjectNameEnum } from '../../enum/objectName.enum';
 import { ProviderEnum } from '../../enum/provider.enum';
 import { ParentRules, RulesConditions } from './conditions.models';
 
-export interface  Rules {
+export interface Rules {
     name?:string;
     description?:string;
     urlDescription?:string;                         // the url to explain why we should do this or documentation

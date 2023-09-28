@@ -5,14 +5,14 @@
       enabled: true
       type: 
         - log
-        - email
+        #- email
       to: 
         - myEmail@gmail.comm
     error:
       enabled: true
       type: 
         - log
-        - email
+        #- email
         #- sms
       to:
         - myEmail@gmail.comm
@@ -20,14 +20,14 @@
       enabled: true
       type: 
         - log
-        - email
+        #- email
       to:
         - myEmail@gmail.comm
     info:
       enabled: true
       type: 
         - log
-        - email
+        #- email
       to:
         - myEmail@gmail.comm
     global:
@@ -36,7 +36,7 @@
         - log
         #- webhook
         #- sms
-        - email
+        #- email
       to: 
         #- http://127.0.0.1:5000/test
         - myEmail@gmail.comm
@@ -64,7 +64,7 @@
       description: "this rules is to check if git repo is private"
       applied: false
       level: 0
-      cloudProvider: git
+      cloudProvider: github
       objectName: repositories
       conditions:
         - property: private
@@ -74,7 +74,7 @@
       description: "this rules is to check if git branch is protected"
       applied: false
       level: 0
-      cloudProvider: git
+      cloudProvider: github
       objectName: branches
       conditions:
         - operator: NAND
@@ -179,7 +179,7 @@
       description : "this rules is to count the number of repo in a git organization"
       applied: false
       level: 0
-      cloudProvider: git
+      cloudProvider: github
       objectName : repositories
       conditions:
         - property : topics

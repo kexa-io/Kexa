@@ -1,5 +1,5 @@
 {
-    "googleWorkspace": [
+    "azure": [
         {
             "rules": [
                 "BenchmarkWorkspace"

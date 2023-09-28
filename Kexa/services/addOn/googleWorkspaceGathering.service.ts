@@ -1,5 +1,7 @@
 /*
     * Provider : googleWorkspace
+    * Thumbnail : https://lh3.googleusercontent.com/sYGCKFdty43En6yLGeV94mfNGHXfVj-bQYitHRndarB7tHmQq_kyVxhlPejeCBVEEYUbnKG2_jUzgNXoPoer6XJm71V3uz2Z6q0CmNw=w0
+    * Documentation : https://developers.google.com/workspace?hl=fr
     * Creation date : 2023-08-24
     * Note :
     * Resources :
@@ -73,9 +75,10 @@ export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[])
             "drive": null
         } as googleWorkspaceResources;
         try {
-            writeStringToJsonFile(await getConfigOrEnvVar(config, "WORKSPACECRED", googleWorkspaceConfig.indexOf(config)+"-"), path.join(process.cwd(), '/config/credentials_workspace.json'));
+            let prefix = config.prefix??(googleWorkspaceConfig.indexOf(config)+"-");
+            writeStringToJsonFile(await getConfigOrEnvVar(config, "WORKSPACECRED", prefix), path.join(process.cwd(), '/config/credentials_workspace.json'));
             if (process.env[googleWorkspaceConfig.indexOf(config)+"-WORKSPACETOKEN"])
-                writeStringToJsonFile(await getConfigOrEnvVar(config, "WORKSPACETOKEN", googleWorkspaceConfig.indexOf(config)+"-"), "./config/token_workspace.json");
+                writeStringToJsonFile(await getConfigOrEnvVar(config, "WORKSPACETOKEN", prefix), "./config/token_workspace.json");
             const auth = await authorize();
                 const promises = [
                     await listUsers(auth),

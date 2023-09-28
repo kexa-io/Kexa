@@ -62,7 +62,7 @@
           value: 0
     - name: "ec2-volume-check-create-less-2-month-expiration"
       description: "this rule is to check for a ec2 volume create date inferior than 2 months"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: aws
       objectName: ec2Volume
@@ -73,7 +73,7 @@
           date: "YYYY-MM-DDThh:mm:ss.SSSZ"
     - name: "tagsvalue-check-for-expiration-date"
       description: "this rule is to check if tags contain an expiration date (separate with \"-\")"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: tagsValue
@@ -83,7 +83,7 @@
           value: '\b\d{1,4}[-]\d{1,4}[-]\d{1,4}\b'
     - name: "o365-check-jobtitle-defined"
       description: "this rule is to check for non defined job title"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: o365
       objectName: user
@@ -93,7 +93,7 @@
           value: null
     - name: "o365-is-simple-member"
       description: "this rule is to check for simple members"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: o365
       objectName: user

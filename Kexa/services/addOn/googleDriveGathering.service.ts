@@ -1,9 +1,11 @@
 /*
-* Provider : googleDrive
-* Creation date : 2023-08-16
-* Note : 
-* Resources :
-*     - files
+    * Provider : googleDrive
+    * Thumbnail : https://icones.pro/wp-content/uploads/2022/08/logo-google-drive.png
+    * Documentation : https://developers.google.com/drive/api/reference/rest/v3?hl=fr
+    * Creation date : 2023-08-16
+    * Note : 
+    * Resources :
+    *     - files
 */
 const process = require('process');
 import { Logger } from "tslog";

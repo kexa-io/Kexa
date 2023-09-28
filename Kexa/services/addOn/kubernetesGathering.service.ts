@@ -1,5 +1,7 @@
 /*
     * Provider : kubernetes
+    * Thumbnail : https://logos-download.com/wp-content/uploads/2018/09/Kubernetes_Logo.png
+    * Documentation : https://github.com/kubernetes-client/javascript
     * Creation date : 2023-08-14
     * Note : 
     * Resources :

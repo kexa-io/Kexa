@@ -1,5 +1,7 @@
 /*
     * Provider : http
+    * Thumbnail : https://cdn-icons-png.flaticon.com/512/2165/2165004.png
+    * Documentation : https://developer.mozilla.org/fr/docs/Web/HTTP
     * Creation date : 2023-08-14
     * Note : 
     * Resources :

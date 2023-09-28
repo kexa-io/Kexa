@@ -52,7 +52,7 @@
   rules:
     - name: NSG-subnet
       description : "check if NSG have a valid subnet"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName : aks
@@ -62,7 +62,7 @@
           value: 2
     - name: "Git repo check"
       description: "this rules is to check if git repo is private"
-      applied: false
+      applied: true
       level: 0
       cloudProvider: github
       objectName: repositories
@@ -72,7 +72,7 @@
           value: true
     - name: "Git_branch_protect"
       description: "this rules is to check if git branch is protected"
-      applied: false
+      applied: true
       level: 0
       cloudProvider: github
       objectName: branches
@@ -87,7 +87,7 @@
               value : master
     - name: "ec2-security-groups-source-defined"
       description: "this rule is to check if a ec2 SG has a defined source (not 0.0.0.0)"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: ec2SG
@@ -113,7 +113,7 @@
           value: null
     - name: "o365-is-mfa-activated-on-user"
       description: "check if at least 2 auth factors are active"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: o365
       objectName: auth_methods

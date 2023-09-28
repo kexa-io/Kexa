@@ -37,7 +37,6 @@
         #- webhook
         #- sms
         #- email
-      name: BenchmarkWorkspace
       to: 
         #- http://127.0.0.1:5000/test
         - myEmail@gmail.com
@@ -53,7 +52,7 @@
   rules:
     - name: "workspace-user-mfa-activated"
       description: "verify if mfa is activated on user account"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: googleWorkspace
       objectName: user
@@ -63,7 +62,7 @@
           value: true
     - name: "workspace-user-mfa-enforced"
       description: "verify if mfa is enforced for user account"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: googleWorkspace
       objectName: user
@@ -73,7 +72,7 @@
           value: true
     - name: "workspace-user-change-passwd-next-login"
       description: "verify if there is at least one super admin for OU"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: googleWorkspace
       objectName: user
@@ -83,7 +82,7 @@
           value: true
     - name: "workspace-at-least-one-super-admin"
       description: "verify if there is at least one super admin for OU"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: googleWorkspace
       objectName: user

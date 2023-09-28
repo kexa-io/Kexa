@@ -1,0 +1,988 @@
+{
+    "aws": {
+        "resources": [
+            "ec2Instance",
+            "ec2SG",
+            "ec2Volume",
+            "rds",
+            "resourceGroup",
+            "tagsValue",
+            "ecsCluster",
+            "ecrRepository"
+        ],
+        "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/1024px-Amazon_Web_Services_Logo.svg.png",
+        "documentation": "https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/welcome.html",
+        "freeRules": [
+            {
+                "name": "aws-ec2-volume-unattached",
+                "description": "this rule is to check if an ec2 volume is unattached",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "aws",
+                "objectName": "ec2Volume",
+                "conditions": [
+                    {
+                        "property": "Attachments",
+                        "condition": "COUNT_SUP",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "name": "ec2-volume-check-create-less-2-month-expiration",
+                "description": "this rule is to check for a ec2 volume create date inferior than 2 months",
+                "applied": true,
+                "level": 2,
+                "cloudProvider": "aws",
+                "objectName": "ec2Volume",
+                "conditions": [
+                    {
+                        "property": "CreateTime",
+                        "condition": "DATE_INF",
+                        "value": "0 0 0 0 0 2 0",
+                        "date": "YYYY-MM-DDThh:mm:ss.SSSZ"
+                    }
+                ]
+            },
+            {
+                "name": "tagsvalue-check-for-expiration-date",
+                "description": "this rule is to check if tags contain an expiration date (separate with \"-\")",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "aws",
+                "objectName": "tagsValue",
+                "conditions": [
+                    {
+                        "property": "name",
+                        "condition": "REGEX",
+                        "value": "\\b\\d{1,4}[-]\\d{1,4}[-]\\d{1,4}\\b"
+                    }
+                ]
+            },
+            {
+                "name": "ec2-security-groups-source-defined",
+                "description": "this rule is to check if a ec2 SG has a defined source (not 0.0.0.0)",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "aws",
+                "objectName": "ec2SG",
+                "conditions": [
+                    {
+                        "property": "IpPermissions",
+                        "condition": "ALL",
+                        "value": [
+                            {
+                                "property": "IpRanges",
+                                "condition": "ALL",
+                                "value": [
+                                    {
+                                        "property": "CidrIp",
+                                        "condition": "DIFFERENT",
+                                        "value": "0.0.0.0/0"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "aws-ec2-public-ip-address",
+                "description": "this rule is to check if an ec2 ip address is public",
+                "applied": true,
+                "level": 2,
+                "cloudProvider": "aws",
+                "objectName": "ec2Instance",
+                "conditions": [
+                    {
+                        "property": "PublicIpAddress",
+                        "condition": "EQUAL",
+                        "value": null
+                    }
+                ]
+            }
+        ]
+    },
+    "azure": {
+        "resources": [
+            "vm",
+            "rg",
+            "disk",
+            "nsg",
+            "virtualNetwork",
+            "networkInterfaces",
+            "aks"
+        ],
+        "thumbnail": "https://cdn.icon-icons.com/icons2/2699/PNG/512/microsoft_azure_logo_icon_168977.png",
+        "documentation": "https://learn.microsoft.com/fr-fr/javascript/api/overview/azure/?view=azure-node-latest",
+        "freeRules": [
+            {
+                "name": "VM-Reservation",
+                "description": "check if VM have a reservation",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "azure",
+                "objectName": "vm",
+                "conditions": [
+                    {
+                        "property": "priority",
+                        "condition": "REGEX",
+                        "value": "(?i)reservation"
+                    }
+                ]
+            },
+            {
+                "name": "azure-disk-orphan",
+                "description": "this rules is to check if disk is orphan",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "disk",
+                "conditions": [
+                    {
+                        "property": "diskState",
+                        "condition": "DIFFERENT",
+                        "value": "Unattached"
+                    }
+                ]
+            },
+            {
+                "name": "aks-scaleSet",
+                "description": "check if aks have a scaleSet",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "azure",
+                "objectName": "aks",
+                "conditions": [
+                    {
+                        "property": "agentPoolProfiles",
+                        "condition": "ALL",
+                        "value": [
+                            {
+                                "property": "scaleSetEvictionPolicy",
+                                "condition": "EQUAL",
+                                "value": "Delete"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Orphan nsg",
+                "description": "this rules is to check if nsg is orphan",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "nsg",
+                "conditions": [
+                    {
+                        "property": "networkInterfaces",
+                        "condition": "COUNT_SUP_OR_EQUAL",
+                        "value": 1
+                    }
+                ]
+            },
+            {
+                "name": "Orphan virtualNetwork",
+                "description": "this rules is to check if virtualNetwork is orphan",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "virtualNetwork",
+                "conditions": [
+                    {
+                        "property": "subnets",
+                        "condition": "COUNT_SUP_OR_EQUAL",
+                        "value": 1
+                    }
+                ]
+            },
+            {
+                "name": "VirtualNetwork-subnet-count",
+                "description": "check if NSG have a minimum of subnets",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "virtualNetwork",
+                "conditions": [
+                    {
+                        "property": "subnets",
+                        "condition": "COUNT_SUP",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "name": "aks-scaleSet",
+                "description": "check if aks have a scaleSet down",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "azure",
+                "objectName": "aks",
+                "conditions": [
+                    {
+                        "property": "agentPoolProfiles",
+                        "condition": "ALL",
+                        "value": [
+                            {
+                                "property": "scaleSetEvictionPolicy",
+                                "condition": "EQUAL",
+                                "value": "Delete"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "NSG-subnet",
+                "description": "check if NSG have a valid subnet",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "aks",
+                "conditions": [
+                    {
+                        "property": "agentPoolProfiles",
+                        "condition": "COUNT",
+                        "value": 2
+                    }
+                ]
+            },
+            {
+                "name": "azure-disk-orphan",
+                "description": "this rules is to check if disk is orphan",
+                "applied": false,
+                "level": 2,
+                "cloudProvider": "azure",
+                "objectName": "disk",
+                "conditions": [
+                    {
+                        "property": "diskState",
+                        "condition": "DIFFERENT",
+                        "value": "Unattached"
+                    }
+                ]
+            },
+            {
+                "name": "check-aks-cluster",
+                "description": "this rules is to check if aks cluster are conform to the norms",
+                "applied": false,
+                "level": 2,
+                "cloudProvider": "azure",
+                "objectName": "aks",
+                "conditions": [
+                    {
+                        "property": "tags.environment",
+                        "condition": "REGEX",
+                        "value": "^(DEV|NPR|PROD)$"
+                    },
+                    {
+                        "property": "tags.author",
+                        "condition": "DIFFERENT",
+                        "value": null
+                    },
+                    {
+                        "property": "tags.billing",
+                        "condition": "REGEX",
+                        "value": "^(VADOR|YODA|LUKE)$"
+                    },
+                    {
+                        "property": "sku.tier",
+                        "condition": "EQUAL",
+                        "value": "Free"
+                    },
+                    {
+                        "property": "publicNetworkAccess",
+                        "condition": "EQUAL",
+                        "value": "Enable"
+                    },
+                    {
+                        "property": "autoScalerProfile.scaleDownDelayAfterAdd",
+                        "condition": "DIFFERENT",
+                        "value": null
+                    }
+                ]
+            },
+            {
+                "name": "azure-disk not public or encrypted",
+                "description": "this rules is to check if disk is either not public or encrypted by default",
+                "applied": false,
+                "level": 2,
+                "cloudProvider": "azure",
+                "objectName": "disk",
+                "conditions": [
+                    {
+                        "operator": "OR",
+                        "rules": [
+                            {
+                                "property": "networkAccessPolicy",
+                                "condition": "DIFFERENT",
+                                "value": "AllowAll"
+                            },
+                            {
+                                "property": "encryption.type",
+                                "condition": "EQUAL",
+                                "value": "EncryptionAtRestWithPlatformKey"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "test-all-onList",
+                "description": "this rules is to test the onList function",
+                "applied": false,
+                "level": 0,
+                "cloudProvider": "azure",
+                "objectName": "aks",
+                "conditions": [
+                    {
+                        "property": "agentPoolProfiles",
+                        "condition": "ALL",
+                        "value": [
+                            {
+                                "property": "osDiskSizeGB",
+                                "condition": "EQUAL",
+                                "value": 128
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "test-some-onList",
+                "description": "this rules is to test the onList function",
+                "applied": false,
+                "level": 0,
+                "cloudProvider": "azure",
+                "objectName": "aks",
+                "conditions": [
+                    {
+                        "property": "agentPoolProfiles",
+                        "condition": "SOME",
+                        "value": [
+                            {
+                                "property": "vmSize",
+                                "condition": "EQUAL",
+                                "value": "Standard_B4ms"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "test-count-onList",
+                "description": "this rules is to test the onList function",
+                "applied": false,
+                "level": 0,
+                "cloudProvider": "azure",
+                "objectName": "aks",
+                "conditions": [
+                    {
+                        "property": "agentPoolProfiles",
+                        "condition": "COUNT",
+                        "value": 2
+                    }
+                ]
+            }
+        ]
+    },
+    "gcp": {
+        "resources": [
+            "tasks_queue",
+            "compute",
+            "storage",
+            "project",
+            "billingAccount",
+            "cluster",
+            "workflows",
+            "websecurity",
+            "connector",
+            "vmware",
+            "namespace",
+            "certificate",
+            "secret",
+            "connectivity_test",
+            "resource_settings",
+            "redis_instance",
+            "os_config",
+            "org_policy_constraint",
+            "airflow_image_version",
+            "disk",
+            "compute_item"
+        ],
+        "thumbnail": "https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-dsc/events/google-cloud-square.png",
+        "documentation": "https://cloud.google.com/nodejs/docs/reference",
+        "freeRules": [
+            {
+                "name": "gcp-disk-check-create-date-2-month-expiration",
+                "description": "this rule is to check for a persistent disk create date is inferior than 2 months ago",
+                "applied": true,
+                "level": 2,
+                "cloudProvider": "gcp",
+                "objectName": "disk",
+                "conditions": [
+                    {
+                        "property": "creationTimestamp",
+                        "condition": "DATE_INF",
+                        "value": "0 0 0 2 0 0 0",
+                        "date": "YYYY-MM-DDThh:mm:ss.SSSZ"
+                    }
+                ]
+            }
+        ]
+    },
+    "github": {
+        "resources": [
+            "repositories",
+            "branches",
+            "issues"
+        ],
+        "thumbnail": "https://1000logos.net/wp-content/uploads/2021/05/GitHub-logo-768x432.png",
+        "documentation": "https://docs.github.com/en/rest?apiVersion=2022-11-28",
+        "freeRules": [
+            {
+                "name": "Git repo check",
+                "description": "this rules is to check if git repo is private",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "github",
+                "objectName": "repositories",
+                "conditions": [
+                    {
+                        "property": "private",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "Git_branch_protect",
+                "description": "this rules is to check if git branch is protected",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "github",
+                "objectName": "branches",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "rules": [
+                            {
+                                "property": "protected",
+                                "condition": "DIFFERENT",
+                                "value": true
+                            },
+                            {
+                                "property": "name",
+                                "condition": "EQUAL",
+                                "value": "master"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Git repo check",
+                "description": "this rules is to check if git repo is private",
+                "applied": false,
+                "level": 0,
+                "cloudProvider": "github",
+                "objectName": "repositories",
+                "conditions": [
+                    {
+                        "property": "private",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "Git_branch_protect",
+                "description": "this rules is to check if git branch is protected",
+                "applied": false,
+                "level": 0,
+                "cloudProvider": "github",
+                "objectName": "branches",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "rules": [
+                            {
+                                "property": "protected",
+                                "condition": "DIFFERENT",
+                                "value": true
+                            },
+                            {
+                                "property": "name",
+                                "condition": "EQUAL",
+                                "value": "master"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "count-repo",
+                "description": "this rules is to count the number of repo in a git organization",
+                "applied": false,
+                "level": 0,
+                "cloudProvider": "github",
+                "objectName": "repositories",
+                "conditions": [
+                    {
+                        "property": "topics",
+                        "condition": "COUNT",
+                        "value": 0
+                    }
+                ]
+            }
+        ]
+    },
+    "googleDrive": {
+        "resources": [
+            "files"
+        ],
+        "thumbnail": "https://icones.pro/wp-content/uploads/2022/08/logo-google-drive.png",
+        "documentation": "https://developers.google.com/drive/api/reference/rest/v3?hl=fr",
+        "freeRules": [
+            {
+                "name": "check drive files name",
+                "description": "check drive files name",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "googleDrive",
+                "objectName": "files",
+                "conditions": [
+                    {
+                        "property": "name",
+                        "condition": "REGEX",
+                        "value": "/^(PUBLIC|PRIVATE)\\s[A-Za-z]+/"
+                    }
+                ]
+            },
+            {
+                "name": "check drive files stay private",
+                "description": "check drive files name private",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "googleDrive",
+                "objectName": "files",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "rules": [
+                            {
+                                "property": "shared",
+                                "condition": "DIFFERENT",
+                                "value": false
+                            },
+                            {
+                                "property": "name",
+                                "condition": "REGEX",
+                                "value": "/PRIVATE\\s[A-Za-z]+/"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "shared only by domaine",
+                "description": "shared only by domaine",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "googleDrive",
+                "objectName": "files",
+                "conditions": [
+                    {
+                        "property": "permissions",
+                        "condition": "ALL",
+                        "value": [
+                            {
+                                "operator": "NAND",
+                                "rules": [
+                                    {
+                                        "property": "type",
+                                        "condition": "EQUAL",
+                                        "value": "user"
+                                    },
+                                    {
+                                        "property": "role",
+                                        "condition": "DIFFERENT",
+                                        "value": "owner"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "googleWorkspace": {
+        "resources": [
+            "user",
+            "domain",
+            "group",
+            "role",
+            "orgaunit",
+            "calendar",
+            "file",
+            "drive"
+        ],
+        "thumbnail": "https://lh3.googleusercontent.com/sYGCKFdty43En6yLGeV94mfNGHXfVj-bQYitHRndarB7tHmQq_kyVxhlPejeCBVEEYUbnKG2_jUzgNXoPoer6XJm71V3uz2Z6q0CmNw=w0",
+        "documentation": "https://developers.google.com/workspace?hl=fr",
+        "freeRules": [
+            {
+                "name": "workspace-user-mfa-activated",
+                "description": "verify if mfa is activated on user account",
+                "applied": true,
+                "level": 2,
+                "cloudProvider": "googleWorkspace",
+                "objectName": "user",
+                "conditions": [
+                    {
+                        "property": "isEnrolledIn2Sv",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "workspace-user-mfa-enforced",
+                "description": "verify if mfa is enforced for user account",
+                "applied": true,
+                "level": 2,
+                "cloudProvider": "googleWorkspace",
+                "objectName": "user",
+                "conditions": [
+                    {
+                        "property": "isEnforcedIn2Sv",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "workspace-user-change-passwd-next-login",
+                "description": "verify if there is at least one super admin for OU",
+                "applied": true,
+                "level": 2,
+                "cloudProvider": "googleWorkspace",
+                "objectName": "user",
+                "conditions": [
+                    {
+                        "property": "changePasswordAtNextLogin",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "workspace-at-least-one-super-admin",
+                "description": "verify if there is at least one super admin for OU",
+                "applied": true,
+                "level": 2,
+                "cloudProvider": "googleWorkspace",
+                "objectName": "user",
+                "conditions": [
+                    {
+                        "property": "totalSuperAdmin",
+                        "condition": "SUP_OR_EQUAL",
+                        "value": 1
+                    }
+                ]
+            },
+            {
+                "name": "workspace-no-more-than-four-super-admin",
+                "description": "verify if there is no more than four super admin for OU",
+                "applied": true,
+                "level": 2,
+                "cloudProvider": "googleWorkspace",
+                "objectName": "user",
+                "conditions": [
+                    {
+                        "property": "totalSuperAdmin",
+                        "condition": "INF_OR_EQUAL",
+                        "value": 4
+                    }
+                ]
+            }
+        ]
+    },
+    "http": {
+        "resources": [
+            "request"
+        ],
+        "thumbnail": "https://cdn-icons-png.flaticon.com/512/2165/2165004.png",
+        "documentation": "https://developer.mozilla.org/fr/docs/Web/HTTP",
+        "freeRules": [
+            {
+                "name": "http request code",
+                "description": "code check",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "http",
+                "objectName": "request",
+                "conditions": [
+                    {
+                        "operator": "OR",
+                        "rules": [
+                            {
+                                "property": "code",
+                                "condition": "EQUAL",
+                                "value": 200
+                            },
+                            {
+                                "property": "code",
+                                "condition": "EQUAL",
+                                "value": 201
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "http request date in body",
+                "description": "date check",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "http",
+                "objectName": "request",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "rules": [
+                            {
+                                "property": "body.date",
+                                "condition": "DATE_INF_OR_EQUAL",
+                                "value": "0 0 0 0 0 0",
+                                "date": "YYYY-MM-DDThh:mm:ss.SSSZ"
+                            },
+                            {
+                                "operator": "OR",
+                                "rules": [
+                                    {
+                                        "property": "code",
+                                        "condition": "EQUAL",
+                                        "value": 200
+                                    },
+                                    {
+                                        "property": "code",
+                                        "condition": "EQUAL",
+                                        "value": 201
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "http request certificate",
+                "description": "certificate check",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "http",
+                "objectName": "request",
+                "conditions": [
+                    {
+                        "property": "certificate.issuer.CN",
+                        "condition": "EQUAL",
+                        "value": "Kubernetes Ingress Controller Fake Certificate"
+                    }
+                ]
+            },
+            {
+                "name": "http request header",
+                "description": "header check",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "http",
+                "objectName": "request",
+                "conditions": [
+                    {
+                        "property": "headers.content-type",
+                        "condition": "INCLUDE",
+                        "value": "application/json"
+                    }
+                ]
+            }
+        ]
+    },
+    "kubernetes": {
+        "resources": [
+            "namespaces",
+            "pods",
+            "helm"
+        ],
+        "thumbnail": "https://logos-download.com/wp-content/uploads/2018/09/Kubernetes_Logo.png",
+        "documentation": "https://github.com/kubernetes-client/javascript",
+        "freeRules": [
+            {
+                "name": "namespace-exist-dev-cloudprices-apiclient",
+                "description": "this rules is to check if namespace exist and notifiable if exist",
+                "applied": false,
+                "level": 0,
+                "cloudProvider": "kubernetes",
+                "objectName": "namespaces",
+                "conditions": [
+                    {
+                        "property": "metadata.name",
+                        "condition": "DIFFERENT",
+                        "value": "dev-cloudprices-apiclient"
+                    }
+                ]
+            },
+            {
+                "name": "all-pods-running-thecloudprices-manorga",
+                "description": "this rules is to check if all pods are running for a namespace",
+                "applied": false,
+                "level": 2,
+                "cloudProvider": "kubernetes",
+                "objectName": "pods",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "rules": [
+                            {
+                                "property": "status.phase",
+                                "condition": "DIFFERENT",
+                                "value": "Running"
+                            },
+                            {
+                                "property": "metadata.namespace",
+                                "condition": "EQUAL",
+                                "value": "thecloudprices-manorga"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "all-pods-not-running",
+                "description": "this rules is to be notifiable if pods are not running",
+                "applied": false,
+                "level": 2,
+                "cloudProvider": "kubernetes",
+                "objectName": "pods",
+                "conditions": [
+                    {
+                        "operator": "OR",
+                        "rules": [
+                            {
+                                "property": "status.phase",
+                                "condition": "EQUAL",
+                                "value": "Running"
+                            },
+                            {
+                                "property": "status.phase",
+                                "condition": "EQUAL",
+                                "value": "Succeeded"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "all-my-helm-is-deploy",
+                "description": "this rules is to check if some helm are not deployed",
+                "applied": false,
+                "level": 2,
+                "cloudProvider": "kubernetes",
+                "objectName": "helm",
+                "conditions": [
+                    {
+                        "property": "status",
+                        "condition": "EQUAL",
+                        "value": "deployed"
+                    }
+                ]
+            }
+        ]
+    },
+    "o365": {
+        "resources": [
+            "sku",
+            "user",
+            "domain",
+            "secure_score",
+            "auth_methods",
+            "organization",
+            "directory",
+            "sp",
+            "alert",
+            "incident",
+            "app_access_policy"
+        ],
+        "thumbnail": "https://www.logo.wine/a/logo/Office_365/Office_365-Logo.wine.svg",
+        "documentation": "https://learn.microsoft.com/en-us/graph/api/overview?view=graph-rest-1.0",
+        "freeRules": [
+            {
+                "name": "o365-is-skus-not-used",
+                "description": "this rule is if a subscribed sku is not being used",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "o365",
+                "objectName": "sku",
+                "conditions": [
+                    {
+                        "property": "consumedUnits",
+                        "condition": "SUP",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "name": "o365-check-jobtitle-defined",
+                "description": "this rule is to check for non defined job title",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "o365",
+                "objectName": "user",
+                "conditions": [
+                    {
+                        "property": "jobTitle",
+                        "condition": "DIFFERENT",
+                        "value": null
+                    }
+                ]
+            },
+            {
+                "name": "o365-is-simple-member",
+                "description": "this rule is to check for simple members",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "o365",
+                "objectName": "user",
+                "conditions": [
+                    {
+                        "property": "userType",
+                        "condition": "EQUAL",
+                        "value": "Member"
+                    }
+                ]
+            },
+            {
+                "name": "o365-is-mfa-activated-on-user",
+                "description": "check if at least 2 auth factors are active",
+                "applied": true,
+                "level": 2,
+                "cloudProvider": "o365",
+                "objectName": "auth_methods",
+                "conditions": [
+                    {
+                        "property": "methods",
+                        "condition": "ONE",
+                        "value": [
+                            {
+                                "property": "dataType",
+                                "condition": "EQUAL",
+                                "value": "#microsoft.graph.microsoftAuthenticatorAuthenticationMethod"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

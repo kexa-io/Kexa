@@ -1,5 +1,7 @@
 /*
     * Provider : github
+    * Thumbnail : https://1000logos.net/wp-content/uploads/2021/05/GitHub-logo-768x432.png
+    * Documentation : https://docs.github.com/en/rest?apiVersion=2022-11-28
     * Creation date : 2023-08-14
     * Note : 
     * Resources :
