@@ -1,5 +1,7 @@
 /*
     * Provider : azure
+    * Thumbnail : https://www.google.com/url?sa=i&url=https%3A%2F%2Ficon-icons.com%2Ffr%2Ficone%2Fmicrosoft-azure-logo%2F168977&psig=AOvVaw1dOVdNoggepX1w2oEahCWr&ust=1695803254377000&source=images&cd=vfe&opi=89978449&ved=0CA4QjRxqFwoTCKD43sbtx4EDFQAAAAAdAAAAABAE
+    * Documentation : https://learn.microsoft.com/fr-fr/javascript/api/overview/azure/?view=azure-node-latest
     * Creation date : 2023-08-14
     * Note : 
     * Resources :
@@ -51,12 +53,17 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
             "networkInterfaces": null,
             "aks": null,
         } as AzureResources;
+        logger.debug("config: ");
+        logger.debug(JSON.stringify(config));
+        let prefix = config.prefix??(azureConfig.indexOf(config)+"-");
         try{
-            let prefix = config.prefix??(azureConfig.indexOf(config)+"-");
+            logger.debug("prefix: "+prefix);
+            logger.debug("process: ");
+            logger.debug(JSON.stringify(process.env));
             let subscriptionId = await getConfigOrEnvVar(config, "SUBSCRIPTIONID", prefix);
-            setEnvVar("AZURE_CLIENT_ID", await getConfigOrEnvVar(config, "AZURECLIENTID", prefix))
-            setEnvVar("AZURE_CLIENT_SECRET", await getConfigOrEnvVar(config, "AZURECLIENTSECRET", prefix))
-            setEnvVar("AZURE_TENANT_ID", await getConfigOrEnvVar(config, "AZURETENANTID", prefix))
+            setEnvVar("AZURE_CLIENT_ID", await getConfigOrEnvVar(config, "AZURECLIENTID", prefix));
+            setEnvVar("AZURE_CLIENT_SECRET", await getConfigOrEnvVar(config, "AZURECLIENTSECRET", prefix));
+            setEnvVar("AZURE_TENANT_ID", await getConfigOrEnvVar(config, "AZURETENANTID", prefix));
 
             const credential = new DefaultAzureCredential();
             if(!subscriptionId) {
@@ -94,7 +101,7 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
                 } as AzureResources;
             }
         }catch(e){
-            logger.error("error in collectAzureData with the subscription ID: " + config.SUBSCRIPTIONID??null);
+            logger.error("error in collectAzureData with the subscription ID: " + (await getConfigOrEnvVar(config, "SUBSCRIPTIONID", prefix))??null);
             logger.error(e);
         }
         resources.push(azureResource);
@@ -104,7 +111,7 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
 
 //get service principal key information
 export async function getSPKeyInformation(credential: DefaultAzureCredential, subscriptionId: string): Promise<any> {
-   const { GraphRbacManagementClient } = require("@azure/graph");
+    const { GraphRbacManagementClient } = require("@azure/graph");
     logger.info("starting getSPKeyInformation");
     try {
         const client = new GraphRbacManagementClient(credential,subscriptionId);
@@ -117,7 +124,6 @@ export async function getSPKeyInformation(credential: DefaultAzureCredential, su
         logger.error("error in getSPKeyInformation:"+err);
         return null;
     }
-   return null;
 }
 
 //ip list

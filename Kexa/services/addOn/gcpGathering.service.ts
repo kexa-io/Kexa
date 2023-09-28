@@ -1,5 +1,7 @@
 /*
     * Provider : gcp
+    * Thumbnail : https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-dsc/events/google-cloud-square.png
+    * Documentation : https://cloud.google.com/nodejs/docs/reference
     * Creation date : 2023-08-14
     * Note : 
     * Resources :

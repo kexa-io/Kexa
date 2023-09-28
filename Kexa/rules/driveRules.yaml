@@ -54,7 +54,7 @@
       description : "check drive files name"
       applied: true
       level: 0
-      cloudProvider: drive
+      cloudProvider: googleDrive
       objectName : files
       conditions:
         - property: name
@@ -64,7 +64,7 @@
       description : "check drive files name private"
       applied: true
       level: 0
-      cloudProvider: drive
+      cloudProvider: googleDrive
       objectName : files
       conditions:
         - operator: NAND
@@ -79,7 +79,7 @@
       description : "shared only by domaine"
       applied: true
       level: 0
-      cloudProvider: drive
+      cloudProvider: googleDrive
       objectName : files
       conditions:
         - property : permissions

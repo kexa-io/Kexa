@@ -30,6 +30,20 @@ jobs:
       - name: Run tests
         run: npm run test
 
+      - name: Run extract Addon
+        run: npm run update
+      
+      - name: commit changes
+        uses: EndBug/add-and-commit@v4
+        with:
+          author_name: estebanmathia
+          author_email: esteban.mathia@supinfo.com
+          force: false
+          signoff: false
+          message: 'add info extract from addon'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
       - name: Git Version
         id: versionning
         uses: codacy/git-version@2.8.0

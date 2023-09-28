@@ -1,5 +1,4 @@
 import { LevelEnum } from './../enum/level.enum';
-import { Logger } from "tslog";
 import fs from "fs";
 import yaml from "js-yaml";
 import { SettingFile } from "../models/settingFile/settingFile.models";
@@ -19,7 +18,6 @@ import moment, { Moment, unitOfTime } from 'moment';
 import { BeHaviorEnum } from '../enum/beHavior.enum';
 import { writeStringToJsonFile } from '../helpers/files';
 import { extractHeaders } from './addOn.service';
-import {DebugEnum} from "../enum/debug.enum";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -48,7 +46,7 @@ export async function gatheringRules(rulesDirectory:string, getAll:boolean=false
     let listNeedRules = getListNeedRules();
     for(const p of paths) {
         logger.debug("getting "+rulesDirectory+"/"+p.name+" rules.");
-        let setting = await analyseRule(rulesDirectory+"/"+p.name, listNeedRules, true);
+        let setting = await analyseRule(rulesDirectory+"/"+p.name, listNeedRules, getAll);
         if(setting){
             setting.alert.global.name = p.name.split(".")[0];
             settingFileList.push(setting);
@@ -60,7 +58,7 @@ export async function gatheringRules(rulesDirectory:string, getAll:boolean=false
     return settingFileList;
 }
 
-function extractAddOnNeed(settingFileList: SettingFile[]){
+export function extractAddOnNeed(settingFileList: SettingFile[]){
     let providerList = new Array<string>();
     settingFileList.forEach((ruleFile) => {
         ruleFile.rules.forEach((rule) => {
@@ -88,8 +86,9 @@ export async function analyseRule(ruleFilePath:string, listNeedRules:string[], g
     logger.debug("analyse:"+ruleFilePath);
     try {
         const doc = (yaml.load(fs.readFileSync(ruleFilePath, 'utf8')) as SettingFile[])[0];
-        if(!listNeedRules.includes(doc?.alert?.global?.name) && !getAll){
-            logger.info("rule not needed:"+doc?.alert?.global?.name);
+        const name = ruleFilePath.split('/')[ruleFilePath.split('/').length -1].split(".")[0];
+        if(!listNeedRules.includes(name) && !getAll){
+            logger.info("rule not needed:"+name);
             return null;
         }
         let result = await checkDoc(doc);
@@ -214,7 +213,7 @@ export function checkDocRules(rules:Rules[]): string[] {
         if(!rule.hasOwnProperty("cloudProvider")) result.push("error - cloudProvider not found in rule");
         else if(!Object.keys(headers).includes(rule.cloudProvider)) result.push("error - cloudProvider not valid in rule : "+rule.cloudProvider + "\nYou have to add this addOn to validate the rules");
         if(!rule.hasOwnProperty("objectName")) result.push("error - objectName not found in rule");
-        else if(!headers[rule.cloudProvider]?.includes(rule.objectName)) result.push("error - objectName not valid in rule : "+rule.objectName+ "\nYou have to verify your addOn gathering data about it");
+        else if(!Object.keys(headers).includes(rule.cloudProvider) || !headers[rule.cloudProvider]["resources"]?.includes(rule.objectName)) result.push("error - objectName not valid in rule : "+rule.objectName+ "\nYou have to verify your addOn gathering data about it");
         if(!rule.hasOwnProperty("conditions")) result.push("error - conditions not found in rule");
         else {
             if (rule.conditions.length === 0) result.push("error - conditions empty in rule");
