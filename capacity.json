@@ -10,8 +10,8 @@
             "ecsCluster",
             "ecrRepository"
         ],
-        "thumbnail": "https//www.google.com/url?sa=i&url=https%3A%2F%2Ffr.m.wikipedia.org%2Fwiki%2FFichier%3AAmazon_Web_Services_Logo.svg&psig=AOvVaw1PNMynGWr6JYuGp35gxWSJ&ust=1695803344578000&source=images&cd=vfe&opi=89978449&ved=0CA4QjRxqFwoTCMinufHtx4EDFQAAAAAdAAAAABAR",
-        "documentation": "https//docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/welcome.html",
+        "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/1024px-Amazon_Web_Services_Logo.svg.png",
+        "documentation": "https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/welcome.html",
         "freeRules": [
             {
                 "name": "aws-ec2-volume-unattached",
@@ -113,8 +113,8 @@
             "networkInterfaces",
             "aks"
         ],
-        "thumbnail": "https//www.google.com/url?sa=i&url=https%3A%2F%2Ficon-icons.com%2Ffr%2Ficone%2Fmicrosoft-azure-logo%2F168977&psig=AOvVaw1dOVdNoggepX1w2oEahCWr&ust=1695803254377000&source=images&cd=vfe&opi=89978449&ved=0CA4QjRxqFwoTCKD43sbtx4EDFQAAAAAdAAAAABAE",
-        "documentation": "https//learn.microsoft.com/fr-fr/javascript/api/overview/azure/?view=azure-node-latest",
+        "thumbnail": "https://cdn.icon-icons.com/icons2/2699/PNG/512/microsoft_azure_logo_icon_168977.png",
+        "documentation": "https://learn.microsoft.com/fr-fr/javascript/api/overview/azure/?view=azure-node-latest",
         "freeRules": [
             {
                 "name": "VM-Reservation",
@@ -230,21 +230,6 @@
                                 "value": "Delete"
                             }
                         ]
-                    }
-                ]
-            },
-            {
-                "name": "NSG-subnet",
-                "description": "check if NSG have a valid subnet",
-                "applied": true,
-                "level": 1,
-                "cloudProvider": "azure",
-                "objectName": "aks",
-                "conditions": [
-                    {
-                        "property": "agentPoolProfiles",
-                        "condition": "COUNT",
-                        "value": 2
                     }
                 ]
             },
@@ -384,6 +369,21 @@
                         "value": 2
                     }
                 ]
+            },
+            {
+                "name": "NSG-subnet",
+                "description": "check if NSG have a valid subnet",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "aks",
+                "conditions": [
+                    {
+                        "property": "agentPoolProfiles",
+                        "condition": "COUNT",
+                        "value": 2
+                    }
+                ]
             }
         ]
     },
@@ -411,8 +411,8 @@
             "disk",
             "compute_item"
         ],
-        "thumbnail": "https//res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,q_autogood/v1/gcs/platform-data-dsc/events/google-cloud-square.png",
-        "documentation": "https//cloud.google.com/nodejs/docs/reference",
+        "thumbnail": "https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-dsc/events/google-cloud-square.png",
+        "documentation": "https://cloud.google.com/nodejs/docs/reference",
         "freeRules": [
             {
                 "name": "gcp-disk-check-create-date-2-month-expiration",
@@ -438,49 +438,9 @@
             "branches",
             "issues"
         ],
-        "thumbnail": "https//www.google.com/url?sa=i&url=https%3A%2F%2F1000logos.net%2Fgithub-logo%2F&psig=AOvVaw3BxGP9QmjIVtP2wSPtAl58&ust=1695803448120000&source=images&cd=vfe&opi=89978449&ved=0CA4QjRxqFwoTCLDy4KLux4EDFQAAAAAdAAAAABAE",
-        "documentation": "https//docs.github.com/en/rest?apiVersion=2022-11-28",
+        "thumbnail": "https://1000logos.net/wp-content/uploads/2021/05/GitHub-logo-768x432.png",
+        "documentation": "https://docs.github.com/en/rest?apiVersion=2022-11-28",
         "freeRules": [
-            {
-                "name": "Git repo check",
-                "description": "this rules is to check if git repo is private",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "github",
-                "objectName": "repositories",
-                "conditions": [
-                    {
-                        "property": "private",
-                        "condition": "EQUAL",
-                        "value": true
-                    }
-                ]
-            },
-            {
-                "name": "Git_branch_protect",
-                "description": "this rules is to check if git branch is protected",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "github",
-                "objectName": "branches",
-                "conditions": [
-                    {
-                        "operator": "NAND",
-                        "rules": [
-                            {
-                                "property": "protected",
-                                "condition": "DIFFERENT",
-                                "value": true
-                            },
-                            {
-                                "property": "name",
-                                "condition": "EQUAL",
-                                "value": "master"
-                            }
-                        ]
-                    }
-                ]
-            },
             {
                 "name": "Git repo check",
                 "description": "this rules is to check if git repo is private",
@@ -535,6 +495,46 @@
                         "value": 0
                     }
                 ]
+            },
+            {
+                "name": "Git repo check",
+                "description": "this rules is to check if git repo is private",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "github",
+                "objectName": "repositories",
+                "conditions": [
+                    {
+                        "property": "private",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "Git_branch_protect",
+                "description": "this rules is to check if git branch is protected",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "github",
+                "objectName": "branches",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "rules": [
+                            {
+                                "property": "protected",
+                                "condition": "DIFFERENT",
+                                "value": true
+                            },
+                            {
+                                "property": "name",
+                                "condition": "EQUAL",
+                                "value": "master"
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     },
@@ -542,8 +542,8 @@
         "resources": [
             "files"
         ],
-        "thumbnail": "https//icones.pro/wp-content/uploads/2022/08/logo-google-drive.png",
-        "documentation": "https//developers.google.com/drive/api/reference/rest/v3?hl=fr",
+        "thumbnail": "https://icones.pro/wp-content/uploads/2022/08/logo-google-drive.png",
+        "documentation": "https://developers.google.com/drive/api/reference/rest/v3?hl=fr",
         "freeRules": [
             {
                 "name": "check drive files name",
@@ -629,8 +629,8 @@
             "file",
             "drive"
         ],
-        "thumbnail": "https//lh3.googleusercontent.com/sYGCKFdty43En6yLGeV94mfNGHXfVj-bQYitHRndarB7tHmQq_kyVxhlPejeCBVEEYUbnKG2_jUzgNXoPoer6XJm71V3uz2Z6q0CmNw=w0",
-        "documentation": "https//developers.google.com/workspace?hl=fr",
+        "thumbnail": "https://lh3.googleusercontent.com/sYGCKFdty43En6yLGeV94mfNGHXfVj-bQYitHRndarB7tHmQq_kyVxhlPejeCBVEEYUbnKG2_jUzgNXoPoer6XJm71V3uz2Z6q0CmNw=w0",
+        "documentation": "https://developers.google.com/workspace?hl=fr",
         "freeRules": [
             {
                 "name": "workspace-user-mfa-activated",
@@ -713,8 +713,8 @@
         "resources": [
             "request"
         ],
-        "thumbnail": "https//cdn-icons-png.flaticon.com/512/2165/2165004.png",
-        "documentation": "https//developer.mozilla.org/fr/docs/Web/HTTP",
+        "thumbnail": "https://cdn-icons-png.flaticon.com/512/2165/2165004.png",
+        "documentation": "https://developer.mozilla.org/fr/docs/Web/HTTP",
         "freeRules": [
             {
                 "name": "http request code",
@@ -815,8 +815,8 @@
             "pods",
             "helm"
         ],
-        "thumbnail": "https//logos-download.com/wp-content/uploads/2018/09/Kubernetes_Logo.png",
-        "documentation": "https//github.com/kubernetes-client/javascript",
+        "thumbnail": "https://logos-download.com/wp-content/uploads/2018/09/Kubernetes_Logo.png",
+        "documentation": "https://github.com/kubernetes-client/javascript",
         "freeRules": [
             {
                 "name": "namespace-exist-dev-cloudprices-apiclient",
@@ -914,8 +914,8 @@
             "incident",
             "app_access_policy"
         ],
-        "thumbnail": "https//www.google.com/url?sa=i&url=https%3A%2F%2Fwww.logo.wine%2Flogo%2FOffice_365&psig=AOvVaw0QCxb-ngpVEPNdPBpKXicu&ust=1695803779468000&source=images&cd=vfe&opi=89978449&ved=0CA4QjRxqFwoTCMievcHvx4EDFQAAAAAdAAAAABAe",
-        "documentation": "https//learn.microsoft.com/en-us/graph/api/overview?view=graph-rest-1.0",
+        "thumbnail": "https://www.logo.wine/a/logo/Office_365/Office_365-Logo.wine.svg",
+        "documentation": "https://learn.microsoft.com/en-us/graph/api/overview?view=graph-rest-1.0",
         "freeRules": [
             {
                 "name": "o365-is-skus-not-used",

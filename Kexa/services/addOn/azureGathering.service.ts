@@ -1,6 +1,6 @@
 /*
     * Provider : azure
-    * Thumbnail : https://www.google.com/url?sa=i&url=https%3A%2F%2Ficon-icons.com%2Ffr%2Ficone%2Fmicrosoft-azure-logo%2F168977&psig=AOvVaw1dOVdNoggepX1w2oEahCWr&ust=1695803254377000&source=images&cd=vfe&opi=89978449&ved=0CA4QjRxqFwoTCKD43sbtx4EDFQAAAAAdAAAAABAE
+    * Thumbnail : https://cdn.icon-icons.com/icons2/2699/PNG/512/microsoft_azure_logo_icon_168977.png
     * Documentation : https://learn.microsoft.com/fr-fr/javascript/api/overview/azure/?view=azure-node-latest
     * Creation date : 2023-08-14
     * Note : 

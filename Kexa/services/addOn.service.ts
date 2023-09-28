@@ -117,12 +117,12 @@ export function hasValidHeader(filePath: string): string | Header {
 
             if (trimmedLine.startsWith('*Thumbnail')) {
                 hasThumbnail = true;
-                header.thumbnail = trimmedLine.split(':').slice(1).join('').trim();
+                header.thumbnail = trimmedLine.split(':').slice(1).join(':').trim();
                 continue;
             }
 
             if (trimmedLine.startsWith('*Documentation')) {
-                header.documentation = trimmedLine.split(':').slice(1).join('').trim();
+                header.documentation = trimmedLine.split(':').slice(1).join(':').trim();
                 continue;
             }
 

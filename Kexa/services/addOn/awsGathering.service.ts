@@ -1,6 +1,6 @@
 /*
     * Provider : aws
-    * Thumbnail : https://www.google.com/url?sa=i&url=https%3A%2F%2Ffr.m.wikipedia.org%2Fwiki%2FFichier%3AAmazon_Web_Services_Logo.svg&psig=AOvVaw1PNMynGWr6JYuGp35gxWSJ&ust=1695803344578000&source=images&cd=vfe&opi=89978449&ved=0CA4QjRxqFwoTCMinufHtx4EDFQAAAAAdAAAAABAR
+    * Thumbnail : https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/1024px-Amazon_Web_Services_Logo.svg.png
     * Documentation : https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/welcome.html
     * Creation date : 2023-08-14
     * Note : 

@@ -17,7 +17,7 @@ async function releaseCapability(){
     });
 
     console.log(JSON.stringify(headers, null, 4));
-    writeStringToJsonFile(JSON.stringify(headers, null, 4), "./Capacity.json");
+    writeStringToJsonFile(JSON.stringify(headers, null, 4), "./capacity.json");
 }
 
 if (require.main === module) {

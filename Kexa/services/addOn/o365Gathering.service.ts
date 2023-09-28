@@ -1,6 +1,6 @@
 /*
     * Provider : o365
-    * Thumbnail : https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.logo.wine%2Flogo%2FOffice_365&psig=AOvVaw0QCxb-ngpVEPNdPBpKXicu&ust=1695803779468000&source=images&cd=vfe&opi=89978449&ved=0CA4QjRxqFwoTCMievcHvx4EDFQAAAAAdAAAAABAe
+    * Thumbnail : https://www.logo.wine/a/logo/Office_365/Office_365-Logo.wine.svg
     * Documentation : https://learn.microsoft.com/en-us/graph/api/overview?view=graph-rest-1.0
     * Creation date : 2023-08-24
     * Note :

@@ -1,6 +1,6 @@
 /*
     * Provider : github
-    * Thumbnail : https://www.google.com/url?sa=i&url=https%3A%2F%2F1000logos.net%2Fgithub-logo%2F&psig=AOvVaw3BxGP9QmjIVtP2wSPtAl58&ust=1695803448120000&source=images&cd=vfe&opi=89978449&ved=0CA4QjRxqFwoTCLDy4KLux4EDFQAAAAAdAAAAABAE
+    * Thumbnail : https://1000logos.net/wp-content/uploads/2021/05/GitHub-logo-768x432.png
     * Documentation : https://docs.github.com/en/rest?apiVersion=2022-11-28
     * Creation date : 2023-08-14
     * Note : 
