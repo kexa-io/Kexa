@@ -16,7 +16,7 @@
             {
                 "name": "aws-ec2-volume-unattached",
                 "description": "this rule is to check if an ec2 volume is unattached",
-                "applied": false,
+                "applied": true,
                 "level": 1,
                 "cloudProvider": "aws",
                 "objectName": "ec2Volume",
@@ -31,7 +31,7 @@
             {
                 "name": "ec2-volume-check-create-less-2-month-expiration",
                 "description": "this rule is to check for a ec2 volume create date inferior than 2 months",
-                "applied": false,
+                "applied": true,
                 "level": 2,
                 "cloudProvider": "aws",
                 "objectName": "ec2Volume",
@@ -47,7 +47,7 @@
             {
                 "name": "tagsvalue-check-for-expiration-date",
                 "description": "this rule is to check if tags contain an expiration date (separate with \"-\")",
-                "applied": false,
+                "applied": true,
                 "level": 1,
                 "cloudProvider": "aws",
                 "objectName": "tagsValue",
@@ -62,7 +62,7 @@
             {
                 "name": "ec2-security-groups-source-defined",
                 "description": "this rule is to check if a ec2 SG has a defined source (not 0.0.0.0)",
-                "applied": false,
+                "applied": true,
                 "level": 1,
                 "cloudProvider": "aws",
                 "objectName": "ec2SG",
@@ -116,6 +116,138 @@
         "thumbnail": "https//www.google.com/url?sa=i&url=https%3A%2F%2Ficon-icons.com%2Ffr%2Ficone%2Fmicrosoft-azure-logo%2F168977&psig=AOvVaw1dOVdNoggepX1w2oEahCWr&ust=1695803254377000&source=images&cd=vfe&opi=89978449&ved=0CA4QjRxqFwoTCKD43sbtx4EDFQAAAAAdAAAAABAE",
         "documentation": "https//learn.microsoft.com/fr-fr/javascript/api/overview/azure/?view=azure-node-latest",
         "freeRules": [
+            {
+                "name": "VM-Reservation",
+                "description": "check if VM have a reservation",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "azure",
+                "objectName": "vm",
+                "conditions": [
+                    {
+                        "property": "priority",
+                        "condition": "REGEX",
+                        "value": "(?i)reservation"
+                    }
+                ]
+            },
+            {
+                "name": "azure-disk-orphan",
+                "description": "this rules is to check if disk is orphan",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "disk",
+                "conditions": [
+                    {
+                        "property": "diskState",
+                        "condition": "DIFFERENT",
+                        "value": "Unattached"
+                    }
+                ]
+            },
+            {
+                "name": "aks-scaleSet",
+                "description": "check if aks have a scaleSet",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "azure",
+                "objectName": "aks",
+                "conditions": [
+                    {
+                        "property": "agentPoolProfiles",
+                        "condition": "ALL",
+                        "value": [
+                            {
+                                "property": "scaleSetEvictionPolicy",
+                                "condition": "EQUAL",
+                                "value": "Delete"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Orphan nsg",
+                "description": "this rules is to check if nsg is orphan",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "nsg",
+                "conditions": [
+                    {
+                        "property": "networkInterfaces",
+                        "condition": "COUNT_SUP_OR_EQUAL",
+                        "value": 1
+                    }
+                ]
+            },
+            {
+                "name": "Orphan virtualNetwork",
+                "description": "this rules is to check if virtualNetwork is orphan",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "virtualNetwork",
+                "conditions": [
+                    {
+                        "property": "subnets",
+                        "condition": "COUNT_SUP_OR_EQUAL",
+                        "value": 1
+                    }
+                ]
+            },
+            {
+                "name": "VirtualNetwork-subnet-count",
+                "description": "check if NSG have a minimum of subnets",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "virtualNetwork",
+                "conditions": [
+                    {
+                        "property": "subnets",
+                        "condition": "COUNT_SUP",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "name": "aks-scaleSet",
+                "description": "check if aks have a scaleSet down",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "azure",
+                "objectName": "aks",
+                "conditions": [
+                    {
+                        "property": "agentPoolProfiles",
+                        "condition": "ALL",
+                        "value": [
+                            {
+                                "property": "scaleSetEvictionPolicy",
+                                "condition": "EQUAL",
+                                "value": "Delete"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "NSG-subnet",
+                "description": "check if NSG have a valid subnet",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "aks",
+                "conditions": [
+                    {
+                        "property": "agentPoolProfiles",
+                        "condition": "COUNT",
+                        "value": 2
+                    }
+                ]
+            },
             {
                 "name": "azure-disk-orphan",
                 "description": "this rules is to check if disk is orphan",
@@ -252,138 +384,6 @@
                         "value": 2
                     }
                 ]
-            },
-            {
-                "name": "VM-Reservation",
-                "description": "check if VM have a reservation",
-                "applied": false,
-                "level": 0,
-                "cloudProvider": "azure",
-                "objectName": "vm",
-                "conditions": [
-                    {
-                        "property": "priority",
-                        "condition": "REGEX",
-                        "value": "(?i)reservation"
-                    }
-                ]
-            },
-            {
-                "name": "azure-disk-orphan",
-                "description": "this rules is to check if disk is orphan",
-                "applied": false,
-                "level": 1,
-                "cloudProvider": "azure",
-                "objectName": "disk",
-                "conditions": [
-                    {
-                        "property": "diskState",
-                        "condition": "DIFFERENT",
-                        "value": "Unattached"
-                    }
-                ]
-            },
-            {
-                "name": "aks-scaleSet",
-                "description": "check if aks have a scaleSet",
-                "applied": false,
-                "level": 0,
-                "cloudProvider": "azure",
-                "objectName": "aks",
-                "conditions": [
-                    {
-                        "property": "agentPoolProfiles",
-                        "condition": "ALL",
-                        "value": [
-                            {
-                                "property": "scaleSetEvictionPolicy",
-                                "condition": "EQUAL",
-                                "value": "Delete"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Orphan nsg",
-                "description": "this rules is to check if nsg is orphan",
-                "applied": false,
-                "level": 1,
-                "cloudProvider": "azure",
-                "objectName": "nsg",
-                "conditions": [
-                    {
-                        "property": "networkInterfaces",
-                        "condition": "COUNT_SUP_OR_EQUAL",
-                        "value": 1
-                    }
-                ]
-            },
-            {
-                "name": "Orphan virtualNetwork",
-                "description": "this rules is to check if virtualNetwork is orphan",
-                "applied": false,
-                "level": 1,
-                "cloudProvider": "azure",
-                "objectName": "virtualNetwork",
-                "conditions": [
-                    {
-                        "property": "subnets",
-                        "condition": "COUNT_SUP_OR_EQUAL",
-                        "value": 1
-                    }
-                ]
-            },
-            {
-                "name": "VirtualNetwork-subnet-count",
-                "description": "check if NSG have a minimum of subnets",
-                "applied": true,
-                "level": 1,
-                "cloudProvider": "azure",
-                "objectName": "virtualNetwork",
-                "conditions": [
-                    {
-                        "property": "subnets",
-                        "condition": "COUNT_SUP",
-                        "value": 0
-                    }
-                ]
-            },
-            {
-                "name": "aks-scaleSet",
-                "description": "check if aks have a scaleSet down",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "azure",
-                "objectName": "aks",
-                "conditions": [
-                    {
-                        "property": "agentPoolProfiles",
-                        "condition": "ALL",
-                        "value": [
-                            {
-                                "property": "scaleSetEvictionPolicy",
-                                "condition": "EQUAL",
-                                "value": "Delete"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "NSG-subnet",
-                "description": "check if NSG have a valid subnet",
-                "applied": false,
-                "level": 1,
-                "cloudProvider": "azure",
-                "objectName": "aks",
-                "conditions": [
-                    {
-                        "property": "agentPoolProfiles",
-                        "condition": "COUNT",
-                        "value": 2
-                    }
-                ]
             }
         ]
     },
@@ -417,7 +417,7 @@
             {
                 "name": "gcp-disk-check-create-date-2-month-expiration",
                 "description": "this rule is to check for a persistent disk create date is inferior than 2 months ago",
-                "applied": false,
+                "applied": true,
                 "level": 2,
                 "cloudProvider": "gcp",
                 "objectName": "disk",
@@ -441,6 +441,46 @@
         "thumbnail": "https//www.google.com/url?sa=i&url=https%3A%2F%2F1000logos.net%2Fgithub-logo%2F&psig=AOvVaw3BxGP9QmjIVtP2wSPtAl58&ust=1695803448120000&source=images&cd=vfe&opi=89978449&ved=0CA4QjRxqFwoTCLDy4KLux4EDFQAAAAAdAAAAABAE",
         "documentation": "https//docs.github.com/en/rest?apiVersion=2022-11-28",
         "freeRules": [
+            {
+                "name": "Git repo check",
+                "description": "this rules is to check if git repo is private",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "github",
+                "objectName": "repositories",
+                "conditions": [
+                    {
+                        "property": "private",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "Git_branch_protect",
+                "description": "this rules is to check if git branch is protected",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "github",
+                "objectName": "branches",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "rules": [
+                            {
+                                "property": "protected",
+                                "condition": "DIFFERENT",
+                                "value": true
+                            },
+                            {
+                                "property": "name",
+                                "condition": "EQUAL",
+                                "value": "master"
+                            }
+                        ]
+                    }
+                ]
+            },
             {
                 "name": "Git repo check",
                 "description": "this rules is to check if git repo is private",
@@ -493,46 +533,6 @@
                         "property": "topics",
                         "condition": "COUNT",
                         "value": 0
-                    }
-                ]
-            },
-            {
-                "name": "Git repo check",
-                "description": "this rules is to check if git repo is private",
-                "applied": false,
-                "level": 0,
-                "cloudProvider": "github",
-                "objectName": "repositories",
-                "conditions": [
-                    {
-                        "property": "private",
-                        "condition": "EQUAL",
-                        "value": true
-                    }
-                ]
-            },
-            {
-                "name": "Git_branch_protect",
-                "description": "this rules is to check if git branch is protected",
-                "applied": false,
-                "level": 0,
-                "cloudProvider": "github",
-                "objectName": "branches",
-                "conditions": [
-                    {
-                        "operator": "NAND",
-                        "rules": [
-                            {
-                                "property": "protected",
-                                "condition": "DIFFERENT",
-                                "value": true
-                            },
-                            {
-                                "property": "name",
-                                "condition": "EQUAL",
-                                "value": "master"
-                            }
-                        ]
                     }
                 ]
             }
@@ -635,7 +635,7 @@
             {
                 "name": "workspace-user-mfa-activated",
                 "description": "verify if mfa is activated on user account",
-                "applied": false,
+                "applied": true,
                 "level": 2,
                 "cloudProvider": "googleWorkspace",
                 "objectName": "user",
@@ -650,7 +650,7 @@
             {
                 "name": "workspace-user-mfa-enforced",
                 "description": "verify if mfa is enforced for user account",
-                "applied": false,
+                "applied": true,
                 "level": 2,
                 "cloudProvider": "googleWorkspace",
                 "objectName": "user",
@@ -665,7 +665,7 @@
             {
                 "name": "workspace-user-change-passwd-next-login",
                 "description": "verify if there is at least one super admin for OU",
-                "applied": false,
+                "applied": true,
                 "level": 2,
                 "cloudProvider": "googleWorkspace",
                 "objectName": "user",
@@ -680,7 +680,7 @@
             {
                 "name": "workspace-at-least-one-super-admin",
                 "description": "verify if there is at least one super admin for OU",
-                "applied": false,
+                "applied": true,
                 "level": 2,
                 "cloudProvider": "googleWorkspace",
                 "objectName": "user",
@@ -920,7 +920,7 @@
             {
                 "name": "o365-is-skus-not-used",
                 "description": "this rule is if a subscribed sku is not being used",
-                "applied": false,
+                "applied": true,
                 "level": 1,
                 "cloudProvider": "o365",
                 "objectName": "sku",
@@ -935,7 +935,7 @@
             {
                 "name": "o365-check-jobtitle-defined",
                 "description": "this rule is to check for non defined job title",
-                "applied": false,
+                "applied": true,
                 "level": 1,
                 "cloudProvider": "o365",
                 "objectName": "user",
@@ -950,7 +950,7 @@
             {
                 "name": "o365-is-simple-member",
                 "description": "this rule is to check for simple members",
-                "applied": false,
+                "applied": true,
                 "level": 1,
                 "cloudProvider": "o365",
                 "objectName": "user",
@@ -965,7 +965,7 @@
             {
                 "name": "o365-is-mfa-activated-on-user",
                 "description": "check if at least 2 auth factors are active",
-                "applied": false,
+                "applied": true,
                 "level": 2,
                 "cloudProvider": "o365",
                 "objectName": "auth_methods",
