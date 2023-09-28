@@ -234,6 +234,21 @@
                 ]
             },
             {
+                "name": "NSG-subnet",
+                "description": "check if NSG have a valid subnet",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "aks",
+                "conditions": [
+                    {
+                        "property": "agentPoolProfiles",
+                        "condition": "COUNT",
+                        "value": 2
+                    }
+                ]
+            },
+            {
                 "name": "azure-disk-orphan",
                 "description": "this rules is to check if disk is orphan",
                 "applied": false,
@@ -369,21 +384,6 @@
                         "value": 2
                     }
                 ]
-            },
-            {
-                "name": "NSG-subnet",
-                "description": "check if NSG have a valid subnet",
-                "applied": true,
-                "level": 1,
-                "cloudProvider": "azure",
-                "objectName": "aks",
-                "conditions": [
-                    {
-                        "property": "agentPoolProfiles",
-                        "condition": "COUNT",
-                        "value": 2
-                    }
-                ]
             }
         ]
     },
@@ -444,6 +444,46 @@
             {
                 "name": "Git repo check",
                 "description": "this rules is to check if git repo is private",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "github",
+                "objectName": "repositories",
+                "conditions": [
+                    {
+                        "property": "private",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "Git_branch_protect",
+                "description": "this rules is to check if git branch is protected",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "github",
+                "objectName": "branches",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "rules": [
+                            {
+                                "property": "protected",
+                                "condition": "DIFFERENT",
+                                "value": true
+                            },
+                            {
+                                "property": "name",
+                                "condition": "EQUAL",
+                                "value": "master"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Git repo check",
+                "description": "this rules is to check if git repo is private",
                 "applied": false,
                 "level": 0,
                 "cloudProvider": "github",
@@ -493,46 +533,6 @@
                         "property": "topics",
                         "condition": "COUNT",
                         "value": 0
-                    }
-                ]
-            },
-            {
-                "name": "Git repo check",
-                "description": "this rules is to check if git repo is private",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "github",
-                "objectName": "repositories",
-                "conditions": [
-                    {
-                        "property": "private",
-                        "condition": "EQUAL",
-                        "value": true
-                    }
-                ]
-            },
-            {
-                "name": "Git_branch_protect",
-                "description": "this rules is to check if git branch is protected",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "github",
-                "objectName": "branches",
-                "conditions": [
-                    {
-                        "operator": "NAND",
-                        "rules": [
-                            {
-                                "property": "protected",
-                                "condition": "DIFFERENT",
-                                "value": true
-                            },
-                            {
-                                "property": "name",
-                                "condition": "EQUAL",
-                                "value": "master"
-                            }
-                        ]
                     }
                 ]
             }
