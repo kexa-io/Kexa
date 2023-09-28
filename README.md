@@ -962,8 +962,15 @@ rules:
   * [X] disk
   * [X] compute_item
 * [X] Google Workspace
-  * [X] files
-* [ ] O365
+  * [X] user
+  * [X] domain
+  * [X] group
+  * [X] role
+  * [X] orgaunit
+  * [X] calendar
+  * [X] drive
+  * [X] file
+* [X] O365
 * [ ] OVH
 * [ ] VM Ware
 * [ ] Postgres
