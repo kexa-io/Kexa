@@ -58,8 +58,6 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
         let prefix = config.prefix??(azureConfig.indexOf(config)+"-");
         try{
             logger.debug("prefix: "+prefix);
-            logger.debug("process: ");
-            logger.debug(JSON.stringify(process.env));
             let subscriptionId = await getConfigOrEnvVar(config, "SUBSCRIPTIONID", prefix);
             setEnvVar("AZURE_CLIENT_ID", await getConfigOrEnvVar(config, "AZURECLIENTID", prefix));
             setEnvVar("AZURE_CLIENT_SECRET", await getConfigOrEnvVar(config, "AZURECLIENTSECRET", prefix));
