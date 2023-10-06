@@ -32,3 +32,15 @@ export function deleteFile(filePath: string): boolean {
         return false;
     }
 }
+
+export function getFile(filePath: string){
+    try{
+        const fileExists = fs.existsSync(filePath);
+        if(fileExists){
+            return fs.readFileSync(filePath, 'utf8');
+        }
+        return null;
+    }catch(error){
+        return null;
+    }
+}
