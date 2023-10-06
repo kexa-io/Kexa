@@ -10,13 +10,12 @@
     *     - helm
 */
 
-import { Logger } from "tslog";
 import helm from 'helm-ts';
 import { KubernetesResources } from "../../models/kubernetes/kubernetes.models";
 import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
-import { deleteFile, writeStringToJsonFile } from "../../helpers/files";
+import { deleteFile, getFile, writeStringToJsonFile } from "../../helpers/files";
 import { KubernetesConfig } from "../../models/kubernetes/config.models";
-
+const yaml = require('js-yaml');
 
 import {getNewLogger} from "../logger.service";
 const logger = getNewLogger("KubernetesLogger");
@@ -29,13 +28,10 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
     for(let config of kubernetesConfig??[]){
         let prefix = config.prefix??(kubernetesConfig.indexOf(config)+"-");
         try {
-            if(!config.KUBECONFIG){
-                throw new Error("- Please pass CONFIG in your config file");
-            }
-            writeStringToJsonFile(await getConfigOrEnvVar(config, "KUBERNETESJSON", prefix), "./config/kubernetes.json");
-            setEnvVar("KUBECONFIG", config.KUBECONFIG);
+            let pathKubeFile = await getConfigOrEnvVar(config, "KUBECONFIG", prefix);
+            writeStringToJsonFile(JSON.stringify(yaml.load(getFile(pathKubeFile??"")), null, 2), "./config/kubernetes.json");
             const promises = [
-                kubernetesListing(),
+                kubernetesListing(pathKubeFile),
             ];
 
             const [kubernetesList] = await Promise.all(promises);
@@ -54,10 +50,10 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
 }
 
 //kubernetes list
-export async function kubernetesListing(): Promise<any> {
+export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
     logger.info("starting kubernetesListing");
     const kc = new k8s.KubeConfig();
-    kc.loadFromDefault();
+    (isPathKubeFile)?kc.loadFromFile("./config/kubernetes.json"):kc.loadFromDefault();
     const k8sApiCore = kc.makeApiClient(k8s.CoreV1Api);
     let namespaces = await k8sApiCore.listNamespace();
     let kubResources: any = {};

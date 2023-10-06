@@ -53,7 +53,8 @@
           <li><a href="#clone-the-repo">Clone the repo</a></li>
           <li><a href="#install-NPM-packages">Install NPM packages</a></li>
           <li><a href="#configure-your-config">Configure your config</a></li>
-          <li><a href="#configure-your-variable-environnement">Configure your variable environnement</a></li>
+          <li><a href="#configure-your-environnement-variable">Configure your variable environnement</a></li>
+          <li><a href="#key-vault">Optional: Key Vault</a></li>
         </ul>
       </ul>
     </li>
@@ -193,7 +194,7 @@ This is an example of how to list things you need to use the software and how to
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-#### Configure your environnement variable:
+#### Configure your environnement variable
 
 - Minumum Environnement variables you need, if you want to specify a folder to store rules: 
     ```
@@ -277,6 +278,8 @@ This is an example of how to list things you need to use the software and how to
     PROJECTB-AZURETENANTID=XXXXXXXXXXXXXXXXXXXXXX
     PROJECTB-AZURECLIENTSECRET=XXXXXXXXXXXXXXXXXX
   ```
+
+##### Key vault
 
   You can optionally use a key manager; for these variables no prefix must be set:
   - Azure:
@@ -584,6 +587,11 @@ To run the deployment commands, make sure that your "func" command is functional
 ```bash
 npm i -g azure-functions-core-tools@4 --unsafe-perm true
 ``` 
+
+Build your version
+```bash
+npm run build
+```
 
 To test azure function locally :
 ```bash
