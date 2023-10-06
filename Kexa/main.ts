@@ -5,8 +5,13 @@ import { alertGlobal } from "./services/alerte.service";
 import { AsciiArtText, talkAboutOtherProject} from "./services/display.service";
 import { getEnvVar } from "./services/manageVarEnvironnement.service";
 import { loadAddOns } from "./services/addOn.service";
-import { deleteFile } from "./helpers/files";
+import { deleteFile, writeStringToJsonFile } from "./helpers/files";
 import {getNewLogger} from "./services/logger.service";
+
+const yargs = require('yargs/yargs')
+const { hideBin } = require('yargs/helpers')
+const args = yargs(hideBin(process.argv)).argv
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 env.config();                                                                    // reading environnement vars                                                       // file system
 
@@ -18,6 +23,8 @@ export async function main() {
             logger.settings.minLevel = 2;
             console.log("DEBUG");
         }
+
+    logger.debug(args);
     AsciiArtText("Kexa");
     logger.info("___________________________________________________________________________________________________"); 
     logger.info("___________________________________-= running Kexa scan =-_________________________________________");
@@ -28,8 +35,7 @@ export async function main() {
 
         let resources = {};
         resources = await loadAddOns(resources);
-      //  logger.debug(resources);
-        // Analyse rules
+        if(args.o) writeStringToJsonFile(JSON.stringify(resources), "./config/resultScan"+ new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '') +".json");
         settings.forEach(setting => {
             let result = checkRules(setting.rules, resources, setting.alert);
             if(setting.alert.global.enabled){
