@@ -28,11 +28,10 @@
     *     - compute_item
 */
 
-import { Logger } from "tslog";
-import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
+import { getConfigOrEnvVar, getEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
 import { GCPResources } from "../../models/gcp/resource.models";
 import {Storage} from "@google-cloud/storage";
-import { deleteFile, writeStringToJsonFile } from "../../helpers/files";
+import { deleteFile, getFile, writeStringToJsonFile } from "../../helpers/files";
 import { GcpConfig } from "../../models/gcp/config.models";
 
 ////////////////////////////////
@@ -49,8 +48,9 @@ const logger = getNewLogger("GcpLogger");
 
 export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[] | null> {
     let resources = new Array<GCPResources>();
-    setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", "./config/gcp.json");
+    let defaultPathCred = await getEnvVar("GOOGLE_APPLICATION_CREDENTIALS");
     for (let config of gcpConfig??[]) {
+        setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", "./config/gcp.json");
         let prefix = config.prefix??(gcpConfig.indexOf(config)+"-");
         let gcpResources = {
             "bucket": null,
@@ -89,7 +89,12 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
             "compute_item": null
         } as GCPResources;
         let projectId = await getConfigOrEnvVar(config, "GOOGLE_PROJECT_ID", prefix);
-        writeStringToJsonFile(await getConfigOrEnvVar(config, "GOOGLE_APPLICATION_CREDENTIALS", prefix), "./config/gcp.json");
+        let googleCred = await getConfigOrEnvVar(config, "GOOGLE_APPLICATION_CREDENTIALS", prefix)
+        if(projectId && googleCred) writeStringToJsonFile(googleCred, "./config/gcp.json");
+        else{
+            setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", defaultPathCred);
+            projectId = JSON.parse(getFile(defaultPathCred)??"")?.project_id;
+        }
         let regionsList = new Array<string>();
         await retrieveAllRegions(projectId, regionsList);
         if ('regions' in config) {

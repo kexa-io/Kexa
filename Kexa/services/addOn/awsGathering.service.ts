@@ -14,8 +14,7 @@
     *     - ecsCluster
     *     - ecrRepository
 */
-import { Credentials, EC2, RDS, S3, ECS, ECR, ResourceGroups, ResourceGroupsTaggingAPI, config } from "aws-sdk";
-import { Logger } from "tslog";
+import { Credentials, EC2, RDS, S3, ECS, ECR, ResourceGroups, ResourceGroupsTaggingAPI, config, SharedIniFileCredentials } from "aws-sdk";
 import { AWSResources } from "../../models/aws/ressource.models";
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { EC2Client, DescribeRegionsCommand } from "@aws-sdk/client-ec2";
@@ -51,10 +50,15 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
         } as AWSResources;
         let prefix = oneConfig["prefix"]??( awsConfig.indexOf(oneConfig) + "-")
         try {
-            const credentials = new Credentials({
-                accessKeyId: await getConfigOrEnvVar(oneConfig, "AWS_ACCESS_KEY_ID", prefix),
-                secretAccessKey: await getConfigOrEnvVar(oneConfig, "AWS_SECRET_ACCESS_KEY", prefix)
-            });
+            let awsKeyId = await getConfigOrEnvVar(oneConfig, "AWS_ACCESS_KEY_ID", prefix);
+            let awsSecretKey = await getConfigOrEnvVar(oneConfig, "AWS_SECRET_ACCESS_KEY", prefix);
+            let credentials: Credentials = new SharedIniFileCredentials({profile: 'default'});
+            if(awsKeyId && awsSecretKey){
+                credentials = new Credentials({
+                    accessKeyId: awsKeyId,
+                    secretAccessKey: awsSecretKey
+                });
+            }
             const client = new EC2Client({region: "us-east-1", credentials: credentials});
             const command = new DescribeRegionsCommand({AllRegions: false,});
             const response = await client.send(command);
