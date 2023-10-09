@@ -128,6 +128,13 @@ This is an example of how to list things you need to use the software and how to
    npm install
    ```
 
+#### Add local module need to build
+
+```sh
+npm install rimraf -g
+npm install typescript
+```
+
 #### Configure your config:
 
   In the config folder, create a file: 'default.json' and the path is "./config/default.json" to inform the providers you want to test and the rules that will be applied to them. Each key at the root of the json refers to the provider you wish to use. In the following example, we wish to use only "azure". Each item in this list refers to a "subscription"/"environment". It's a good idea to give each item a name and a description, to make it easier to understand. The "rules" key is mandatory to specify the rules to be applied to each environment. Finally, a key called "prefix" will allow you to identify the variables used to log on to the environment among your environment variables or your secret manager. The attribute of this value should preferably be unique, unless you want to use the same identifiers more than once on several environments. If you haven't specified a prefix, a default value is assigned. It corresponds to the environment index followed by a "-".
@@ -928,6 +935,13 @@ rules:
   * [X] repositories
   * [X] branches
   * [X] issues
+  * [X] organizations
+  * [X] members
+  * [X] teams
+  * [X] teamProjects
+  * [X] teamMembers
+  * [X] teamRepositories
+  * [X] outsideCollaborators
 * [X] Kubernetes check in:
   * [X] namespaces
   * [X] pods
