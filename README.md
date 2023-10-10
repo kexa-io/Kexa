@@ -993,6 +993,17 @@ rules:
   * [X] drive
   * [X] file
 * [X] O365
+  * [X] sku
+  * [X] user
+  * [X] domain
+  * [X] secure_score
+  * [X] auth_methods
+  * [X] organization
+  * [X] directory
+  * [X] sp
+  * [X] alert
+  * [X] incident
+  * [X] app_access_policy
 * [ ] OVH
 * [ ] VM Ware
 * [ ] Postgres
