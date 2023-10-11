@@ -20,22 +20,23 @@
 import { Octokit } from "octokit";
 import env from "dotenv";
 import { GitResources } from "../../models/git/resource.models";
-import { getConfigOrEnvVar, getEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
+import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
 import { GitConfig } from "../../models/git/config.models";
 env.config();
 
 import {getNewLogger} from "../logger.service";
 const logger = getNewLogger("GithubLogger");
+let githubToken = "";
 
 export async function collectData(gitConfig:GitConfig[]): Promise<GitResources[]|null>{
     let resources = new Array<GitResources>();
     for(let config of gitConfig??[]){
         let prefix = config.prefix??(gitConfig.indexOf(config)+"-");
-        let githubToken = await getConfigOrEnvVar(config, "GITHUBTOKEN", prefix);
+        githubToken = await getConfigOrEnvVar(config, "GITHUBTOKEN", prefix);
         if(!githubToken){
             throw new Error("- Please pass GITHUBTOKEN in your config file");
         }
-        setEnvVar("GITHUBTOKEN", githubToken)
+        await setEnvVar("GITHUBTOKEN", githubToken)
         try {
             logger.info("Gathering github data");
             const promisesPrimaryData:any[] = [collectRepo(), collectOrganizations()]
@@ -185,7 +186,7 @@ function addInfoRepo(repo: any, datas:any): any[]{
 }
 
 async function getOctokit(): Promise<Octokit>{
-    return new Octokit({ auth: await getEnvVar("GITHUBTOKEN") });
+    return new Octokit({ auth: githubToken });
 }
 
 export async function collectRepo(){
