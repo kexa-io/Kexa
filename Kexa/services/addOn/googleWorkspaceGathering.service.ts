@@ -17,8 +17,7 @@
 
 const process = require('process');
 
-import { Logger } from "tslog";
-import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
+import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { googleWorkspaceResources } from "../../models/googleWorkspace/ressource.models";
 import { googleWorkspaceConfig } from "../../models/googleWorkspace/config.models";
 import {deleteFile, writeStringToJsonFile} from "../../helpers/files";

@@ -18,7 +18,7 @@
     *       - app_access_policy
 */
 
-import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
+import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { o365Resources } from "../../models/o365/ressource.models";
 import { o365Config } from "../../models/o365/config.models";
 

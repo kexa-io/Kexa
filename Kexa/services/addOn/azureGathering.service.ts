@@ -23,7 +23,6 @@ import {
 import { ComputeManagementClient, Disk, VirtualMachine } from "@azure/arm-compute";
 import { ResourceManagementClient , ResourceGroup } from "@azure/arm-resources";
 import * as ckiNetworkSecurityClass from "../../class/azure/ckiNetworkSecurityGroup.class";
-import { Logger } from "tslog";
 import { AzureResources } from "../../models/azure/resource.models";
 import { DefaultAzureCredential } from "@azure/identity";
 import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";

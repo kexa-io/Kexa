@@ -12,7 +12,7 @@
 
 import helm from 'helm-ts';
 import { KubernetesResources } from "../../models/kubernetes/kubernetes.models";
-import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
+import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { deleteFile, getFile, writeStringToJsonFile } from "../../helpers/files";
 import { KubernetesConfig } from "../../models/kubernetes/config.models";
 const yaml = require('js-yaml');

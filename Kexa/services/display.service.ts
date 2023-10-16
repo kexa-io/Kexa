@@ -1,5 +1,4 @@
 import { ResultScan } from "../models/resultScan.models";
-import { Logger } from "tslog";
 import { Rules } from "../models/settingFile/rules.models";
 import { loadAddOnsDisplay } from "./addOn.service";
 

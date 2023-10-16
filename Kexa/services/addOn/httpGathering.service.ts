@@ -10,7 +10,6 @@
 
 import dns from 'dns';
 import { HttpResources } from "../../models/http/resource.model";
-import { Logger } from "tslog";
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { HttpConfig } from "../../models/http/config.models";
 import { isEmpty } from "../../helpers/isEmpty";
