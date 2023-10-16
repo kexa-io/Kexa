@@ -17,13 +17,15 @@ import { deleteFile, getFile, writeStringToJsonFile } from "../../helpers/files"
 import { KubernetesConfig } from "../../models/kubernetes/config.models";
 const yaml = require('js-yaml');
 
-import {getNewLogger} from "../logger.service";
+import {getContext, getNewLogger} from "../logger.service";
 const logger = getNewLogger("KubernetesLogger");
 
 const k8s = require('@kubernetes/client-node');
 
 export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<KubernetesResources[]|null>{
-    logger.info("starting collectKubernetes");
+    let context = getContext();
+    context?.log("- loading client kubernetes -");
+    logger.info("- loading client kubernetes -");
     let resources = new Array<KubernetesResources>();
     for(let config of kubernetesConfig??[]){
         let prefix = config.prefix??(kubernetesConfig.indexOf(config)+"-");
@@ -46,11 +48,15 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
         }
         deleteFile("./config/kubernetes.json");
     }
+    context?.log("- end collect kubernetes -");
+    logger.info("- end collect kubernetes -");
     return resources??null;
 }
 
 //kubernetes list
 export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
+    let context = getContext();
+    context?.log("starting kubernetesListing");
     logger.info("starting kubernetesListing");
     const kc = new k8s.KubeConfig();
     (isPathKubeFile)?kc.loadFromFile("./config/kubernetes.json"):kc.loadFromDefault();

@@ -1,5 +1,3 @@
-import { Logger } from "tslog";
-
 const AWS = require('aws-sdk');
 
 import {getNewLogger} from "./logger.service";
@@ -32,7 +30,10 @@ function possibleWithAzureKeyVault(){
 
 async function getEnvVarWithAzureKeyVault(name:string){
     const url = `https://${process.env.AZUREKEYVAULTNAME}.vault.azure.net`;
-    const credential = new DefaultAzureCredential();
+    let UAI = {}
+    let useAzureIdentity = process.env.USERAZUREIDENTITYID;
+    if(useAzureIdentity) UAI = {managedIdentityClientId: useAzureIdentity};
+    const credential = new DefaultAzureCredential(UAI);
     const client = new SecretClient(url, credential);
     return (await client.getSecret(name)).value;
 }

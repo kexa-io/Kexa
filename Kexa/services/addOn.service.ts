@@ -1,4 +1,3 @@
-import { Logger } from "tslog";
 import { Provider, ProviderResource } from "../models/providerResource.models";
 import { Header } from "../models/settingFile/header.models";
 import { writeStringToJsonFile } from "../helpers/files"
@@ -8,11 +7,14 @@ const mainFolder = 'Kexa';
 const serviceAddOnPath = './' + mainFolder + '/services/addOn';
 const fs = require('fs');
 
-import {getNewLogger} from "./logger.service";
+import {getContext, getNewLogger} from "./logger.service";
 import { Capacity } from "../models/settingFile/capacity.models";
 const logger = getNewLogger("LoaderAddOnLogger");
-export async function loadAddOns(resources: ProviderResource){
+
+export async function loadAddOns(resources: ProviderResource): Promise<ProviderResource>{
+    let context = getContext();
     logger.info("Loading addOns");
+    context?.log("Loading addOns");
     const addOnNeed = require('../../config/addOnNeed.json');
     const files = fs.readdirSync(serviceAddOnPath);
     const promises = files.map(async (file: string) => {
