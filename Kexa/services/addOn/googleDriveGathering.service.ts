@@ -8,7 +8,6 @@
     *     - files
 */
 const process = require('process');
-import { Logger } from "tslog";
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { deleteFile, writeStringToJsonFile } from "../../helpers/files";
 

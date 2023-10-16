@@ -12,7 +12,7 @@
 
 import helm from 'helm-ts';
 import { KubernetesResources } from "../../models/kubernetes/kubernetes.models";
-import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
+import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { deleteFile, getFile, writeStringToJsonFile } from "../../helpers/files";
 import { KubernetesConfig } from "../../models/kubernetes/config.models";
 const yaml = require('js-yaml');
@@ -23,9 +23,6 @@ const logger = getNewLogger("KubernetesLogger");
 const k8s = require('@kubernetes/client-node');
 
 export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<KubernetesResources[]|null>{
-    let context = getContext();
-    context?.log("- loading client kubernetes -");
-    logger.info("- loading client kubernetes -");
     let resources = new Array<KubernetesResources>();
     for(let config of kubernetesConfig??[]){
         let prefix = config.prefix??(kubernetesConfig.indexOf(config)+"-");
@@ -48,8 +45,6 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
         }
         deleteFile("./config/kubernetes.json");
     }
-    context?.log("- end collect kubernetes -");
-    logger.info("- end collect kubernetes -");
     return resources??null;
 }
 
