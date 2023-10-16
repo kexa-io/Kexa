@@ -68,8 +68,10 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
             let azureTenantId = await getConfigOrEnvVar(config, "AZURETENANTID", prefix);
             if(azureTenantId) setEnvVar("AZURE_TENANT_ID", azureTenantId);
             else logger.warn(prefix + "AZURETENANTID not found in config file");
-
-            const credential = new DefaultAzureCredential();
+            let UAI = {}
+            let useAzureIdentity = await getConfigOrEnvVar(config, "USERAZUREIDENTITYID", prefix);
+            if(useAzureIdentity) UAI = {managedIdentityClientId: useAzureIdentity};
+            const credential = new DefaultAzureCredential(UAI);
             if(!subscriptionId) {
                 throw new Error("- Please pass "+ prefix + "SUBSCRIPTIONID in your config file");
             }else{

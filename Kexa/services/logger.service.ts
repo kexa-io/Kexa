@@ -1,6 +1,8 @@
-import { Logger } from "tslog";
+import { Context } from "@azure/functions";
 import {DebugEnum} from "../enum/debug.enum";
 import * as dotenv from 'dotenv';
+//import { Context } from "@azure/functions"
+import { Logger } from "tslog";
 
 dotenv.config();
 const process = require('process');
@@ -17,4 +19,28 @@ export function getNewLogger(name: string) {
             debug_mode = Number(DebugEnum[debug_var]);
     }
     return new Logger({minLevel: debug_mode, name: name});
+}
+
+export function getContext(): Context | null {
+    return LoggerAzure.getContext();
+}
+
+export function setContext(context: Context) {
+    LoggerAzure.setContext(context);
+}
+
+class LoggerAzure{
+    private static context:Context | null = null;
+
+    static setContext(context:Context){
+        LoggerAzure.context = context;
+    }
+
+    static getContext(){
+        return LoggerAzure.context;
+    }
+
+    LoggerAzure(context:Context){
+        LoggerAzure.setContext(context);
+    }
 }

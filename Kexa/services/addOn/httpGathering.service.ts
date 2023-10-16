@@ -22,7 +22,7 @@ let httpConfig: HttpConfig[] = [];
 const jsome = require('jsome');
 jsome.level.show = true;
 
-import {getNewLogger} from "../logger.service";
+import {getContext, getNewLogger} from "../logger.service";
 const logger = getNewLogger("HttpLogger");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -32,11 +32,15 @@ export async function collectData(_httpConfig:HttpConfig[]) {
     httpConfig = _httpConfig;
     let resources = new Array<HttpResources>();
     let promises: any = []
+    let context = getContext();
+    context?.log("- loading client http -");
     logger.info("- loading client http -");
     for(let config of httpConfig??[]){
         let prefix = config.prefix??(httpConfig.indexOf(config)+"-");
         promises.push(
             (async () => {
+                context?.log("- add one config for http -");
+                logger.info("- add one config for http -");
                 let httpResources = {
                     certificate: null,
                     body: null,
@@ -46,7 +50,6 @@ export async function collectData(_httpConfig:HttpConfig[]) {
 
                 try {
                     const url = await getConfigOrEnvVar(config, "URL", prefix);
-
                     if (!url) {
                         throw new Error("- Please pass URL in your config file");
                     }
@@ -66,6 +69,7 @@ export async function collectData(_httpConfig:HttpConfig[]) {
     resources.push(...results);
 
     logger.info("- listing http resources done -");
+    context?.log("- listing http resources done -");
     return resources??null;
 }
 

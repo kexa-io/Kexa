@@ -231,6 +231,11 @@ npm install typescript
       AZURETENANTID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX	(ID of the application's Azure AD tenant)
       AZURECLIENTSECRET=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX	(one of the application's client secrets)
     ```
+    If you are runnning your Kexa in a azure function you can also use this with UAI (User Assigned Identities):
+    ```
+      AZUREKEYVAULTNAME=MyKeyVault
+      USERAZUREIDENTITYID=XXXXXXXX
+    ```
   - GitHub:
     ```
       GITHUBTOKEN=github_pat_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -285,6 +290,11 @@ npm install typescript
       AZURE_CLIENT_ID=XXXXXXXXXXXX
       AZURE_TENANT_ID=XXXXXXXXXXXX
       AZURE_CLIENT_SECRET=XXXXXXXX
+    ```
+    You can also use this combination with UAI (User Assigned Identities):
+    ```
+      AZUREKEYVAULTNAME=MyKeyVault
+      USERAZUREIDENTITYID=XXXXXXXX
     ```
   - AWS:
     To refer to your Key Vault add this following environnement variable :
