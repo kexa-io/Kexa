@@ -33,8 +33,6 @@ export async function collectData(_httpConfig:HttpConfig[]) {
     let resources = new Array<HttpResources>();
     let promises: any = []
     let context = getContext();
-    context?.log("- loading client http -");
-    logger.info("- loading client http -");
     for(let config of httpConfig??[]){
         let prefix = config.prefix??(httpConfig.indexOf(config)+"-");
         promises.push(

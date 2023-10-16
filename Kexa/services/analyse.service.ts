@@ -21,7 +21,7 @@ import { extractHeaders } from './addOn.service';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import {getNewLogger} from "./logger.service";
+import {getContext, getNewLogger} from "./logger.service";
 const logger = getNewLogger("AnalyseLogger");
 
 const jsome = require('jsome');
@@ -297,11 +297,12 @@ function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, ind
 }
 
 export function checkRules(rules:Rules[], resources:ProviderResource, alert: Alert): ResultScan[][] {
-
+    const context = getContext();
     logger.debug("check rules");
     let result: ResultScan[][] = [];
     rules.forEach(rule => {
         if(!rule.applied) return;
+        context?.log("check rule:"+rule.name);
         logger.info("check rule:"+rule.name);
         if(!config.has(rule.cloudProvider)){
             logger.warn("cloud provider not found in config:"+rule.cloudProvider);
@@ -311,6 +312,7 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
         let objectResources:any = []
         for(let i = 0; i < configAssign.length; i++){
             if(configAssign[i].rules.includes(alert.global.name)){
+                context?.log("check rule with object with index :"+ i);
                 logger.info("check rule with object with index :"+ i);
                 switch(checkMatchConfigAndResource(rule, resources, i)){
                     case BeHaviorEnum.RETURN:

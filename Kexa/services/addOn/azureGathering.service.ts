@@ -32,7 +32,7 @@ import { AzureConfig } from "../../models/azure/config.models";
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 const { ContainerServiceClient } = require("@azure/arm-containerservice");
 
-import {getNewLogger} from "../logger.service";
+import {getContext, getNewLogger} from "../logger.service";
 const logger = getNewLogger("AzureLogger");
 
 let computeClient: ComputeManagementClient;
@@ -42,6 +42,7 @@ let networkClient: NetworkManagementClient;
 //// LISTING CLOUD RESOURCES
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResources[]|null>{
+    let context = getContext();
     let resources = new Array<AzureResources>();
     for(let config of azureConfig??[]){
         let azureResource = {
@@ -79,6 +80,7 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
                 resourcesClient = new ResourceManagementClient(credential, subscriptionId);
                 computeClient   = new ComputeManagementClient(credential, subscriptionId);
                 networkClient   = new NetworkManagementClient(credential, subscriptionId);
+                context?.log("- loading client microsoft azure done-");
                 logger.info("- loading client microsoft azure done-");
                 ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
         
@@ -94,6 +96,7 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
                 ];
                 
                 const [nsgList, vmList, rgList, diskList, virtualNetworkList, aksList, ipList] = await Promise.all(promises); //, SPList
+                context?.log("- listing cloud resources done -");
                 logger.info("- listing cloud resources done -");
                 azureResource = {
                     "vm": [...azureResource["vm"]??[], ...vmList],

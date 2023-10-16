@@ -38,7 +38,7 @@ import { GcpConfig } from "../../models/gcp/config.models";
 //////   INITIALIZATION   //////
 ////////////////////////////////
 
-import {getNewLogger} from "../logger.service";
+import {getContext, getNewLogger} from "../logger.service";
 const logger = getNewLogger("GcpLogger");
 
 /////////////////////////////////////////
@@ -47,6 +47,7 @@ const logger = getNewLogger("GcpLogger");
 
 
 export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[] | null> {
+    let context = getContext();
     let resources = new Array<GCPResources>();
     let defaultPathCred = await getEnvVar("GOOGLE_APPLICATION_CREDENTIALS");
     for (let config of gcpConfig??[]) {
@@ -100,6 +101,7 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
         if ('regions' in config) {
             const userRegions = config.regions as Array<string>;
             if (userRegions.length <= 0) {
+                context?.log("GCP - No Regions found in Config, gathering all regions...")
                 logger.info("GCP - No Regions found in Config, gathering all regions...");
             }
             else if (!(compareUserAndValidRegions(userRegions as Array<string>, regionsList, gcpConfig, config)))
@@ -108,9 +110,11 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 regionsList = userRegions as Array<string>;
             }
         } else {
+            context?.log("GCP - No Regions found in Config, gathering all regions...")
             logger.info("GCP - No Regions found in Config, gathering all regions...")
         }
         try {
+            context?.log("- listing GCP resources -");
             logger.info("- listing GCP resources -");
             const promises = [
                 listTasks(projectId, regionsList),
@@ -157,7 +161,8 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 kms_crypto_keyList, kms_key_ringList, domain_registrationList, dns_zoneList,
                 pipelineList, certificateList, batchJobList, workloadList, artifactRepoList,
                 app_gatewayList, diskList, compute_itemList] = await Promise.all(promises);
-
+            
+            context?.log("- listing cloud resources done -");
             logger.info("- listing cloud resources done -");
 
             ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////

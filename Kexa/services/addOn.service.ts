@@ -30,6 +30,7 @@ export async function loadAddOns(resources: ProviderResource): Promise<ProviderR
 }
 
 async function loadAddOn(file: string, addOnNeed: any): Promise<{ key: string; data: Provider|null; } | null> {
+    let context = getContext();
     try{
         if (file.endsWith('Gathering.service.ts')){
             let nameAddOn = file.split('Gathering.service.ts')[0];
@@ -44,6 +45,7 @@ async function loadAddOn(file: string, addOnNeed: any): Promise<{ key: string; d
             const addOnConfig = (configuration.has(nameAddOn))?configuration.get(nameAddOn):null;
             const data = await collectData(addOnConfig);
             let delta = Date.now() - start;
+            context?.log(`AddOn ${nameAddOn} collect in ${delta}ms`);
             logger.info(`AddOn ${nameAddOn} collect in ${delta}ms`);
             return { key: nameAddOn, data:(checkIfDataIsProvider(data) ? data : null)};
         }
