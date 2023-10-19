@@ -33,7 +33,7 @@ export async function collectData(_httpConfig:HttpConfig[]) {
     let promises: any = []
     let context = getContext();
     for(let config of httpConfig??[]){
-        let prefix = config.prefix??(httpConfig.indexOf(config)+"-");
+        let prefix = config.prefix??(httpConfig.indexOf(config).toString());
         promises.push(
             (async () => {
                 context?.log("- add one config for http -");

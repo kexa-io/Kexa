@@ -1,0 +1,107 @@
+{
+    "aws": [
+        {
+            "name": "Project A",
+            "prefix": "AWSPROJECTA-",
+            "description": "First subscription (0) : Project A subscription",
+            "rules": [
+                "Name of my rule"
+            ],
+            "regions": [
+                "us-east-1"
+            ]
+        }
+    ],
+    "gcp": [
+        {
+            "name": "Project B",
+            "prefix": "GCPPROJECTB-",
+            "description": "First subscription (0) : Project B subscription",
+            "rules": [
+                "Name of my rule",
+                "Another rules"
+            ],
+            "regions": [
+                "us-east1"
+            ]
+        }
+    ],
+    "azure": [
+        {
+            "name": "Project A",
+            "prefix": "AZUREPROJECTA-",
+            "description": "First subscription (0) : Project A subscription",
+            "rules": [
+            "Name of my rule"
+            ]
+        }
+    ],
+    "github":[
+        {
+            "name": "Project A",
+            "prefix": "GITHUBPROJECTA-",
+            "description": "First subscription (0) : Project A subscription",
+            "rules": [
+                "Name of my rule",
+                "Another rules"
+            ]
+        }
+    ],
+    "googleDrive":[
+        {
+            "name": "Project A",
+            "prefix": "GOOGLEDRIVEPROJECTA-",
+            "description": "First subscription (0) : Project A subscription",
+            "rules": [
+                "Name of my rule",
+                "Another rules"
+            ]
+        }
+    ],
+    "googleWorkspace":[
+        {
+            "name": "Project A",
+            "prefix": "GOOGLEWORKSPACEPROJECTA-",
+            "description": "First subscription (0) : Project A subscription",
+            "rules": [
+                "Name of my rule",
+                "Another rules"
+            ]
+        }
+    ],
+    "http":[
+        {
+            "name": "Project A",
+            "prefix": "HTTPPROJECTA-",
+            "description": "First subscription (0) : Project A subscription",
+            "rules": [
+                "Name of my rule",
+                "Another rules"
+            ],
+            "METHOD": "GET",
+            "URL": "https://exemple.com/"
+        }
+    ],
+    "kubernetes":[
+        {
+            "name": "Project A",
+            "prefix": "KUBERNETESPROJECTA-",
+            "description": "First subscription (0) : Project A subscription",
+            "rules": [
+                "Name of my rule",
+                "Another rules"
+            ]
+        }
+    ],
+    "o365":[
+        {
+            "name": "Project A",
+            "prefix": "O365PROJECTA-",
+            "description": "First subscription (0) : Project A subscription",
+            "rules": [
+                "Name of my rule",
+                "Another rules"
+            ]
+        }
+    ]
+}

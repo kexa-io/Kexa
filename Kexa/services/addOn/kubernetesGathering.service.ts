@@ -25,7 +25,7 @@ const k8s = require('@kubernetes/client-node');
 export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<KubernetesResources[]|null>{
     let resources = new Array<KubernetesResources>();
     for(let config of kubernetesConfig??[]){
-        let prefix = config.prefix??(kubernetesConfig.indexOf(config)+"-");
+        let prefix = config.prefix??(kubernetesConfig.indexOf(config).toString());
         try {
             let pathKubeFile = await getConfigOrEnvVar(config, "KUBECONFIG", prefix);
             writeStringToJsonFile(JSON.stringify(yaml.load(getFile(pathKubeFile??"")), null, 2), "./config/kubernetes.json");

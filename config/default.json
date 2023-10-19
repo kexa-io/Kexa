@@ -4,7 +4,8 @@
             "description": "organization 4urcloud",
             "prefix": "DEMO-",
             "rules": [
-                "Deployement"
+                "Deployement",
+                "Security"
             ]
         }
     ],

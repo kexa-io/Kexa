@@ -88,7 +88,7 @@ export async function analyseRule(ruleFilePath:string, listNeedRules:string[], g
         const doc = (yaml.load(fs.readFileSync(ruleFilePath, 'utf8')) as SettingFile[])[0];
         const name = ruleFilePath.split('/')[ruleFilePath.split('/').length -1].split(".")[0];
         if(!listNeedRules.includes(name) && !getAll){
-            logger.info("rule not needed:"+name);
+            logger.debug("rule not needed:"+name);
             return null;
         }
         let result = await checkDoc(doc);
@@ -204,7 +204,7 @@ export function checkDocRules(rules:Rules[]): string[] {
         else if(typeof rule.name !== "string") result.push("warn - name not string in rule : "+rule.name);
         if(!rule.hasOwnProperty("description")) result.push("info - description not found in rule");
         else if(typeof rule.description !== "string") result.push("warn - description not string in rule : "+rule.description);
-        if(!rule.hasOwnProperty("urlDescription")) result.push("info - urlDescription not found in rule");
+        if(!rule.hasOwnProperty("urlDescription")) result.push("debug - urlDescription not found in rule");
         else if(typeof rule.urlDescription !== "string") result.push("warn - urlDescription not string in rule : "+rule.urlDescription);
         if(!rule.hasOwnProperty("applied")) result.push("error - applied not found in rule");
         else if(typeof rule.applied !== "boolean") result.push("error - applied not boolean in rule : "+rule.applied);

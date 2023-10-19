@@ -99,6 +99,10 @@ The Kexa tool is a powerful way to monitor and evaluate the behavior of your clo
 
 * [![NodeJs][NodeJs.com]][NodeJs-url]
 
+optional : 
+
+* [![Docker][Docker.com]][Docker-url]
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
@@ -139,8 +143,8 @@ npm install typescript
 
 #### Configure your config:
 
-  In the config folder, create a file if not already exist: 'default.json' and the path is "./config/default.json" to inform the providers you want to test and the rules that will be applied to them. Each key at the root of the json refers to the provider you wish to use. In the following example, we wish to use only "azure". Each item in this list refers to a "subscription"/"environment". It's a good idea to give each item a name and a description, to make it easier to understand. The "rules" key is mandatory to specify the rules to be applied to each environment. Finally, a key called "prefix" will allow you to identify the variables used to log on to the environment among your environment variables or your secret manager. The attribute of this value should preferably be unique, unless you want to use the same identifiers more than once on several environments. If you haven't specified a prefix, a default value is assigned. It corresponds to the environment index followed by a "-".
-En outre sur les addon officiels que nous avons publié nous avons normalisé le schema de config. Chaque addOn est libre de ses clés valeurs obligatoire. Dans tout les cas les clés à la racine permette d'identifier le nom des addOns
+  In the config folder, create a file if not already exist: 'default.json' and the path is "./config/default.json" to inform the providers you want to test and the rules that will be applied to them. Each key at the root of the json refers to the provider you wish to use. In the following example, we wish to use only "azure". Each item in this list refers to a "subscription"/"environment". It's a good idea to give each item a name and a description, to make it easier to understand. The "rules" key is mandatory to specify the rules to be applied to each environment. Finally, a key called "prefix" will allow you to identify the variables used to log on to the environment among your environment variables or your secret manager. The attribute of this value should preferably be unique, unless you want to use the same identifiers more than once on several environments. If you haven't specified a prefix, a default value is assigned. It corresponds to the environment index.
+In addition, we've standardized the config schema of the official addons we've published. Each published addOn is free to set its own mandatory key values. Our minimum values for any addOn are "rules". Keys such as "prefix", "name" and "description" are strongly recommended to maintain ease of use.
   The file will have the following format : 
   __Azure config exemple__
   ```js
@@ -148,7 +152,7 @@ En outre sur les addon officiels que nous avons publié nous avons normalisé le
     "azure": [
       {
         "name": "Project A",
-        "prefix": "PROJECTA-", #(if not specify it would have been: '0-')
+        "prefix": "PROJECTA_", #(if not specify it would have been: '0')
         "description": "First subscription (0) : Project A subscription",
         "rules": [
           "Name of my rule"
@@ -156,7 +160,7 @@ En outre sur les addon officiels que nous avons publié nous avons normalisé le
       },
       {
         "name": "Project B",
-        "prefix": "PROJECTB-", #(if not specify it would have been: '1-')
+        "prefix": "PROJECTB_", #(if not specify it would have been: '1')
         "description": "Second subscription (1) : Project B subscription",
         "rules": [
           "Name of my rule",
@@ -175,7 +179,7 @@ En outre sur les addon officiels que nous avons publié nous avons normalisé le
     "aws": [
       {
         "name": "Project A",
-        "prefix": "AWSPROJECTA-", #(if not specify it would have been: '0-')
+        "prefix": "AWSPROJECTA_", #(if not specify it would have been: '0')
         "description": "First subscription (0) : Project A subscription",
         "rules": [
           "Name of my rule"
@@ -188,7 +192,7 @@ En outre sur les addon officiels que nous avons publié nous avons normalisé le
     "gcp": [
       {
         "name": "Project B",
-        "prefix": "GCPPROJECTB-", #(if not specify it would have been: '0-')
+        "prefix": "GCPPROJECTB_", #(if not specify it would have been: '0')
         "description": "First subscription (0) : Project B subscription",
         "rules": [
           "Name of my rule",
@@ -210,8 +214,8 @@ En outre sur les addon officiels que nous avons publié nous avons normalisé le
     ```
       RULESDIRECTORY=./Kexa/rules (default value)
     ```
-  - add the following variables for each type of notification you have use in your rules:
-    - email:
+  - add the following variables for each type of notification you have use in your rules, they will be used to identify yourself to your notification tools:
+    - [email](https://docs.sendgrid.com/ui/account-and-settings/api-keys#creating-an-api-key):
       ```
         EMAILPORT=587
         EMAILHOST=smtp.sendgrid.net
@@ -219,27 +223,27 @@ En outre sur les addon officiels que nous avons publié nous avons normalisé le
         EMAILPWD=XXXXXXXXXXXXXXX
         EMAILFROM='"Kexa" <noreply@4urcloud.eu>'
       ```
-    - sms with twilio:
+    - [sms with twilio](https://www.twilio.com/docs/iam/keys/api-key):
       ```
         SMSFROM='+00000000000'
         SMSACCOUNTSID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         SMSAUTHTOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
       ```
 
-  Add the following variables for each provider you want to test preceded by the prefix mentioned in the previous section:
-  - Azure:
+  Add the following variables for each provider you want to test preceded by the prefix mentioned in the previous section. For each environment you want to test, you'll need to provide the environment variables needed to authenticate to it. Be careful when creating your credentials so that they have read access to your environment. :
+  - [Azure](https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal):
     ```
       SUBSCRIPTIONID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
       AZURECLIENTID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX	(ID of an Azure AD application)
       AZURETENANTID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX	(ID of the application's Azure AD tenant)
       AZURECLIENTSECRET=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX	(one of the application's client secrets)
     ```
-    If you are runnning your Kexa in a azure function you can also use this with UAI (User Assigned Identities):
+    If you are runnning your Kexa in a azure function you can also use this with [UAI (User Assigned Identities)](https://learn.microsoft.com/en-us/azure/active-directory/workload-identities/workload-identity-federation-create-trust-user-assigned-managed-identity):
     ```
       AZUREKEYVAULTNAME=MyKeyVault
       USERAZUREIDENTITYID=XXXXXXXX
     ```
-  - GitHub:
+  - [GitHub](https://docs.github.com/en/enterprise-server@3.6/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens):
     ```
       GITHUBTOKEN=github_pat_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     ```
@@ -247,12 +251,12 @@ En outre sur les addon officiels que nous avons publié nous avons normalisé le
     ```
       KUBECONFIG="./Path/to/my/config.yml"
     ```
-  - AWS:
+  - [AWS](https://docs.aws.amazon.com/singlesignon/latest/userguide/howtogetcredentials.html):
     ```
       AWSACCESSKEYID
       AWSSECRETACCESSKEY
     ```
-  - GCP:
+  - [GCP](https://developers.google.com/workspace/guides/create-credentials):
     ```
       GOOGLE_APPLICATION_CREDENTIALS (id your google json credential)
       GOOGLE_PROJECT_ID (ID of a gcp project)
@@ -270,22 +274,22 @@ En outre sur les addon officiels que nous avons publié nous avons normalisé le
       body:{"name": "Toto"}
     ```
   
-  Before each of this variable you must add a prefix which indicates to which "environment" this refers. The default prefix is the index in the provider's config (we start counting from zero) followed by a dash.
+  Before each of this variable you must add a prefix which indicates to which "environment" this refers. The default prefix is the index in the provider's config (we start counting from zero).
   Example of my environnement variable for __Azure config exemple__ previously show : 
   ```
-    PROJECTA-SUBSCRIPTIONID=XXXXXXXXXXXXXXXXXXXXX
-    PROJECTA-AZURECLIENTID =XXXXXXXXXXXXXXXXXXXXX
-    PROJECTA-AZURETENANTID=XXXXXXXXXXXXXXXXXXXXXX
-    PROJECTA-AZURECLIENTSECRET=XXXXXXXXXXXXXXXXXX
+    PROJECTA_SUBSCRIPTIONID=XXXXXXXXXXXXXXXXXXXXX
+    PROJECTA_AZURECLIENTID =XXXXXXXXXXXXXXXXXXXXX
+    PROJECTA_AZURETENANTID=XXXXXXXXXXXXXXXXXXXXXX
+    PROJECTA_AZURECLIENTSECRET=XXXXXXXXXXXXXXXXXX
     PROJECTB-SUBSCRIPTIONID=XXXXXXXXXXXXXXXXXXXXX
     PROJECTB-AZURECLIENTID =XXXXXXXXXXXXXXXXXXXXX
     PROJECTB-AZURETENANTID=XXXXXXXXXXXXXXXXXXXXXX
     PROJECTB-AZURECLIENTSECRET=XXXXXXXXXXXXXXXXXX
   ```
 
-##### Key vault
+##### Password manager
 
-  You can optionally use a key manager; for these variables no prefix must be set:
+  You can optionally use a key manager; for these variables no prefix must be set. The prefix is not mandatory, as it does not refer to any specific environment, but simply to the runner space :
   - Azure:
     To refer to your Key Vault add this following environnement variable :
     ```
@@ -322,134 +326,126 @@ Whichever way you want to launch Kexa, you need to go through the configuration 
 
 ### Quick launch
 
+For a quick launch, we're going to use docker.
+To do this, create a folder called "config", for example.
+In this folder, create a "default.json" file.
+This file will be populated according to the provider you want to test, as follows.
+Don't forget to modify "Absolute/Path/To/config" with the absolute path to your config folder.
+Obviously, the tokens you supply must have read rights on the environments you want to scan.
+
 <details>
-  <summary>Which provider quick check</summary>
-  <br>
-  <p>
-    For a quick launch, we're going to use docker.
-    To do this, create a folder called "config", for example.
-    In this folder, create a "default.json" file.
-    This file will be populated according to the provider you want to test, as follows.
-    don't forget to modify "Absolute/Path/To/config" with the absolute path to your config folder. 
-  </p>
-  <ul>
-    <li>
-      <details>
-        <summary>Azure</summary>
-        default.json:  
+  <summary>Azure</summary>
+  default.json:  
 
 ~~~json
-        {
-            "azure": [
-                {
-                    "name": "Project A",
-                    "prefix": "A-",
-                    "description": "Project A is a quick-launch test",
-                    "rules": [
-                        "Economy",
-                        "OperationalExcellence",
-                        "Security",
-                        "rules-testing",
-                        "Performance"
-                    ]
-                }
-            ]
-        }
-~~~
-<p>Then paste this command fill with your credential: </p>
-
-~~~bash
-        docker run -v Absolute/Path/To/config:/app/config /
-        -e A-AZURE_CLIENT_ID= /
-        -e A-AZURE_TENANT_ID= /
-        -e A-AZURE_CLIENT_SECRET= /
-        -e A-SUBSCRIPTIONID= /
-        innovtech/kexa
-~~~
-</details>
-    </li>
-    <li>
-      <details>
-        <summary>AWS</summary>
-        default.json: 
-
-~~~json
+  {
+      "azure": [
           {
-              "aws": [
-                  {
-                      "name": "Project A",
-                      "prefix": "A-",
-                      "description": "Project A is a quick-launch test",
-                      "rules": [
-                          "Economy",
-                          "OperationalExcellence",
-                          "Security",
-                          "rules-testing",
-                          "Performance"
-                      ]
-                  }
+              "name": "Project A",
+              "prefix": "A_",
+              "description": "Project A is a quick-launch test",
+              "rules": [
+                  "Economy",
+                  "OperationalExcellence",
+                  "Security",
+                  "rules-testing",
+                  "Performance"
               ]
           }
+      ]
+  }
 ~~~
 <p>Then paste this command fill with your credential: </p>
 
 ~~~bash
-        docker run -v Absolute/Path/To/config:/app/config /
-        -e A-AWS_SECRET_NAME= /
-        -e A-AWS_REGION= /
-        -e A-AWS_ACCESS_KEY_ID= /
-        -e A-AWS_SECRET_ACCESS_KEY= /
-        innovtech/kexa
+  docker run -v Absolute/Path/To/config:/app/config /
+  -e A_AZURECLIENTID="" /
+  -e A_AZURETENANTID="" /
+  -e A_AZURECLIENTSECRET="" /
+  -e A_SUBSCRIPTIONID="" /
+  innovtech/kexa
 ~~~
 </details>
-    </li>
-    <li>
-      <details>
-        <summary>GCP</summary>
-        default.json: 
+
+<details>
+<summary>AWS</summary>
+default.json: 
 
 ~~~json
-          {
-              "gcp": [
-                  {
-                      "name": "Project A",
-                      "prefix": "A-",
-                      "description": "Project A is a quick-launch test",
-                      "rules": [
-                          "Economy",
-                          "OperationalExcellence",
-                          "Security",
-                          "rules-testing",
-                          "Performance"
-                      ]
-                  }
-              ]
-          }
+{
+  "aws": [
+      {
+          "name": "Project A",
+          "prefix": "A_",
+          "description": "Project A is a quick-launch test",
+          "rules": [
+              "Economy",
+              "OperationalExcellence",
+              "Security",
+              "rules-testing",
+              "Performance"
+          ]
+      }
+  ]
+}
 ~~~
 <p>Then paste this command fill with your credential: </p>
 
 ~~~bash
-        docker run -v Absolute/Path/To/config:/app/config /
-        -e A-GOOGLE_APPLICATION_CREDENTIALS= '{ /
-               "type": "service_account", /
-               "project_id": "", /
-               "private_key_id": "", /
-               "private_key": "-----BEGIN PRIVATE KEY----- -----END PRIVATE KEY-----\n", /
-               "client_email": "", /
-               "client_id": "", /
-               "auth_uri": "", /
-               "token_uri": "", /
-               "auth_provider_x509_cert_url": "", /
-               "client_x509_cert_url": "", /
-               "universe_domain": "googleapis.com" /
-             }'/
-        -e A-GOOGLE_PROJECT_ID= /
-        innovtech/kexa
+  docker run -v Absolute/Path/To/config:/app/config /
+  -e A_AWS_SECRET_NAME= /
+  -e A_AWS_REGION= /
+  -e A_AWS_ACCESS_KEY_ID= /
+  -e A_AWS_SECRET_ACCESS_KEY= /
+  innovtech/kexa
 ~~~
 </details>
-    </li>
-    <li>
-      <details>
+
+<details>
+<summary>GCP</summary>
+default.json: 
+
+~~~json
+  {
+      "gcp": [
+          {
+              "name": "Project A",
+              "prefix": "A_",
+              "description": "Project A is a quick-launch test",
+              "rules": [
+                  "Economy",
+                  "OperationalExcellence",
+                  "Security",
+                  "rules-testing",
+                  "Performance"
+              ]
+          }
+      ]
+  }
+~~~
+<p>Then paste this command fill with your credential: </p>
+
+~~~bash
+docker run -v Absolute/Path/To/config:/app/config /
+-e A_GOOGLE_APPLICATION_CREDENTIALS= '{ /
+        "type": "service_account", /
+        "project_id": "", /
+        "private_key_id": "", /
+        "private_key": "-----BEGIN PRIVATE KEY----- -----END PRIVATE KEY-----\n", /
+        "client_email": "", /
+        "client_id": "", /
+        "auth_uri": "", /
+        "token_uri": "", /
+        "auth_provider_x509_cert_url": "", /
+        "client_x509_cert_url": "", /
+        "universe_domain": "googleapis.com" /
+      }'/
+-e A_GOOGLE_PROJECT_ID= /
+innovtech/kexa
+~~~
+</details>
+
+<details>
         <summary>Github</summary>
         default.json: 
 
@@ -458,7 +454,7 @@ Whichever way you want to launch Kexa, you need to go through the configuration 
               "github": [
                   {
                       "name": "Project A",
-                      "prefix": "A-",
+                      "prefix": "A_",
                       "description": "Project A is a quick-launch test",
                       "rules": [
                           "Economy",
@@ -476,13 +472,12 @@ Whichever way you want to launch Kexa, you need to go through the configuration 
 
 ~~~bash
         docker run -v Absolute/Path/To/config:/app/config /
-        -e A-GITHUBTOKEN= /
+        -e A_GITHUBTOKEN= /
         innovtech/kexa
 ~~~
 </details>
-    </li>
-    <li>
-      <details>
+
+<details>
         <summary>Kubernetes</summary>
         default.json:
 
@@ -491,7 +486,7 @@ Whichever way you want to launch Kexa, you need to go through the configuration 
     "kubernetes": [
         {
             "name": "Project A",
-            "prefix": "A-",
+            "prefix": "A_",
             "description": "Project A is a quick-launch test",
             "rules": [
                 "Economy",
@@ -510,13 +505,12 @@ Whichever way you want to launch Kexa, you need to go through the configuration 
 ~~~bash
 docker run -v Absolute/Path/To/config:/app/config /
 -v Absolute/Path/To/.kube:/app/.kube /
--e A-KUBECONFIG="/app/.kube" /
+-e A_KUBECONFIG="/app/.kube" /
 innovtech/kexa
 ~~~
 </details>
-    </li>
-    <li>
-      <details>
+
+<details>
         <summary>Office 365</summary>
         default.json: 
 
@@ -525,7 +519,7 @@ innovtech/kexa
               "o365": [
                   {
                       "name": "Project A",
-                      "prefix": "A-",
+                      "prefix": "A_",
                       "description": "Project A is a quick-launch test",
                       "rules": [
                           "Economy",
@@ -543,15 +537,12 @@ innovtech/kexa
 
 ~~~bash
         docker run -v Absolute/Path/To/config:/app/config /
-        -e A-AZURE_CLIENT_ID= /
-        -e A-AZURE_TENANT_ID= /
-        -e A-AZURE_CLIENT_SECRET= /
-        -e A-SUBSCRIPTIONID= /
+        -e A_AZURE_CLIENT_ID= /
+        -e A_AZURE_TENANT_ID= /
+        -e A_AZURE_CLIENT_SECRET= /
+        -e A_SUBSCRIPTIONID= /
         innovtech/kexa
 ~~~
-</details>
-    </li>
-  </ul>
 </details>
 
 <div id="local"></div>
@@ -634,21 +625,21 @@ spec:
             image: kexa:latest
             env:
               # all the environment variables needed by the container according to the previous example configuration
-              - name: PROJECTA-SUBSCRIPTIONID
+              - name: PROJECTA_SUBSCRIPTIONID
                 value: XXXXXXXXXXXXXXXXXXXXXXXXXXXX
-              - name: PROJECTA-AZURECLIENTID
+              - name: PROJECTA_AZURECLIENTID
                 value: XXXXXXXXXXXXXXXXXXXXXXXXXXXX
-              - name: PROJECTA-AZURETENANTID
+              - name: PROJECTA_AZURETENANTID
                 value: XXXXXXXXXXXXXXXXXXXXXXXXXXXX
-              - name: PROJECTA-AZURECLIENTSECRET
+              - name: PROJECTA_AZURECLIENTSECRET
                 value: XXXXXXXXXXXXXXXXXXXXXXXXXXXX
-              - name: PROJECTB-SUBSCRIPTIONID
+              - name: PROJECTB_SUBSCRIPTIONID
                 value: XXXXXXXXXXXXXXXXXXXXXXXXXXXX
-              - name: PROJECTB-AZURECLIENTID
+              - name: PROJECTB_AZURECLIENTID
                 value: XXXXXXXXXXXXXXXXXXXXXXXXXXXX
-              - name: PROJECTB-AZURETENANTID
+              - name: PROJECTB_AZURETENANTID
                 value: XXXXXXXXXXXXXXXXXXXXXXXXXXXX
-              - name: PROJECTB-AZURECLIENTSECRET
+              - name: PROJECTB_AZURECLIENTSECRET
                 value: XXXXXXXXXXXXXXXXXXXXXXXXXXXX
               - name: EMAILPORT
                 value: "587"
@@ -933,90 +924,90 @@ rules:
 <!-- ROADMAP -->
 ## Roadmap
 
-* [X] Setting notification levels
-* [X] Azure check in:
-  * [X] virtual machine (vm)
-  * [X] resource groupe (rg)
-  * [X] disk
-  * [X] network security groupe (nsg)
-  * [X] virtual network (virtualNetwork)
-  * [X] ip
-  * [X] namespaces (namespaces)
-  * [X] pods
-  * [X] aks
-* [X] Github check in:
-  * [X] repositories
-  * [X] branches
-  * [X] issues
-  * [X] organizations
-  * [X] members
-  * [X] teams
-  * [X] teamProjects
-  * [X] teamMembers
-  * [X] teamRepositories
-  * [X] outsideCollaborators
-* [X] Kubernetes check in:
-  * [X] namespaces
-  * [X] pods
-  * [X] helm
-* [X] AWS :
-  * [X] EC2 Instance (ec2Instance)
-  * [X] EC2 Volume (ec2Volume)
-  * [X] EC2 Security group (ec2SG)
-  * [X] Relational Database Service (rds)
-  * [X] Resource Groups (resourceGroups)
-  * [X] Tags (tagsValue)
-  * [X] Elastic Container Service CLUSTER (ecsCluster)
-  * [X] Elastic Container Repository(ecrRepository)
-* [X] HTTP and HTTPS request
-  * [X] request
-    * [X] certificate
-    * [X] body
-    * [X] headers
-    * [X] http code(code)
-* [X] GCP
-  * [X] tasks_queue
-  * [X] compute
-  * [X] storage
-  * [X] project
-  * [X] billingAccount
-  * [X] cluster
-  * [X] workflows
-  * [X] websecurity
-  * [X] connector
-  * [X] vmware-engine
-  * [X] namespace
-  * [X] certificate
-  * [X] secret
-  * [X] connectivity_test
-  * [X] resource_settings
-  * [X] redis_instance
-  * [X] os_config
-  * [X] org_policy_constraint
-  * [X] airflow_image_version
-  * [X] disk
-  * [X] compute_item
-* [X] Google Workspace
-  * [X] user
-  * [X] domain
-  * [X] group
-  * [X] role
-  * [X] orgaunit
-  * [X] calendar
-  * [X] drive
-  * [X] file
-* [X] O365
-  * [X] sku
-  * [X] user
-  * [X] domain
-  * [X] secure_score
-  * [X] auth_methods
-  * [X] organization
-  * [X] directory
-  * [X] sp
-  * [X] alert
-  * [X] incident
-  * [X] app_access_policy
+* :white_check_mark: Setting notification levels
+* :white_check_mark: Azure check in:
+  * :white_check_mark: virtual machine (vm)
+  * :white_check_mark: resource groupe (rg)
+  * :white_check_mark: disk
+  * :white_check_mark: network security groupe (nsg)
+  * :white_check_mark: virtual network (virtualNetwork)
+  * :white_check_mark: ip
+  * :white_check_mark: namespaces (namespaces)
+  * :white_check_mark: pods
+  * :white_check_mark: aks
+* :white_check_mark: Github check in:
+  * :white_check_mark: repositories
+  * :white_check_mark: branches
+  * :white_check_mark: issues
+  * :white_check_mark: organizations
+  * :white_check_mark: members
+  * :white_check_mark: teams
+  * :white_check_mark: teamProjects
+  * :white_check_mark: teamMembers
+  * :white_check_mark: teamRepositories
+  * :white_check_mark: outsideCollaborators
+* :white_check_mark: Kubernetes check in:
+  * :white_check_mark: namespaces
+  * :white_check_mark: pods
+  * :white_check_mark: helm
+* :white_check_mark: AWS :
+  * :white_check_mark: EC2 Instance (ec2Instance)
+  * :white_check_mark: EC2 Volume (ec2Volume)
+  * :white_check_mark: EC2 Security group (ec2SG)
+  * :white_check_mark: Relational Database Service (rds)
+  * :white_check_mark: Resource Groups (resourceGroups)
+  * :white_check_mark: Tags (tagsValue)
+  * :white_check_mark: Elastic Container Service CLUSTER (ecsCluster)
+  * :white_check_mark: Elastic Container Repository(ecrRepository)
+* :white_check_mark: HTTP and HTTPS request
+  * :white_check_mark: request
+    * :white_check_mark: certificate
+    * :white_check_mark: body
+    * :white_check_mark: headers
+    * :white_check_mark: http code(code)
+* :white_check_mark: GCP
+  * :white_check_mark: tasks_queue
+  * :white_check_mark: compute
+  * :white_check_mark: storage
+  * :white_check_mark: project
+  * :white_check_mark: billingAccount
+  * :white_check_mark: cluster
+  * :white_check_mark: workflows
+  * :white_check_mark: websecurity
+  * :white_check_mark: connector
+  * :white_check_mark: vmware-engine
+  * :white_check_mark: namespace
+  * :white_check_mark: certificate
+  * :white_check_mark: secret
+  * :white_check_mark: connectivity_test
+  * :white_check_mark: resource_settings
+  * :white_check_mark: redis_instance
+  * :white_check_mark: os_config
+  * :white_check_mark: org_policy_constraint
+  * :white_check_mark: airflow_image_version
+  * :white_check_mark: disk
+  * :white_check_mark: compute_item
+* :white_check_mark: Google Workspace
+  * :white_check_mark: user
+  * :white_check_mark: domain
+  * :white_check_mark: group
+  * :white_check_mark: role
+  * :white_check_mark: orgaunit
+  * :white_check_mark: calendar
+  * :white_check_mark: drive
+  * :white_check_mark: file
+* :white_check_mark: O365
+  * :white_check_mark: sku
+  * :white_check_mark: user
+  * :white_check_mark: domain
+  * :white_check_mark: secure_score
+  * :white_check_mark: auth_methods
+  * :white_check_mark: organization
+  * :white_check_mark: directory
+  * :white_check_mark: sp
+  * :white_check_mark: alert
+  * :white_check_mark: incident
+  * :white_check_mark: app_access_policy
 * [ ] OVH
 * [ ] VM Ware
 * [ ] Postgres
@@ -1184,3 +1175,5 @@ Public site: [Kexa.io](www.kexa.io)
 [license-url]: https://github.com/4urcloud/Kexa/blob/master/LICENSE.txt
 [NodeJs-url]:https://nodejs.org/en
 [NodeJs.com]:https://img.shields.io/badge/Nodejs-3c873a?style=for-the-badge&logo=node.js&logoColor=white
+[Docker-url]:https://www.docker.com/
+[Docker.com]:https://img.shields.io/badge/DOCKER-2596be?style=for-the-badge

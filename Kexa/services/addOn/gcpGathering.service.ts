@@ -52,7 +52,7 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
     let defaultPathCred = await getEnvVar("GOOGLE_APPLICATION_CREDENTIALS");
     for (let config of gcpConfig??[]) {
         setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", "./config/gcp.json");
-        let prefix = config.prefix??(gcpConfig.indexOf(config)+"-");
+        let prefix = config.prefix??(gcpConfig.indexOf(config).toString());
         let gcpResources = {
             "bucket": null,
             "tasks_queue": null,
