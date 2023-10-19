@@ -17,8 +17,7 @@
 
 const process = require('process');
 
-import { Logger } from "tslog";
-import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
+import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { googleWorkspaceResources } from "../../models/googleWorkspace/ressource.models";
 import { googleWorkspaceConfig } from "../../models/googleWorkspace/config.models";
 import {deleteFile, writeStringToJsonFile} from "../../helpers/files";
@@ -27,7 +26,7 @@ import {deleteFile, writeStringToJsonFile} from "../../helpers/files";
 //////   INITIALIZATION   //////
 ////////////////////////////////
 
-import {getNewLogger} from "../logger.service";
+import {getContext, getNewLogger} from "../logger.service";
 const logger = getNewLogger("googleWorkspaceLogger");
 
 const fs = require('fs').promises;
@@ -60,6 +59,7 @@ const TOKEN_PATH = path.join(process.cwd(), '/config/token_workspace.json');
 const CREDENTIALS_PATH = path.join(process.cwd(), '/config/credentials_workspace.json');
 
 export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[]): Promise<googleWorkspaceResources[] | null> {
+    let context = getContext();
     let resources = new Array<googleWorkspaceResources>();
 
 
@@ -102,6 +102,7 @@ export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[])
                     file: fileList,
                     drive: driveList
                 };
+                context?.log("- listing googleWorkspace resources done -");
                 logger.info("- listing googleWorkspace resources done -");
             }
             catch (e)

@@ -20,7 +20,7 @@ const levelAlert = ["info", "warning", "error", "critical"];
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
 const config = require('config');
 
-import {getNewLogger} from "./logger.service";
+import {getContext, getNewLogger} from "./logger.service";
 const logger = getNewLogger("functionLogger");
 export function alertGlobal(allScan: ResultScan[][], alert: GlobalConfigAlert) {
     let compteError = [0,0,0,0];
@@ -75,22 +75,31 @@ export function alertFromGlobal(alert: GlobalConfigAlert, compteError: number[],
 }
 
 export function alertLogGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
+    const context = getContext();
+    context?.log("_______________________________________-= Result Global scan =-___________________________________");
     logger.info("_______________________________________-= Result Global scan =-___________________________________");
     compteError.forEach((value, index) => {
+        context?.log("number of "+levelAlert[index]+" :"+value);
         logger.info("number of "+levelAlert[index]+" :"+value);
     });
+    context?.log("-= Detail for each Rules =-");
     logger.info("-= Detail for each Rules =-");
     let allScanOneDimension = [];
     for (let row of allScan) for (let e of row) allScanOneDimension.push(e);
     let subResult = groupBy(allScanOneDimension, (scan) => scan.rule?.name);
     Object.entries(subResult).forEach(([key, value]) => {
+        context?.log("rule:"+key);
         logger.info("rule:"+key);
+        context?.log("all resources who not respect the rules:");
         logger.info("all resources who not respect the rules:");
         value.map(scan => scan.objectContent).forEach((resource, index) => {
+            context?.log("resource " + (index+1) + ":");
             logger.info("resource " + (index+1) + ":");
+            context?.log(jsome.getColoredString(resource));
             logger.info(jsome.getColoredString(resource));
         });
     });
+    context?.log("_____________________________________-= End Result Global scan =-_________________________________");
     logger.info("_____________________________________-= End Result Global scan =-_________________________________");
 }
 
@@ -309,6 +318,7 @@ async function SendMail(mail: string, to: string, subject: string): Promise<bool
 }
 
 async function SendMailWithAttachment(mail: string, to: string, subject: string, content: any): Promise<boolean> {
+    let context = getContext();
     try{
         const jsonContent = JSON.stringify(content);
 
@@ -328,6 +338,7 @@ async function SendMailWithAttachment(mail: string, to: string, subject: string,
                 }
             ]
         });
+        context?.log(`Email sent: ${subject} to ${to} with attachment`);
         logger.info(`Email sent: ${subject} to ${to} with attachment`);
         return true;
     }catch (e) {
@@ -353,6 +364,7 @@ ${content}`,
 }
 
 async function sendWebhook(alert: ConfigAlert, subject: string, content: any) {
+    const context = getContext();
     content["title"] = subject;
     logger.debug("send webhook");
     for (const webhook_to of alert.to) {
@@ -364,9 +376,10 @@ async function sendWebhook(alert: ConfigAlert, subject: string, content: any) {
         try {
             const response = await axios.post(webhook_to, payload);
             if (response.status === 200) {
-                logger.info('Teams Card sent successfully!');
+                context?.log('Webhook sent successfully!');
+                logger.info('Webhook sent successfully!');
             } else {
-                logger.error('Failed to send Teams card.');
+                logger.error('Failed to send Webhook.');
             }
         } catch (error) {
             logger.error('Teams webhook : An error occurred:', error);
@@ -377,6 +390,7 @@ async function sendWebhook(alert: ConfigAlert, subject: string, content: any) {
 import axios from 'axios';
 
 export async function sendCardMessageToTeamsChannel(channelWebhook: string, subject: string, content: any): Promise<void> {
+    const context = getContext();
     if (!channelWebhook) {
         logger.error("Cannot retrieve TEAMS_CHANNEL_WEBHOOK_URL from env");
         throw("Error on TEAMS_CHANNEL_WEBHOOK_URL retrieve");
@@ -388,8 +402,10 @@ export async function sendCardMessageToTeamsChannel(channelWebhook: string, subj
     try {
         const response = await axios.post(channelWebhook, payload);
         if (response.status === 200) {
+            context?.log('Card sent successfully!');
             logger.info('Card sent successfully!');
         } else {
+            context?.log('Failed to send card.');
             logger.info('Failed to send card.');
         }
     } catch (error) {
