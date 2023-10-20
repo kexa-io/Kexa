@@ -1,5 +1,5 @@
 
-### **GLOBAL CONFIGURATION**
+# **GLOBAL CONFIGURATION**
 
 
 In the Kexa config folder, edit the default.json (create it if it doesn't exist)
@@ -107,9 +107,9 @@ Each projects in this list refers to a "subscription"/"environment". It's a good
 }
 ```
 
-### **ENVIRONMENT VARIABLE & AUTH** 
+# **ENVIRONMENT VARIABLE & AUTH** 
 
-/// **Directory & Notifications** ///
+## **Directory & Notifications**
 
 Specify a folder to store the rules files.
 ```
@@ -132,7 +132,7 @@ Setup your notification tools. (for those selected in your rules files)
   SMSAUTHTOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-/// **Providers Authentications** ///
+## **Providers Authentications**
 
 For each environment you want to test, you'll need to provide the environment variables needed to authenticate to it. For this you can refer to the addons section corresponding to each addon.
 
@@ -141,7 +141,7 @@ LIST LINK DOC ADDONS
 An environment file is also available in our repository, with every official addon's needed variables.
 You can use it by filling the field corresponding to the providers you want to authenticate to.
 
-/// **Password manager** ///
+## **Password manager**
 
 You can optionally use a key manager; for these variables no prefix are needed. Those variables does not refer to any specific environment, but simply to the runner space :
 
@@ -173,55 +173,49 @@ You can optionally use a key manager; for these variables no prefix are needed. 
       GOOGLE_APPLICATION_CREDENTIALS=PATH_TO_JSON_CRED
     ```
 
-/////////////////////////////////
-//    **OFFICIAL ADDONS**     //
-/////////////////////////////////
 
+# **OFFICIAL ADDONS**
 
-**AWS**
+### **AWS**
 quick catchphrase
 
 - Link notre doc.md
 
 
-**GCP**
+### **GCP**
 quick catchphrase
 
 - Link notre doc.md
 
 
-**WORKSPACE**
+### **WORKSPACE**
 quick catchphrase
 
 - Link notre doc.md
 
 
-**O365**
+### **O365**
 quick catchphrase
 
 - Link notre doc.md
 
+# **COMMUNITY ADDONS**
 
-
-//////////////////////////////////////
-//    **COMMUNITY ADDONS**     //
-/////////////////////////////////////
-
-/// **Getting new addons** ///
+## **Getting new addons**
 
 To use a community addon, simply download the required {AddonName}Gathering.service.ts and {AddonName}Display.service.ts, and move them in the /services/addOn and /services/addOn/display folder in the Kexa root directory.
 
 You will need to refer to the addOn documentation to get information about the required environment variable, gathered data or specific configuration fields.
 
 
-/// **Contributing** //
+## **Contributing** 
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
 
 
-/// **Forking project** ///
+## **Forking project**
 
 	1. Fork the Project
 	2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
@@ -230,7 +224,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 	5. Open a Pull Request
 
 
-/// **Adding functionalities** ///
+## **Adding functionalities**
 	
 	 Each published addOn is free to set its own mandatory key values for its default.config configuration schema.
 	 Our minimum values for any addOn are "rules". Keys such as "prefix", "name" and "description" are strongly recommended to maintain ease of use.
@@ -238,7 +232,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 	We've set up a system to facilitate the development of new features. This system is based on the "addOn" system. To develop a new feature, you don't need to know the whole project. You can develop additional services to collect additional data, among which you can make rules.
 
 
-/// **Gathering data** ///
+## **Gathering data**
 
 	A file to collect data whose path will be "./Kexa/services/addOn". It is named as follows: [extension's name]Gathering.service.ts . The entry point for this file is a function named "collectData", which takes one arguments. The argument is a list containing all the configs for your addOn. The return format of this function is as shown in the following example. exemple :
 	
@@ -293,7 +287,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 	```
 	
 
-/// **Display data** ///
+## **Display data**
 
 	The display data file a pour schema de nom : [same extension's name]Display.service.ts, its path will be: "./Kexa/services/addOn/display". This file is used to display precise attributes of an object to quickly identify it in its environment. This return is done by returning a string, with the possibility of putting html in this sting. The function used as an entry point is named "propertyToSend". It takes 3 arguments. The first is a "Rules", and the relative path to the object definition is
 	
@@ -320,7 +314,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 
 
 
-/// **Tests** ///
+## **Tests**
 
 	We've set up some tests you can use to validate the integration of your addOn:
 	
@@ -331,14 +325,9 @@ If you have a suggestion that would make this better, please fork the repo and c
 	Other checks are carried out at various stages to validate the integration of your addOn and the rules you can design. However, these checks are only carried out during software execution. Indeed, due to the nature of certain data collections, it is not possible to carry out "cold" tests without having access to dedicated environments.
 
 
+# **HOW TO LAUNCH KEXA**
 
-
-/////////////////////////////////
-// **HOW TO LAUNCH KEXA** //
-/////////////////////////////////
-
-
-/// **Local** ///
+## **Local**
 
 Use this command to launch scans:
 ```
@@ -347,7 +336,7 @@ npm run start
 
 
 
-/// **Local Docker** ///
+## **Local Docker**
 
 Build the image
 ```shell
@@ -366,7 +355,7 @@ docker run -d kexa
 
 
 
-/// **Azure function** ///
+## **Azure function**
 
 To run the deployment commands, make sure that your "func" command is functional. If it is not, you can install it with this command:
 
@@ -394,7 +383,7 @@ func azure functionapp publish [Name of your function app]
 
 
 
-/// **Kubernetes** ///
+## **Kubernetes**
 
 Build the image
 
