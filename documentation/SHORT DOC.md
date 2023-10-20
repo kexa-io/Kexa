@@ -10,7 +10,7 @@ Clone the repository, follow our setup guide (LINK HERE) or the quick launch (LI
 
 Run it and get all the available optimizations with the different notification tools (logs, mail, sms, webhook, Teams, and more incoming with generics tools)
 
-With Kexa, you can edit your own rules (LINK HERE) and retrieve rules or even addons built by the community.
+With Kexa, you can edit your own rules (LINK HERE) and retrieve rules or even addons built by the community (LINK HERE).
 
 
 
