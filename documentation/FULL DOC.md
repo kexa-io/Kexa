@@ -72,6 +72,7 @@ Each projects in this list refers to a "subscription"/"environment". It's a good
 
 
 /// **Regions** ///
+
 	For Amazon Web Services and Google Cloud Provider (or other official addons using regions), you can choose to select specifics regions to check. 
 	Without "regions" property (or empty "regions property), all the regions will be checked.
 
