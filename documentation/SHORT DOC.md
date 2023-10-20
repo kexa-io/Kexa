@@ -4,7 +4,7 @@
 
 1-**ABOUT PROJECT**
 
-We have built Kexa to automatize verifications across your cloud environments (and more than cloud, like APIs endpoints), with a easy-to-deploy script that will allow you to optimize your costs, conformity and security.
+We have built Kexa to automatize verifications across your working environments (cloud, workspace, APIs endpoints), with a easy-to-deploy script that will allow you to optimize your costs, conformity and security.
 
 Clone the repository, follow our setup guide (LINK HERE) or the quick launch (LINK HERE), setup the rules you want to verify from the already available rules file, or build your own.
 
