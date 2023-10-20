@@ -62,11 +62,14 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
     kubResources["pods"] = [];
     kubResources["helm"] = [];
     const namespacePromises = namespaces.body.items.map(async (item: any) => {
-        let helmData = await helm.list({ namespace: item.metadata.name });
+        const promises = [
+            collectHelm(item.metadata.name),
+            collectPods(k8sApiCore, item.metadata.name),
+        ];
+        const [helmData, pods] = await Promise.all(promises);
         helmData.forEach((helmItem: any) => {
             kubResources["helm"].push(helmItem);
         });
-        const pods = await k8sApiCore.listNamespacedPod(item.metadata.name);
         pods.body.items.forEach((pod: any) => {
             pod.metadata.namespace = item.metadata.name;
             kubResources["pods"].push(pod);
@@ -74,4 +77,24 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
     });
     await Promise.all(namespacePromises);
     return kubResources;
+}
+
+async function collectHelm(namespace: string): Promise<any> {
+    try{
+        let helmData = await helm.list({ namespace: namespace });
+        return helmData;
+    }catch(e){
+        logger.error(e);
+        return null;
+    }
+}
+
+async function collectPods(k8sApiCore: any, namespace: string): Promise<any> {
+    try{
+        const pods = await k8sApiCore.listNamespacedPod(namespace);
+        return pods;
+    }catch(e){
+        logger.error(e);
+        return null;
+    }
 }

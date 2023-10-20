@@ -148,11 +148,18 @@ async function dnsLookup(hostname: string): Promise<string[]|string|null> {
 }
 
 async function doRequest(url: string, config: HttpConfig): Promise<any> {
-    let method = await getConfigOrEnvVar(config, "METHOD", config.prefix??(httpConfig.indexOf(config)+"-"));
-    let header = await getHeader(config);
-    let body = getBody(config);
-    if(!header) return await makeHttpRequest<any>(method, url, body);
-    return await makeHttpRequest<any>(method, url, body, header);
+    const method = await getConfigOrEnvVar(config, "METHOD", config.prefix??(httpConfig.indexOf(config)+"-"));
+    const header = await getHeader(config);
+    const body = getBody(config);
+    const start = Date.now();
+    let result = null;
+    if(!header) result = await makeHttpRequest<any>(method, url, body);
+    else result = await makeHttpRequest<any>(method, url, body, header);
+    const delays = Date.now() - start;
+    return {
+        ...result,
+        delays: delays,
+    };
 }
 
 async function getDataHttp(url: string, config: HttpConfig): Promise<HttpRequest> {
@@ -163,16 +170,14 @@ async function getDataHttp(url: string, config: HttpConfig): Promise<HttpRequest
         code: null,
     } as HttpRequest;
     try{
-        let start = Date.now();
         let response = await doRequest(url, config);
-        let delays = Date.now() - start;
         httpResources.body = response?.data;
         httpResources.headers = response?.headers;
         httpResources.code = response?.status;
         httpResources.url = url;
         httpResources.ip = await dnsLookup(URL.parse(url).hostname!);
         httpResources.certificate = await getCertificateFromResponse(response);
-        httpResources.delays = delays;
+        httpResources.delays = response?.delays;
     }catch(e){
         logger.error("error in getDataHttp with the url: " + url);
         logger.error(e);
