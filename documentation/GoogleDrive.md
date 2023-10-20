@@ -6,7 +6,7 @@
 # <h3 align="center">Google Drive addOn</h3>
 
   <p align="center">
-    Reinvent the way you work with Google Drive with our revolutionary data collection add-on, simplifying the collection, organization and analysis of your files and information for unprecedented productivity in the cloud.
+    Reinvent the way you work with Google Drive with our revolutionary data scan add-on, simplifying the collection, organization and analysis of your files and information for unprecedented productivity in the cloud.
     <br />
     <a href="https://github.com/4urcloud/Kexa/issues">Report Bug</a>
     ·
@@ -26,16 +26,27 @@ The following keys are recommended to ensure better readability when re-reading 
     - "name": The name refers to the environment concerned by one or more keywords.
     - "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.
 
-![example config for azure](../config/azure.default.json)
+Example config for 2 environments:
+![example config for google drive](../config/azure.default.json)
 
 ### Environment
 
-GitHub requires tokens to identify itself to its services. Please note that there are different types of token, depending on what you want to scan. You can create [personal tokens](https://docs.github.com/en/enterprise-server@3.6/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) and [organization tokens](https://docs.github.com/en/organizations/managing-programmatic-access-to-your-organization/setting-a-personal-access-token-policy-for-your-organization). Choose the type of token that best corresponds to the elements that are important to you
+[here](https://developers.google.com/workspace/guides/create-credentials) you can create your credential to get access through Kexa to your environment
 ```bash
-GITHUBTOKEN=github_pat_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+DRIVECRED='{
+    "installed": {
+        "client_id": "XXXXXXXXXXXXXXXXX.apps.googleusercontent.com",
+        "project_id": "",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_secret": "",
+        "redirect_uris": [
+        ]
+    }
+}'
 ```
 
+## Additional documentation
 
-### Additional documentation
-
-[Octokit JS](https://github.com/octokit/octokit.js)
+[Drive SDK JS](https://developers.google.com/drive/api/quickstart/nodejs)

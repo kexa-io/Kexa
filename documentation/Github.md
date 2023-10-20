@@ -26,7 +26,8 @@ The following keys are recommended to ensure better readability when re-reading 
     - "name": The name refers to the environment concerned by one or more keywords.
     - "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.
 
-![example config for azure](../config/azure.default.json)
+Example config for 2 environments:
+![example config for github](../config/demo/github.default.json)
 
 ### Environment
 
@@ -35,7 +36,6 @@ GitHub requires tokens to identify itself to its services. Please note that ther
 GITHUBTOKEN=github_pat_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-
-### Additional documentation
+## Additional documentation
 
 [Octokit JS](https://github.com/octokit/octokit.js)

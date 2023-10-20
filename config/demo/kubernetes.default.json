@@ -1,11 +1,11 @@
 {
-    "azure": [
+    "kubernetes": [
         {
             "name": "Project A",
             "prefix": "PROJECTA-",
             "description": "First subscription (0) : Project A subscription",
             "rules": [
-            "Name of my rule"
+                "Name of my rule"
             ]
         },
         {

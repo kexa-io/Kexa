@@ -26,7 +26,8 @@ The following keys are recommended to ensure better readability when re-reading 
     - "name": The name refers to the environment concerned by one or more keywords.
     - "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.
 
-![example config for azure](../config/azure.default.json)
+Example config for 2 environments:
+![example config for azure](../config/demo/azure.default.json)
 
 ### Environment
 
@@ -47,7 +48,6 @@ USERAZUREIDENTITYID=XXXXXXXX
 
 - If you are using your Kexa in an Azure CLI environment and are already logged in, you do not need to log in again. Your credentials will be used during the scan.
 
-
-### Additional documentation
+## Additional documentation
 
 [Azure NodeJs SDK](https://github.com/Azure/azure-sdk-for-js/tree/main)
