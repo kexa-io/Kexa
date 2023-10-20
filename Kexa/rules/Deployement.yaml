@@ -107,6 +107,7 @@
         - property : headers.content-type
           condition : INCLUDE
           value : "application/json"
+    #change the namespace name to your namespace
     - name: namespace-exist-api-4urcloud
       description : "this rules is to check if namespace exist and notifiable if exist"
       applied: true
@@ -117,6 +118,7 @@
         - property : metadata.name
           condition : DIFFERENT
           value : 4urcloudwebsitepublic
+    #change the namespace name to your namespace
     - name: all-pods-running-kexawebsite
       description : "this rules is to check if all pods are running for a namespace"
       applied: true
