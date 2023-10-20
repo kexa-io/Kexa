@@ -5,13 +5,13 @@ const logger = new Logger({ minLevel: 3, type: "pretty", name: "GcpLogger" });
 export function writeStringToJsonFile(data: string, filePath: string): boolean {
     try {
         const fileExists = fs.existsSync(filePath);
-        logger.debug("File exists: " + fileExists)
+        logger.debug("File exists: " + fileExists);
         if (!fileExists) {
-            logger.debug("Creating file: " + filePath)
+            logger.debug("Creating file: " + filePath);
             const initialData = JSON.stringify({});
             fs.writeFileSync(filePath, initialData);
         }
-        logger.debug("Writing data to file: " + filePath)
+        logger.debug("Writing data to file: " + filePath);
         fs.writeFileSync(filePath, JSON.stringify(JSON.parse(data), null, 4), 'utf8');
         return true;
     } catch (error) {
@@ -42,5 +42,22 @@ export function getFile(filePath: string){
         return null;
     }catch(error){
         return null;
+    }
+}
+
+export function writeFileSync(data: string, filePath:string):boolean{
+    try{
+        const fileExists = fs.existsSync(filePath);
+        logger.debug("File exists: " + fileExists);
+        if(!fileExists){
+            logger.debug("Creating file: " + filePath);
+            fs.writeFileSync(filePath, "");
+        }
+        logger.debug("Writing data to file: " + filePath);
+        fs.writeFileSync(filePath, data);
+        return true;
+    }catch(error){
+        logger.error(error);
+        return false;
     }
 }

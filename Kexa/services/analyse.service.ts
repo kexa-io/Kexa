@@ -96,6 +96,7 @@ export async function analyseRule(ruleFilePath:string, listNeedRules:string[], g
         result.forEach((value) => {
             if(value.startsWith("error")) throw new Error(value);
         });
+        logger.info("rule:"+name+" is valid");
         return doc;
     } catch (e) {
         logger.error("error - "+ ruleFilePath + " was not load properly : "+e);
@@ -108,7 +109,8 @@ export function logCheckDoc(result:string[]): void {
     result.forEach((value) => {
         if(value.startsWith("error")) logger.error(value);
         else if(value.startsWith("warn")) logger.warn(value);
-        else logger.info(value);
+        else if(value.startsWith("info")) logger.info(value);
+        else logger.debug(value);
     });
 }
 
@@ -116,9 +118,9 @@ export async function checkDoc(doc:SettingFile): Promise<string[]> {
     logger.debug("check doc");
     let result:string[] = [];
     if(!doc.hasOwnProperty("version")) result.push("info - version not found in doc");
-    else if(doc.version.match(/^[0-9]+\.[0-9]+\.[0-9]+$/) === null) result.push("info - version not valid in doc : "+ doc.version);
+    else if(doc.version.match(/^[0-9]+\.[0-9]+\.[0-9]+$/) === null) result.push("debug - version not valid in doc : "+ doc.version);
     if(!doc.hasOwnProperty("date")) result.push("info - date not found in doc");
-    else if(doc.date.match(/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-(19|20)\d\d$/) === null) result.push("info - date not valid in doc : "+ doc.date);
+    else if(doc.date.match(/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-(19|20)\d\d$/) === null) result.push("debug - date not valid in doc : "+ doc.date);
     (await checkDocAlert(doc.alert)).forEach((value) => result.push(value));
     checkDocRules(doc.rules).forEach((value) => result.push(value));
     return result;
@@ -239,9 +241,9 @@ export function checkRuleCondition(condition:RulesConditions|ParentRules): strin
 export function checkParentRuleCondition(parentRule:ParentRules): string[] {
     logger.debug("check parent rule condition");
     let result:string[] = [];
-    if(!parentRule.hasOwnProperty("name")) result.push("info - name not found in parent rule condition");
+    if(!parentRule.hasOwnProperty("name")) result.push("debug - name not found in parent rule condition");
     else if(typeof parentRule.name !== "string") result.push("warn - name not string in parent rule condition : "+parentRule.name);
-    if(!parentRule.hasOwnProperty("description")) result.push("info - description not found in parent rule condition");
+    if(!parentRule.hasOwnProperty("description")) result.push("debug - description not found in parent rule condition");
     else if(typeof parentRule.description !== "string") result.push("warn - description not string in parent rule condition : "+parentRule.description);
     if(!parentRule.hasOwnProperty("operator")) result.push("error - operator not found in parent rule condition");
     else if(!Object.values(OperatorEnum).includes(parentRule.operator)) result.push("error - operator not valid in parent rule condition : " + parentRule.operator);
@@ -305,15 +307,15 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
         context?.log("check rule:"+rule.name);
         logger.info("check rule:"+rule.name);
         if(!config.has(rule.cloudProvider)){
-            logger.warn("cloud provider not found in config:"+rule.cloudProvider);
+            logger.debug("cloud provider not found in config:"+rule.cloudProvider);
             return;
         }
         const configAssign = config.get(rule.cloudProvider);
         let objectResources:any = []
         for(let i = 0; i < configAssign.length; i++){
             if(configAssign[i].rules.includes(alert.global.name)){
-                context?.log("check rule with object with index :"+ i);
-                logger.info("check rule with object with index :"+ i);
+                context?.log("check rule with config with index/prefix :"+ (configAssign[i].prefix??i));
+                logger.info("check rule with config "+ rule.cloudProvider +" with index/prefix :"+ (configAssign[i].prefix??i));
                 switch(checkMatchConfigAndResource(rule, resources, i)){
                     case BeHaviorEnum.RETURN:
                         return;

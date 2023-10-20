@@ -163,13 +163,16 @@ async function getDataHttp(url: string, config: HttpConfig): Promise<HttpRequest
         code: null,
     } as HttpRequest;
     try{
+        let start = Date.now();
         let response = await doRequest(url, config);
+        let delays = Date.now() - start;
         httpResources.body = response?.data;
         httpResources.headers = response?.headers;
         httpResources.code = response?.status;
         httpResources.url = url;
         httpResources.ip = await dnsLookup(URL.parse(url).hostname!);
         httpResources.certificate = await getCertificateFromResponse(response);
+        httpResources.delays = delays;
     }catch(e){
         logger.error("error in getDataHttp with the url: " + url);
         logger.error(e);

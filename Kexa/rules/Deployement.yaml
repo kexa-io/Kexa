@@ -5,37 +5,37 @@
       enabled: false
       type: 
         - log
-        - email
+        #- email
       to: 
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     error:
       enabled: false
       type: 
         - log
-        - email
+        #- email
       to: 
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     warning:
       enabled: false
       type: 
         - log
-        - email
+        #- email
       to:
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     info:
       enabled: false
       type: 
         - log
-        - email
+        #- email
       to: 
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     global:
       enabled: true
       type: 
         - log
-        - email
+        #- email
       to: 
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
       conditions:
         - level: 0
           min: 1
