@@ -140,6 +140,8 @@ Setup your notification tools. (for those selected in your rules files)
 
 For each environment you want to test, you'll need to provide the environment variables needed to authenticate to it. For this you can refer to the addons section corresponding to each addon.
 
+LIST LINK DOC ADDONS
+
 An environment file is also available in our repository, with every official addon's needed variables.
 You can use it by filling the field corresponding to the providers you want to authenticate to.
 
