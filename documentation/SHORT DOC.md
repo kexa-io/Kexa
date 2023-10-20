@@ -4,6 +4,7 @@
 
 1-**ABOUT PROJECT**
 
+#TODO
 We have built Kexa to automatize verifications across your cloud environments (and more than cloud, like APIs endpoints), with a easy-to-deploy script that will allow you to optimize your costs, conformity and security.
 
 Clone the repository, follow our setup guide (LINK HERE) or the quick launch (LINK HERE), setup the rules you want to verify from the already available rules file, or build your own.
@@ -16,6 +17,7 @@ With Kexa, you can edit your own rules (LINK HERE) and retrieve rules or even ad
 
 2-**RULES  USAGE** 
 
+#EXPLICATION TRES MACRO NE PAS RENTRER DANS LES DETAILS
 Kexa offers significant benefits in a number of areas, contributing to the efficiency and reliability of your environment. You can define rules with YAML (.yaml) files, that you will store in your Kexa 'rules' folder, located in the Kexa root folder.
 
 In this section, we will present you the main areas where our tool add value, with rules files explanations and examples about how to create custom rules (LINK HERE).
@@ -38,12 +40,12 @@ Here is the structure and required fields for a new rule :
   objectName : enum 
   # the target object name (defined in the ./models/[provider]/ressource.model.ts)
   conditions: # the list of criteria to match
-	 - property : string 
-	 # the object field name to check (you can see the objects fields by launching Kexa with -o option)
-	- condition : enum 
-	# the condition for this comparison (defined in ./enum/condition.enum.ts)
-	- value : string 
-	# the value to compare with (refer to the provider documentation)
+		-	property : string 
+	 		# the object field name to check (you can see the objects fields by launching Kexa with -o option)
+			condition : enum 
+			# the condition for this comparison (defined in ./enum/condition.enum.ts)
+			value : string 
+			# the value to compare with (refer to the provider documentation)
 
 	# add more criteria by starting a new '- property:' here #
 ```
@@ -61,14 +63,14 @@ You can also cross operations with logical operators :
    - operator : enum
    # the operator to apply accross criterias (defined in ./enum/operator.enum.ts)
       rules:
-		- property : string 
-		- condition : enum 
-		- value : string 
-		# first criteria
-		- property : string 
-		- condition : enum 
-		- value : string
-		# second criteria
+		- 	property : string 
+			condition : enum 
+			value : string 
+			# first criteria
+		- 	property : string 
+			condition : enum 
+			value : string
+			# second criteria
 
 		# add more criteria by starting a new '- property:' here #
 
@@ -88,23 +90,23 @@ With nested operations :
    - operator : enum
    # the operator to apply accross criterias (defined in ./enum/operator.enum.ts)
       rules:
-		- property : string 
-		- condition : enum 
-		- value : string 
+		- 	property : string 
+			condition : enum 
+			value : string 
 		# first criteria
 		- property : string 
-		- condition : enum 
-		- value : # nested operation
-			- operator: AND
-			  rules:
-				- property : string 
-				- condition : enum 
-				- value : string 
-				# first criteria
-				- property : string 
-				- condition : enum 
-				- value : string 
-				# second criteria
+			condition : enum 
+			value : # nested operation
+				- 	operator: AND
+			  		rules:
+						-	property : string 
+							condition : enum 
+							value : string 
+							# first criteria
+						-	property : string 
+							condition : enum 
+							value : string 
+							# second criteria
 		 
 		# add more criteria by starting a new '- property:' here #
 
@@ -193,7 +195,7 @@ condition: (
   DATE_INTERVAL
 )
 value: 0 0 0 0 0 0 0
-# time value to compare.
+# time value to compare. We use NCronTab Normalization format
 date: "YYYY-MM-DDThh:mm:ss.SSSZ"
 # the format of the date you want to parse (the one used in the resource object field).
 ```
