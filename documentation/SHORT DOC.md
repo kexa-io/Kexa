@@ -1,8 +1,12 @@
 
 
-**EN-TÊTE**
+<br/><br/><br/>
+# <div align="center">**EN-TETE**</div>
+<br/><br/>
 
-1-**ABOUT PROJECT**
+<br/><br/><br/>
+# <div align="center">**About Project**</div>
+<br/><br/>
 
 We have built Kexa to automatize verifications across your working environments (cloud, workspace, APIs endpoints), with a easy-to-deploy script that will allow you to optimize your costs, conformity and security.
 
@@ -12,9 +16,9 @@ Run it and get all the available optimizations with the different notification t
 
 With Kexa, you can edit your own rules (LINK HERE) and retrieve rules or even addons built by the community (LINK HERE).
 
-
-
-2-**RULES  USAGE** 
+<br/><br/><br/>
+# <div align="center">**Rules Usage**</div>
+<br/><br/>
 
 #EXPLICATION TRES MACRO NE PAS RENTRER DANS LES DETAILS
 Kexa offers significant benefits in a number of areas, contributing to the efficiency and reliability of your environment. You can define rules with YAML (.yaml) files, that you will store in your Kexa 'rules' folder, located in the Kexa root folder.
@@ -280,7 +284,9 @@ One of the key features of our tool is its flexibility, allowing users to custom
 
 Whether you want to check specific elements of your infrastructure or take a more general approach, the possibilities are endless. Everyone is free to design and share their own use cases, providing a wealth of resources for the community as a whole.
 
-3-**QUICK LAUNCH**
+<br/><br/><br/>
+# <div align="center">**Quick Launch**</div>
+<br/><br/>
 
 For a quick launch, we're going to use docker.
 
@@ -491,11 +497,13 @@ Office 365
 	        innovtech/kexa
 	```
 
+<br/><br/><br/>
+# <div align="center">**Results Explanation**</div>
+<br/><br/>
 
-4-**EXPLANATION RESULTS**
-
-
-5-**ROADMAP**
+<br/><br/><br/>
+# <div align="center">**Roadmap**</div>
+<br/><br/>
 
 - ✅ Setting notification levels
 - ✅ Azure check in:
@@ -589,13 +597,16 @@ Office 365
 - [ ]  Oracle
 - [ ]  Kexa SAAS
 
+<br/><br/><br/>
+# <div align="center">**License**</div>
+<br/><br/>
 
-6-**LICENSE**
 
 Distributed under the MIT License. See [`LICENSE.txt`](https://github.com/4urcloud/Kexa/blob/main/LICENCE.txt) for more information just [here](https://github.com/4urcloud/Kexa/blob/main/LICENCE.txt).
 
-
-7-**CONTACT**
+<br/><br/><br/>
+# <div align="center">**Contact**</div>
+<br/><br/>
 
 [contact@4urcloud.com](mailto:contact@4urcloud.com)
 
