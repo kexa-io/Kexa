@@ -1,6 +1,4 @@
-
-# **GLOBAL CONFIGURATION**
-
+# <div align="center">**GLOBAL CONFIGURATION**</div>
 
 In the Kexa config folder, edit the default.json (create it if it doesn't exist)
 
