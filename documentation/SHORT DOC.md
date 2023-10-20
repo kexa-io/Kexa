@@ -25,6 +25,8 @@ Kexa offers significant benefits in a number of areas, contributing to the effic
 
 In this section, we will present you the main areas where our tool add value, with rules files explanations and examples about how to create custom rules (LINK HERE).
 
+<br/><br/>
+
 ## **Rules fields**
 
 Here is the structure and required fields for a new rule :
@@ -116,6 +118,9 @@ With nested operations :
 	
 ```
 
+<br/><br/>
+
+
 ## **Full Yaml rules file**
 
 ```yaml
@@ -181,6 +186,7 @@ With nested operations :
 	
 ```
 
+<br/><br/>
 
 ## **Date & time criteria**
 
@@ -203,6 +209,8 @@ date: "YYYY-MM-DDThh:mm:ss.SSSZ"
 # the format of the date you want to parse (the one used in the resource object field).
 ```
 
+<br/><br/>
+
 ## **Utility examples**
 
 **Cost savings**
@@ -223,6 +231,8 @@ For example, a rule for alerting if there is an orphan disk:
       condition : DIFFERENT
       value : Unattached
 ```
+
+<br/><br/>
 
 ## **Safety guarantee**
 
@@ -248,6 +258,8 @@ Example of rule to verify:
           condition : EQUAL
           value : EncryptionAtRestWithPlatformKey
 ```
+
+<br/><br/>
 
 ## **Standardization**
 
@@ -276,6 +288,8 @@ Exemple of rule to normalise names among tags:
         value : ^(VADOR|YODA|LUKE)$
 ```
 
+<br/><br/>
+
 ## **Community**
 
 Our infrastructure health check tool promotes a community-based approach that encourages collaboration and knowledge exchange between users.
@@ -294,7 +308,9 @@ Create a folder called "config" and create a "default.json" file inside this fol
 
 Don't forget to modify "Absolute/Path/To/config" with the absolute path to your config folder. Obviously, the tokens you supply must have read rights on the environments you want to scan.
 
-Azure
+<br/>
+
+### Azure
 	default.json:
 	
 	```json
@@ -326,8 +342,9 @@ Azure
 	  -e A_SUBSCRIPTIONID="" /
 	  innovtech/kexa
 	```
+<br/>
 
-AWS
+### AWS
 	default.json:
 	
 	```json
@@ -359,8 +376,9 @@ AWS
 	  -e A_AWS_SECRET_ACCESS_KEY= /
 	  innovtech/kexa
 	```
+<br/>
 
-GCP
+### GCP
 	default.json:
 	
 	```json
@@ -402,8 +420,9 @@ GCP
 	-e A_GOOGLE_PROJECT_ID= /
 	innovtech/kexa
 	```
+<br/>
 
-Github
+### Github
 	default.json:
 	
 	```json
@@ -432,8 +451,9 @@ Github
 	        -e A_GITHUBTOKEN= /
 	        innovtech/kexa
 	```
+<br/>
 
-Kubernetes
+### Kubernetes
 	default.json:
 	
 	```json
@@ -463,8 +483,9 @@ Kubernetes
 	-e A_KUBECONFIG="/app/.kube" /
 	innovtech/kexa
 	```
+<br/>
 
-Office 365
+### Office 365
 	default.json:
 	
 	```json
