@@ -1,8 +1,12 @@
 
 
-**EN-TÊTE**
+<br/><br/><br/>
+# <div align="center">**EN-TETE**</div>
+<br/><br/>
 
-1-**ABOUT PROJECT**
+<br/><br/><br/>
+# <div align="center">**About Project**</div>
+<br/><br/>
 
 We have built Kexa to automatize verifications across your working environments (cloud, workspace, APIs endpoints), with a easy-to-deploy script that will allow you to optimize your costs, conformity and security.
 
@@ -12,16 +16,18 @@ Run it and get all the available optimizations with the different notification t
 
 With Kexa, you can edit your own rules (LINK HERE) and retrieve rules or even addons built by the community (LINK HERE).
 
-
-
-2-**RULES  USAGE** 
+<br/><br/><br/>
+# <div align="center">**Rules Usage**</div>
+<br/><br/>
 
 #EXPLICATION TRES MACRO NE PAS RENTRER DANS LES DETAILS
 Kexa offers significant benefits in a number of areas, contributing to the efficiency and reliability of your environment. You can define rules with YAML (.yaml) files, that you will store in your Kexa 'rules' folder, located in the Kexa root folder.
 
 In this section, we will present you the main areas where our tool add value, with rules files explanations and examples about how to create custom rules (LINK HERE).
 
-a-**Rules fields**
+<br/><br/>
+
+## **Rules fields**
 
 Here is the structure and required fields for a new rule :
 
@@ -112,7 +118,10 @@ With nested operations :
 	
 ```
 
-b-**Full Yaml rules file**
+<br/><br/>
+
+
+## **Full Yaml rules file**
 
 ```yaml
 - version: string
@@ -177,8 +186,9 @@ b-**Full Yaml rules file**
 	
 ```
 
+<br/><br/>
 
-c-**Date & time criteria**
+## **Date & time criteria**
 
 You can also set up date and time comparison for your rules, we have built a set of specific conditions and fields for this feature :
 
@@ -199,7 +209,9 @@ date: "YYYY-MM-DDThh:mm:ss.SSSZ"
 # the format of the date you want to parse (the one used in the resource object field).
 ```
 
-d-**Utility examples**
+<br/><br/>
+
+## **Utility examples**
 
 **Cost savings**
 
@@ -220,7 +232,9 @@ For example, a rule for alerting if there is an orphan disk:
       value : Unattached
 ```
 
-**Safety guarantee**
+<br/><br/>
+
+## **Safety guarantee**
 
 By defining specific security rules, you can constantly check that good practice is being followed and that your infrastructure is protected against potential threats.
 The tool alerts you in the event of non-compliance, enabling you to take corrective action quickly and maintain a high level of security.
@@ -245,7 +259,9 @@ Example of rule to verify:
           value : EncryptionAtRestWithPlatformKey
 ```
 
-**Standardization**
+<br/><br/>
+
+## **Standardization**
 
 Rules can help you to implement consistent operating standards. This makes it easier to manage your entire environment and helps you maintain a stable, predictable infrastructure.
 
@@ -272,7 +288,9 @@ Exemple of rule to normalise names among tags:
         value : ^(VADOR|YODA|LUKE)$
 ```
 
-**Community**
+<br/><br/>
+
+## **Community**
 
 Our infrastructure health check tool promotes a community-based approach that encourages collaboration and knowledge exchange between users.
 
@@ -280,7 +298,9 @@ One of the key features of our tool is its flexibility, allowing users to custom
 
 Whether you want to check specific elements of your infrastructure or take a more general approach, the possibilities are endless. Everyone is free to design and share their own use cases, providing a wealth of resources for the community as a whole.
 
-3-**QUICK LAUNCH**
+<br/><br/><br/>
+# <div align="center">**Quick Launch**</div>
+<br/><br/>
 
 For a quick launch, we're going to use docker.
 
@@ -288,7 +308,9 @@ Create a folder called "config" and create a "default.json" file inside this fol
 
 Don't forget to modify "Absolute/Path/To/config" with the absolute path to your config folder. Obviously, the tokens you supply must have read rights on the environments you want to scan.
 
-Azure
+<br/>
+
+### Azure
 	default.json:
 	
 	```json
@@ -320,8 +342,9 @@ Azure
 	  -e A_SUBSCRIPTIONID="" /
 	  innovtech/kexa
 	```
+<br/>
 
-AWS
+### AWS
 	default.json:
 	
 	```json
@@ -353,8 +376,9 @@ AWS
 	  -e A_AWS_SECRET_ACCESS_KEY= /
 	  innovtech/kexa
 	```
+<br/>
 
-GCP
+### GCP
 	default.json:
 	
 	```json
@@ -396,8 +420,9 @@ GCP
 	-e A_GOOGLE_PROJECT_ID= /
 	innovtech/kexa
 	```
+<br/>
 
-Github
+### Github
 	default.json:
 	
 	```json
@@ -426,8 +451,9 @@ Github
 	        -e A_GITHUBTOKEN= /
 	        innovtech/kexa
 	```
+<br/>
 
-Kubernetes
+### Kubernetes
 	default.json:
 	
 	```json
@@ -457,8 +483,9 @@ Kubernetes
 	-e A_KUBECONFIG="/app/.kube" /
 	innovtech/kexa
 	```
+<br/>
 
-Office 365
+### Office 365
 	default.json:
 	
 	```json
@@ -491,11 +518,13 @@ Office 365
 	        innovtech/kexa
 	```
 
+<br/><br/><br/>
+# <div align="center">**Results Explanation**</div>
+<br/><br/>
 
-4-**EXPLANATION RESULTS**
-
-
-5-**ROADMAP**
+<br/><br/><br/>
+# <div align="center">**Roadmap**</div>
+<br/><br/>
 
 - ✅ Setting notification levels
 - ✅ Azure check in:
@@ -589,13 +618,16 @@ Office 365
 - [ ]  Oracle
 - [ ]  Kexa SAAS
 
+<br/><br/><br/>
+# <div align="center">**License**</div>
+<br/><br/>
 
-6-**LICENSE**
 
 Distributed under the MIT License. See [`LICENSE.txt`](https://github.com/4urcloud/Kexa/blob/main/LICENCE.txt) for more information just [here](https://github.com/4urcloud/Kexa/blob/main/LICENCE.txt).
 
-
-7-**CONTACT**
+<br/><br/><br/>
+# <div align="center">**Contact**</div>
+<br/><br/>
 
 [contact@4urcloud.com](mailto:contact@4urcloud.com)
 
