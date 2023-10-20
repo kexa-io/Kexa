@@ -105,7 +105,7 @@ Each projects in this list refers to a "subscription"/"environment". It's a good
 }
 ```
 
-# **ENVIRONMENT VARIABLE & AUTH** 
+# <div align="center">**ENVIRONMENT VARIABLE & AUTH**</div>
 
 ## **Directory & Notifications**
 
@@ -171,8 +171,7 @@ You can optionally use a key manager; for these variables no prefix are needed. 
       GOOGLE_APPLICATION_CREDENTIALS=PATH_TO_JSON_CRED
     ```
 
-
-# **OFFICIAL ADDONS**
+# <div align="center">**OFFICIAL ADDONS**</div>
 
 ### **AWS**
 quick catchphrase
@@ -197,7 +196,7 @@ quick catchphrase
 
 - Link notre doc.md
 
-# **COMMUNITY ADDONS**
+# <div align="center">**COMMUNITY ADDONS**</div>
 
 ## **Getting new addons**
 
@@ -322,8 +321,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 	
 	Other checks are carried out at various stages to validate the integration of your addOn and the rules you can design. However, these checks are only carried out during software execution. Indeed, due to the nature of certain data collections, it is not possible to carry out "cold" tests without having access to dedicated environments.
 
-
-# **HOW TO LAUNCH KEXA**
+# <div align="center">**HOW TO LAUNCH KEXA**</div>
 
 ## **Local**
 
