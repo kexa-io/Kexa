@@ -25,7 +25,7 @@ Kexa offers significant benefits in a number of areas, contributing to the effic
 
 In this section, we will present you the main areas where our tool add value, with rules files explanations and examples about how to create custom rules (LINK HERE).
 
-a-**Rules fields**
+## **Rules fields**
 
 Here is the structure and required fields for a new rule :
 
@@ -116,7 +116,7 @@ With nested operations :
 	
 ```
 
-b-**Full Yaml rules file**
+## **Full Yaml rules file**
 
 ```yaml
 - version: string
@@ -182,7 +182,7 @@ b-**Full Yaml rules file**
 ```
 
 
-c-**Date & time criteria**
+## **Date & time criteria**
 
 You can also set up date and time comparison for your rules, we have built a set of specific conditions and fields for this feature :
 
@@ -203,7 +203,7 @@ date: "YYYY-MM-DDThh:mm:ss.SSSZ"
 # the format of the date you want to parse (the one used in the resource object field).
 ```
 
-d-**Utility examples**
+## **Utility examples**
 
 **Cost savings**
 
@@ -224,7 +224,7 @@ For example, a rule for alerting if there is an orphan disk:
       value : Unattached
 ```
 
-**Safety guarantee**
+## **Safety guarantee**
 
 By defining specific security rules, you can constantly check that good practice is being followed and that your infrastructure is protected against potential threats.
 The tool alerts you in the event of non-compliance, enabling you to take corrective action quickly and maintain a high level of security.
@@ -249,7 +249,7 @@ Example of rule to verify:
           value : EncryptionAtRestWithPlatformKey
 ```
 
-**Standardization**
+## **Standardization**
 
 Rules can help you to implement consistent operating standards. This makes it easier to manage your entire environment and helps you maintain a stable, predictable infrastructure.
 
@@ -276,7 +276,7 @@ Exemple of rule to normalise names among tags:
         value : ^(VADOR|YODA|LUKE)$
 ```
 
-**Community**
+## **Community**
 
 Our infrastructure health check tool promotes a community-based approach that encourages collaboration and knowledge exchange between users.
 
