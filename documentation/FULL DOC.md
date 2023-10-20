@@ -1,6 +1,7 @@
-# <div align="center">**GLOBAL CONFIGURATION**</div>
+# <div align="center">**Global Configuration**</div>
 <br/><br/>
 In the Kexa config folder, edit the default.json (create it if it doesn't exist)
+<br/>
 
 ## **Basic configuration**
 
@@ -33,6 +34,7 @@ file you want to check.
 ```
 
 
+<br/>
 
 ## **Multiple environments provider prefix**
 
@@ -66,6 +68,7 @@ Each projects in this list refers to a "subscription"/"environment". It's a good
   ]
 }
 ```
+<br/>
 
 
 ## **Regions**
@@ -131,6 +134,8 @@ Setup your notification tools. (for those selected in your rules files)
   SMSAUTHTOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
+<br/>
+
 ## **Providers Authentications**
 
 For each environment you want to test, you'll need to provide the environment variables needed to authenticate to it. For this you can refer to the addons section corresponding to each addon.
@@ -139,6 +144,8 @@ LIST LINK DOC ADDONS
 
 An environment file is also available in our repository, with every official addon's needed variables.
 You can use it by filling the field corresponding to the providers you want to authenticate to.
+
+<br/>
 
 ## **Password manager**
 
@@ -180,7 +187,6 @@ quick catchphrase
 
 - Link notre doc.md
 
-
 ### **GCP**
 quick catchphrase
 
@@ -206,12 +212,15 @@ To use a community addon, simply download the required {AddonName}Gathering.serv
 
 You will need to refer to the addOn documentation to get information about the required environment variable, gathered data or specific configuration fields.
 
+<br/>
 
 ## **Contributing** 
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
+
+<br/>
 
 
 ## **Forking project**
@@ -222,6 +231,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 	4. Push to the Branch (`git push origin feature/AmazingFeature`)
 	5. Open a Pull Request
 
+<br/>
 
 ## **Adding functionalities**
 	
@@ -230,6 +240,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 	
 	We've set up a system to facilitate the development of new features. This system is based on the "addOn" system. To develop a new feature, you don't need to know the whole project. You can develop additional services to collect additional data, among which you can make rules.
 
+<br/>
 
 ## **Gathering data**
 
@@ -285,6 +296,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 	//can add other function here
 	```
 	
+<br/>
 
 ## **Display data**
 
@@ -311,6 +323,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 	//can add other function here
 	```
 
+<br/>
 
 
 ## **Tests**
@@ -334,6 +347,7 @@ Use this command to launch scans:
 npm run start
 ```
 
+<br/>
 
 
 ## **Local Docker**
@@ -353,6 +367,7 @@ Run the image
 docker run -d kexa
 ```
 
+<br/>
 
 
 ## **Azure function**
@@ -382,6 +397,7 @@ func azure functionapp publish [Name of your function app]
 ```
 
 
+<br/>
 
 ## **Kubernetes**
 
