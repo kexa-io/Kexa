@@ -13,13 +13,14 @@ Run it and get all the available optimizations with the different notification t
 With Kexa, you can edit your own rules (LINK HERE) and retrieve rules or even addons built by the community.
 
 
+
 2-**RULES  USAGE** 
 
 Kexa offers significant benefits in a number of areas, contributing to the efficiency and reliability of your environment. You can define rules with YAML (.yaml) files, that you will store in your Kexa 'rules' folder, located in the Kexa root folder.
 
 In this section, we will present you the main areas where our tool add value, with rules files explanations and examples about how to create custom rules (LINK HERE).
 
-/// **Rules fields** ///
+a-**Rules fields**
 
 Here is the structure and required fields for a new rule :
 
@@ -110,7 +111,7 @@ With nested operations :
 	
 ```
 
-/// **Full Yaml rules file** ///
+b-**Full Yaml rules file**
 
 ```yaml
 - version: string
@@ -176,7 +177,7 @@ With nested operations :
 ```
 
 
-/// **Date & time criteria** ///
+c-**Date & time criteria**
 
 You can also set up date and time comparison for your rules, we have built a set of specific conditions and fields for this feature :
 
@@ -197,9 +198,9 @@ date: "YYYY-MM-DDThh:mm:ss.SSSZ"
 # the format of the date you want to parse (the one used in the resource object field).
 ```
 
-/// **Utility examples** ///
+d-**Utility examples**
 
-1. **Cost savings**
+**Cost savings**
 
 By automating the monitoring of your infrastructure's status and behaviour, our tool enables you to make significant savings. 
 By detecting rule violations quickly, you can avoid the additional costs associated with prolonged problems and prevent costly malfunctions. 
@@ -218,7 +219,7 @@ For example, a rule for alerting if there is an orphan disk:
       value : Unattached
 ```
 
-2. **Safety guarantee**
+**Safety guarantee**
 
 By defining specific security rules, you can constantly check that good practice is being followed and that your infrastructure is protected against potential threats.
 The tool alerts you in the event of non-compliance, enabling you to take corrective action quickly and maintain a high level of security.
@@ -243,7 +244,7 @@ Example of rule to verify:
           value : EncryptionAtRestWithPlatformKey
 ```
 
-3. **Standardization**
+**Standardization**
 
 Rules can help you to implement consistent operating standards. This makes it easier to manage your entire environment and helps you maintain a stable, predictable infrastructure.
 
@@ -270,7 +271,7 @@ Exemple of rule to normalise names among tags:
         value : ^(VADOR|YODA|LUKE)$
 ```
 
-4. **Community**
+**Community**
 
 Our infrastructure health check tool promotes a community-based approach that encourages collaboration and knowledge exchange between users.
 
@@ -278,9 +279,7 @@ One of the key features of our tool is its flexibility, allowing users to custom
 
 Whether you want to check specific elements of your infrastructure or take a more general approach, the possibilities are endless. Everyone is free to design and share their own use cases, providing a wealth of resources for the community as a whole.
 
-////////////////////////////////////
-//         **QUICK LAUNCH**          //
-////////////////////////////////////
+3-**QUICK LAUNCH**
 
 For a quick launch, we're going to use docker.
 
@@ -491,13 +490,11 @@ Office 365
 	        innovtech/kexa
 	```
 
-///////////////////////////////////////////////
-//          **EXPLANATION RESULTS**          //
-//////////////////////////////////////////////
 
-////////////////////////////////////
-//               **ROADMAP**             //
-////////////////////////////////////
+4-**EXPLANATION RESULTS**
+
+
+5-**ROADMAP**
 
 - ✅ Setting notification levels
 - ✅ Azure check in:
@@ -591,15 +588,13 @@ Office 365
 - [ ]  Oracle
 - [ ]  Kexa SAAS
 
-////////////////////////////////////
-//               **LICENSE**             //
-////////////////////////////////////
+
+6-**LICENSE**
 
 Distributed under the MIT License. See [`LICENSE.txt`](https://github.com/4urcloud/Kexa/blob/main/LICENCE.txt) for more information just [here](https://github.com/4urcloud/Kexa/blob/main/LICENCE.txt).
 
-////////////////////////////////////
-//               **CONTACT**             //
-////////////////////////////////////
+
+7-**CONTACT**
 
 [contact@4urcloud.com](mailto:contact@4urcloud.com)
 
