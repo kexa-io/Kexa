@@ -1,11 +1,10 @@
 
-////////////////////////////////////
-// **GLOBAL CONFIGURATION** //
-////////////////////////////////////
+### **GLOBAL CONFIGURATION**
+
 
 In the Kexa config folder, edit the default.json (create it if it doesn't exist)
 
-/// **Basic configuration** ///
+## **Basic configuration**
 
 Here you can define the providers you want to retrieve data from, and for each one, which rules
 file you want to check.
@@ -37,7 +36,7 @@ file you want to check.
 
 
 
-/// **Multiple environments provider prefix** ///
+## **Multiple environments provider prefix**
 
 For every provider you can define multiple projects to make custom verifications for your  subscriptions.
 Each projects in this list refers to a "subscription"/"environment". It's a good idea to give each project a name and a description, to make it easier to understand
@@ -71,7 +70,7 @@ Each projects in this list refers to a "subscription"/"environment". It's a good
 ```
 
 
-/// **Regions** ///
+## **Regions**
 
 	For Amazon Web Services and Google Cloud Provider (or other official addons using regions), you can choose to select specifics regions to check. 
 	Without "regions" property (or empty "regions property), all the regions will be checked.
@@ -108,10 +107,7 @@ Each projects in this list refers to a "subscription"/"environment". It's a good
 }
 ```
 
-
-/////////////////////////////////////////////
-// **ENVIRONMENT VARIABLE & AUTH** //
-/////////////////////////////////////////////
+### **ENVIRONMENT VARIABLE & AUTH** 
 
 /// **Directory & Notifications** ///
 
