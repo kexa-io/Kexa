@@ -78,7 +78,7 @@
       objectName: branches
       conditions:
         - operator: NAND
-          rules:
+          criteria:
             - property : protected
               condition : DIFFERENT
               value : true

@@ -11,3 +11,5 @@ eastern-rider-263712-9376010a1184.json
 config/addOnNeed.json
 config/headers.json
 config_kuber
+config/resources*.html
+config/resources*.json

@@ -230,7 +230,7 @@ export function checkDocRules(rules:Rules[]): string[] {
 export function checkRuleCondition(condition:RulesConditions|ParentRules): string[] {
     logger.debug("check rule condition");
     let result:string[] = [];
-    if(condition.hasOwnProperty("rules")){
+    if(condition.hasOwnProperty("criteria")){
         checkParentRuleCondition(condition as ParentRules).forEach((value) => result.push(value));
     }else{
         checkSubRuleCondition(condition as RulesConditions).forEach((value) => result.push(value));
@@ -247,11 +247,11 @@ export function checkParentRuleCondition(parentRule:ParentRules): string[] {
     else if(typeof parentRule.description !== "string") result.push("warn - description not string in parent rule condition : "+parentRule.description);
     if(!parentRule.hasOwnProperty("operator")) result.push("error - operator not found in parent rule condition");
     else if(!Object.values(OperatorEnum).includes(parentRule.operator)) result.push("error - operator not valid in parent rule condition : " + parentRule.operator);
-    else if(parentRule.operator === OperatorEnum.NOT && parentRule.rules.length > 1) result.push("warn - operator not will be considered in rules only the first one");
-    if(!parentRule.hasOwnProperty("rules")) result.push("error - rules not found in parent rule condition");
+    else if(parentRule.operator === OperatorEnum.NOT && parentRule.criteria.length > 1) result.push("warn - operator not will be considered in criteria only the first one");
+    if(!parentRule.hasOwnProperty("criteria")) result.push("error - criteria not found in parent rule condition");
     else {
-        if (parentRule.rules.length === 0) result.push("error - rules empty in parent rule condition");
-        parentRule.rules.forEach((rule) => {
+        if (parentRule.criteria.length === 0) result.push("error - criteria empty in parent rule condition");
+        parentRule.criteria.forEach((rule) => {
             checkRuleCondition(rule).forEach((value) => result.push(value));
         });
     }
@@ -360,7 +360,7 @@ export function checkRule(conditions: RulesConditions[]|ParentRules[], resources
     logger.debug("check subrule");
     let result: SubResultScan[] = [];
     conditions.forEach(condition => {
-        if(condition.hasOwnProperty("rules")) {
+        if(condition.hasOwnProperty("criteria")) {
             result.push(checkParentRule(condition as ParentRules, resources));
         } else {
             condition = condition as RulesConditions;
@@ -373,7 +373,7 @@ export function checkRule(conditions: RulesConditions[]|ParentRules[], resources
 
 export function checkParentRule(parentRule:ParentRules, resources:any): SubResultScan {
     logger.debug("check parent rule");
-    let result: SubResultScan[] = checkRule(parentRule.rules, resources);
+    let result: SubResultScan[] = checkRule(parentRule.criteria, resources);
     switch(parentRule.operator){
         case OperatorEnum.AND:
             return parentResultScan(result, result.every((value) => value.result));

@@ -58,7 +58,7 @@
       objectName : request
       conditions:
         - operator : OR
-          rules:
+          criteria:
             - property : code
               condition : EQUAL
               value : 200
@@ -73,13 +73,13 @@
       objectName : request
       conditions:
         - operator: NAND
-          rules :
+          criteria :
             - property : body.date
               condition : DATE_INF_OR_EQUAL
               value : 0 0 0 0 0 0
               date: "YYYY-MM-DDThh:mm:ss.SSSZ"
             - operator : OR
-              rules:
+              criteria:
                 - property : code
                   condition : EQUAL
                   value : 200

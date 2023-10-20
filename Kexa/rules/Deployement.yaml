@@ -64,7 +64,7 @@
       objectName: branches
       conditions:
         - operator: NAND
-          rules:
+          criteria:
             - property : protected
               condition : DIFFERENT
               value : true
@@ -79,7 +79,7 @@
       objectName : request
       conditions:
         - operator: NAND
-          rules :
+          criteria :
             - property : body.date
               condition : EQUAL
               value : null
@@ -127,7 +127,7 @@
       objectName : pods
       conditions:
         - operator: NAND
-          rules:
+          criteria:
             - property : status.phase
               condition : DIFFERENT
               value : Running
