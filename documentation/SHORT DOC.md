@@ -1,11 +1,8 @@
 
-////////////////////////////////////
-//               **EN-TÊTE**                //
-///////////////////////////////////
 
-////////////////////////////////////
-//          **ABOUT PROJECT**        //
-////////////////////////////////////
+**EN-TÊTE**
+
+1-**ABOUT PROJECT**
 
 We have built Kexa to automatize verifications across your cloud environments (and more than cloud, like APIs endpoints), with a easy-to-deploy script that will allow you to optimize your costs, conformity and security.
 
@@ -16,9 +13,7 @@ Run it and get all the available optimizations with the different notification t
 With Kexa, you can edit your own rules (LINK HERE) and retrieve rules or even addons built by the community.
 
 
-//////////////////////////////////
-//        **RULES  USAGE**          //
-/////////////////////////////////
+2-**RULES  USAGE** 
 
 Kexa offers significant benefits in a number of areas, contributing to the efficiency and reliability of your environment. You can define rules with YAML (.yaml) files, that you will store in your Kexa 'rules' folder, located in the Kexa root folder.
 
