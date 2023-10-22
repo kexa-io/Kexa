@@ -1,3 +1,90 @@
+<div id="top"></div>
+
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+
+
+
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+
+  <a href="https://www.kexa.io/">
+    <img src="images/kexa-no-background-color.png" alt="Logo" width="100" height="100">
+  </a>
+
+# <h3 align="center">Kexa</h3>
+
+  <p align="center">
+    Generic alert tools to ensure the quality of your infrastructure. Avoid wasting money on useless infrastructure, avoidable security breaches and service malfunctions.
+    <br />
+    <a href="https://github.com/4urcloud/Kexa"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/4urcloud/Kexa">View Demo</a>
+    ·
+    <a href="https://github.com/4urcloud/Kexa/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/4urcloud/Kexa/issues">Request Feature</a>
+  </p>
+</div>
+
+
+
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+        <ul>
+          <li><a href="#clone-the-repo">Clone the repo</a></li>
+          <li><a href="#install-NPM-packages">Install NPM packages</a></li>
+          <li><a href="#configure-your-config">Configure your config</a></li>
+          <li><a href="#configure-your-environnement-variable">Configure your variable environnement</a></li>
+          <li><a href="#key-vault">Optional: Key Vault</a></li>
+        </ul>
+      </ul>
+    </li>
+    <li>
+      <a href="#how-to-launch-Kexa">How to launch Kexa</a>
+      <ul>
+        <li><a href="#quick-launch">Quick Launch</a></li>
+        <li><a href="#local">Local</a></li>
+        <li><a href="#local-docker">Local docker</a></li>
+        <li><a href="#azure-function">Azure function</a></li>
+        <li><a href="#kubernetes">Kubernetes</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#usage">Usage</a>
+      <ul>
+        <li><a href="#cost-saving">Cost saving</a></li>
+        <li><a href="#safety-guarantee">Safety guarantee</a></li>
+        <li><a href="#standardisation">Standardisation</a></li>
+        <li><a href="#community">Community</a></li>
+      </ul>
+    </li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
+
+
 # <div align="center">**Global Configuration**</div>
 <br/><br/>
 In the Kexa config folder, edit the default.json (create it if it doesn't exist)
