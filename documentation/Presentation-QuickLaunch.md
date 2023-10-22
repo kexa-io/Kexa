@@ -1,13 +1,3 @@
-<div id="top"></div>
-
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-
-
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -36,7 +26,7 @@
 
 <!-- TABLE OF CONTENTS -->
 <details>
-  <summary>Table of Contents (Short Documentation)</summary>
+  <summary>Table of Contents (Presentation & Quick launch)</summary>
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
@@ -51,7 +41,6 @@
         <li><a href="#kubernetes">Kubernetes</a></li>
         <li><a href="#office-365">Office 365</a></li>
         <li><a href="#google-workspace">Google Workspace</a></li>
-        <li><a href="#http-endpoints">HTTPS Endpoints</a></li>
       </ul>
     </li>
     <li>
@@ -91,7 +80,7 @@ Don't forget to modify "Absolute/Path/To/config" with the absolute path to your 
 <br/>
 
 ### Azure
-	default.json:
+default.json:
 	
 	```json
 	  {
@@ -125,7 +114,7 @@ Don't forget to modify "Absolute/Path/To/config" with the absolute path to your 
 <br/>
 
 ### AWS
-	default.json:
+default.json:
 	
 	```json
 	{
@@ -159,7 +148,7 @@ Don't forget to modify "Absolute/Path/To/config" with the absolute path to your 
 <br/>
 
 ### GCP
-	default.json:
+default.json:
 	
 	```json
 	  {
@@ -203,7 +192,7 @@ Don't forget to modify "Absolute/Path/To/config" with the absolute path to your 
 <br/>
 
 ### Github
-	default.json:
+default.json:
 	
 	```json
 	          {
@@ -234,7 +223,7 @@ Don't forget to modify "Absolute/Path/To/config" with the absolute path to your 
 <br/>
 
 ### Kubernetes
-	default.json:
+default.json:
 	
 	```json
 	{
@@ -266,7 +255,7 @@ Don't forget to modify "Absolute/Path/To/config" with the absolute path to your 
 <br/>
 
 ### Office 365
-	default.json:
+default.json:
 	
 	```json
 	          {
@@ -298,6 +287,36 @@ Don't forget to modify "Absolute/Path/To/config" with the absolute path to your 
 	        innovtech/kexa
 	```
 
+### Google Workspace
+default.json:
+	
+	```json
+	          {
+	              "googleWorkspace": [
+	                  {
+	                      "name": "Project A",
+	                      "prefix": "A_",
+	                      "description": "Project A is a quick-launch test",
+	                      "rules": [
+	                          "Economy",
+	                          "OperationalExcellence",
+	                          "Security",
+	                          "rules-testing",
+	                          "Performance"
+	                      ]
+	                  }
+	              ]
+	          }
+	```
+	
+	Then paste this command fill with your credential:
+	
+	```shell
+	        docker run -v Absolute/Path/To/config:/app/config /
+	        -e A_WORKSPACECRED= (the credentials.json content) /
+	        innovtech/kexa
+	```
+
 <br/><br/><br/>
 # <div align="center">**Results Explanation**</div>
 <br/><br/>
@@ -305,8 +324,6 @@ Don't forget to modify "Absolute/Path/To/config" with the absolute path to your 
 <br/><br/><br/>
 # <div align="center">**Rules Usage**</div>
 <br/><br/>
-
-#EXPLICATION TRES MACRO NE PAS RENTRER DANS LES DETAILS
 
 Kexa offers significant benefits in a number of areas, contributing to the efficiency and reliability of your environment. You can define rules with YAML (.yaml) files, that you will store in your Kexa 'rules' folder, located in the Kexa root folder.
 

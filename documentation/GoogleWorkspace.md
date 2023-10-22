@@ -32,21 +32,9 @@ Example config for 2 environments:
 ### Environment
 
 There are several ways to identify yourself in an Azure environment. Obviously, you can only scan the environment for which you are at least a "reader":
-- [Service principal](https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal) must be use by default in many of your case:
 ```
-SUBSCRIPTIONID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX   (ID of your subscription)
-AZURECLIENTID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX	(ID of an Azure AD application)
-AZURETENANTID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX	(ID of the application's Azure AD tenant)
-AZURECLIENTSECRET=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX	(one of the application's client secrets)
+0-WORKSPACECRED=''  (content of credentials.json)
 ```
-
-- If you are runnning your Kexa in a azure function you can also use this with [UAI (User Assigned Identities)](https://learn.microsoft.com/en-us/azure/active-directory/workload-identities/workload-identity-federation-create-trust-user-assigned-managed-identity) and it's recommended if you want use an Azure Keyvault:
-
-```bash
-USERAZUREIDENTITYID=XXXXXXXX
-```
-
-- If you are using your Kexa in an Azure CLI environment and are already logged in, you do not need to log in again. Your credentials will be used during the scan.
 
 ## Additional documentation
 
