@@ -18,15 +18,15 @@
 
 ### Default.json
 
-For each of your environments, the following keys are mandatory:
-    - "rules": This refers to the set of rules files you want to apply to this environment.
-    - "prefix": the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).
+For each of your environments, the following keys are mandatory:<br/>
+    - "rules": This refers to the set of rules files you want to apply to this environment.<br/>
+    - "prefix": the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).<br/><br/>
 
-The following keys are recommended to ensure better readability when re-reading the configuration:
-    - "name": The name refers to the environment concerned by one or more keywords.
-    - "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.
+The following keys are recommended to ensure better readability when re-reading the configuration:<br/>
+    - "name": The name refers to the environment concerned by one or more keywords.<br/>
+    - "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.<br/><br/>
 
-Example config for 2 environments:
+Example config for 2 environments:<br/>
 ![example config for azure](../config/demo/azure.default.json)
 
 ### Environment

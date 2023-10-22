@@ -18,21 +18,21 @@
 
 ### Default.json
 
-For each of your EndPoint, the following keys are mandatory:
-    - "rules": this refers to the set of rules files you want to apply to this environment.
-    - "prefix": the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).
-    - "METHOD": It's define the way to communicate with the endpoint: "GET", "POST", "DELETE", "PATCH", ....
-    - "URL": destination of the request
+For each of your EndPoint, the following keys are mandatory:<br/>
+    - "rules": this refers to the set of rules files you want to apply to this environment.<br/>
+    - "prefix": the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).<br/>
+    - "METHOD": It's define the way to communicate with the endpoint: "GET", "POST", "DELETE", "PATCH", ....<br/>
+    - "URL": destination of the request<br/><br/>
 
-Optional keys to add more detail to your request:
-    - "header": it's a json that collapse all your additional key/value you want. If you want to add AUTHORIZATION please refer to [environment](#environment)
-    - "body": You can pass want ever you want except file
+Optional keys to add more detail to your request:<br/>
+    - "header": it's a json that collapse all your additional key/value you want. If you want to add AUTHORIZATION please refer to [environment](#environment)<br/>
+    - "body": You can pass want ever you want except file<br/><br/>
 
-The following keys are recommended to ensure better readability when re-reading the configuration:
-    - "name": the name refers to the environment concerned by one or more keywords.
-    - "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.
+The following keys are recommended to ensure better readability when re-reading the configuration:<br/>
+    - "name": the name refers to the environment concerned by one or more keywords.<br/>
+    - "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.<br/><br/>
 
-Example config for 2 environments:
+Example config for 2 environments:<br/>
 ![example config for http](../config/demo/http.default.json)
 
 ### Environment

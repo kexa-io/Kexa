@@ -18,22 +18,22 @@
 
 ### Default.json
 
-For each of your environments, the following keys are mandatory:
-    - "rules": This refers to the set of rules files you want to apply to this environment.
-    - "prefix": the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).
+For each of your environments, the following keys are mandatory:<br/>
+    - "rules": This refers to the set of rules files you want to apply to this environment.<br/>
+    - "prefix": the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).<br/><br/>
 
-The following keys are recommended to ensure better readability when re-reading the configuration:
-    - "name": The name refers to the environment concerned by one or more keywords.
-    - "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.
+The following keys are recommended to ensure better readability when re-reading the configuration:<br/>
+    - "name": The name refers to the environment concerned by one or more keywords.<br/>
+    - "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.<br/><br/>
 
-You can also specify the regions you want to scan, this can be used to avoid scanning all regions and reduce execution time.
-Without specifying this, all regions will be scan.
-- "regions": The list of the regions name you want to scan, refer to AWS regions name
+You can also specify the regions you want to scan, this can be used to avoid scanning all regions and reduce execution time.<br/>
+Without specifying this, all regions will be scan.<br/>
+- "regions": The list of the regions name you want to scan, refer to AWS regions name<br/><br/>
 
-Here is the GCP regions official documentation :
+Here is the GCP regions official documentation :<br/>
 https://cloud.google.com/compute/docs/regions-zones?hl=en
-
-Example config for 2 environments:
+<br/>
+Example config for 2 environments:<br/>
 ![example config for GCP](../config/demo/gcp.default.json)
 
 ### Environment
