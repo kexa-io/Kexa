@@ -39,48 +39,62 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#about-the-project">About The Project</a>
+      <a href="#global-configuration">Global Configuration</a>
       <ul>
-        <li><a href="#built-with">Built With</a></li>
+        <li><a href="#built-with">Basic Configuration</a></li>
+        <li><a href="#multiple-environments-provider-prefix">Multiple Environments provider prefix</a></li>
+        <li><a href="#regions">Regions</a></li>
       </ul>
     </li>
     <li>
-      <a href="#getting-started">Getting Started</a>
+      <a href="#environment-variables--auth">Environment variables & Auth</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-        <ul>
-          <li><a href="#clone-the-repo">Clone the repo</a></li>
-          <li><a href="#install-NPM-packages">Install NPM packages</a></li>
-          <li><a href="#configure-your-config">Configure your config</a></li>
-          <li><a href="#configure-your-environnement-variable">Configure your variable environnement</a></li>
-          <li><a href="#key-vault">Optional: Key Vault</a></li>
+        <li><a href="#directory--notifications">Directory & Notifications</a></li>
+        <li><a href="#providers-authentications">Providers Authentications</a></li>
+        <li><a href="#password-manager">Password Manager</a></li>
+      </ul>
+      </li>
+    <li>
+      <a href="#rules-editing">Rules Editing</a>
+      <ul>
+        <li><a href="#rules-fields">Rules fields</a></li>
+        <li><a href="#full-yaml-rules-file">Full Yaml rules file</a></li>
+        <li><a href="#date--time-criteria">Date & Time criteria</a></li>
+        <li><a href="#utility-examples">Utility examples</a>
+            <ul>
+                <li><a href="#cost-savings">Cost savings</a></li>
+                <li><a href="#safety-guarantee">Safety Guarantee</a></li>
+                <li><a href="#standardization">Standardization</a></li>
+                <li><a href="#community">Community</a></li>
+            </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a href="#usage">Official Addons</a>
+    </li>
+    <li>
+      <a href="#community-addons">Community Addons</a>
+      <ul>
+                <li><a href="#getting-new-addons">Getting new addons</a></li>
+                <li><a href="#contributing">Contributing</a>
+                <ul>
+                    <li><a href="#forking-project">Forking project</a></li>
+                    <li><a href="#adding-functionalities">Adding functionalities</a></li>
+                    <li><a href="#gathering-data">Gathering data</a></li>
+                    <li><a href="#display-results">Display results</a></li>
+                    <li><a href="#tests">Tests</a></li>
+                </ul></li>
         </ul>
-      </ul>
     </li>
-    <li>
-      <a href="#how-to-launch-Kexa">How to launch Kexa</a>
-      <ul>
-        <li><a href="#quick-launch">Quick Launch</a></li>
-        <li><a href="#local">Local</a></li>
-        <li><a href="#local-docker">Local docker</a></li>
-        <li><a href="#azure-function">Azure function</a></li>
-        <li><a href="#kubernetes">Kubernetes</a></li>
-      </ul>
+    <li><a href="#roadmap">How to launch Kexa</a>
+                <ul>
+                    <li><a href="#local">Local</a></li>
+                    <li><a href="#local-docker">Local Docker</a></li>
+                    <li><a href="#azure-function">Azure function</a></li>
+                    <li><a href="#kubernetes">Kubernetes</a></li>
+                </ul>
     </li>
-    <li>
-      <a href="#usage">Usage</a>
-      <ul>
-        <li><a href="#cost-saving">Cost saving</a></li>
-        <li><a href="#safety-guarantee">Safety guarantee</a></li>
-        <li><a href="#standardisation">Standardisation</a></li>
-        <li><a href="#community">Community</a></li>
-      </ul>
-    </li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
 
@@ -586,7 +600,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 <br/>
 
 
-## **Forking project**
+### **Forking project**
 
 	1. Fork the Project
 	2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
@@ -596,7 +610,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 
 <br/>
 
-## **Adding functionalities**
+### **Adding functionalities**
 	
 	 Each published addOn is free to set its own mandatory key values for its default.config configuration schema.
 	 Our minimum values for any addOn are "rules". Keys such as "prefix", "name" and "description" are strongly recommended to maintain ease of use.
@@ -605,7 +619,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 
 <br/>
 
-## **Gathering data**
+### **Gathering data**
 
 	A file to collect data whose path will be "./Kexa/services/addOn". It is named as follows: [extension's name]Gathering.service.ts . The entry point for this file is a function named "collectData", which takes one arguments. The argument is a list containing all the configs for your addOn. The return format of this function is as shown in the following example. exemple :
 	
@@ -661,7 +675,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 	
 <br/>
 
-## **Display data**
+### **Display results**
 
 	The display data file a pour schema de nom : [same extension's name]Display.service.ts, its path will be: "./Kexa/services/addOn/display". This file is used to display precise attributes of an object to quickly identify it in its environment. This return is done by returning a string, with the possibility of putting html in this sting. The function used as an entry point is named "propertyToSend". It takes 3 arguments. The first is a "Rules", and the relative path to the object definition is
 	
@@ -689,7 +703,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 <br/>
 
 
-## **Tests**
+### **Tests**
 
 	We've set up some tests you can use to validate the integration of your addOn:
 	

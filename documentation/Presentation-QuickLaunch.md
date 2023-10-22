@@ -42,40 +42,25 @@
       <a href="#about-the-project">About The Project</a>
     </li>
     <li>
-      <a href="#getting-started">Getting Started</a>
+      <a href="#quick-launch">Quick Launch</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-        <ul>
-          <li><a href="#clone-the-repo">Clone the repo</a></li>
-          <li><a href="#install-NPM-packages">Install NPM packages</a></li>
-          <li><a href="#configure-your-config">Configure your config</a></li>
-          <li><a href="#configure-your-environnement-variable">Configure your variable environnement</a></li>
-          <li><a href="#key-vault">Optional: Key Vault</a></li>
-        </ul>
-      </ul>
-    </li>
-    <li>
-      <a href="#how-to-launch-Kexa">How to launch Kexa</a>
-      <ul>
-        <li><a href="#quick-launch">Quick Launch</a></li>
-        <li><a href="#local">Local</a></li>
-        <li><a href="#local-docker">Local docker</a></li>
-        <li><a href="#azure-function">Azure function</a></li>
+        <li><a href="#azure">Azure</a></li>
+        <li><a href="#aws">AWS</a></li>
+        <li><a href="#gcp">GCP</a></li>
+        <li><a href="#github">Github</a></li>
         <li><a href="#kubernetes">Kubernetes</a></li>
+        <li><a href="#office-365">Office 365</a></li>
+        <li><a href="#google-workspace">Google Workspace</a></li>
+        <li><a href="#http-endpoints">HTTPS Endpoints</a></li>
       </ul>
     </li>
     <li>
-      <a href="#usage">Usage</a>
-      <ul>
-        <li><a href="#cost-saving">Cost saving</a></li>
-        <li><a href="#safety-guarantee">Safety guarantee</a></li>
-        <li><a href="#standardisation">Standardisation</a></li>
-        <li><a href="#community">Community</a></li>
-      </ul>
+      <a href="#results-explanation">Results Explanation</a>
+    </li>
+    <li>
+      <a href="#rules-usage">Rules Usage</a>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -87,11 +72,11 @@
 
 We have built Kexa to automatize verifications across your working environments (cloud, workspace, APIs endpoints), with a easy-to-deploy script that will allow you to optimize your costs, conformity and security.
 
-Clone the repository, follow our setup guide (LINK HERE) or the quick launch (LINK HERE), setup the rules you want to verify from the already available rules file, or build your own.
+Clone the repository, follow our [setup guide](documentation/Documentation-Kexa.md) or the [quick launch](#quick-launch), setup the rules you want to verify from the already available rules file, or build your own.
 
 Run it and get all the available optimizations with the different notification tools (logs, mail, sms, webhook, Teams, and more incoming with generics tools)
 
-With Kexa, you can edit your own rules (LINK HERE) and retrieve rules or even addons built by the community (LINK HERE).
+With Kexa, you can [edit your own rules](documentation/Documentation-Kexa.md#rules-fields) and retrieve rules or even addons [built by the community](documentation/Documentation-Kexa.md#rules-fields).
 
 <br/><br/><br/>
 # <div align="center">**Quick Launch**</div>
@@ -327,11 +312,11 @@ Kexa offers significant benefits in a number of areas, contributing to the effic
 
 You can then launch a scan, Kexa will retrieve resource's information from the required sources (providers or others online services supported by addons), and apply the rules you defined.
 
-All issues will be reported following the notification configuration [LINK HERE] you've set.
+All issues will be reported following the [notification configuration](documentation/Documentation-Kexa.md#directory--notifications) you've set.
 
 
-The rules editing section in full documentation [LINK HERE] will present you the main areas where our tool add value, with and examples of YAML rules.
-If you want explanations and detailled informations about rules in Kexa, please refer to this section [LINK HERE] in the full documentation.
+The rules editing section in [full documentation](documentation/Documentation-Kexa.md) will present you the main areas where our tool add value, with and examples of YAML rules.
+If you want explanations and details about rules in Kexa, please refer to [this section](documentation/Documentation-Kexa.md#div-aligncenter-rules-editing-div) in the full documentation.
 
 <br/><br/>
 
@@ -429,12 +414,11 @@ If you want explanations and detailled informations about rules in Kexa, please 
 - [ ]  SQL
 - [ ]  Mysql/MariaDB
 - [ ]  Oracle
-- [ ]  Kexa SAAS
+- [ ] Kexa SAAS
 
 <br/><br/><br/>
 # <div align="center">**License**</div>
 <br/><br/>
-
 
 Distributed under the MIT License. See [`LICENSE.txt`](https://github.com/4urcloud/Kexa/blob/main/LICENCE.txt) for more information just [here](https://github.com/4urcloud/Kexa/blob/main/LICENCE.txt).
 
