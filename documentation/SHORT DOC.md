@@ -329,18 +329,11 @@ You can then launch a scan, Kexa will retrieve resource's information from the r
 
 All issues will be reported following the notification configuration [LINK HERE] you've set.
 
-In this section, we will present you the main areas where our tool add value, with and examples of YAML rules.
+
+The rules editing section in full documentation [LINK HERE] will present you the main areas where our tool add value, with and examples of YAML rules.
 If you want explanations and detailled informations about rules in Kexa, please refer to this section [LINK HERE] in the full documentation.
 
 <br/><br/>
-
-### **Community**
-
-Our infrastructure health check tool promotes a community-based approach that encourages collaboration and knowledge exchange between users.
-
-One of the key features of our tool is its flexibility, allowing users to customize and adjust the rules to suit their specific needs. The rules are easily shared using simple YAML files, making it easy to spread best practice and innovative ideas.
-
-Whether you want to check specific elements of your infrastructure or take a more general approach, the possibilities are endless. Everyone is free to design and share their own use cases, providing a wealth of resources for the community as a whole.
 
 <br/><br/><br/>
 # <div align="center">**Roadmap**</div>

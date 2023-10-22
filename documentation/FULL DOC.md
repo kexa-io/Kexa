@@ -532,6 +532,13 @@ Exemple of rule to normalise names among tags:
 ```
 
 <br/><br/>
+### **Community**
+
+Our infrastructure health check tool promotes a community-based approach that encourages collaboration and knowledge exchange between users.
+
+One of the key features of our tool is its flexibility, allowing users to customize and adjust the rules to suit their specific needs. The rules are easily shared using simple YAML files, making it easy to spread best practice and innovative ideas.
+
+Whether you want to check specific elements of your infrastructure or take a more general approach, the possibilities are endless. Everyone is free to design and share their own use cases, providing a wealth of resources for the community as a whole.
 
 
 <br/><br/><br/>
