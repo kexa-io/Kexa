@@ -12,5 +12,6 @@
     "strict": true,                                      /* Enable all strict type-checking options. */
     "inlineSourceMap": true, 
     "noImplicitAny": true,                               /* Enable error reporting for expressions and declarations with an implied 'any' type. */
-  }
+  },
+  "exclude": ["node_modules", "build", "config"]                   /* Exclude files from compilation. */
 }

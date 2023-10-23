@@ -79,7 +79,7 @@
       objectName: ec2Instance
       conditions:
         - operator: NAND
-          rules:
+          criteria:
             - property: State
               condition: EQUAL
               value: terminated
@@ -110,7 +110,7 @@
           condition: ALL
           value:
             - operator: AND
-              rules:
+              criteria:
                 - property: FromPort
                   condition: REGEX
                   value: '^\d+$'
