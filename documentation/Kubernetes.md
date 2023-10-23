@@ -18,25 +18,29 @@
 
 ### Default.json
 
-For each of your EndPoint, the following keys are mandatory:<br/>
-    - "rules": this refers to the set of rules files you want to apply to this environment.<br/>
-    - "prefix": the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).<br/><br/>
+For each of your EndPoint, the following keys are mandatory:
 
-The following keys are recommended to ensure better readability when re-reading the configuration:<br/>
-    - "name": the name refers to the environment concerned by one or more keywords.<br/>
-    - "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.<br/><br/>
+- "rules": this refers to the set of rules files you want to apply to this environment.
+- "prefix": the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).
 
-Example config for 2 environments:<br/>
+The following keys are recommended to ensure better readability when re-reading the configuration:
+
+- "name": the name refers to the environment concerned by one or more keywords.
+- "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.
+
+Example config for 2 environments:
 ![example config for http](../config/demo/kubernetes.default.json)
 
 ### Environment
 
 You need to get and give the path to the access config to your kubernetes:
+
 ```bash
 KUBECONFIG=./Path/to/your/config
 ```
 
 The config file looks something like this:
+
 ```yaml
 apiVersion: v1
 clusters:

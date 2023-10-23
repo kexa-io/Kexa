@@ -18,8 +18,8 @@ async function getFromManager(name:string){
             return await getEnvVarWithAzureKeyVault(name);
         else if (possibleWithAwsSecretManager())
             return await getEnvVarWithAwsSecretManager(name);
-        else if (await possibleWithGoogleSecretManager(process.env["0-GOOGLE_PROJECT_ID"]))
-            return await getEnvVarWithGoogleSecretManager(name, process.env["0-GOOGLE_PROJECT_ID"]);
+        else if (await possibleWithGoogleSecretManager(process.env["GOOGLE_PROJECT_ID"]))
+            return await getEnvVarWithGoogleSecretManager(name, process.env["GOOGLE_PROJECT_ID"]);
         } catch(e) {}
     return null;
 }
@@ -42,8 +42,18 @@ function possibleWithAwsSecretManager(){
     return (Boolean(process.env.AWS_SECRET_NAME));
 }
 
+import { Credentials, SharedIniFileCredentials } from "aws-sdk";
 async function getEnvVarWithAwsSecretManager(name:string){
-    const secretsmanager = new AWS.SecretsManager();
+    let awsKeyId = process.env.AWS_ACCESS_KEY_ID;
+    let awsSecretKey = process.env.AWS_SECRET_ACCESS_KEY;
+    let credentials: Credentials = new SharedIniFileCredentials({profile: 'default'});
+    if(awsKeyId && awsSecretKey){
+        credentials = new Credentials({
+            accessKeyId: awsKeyId,
+            secretAccessKey: awsSecretKey
+        });
+    }
+    const secretsmanager = new AWS.SecretsManager({credentials});
     const secName = process.env.AWS_SECRET_NAME;
     const params = { SecretId: secName };
     secretsmanager.getSecretValue(params, function(err : any, data : any) {

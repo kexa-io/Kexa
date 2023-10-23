@@ -18,22 +18,26 @@
 
 ### Default.json
 
-For each of your environments, the following keys are mandatory:<br/>
-    - "rules": This refers to the set of rules files you want to apply to this environment.<br/>
-    - "prefix": the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).<br/><br/>
+For each of your environments, the following keys are mandatory:
 
-The following keys are recommended to ensure better readability when re-reading the configuration:<br/>
-    - "name": The name refers to the environment concerned by one or more keywords.<br/>
-    - "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.<br/><br/>
+- "rules": This refers to the set of rules files you want to apply to this environment.
+- "prefix": the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).
 
-Example config for 2 environments:<br/>
+The following keys are recommended to ensure better readability when re-reading the configuration:
+
+- "name": The name refers to the environment concerned by one or more keywords.
+- "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.
+
+Example config for 2 environments:
 ![example config for azure](../config/demo/azure.default.json)
 
 ### Environment
 
 There are several ways to identify yourself in an Azure environment. Obviously, you can only scan the environment for which you are at least a "reader":
+
 - [Service principal](https://learn.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal) must be use by default in many of your case:
-```
+
+```shell
 SUBSCRIPTIONID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX   (ID of your subscription)
 AZURECLIENTID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX	(ID of an Azure AD application)
 AZURETENANTID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX	(ID of the application's Azure AD tenant)

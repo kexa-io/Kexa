@@ -18,20 +18,23 @@
 
 ### Default.json
 
-For each of your environments, the following keys are mandatory:<br/>
-    - "rules": This refers to the set of rules files you want to apply to this environment.<br/>
-    - "prefix": the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).<br/><br/>
+For each of your environments, the following keys are mandatory:
 
-The following keys are recommended to ensure better readability when re-reading the configuration:<br/>
-    - "name": The name refers to the environment concerned by one or more keywords.<br/>
-    - "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.<br/><br/>
+- "rules": This refers to the set of rules files you want to apply to this environment.
+- "prefix": the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).
 
-Example config for 2 environments:<br/>
-![example config for google drive](../config/azure.default.json)
+The following keys are recommended to ensure better readability when re-reading the configuration:
+
+- "name": The name refers to the environment concerned by one or more keywords.
+- "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.
+
+Example config for 2 environments:
+![example config for google drive](../config/demo/googleDrive.default.json)
 
 ### Environment
 
 [here](https://developers.google.com/workspace/guides/create-credentials) you can create your credential to get access through Kexa to your environment
+
 ```bash
 DRIVECRED='{
     "installed": {

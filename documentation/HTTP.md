@@ -18,26 +18,30 @@
 
 ### Default.json
 
-For each of your EndPoint, the following keys are mandatory:<br/>
-    - "rules": this refers to the set of rules files you want to apply to this environment.<br/>
-    - "prefix": the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).<br/>
-    - "METHOD": It's define the way to communicate with the endpoint: "GET", "POST", "DELETE", "PATCH", ....<br/>
-    - "URL": destination of the request<br/><br/>
+For each of your EndPoint, the following keys are mandatory:
 
-Optional keys to add more detail to your request:<br/>
-    - "header": it's a json that collapse all your additional key/value you want. If you want to add AUTHORIZATION please refer to [environment](#environment)<br/>
-    - "body": You can pass want ever you want except file<br/><br/>
+- "rules": this refers to the set of rules files you want to apply to this environment.
+- "prefix": the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).
+- "METHOD": It's define the way to communicate with the endpoint: "GET", "POST", "DELETE", "PATCH", ....
+- "URL": destination of the request
 
-The following keys are recommended to ensure better readability when re-reading the configuration:<br/>
-    - "name": the name refers to the environment concerned by one or more keywords.<br/>
-    - "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.<br/><br/>
+Optional keys to add more detail to your request:
 
-Example config for 2 environments:<br/>
+- "header": it's a json that collapse all your additional key/value you want. If you want to add AUTHORIZATION please refer to [environment](#environment)
+- "body": You can pass want ever you want except file
+
+The following keys are recommended to ensure better readability when re-reading the configuration:
+
+- "name": the name refers to the environment concerned by one or more keywords.
+- "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.
+
+Example config for 2 environments:
 ![example config for http](../config/demo/http.default.json)
 
 ### Environment
 
 You can add authorization to your request but it's not mandatory. However you want it:
+
 ```bash
 AUTHORIZATION=
 ```
