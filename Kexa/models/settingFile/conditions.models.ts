@@ -12,5 +12,5 @@ export interface ParentRules {
     name?:string;
     description?:string;
     operator:OperatorEnum;                  // AND, OR, NOT, XOR, NAND, NOR, XNOR
-    rules: RulesConditions[]|ParentRules[]; // the conditions to create the rule
+    criteria: RulesConditions[]|ParentRules[]; // the conditions to create the rule
 }

@@ -7,4 +7,5 @@ export interface HttpRequest {
     code: number|null;
     url: string|null;
     ip: any|null;
+    delays: number|null;
 }

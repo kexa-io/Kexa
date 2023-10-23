@@ -76,8 +76,8 @@ export function alertFromGlobal(alert: GlobalConfigAlert, compteError: number[],
 
 export function alertLogGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
     const context = getContext();
-    context?.log("_______________________________________-= Result Global scan =-___________________________________");
-    logger.info("_______________________________________-= Result Global scan =-___________________________________");
+    context?.log("_______________________________________-= Result Global scan: "+ alert.name +" =-___________________________________");
+    logger.info("_______________________________________-= Result Global scan: "+ alert.name +" =-___________________________________");
     compteError.forEach((value, index) => {
         context?.log("number of "+levelAlert[index]+" :"+value);
         logger.info("number of "+levelAlert[index]+" :"+value);
@@ -92,11 +92,13 @@ export function alertLogGlobal(alert: GlobalConfigAlert, compteError: number[], 
         logger.info("rule:"+key);
         context?.log("all resources who not respect the rules:");
         logger.info("all resources who not respect the rules:");
-        value.map(scan => scan.objectContent).forEach((resource, index) => {
+        value.map((scan:ResultScan) => scan.objectContent).forEach((resource, index) => {
             context?.log("resource " + (index+1) + ":");
             logger.info("resource " + (index+1) + ":");
-            context?.log(jsome.getColoredString(resource));
-            logger.info(jsome.getColoredString(resource));
+            //context?.log(jsome.getColoredString(resource));
+            logger.debug(jsome.getColoredString(resource));
+            context?.log(propertyToSend(value[index].rule, resource, true));
+            logger.info(propertyToSend(value[index].rule, resource, true));
         });
     });
     context?.log("_____________________________________-= End Result Global scan =-_________________________________");
@@ -232,7 +234,8 @@ export function alertLog(rule: Rules, conditions: SubResultScan[], objectResourc
         case LevelEnum.INFO:
             logger.info("information:"+rule.name);
             logger.info(sentenceConditionLog(objectResource.id));
-            logger.info(jsome.getColoredString(conditions));
+            logger.debug(jsome.getColoredString(conditions));
+            logger.info(propertyToSend(rule, objectResource, true));
             break;
         case LevelEnum.WARNING:
             warnLog(rule, conditions, objectResource);
@@ -240,12 +243,14 @@ export function alertLog(rule: Rules, conditions: SubResultScan[], objectResourc
         case LevelEnum.ERROR:
             logger.error("error:"+rule.name);
             logger.error(sentenceConditionLog(objectResource.id));
-            logger.info(jsome.getColoredString(conditions));
+            logger.debug(jsome.getColoredString(conditions));
+            logger.info(propertyToSend(rule, objectResource, true));
             break;
         case LevelEnum.FATAL:
             logger.fatal("critical:"+rule.name);
             logger.fatal(sentenceConditionLog(objectResource.id));
-            logger.info(jsome.getColoredString(conditions));
+            logger.debug(jsome.getColoredString(conditions));
+            logger.info(propertyToSend(rule, objectResource, true));
             break;
         default:
             warnLog(rule, conditions, objectResource);

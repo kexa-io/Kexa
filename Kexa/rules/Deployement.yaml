@@ -5,37 +5,37 @@
       enabled: false
       type: 
         - log
-        - email
+        #- email
       to: 
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     error:
       enabled: false
       type: 
         - log
-        - email
+        #- email
       to: 
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     warning:
       enabled: false
       type: 
         - log
-        - email
+        #- email
       to:
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     info:
       enabled: false
       type: 
         - log
-        - email
+        #- email
       to: 
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
     global:
       enabled: true
       type: 
         - log
-        - email
+        #- email
       to: 
-        - esteban.mathia@innovtech.eu
+        - myEmail@gmail.com
       conditions:
         - level: 0
           min: 1
@@ -64,7 +64,7 @@
       objectName: branches
       conditions:
         - operator: NAND
-          rules:
+          criteria:
             - property : protected
               condition : DIFFERENT
               value : true
@@ -79,7 +79,7 @@
       objectName : request
       conditions:
         - operator: NAND
-          rules :
+          criteria :
             - property : body.date
               condition : EQUAL
               value : null
@@ -107,6 +107,7 @@
         - property : headers.content-type
           condition : INCLUDE
           value : "application/json"
+    #change the namespace name to your namespace
     - name: namespace-exist-api-4urcloud
       description : "this rules is to check if namespace exist and notifiable if exist"
       applied: true
@@ -117,6 +118,7 @@
         - property : metadata.name
           condition : DIFFERENT
           value : 4urcloudwebsitepublic
+    #change the namespace name to your namespace
     - name: all-pods-running-kexawebsite
       description : "this rules is to check if all pods are running for a namespace"
       applied: true
@@ -125,7 +127,7 @@
       objectName : pods
       conditions:
         - operator: NAND
-          rules:
+          criteria:
             - property : status.phase
               condition : DIFFERENT
               value : Running

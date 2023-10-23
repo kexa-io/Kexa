@@ -68,7 +68,7 @@
       objectName : files
       conditions:
         - operator: NAND
-          rules:
+          criteria:
             - property : shared
               condition : DIFFERENT
               value : false
@@ -86,7 +86,7 @@
           condition : ALL
           value : 
             - operator: NAND
-              rules:
+              criteria:
                 - property : type
                   condition : EQUAL
                   value : user

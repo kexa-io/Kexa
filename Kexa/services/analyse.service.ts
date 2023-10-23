@@ -88,7 +88,7 @@ export async function analyseRule(ruleFilePath:string, listNeedRules:string[], g
         const doc = (yaml.load(fs.readFileSync(ruleFilePath, 'utf8')) as SettingFile[])[0];
         const name = ruleFilePath.split('/')[ruleFilePath.split('/').length -1].split(".")[0];
         if(!listNeedRules.includes(name) && !getAll){
-            logger.info("rule not needed:"+name);
+            logger.debug("rule not needed:"+name);
             return null;
         }
         let result = await checkDoc(doc);
@@ -96,6 +96,7 @@ export async function analyseRule(ruleFilePath:string, listNeedRules:string[], g
         result.forEach((value) => {
             if(value.startsWith("error")) throw new Error(value);
         });
+        logger.info("rule:"+name+" is valid");
         return doc;
     } catch (e) {
         logger.error("error - "+ ruleFilePath + " was not load properly : "+e);
@@ -108,7 +109,8 @@ export function logCheckDoc(result:string[]): void {
     result.forEach((value) => {
         if(value.startsWith("error")) logger.error(value);
         else if(value.startsWith("warn")) logger.warn(value);
-        else logger.info(value);
+        else if(value.startsWith("info")) logger.info(value);
+        else logger.debug(value);
     });
 }
 
@@ -116,9 +118,9 @@ export async function checkDoc(doc:SettingFile): Promise<string[]> {
     logger.debug("check doc");
     let result:string[] = [];
     if(!doc.hasOwnProperty("version")) result.push("info - version not found in doc");
-    else if(doc.version.match(/^[0-9]+\.[0-9]+\.[0-9]+$/) === null) result.push("info - version not valid in doc : "+ doc.version);
+    else if(doc.version.match(/^[0-9]+\.[0-9]+\.[0-9]+$/) === null) result.push("debug - version not valid in doc : "+ doc.version);
     if(!doc.hasOwnProperty("date")) result.push("info - date not found in doc");
-    else if(doc.date.match(/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-(19|20)\d\d$/) === null) result.push("info - date not valid in doc : "+ doc.date);
+    else if(doc.date.match(/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-(19|20)\d\d$/) === null) result.push("debug - date not valid in doc : "+ doc.date);
     (await checkDocAlert(doc.alert)).forEach((value) => result.push(value));
     checkDocRules(doc.rules).forEach((value) => result.push(value));
     return result;
@@ -204,7 +206,7 @@ export function checkDocRules(rules:Rules[]): string[] {
         else if(typeof rule.name !== "string") result.push("warn - name not string in rule : "+rule.name);
         if(!rule.hasOwnProperty("description")) result.push("info - description not found in rule");
         else if(typeof rule.description !== "string") result.push("warn - description not string in rule : "+rule.description);
-        if(!rule.hasOwnProperty("urlDescription")) result.push("info - urlDescription not found in rule");
+        if(!rule.hasOwnProperty("urlDescription")) result.push("debug - urlDescription not found in rule");
         else if(typeof rule.urlDescription !== "string") result.push("warn - urlDescription not string in rule : "+rule.urlDescription);
         if(!rule.hasOwnProperty("applied")) result.push("error - applied not found in rule");
         else if(typeof rule.applied !== "boolean") result.push("error - applied not boolean in rule : "+rule.applied);
@@ -228,7 +230,7 @@ export function checkDocRules(rules:Rules[]): string[] {
 export function checkRuleCondition(condition:RulesConditions|ParentRules): string[] {
     logger.debug("check rule condition");
     let result:string[] = [];
-    if(condition.hasOwnProperty("rules")){
+    if(condition.hasOwnProperty("criteria")){
         checkParentRuleCondition(condition as ParentRules).forEach((value) => result.push(value));
     }else{
         checkSubRuleCondition(condition as RulesConditions).forEach((value) => result.push(value));
@@ -239,17 +241,17 @@ export function checkRuleCondition(condition:RulesConditions|ParentRules): strin
 export function checkParentRuleCondition(parentRule:ParentRules): string[] {
     logger.debug("check parent rule condition");
     let result:string[] = [];
-    if(!parentRule.hasOwnProperty("name")) result.push("info - name not found in parent rule condition");
+    if(!parentRule.hasOwnProperty("name")) result.push("debug - name not found in parent rule condition");
     else if(typeof parentRule.name !== "string") result.push("warn - name not string in parent rule condition : "+parentRule.name);
-    if(!parentRule.hasOwnProperty("description")) result.push("info - description not found in parent rule condition");
+    if(!parentRule.hasOwnProperty("description")) result.push("debug - description not found in parent rule condition");
     else if(typeof parentRule.description !== "string") result.push("warn - description not string in parent rule condition : "+parentRule.description);
     if(!parentRule.hasOwnProperty("operator")) result.push("error - operator not found in parent rule condition");
     else if(!Object.values(OperatorEnum).includes(parentRule.operator)) result.push("error - operator not valid in parent rule condition : " + parentRule.operator);
-    else if(parentRule.operator === OperatorEnum.NOT && parentRule.rules.length > 1) result.push("warn - operator not will be considered in rules only the first one");
-    if(!parentRule.hasOwnProperty("rules")) result.push("error - rules not found in parent rule condition");
+    else if(parentRule.operator === OperatorEnum.NOT && parentRule.criteria.length > 1) result.push("warn - operator not will be considered in criteria only the first one");
+    if(!parentRule.hasOwnProperty("criteria")) result.push("error - criteria not found in parent rule condition");
     else {
-        if (parentRule.rules.length === 0) result.push("error - rules empty in parent rule condition");
-        parentRule.rules.forEach((rule) => {
+        if (parentRule.criteria.length === 0) result.push("error - criteria empty in parent rule condition");
+        parentRule.criteria.forEach((rule) => {
             checkRuleCondition(rule).forEach((value) => result.push(value));
         });
     }
@@ -305,15 +307,15 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
         context?.log("check rule:"+rule.name);
         logger.info("check rule:"+rule.name);
         if(!config.has(rule.cloudProvider)){
-            logger.warn("cloud provider not found in config:"+rule.cloudProvider);
+            logger.debug("cloud provider not found in config:"+rule.cloudProvider);
             return;
         }
         const configAssign = config.get(rule.cloudProvider);
         let objectResources:any = []
         for(let i = 0; i < configAssign.length; i++){
             if(configAssign[i].rules.includes(alert.global.name)){
-                context?.log("check rule with object with index :"+ i);
-                logger.info("check rule with object with index :"+ i);
+                context?.log("check rule with config with index/prefix :"+ (configAssign[i].prefix??i));
+                logger.info("check rule with config "+ rule.cloudProvider +" with index/prefix :"+ (configAssign[i].prefix??i));
                 switch(checkMatchConfigAndResource(rule, resources, i)){
                     case BeHaviorEnum.RETURN:
                         return;
@@ -358,7 +360,7 @@ export function checkRule(conditions: RulesConditions[]|ParentRules[], resources
     logger.debug("check subrule");
     let result: SubResultScan[] = [];
     conditions.forEach(condition => {
-        if(condition.hasOwnProperty("rules")) {
+        if(condition.hasOwnProperty("criteria")) {
             result.push(checkParentRule(condition as ParentRules, resources));
         } else {
             condition = condition as RulesConditions;
@@ -371,7 +373,7 @@ export function checkRule(conditions: RulesConditions[]|ParentRules[], resources
 
 export function checkParentRule(parentRule:ParentRules, resources:any): SubResultScan {
     logger.debug("check parent rule");
-    let result: SubResultScan[] = checkRule(parentRule.rules, resources);
+    let result: SubResultScan[] = checkRule(parentRule.criteria, resources);
     switch(parentRule.operator){
         case OperatorEnum.AND:
             return parentResultScan(result, result.every((value) => value.result));
