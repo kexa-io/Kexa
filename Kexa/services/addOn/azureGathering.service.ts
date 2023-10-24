@@ -55,19 +55,19 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
         } as AzureResources;
         logger.debug("config: ");
         logger.debug(JSON.stringify(config));
-        let prefix = config.prefix??(azureConfig.indexOf(config)+"-");
+        let prefix = config.prefix??(azureConfig.indexOf(config).toString());
         try{
             logger.debug("prefix: "+prefix);
             let subscriptionId = await getConfigOrEnvVar(config, "SUBSCRIPTIONID", prefix);
             let azureClientId = await getConfigOrEnvVar(config, "AZURECLIENTID", prefix);
             if(azureClientId) setEnvVar("AZURE_CLIENT_ID", azureClientId);
-            else logger.warn(prefix + "AZURECLIENTID not found in config file");
+            else logger.warn(prefix + "AZURECLIENTID not found");
             let azureClientSecret = await getConfigOrEnvVar(config, "AZURECLIENTSECRET", prefix);
             if(azureClientSecret) setEnvVar("AZURE_CLIENT_SECRET", azureClientSecret);
-            else logger.warn(prefix + "AZURECLIENTSECRET not found in config file");
+            else logger.warn(prefix + "AZURECLIENTSECRET not found");
             let azureTenantId = await getConfigOrEnvVar(config, "AZURETENANTID", prefix);
             if(azureTenantId) setEnvVar("AZURE_TENANT_ID", azureTenantId);
-            else logger.warn(prefix + "AZURETENANTID not found in config file");
+            else logger.warn(prefix + "AZURETENANTID not found");
             let UAI = {}
             let useAzureIdentity = await getConfigOrEnvVar(config, "USERAZUREIDENTITYID", prefix);
             if(useAzureIdentity) UAI = {managedIdentityClientId: useAzureIdentity};

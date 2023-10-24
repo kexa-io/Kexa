@@ -49,7 +49,7 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
             //   "ecrImage": null
             // Add more AWS resource
         } as AWSResources;
-        let prefix = oneConfig["prefix"]??( awsConfig.indexOf(oneConfig) + "-")
+        let prefix = oneConfig["prefix"]??( awsConfig.indexOf(oneConfig).toString())
         try {
             let awsKeyId = await getConfigOrEnvVar(oneConfig, "AWS_ACCESS_KEY_ID", prefix);
             let awsSecretKey = await getConfigOrEnvVar(oneConfig, "AWS_SECRET_ACCESS_KEY", prefix);
@@ -86,8 +86,8 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
             }
             else {
                 gatherAll = true;
-                context?.log("AWS - No Regions found in Config, gathering all regions...");
-                logger.info("AWS - No Regions found in Config, gathering all regions...");
+                context?.log("AWS - No Regions found, gathering all regions...");
+                logger.info("AWS - No Regions found, gathering all regions...");
             }
             if (skip)
                 continue;

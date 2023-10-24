@@ -78,7 +78,7 @@
       objectName: branches
       conditions:
         - operator: NAND
-          rules:
+          criteria:
             - property : protected
               condition : DIFFERENT
               value : true
@@ -103,7 +103,7 @@
       objectName : pods
       conditions:
         - operator: NAND
-          rules:
+          criteria:
             - property : status.phase
               condition : DIFFERENT
               value : Running
@@ -118,7 +118,7 @@
       objectName : pods
       conditions:
         - operator: OR
-          rules:
+          criteria:
             - property : status.phase
               condition : EQUAL
               value : Running
@@ -168,7 +168,7 @@
       objectName : disk
       conditions:
         - operator : OR
-          rules:
+          criteria:
             - property : networkAccessPolicy
               condition : DIFFERENT
               value : AllowAll

@@ -25,7 +25,7 @@ const k8s = require('@kubernetes/client-node');
 export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<KubernetesResources[]|null>{
     let resources = new Array<KubernetesResources>();
     for(let config of kubernetesConfig??[]){
-        let prefix = config.prefix??(kubernetesConfig.indexOf(config)+"-");
+        let prefix = config.prefix??(kubernetesConfig.indexOf(config).toString());
         try {
             let pathKubeFile = await getConfigOrEnvVar(config, "KUBECONFIG", prefix);
             writeStringToJsonFile(JSON.stringify(yaml.load(getFile(pathKubeFile??"")), null, 2), "./config/kubernetes.json");
@@ -62,16 +62,39 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
     kubResources["pods"] = [];
     kubResources["helm"] = [];
     const namespacePromises = namespaces.body.items.map(async (item: any) => {
-        let helmData = await helm.list({ namespace: item.metadata.name });
-        helmData.forEach((helmItem: any) => {
+        const promises = [
+            collectHelm(item.metadata.name),
+            collectPods(k8sApiCore, item.metadata.name),
+        ];
+        const [helmData, pods] = await Promise.all(promises);
+        helmData?.forEach((helmItem: any) => {
             kubResources["helm"].push(helmItem);
         });
-        const pods = await k8sApiCore.listNamespacedPod(item.metadata.name);
-        pods.body.items.forEach((pod: any) => {
+        pods?.body?.items?.forEach((pod: any) => {
             pod.metadata.namespace = item.metadata.name;
             kubResources["pods"].push(pod);
         });
     });
     await Promise.all(namespacePromises);
     return kubResources;
+}
+
+async function collectHelm(namespace: string): Promise<any> {
+    try{
+        let helmData = await helm.list({ namespace: namespace });
+        return helmData;
+    }catch(e){
+        logger.error(e);
+        return null;
+    }
+}
+
+async function collectPods(k8sApiCore: any, namespace: string): Promise<any> {
+    try{
+        const pods = await k8sApiCore.listNamespacedPod(namespace);
+        return pods;
+    }catch(e){
+        logger.error(e);
+        return null;
+    }
 }

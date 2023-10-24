@@ -26,7 +26,7 @@ const CREDENTIALS_PATH = path.join(process.cwd(), '/config/credentials_drive.jso
 export async function collectData(googleDriveConfig: any){
     let resources = []
     for(let config of googleDriveConfig??[]){
-        let prefix = config.prefix??(googleDriveConfig.indexOf(config)+"-");
+        let prefix = config.prefix??(googleDriveConfig.indexOf(config).toString());
         writeStringToJsonFile(await getConfigOrEnvVar(config, "DRIVECRED", prefix), "./config/credentials_drive.json");
         writeStringToJsonFile(await getConfigOrEnvVar(config, "DRIVETOKEN", prefix), "./config/token_drive.json");
         let auth = await authorize()

@@ -32,7 +32,7 @@ export async function collectData(gitConfig:GitConfig[]): Promise<GitResources[]
     let context = getContext();
     let resources = new Array<GitResources>();
     for(let config of gitConfig??[]){
-        let prefix = config.prefix??(gitConfig.indexOf(config)+"-");
+        let prefix = config.prefix??(gitConfig.indexOf(config).toString());
         githubToken = await getConfigOrEnvVar(config, "GITHUBTOKEN", prefix);
         if(!githubToken){
             throw new Error("- Please pass GITHUBTOKEN in your config file");

@@ -313,7 +313,7 @@
                 "conditions": [
                     {
                         "operator": "OR",
-                        "rules": [
+                        "criteria": [
                             {
                                 "property": "networkAccessPolicy",
                                 "condition": "DIFFERENT",
@@ -473,7 +473,47 @@
                 "conditions": [
                     {
                         "operator": "NAND",
-                        "rules": [
+                        "criteria": [
+                            {
+                                "property": "protected",
+                                "condition": "DIFFERENT",
+                                "value": true
+                            },
+                            {
+                                "property": "name",
+                                "condition": "EQUAL",
+                                "value": "master"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Git repo check",
+                "description": "this rules is to check if git repo is private",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "github",
+                "objectName": "repositories",
+                "conditions": [
+                    {
+                        "property": "private",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "Git_branch_protect",
+                "description": "this rules is to check if git branch is protected",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "github",
+                "objectName": "branches",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "criteria": [
                             {
                                 "property": "protected",
                                 "condition": "DIFFERENT",
@@ -513,7 +553,7 @@
                 "conditions": [
                     {
                         "operator": "NAND",
-                        "rules": [
+                        "criteria": [
                             {
                                 "property": "protected",
                                 "condition": "DIFFERENT",
@@ -577,7 +617,7 @@
                 "conditions": [
                     {
                         "operator": "NAND",
-                        "rules": [
+                        "criteria": [
                             {
                                 "property": "shared",
                                 "condition": "DIFFERENT",
@@ -606,7 +646,7 @@
                         "value": [
                             {
                                 "operator": "NAND",
-                                "rules": [
+                                "criteria": [
                                     {
                                         "property": "type",
                                         "condition": "EQUAL",
@@ -724,6 +764,62 @@
         "documentation": "https://developer.mozilla.org/fr/docs/Web/HTTP",
         "freeRules": [
             {
+                "name": "http request date in body",
+                "description": "date check",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "http",
+                "objectName": "request",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "criteria": [
+                            {
+                                "property": "body.date",
+                                "condition": "EQUAL",
+                                "value": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "http request certificate",
+                "description": "certificate check",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "http",
+                "objectName": "request",
+                "conditions": [
+                    {
+                        "property": "certificate.issuer.CN",
+                        "condition": "EQUAL",
+                        "value": "Kubernetes Ingress Controller Fake Certificate"
+                    },
+                    {
+                        "property": "certificate.valid_to",
+                        "condition": "DATE_INF",
+                        "value": "0 0 0 0 0 0",
+                        "date": "MMM DD HH:mm:ss YYYY GMT"
+                    }
+                ]
+            },
+            {
+                "name": "http request header",
+                "description": "header check",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "http",
+                "objectName": "request",
+                "conditions": [
+                    {
+                        "property": "headers.content-type",
+                        "condition": "INCLUDE",
+                        "value": "application/json"
+                    }
+                ]
+            },
+            {
                 "name": "http request code",
                 "description": "code check",
                 "applied": true,
@@ -733,7 +829,7 @@
                 "conditions": [
                     {
                         "operator": "OR",
-                        "rules": [
+                        "criteria": [
                             {
                                 "property": "code",
                                 "condition": "EQUAL",
@@ -758,7 +854,7 @@
                 "conditions": [
                     {
                         "operator": "NAND",
-                        "rules": [
+                        "criteria": [
                             {
                                 "property": "body.date",
                                 "condition": "DATE_INF_OR_EQUAL",
@@ -767,7 +863,7 @@
                             },
                             {
                                 "operator": "OR",
-                                "rules": [
+                                "criteria": [
                                     {
                                         "property": "code",
                                         "condition": "EQUAL",
@@ -826,6 +922,46 @@
         "documentation": "https://github.com/kubernetes-client/javascript",
         "freeRules": [
             {
+                "name": "namespace-exist-api-4urcloud",
+                "description": "this rules is to check if namespace exist and notifiable if exist",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "kubernetes",
+                "objectName": "namespaces",
+                "conditions": [
+                    {
+                        "property": "metadata.name",
+                        "condition": "DIFFERENT",
+                        "value": "4urcloudwebsitepublic"
+                    }
+                ]
+            },
+            {
+                "name": "all-pods-running-kexawebsite",
+                "description": "this rules is to check if all pods are running for a namespace",
+                "applied": true,
+                "level": 2,
+                "cloudProvider": "kubernetes",
+                "objectName": "pods",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "criteria": [
+                            {
+                                "property": "status.phase",
+                                "condition": "DIFFERENT",
+                                "value": "Running"
+                            },
+                            {
+                                "property": "metadata.namespace",
+                                "condition": "EQUAL",
+                                "value": "kexawebsitepublic"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
                 "name": "namespace-exist-dev-cloudprices-apiclient",
                 "description": "this rules is to check if namespace exist and notifiable if exist",
                 "applied": false,
@@ -850,7 +986,7 @@
                 "conditions": [
                     {
                         "operator": "NAND",
-                        "rules": [
+                        "criteria": [
                             {
                                 "property": "status.phase",
                                 "condition": "DIFFERENT",
@@ -875,7 +1011,7 @@
                 "conditions": [
                     {
                         "operator": "OR",
-                        "rules": [
+                        "criteria": [
                             {
                                 "property": "status.phase",
                                 "condition": "EQUAL",

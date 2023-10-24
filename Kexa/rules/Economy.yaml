@@ -93,6 +93,7 @@
         - property : networkInterfaces
           condition : COUNT_SUP_OR_EQUAL
           value : 1
+        #AND no subnet
     - name: "Orphan virtualNetwork"
       description : "this rules is to check if virtualNetwork is orphan"
       applied: true
