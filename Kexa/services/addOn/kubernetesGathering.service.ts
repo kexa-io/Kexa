@@ -67,10 +67,10 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
             collectPods(k8sApiCore, item.metadata.name),
         ];
         const [helmData, pods] = await Promise.all(promises);
-        helmData.forEach((helmItem: any) => {
+        helmData?.forEach((helmItem: any) => {
             kubResources["helm"].push(helmItem);
         });
-        pods.body.items.forEach((pod: any) => {
+        pods?.body?.items?.forEach((pod: any) => {
             pod.metadata.namespace = item.metadata.name;
             kubResources["pods"].push(pod);
         });
