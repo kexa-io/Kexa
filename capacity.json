@@ -490,6 +490,61 @@
             },
             {
                 "name": "Git repo check",
+                "description": "this rules is to check if my git repo is private",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "github",
+                "objectName": "repositories",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "criteria": [
+                            {
+                                "property": "private",
+                                "condition": "EQUAL",
+                                "value": false
+                            },
+                            {
+                                "property": "full_name",
+                                "condition": "EQUAL",
+                                "value": "4urcloud/Kexa_website"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Git_branch_protect",
+                "description": "this rules is to check if my git branch is protected",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "github",
+                "objectName": "branches",
+                "conditions": [
+                    {
+                        "operator": "OR",
+                        "criteria": [
+                            {
+                                "property": "repo",
+                                "condition": "DIFFERENT",
+                                "value": "Kexa_website"
+                            },
+                            {
+                                "property": "name",
+                                "condition": "DIFFERENT",
+                                "value": "main"
+                            },
+                            {
+                                "property": "protected",
+                                "condition": "EQUAL",
+                                "value": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Git repo check",
                 "description": "this rules is to check if git repo is private",
                 "applied": true,
                 "level": 0,
@@ -909,6 +964,62 @@
                         "value": "application/json"
                     }
                 ]
+            },
+            {
+                "name": "http request date in body",
+                "description": "date check",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "http",
+                "objectName": "request",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "criteria": [
+                            {
+                                "property": "body.date",
+                                "condition": "EQUAL",
+                                "value": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "http request certificate",
+                "description": "certificate check",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "http",
+                "objectName": "request",
+                "conditions": [
+                    {
+                        "property": "certificate.issuer.CN",
+                        "condition": "EQUAL",
+                        "value": "Kubernetes Ingress Controller Fake Certificate"
+                    },
+                    {
+                        "property": "certificate.valid_to",
+                        "condition": "DATE_INF",
+                        "value": "0 0 0 0 0 0",
+                        "date": "MMM DD HH:mm:ss YYYY GMT"
+                    }
+                ]
+            },
+            {
+                "name": "http request header",
+                "description": "header check",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "http",
+                "objectName": "request",
+                "conditions": [
+                    {
+                        "property": "headers.content-type",
+                        "condition": "INCLUDE",
+                        "value": "application/json"
+                    }
+                ]
             }
         ]
     },
@@ -954,6 +1065,27 @@
                             },
                             {
                                 "property": "metadata.namespace",
+                                "condition": "EQUAL",
+                                "value": "kexawebsitepublic"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "alert-if-namespace-not-exist-api-4urcloud",
+                "description": "this rules is to check if namespace exist and notifiable if not",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "kubernetes",
+                "objectName": "namespaces",
+                "conditions": [
+                    {
+                        "property": ".",
+                        "condition": "SOME",
+                        "value": [
+                            {
+                                "property": "metadata.name",
                                 "condition": "EQUAL",
                                 "value": "kexawebsitepublic"
                             }
