@@ -1,5 +1,8 @@
-<!-- PROJECT LOGO -->
-<br />
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
 <div align="center" id="top">
 
   <a href="https://www.kexa.io/">
@@ -467,3 +470,14 @@ Distributed under the MIT License. See [`LICENSE.txt`](https://github.com/4urcl
 
 Project Link: [https://github.com/4urcloud/Kexa](https://github.com/4urcloud/Kexa) Public site: [Kexa.io](https://github.com/4urcloud/Kexa/blob/rework-documentation/documentation/www.kexa.io)
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+[contributors-shield]: https://img.shields.io/github/contributors/4urcloud/Kexa.svg?style=for-the-badge
+[contributors-url]: https://github.com/4urcloud/Kexa/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/4urcloud/Kexa.svg?style=for-the-badge
+[forks-url]: https://github.com/4urcloud/Kexa/network/members
+[stars-shield]: https://img.shields.io/github/stars/4urcloud/Kexa.svg?style=for-the-badge
+[stars-url]: https://github.com/4urcloud/Kexa/stargazers
+[issues-shield]: https://img.shields.io/github/issues/4urcloud/Kexa.svg?style=for-the-badge
+[issues-url]: https://github.com/4urcloud/Kexa/issues
+[license-shield]: https://img.shields.io/github/license/4urcloud/Kexa.svg?style=for-the-badge
+[license-url]: https://github.com/4urcloud/Kexa/blob/master/LICENSE.txt
