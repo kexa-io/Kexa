@@ -90,6 +90,8 @@ export function alertLogGlobal(alert: GlobalConfigAlert, compteError: number[], 
     Object.entries(subResult).forEach(([key, value]) => {
         context?.log("rule:"+key);
         logger.info("rule:"+key);
+        context?.log("description:"+value[0].rule?.description);
+        logger.info("description:"+value[0].rule?.description);
         context?.log("all resources who not respect the rules:");
         logger.info("all resources who not respect the rules:");
         value.map((scan:ResultScan) => scan.objectContent).forEach((resource, index) => {
@@ -231,10 +233,12 @@ export function alertLog(rule: Rules, conditions: SubResultScan[], objectResourc
     switch(rule.level){
         case LevelEnum.INFO:
             if(fullDetail){
-                context?.log("info:"+rule.name);
-                logger.error("critical:"+rule.name);
+                context?.log("info name:"+rule.name);
+                logger.info("info name:"+rule.name);
+                context?.log("info description:"+rule?.description);
+                logger.info("info description:"+rule?.description);
                 context?.log(sentenceConditionLog(objectResource.id));
-                logger.error(sentenceConditionLog(objectResource.id));
+                logger.info(sentenceConditionLog(objectResource.id));
             }
             logger.debug(jsome.getColoredString(conditions));
             context?.log(propertyToSend(rule, objectResource, true));
@@ -245,8 +249,10 @@ export function alertLog(rule: Rules, conditions: SubResultScan[], objectResourc
             break;
         case LevelEnum.ERROR:
             if(fullDetail){
-                context?.log("error:"+rule.name);
-                logger.error("critical:"+rule.name);
+                context?.log("error name:"+rule.name);
+                logger.error("error name:"+rule.name);
+                context?.log("error description:"+rule?.description);
+                logger.error("error description:"+rule?.description);
                 context?.log(sentenceConditionLog(objectResource.id));
                 logger.error(sentenceConditionLog(objectResource.id));
             }
@@ -256,8 +262,10 @@ export function alertLog(rule: Rules, conditions: SubResultScan[], objectResourc
             break;
         case LevelEnum.FATAL:
             if(fullDetail){
-                context?.log("critical:"+rule.name);
-                logger.fatal("critical:"+rule.name);
+                context?.log("critical name:"+rule.name);
+                logger.fatal("critical name:"+rule.name);
+                context?.log("critical description:"+rule?.description);
+                logger.fatal("critical description:"+rule?.description);
                 context?.log(sentenceConditionLog(objectResource.id));
                 logger.fatal(sentenceConditionLog(objectResource.id));
             }

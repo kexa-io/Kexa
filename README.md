@@ -383,6 +383,9 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 # <div align="center" id="roadmap">**Roadmap**</div>
 <br/>
 
+<details>
+<summary>All Achievements</summary>
+
 - ✅ Setting notification levels
 - ✅ Azure check in:
     - ✅ virtual machine (vm)
@@ -468,8 +471,13 @@ If you want explanations and details about rules in Kexa, please refer to [this 
     - ✅ alert
     - ✅ incident
     - ✅ app_access_policy
-- [ ] VM Ware
+
+</details>
+
+Next step:
+
 - [ ] Kexa SaaS
+- [ ] VM Ware
 - [ ] OVH
 - [ ] Database
 	- [ ] Postgres

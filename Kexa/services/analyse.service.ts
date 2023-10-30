@@ -550,7 +550,7 @@ export function checkIncludeNS(condition:RulesConditions, value:any): boolean {
 export function checkRegex(condition:RulesConditions, value:any): boolean {
     logger.debug("check regex");
     if (typeof value == "number") {
-        if (value.toString().match(condition.value.toString()))
+        if (RegExp(condition.value.toString()).exec(value.toString()))
             return true;
         else
             return false;
