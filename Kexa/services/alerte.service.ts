@@ -90,15 +90,14 @@ export function alertLogGlobal(alert: GlobalConfigAlert, compteError: number[], 
     Object.entries(subResult).forEach(([key, value]) => {
         context?.log("rule:"+key);
         logger.info("rule:"+key);
+        context?.log("description:"+value[0].rule?.description);
+        logger.info("description:"+value[0].rule?.description);
         context?.log("all resources who not respect the rules:");
         logger.info("all resources who not respect the rules:");
         value.map((scan:ResultScan) => scan.objectContent).forEach((resource, index) => {
             context?.log("resource " + (index+1) + ":");
             logger.info("resource " + (index+1) + ":");
-            //context?.log(jsome.getColoredString(resource));
-            logger.debug(jsome.getColoredString(resource));
-            context?.log(propertyToSend(value[index].rule, resource, true));
-            logger.info(propertyToSend(value[index].rule, resource, true));
+            alertLog(value[index].rule, value[index].error, resource, false);
         });
     });
     context?.log("_____________________________________-= End Result Global scan =-_________________________________");
@@ -229,28 +228,50 @@ const sentenceConditionLog = (resource : string) => {
     return "condition not respect for " + resource + " :";
 }
 
-export function alertLog(rule: Rules, conditions: SubResultScan[], objectResource: any) {
+export function alertLog(rule: Rules, conditions: SubResultScan[], objectResource: any, fullDetail:boolean = true) {
+    const context = getContext();
     switch(rule.level){
         case LevelEnum.INFO:
-            logger.info("information:"+rule.name);
-            logger.info(sentenceConditionLog(objectResource.id));
+            if(fullDetail){
+                context?.log("info name:"+rule.name);
+                logger.info("info name:"+rule.name);
+                context?.log("info description:"+rule?.description);
+                logger.info("info description:"+rule?.description);
+                context?.log(sentenceConditionLog(objectResource.id));
+                logger.info(sentenceConditionLog(objectResource.id));
+            }
             logger.debug(jsome.getColoredString(conditions));
+            context?.log(propertyToSend(rule, objectResource, true));
             logger.info(propertyToSend(rule, objectResource, true));
             break;
         case LevelEnum.WARNING:
             warnLog(rule, conditions, objectResource);
             break;
         case LevelEnum.ERROR:
-            logger.error("error:"+rule.name);
-            logger.error(sentenceConditionLog(objectResource.id));
+            if(fullDetail){
+                context?.log("error name:"+rule.name);
+                logger.error("error name:"+rule.name);
+                context?.log("error description:"+rule?.description);
+                logger.error("error description:"+rule?.description);
+                context?.log(sentenceConditionLog(objectResource.id));
+                logger.error(sentenceConditionLog(objectResource.id));
+            }
             logger.debug(jsome.getColoredString(conditions));
-            logger.info(propertyToSend(rule, objectResource, true));
+            context?.log(propertyToSend(rule, objectResource, true));
+            logger.error(propertyToSend(rule, objectResource, true));
             break;
         case LevelEnum.FATAL:
-            logger.fatal("critical:"+rule.name);
-            logger.fatal(sentenceConditionLog(objectResource.id));
+            if(fullDetail){
+                context?.log("critical name:"+rule.name);
+                logger.fatal("critical name:"+rule.name);
+                context?.log("critical description:"+rule?.description);
+                logger.fatal("critical description:"+rule?.description);
+                context?.log(sentenceConditionLog(objectResource.id));
+                logger.fatal(sentenceConditionLog(objectResource.id));
+            }
             logger.debug(jsome.getColoredString(conditions));
-            logger.info(propertyToSend(rule, objectResource, true));
+            context?.log(propertyToSend(rule, objectResource, true));
+            logger.fatal(propertyToSend(rule, objectResource, true));
             break;
         default:
             warnLog(rule, conditions, objectResource);
@@ -258,10 +279,17 @@ export function alertLog(rule: Rules, conditions: SubResultScan[], objectResourc
     }
 }
 
-export function warnLog(rule: Rules, conditions:SubResultScan[], objectResource:any){
-    logger.warn("warning:"+rule.name);
-    logger.warn(sentenceConditionLog(objectResource.id));
-    logger.info(jsome.getColoredString(conditions));
+export function warnLog(rule: Rules, conditions:SubResultScan[], objectResource:any, fullDetail:boolean = true){
+    const context = getContext();
+    if(fullDetail){
+        context?.log("warning:"+rule.name);
+        logger.warn("warning:"+rule.name);
+        context?.log(sentenceConditionLog(objectResource.id));
+        logger.warn(sentenceConditionLog(objectResource.id));
+    }
+    logger.debug(jsome.getColoredString(conditions));
+    context?.log(propertyToSend(rule, objectResource, true));
+    logger.warn(propertyToSend(rule, objectResource, true));
 }
 
 export function alertTeams(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules, objectResource:any) {

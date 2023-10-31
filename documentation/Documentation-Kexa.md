@@ -303,6 +303,7 @@ You can optionally use a key manager; for these variables no prefix are needed. 
 
 ## **Rules fields**
 
+The default path for your folder rules is "./Kexa/rules". You can change it with the environment variable "RULESDIRECTORY".
 Here is the structure and required fields for a new rule :
 
 ```yaml

@@ -1,5 +1,8 @@
-<!-- PROJECT LOGO -->
-<br />
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
 <div align="center" id="top">
 
   <a href="https://www.kexa.io/">
@@ -60,7 +63,7 @@
 
 We have built Kexa to automatize verifications across your working environments (cloud, workspace, APIs endpoints), with a easy-to-deploy script that will allow you to optimize your costs, conformity and security.
 
-It can be deployed as a script, docker or github action (incomming). Kexa is flexible in the way it is deployed, and can be quickly incorporated into CI/CDs or workflows to guarantee the integrity of your workflows on a hight frequency check.
+It can be deployed as a script, [Docker](https://hub.docker.com/r/innovtech/kexa) or [github action](https://github.com/4urcloud/Kexa_githubAction). Kexa is flexible in the way it is deployed, and can be quickly incorporated into CI/CDs or pipeline to guarantee the integrity of your workflow on a hight frequency check.
 
 Clone the repository, follow our [setup guide](documentation/Documentation-Kexa.md) or the [quick launch](#quick-launch), setup the rules you want to verify from the already available rules file, or build your own.
 
@@ -76,9 +79,12 @@ For a quick launch, we're going to use docker. If you can't use docker you can r
 
 Create a folder called "config" and create a "default.json" file inside this folder. This file will be populated according to the provider you want to test, as follows.
 
-Don't forget to modify "Absolute/Path/To/config" with the absolute path to your config folder. Obviously, the tokens you supply must have read rights on the environments you want to scan.
+Don't forget to modify "Absolute/Path/To/config" with the absolute path to your config folder (ex: "C:\Users\MyUser\Documents\Kubernetes" in windows). Obviously, the credentials you supply must have read rights on the environments you want to scan.
 
-<br/>
+Click on the provider you want to fast try:
+
+<details>
+<summary>Azure</summary>
 
 ### Azure
 
@@ -114,7 +120,10 @@ Then paste this command fill with your credential:
 	innovtech/kexa
 ```
 <p align="right">(<a href="#top">back to top</a>)</p>
-<br/>
+</details>
+
+<details>
+<summary>AWS</summary>
 
 ### AWS
 default.json:
@@ -149,7 +158,10 @@ Then paste this command fill with your credential:
 	innovtech/kexa
 ```
 <p align="right">(<a href="#top">back to top</a>)</p>
-<br/>
+</details>
+
+<details>
+<summary>GCP</summary>
 
 ### GCP
 default.json:
@@ -194,7 +206,10 @@ docker run -v Absolute/Path/To/config:/app/config /
 innovtech/kexa
 ```
 <p align="right">(<a href="#top">back to top</a>)</p>
-<br/>
+</details>
+
+<details>
+<summary>Github</summary>
 
 ### Github
 default.json:
@@ -226,7 +241,10 @@ docker run -v Absolute/Path/To/config:/app/config /
 innovtech/kexa
 ```
 <p align="right">(<a href="#top">back to top</a>)</p>
-<br/>
+</details>
+
+<details>
+<summary>Kubernetes</summary>
 
 ### Kubernetes
 default.json:
@@ -259,7 +277,10 @@ docker run -v Absolute/Path/To/config:/app/config /
 innovtech/kexa
 ```
 <p align="right">(<a href="#top">back to top</a>)</p>
-<br/>
+</details>
+
+<details>
+<summary>Office 365</summary>
 
 ### Office 365
 default.json:
@@ -294,7 +315,10 @@ docker run -v Absolute/Path/To/config:/app/config /
 innovtech/kexa
 ```
 <p align="right">(<a href="#top">back to top</a>)</p>
-<br/>
+</details>
+
+<details>
+<summary>Google Workspace</summary>
 
 ### Google Workspace
 default.json:
@@ -326,11 +350,12 @@ docker run -v Absolute/Path/To/config:/app/config /
 innovtech/kexa
 ```
 <p align="right">(<a href="#top">back to top</a>)</p>
+</details>
 
 # <div align="center" id="results-explanation">**Results Explanation**</div>
 <br/>
 
-Once a scan has been performed, you can observe the results at the locations you have specified in your rules files. In addition to the notification locations you have set up, by default a html files of scan results for each rule file has been created. In the case of a quick-launch, your results will be displayed in logs + output files by default.
+Once a scan has been performed, you can observe the results at the locations you have specified in your [rules files](./documentation/Documentation-Kexa.md#rules-editing). In addition to the notification locations you have set up, by default a html files of scan results for each rule file has been created. In the case of a quick-launch, your results will be displayed in logs + output files by default.
 
 I'm going to show the result of a ruler scan with HTML rendering. The name of this file follow this type format : "./config/resources[Name of the rule][Date as : 'YYYYMMDDHHmm'].html". In our case our scan rule is "Security" :
 <img alt="Render HTML of security scan" src="./images/Exemple_Scan_Security_html.png" height="800"/>
@@ -357,6 +382,9 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 
 # <div align="center" id="roadmap">**Roadmap**</div>
 <br/>
+
+<details>
+<summary>All Achievements</summary>
 
 - ✅ Setting notification levels
 - ✅ Azure check in:
@@ -443,13 +471,19 @@ If you want explanations and details about rules in Kexa, please refer to [this 
     - ✅ alert
     - ✅ incident
     - ✅ app_access_policy
-- [ ] VM Ware
+
+</details>
+
+Next step:
+
 - [ ] Kexa SaaS
+- [ ] VM Ware
 - [ ] OVH
-- [ ] Postgres
-- [ ] SQL
-- [ ] Mysql/MariaDB
-- [ ] Oracle
+- [ ] Database
+	- [ ] Postgres
+	- [ ] SQL
+	- [ ] Mysql/MariaDB
+	- [ ] Oracle
 
 If you would like additional functionality, please send us your request. : <a href="https://github.com/4urcloud/Kexa/issues">Request Feature</a>
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -467,3 +501,14 @@ Distributed under the MIT License. See [`LICENSE.txt`](https://github.com/4urcl
 
 Project Link: [https://github.com/4urcloud/Kexa](https://github.com/4urcloud/Kexa) Public site: [Kexa.io](https://github.com/4urcloud/Kexa/blob/rework-documentation/documentation/www.kexa.io)
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+[contributors-shield]: https://img.shields.io/github/contributors/4urcloud/Kexa.svg?style=for-the-badge
+[contributors-url]: https://github.com/4urcloud/Kexa/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/4urcloud/Kexa.svg?style=for-the-badge
+[forks-url]: https://github.com/4urcloud/Kexa/network/members
+[stars-shield]: https://img.shields.io/github/stars/4urcloud/Kexa.svg?style=for-the-badge
+[stars-url]: https://github.com/4urcloud/Kexa/stargazers
+[issues-shield]: https://img.shields.io/github/issues/4urcloud/Kexa.svg?style=for-the-badge
+[issues-url]: https://github.com/4urcloud/Kexa/issues
+[license-shield]: https://img.shields.io/github/license/4urcloud/Kexa.svg?style=for-the-badge
+[license-url]: https://github.com/4urcloud/Kexa/blob/master/LICENSE.txt
