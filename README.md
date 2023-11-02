@@ -80,7 +80,7 @@ For a quick launch, we're going to use docker. If you can't use docker you can r
 Create a folder called "config" and create a "default.json" file inside this folder. This file will be populated according to the provider you want to test, as follows.
 
 Don't forget to modify "Absolute/Path/To/config" with the absolute path to your config folder (ex: "C:\Users\MyUser\Documents\Kubernetes" in windows). Obviously, the credentials you supply must have read rights on the environments you want to scan.
-
+<br/>
 Click on the provider you want to fast try:
 
 <details>
@@ -242,115 +242,13 @@ innovtech/kexa
 ```
 <p align="right">(<a href="#top">back to top</a>)</p>
 </details>
-
-<details>
-<summary>Kubernetes</summary>
-
-### Kubernetes
-default.json:
-
-```json
-{
-	"kubernetes": [
-		{
-			"name": "Project A",
-			"prefix": "A_",
-			"description": "Project A is a quick-launch test",
-			"rules": [
-				"Economy",
-				"OperationalExcellence",
-				"Security",
-				"rules-testing",
-				"Performance"
-			]
-		}
-	]
-}
-```
-
-Then paste this command fill with your credential:
-
-```shell
-docker run -v Absolute/Path/To/config:/app/config /
--v Absolute/Path/To/.kube:/app/.kube /
--e A_KUBECONFIG="/app/.kube" /
-innovtech/kexa
-```
-<p align="right">(<a href="#top">back to top</a>)</p>
-</details>
-
-<details>
-<summary>Office 365</summary>
-
-### Office 365
-default.json:
-
-```json
-{
-	"o365": [
-		{
-			"name": "Project A",
-			"prefix": "A_",
-			"description": "Project A is a quick-launch test",
-			"rules": [
-				"Economy",
-				"OperationalExcellence",
-				"Security",
-				"rules-testing",
-				"Performance"
-			]
-		}
-	]
-}
-```
-
-Then paste this command fill with your credential:
-
-```shell
-docker run -v Absolute/Path/To/config:/app/config /
--e A_AZURE_CLIENT_ID= /
--e A_AZURE_TENANT_ID= /
--e A_AZURE_CLIENT_SECRET= /
--e A_SUBSCRIPTIONID= /
-innovtech/kexa
-```
-<p align="right">(<a href="#top">back to top</a>)</p>
-</details>
-
-<details>
-<summary>Google Workspace</summary>
-
-### Google Workspace
-default.json:
-
-```json
-{
-	"googleWorkspace": [
-		{
-			"name": "Project A",
-			"prefix": "A_",
-			"description": "Project A is a quick-launch test",
-			"rules": [
-				"Economy",
-				"OperationalExcellence",
-				"Security",
-				"rules-testing",
-				"Performance"
-			]
-		}
-	]
-}
-```
-
-Then paste this command fill with your credential:
-
-```shell
-docker run -v Absolute/Path/To/config:/app/config /
--e A_WORKSPACECRED= (the credentials.json content) /
-innovtech/kexa
-```
-<p align="right">(<a href="#top">back to top</a>)</p>
-</details>
+<br/>
+For more addons, please refer to the respective documentations.
+     <ul>
+        <li><a href="documentation/Kubernetes.md">Kubernetes</a></li>
+        <li><a href="documentation/O365.md">Office 365</a></li>
+        <li><a href="documentation/GoogleWorkspace.md">Google Workspace</a></li>
+      </ul>
 
 # <div align="center" id="results-explanation">**Results Explanation**</div>
 <br/>
