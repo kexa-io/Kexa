@@ -63,7 +63,7 @@
 
 We have built Kexa to automatize verifications across your working environments (cloud, workspace, APIs endpoints), with a easy-to-deploy script that will allow you to optimize your costs, conformity and security.
 
-It can be deployed as a script, [Docker](https://hub.docker.com/r/innovtech/kexa) or [github action](https://github.com/4urcloud/Kexa_githubAction). Kexa is flexible in the way it is deployed, and can be quickly incorporated into CI/CDs or pipeline to guarantee the integrity of your workflow on a hight frequency check.
+Kexa is flexible in the way it is deployed, and can be quickly incorporated into CI/CDs or pipeline to guarantee the integrity of your workflow on a hight frequency check. It can be deployed as a script, that can run in Azure functions, AWS lambdas, and others serverless computing services. A [Docker image](https://hub.docker.com/r/innovtech/kexa) is available, as well as a [github action](https://github.com/4urcloud/Kexa_githubAction) Kexa repository.
 
 Clone the repository, follow our [setup guide](documentation/Documentation-Kexa.md) or the [quick launch](#quick-launch), setup the rules you want to verify from the already available rules file, or build your own.
 
