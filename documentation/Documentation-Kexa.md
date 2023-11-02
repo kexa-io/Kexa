@@ -26,7 +26,7 @@
 
 <!-- TABLE OF CONTENTS -->
 <details>
-  <summary>Table of Contents (Full documentation)</summary>
+  <summary>Table of Contents</summary>
   <ol>
     <li>
       <a href="#global-configuration">Global Configuration</a>
