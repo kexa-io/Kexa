@@ -50,7 +50,7 @@
         - level: 3
           min: 1
   rules:
-    - name: VirtualNetwork-subnet-count
+    - name: "azure-virtual-network-minimum-subnets"
       description : "check if NSG have a minimum of subnets"
       applied: true
       level: 1
@@ -71,7 +71,7 @@
           condition: DATE_INF
           value: 0 0 0 0 0 2 0
           date: "YYYY-MM-DDThh:mm:ss.SSSZ"
-    - name: "tagsvalue-check-for-expiration-date"
+    - name: "aws-tagsvalue-check-for-expiration-date"
       description: "this rule is to check if tags contain an expiration date (separate with \"-\")"
       applied: true
       level: 1

@@ -46,8 +46,8 @@
         - level: 3
           min: 1
   rules:
-    - name: "http request date in body"
-      description : "date check"
+    - name: "http-request-date-in-body"
+      description : "request date in body"
       applied: true
       level: 0
       cloudProvider: http
@@ -58,8 +58,8 @@
             - property : body.date
               condition : EQUAL
               value : null
-    - name: "http request certificate"
-      description : "certificate check"
+    - name: "http-request-certificate"
+      description : "request certificate"
       applied: true
       level: 0
       cloudProvider: http
@@ -72,8 +72,8 @@
           condition : DATE_INF
           value : 0 0 0 0 0 0
           date: "MMM DD HH:mm:ss YYYY GMT"
-    - name: "http request header"
-      description : "header check"
+    - name: "http-request-header"
+      description : "request header content"
       applied: true
       level: 0
       cloudProvider: http

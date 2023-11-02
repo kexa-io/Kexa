@@ -50,7 +50,7 @@
         - level: 3
           min: 1
   rules:
-    - name: NSG-subnet
+    - name: "azure-nsg-valid-subnet"
       description : "check if NSG have a valid subnet"
       applied: true
       level: 1
@@ -60,7 +60,7 @@
         - property: agentPoolProfiles
           condition: COUNT
           value: 2
-    - name: "Git repo check"
+    - name: "git-is-repository-private"
       description: "this rules is to check if git repo is private"
       applied: true
       level: 0
@@ -70,7 +70,7 @@
         - property: private
           condition: EQUAL
           value: true
-    - name: "Git_branch_protect"
+    - name: "git-is-branch-protected"
       description: "this rules is to check if git branch is protected"
       applied: true
       level: 0
