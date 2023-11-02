@@ -26,38 +26,6 @@
 </div>
 
 
-
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents (Presentation & Quick launch)</summary>
-  <ol>
-    <li>
-      <a href="#about-project">About Project</a>
-    </li>
-    <li>
-      <a href="#quick-launch">Quick Launch</a>
-      <ul>
-        <li><a href="#azure">Azure</a></li>
-        <li><a href="#aws">AWS</a></li>
-        <li><a href="#gcp">GCP</a></li>
-        <li><a href="#github">Github</a></li>
-        <li><a href="#kubernetes">Kubernetes</a></li>
-        <li><a href="#office-365">Office 365</a></li>
-        <li><a href="#google-workspace">Google Workspace</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#results-explanation">Results Explanation</a>
-    </li>
-    <li>
-      <a href="#rules-usage">Rules Usage</a>
-    </li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ol>
-</details>
-
 # <div align="center" id="about-project">**About Project**</div>
 <br/>
 
@@ -208,43 +176,10 @@ innovtech/kexa
 <p align="right">(<a href="#top">back to top</a>)</p>
 </details>
 
-<details>
-<summary>Github</summary>
-
-### Github
-default.json:
-
-```json
-{
-	"github": [
-		{
-			"name": "Project A",
-			"prefix": "A_",
-			"description": "Project A is a quick-launch test",
-			"rules": [
-				"Economy",
-				"OperationalExcellence",
-				"Security",
-				"rules-testing",
-				"Performance"
-			]
-		}
-	]
-}
-```
-
-Then paste this command fill with your credential:
-
-```shell
-docker run -v Absolute/Path/To/config:/app/config /
--e A_GITHUBTOKEN= /
-innovtech/kexa
-```
-<p align="right">(<a href="#top">back to top</a>)</p>
-</details>
 <br/>
 For more addons, please refer to the respective documentations.
      <ul>
+        <li><a href="documentation/Github.md">Github</a></li>
         <li><a href="documentation/Kubernetes.md">Kubernetes</a></li>
         <li><a href="documentation/O365.md">Office 365</a></li>
         <li><a href="documentation/GoogleWorkspace.md">Google Workspace</a></li>
@@ -284,104 +219,133 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 <details>
 <summary>All Achievements</summary>
 
-- ✅ Setting notification levels
-- ✅ Azure check in:
-    - ✅ virtual machine (vm)
-    - ✅ resource groupe (rg)
-    - ✅ disk
-    - ✅ network security groupe (nsg)
-    - ✅ virtual network (virtualNetwork)
-    - ✅ ip
-    - ✅ namespaces (namespaces)
-    - ✅ pods
-    - ✅ aks
-- ✅ Github check in:
-    - ✅ repositories
-    - ✅ branches
-    - ✅ issues
-    - ✅ organizations
-    - ✅ members
-    - ✅ teams
-    - ✅ teamProjects
-    - ✅ teamMembers
-    - ✅ teamRepositories
-    - ✅ outsideCollaborators
-- ✅ Kubernetes check in:
-    - ✅ namespaces
-    - ✅ pods
-    - ✅ helm
-- ✅ AWS :
-    - ✅ EC2 Instance (ec2Instance)
-    - ✅ EC2 Volume (ec2Volume)
-    - ✅ EC2 Security group (ec2SG)
-    - ✅ Relational Database Service (rds)
-    - ✅ Resource Groups (resourceGroups)
-    - ✅ Tags (tagsValue)
-    - ✅ Elastic Container Service CLUSTER (ecsCluster)
-    - ✅ Elastic Container Repository(ecrRepository)
-- ✅ HTTP and HTTPS request
-    - ✅ request
-        - ✅ certificate
-        - ✅ body
-        - ✅ headers
-        - ✅ http code(code)
-        - ✅ latency
-- ✅ GCP
-    - ✅ tasks_queue
-    - ✅ compute
-    - ✅ storage
-    - ✅ project
-    - ✅ billingAccount
-    - ✅ cluster
-    - ✅ workflows
-    - ✅ websecurity
-    - ✅ connector
-    - ✅ vmware-engine
-    - ✅ namespace
-    - ✅ certificate
-    - ✅ secret
-    - ✅ connectivity_test
-    - ✅ resource_settings
-    - ✅ redis_instance
-    - ✅ os_config
-    - ✅ org_policy_constraint
-    - ✅ airflow_image_version
-    - ✅ disk
-    - ✅ compute_item
-- ✅ Google Workspace
-    - ✅ user
-    - ✅ domain
-    - ✅ group
-    - ✅ role
-    - ✅ orgaunit
-    - ✅ calendar
-    - ✅ drive
-    - ✅ file
-- ✅ O365
-    - ✅ sku
-    - ✅ user
-    - ✅ domain
-    - ✅ secure_score
-    - ✅ auth_methods
-    - ✅ organization
-    - ✅ directory
-    - ✅ sp
-    - ✅ alert
-    - ✅ incident
-    - ✅ app_access_policy
+<details>
+<summary>Azure check-in</pre></summary>
+
+- ✅ virtual machine (vm)
+- ✅ resource group (rg)
+- ✅ disk
+- ✅ network security group (nsg)
+- ✅ virtual network (virtualNetwork)
+- ✅ IP
+- ✅ namespaces (namespaces)
+- ✅ pods
+- ✅ AKS
+</details>
+
+<details>
+  <summary>Github check-in</summary>
+
+- ✅ repositories
+- ✅ branches
+- ✅ issues
+- ✅ organizations
+- ✅ members
+- ✅ teams
+- ✅ teamProjects
+- ✅ teamMembers
+- ✅ teamRepositories
+- ✅ outsideCollaborators
+</details>
+
+<details>
+<summary>Kubernetes check-in</summary>
+
+- ✅ namespaces
+- ✅ pods
+- ✅ Helm
+</details>
+
+<details>
+<summary>AWS</summary>
+
+- ✅ EC2 Instance (ec2Instance)
+- ✅ EC2 Volume (ec2Volume)
+- ✅ EC2 Security group (ec2SG)
+- ✅ Relational Database Service (RDS)
+- ✅ Resource Groups (resourceGroups)
+- ✅ Tags (tagsValue)
+- ✅ Elastic Container Service CLUSTER (ecsCluster)
+- ✅ Elastic Container Repository (ecrRepository)
+</details>
+
+<details>
+<summary>HTTP and HTTPS request</summary>
+
+<details>
+<summary>request</summary>
+
+   - ✅ certificate
+   - ✅ body
+   - ✅ headers
+   - ✅ http code (code)
+   - ✅ latency
+</details>
 
 </details>
 
-Next step:
+<details>
+<summary>GCP</summary>
+
+- ✅ tasks_queue
+- ✅ compute
+- ✅ storage
+- ✅ project
+- ✅ billingAccount
+- ✅ cluster
+- ✅ workflows
+- ✅ websecurity
+- ✅ connector
+- ✅ vmware-engine
+- ✅ namespace
+- ✅ certificate
+- ✅ secret
+- ✅ connectivity_test
+- ✅ resource_settings
+- ✅ redis_instance
+- ✅ os_config
+- ✅ org_policy_constraint
+- ✅ airflow_image_version
+- ✅ disk
+- ✅ compute_item
+</details>
+
+<details>
+<summary>Google Workspace</summary>
+
+- ✅ user
+- ✅ domain
+- ✅ group
+- ✅ role
+- ✅ orgaunit
+- ✅ calendar
+- ✅ drive
+- ✅ file
+</details>
+
+<details>
+<summary>O365</summary>
+
+- ✅ sku
+- ✅ user
+- ✅ domain
+- ✅ secure_score
+- ✅ auth_methods
+- ✅ organization
+- ✅ directory
+- ✅ sp
+- ✅ alert
+- ✅ incident
+- ✅ app_access_policy
+</details>
+
+</details>
+Next steps:
 
 - [ ] Kexa SaaS
 - [ ] VM Ware
 - [ ] OVH
-- [ ] Database
-	- [ ] Postgres
-	- [ ] SQL
-	- [ ] Mysql/MariaDB
-	- [ ] Oracle
+- [ ] Databases
 
 If you would like additional functionality, please send us your request. : <a href="https://github.com/4urcloud/Kexa/issues">Request Feature</a>
 <p align="right">(<a href="#top">back to top</a>)</p>
