@@ -43,7 +43,7 @@ With Kexa, you can [edit your own rules](documentation/Documentation-Kexa.md#rul
 # <div align="center" id="quick-launch">**Quick Launch**</div>
 <br/>
 
-For a quick launch, we're going to use docker. If you can't use docker you can refer to [this documention](documentation/Documentation-Kexa.md) to try Kexa.
+For a quick launch, we're going to use Docker. If you can't use Docker you can refer to [this documention](documentation/Documentation-Kexa.md) to try Kexa.
 
 Create a folder called "config" and create a "default.json" file inside this folder. This file will be populated according to the provider you want to test, as follows.
 
