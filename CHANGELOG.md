@@ -48,3 +48,12 @@ Kexa/rules/driveRules.yaml was changed
 Kexa/rules/rules-testing.yaml was changed
 
 
+## 1.8.0-SNAPSHOT.55.c3f6d1b
+
+### Files added: 0
+
+### Files changed: 1
+
+README.md was changed
+
+
