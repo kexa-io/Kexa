@@ -50,8 +50,8 @@
         - level: 3
           min: 1
   rules:
-    - name: "check drive files name"
-      description : "check drive files name"
+    - name: "check-regex-drive-file-name"
+      description : "compare drive file name to regex for compliance"
       applied: true
       level: 0
       cloudProvider: googleDrive
@@ -60,8 +60,8 @@
         - property: name
           condition: REGEX
           value: /^(PUBLIC|PRIVATE)\s[A-Za-z]+/
-    - name: "check drive files stay private"
-      description : "check drive files name private"
+    - name: "is-drive-file-private"
+      description : "this rule is to check if drive files are private"
       applied: true
       level: 0
       cloudProvider: googleDrive
@@ -75,8 +75,8 @@
             - property : name
               condition : REGEX
               value : /PRIVATE\s[A-Za-z]+/
-    - name: "shared only by domaine"
-      description : "shared only by domaine"
+    - name: "is-file-shared-only-by-domaine"
+      description : "this rule is to check if a file is shared only by domain"
       applied: true
       level: 0
       cloudProvider: googleDrive

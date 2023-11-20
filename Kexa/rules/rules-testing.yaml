@@ -50,7 +50,7 @@
         - level: 3
           min: 1
   rules:
-    - name: "azure-disk-orphan"
+    - name: "azure-is-disk-orphan"
       description : "this rules is to check if disk is orphan"
       applied: false
       level: 2
@@ -60,7 +60,7 @@
         - property : diskState
           condition : DIFFERENT
           value : Unattached
-    - name: "Git repo check"
+    - name: "git-is-repository-private"
       description: "this rules is to check if git repo is private"
       applied: false
       level: 0
@@ -70,7 +70,7 @@
         - property: private
           condition: EQUAL
           value: true
-    - name: "Git_branch_protect"
+    - name: "git-is-branch-protected"
       description: "this rules is to check if git branch is protected"
       applied: false
       level: 0
@@ -85,7 +85,7 @@
             - property : name
               condition : EQUAL
               value : master
-    - name: namespace-exist-dev-cloudprices-apiclient
+    - name: "kub-alert-if-namespace-not-exist"
       description : "this rules is to check if namespace exist and notifiable if exist"
       applied: false
       level: 0
@@ -95,7 +95,7 @@
         - property : metadata.name
           condition : DIFFERENT
           value : dev-cloudprices-apiclient
-    - name: all-pods-running-thecloudprices-manorga
+    - name: "kub-are-all-pods-running-namespace"
       description : "this rules is to check if all pods are running for a namespace"
       applied: false
       level: 2
@@ -110,7 +110,7 @@
             - property : metadata.namespace
               condition : EQUAL
               value : thecloudprices-manorga
-    - name: all-pods-not-running
+    - name: "kub-are-all-pods-not-running"
       description : "this rules is to be notifiable if pods are not running"
       applied: false
       level: 2
@@ -125,7 +125,7 @@
             - property : status.phase
               condition : EQUAL
               value : Succeeded
-    - name: check-aks-cluster
+    - name: "azure-check-aks-cluster-conformity"
       description : "this rules is to check if aks cluster are conform to the norms"
       applied: false
       level: 2
@@ -150,7 +150,7 @@
         - property : autoScalerProfile.scaleDownDelayAfterAdd
           condition : DIFFERENT
           value : NULL
-    - name: all-my-helm-is-deploy
+    - name: "kub-all-my-helm-is-deploy"
       description : "this rules is to check if some helm are not deployed"
       applied: false
       level: 2
@@ -160,7 +160,7 @@
         - property : status
           condition : EQUAL
           value : deployed
-    - name: azure-disk not public or encrypted
+    - name: "azure-disk-not-public-or-encrypted"
       description : "this rules is to check if disk is either not public or encrypted by default"
       applied: false
       level: 2
@@ -175,7 +175,7 @@
             - property : encryption.type
               condition : EQUAL
               value : EncryptionAtRestWithPlatformKey
-    - name: count-repo
+    - name: "git-count-repo-orga"
       description : "this rules is to count the number of repo in a git organization"
       applied: false
       level: 0
@@ -185,7 +185,7 @@
         - property : topics
           condition : COUNT
           value : 0
-    - name: test-all-onList
+    - name: "azure-test-all-onlist-function"
       description : "this rules is to test the onList function"
       applied: false
       level: 0
@@ -198,7 +198,7 @@
             - property: osDiskSizeGB
               condition: EQUAL
               value: 128
-    - name: test-some-onList
+    - name: "azure-test-some-onlist"
       description : "this rules is to test the onList function"
       applied: false
       level: 0
@@ -211,7 +211,7 @@
             - property: vmSize
               condition: EQUAL
               value: Standard_B4ms
-    - name: test-count-onList
+    - name: "azure-test-count-onlist"
       description : "this rules is to test the onList function"
       applied: false
       level: 0
