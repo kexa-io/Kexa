@@ -2,14 +2,14 @@
   date: 07-18-2023
   alert:
     fatal:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- email
       to:
         - myEmail@gmail.com
     error:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- email
@@ -17,14 +17,14 @@
       to: 
         - myEmail@gmail.com
     warning:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- email
       to:
         - myEmail@gmail.com
     info:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- email
@@ -59,7 +59,7 @@
       conditions: 
         - property: priority
           condition: REGEX
-          value: (?i)reservation
+          value: ^(reservation)$
     - name: "azure-disk-orphan"
       description : "this rules is to check if disk is orphan"
       applied: true
@@ -90,10 +90,14 @@
       cloudProvider: azure
       objectName : nsg
       conditions:
-        - property : networkInterfaces
-          condition : COUNT_SUP_OR_EQUAL
-          value : 1
-        #AND no subnet
+        - operator: OR
+          criteria:
+            - property : networkInterfaces
+              condition : COUNT_SUP_OR_EQUAL
+              value : 1
+            - property : subnets
+              condition : COUNT_SUP_OR_EQUAL
+              value : 1
     - name: "Orphan virtualNetwork"
       description : "this rules is to check if virtualNetwork is orphan"
       applied: true

@@ -2,14 +2,14 @@
   date: 07-18-2023
   alert:
     fatal:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- email
       to: 
         - myEmail@gmail.com
     error:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- email
@@ -17,14 +17,14 @@
       to: 
         - myEmail@gmail.com
     warning:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- email
       to:
         - myEmail@gmail.com
     info:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- email
@@ -60,7 +60,7 @@
         - property: agentPoolProfiles
           condition: COUNT
           value: 2
-    - name: "Git repo check"
+    - name: Git-repo-private
       description: "this rules is to check if git repo is private"
       applied: true
       level: 0
@@ -70,7 +70,7 @@
         - property: private
           condition: EQUAL
           value: true
-    - name: "Git_branch_protect"
+    - name: Git-branch-protect
       description: "this rules is to check if git branch is protected"
       applied: true
       level: 0

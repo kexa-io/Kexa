@@ -2,14 +2,14 @@
   date: 07-18-2023
   alert:
     fatal:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- email
       to: 
         - myEmail@gmail.com
     error:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- email
@@ -17,14 +17,14 @@
       to: 
         - myEmail@gmail.com
     warning:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- email
       to:
         - myEmail@gmail.com
     info:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- email

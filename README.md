@@ -12,7 +12,10 @@
 # <h3 align="center">Kexa</h3>
 
   <p align="center">
-    Generic alert tools to ensure the quality of your infrastructure. Avoid wasting money on useless infrastructure, avoidable security breaches and service malfunctions.
+Kexa, your ally in multi-cloud compliance management, simplifies compliance on platforms such as Azure, Google, Amazon and more.<br><br>
+With simple, intuitive rules, even non-experts can guarantee the security of their cloud environments. Kexa, an Open Source tool, offers real-time monitoring, instantly alerting to any deviation from defined rules.<br><br>
+Its detailed reports facilitate compliance analysis, ensuring complete visibility of the state of the infrastructure. Scalable and integrable, Kexa adapts to the evolution of your infrastructure and connects easily to your existing tools.<br><br>
+Turn complexity into simplicity with Kexa, ensuring unrivalled security and turning compliance into a competitive advantage.
     <br />
     <a href="https://github.com/4urcloud/Kexa"><strong>Explore the docs »</strong></a>
     <br />
