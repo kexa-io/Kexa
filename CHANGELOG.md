@@ -57,3 +57,22 @@ Kexa/rules/rules-testing.yaml was changed
 README.md was changed
 
 
+## 1.8.0-SNAPSHOT.58.885a664
+
+### Files added: 0
+
+### Files changed: 6
+
+Kexa/rules/Economy.yaml was changed
+
+Kexa/rules/OperationalExcellence.yaml was changed
+
+Kexa/rules/Performance.yaml was changed
+
+Kexa/rules/Security.yaml was changed
+
+Kexa/rules/rules-testing.yaml was changed
+
+README.md was changed
+
+

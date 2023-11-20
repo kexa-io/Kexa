@@ -176,14 +176,24 @@
                 "objectName": "nsg",
                 "conditions": [
                     {
-                        "property": "networkInterfaces",
-                        "condition": "COUNT_SUP_OR_EQUAL",
-                        "value": 1
+                        "operator": "OR",
+                        "criteria": [
+                            {
+                                "property": "networkInterfaces",
+                                "condition": "COUNT_SUP_OR_EQUAL",
+                                "value": 1
+                            },
+                            {
+                                "property": "subnets",
+                                "condition": "COUNT_SUP_OR_EQUAL",
+                                "value": 1
+                            }
+                        ]
                     }
                 ]
             },
             {
-                "name": "is-virtual-network-orphan",
+                "name": "Orphan virtualNetwork",
                 "description": "this rules is to check if virtualNetwork is orphan",
                 "applied": true,
                 "level": 1,
