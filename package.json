@@ -87,7 +87,7 @@
         "typescript": "^4.9.5"
     },
     "name": "Kexa",
-    "version": "1.8.0-SNAPSHOT.51.f9fa354",
+    "version": "1.8.0-SNAPSHOT.58.885a664",
     "main": "./build/index.js",
     "scripts": {
         "build": "rimraf ./build && tsc",

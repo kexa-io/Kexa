@@ -45,7 +45,7 @@
                 ]
             },
             {
-                "name": "tagsvalue-check-for-expiration-date",
+                "name": "aws-tagsvalue-check-for-expiration-date",
                 "description": "this rule is to check if tags contain an expiration date (separate with \"-\")",
                 "applied": true,
                 "level": 1,
@@ -117,7 +117,7 @@
         "documentation": "https://learn.microsoft.com/fr-fr/javascript/api/overview/azure/?view=azure-node-latest",
         "freeRules": [
             {
-                "name": "VM-Reservation",
+                "name": "check-vm-reservation",
                 "description": "check if VM have a reservation",
                 "applied": true,
                 "level": 0,
@@ -132,7 +132,7 @@
                 ]
             },
             {
-                "name": "azure-disk-orphan",
+                "name": "azure-is-disk-orphan",
                 "description": "this rules is to check if disk is orphan",
                 "applied": true,
                 "level": 1,
@@ -147,7 +147,7 @@
                 ]
             },
             {
-                "name": "aks-scaleSet",
+                "name": "aks-has-scaleSet",
                 "description": "check if aks have a scaleSet",
                 "applied": true,
                 "level": 0,
@@ -168,7 +168,7 @@
                 ]
             },
             {
-                "name": "Orphan nsg",
+                "name": "azure-orphan-nsg",
                 "description": "this rules is to check if nsg is orphan",
                 "applied": true,
                 "level": 1,
@@ -176,9 +176,19 @@
                 "objectName": "nsg",
                 "conditions": [
                     {
-                        "property": "networkInterfaces",
-                        "condition": "COUNT_SUP_OR_EQUAL",
-                        "value": 1
+                        "operator": "OR",
+                        "criteria": [
+                            {
+                                "property": "networkInterfaces",
+                                "condition": "COUNT_SUP_OR_EQUAL",
+                                "value": 1
+                            },
+                            {
+                                "property": "subnets",
+                                "condition": "COUNT_SUP_OR_EQUAL",
+                                "value": 1
+                            }
+                        ]
                     }
                 ]
             },
@@ -198,7 +208,7 @@
                 ]
             },
             {
-                "name": "VirtualNetwork-subnet-count",
+                "name": "azure-virtual-network-minimum-subnets",
                 "description": "check if NSG have a minimum of subnets",
                 "applied": true,
                 "level": 1,
@@ -213,7 +223,7 @@
                 ]
             },
             {
-                "name": "aks-scaleSet",
+                "name": "aks-is-scaleset-down",
                 "description": "check if aks have a scaleSet down",
                 "applied": true,
                 "level": 0,
@@ -234,7 +244,7 @@
                 ]
             },
             {
-                "name": "NSG-subnet",
+                "name": "azure-nsg-valid-subnet",
                 "description": "check if NSG have a valid subnet",
                 "applied": true,
                 "level": 1,
@@ -249,7 +259,7 @@
                 ]
             },
             {
-                "name": "azure-disk-orphan",
+                "name": "azure-is-disk-orphan",
                 "description": "this rules is to check if disk is orphan",
                 "applied": false,
                 "level": 2,
@@ -264,7 +274,7 @@
                 ]
             },
             {
-                "name": "check-aks-cluster",
+                "name": "azure-check-aks-cluster-conformity",
                 "description": "this rules is to check if aks cluster are conform to the norms",
                 "applied": false,
                 "level": 2,
@@ -304,7 +314,7 @@
                 ]
             },
             {
-                "name": "azure-disk not public or encrypted",
+                "name": "azure-disk-not-public-or-encrypted",
                 "description": "this rules is to check if disk is either not public or encrypted by default",
                 "applied": false,
                 "level": 2,
@@ -329,7 +339,7 @@
                 ]
             },
             {
-                "name": "test-all-onList",
+                "name": "azure-test-all-onlist-function",
                 "description": "this rules is to test the onList function",
                 "applied": false,
                 "level": 0,
@@ -350,7 +360,7 @@
                 ]
             },
             {
-                "name": "test-some-onList",
+                "name": "azure-test-some-onlist",
                 "description": "this rules is to test the onList function",
                 "applied": false,
                 "level": 0,
@@ -371,7 +381,7 @@
                 ]
             },
             {
-                "name": "test-count-onList",
+                "name": "azure-test-count-onlist",
                 "description": "this rules is to test the onList function",
                 "applied": false,
                 "level": 0,
@@ -449,7 +459,7 @@
         "documentation": "https://docs.github.com/en/rest?apiVersion=2022-11-28",
         "freeRules": [
             {
-                "name": "Git repo check",
+                "name": "git-is-repository-private",
                 "description": "this rules is to check if git repo is private",
                 "applied": true,
                 "level": 0,
@@ -464,7 +474,7 @@
                 ]
             },
             {
-                "name": "Git_branch_protect",
+                "name": "git-is-branch-protectec",
                 "description": "this rules is to check if git branch is protected",
                 "applied": true,
                 "level": 0,
@@ -489,7 +499,7 @@
                 ]
             },
             {
-                "name": "Git repo check",
+                "name": "git-is-repository-private",
                 "description": "this rules is to check if my git repo is private",
                 "applied": true,
                 "level": 1,
@@ -514,7 +524,7 @@
                 ]
             },
             {
-                "name": "Git_branch_protect",
+                "name": "git-is-branch-protected",
                 "description": "this rules is to check if my git branch is protected",
                 "applied": true,
                 "level": 1,
@@ -544,7 +554,7 @@
                 ]
             },
             {
-                "name": "Git repo check",
+                "name": "git-is-repository-private",
                 "description": "this rules is to check if git repo is private",
                 "applied": true,
                 "level": 0,
@@ -559,7 +569,7 @@
                 ]
             },
             {
-                "name": "Git_branch_protect",
+                "name": "git-is-branch-protected",
                 "description": "this rules is to check if git branch is protected",
                 "applied": true,
                 "level": 0,
@@ -584,7 +594,7 @@
                 ]
             },
             {
-                "name": "Git repo check",
+                "name": "git-is-repository-private",
                 "description": "this rules is to check if git repo is private",
                 "applied": false,
                 "level": 0,
@@ -599,7 +609,7 @@
                 ]
             },
             {
-                "name": "Git_branch_protect",
+                "name": "git-is-branch-protected",
                 "description": "this rules is to check if git branch is protected",
                 "applied": false,
                 "level": 0,
@@ -624,7 +634,7 @@
                 ]
             },
             {
-                "name": "count-repo",
+                "name": "git-count-repo-orga",
                 "description": "this rules is to count the number of repo in a git organization",
                 "applied": false,
                 "level": 0,
@@ -648,8 +658,8 @@
         "documentation": "https://developers.google.com/drive/api/reference/rest/v3?hl=fr",
         "freeRules": [
             {
-                "name": "check drive files name",
-                "description": "check drive files name",
+                "name": "check-regex-drive-file-name",
+                "description": "compare drive file name to regex for compliance",
                 "applied": true,
                 "level": 0,
                 "cloudProvider": "googleDrive",
@@ -663,8 +673,8 @@
                 ]
             },
             {
-                "name": "check drive files stay private",
-                "description": "check drive files name private",
+                "name": "is-drive-file-private",
+                "description": "this rule is to check if drive files are private",
                 "applied": true,
                 "level": 0,
                 "cloudProvider": "googleDrive",
@@ -688,8 +698,8 @@
                 ]
             },
             {
-                "name": "shared only by domaine",
-                "description": "shared only by domaine",
+                "name": "is-file-shared-only-by-domaine",
+                "description": "this rule is to check if a file is shared only by domain",
                 "applied": true,
                 "level": 0,
                 "cloudProvider": "googleDrive",
@@ -819,8 +829,8 @@
         "documentation": "https://developer.mozilla.org/fr/docs/Web/HTTP",
         "freeRules": [
             {
-                "name": "http request date in body",
-                "description": "date check",
+                "name": "http-request-date-in-body",
+                "description": "request date in body",
                 "applied": true,
                 "level": 0,
                 "cloudProvider": "http",
@@ -839,8 +849,8 @@
                 ]
             },
             {
-                "name": "http request certificate",
-                "description": "certificate check",
+                "name": "http-request-certificate",
+                "description": "check if certificate is present",
                 "applied": true,
                 "level": 0,
                 "cloudProvider": "http",
@@ -860,8 +870,8 @@
                 ]
             },
             {
-                "name": "http request header",
-                "description": "header check",
+                "name": "http-request-header",
+                "description": "http requested header",
                 "applied": true,
                 "level": 0,
                 "cloudProvider": "http",
@@ -875,8 +885,8 @@
                 ]
             },
             {
-                "name": "http request code",
-                "description": "code check",
+                "name": "http-request-response-code",
+                "description": "check for a specific response code",
                 "applied": true,
                 "level": 0,
                 "cloudProvider": "http",
@@ -900,8 +910,8 @@
                 ]
             },
             {
-                "name": "http request date in body",
-                "description": "date check",
+                "name": "http-request-date-in-body",
+                "description": "check if date is in body",
                 "applied": true,
                 "level": 0,
                 "cloudProvider": "http",
@@ -936,8 +946,8 @@
                 ]
             },
             {
-                "name": "http request certificate",
-                "description": "certificate check",
+                "name": "http-request-certificate",
+                "description": "request certificate",
                 "applied": true,
                 "level": 0,
                 "cloudProvider": "http",
@@ -951,8 +961,8 @@
                 ]
             },
             {
-                "name": "http request header",
-                "description": "header check",
+                "name": "http-request-header",
+                "description": "request header content",
                 "applied": true,
                 "level": 0,
                 "cloudProvider": "http",
@@ -966,8 +976,8 @@
                 ]
             },
             {
-                "name": "http request date in body",
-                "description": "date check",
+                "name": "http-request-date-in-body",
+                "description": "request date in body",
                 "applied": true,
                 "level": 0,
                 "cloudProvider": "http",
@@ -986,8 +996,8 @@
                 ]
             },
             {
-                "name": "http request certificate",
-                "description": "certificate check",
+                "name": "http-request-certificate",
+                "description": "request certificate",
                 "applied": true,
                 "level": 0,
                 "cloudProvider": "http",
@@ -1007,8 +1017,8 @@
                 ]
             },
             {
-                "name": "http request header",
-                "description": "header check",
+                "name": "http-request-header",
+                "description": "request header content",
                 "applied": true,
                 "level": 0,
                 "cloudProvider": "http",
@@ -1073,7 +1083,7 @@
                 ]
             },
             {
-                "name": "alert-if-namespace-not-exist-api-4urcloud",
+                "name": "kub-alert-if-namespace-not-exist",
                 "description": "this rules is to check if namespace exist and notifiable if not",
                 "applied": true,
                 "level": 0,
@@ -1094,7 +1104,7 @@
                 ]
             },
             {
-                "name": "namespace-exist-dev-cloudprices-apiclient",
+                "name": "kub-alert-if-namespace-not-exist",
                 "description": "this rules is to check if namespace exist and notifiable if exist",
                 "applied": false,
                 "level": 0,
@@ -1109,7 +1119,7 @@
                 ]
             },
             {
-                "name": "all-pods-running-thecloudprices-manorga",
+                "name": "kub-are-all-pods-running-namespace",
                 "description": "this rules is to check if all pods are running for a namespace",
                 "applied": false,
                 "level": 2,
@@ -1134,7 +1144,7 @@
                 ]
             },
             {
-                "name": "all-pods-not-running",
+                "name": "kub-are-all-pods-not-running",
                 "description": "this rules is to be notifiable if pods are not running",
                 "applied": false,
                 "level": 2,
@@ -1159,7 +1169,7 @@
                 ]
             },
             {
-                "name": "all-my-helm-is-deploy",
+                "name": "kub-all-my-helm-is-deploy",
                 "description": "this rules is to check if some helm are not deployed",
                 "applied": false,
                 "level": 2,

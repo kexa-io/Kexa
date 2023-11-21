@@ -12,7 +12,10 @@
 # <h3 align="center">Kexa</h3>
 
   <p align="center">
-    Generic alert tools to ensure the quality of your infrastructure. Avoid wasting money on useless infrastructure, avoidable security breaches and service malfunctions.
+Kexa, your ally in multi-cloud compliance management, simplifies compliance on platforms such as Azure, Google, Amazon and more.<br><br>
+With simple, intuitive rules, even non-experts can guarantee the security of their cloud environments. Kexa, an Open Source tool, offers real-time monitoring, instantly alerting to any deviation from defined rules.<br><br>
+Its detailed reports facilitate compliance analysis, ensuring complete visibility of the state of the infrastructure. Scalable and integrable, Kexa adapts to the evolution of your infrastructure and connects easily to your existing tools.<br><br>
+Turn complexity into simplicity with Kexa, ensuring unrivalled security and turning compliance into a competitive advantage.
     <br />
     <a href="https://github.com/4urcloud/Kexa"><strong>Explore the docs »</strong></a>
     <br />
@@ -356,6 +359,7 @@ innovtech/kexa
 <br/>
 
 Once a scan has been performed, you can observe the results at the locations you have specified in your [rules files](./documentation/Documentation-Kexa.md#rules-editing). In addition to the notification locations you have set up, by default a html files of scan results for each rule file has been created. In the case of a quick-launch, your results will be displayed in logs + output files by default.
+Those html files can be found in your /config folder.
 
 I'm going to show the result of a ruler scan with HTML rendering. The name of this file follow this type format : "./config/resources[Name of the rule][Date as : 'YYYYMMDDHHmm'].html". In our case our scan rule is "Security" :
 <img alt="Render HTML of security scan" src="./images/Exemple_Scan_Security_html.png" height="800"/>

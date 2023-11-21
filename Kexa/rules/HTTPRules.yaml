@@ -50,8 +50,8 @@
         - level: 3
           min: 1
   rules:
-    - name: "http request code"
-      description : "code check"
+    - name: "http-request-response-code"
+      description : "check for a specific response code"
       applied: true
       level: 0
       cloudProvider: http
@@ -65,8 +65,8 @@
             - property : code
               condition : EQUAL
               value : 201
-    - name: "http request date in body"
-      description : "date check"
+    - name: "http-request-date-in-body"
+      description : "check if date is in body"
       applied: true
       level: 0
       cloudProvider: http
@@ -86,8 +86,8 @@
                 - property : code
                   condition : EQUAL
                   value : 201
-    - name: "http request certificate"
-      description : "certificate check"
+    - name: "http-request-certificate"
+      description : "request certificate"
       applied: true
       level: 0
       cloudProvider: http
@@ -96,8 +96,8 @@
         - property : certificate.issuer.CN
           condition : EQUAL
           value : "Kubernetes Ingress Controller Fake Certificate"
-    - name: "http request header"
-      description : "header check"
+    - name: "http-request-header"
+      description : "request header content"
       applied: true
       level: 0
       cloudProvider: http

@@ -2,14 +2,14 @@
   date: 07-18-2023
   alert:
     fatal:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- email
       to:
         - myEmail@gmail.com
     error:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- email
@@ -17,14 +17,14 @@
       to: 
         - myEmail@gmail.com
     warning:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- email
       to:
         - myEmail@gmail.com
     info:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- email
@@ -50,7 +50,7 @@
         - level: 3
           min: 1
   rules:
-    - name: VM-Reservation
+    - name: "check-vm-reservation"
       description : "check if VM have a reservation"
       applied: true
       level: 0
@@ -60,7 +60,7 @@
         - property: priority
           condition: REGEX
           value: (?i)reservation
-    - name: "azure-disk-orphan"
+    - name: "azure-is-disk-orphan"
       description : "this rules is to check if disk is orphan"
       applied: true
       level: 1
@@ -70,7 +70,7 @@
         - property : diskState
           condition : DIFFERENT
           value : Unattached
-    - name: aks-scaleSet
+    - name: "aks-has-scaleSet"
       description : "check if aks have a scaleSet"
       applied: true
       level: 0
@@ -83,17 +83,21 @@
             - property: scaleSetEvictionPolicy
               condition: EQUAL
               value: Delete
-    - name: "Orphan nsg"
+    - name: "azure-orphan-nsg"
       description : "this rules is to check if nsg is orphan"
       applied: true
       level: 1
       cloudProvider: azure
       objectName : nsg
       conditions:
-        - property : networkInterfaces
-          condition : COUNT_SUP_OR_EQUAL
-          value : 1
-        #AND no subnet
+        - operator: OR
+          criteria:
+            - property : networkInterfaces
+              condition : COUNT_SUP_OR_EQUAL
+              value : 1
+            - property : subnets
+              condition : COUNT_SUP_OR_EQUAL
+              value : 1
     - name: "Orphan virtualNetwork"
       description : "this rules is to check if virtualNetwork is orphan"
       applied: true
