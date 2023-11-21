@@ -19,7 +19,7 @@ export function renderTableAllScan(allScan: ResultScan[][]): string{
                 lastRule = rule?.rule?.name??""
                 result += `<tr style="border: 4px solid black; border-width: 4px 0;">
                             <td>
-                                <table>
+                                <table style="width:100%">
                                     <tbody>
                                         <tr>
                                             <td style="direction:ltr;padding:20px 0;text-align:center;color:`+ color +`"  colspan="1">

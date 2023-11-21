@@ -94,6 +94,7 @@
         "start:dev": "npx nodemon",
         "start": "npm run build && node build/index.js",
         "start:o": "npm run build && node build/index.js -o",
+        "start:nobuild": "node build/index.js",
         "update": "npm run build && node build/services/updateCapability.service.js",
         "lint": "eslint . --ext .ts",
         "prettier-format": "run-script-os",
