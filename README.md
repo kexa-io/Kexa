@@ -359,9 +359,9 @@ innovtech/kexa
 <br/>
 
 Once a scan has been performed, you can observe the results at the locations you have specified in your [rules files](./documentation/Documentation-Kexa.md#rules-editing). In addition to the notification locations you have set up, by default a html files of scan results for each rule file has been created. In the case of a quick-launch, your results will be displayed in logs + output files by default.
-Those html files can be found in your /config folder.
+Those html files can be found in your /output folder by default. To change your default folder, add the environment variable: "OUTPUT" with the path to your folder.
 
-I'm going to show the result of a ruler scan with HTML rendering. The name of this file follow this type format : "./config/resources/[Name of the rule]/[Date as : 'YYYYMMDDHHmm'].html". In our case our scan rule is "Security" :
+I'm going to show the result of a ruler scan with HTML rendering. The name of this file follow this type format : "./output/resources/[Name of the rule]/[Date as : 'YYYYMMDDHHmm'].html". In our case our scan rule is "Security" :
 <img alt="Render HTML of security scan" src="./images/Exemple_Scan_Security_html.png" height="800"/>
 
 The summary sheet groups together all the different error levels, from info to critical error. Then, for each of the rules present in this rule file, we have all the rules that are not respected, as well as the resources that go against them. In this example, we only have github repos that don't respect our rules. Each resource has a clickable link whenever possible, as well as a few keywords to identify which resources are being referred to.

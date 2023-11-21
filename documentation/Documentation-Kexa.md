@@ -216,6 +216,11 @@ Specify a folder to store the rules files.
   RULESDIRECTORY=./Kexa/rules (default value)
 ```
 
+Specify a folder to store the output files.
+```
+  OUTPUT=./output (default value)
+```
+
 You can modify your rule files to customize the notification channels on which to have your alerts. The "alert" section in rules files is designed for this purpose. It is possible to set up individual alerts by resource and by level of importance, but above all global alerts that summarize the scan. Go to [Full Yaml Rules File](#full-yaml-rules-file) to have more information.
 
 Setup your notification tools. (for those selected in your rules files).

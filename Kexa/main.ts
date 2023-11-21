@@ -11,6 +11,7 @@ import { Emails } from "./emails/emails";
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const args = yargs(hideBin(process.argv)).argv
+const folderOutput = process.env.OUTPUT??"./output";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 env.config();                                                                    // reading environnement vars                                                       // file system
@@ -41,7 +42,7 @@ export async function main() {
         let resources = {};
         resources = await loadAddOns(resources);
         context?.log("resources", resources);
-        if(args.o) createFileSync(JSON.stringify(resources), "./config/resources/"+ new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '') +".json", true);
+        if(args.o) createFileSync(JSON.stringify(resources), folderOutput + "/resources/"+ new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '') +".json", true);
         context?.log("good");
         settings.forEach(setting => {
             context?.log("setting", setting);
@@ -57,7 +58,7 @@ export async function main() {
                     });
                 });
                 let mail = Emails.Recap(compteError, render_table, render_table_loud, setting.alert.global);
-                createFileSync(mail, "./config/scans/"+ setting.alert.global.name + "/" + new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '') +".html");
+                createFileSync(mail, folderOutput + "/scans/"+ setting.alert.global.name + "/" + new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '') +".html");
                 alertGlobal(result, setting.alert.global);
             }
         });
