@@ -89,3 +89,38 @@ images/schema-engine.png was changed
 documentation/Documentation-Kexa.md was changed
 
 
+## 1.8.0-SNAPSHOT.67.e122e26
+
+### Files added: 0
+
+### Files changed: 14
+
+.gitignore was changed
+
+Kexa/emails/emails.ts was changed
+
+Kexa/helpers/files.ts was changed
+
+Kexa/main.ts was changed
+
+Kexa/models/resultScan.models.ts was changed
+
+Kexa/models/settingFile/rules.models.ts was changed
+
+Kexa/rules/Deployement.yaml was changed
+
+Kexa/services/alerte.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+Kexa/services/display.service.ts was changed
+
+README.md was changed
+
+config/default.json was changed
+
+documentation/Documentation-Kexa.md was changed
+
+package.json was changed
+
+

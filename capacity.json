@@ -833,18 +833,14 @@
                 "description": "request date in body",
                 "applied": true,
                 "level": 0,
+                "loudMessage": "date is present in body",
                 "cloudProvider": "http",
                 "objectName": "request",
                 "conditions": [
                     {
-                        "operator": "NAND",
-                        "criteria": [
-                            {
-                                "property": "body.date",
-                                "condition": "EQUAL",
-                                "value": null
-                            }
-                        ]
+                        "property": "body.date",
+                        "condition": "DIFFERENT",
+                        "value": null
                     }
                 ]
             },
@@ -874,6 +870,8 @@
                 "description": "http requested header",
                 "applied": true,
                 "level": 0,
+                "loud": true,
+                "loudMessage": "header is present",
                 "cloudProvider": "http",
                 "objectName": "request",
                 "conditions": [
