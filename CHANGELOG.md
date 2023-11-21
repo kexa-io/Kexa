@@ -76,3 +76,16 @@ Kexa/rules/rules-testing.yaml was changed
 README.md was changed
 
 
+## 1.8.0-SNAPSHOT.61.b5ef343
+
+### Files added: 1
+
+images/schema-engine.png was added
+
+### Files changed: 2
+
+images/schema-engine.png was changed
+
+documentation/Documentation-Kexa.md was changed
+
+
