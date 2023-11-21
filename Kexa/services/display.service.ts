@@ -11,32 +11,71 @@ const addOnPropertyToSend: { [key: string]: Function; } = loadAddOnsDisplay();
 
 export function renderTableAllScan(allScan: ResultScan[][]): string{
     let lastRule = ""
-    let result = allScan.map((mainRule) => {
-        return mainRule.map((rule) => {
+    let result = allScan.map((listResultScan) => {
+        return listResultScan.map((resultScan) => {
             let result = "";
-            const color = colors[rule?.rule?.level??0];
-            if(lastRule != rule?.rule?.name){
-                lastRule = rule?.rule?.name??""
+            const color = colors[resultScan?.rule?.level??0];
+            if(lastRule != resultScan?.rule?.name){
+                lastRule = resultScan?.rule?.name??""
                 result += `<tr style="border: 4px solid black; border-width: 4px 0;">
                             <td>
-                                <table>
+                                <table style="width:100%">
                                     <tbody>
                                         <tr>
                                             <td style="direction:ltr;padding:20px 0;text-align:center;color:`+ color +`"  colspan="1">
-                                                Name : `+ rule?.rule?.name +`
+                                                Name : `+ resultScan?.rule?.name +`
                                             </td>
                                             <td style="direction:ltr;padding:20px 0;text-align:center;color:`+ color +`"  colspan="2">
-                                            &nbspDescription : `+ rule?.rule?.description +`
+                                            &nbspDescription : `+ resultScan?.rule?.description +`
                                             </td>
                                         </tr>`;
             }
             result += `
                 <tr>
                     <td style="direction:ltr;padding:20px 0;text-align:center" colspan="3">
-                        `+ propertyToSend(rule.rule, rule.objectContent, false) +`
+                        `+ propertyToSend(resultScan.rule, resultScan.objectContent, false) +`
                     </td>
                 </tr>`;
-            result += (mainRule[mainRule.length-1].objectContent === rule.objectContent)?'</tbody></table></td></tr>':'';
+            result += (listResultScan[listResultScan.length-1].objectContent === resultScan.objectContent)?'</tbody></table></td></tr>':'';
+            return result
+        }).join(' ')
+    }).join(' ')
+
+    return result
+}
+
+export function renderTableAllScanLoud(allScan: ResultScan[][]): string{
+    let lastRule = ""
+    let result = allScan.map((listResultScan) => {
+        return listResultScan.map((resultScan) => {
+            let result = "";
+            if(lastRule != resultScan?.rule?.name){
+                lastRule = resultScan?.rule?.name??""
+                result += `<tr style="border: 4px solid black; border-width: 4px 0;">
+                            <td>
+                                <table style="width:100%">
+                                    <tbody>
+                                        <tr>
+                                            <td style="direction:ltr;padding:20px 0;text-align:center;"  colspan="1">
+                                                Name : `+ resultScan?.rule?.name +`
+                                            </td>
+                                            <td style="direction:ltr;padding:20px 0;text-align:center;"  colspan="2">
+                                            &nbspDescription : `+ resultScan?.loud?.message +`
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="direction:ltr;padding:20px 0;text-align:center;"  colspan="3">
+                                                All the following object are compliant with the rule
+                                            </td>
+                                        </tr>`;
+            }
+            result += `
+                <tr>
+                    <td style="direction:ltr;padding:20px 0;text-align:center" colspan="3">
+                        `+ propertyToSend(resultScan.rule, resultScan.objectContent, false) +`
+                    </td>
+                </tr>`;
+            result += (listResultScan[listResultScan.length-1].objectContent === resultScan.objectContent)?'</tbody></table></td></tr>':'';
             return result
         }).join(' ')
     }).join(' ')

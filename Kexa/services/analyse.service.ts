@@ -327,28 +327,38 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
         }
         let subResult: ResultScan[] = [];
         if(rule.conditions[0].hasOwnProperty("property") && (rule.conditions[0] as RulesConditions).property === "."){
+            let subResultScan: SubResultScan[] = checkRule(rule.conditions, objectResources);
             subResult.push({
                 objectContent: {
                     "id": "global property",
                 },
                 rule: rule,
-                error: actionAfterCheckRule(rule, objectResources, alert),
+                error: actionAfterCheckRule(rule, objectResources, alert, subResultScan),
             });
         }else{
             objectResources.forEach((objectResource: any) => {
+                let subResultScan: SubResultScan[] = checkRule(rule.conditions, objectResource);
                 subResult.push({
                     objectContent: objectResource,
                     rule: rule,
-                    error: actionAfterCheckRule(rule, objectResource, alert),
+                    error: actionAfterCheckRule(rule, objectResource, alert, subResultScan),
                 });
             });
+        }
+        if(rule.loud && subResult[subResult.length - 1].error.length <= 0){
+            subResult[subResult.length - 1].loud = {
+                value: subResult[subResult.length - 1].objectContent,
+                condition: rule.conditions,
+                result: true,
+                message : rule.loudMessage??rule.name
+            };
         }
         result.push(subResult);
     });
     return result;
 }
-function actionAfterCheckRule(rule: Rules, objectResource: any, alert: Alert): SubResultScan[] {
-    let subResultScan: SubResultScan[] = checkRule(rule.conditions, objectResource);
+function actionAfterCheckRule(rule: Rules, objectResource: any, alert: Alert, subResultScan: SubResultScan[]): SubResultScan[] {
+    logger.debug("subResultScan:"+JSON.stringify(subResultScan));
     let error = subResultScan.filter((value) => !value.result);
     if(error.length > 0){
         alertFromRule(rule, subResultScan, objectResource, alert);

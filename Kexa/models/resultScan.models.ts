@@ -1,4 +1,4 @@
-import { RulesConditions } from "./settingFile/conditions.models";
+import { ParentRules, RulesConditions } from "./settingFile/conditions.models";
 import { Rules } from "./settingFile/rules.models";
 
 export interface ResultScan {
@@ -6,11 +6,20 @@ export interface ResultScan {
     rule: Rules;
     error: SubResultScan[];
     message?: string;
+    loud?: LoudScan;
 }
 
 export interface SubResultScan {
     value: any;
     result: boolean;
     condition: RulesConditions[];
+    message?: string;
+}
+
+export interface LoudScan {
+    value: any;
+    result: boolean;
+    //condition: RulesConditions[];
+    condition: RulesConditions[] | ParentRules[];
     message?: string;
 }
