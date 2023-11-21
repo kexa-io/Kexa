@@ -48,8 +48,8 @@
       <a href="#rules-editing">Rules Editing</a>
       <ul>
         <li><a href="#rules-fields">Rules fields</a></li>
-        <li><a href="#full-yaml-rules-file">Full Yaml rules file</a></li>
         <li><a href="#date--time-criteria">Date & Time criteria</a></li>
+        <li><a href="#full-yaml-rules-file">Full Yaml rules file</a></li>
         <li><a href="#utility-examples">Utility examples</a>
             <ul>
                 <li><a href="#cost-savings">Cost savings</a></li>
@@ -88,8 +88,30 @@
   </ol>
 </details>
 
+# <div align="center" id= "global-configuration">**Global Understanding**</div>
+
+We'll discuss how Kexa works in principle, and explain the usefulness of the various elements in the process at each stage.
+
+<img src="../images/schema-engine.png" alt="schema engine kexa">
+
+- The first step is to scan your environment. To avoid trying to scan all environments, we use a config that lets you describe which providers will be used. In this configuration, we then define the project(s) in this provider and the rule sets associated with them.
+
+- To perform the scans, addOns retrieves the credentials you've set up for each project. Priority is given to the credentials present in your key manager, and if not set up, then in the environment variables.
+
+- Once all the scans have been made, we apply the rules you've defined to the data. We detect any resource that doesn't conform to any of your rules.
+
+- Finally, depending on :
+  - the severity levels associated with the rule in question
+  - the notification presets present in the rule set where the rule is present.
+
+  Kexa notifies you on your communication channels
+
+The principle is simple: scan and verify. That's why you have 2 main elements to set up:
+  - the default.json to know what to scan and what to scan with
+  - the set of rules to know what Kexa has to verify
 
 # <div align="center" id= "global-configuration">**Global Configuration**</div>
+
 <br/>
 In the Kexa config folder, edit the default.json (create it if it doesn't exist)
 <br/>
@@ -97,8 +119,7 @@ In the Kexa config folder, edit the default.json (create it if it doesn't exist)
 
 ## **Basic configuration**
 
-Here you can define the providers you want to retrieve data from, and for each one, which rules
-file you want to check.
+Here you can define the providers you want to retrieve data from, and for each one, which rules file you want to check.
 - You can find the available providers name for this in /enum/provider.enum.ts
 - The 'rules' field is mandatory to specify the rules to be applied to each environment.
 
@@ -378,7 +399,7 @@ With nested operations :
 			condition : enum 
 			value : # nested operation
 				- operator: AND
-			  		criteria:
+			  	criteria:
 						-	property : string 
 							condition : enum 
 							value : string 
@@ -391,6 +412,37 @@ With nested operations :
 		# add more criteria by starting a new '- property:' here #
 
 	
+```
+
+<br/>
+<div id="date-and-time-criteria"></div>
+
+## **Date & time criteria**
+
+You can also set up date and time comparison for your rules, we have built a set of specific conditions and fields for this feature :
+
+```yaml
+property: string
+condition: (
+  DATE_EQUAL |
+  DATE_SUP |
+  DATE_INF |
+  DATE_SUP_OR_EQUAL |
+  DATE_INF_OR_EQUAL |
+  INTERVAL |
+  DATE_INTERVAL
+)
+value: 0 0 0 0 0 0
+# time value to compare. We use NCronTab Normalization format. The values given in this value are subtracted from the current time.
+#In reading order, numbers have values in seconds, minutes, hours, weeks, months, years. That means 0 0 0 0 0 is equal to now.
+# few examples: 
+# - 0 0 1 0 0 0 = now minus one hour
+# - 0 0 0 0 2 0 = now minus 2 month
+date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+# the format of the date you want to parse (the one used in the resource object field).
+# few examples:
+# "2023-10-23" = "YYYY-MM-DD"
+# "23-10 / 12:27" = "DD-MM / HH:mm"
 ```
 
 <br/>
@@ -461,38 +513,6 @@ With nested operations :
 	
 	# Add as much rules as you want by starting a new '-name' #
 	
-```
-
-<br/>
-
-<div id="date-and-time-criteria"></div>
-
-## **Date & time criteria**
-
-You can also set up date and time comparison for your rules, we have built a set of specific conditions and fields for this feature :
-
-```yaml
-property: string
-condition: (
-  DATE_EQUAL |
-  DATE_SUP |
-  DATE_INF |
-  DATE_SUP_OR_EQUAL |
-  DATE_INF_OR_EQUAL |
-  INTERVAL |
-  DATE_INTERVAL
-)
-value: 0 0 0 0 0 0
-# time value to compare. We use NCronTab Normalization format. The values given in this value are subtracted from the current time.
-#In reading order, numbers have values in seconds, minutes, hours, weeks, months, years. That means 0 0 0 0 0 is equal to now.
-# few examples: 
-# - 0 0 1 0 0 0 = now minus one hour
-# - 0 0 0 0 2 0 = now minus 2 month
-date: "YYYY-MM-DDThh:mm:ss.SSSZ"
-# the format of the date you want to parse (the one used in the resource object field).
-# few examples:
-# "2023-10-23" = "YYYY-MM-DD"
-# "23-10 / 12:27" = "DD-MM / HH:mm"
 ```
 
 <br/>
