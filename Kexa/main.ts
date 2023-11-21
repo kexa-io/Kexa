@@ -1,7 +1,7 @@
 import env from "dotenv";
 import { checkRules, gatheringRules } from "./services/analyse.service";
 import { alertGlobal } from "./services/alerte.service";
-import { AsciiArtText, renderTableAllScan, talkAboutOtherProject} from "./services/display.service";
+import { AsciiArtText, renderTableAllScan, renderTableAllScanLoud, talkAboutOtherProject} from "./services/display.service";
 import { getEnvVar } from "./services/manageVarEnvironnement.service";
 import { loadAddOns } from "./services/addOn.service";
 import { deleteFile, createFileSync, writeStringToJsonFile } from "./helpers/files";
@@ -49,13 +49,14 @@ export async function main() {
             logger.debug(result);
             if(setting.alert.global.enabled){
                 let render_table = renderTableAllScan(result.map(scan => scan.filter(value => value.error.length>0)));
+                let render_table_loud = renderTableAllScanLoud(result.map(scan => scan.filter(value => value.loud)));
                 let compteError = [0,0,0,0];
                 result.forEach((rule) => {
                     rule.forEach((scan) => {
                         if(scan.error.length > 0) compteError[scan.rule?.level??3]++;
                     });
                 });
-                let mail = Emails.Recap(compteError, render_table, setting.alert.global);
+                let mail = Emails.Recap(compteError, render_table, render_table_loud, setting.alert.global);
                 createFileSync(mail, "./config/scans/"+ setting.alert.global.name + "/" + new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '') +".html");
                 alertGlobal(result, setting.alert.global);
             }
