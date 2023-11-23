@@ -129,7 +129,7 @@ export async function getSPKeyInformation(credential: DefaultAzureCredential, su
         }
         return resultList;
     } catch (err) {
-        logger.error("error in getSPKeyInformation:"+err);
+        logger.debug("error in getSPKeyInformation:"+err);
         return null;
     }
 }
@@ -144,7 +144,7 @@ export async function ipListing(client:NetworkManagementClient): Promise<Array<a
         }
         return resultList;
     }catch(e){
-        logger.error("error in ipListing:"+e);
+        logger.debug("error in ipListing:"+e);
         return null;
     }
 }
@@ -160,7 +160,7 @@ export async function aksListing(credential: DefaultAzureCredential, subscriptio
         }
         return resArray;
     }catch(e){
-        logger.error("error in aksListing:"+e);
+        logger.debug("error in aksListing:"+e);
         return null;
     }
 }
@@ -176,7 +176,7 @@ export async function networkSecurityGroupListing(client:NetworkManagementClient
         logger.info("ended networkSecurityGroupListing");
         return resultList;        
     } catch (err) {
-        logger.error("error in networkSecurityGroupListing:"+err);
+        logger.debug("error in networkSecurityGroupListing:"+err);
         return null;
     }
 }
@@ -192,7 +192,7 @@ export async function virtualNetworksListing(client:NetworkManagementClient): Pr
 
         return resultList;
     } catch (err) {
-        logger.error("error in virtualNetworksListing:"+err);
+        logger.debug("error in virtualNetworksListing:"+err);
         return null;
     }
 }
@@ -207,7 +207,7 @@ export async function networkInterfacesListing(client:NetworkManagementClient): 
         }
         return resultList;
     } catch (err) {
-        logger.error("error in networkInterfacesListing:"+err);
+        logger.debug("error in networkInterfacesListing:"+err);
         return null;
     }
 }
@@ -222,7 +222,7 @@ export async function disksListing(client:ComputeManagementClient): Promise<Arra
         }
         return resultList;
     } catch (err) {
-        logger.error("error in disksListing:"+err);
+        logger.debug("error in disksListing:"+err);
         return null;
     }    
 }
@@ -237,7 +237,7 @@ export async function virtualMachinesListing(client:ComputeManagementClient): Pr
         }
         return resultList;
     }catch (err) {
-        logger.error("error in virtualMachinesListing:"+err);
+        logger.debug("error in virtualMachinesListing:"+err);
         return null;
     } 
 }
@@ -252,7 +252,7 @@ export async function resourceGroupListing(client:ResourceManagementClient): Pro
         }
         return resultList;
     }catch (err) {
-        logger.error("error in resourceGroupListing:"+err);
+        logger.debug("error in resourceGroupListing:"+err);
         return null;
     }     
 }
@@ -274,7 +274,7 @@ export async function networkSecurityGroup_analyse(nsgList: Array<NetworkSecurit
         }
         return resultList;
     }catch (e) {
-        logger.error("error"+e);
+        logger.debug("error"+e);
         return null;
     }  
 }

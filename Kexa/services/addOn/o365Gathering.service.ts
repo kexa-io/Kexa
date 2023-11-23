@@ -136,7 +136,7 @@ async function getToken(tenantId: string, clientId: string, clientSecret: string
             return null;
         }
     } catch (error) {
-        console.error('O365 - Error fetching token:', error);
+        console.debug('O365 - Error fetching token:', error);
         throw error;
     }
     return accessToken ?? null;
@@ -182,8 +182,8 @@ async function  listUsers(endpoint: string, accessToken: string, headers: Header
                 }
             }
         } catch (error: any) {
-            console.error('O365 - Error fetching :');
-            console.error(error.response.data);
+            console.debug('O365 - Error fetching :');
+            console.debug(error.response.data);
         }
     return  jsonData ?? null;
 }
@@ -222,7 +222,7 @@ async function  listSubscribedSkus(endpoint: string, accessToken: string, header
             }
 
         } catch (e: any) {
-            logger.error(e.response.data);
+            logger.debug(e.response.data);
         }
     return jsonData ?? null;
 }
@@ -244,7 +244,7 @@ async function genericListing(endpoint: string, accessToken: string, queryEndpoi
             jsonData = JSON.parse(JSON.stringify(response.data.value));
         }
     } catch (e: any) {
-        logger.error(e.response.data);
+        logger.debug(e.response.data);
     }
     return jsonData ?? null;
 }
@@ -289,7 +289,7 @@ async function listAuthMethods(endpoint: string, accessToken: string, userList: 
                     jsonData.push(tmpJson);
                 }
         } catch (e: any) {
-            logger.error(e.response.data);
+            logger.debug(e.response.data);
         }
     }
     return jsonData ?? null;
@@ -346,8 +346,8 @@ async function listAppAccessPolicy(endpoint: string, accessToken: string, header
                 }
                 jsonData = licenseResponse.data.value;
             } catch (e) {
-                logger.error('O365 - Error fetching user ');
-                logger.error(e);
+                logger.debug('O365 - Error fetching user ');
+                logger.debug(e);
             }
         }
     return jsonData ?? null;

@@ -41,7 +41,7 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
             } as KubernetesResources;
             resources.push(kubernetesResource);
         }catch(e){
-            logger.error(e);
+            logger.debug(e);
         }
         deleteFile("./config/kubernetes.json");
     }
@@ -84,7 +84,7 @@ async function collectHelm(namespace: string): Promise<any> {
         let helmData = await helm.list({ namespace: namespace });
         return helmData;
     }catch(e){
-        logger.error(e);
+        logger.debug(e);
         return null;
     }
 }
@@ -94,7 +94,7 @@ async function collectPods(k8sApiCore: any, namespace: string): Promise<any> {
         const pods = await k8sApiCore.listNamespacedPod(namespace);
         return pods;
     }catch(e){
-        logger.error(e);
+        logger.debug(e);
         return null;
     }
 }

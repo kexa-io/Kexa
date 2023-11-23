@@ -186,7 +186,7 @@ async function listUsers(auth: any): Promise<Array<any> | null> {
             });
 
         } catch (error) {
-            logger.error('Error listing user roles:', error);
+            logger.debug('Error listing user roles:', error);
             return [];
         }
         if (isSuperAdmin) {
@@ -222,11 +222,11 @@ async function listDomains(auth: any): Promise<Array<any> | null> {
                 }
                 jsonData.push(JSON.parse(JSON.stringify(newJsonEntry)));
             } catch (e) {
-                logger.error(e);
+                logger.debug(e);
             }
         }
     } catch (e) {
-        logger.error(e);
+        logger.debug(e);
     }
     return jsonData ?? null;
 }
@@ -245,7 +245,7 @@ async function listGroups(auth: any): Promise<Array<any> | null> {
         else
             return null;
     } catch (e) {
-        logger.error(e);
+        logger.debug(e);
     }
     return jsonData ?? null;
 }
@@ -261,7 +261,7 @@ async function listRoles(auth: any): Promise<Array<any> | null> {
         });
         jsonData = JSON.parse(JSON.stringify(adminRoles.data.items));
     } catch (error) {
-        logger.error('Error listing user roles:', error);
+        logger.debug('Error listing user roles:', error);
     }
     return jsonData ?? null;
 }
@@ -280,7 +280,7 @@ async function listOrganizationalUnits(auth: any): Promise<Array<any> | null> {
         const orgUnitList = orgUnits.data;
         jsonData = JSON.parse(JSON.stringify(orgUnitList));
     } catch (error) {
-        console.error('Error listing organizational units:', error);
+        logger.debug('Error listing organizational units:', error);
     }
     return jsonData ?? null;
 }
@@ -303,7 +303,7 @@ async function listCalendars(auth: any): Promise<Array<any> | null> {
             jsonData[i].calendarACL = JSON.parse(JSON.stringify(calendarACL.items));
         }
     } catch (e) {
-        logger.error(e);
+        logger.debug(e);
     }
     return jsonData ?? null;
 }
@@ -324,7 +324,7 @@ async function listFiles(auth: any): Promise<Array<any> | null> {
             jsonData.push(JSON.parse(JSON.stringify(res.data)));
         }
     } catch (e) {
-        logger.error(e);
+        logger.debug(e);
     }
     return jsonData ?? null;
 }
@@ -345,7 +345,7 @@ async function listDrive(auth: any): Promise<Array<any> | null> {
             jsonData.push(JSON.parse(JSON.stringify(res.data)));
         }
     } catch (e) {
-        logger.error(e);
+        logger.debug(e);
     }
     return jsonData ?? null;
 }
