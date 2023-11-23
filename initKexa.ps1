@@ -73,6 +73,20 @@ function Save-ConfigJson {
     $configJson | ConvertTo-Json -Depth 1 | Out-File -FilePath $filePath -Force
 }
 
+function Save-TextToFile {
+    param (
+        [string]$text,
+        [string]$filePath
+    )
+
+    $folderPath = $filePath | Split-Path -Parent
+    if (-not (Test-Path -Path $folderPath)) {
+        New-Item -ItemType Directory -Path $folderPath | Out-Null
+    }
+
+    $text | Out-File -FilePath $filePath -Force
+}
+
 function Configure-Providers {
     $providers = @{
         "aws"="AWS"
@@ -106,7 +120,7 @@ function Configure-Providers {
 
     $configJson = @{}
     $askingProvider = @()
-    "" | Out-File -FilePath "./.env" -Encoding utf8 -Force
+    "RULESDIRECTORY=./rules" | Out-File -FilePath "./.env" -Encoding utf8 -Force
     while($true){
         $ask = Ask-User -prompt "Which providers do you want to configure? (q to finish)" -options $providers.Values
         $askProvider = $providers.Keys | where { $providers[$_] -eq $ask }
@@ -135,7 +149,9 @@ function Configure-Providers {
             if($additionnalConfiguration[$askProvider]){
                 foreach($addCred in $additionnalConfiguration[$askProvider]){
                     $value = Read-Host "$addCred"
-                    $environment[$addCred] = $value
+                    if($value){
+                        $environment[$addCred] = $value
+                    }
                 }
             }
 
@@ -145,6 +161,10 @@ function Configure-Providers {
         if($environments){
             $credentials = Get-UserInputForAllCred -provider $askProvider -prefixs $prefixs -credForTheProvider $credByProvider[$askProvider]
             Write-DictionaryToFile -filePath "./.env" -dictionary $credentials
+            # get raw text from url and save it to file
+            $url = "https://raw.githubusercontent.com/4urcloud/Kexa/main/Kexa/rules/rulesByProvider/${askProvider}SetRules.yaml"
+            $text = Invoke-WebRequest -Uri $url -UseBasicParsing
+            Save-TextToFile -text $text -filePath "./rules/${askProvider}SetRules.yaml"
         }
         $configJson[$askProvider] = $environments
         $askingProvider += $askProvider
@@ -152,7 +172,7 @@ function Configure-Providers {
     }
 
     Save-ConfigJson -configJson $configJson -filePath "./config/default.json"
-    return $configJson
+    #return $configJson
 }
 
 function Press-EnterToContinue {
@@ -165,4 +185,4 @@ Write-Host "Kexa Script initailization"
 Configure-Providers
 
 Write-Host "End Script"
-Press-AnyKeyToContinue
+Press-EnterToContinue
