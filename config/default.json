@@ -1,13 +1,11 @@
 {
-    "http":[
+    "o365": [
         {
-            "Description": "main end point for the api 4urcloud",
-            "prefix": "DEMO-",
+            "description": "organization 4urcloud",
+            "prefix": "DEMO_",
             "rules": [
-                "Deployement"
-            ],
-            "METHOD": "GET",
-            "URL": "https://api.4urcloud.eu/"
+                "BenchmarkOffice365"
+            ]
         }
     ]
 }
