@@ -132,19 +132,13 @@ First of all, Kexa is build with [node](https://nodejs.org/en) so you need to [i
    git clone https://github.com/4urcloud/Kexa.git
    ```
 
-- Github Desktop:
+<!--- Github Desktop:
 
   ```
   x-github-client://openRepo/https://github.com/4urcloud/Kexa
   ```
-  [![Github Desktop](https://custom-icon-badges.demolab.com/badge/Download-purple?style=for-the-badge&logo=github&logoColor=white "Github Desktop")](x-github-client://openRepo/https://github.com/4urcloud/Kexa)
+  [![Github Desktop](https://custom-icon-badges.demolab.com/badge/Download-purple?style=for-the-badge&logo=github&logoColor=white "Github Desktop")](x-github-client://openRepo/https://github.com/4urcloud/Kexa)-->
 
-- Visual Studio:
-
-  ```
-  git-client://clone?repo=https%3A%2F%2Fgithub.com%2F4urcloud%2FKexa
-  ```
-  [![Github Desktop](https://custom-icon-badges.demolab.com/badge/Download-purple?style=for-the-badge&logo=visualstudio&logoColor=white "Github Desktop")](git-client://clone?repo=https%3A%2F%2Fgithub.com%2F4urcloud%2FKexa)
 
 - SSH:
 
@@ -155,6 +149,11 @@ First of all, Kexa is build with [node](https://nodejs.org/en) so you need to [i
 - Download ZIP:
 
   [![Download zip](https://custom-icon-badges.demolab.com/badge/-Download-blue?style=for-the-badge&logo=download&logoColor=white "Download zip")](https://github.com/4urcloud/Kexa/archive/refs/heads/main.zip)
+
+- Visual Studio:
+
+  
+  [![Open in VS Code](https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual%20Studio%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc)](https://vscode.dev/github/4urcloud/Kexa)
 
 ### Install NPM packages
    ```sh
