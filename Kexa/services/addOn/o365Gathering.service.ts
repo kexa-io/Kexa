@@ -167,7 +167,7 @@ async function getToken(tenantId: string, clientId: string, clientSecret: string
             return null;
         }
     } catch (error) {
-        console.error('O365 - Error fetching token:', error);
+        console.debug('O365 - Error fetching token:', error);
         throw error;
     }
     return accessToken ?? null;
@@ -214,7 +214,6 @@ async function  listUsers(endpoint: string, accessToken: string, headers: Header
                 logger.error('O365 - Error fetching user ');
                 logger.error(e);
             }
-        }
     } catch (error: any) {
         console.error('O365 - Error fetching :');
         console.error(error.response.data);
@@ -281,7 +280,7 @@ async function genericListing(endpoint: string, accessToken: string, queryEndpoi
                 jsonData = JSON.parse(JSON.stringify(response.data));
         }
     } catch (e: any) {
-        logger.error(e.response.data);
+        logger.debug(e.response.data);
     }
     return jsonData ?? null;
 }
@@ -327,7 +326,7 @@ async function listAuthMethods(endpoint: string, accessToken: string, userList: 
                 jsonData.push(tmpJson);
             }
         } catch (e: any) {
-            logger.error(e.response.data);
+            logger.debug(e.response.data);
         }
     }
     return jsonData ?? null;
