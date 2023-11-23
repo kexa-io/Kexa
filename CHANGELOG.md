@@ -124,3 +124,26 @@ documentation/Documentation-Kexa.md was changed
 package.json was changed
 
 
+## 1.8.0-SNAPSHOT.69.12ed96c
+
+### Files added: 0
+
+### Files changed: 8
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+Kexa/services/addOn/githubGathering.service.ts was changed
+
+Kexa/services/addOn/googleDriveGathering.service.ts was changed
+
+Kexa/services/addOn/googleWorkspaceGathering.service.ts was changed
+
+Kexa/services/addOn/kubernetesGathering.service.ts was changed
+
+Kexa/services/addOn/o365Gathering.service.ts was changed
+
+
