@@ -17,11 +17,9 @@ With simple, intuitive rules, even non-experts can guarantee the security of the
 Its detailed reports facilitate compliance analysis, ensuring complete visibility of the state of the infrastructure. Scalable and integrable, Kexa adapts to the evolution of your infrastructure and connects easily to your existing tools.<br><br>
 Turn complexity into simplicity with Kexa, ensuring unrivalled security and turning compliance into a competitive advantage.
     <br />
-    <a href="https://github.com/4urcloud/Kexa"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/4urcloud/Kexa/blob/main/documentation/Documentation-Kexa.md"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/4urcloud/Kexa">View Demo</a>
-    ·
     <a href="https://github.com/4urcloud/Kexa/issues">Report Bug</a>
     ·
     <a href="https://github.com/4urcloud/Kexa/issues">Request Feature</a>
@@ -36,6 +34,9 @@ Turn complexity into simplicity with Kexa, ensuring unrivalled security and turn
   <ol>
     <li>
       <a href="#about-project">About Project</a>
+	  <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
     </li>
     <li>
       <a href="#quick-launch">Quick Launch</a>
@@ -74,13 +75,16 @@ Run it and get all the available optimizations with the different notification t
 
 With Kexa, you can [edit your own rules](documentation/Documentation-Kexa.md#rules-fields) and retrieve rules or even addons [built by the community](documentation/Documentation-Kexa.md#community-addons).
 
+### Built With
+
+* [![NodeJs][NodeJs.com]][NodeJs-url]
 
 # <div align="center" id="quick-launch">**Quick Launch**</div>
 <br/>
 
 For a quick launch, we're going to use docker. If you can't use docker you can refer to [this documention](documentation/Documentation-Kexa.md) to try Kexa.
 
-Create a folder called "config" and create a "default.json" file inside this folder. This file will be populated according to the provider you want to test, as follows.
+From any folder, create a folder called "config" and create a "default.json" file inside this folder. This file will be populated according to the provider you want to test, as follows.
 
 Don't forget to modify "Absolute/Path/To/config" with the absolute path to your config folder (ex: "C:\Users\MyUser\Documents\Kubernetes" in windows). Obviously, the credentials you supply must have read rights on the environments you want to scan.
 
