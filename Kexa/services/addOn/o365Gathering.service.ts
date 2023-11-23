@@ -85,25 +85,38 @@ export async function collectData(o365Config:o365Config[]): Promise<o365Resource
                 logger.info("- listing O365 resources -");
                 const userList = await listUsers(graphApiEndpoint, accessToken, headers);
                 const promises = [
-                    await listSubscribedSkus(graphApiEndpoint, accessToken, headers),
-                    await listDomains(graphApiEndpoint, accessToken, headers),
-                    await listSecureScore(graphApiEndpoint, accessToken, headers),
-                    await listAuthMethods(graphApiEndpoint, accessToken, userList),
-                    await listOrganization(graphApiEndpoint, accessToken, headers),
-                    await listDirectoryRole(graphApiEndpoint, accessToken, headers),
-                    await listServicePrincipal(graphApiEndpoint, accessToken, headers),
-                    await listAlerts(graphApiEndpoint, accessToken, headers),
-                    await listIncidents(graphApiEndpoint, accessToken, headers),
-                    await listAppAccessPolicy(graphApiEndpoint, accessToken, headers, userList),
-                    await listGroups(graphApiEndpoint, accessToken, headers),
-                    await listPolicies(graphApiEndpoint, accessToken, headers),
-                    await listConditionalAccess(graphApiEndpoint, accessToken, headers),
-                    await listSharepointSettings(graphApiEndpoint, accessToken, headers)
+                    listSubscribedSkus(graphApiEndpoint, accessToken, headers),
+                    listDomains(graphApiEndpoint, accessToken, headers),
+                    listSecureScore(graphApiEndpoint, accessToken, headers),
+                    listAuthMethods(graphApiEndpoint, accessToken, userList),
+                    listOrganization(graphApiEndpoint, accessToken, headers),
+                    listDirectoryRole(graphApiEndpoint, accessToken, headers),
+                    listServicePrincipal(graphApiEndpoint, accessToken, headers),
+                    listAlerts(graphApiEndpoint, accessToken, headers),
+                    listIncidents(graphApiEndpoint, accessToken, headers),
+                    listAppAccessPolicy(graphApiEndpoint, accessToken, headers, userList),
+                    listGroups(graphApiEndpoint, accessToken, headers),
+                    listPolicies(graphApiEndpoint, accessToken, headers),
+                    listConditionalAccess(graphApiEndpoint, accessToken, headers),
+                    listSharepointSettings(graphApiEndpoint, accessToken, headers)
                 ];
-                const [skuList, domainList, secure_scoreList, auth_methodsList,
-                    organizationList, directoryList, spList, alertList, incidentList,
-                    app_access_policyList, groupList, policyList, conditional_accessList,
-                    sharepoint_settingsList] = await Promise.all(promises);
+
+                const [
+                    skuList,
+                    domainList,
+                    secure_scoreList,
+                    auth_methodsList,
+                    organizationList,
+                    directoryList,
+                    spList,
+                    alertList,
+                    incidentList,
+                    app_access_policyList,
+                    groupList,
+                    policyList,
+                    conditional_accessList,
+                    sharepoint_settingsList
+                ] = await Promise.all(promises);
 
                 o365Resources = {
                     sku: skuList,
@@ -445,7 +458,6 @@ async function listPolicies(endpoint: string, accessToken: string, headers: Head
     if (jsonTenant) {//policies/defaultAppManagementPolicy
         jsonData.push(jsonTenant);
     }
-    console.log(jsonData);
     return jsonData ?? null;
 }
 

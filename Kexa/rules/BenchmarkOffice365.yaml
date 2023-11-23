@@ -100,7 +100,7 @@
               value: "#microsoft.graph.microsoftAuthenticatorAuthenticationMethod"
     - name: "o365-do-timeout-exist"
       description: "verify if there is active timeout policies"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: o365
       objectName: policy
