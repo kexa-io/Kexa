@@ -21,7 +21,7 @@ let httpConfig: HttpConfig[] = [];
 const jsome = require('jsome');
 jsome.level.show = true;
 
-import {getContext, getNewLogger} from "../logger.service";
+import {getNewLogger} from "../logger.service";
 const logger = getNewLogger("HttpLogger");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,12 +31,10 @@ export async function collectData(_httpConfig:HttpConfig[]) {
     httpConfig = _httpConfig;
     let resources = new Array<HttpResources>();
     let promises: any = []
-    let context = getContext();
     for(let config of httpConfig??[]){
         let prefix = config.prefix??(httpConfig.indexOf(config).toString());
         promises.push(
             (async () => {
-                context?.log("- add one config for http -");
                 logger.info("- add one config for http -");
                 let httpResources = {
                     certificate: null,
@@ -53,7 +51,7 @@ export async function collectData(_httpConfig:HttpConfig[]) {
 
                     httpResources = await getDataHttp(url, config);
 
-                } catch (e) {
+                } catch (e:any) {
                     logger.error("error in collectHttpData with the url: " + ((await getConfigOrEnvVar(config, "URL", prefix)) ?? null));
                     logger.error(e);
                 }
@@ -66,7 +64,6 @@ export async function collectData(_httpConfig:HttpConfig[]) {
     resources.push(...results);
 
     logger.info("- listing http resources done -");
-    context?.log("- listing http resources done -");
     return resources??null;
 }
 
@@ -178,7 +175,7 @@ async function getDataHttp(url: string, config: HttpConfig): Promise<HttpRequest
         httpResources.ip = await dnsLookup(URL.parse(url).hostname!);
         httpResources.certificate = await getCertificateFromResponse(response);
         httpResources.delays = response?.delays;
-    }catch(e){
+    }catch(e:any){
         logger.error("error in getDataHttp with the url: " + url);
         logger.error(e);
     }

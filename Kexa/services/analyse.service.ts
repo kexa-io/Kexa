@@ -30,7 +30,7 @@ const varEnvMin = {
     "email": ["EMAILPORT", "EMAILHOST", "EMAILUSER", "EMAILPWD", "EMAILFROM"],
     "sms": ["SMSACCOUNTSID", "SMSAUTHTOKEN", "SMSFROM"],
 }
-const config = require('config');
+const config = require('node-config-ts').config;
 const levelAlert = ["info", "warning", "error", "critical"];
 let headers: any;
 //Analyse  list
@@ -69,13 +69,15 @@ export function extractAddOnNeed(settingFileList: SettingFile[]){
 }
 
 function getListNeedRules(): string[]{
-    const config = require('config');
+    const config = require('node-config-ts').config;
     let listNeedRules = new Array<string>();
     for(let cloudProvider of Object.keys(config)){
-        let configAssign = config.get(cloudProvider);
+        let configAssign = config[cloudProvider];
         for(let config of configAssign){
-            for(let rule of config.rules){
-                if(!listNeedRules.includes(rule)) listNeedRules.push(rule);
+            if (Array.isArray(config.rules)) {
+                for (let rule of config.rules) {
+                    if (!listNeedRules.includes(rule)) listNeedRules.push(rule);
+                }
             }
         }
     }
@@ -306,11 +308,11 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
         if(!rule.applied) return;
         context?.log("check rule:"+rule.name);
         logger.info("check rule:"+rule.name);
-        if(!config.has(rule.cloudProvider)){
+        if(!config.hasOwnProperty(rule.cloudProvider)){
             logger.debug("cloud provider not found in config:"+rule.cloudProvider);
             return;
         }
-        const configAssign = config.get(rule.cloudProvider);
+        const configAssign = config[rule.cloudProvider];
         let objectResources:any = []
         for(let i = 0; i < configAssign.length; i++){
             if(configAssign[i].rules.includes(alert.global.name)){

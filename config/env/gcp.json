@@ -1,0 +1,16 @@
+{
+  "gcp": [
+    {
+      "name": "GCP project B",
+      "prefix": "GCPPROJECTB_",
+      "description": "First subscription (0) : Project B subscription",
+      "rules": [
+        "Economy",
+        "OperationalExcellence"
+      ],
+      "regions": [
+        "us-east1"
+      ]
+    }
+  ]
+}

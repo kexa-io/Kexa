@@ -1,7 +1,7 @@
 import { Provider, ProviderResource } from "../models/providerResource.models";
 import { Header } from "../models/settingFile/header.models";
 import { writeStringToJsonFile } from "../helpers/files"
-const configuration = require('config');
+const configuration = require('node-config-ts').config;
 
 const mainFolder = 'Kexa';
 const serviceAddOnPath = './' + mainFolder + '/services/addOn';
@@ -42,7 +42,7 @@ async function loadAddOn(file: string, addOnNeed: any): Promise<{ key: string; d
             }
             const { collectData } = await import(`./addOn/${file.replace(".ts", ".js") }`);
             let start = Date.now();
-            const addOnConfig = (configuration.has(nameAddOn))?configuration.get(nameAddOn):null;
+            const addOnConfig = (configuration.hasOwnProperty(nameAddOn)) ? configuration[nameAddOn] : null;
             const data = await collectData(addOnConfig);
             let delta = Date.now() - start;
             context?.log(`AddOn ${nameAddOn} collect in ${delta}ms`);
