@@ -4,6 +4,7 @@ build/*
 *.js
 .idea
 config/default.json
+config/Config.d.ts
 build
 Kexa/rules/aws-tests.yaml
 config_kuber

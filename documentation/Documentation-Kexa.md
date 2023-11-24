@@ -253,10 +253,10 @@ To use a custom file, set the following environment variable :
 NODE_CONFIG_TS_ENV=customName
 ```
 
-Replace `customName` by your file name (that will always be a .json).
+Replace `customName` by your file name (that will always have '.json' extension).
 Do not forget to delete or move away `default.json` to avoid conflicts.
 
-In addition, you can also use the `/config/deployment` and `/config/user`, by using `DEPLOYMENT=customName` or `USER=customName`.
+In addition, you can also use the `/config/deployment/` and `/config/user/` folder, by using for each `DEPLOYMENT=customName` or `USER=customName`.
 For more information, check [node-config-ts](https://www.npmjs.com/package/node-config-ts#custom-config-directory) documentation.
 
 <br/>
