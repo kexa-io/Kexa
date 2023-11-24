@@ -37,6 +37,7 @@
       <ul>
         <li><a href="#basic-configuration">Basic Configuration</a></li>
         <li><a href="#multiple-environments-provider-prefix">Multiple Environments provider prefix</a></li>
+	<li><a href="#custom-and-multiple-configurations">Custom and multiple Configurations</a></li>
         <li><a href="#regions">Regions</a></li>
       </ul>
     </li>
