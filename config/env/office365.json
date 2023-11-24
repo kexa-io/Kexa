@@ -1,8 +1,9 @@
 {
   "o365": [
     {
+      "name": "O365 project A",
       "description": "organization 4urcloud",
-      "prefix": "DEMO_",
+      "prefix": "O365PROJECTA_",
       "rules": [
         "BenchmarkOffice365"
       ]

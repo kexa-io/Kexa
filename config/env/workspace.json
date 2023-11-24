@@ -1,0 +1,12 @@
+{
+  "googleWorkspace": [
+    {
+      "name": "Workspace project A",
+      "prefix": "WORKPROJECTA",
+      "description": "First subscription (0) : Project A subscription",
+      "rules": [
+        "BenchmarkWorkspace"
+      ]
+    }
+  ]
+}
