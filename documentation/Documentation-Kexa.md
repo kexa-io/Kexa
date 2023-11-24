@@ -234,6 +234,32 @@ Each projects in this list refers to a "subscription"/"environment". It's a good
 ```
 <br/>
 
+<div id="custom-and-multiple-configurations"></div>
+
+## **Custom and multiple configurations**
+
+As we said before, `/config/default.json` is the default file path for your Kexa projects configuration.
+But you can edit this and have multiple configuration files to switch between.
+
+First, delete the `default.json` configuration file, so it won't be taken into account. (think about backup if you need it)
+
+There is a `/config/env/` folder available in Kexa, if not, you can create it.
+In this folder you will be able to store multiple configuration files, each having a custom name.
+
+To use a custom file, set the following environment variable :
+
+```sh
+NODE_CONFIG_TS_ENV=customName
+```
+
+Replace `customName` by your file name (that will always be a .json).
+Do not forget to delete or move away `default.json` to avoid conflicts.
+
+In addition, you can also use the `/config/deployment` and `/config/user`, by using `DEPLOYMENT=customName` or `USER=customName`.
+For more information, check [node-config-ts](https://www.npmjs.com/package/node-config-ts#custom-config-directory) documentation.
+
+<br/>
+
 <div id="regions"></div>
 
 ## **Regions**
