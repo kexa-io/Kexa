@@ -191,3 +191,20 @@ config/default.json was added
 config/default.json was changed
 
 
+## 1.8.0-SNAPSHOT.98.874b280
+
+### Files added: 0
+
+### Files changed: 5
+
+Kexa/models/azure/resource.models.ts was changed
+
+Kexa/rules/OperationalExcellence.yaml was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+

@@ -111,7 +111,11 @@
             "nsg",
             "virtualNetwork",
             "networkInterfaces",
-            "aks"
+            "aks",
+            "mlWorkspace",
+            "mlJobs",
+            "mlComputes",
+            "mlSchedule"
         ],
         "thumbnail": "https://cdn.icon-icons.com/icons2/2699/PNG/512/microsoft_azure_logo_icon_168977.png",
         "documentation": "https://learn.microsoft.com/fr-fr/javascript/api/overview/azure/?view=azure-node-latest",
@@ -219,6 +223,21 @@
                         "property": "subnets",
                         "condition": "COUNT_SUP",
                         "value": 0
+                    }
+                ]
+            },
+            {
+                "name": "az-job-ml-check",
+                "description": "this rule is to check for ml job if they are not failed",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "mlJobs",
+                "conditions": [
+                    {
+                        "property": "properties.status",
+                        "condition": "DIFFERENT",
+                        "value": "Failed"
                     }
                 ]
             },
