@@ -167,3 +167,16 @@ README.md was changed
 documentation/Documentation-Kexa.md was changed
 
 
+## 1.8.0-SNAPSHOT.91.b5c4d86
+
+### Files added: 0
+
+### Files changed: 3
+
+Kexa/services/analyse.service.ts was changed
+
+config/env/office365.json was changed
+
+documentation/Documentation-Kexa.md was changed
+
+
