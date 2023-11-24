@@ -3,6 +3,8 @@
         "@aws-sdk/client-ec2": "^3.390.0",
         "@azure/arm-compute": "^20.0.0",
         "@azure/arm-containerservice": "^19.0.0",
+        "@azure/arm-machinelearning": "^2.1.1",
+        "@azure/arm-machinelearningservices": "^5.0.1",
         "@azure/arm-network": "^30.1.0",
         "@azure/arm-resources": "^5.1.0",
         "@azure/arm-resources-subscriptions": "^2.1.0",
