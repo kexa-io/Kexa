@@ -217,3 +217,14 @@ package.json was changed
 README.md was changed
 
 
+## 1.8.0-SNAPSHOT.102.b8694e9
+
+### Files added: 0
+
+### Files changed: 3
+
+.gitignore was changed
+
+documentation/Documentation-Kexa.md was changed
+
+
