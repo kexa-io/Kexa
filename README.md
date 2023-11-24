@@ -405,6 +405,10 @@ If you want explanations and details about rules in Kexa, please refer to [this 
     - ✅ namespaces (namespaces)
     - ✅ pods
     - ✅ aks
+    - ✅ mlWorkspaces
+    - ✅ mlJobs
+    - ✅ mlComputes
+    - ✅ mlSchedule
 - ✅ Github check in:
     - ✅ repositories
     - ✅ branches
