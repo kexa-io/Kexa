@@ -17,7 +17,7 @@ import { deleteFile, getFile, writeStringToJsonFile } from "../../helpers/files"
 import { KubernetesConfig } from "../../models/kubernetes/config.models";
 const yaml = require('js-yaml');
 
-import {getContext, getNewLogger} from "../logger.service";
+import {getNewLogger} from "../logger.service";
 const logger = getNewLogger("KubernetesLogger");
 
 const k8s = require('@kubernetes/client-node');
@@ -40,8 +40,8 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
                 "helm": kubernetesList["helm"],
             } as KubernetesResources;
             resources.push(kubernetesResource);
-        }catch(e){
-            logger.debug(e);
+        }catch(e:any){
+            logger.error(e);
         }
         deleteFile("./config/kubernetes.json");
     }
@@ -50,8 +50,6 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
 
 //kubernetes list
 export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
-    let context = getContext();
-    context?.log("starting kubernetesListing");
     logger.info("starting kubernetesListing");
     const kc = new k8s.KubeConfig();
     (isPathKubeFile)?kc.loadFromFile("./config/kubernetes.json"):kc.loadFromDefault();
@@ -83,8 +81,8 @@ async function collectHelm(namespace: string): Promise<any> {
     try{
         let helmData = await helm.list({ namespace: namespace });
         return helmData;
-    }catch(e){
-        logger.debug(e);
+    }catch(e:any){
+        //logger.error(e);
         return null;
     }
 }
@@ -93,8 +91,8 @@ async function collectPods(k8sApiCore: any, namespace: string): Promise<any> {
     try{
         const pods = await k8sApiCore.listNamespacedPod(namespace);
         return pods;
-    }catch(e){
-        logger.debug(e);
+    }catch(e:any){
+        //logger.error(e);
         return null;
     }
 }

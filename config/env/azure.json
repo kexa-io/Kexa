@@ -1,0 +1,11 @@
+{
+  "azure": [
+    {
+      "description": "organization 4urcloud",
+      "prefix": "DEMO_",
+      "rules": [
+        "Economy"
+      ]
+    }
+  ]
+}
