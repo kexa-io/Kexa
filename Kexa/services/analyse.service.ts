@@ -74,8 +74,10 @@ function getListNeedRules(): string[]{
     for(let cloudProvider of Object.keys(config)){
         let configAssign = config[cloudProvider];
         for(let config of configAssign){
-            for(let rule of config.rules){
-                if(!listNeedRules.includes(rule)) listNeedRules.push(rule);
+            if (Array.isArray(config.rules)) {
+                for (let rule of config.rules) {
+                    if (!listNeedRules.includes(rule)) listNeedRules.push(rule);
+                }
             }
         }
     }
