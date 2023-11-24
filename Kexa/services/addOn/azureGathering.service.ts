@@ -242,7 +242,6 @@ export async function virtualMachinesListing(client:ComputeManagementClient): Pr
     } 
 }
 
-//resourceGroups.list
 export async function resourceGroupListing(client:ResourceManagementClient): Promise<Array<ResourceGroup>|null> {
     logger.info("starting resourceGroupListing");
     try {
@@ -256,9 +255,6 @@ export async function resourceGroupListing(client:ResourceManagementClient): Pro
         return null;
     }     
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 export async function networkSecurityGroup_analyse(nsgList: Array<NetworkSecurityGroup>): Promise<Array<ckiNetworkSecurityClass.CkiNetworkSecurityGroupClass>|null> {
     try {

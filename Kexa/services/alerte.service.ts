@@ -18,7 +18,7 @@ const request = require('request');
 const nodemailer = require("nodemailer");
 const levelAlert = ["info", "warning", "error", "critical"];
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
-const config = require('config');
+const config = require('node-config-ts');
 
 import {getContext, getNewLogger} from "./logger.service";
 const logger = getNewLogger("functionLogger");
