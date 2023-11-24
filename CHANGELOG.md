@@ -147,3 +147,23 @@ Kexa/services/addOn/kubernetesGathering.service.ts was changed
 Kexa/services/addOn/o365Gathering.service.ts was changed
 
 
+## 1.8.0-SNAPSHOT.76.2e20887
+
+### Files added: 0
+
+### Files changed: 1
+
+Kexa/services/addOn/o365Gathering.service.ts was changed
+
+
+## 1.8.0-SNAPSHOT.80.a324899
+
+### Files added: 0
+
+### Files changed: 2
+
+README.md was changed
+
+documentation/Documentation-Kexa.md was changed
+
+

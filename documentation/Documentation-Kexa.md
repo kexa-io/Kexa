@@ -14,8 +14,6 @@
     <a href="https://github.com/4urcloud/Kexa"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/4urcloud/Kexa">View Demo</a>
-    ·
     <a href="https://github.com/4urcloud/Kexa/issues">Report Bug</a>
     ·
     <a href="https://github.com/4urcloud/Kexa/issues">Request Feature</a>
@@ -28,6 +26,12 @@
 <details>
   <summary>Table of Contents (Full documentation)</summary>
   <ol>
+    <li>
+      <a href="#global-understanding">Global understanding</a>
+    </li>
+    <li>
+      <a href="#prerequisites">Prerequisites</a>
+    </li>
     <li>
       <a href="#global-configuration">Global Configuration</a>
       <ul>
@@ -88,7 +92,7 @@
   </ol>
 </details>
 
-# <div align="center" id= "global-configuration">**Global Understanding**</div>
+# <div align="center" id= "global-understanding">**Global Understanding**</div>
 
 We'll discuss how Kexa works in principle, and explain the usefulness of the various elements in the process at each stage.
 
@@ -109,6 +113,52 @@ We'll discuss how Kexa works in principle, and explain the usefulness of the var
 The principle is simple: scan and verify. That's why you have 2 main elements to set up:
   - the default.json to know what to scan and what to scan with
   - the set of rules to know what Kexa has to verify
+
+# <div align="center" id= "prerequisites">**Prerequisites**</div>
+
+First of all, Kexa is build with [node](https://nodejs.org/en) so you need to [install it](https://nodejs.org/en/download)
+* npm
+  ```sh
+  npm install npm@latest -g
+  ```
+
+## Installation
+
+### Clone the repo
+
+- CLI:
+
+   ```bash
+   git clone https://github.com/4urcloud/Kexa.git
+   ```
+
+<!--- Github Desktop:
+
+  ```
+  x-github-client://openRepo/https://github.com/4urcloud/Kexa
+  ```
+  [![Github Desktop](https://custom-icon-badges.demolab.com/badge/Download-purple?style=for-the-badge&logo=github&logoColor=white "Github Desktop")](x-github-client://openRepo/https://github.com/4urcloud/Kexa)-->
+
+
+- SSH:
+
+  ```bash
+  git@github.com:4urcloud/Kexa.git
+  ```
+
+- Download ZIP:
+
+  [![Download zip](https://custom-icon-badges.demolab.com/badge/-Download-blue?style=for-the-badge&logo=download&logoColor=white "Download zip")](https://github.com/4urcloud/Kexa/archive/refs/heads/main.zip)
+
+- Visual Studio:
+
+  
+  [![Open in VS Code](https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual%20Studio%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc)](https://vscode.dev/github/4urcloud/Kexa)
+
+### Install NPM packages
+   ```sh
+   npm install
+   ```
 
 # <div align="center" id= "global-configuration">**Global Configuration**</div>
 
