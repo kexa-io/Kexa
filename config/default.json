@@ -1,10 +1,9 @@
 {
-    "o365": [
+    "azure": [
         {
             "description": "organization 4urcloud",
-            "prefix": "DEMO_",
             "rules": [
-                "BenchmarkOffice365"
+                "OperationalExcellence"
             ]
         }
     ]

@@ -52,6 +52,7 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
             "virtualNetwork": null,
             "networkInterfaces": null,
             "aks": null,
+            "ml": null,
         } as AzureResources;
         logger.debug("config: ");
         logger.debug(JSON.stringify(config));
@@ -91,20 +92,22 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
                     virtualNetworksListing(networkClient),
                     aksListing(credential, subscriptionId),
                     ipListing(networkClient),
+                    mlListing(credential, subscriptionId),
                     //getSPKeyInformation(credential, subscriptionId)
                 ];
                 
-                const [nsgList, vmList, rgList, diskList, virtualNetworkList, aksList, ipList] = await Promise.all(promises); //, SPList
+                const [nsgList, vmList, rgList, diskList, virtualNetworkList, aksList, ipList, mlList] = await Promise.all(promises); //, SPList
                 context?.log("- listing cloud resources done -");
                 logger.info("- listing cloud resources done -");
                 azureResource = {
-                    "vm": [...azureResource["vm"]??[], ...vmList],
-                    "rg": [...azureResource["rg"]??[], ...rgList],
-                    "disk": [...azureResource["disk"]??[], ...diskList],
-                    "nsg": [...azureResource["nsg"]??[], ...nsgList],
-                    "virtualNetwork": [...azureResource["virtualNetwork"]??[], ...virtualNetworkList],
-                    "aks": [...azureResource["aks"]??[], ...aksList],
-                    "ip": [...azureResource["ip"]??[], ...ipList],
+                    "vm": [...azureResource["vm"]??[], ...vmList??[]],
+                    "rg": [...azureResource["rg"]??[], ...rgList??[]],
+                    "disk": [...azureResource["disk"]??[], ...diskList??[]],
+                    "nsg": [...azureResource["nsg"]??[], ...nsgList??[]],
+                    "virtualNetwork": [...azureResource["virtualNetwork"]??[], ...virtualNetworkList??[]],
+                    "aks": [...azureResource["aks"]??[], ...aksList??[]],
+                    "ip": [...azureResource["ip"]??[], ...ipList??[]],
+                    "ml": [...azureResource["ml"]??[], ...mlList??[]],
                     //"sp": [...azureResource["sp"]??[], ...SPList],
                 } as AzureResources;
             }
@@ -277,4 +280,26 @@ export async function networkSecurityGroup_analyse(nsgList: Array<NetworkSecurit
         logger.debug("error"+e);
         return null;
     }  
+}
+
+
+import { AzureMachineLearningWorkspaces } from "@azure/arm-machinelearning";
+export async function mlListing(credential: DefaultAzureCredential, subscriptionId: string): Promise<any> {
+    logger.info("starting mlListing");
+    try{
+        const client = new AzureMachineLearningWorkspaces(credential, subscriptionId);
+        const resArray = new Array();
+        for await (let item of client.workspaces.listBySubscription()) {
+            let result:any = item;
+            let resourceGroupName = item?.id?.split("/")[4] ?? "";
+            result["jobs"] = client.jobs.list(resourceGroupName, item?.name??"");
+            result["computes"] = client.computeOperations.list(resourceGroupName, item?.name??"");
+            result["schedule"] = client.schedules.list(resourceGroupName, item?.name??"");
+            resArray.push(result);
+        }
+        return resArray;
+    }catch(e){
+        logger.debug("error in mlListing:"+e);
+        return null;
+    }
 }

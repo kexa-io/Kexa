@@ -13,4 +13,5 @@ export interface AzureResources {
     pods: Array<any>|null;
     aks: Array<any>|null;
     ip: Array<any>|null;
+    ml: Array<any>|null;
 }
