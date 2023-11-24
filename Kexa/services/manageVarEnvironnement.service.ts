@@ -1,8 +1,11 @@
+import axios from "axios";
+
 const AWS = require('aws-sdk');
 
 import {getNewLogger} from "./logger.service";
 const logger = getNewLogger("KubernetesLogger");
 
+import { BitwardenClient, ClientSettings, DeviceType, LogLevel } from "@bitwarden/sdk-napi";
 
 const { SecretClient } = require("@azure/keyvault-secrets");
 const { DefaultAzureCredential } = require("@azure/identity");
@@ -18,6 +21,8 @@ async function getFromManager(name:string){
             return await getEnvVarWithAzureKeyVault(name);
         else if (possibleWithAwsSecretManager())
             return await getEnvVarWithAwsSecretManager(name);
+        else if (possibleWithBitwarden())
+            return await getEnvVarWithBitwarden();
         else if (await possibleWithGoogleSecretManager(process.env["GOOGLE_PROJECT_ID"]))
             return await getEnvVarWithGoogleSecretManager(name, process.env["GOOGLE_PROJECT_ID"]);
         } catch(e) {}
@@ -69,6 +74,31 @@ async function getEnvVarWithAwsSecretManager(name:string){
     });
 }
 
+function possibleWithBitwarden(){
+    return (Boolean(process.env.BITWARDEN_CLIENTID && process.env.BITWARDEN_CLIENTSECRET));
+}
+
+async function getEnvVarWithBitwarden(){
+    let bitwardenClientId = process.env.BITWARDEN_CLIENTID;
+    let bitwtardenClientSecret = process.env.BITWARDEN_CLIENTSECRET;
+
+
+    const settings: ClientSettings = {
+        apiUrl: "https://api.bitwarden.com",
+        identityUrl: "https://identity.bitwarden.com",
+        userAgent: "Bitwarden SDK",
+        deviceType: DeviceType.SDK,
+    };
+    const accessToken = "-- REDACTED --";
+    const client = new BitwardenClient(settings, LogLevel.Info);
+    const result = await client.loginWithAccessToken(accessToken);
+    if (!result.success) {
+        throw Error("Authentication failed");
+    }
+    console.log("BITWARDEN GATHER HERE");
+   /* const secrets = await client.secrets().list(ogranizationId); */
+    const secret = await client.secrets().get("secret-id");
+}
 import {listSecrets} from "./addOn/gcpGathering.service";
 import {deleteFile, writeStringToJsonFile} from "../helpers/files";
 import {Storage} from "@google-cloud/storage";
