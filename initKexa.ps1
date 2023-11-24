@@ -1,4 +1,3 @@
-
 function Ask-User {
     param (
         [string]$prompt,
@@ -32,11 +31,13 @@ function Get-UserInputForAllCred {
     $alreadyAsked = @{}
     Write-Host "For the provider $provider, enter your credentials for each prefix"
     foreach ($prefix in $prefixs) {
-        # Vérifier si l'élément a déjà été traité
         if (-not $alreadyAsked.ContainsKey($prefix)) {
-            Write-Host "For the prefix '$prefix' s environment"
+            Write-Host "For the prefix '$prefix' environment"
             foreach ($cred in $credForTheProvider) {
-                $value = Read-Host "$cred"
+                $value = Read-Host -MaskInput -Prompt "$cred" 
+                if (-not $value) {
+                    Write-Host "You must enter a value for $cred, dont forget to fill it in the .env file"
+                }
                 $credentials[$prefix+$cred] = $value
             }
             $alreadyAsked[$prefix] = $true
@@ -70,7 +71,7 @@ function Save-ConfigJson {
         New-Item -ItemType Directory -Path $folderPath | Out-Null
     }
 
-    $configJson | ConvertTo-Json -Depth 1 | Out-File -FilePath $filePath -Force
+    $configJson | ConvertTo-Json -Depth 4 | Out-File -FilePath $filePath -Force
 }
 
 function Save-TextToFile {
@@ -112,10 +113,14 @@ function Configure-Providers {
         "o365"=@("SUBSCRIPTIONID", "AZURECLIENTID", "AZURETENANTID", "AZURECLIENTSECRET")
     }
 
-    $additionnalConfiguration = @{
+    $additionnalConfigurationOptionnal = @{
         "aws"=@("regions")
         "gcp"=@("regions")
-        "http"=@("METHOD", "URL", "header", "body")
+        "http"=@("header", "body")
+    }
+
+    $additionnalConfigurationNotOptionnal = @{
+        "http"=@("METHOD", "URL")
     }
 
     $configJson = @{}
@@ -127,9 +132,15 @@ function Configure-Providers {
         if($ask -eq "q"){
             break
         }
+        #Clear-Host
         $prefixs = @()
+        $environments = @()
+        $numberOfEnvironments = 0
+        Write-Host "For the provider $askProvider, enter the environments"
+        Write-Host "For each environment, enter the name, the description, the prefix and additionnal configuration if needed"
+        Write-Host " "
         while($true){
-            $environmentName = Read-Host "Enter the name of the new environment (q to finish) "
+            $environmentName = Read-Host "Enter the name of the new environment (number: $numberOfEnvironments) (q to finish) "
             if ($environmentName -eq "q") {
                 break
             }
@@ -146,9 +157,18 @@ function Configure-Providers {
                 "rules" = @($askProvider+"SetRules")
             }
 
-            if($additionnalConfiguration[$askProvider]){
-                foreach($addCred in $additionnalConfiguration[$askProvider]){
+            if($additionnalConfigurationNotOptionnal[$askProvider]){
+                foreach($addCred in $additionnalConfigurationNotOptionnal[$askProvider]){
                     $value = Read-Host "$addCred"
+                    if($value){
+                        $environment[$addCred] = $value
+                    }
+                }
+            }
+
+            if($additionnalConfigurationOptionnal[$askProvider]){
+                foreach($addCred in $additionnalConfigurationOptionnal[$askProvider]){
+                    $value = Read-Host "$addCred (optionnal)"
                     if($value){
                         $environment[$addCred] = $value
                     }
@@ -157,27 +177,29 @@ function Configure-Providers {
 
 
             $environments += $environment
+            $numberOfEnvironments++
         }
         if($environments){
+            Write-Host " "
             $credentials = Get-UserInputForAllCred -provider $askProvider -prefixs $prefixs -credForTheProvider $credByProvider[$askProvider]
             Write-DictionaryToFile -filePath "./.env" -dictionary $credentials
-            # get raw text from url and save it to file
-            $url = "https://raw.githubusercontent.com/4urcloud/Kexa/main/Kexa/rules/rulesByProvider/${askProvider}SetRules.yaml"
+            $url = "https://raw.githubusercontent.com/4urcloud/Kexa/dev-esteban-scriptinit/Kexa/rules/rulesByProvider/${askProvider}SetRules.yaml"
             $text = Invoke-WebRequest -Uri $url -UseBasicParsing
             Save-TextToFile -text $text -filePath "./rules/${askProvider}SetRules.yaml"
         }
         $configJson[$askProvider] = $environments
         $askingProvider += $askProvider
         $providers.Remove($askProvider)
+        #Clear-Host
     }
 
     Save-ConfigJson -configJson $configJson -filePath "./config/default.json"
-    #return $configJson
 }
 
 function Press-EnterToContinue {
     Write-Host "Press enter to continue..."
     Read-Host > $null
+    #Clear-Host
 }
 
 Write-Host "Kexa Script initailization"
