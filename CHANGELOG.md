@@ -180,3 +180,14 @@ config/env/office365.json was changed
 documentation/Documentation-Kexa.md was changed
 
 
+## 1.8.0-SNAPSHOT.93.aa30113
+
+### Files added: 1
+
+config/default.json was added
+
+### Files changed: 1
+
+config/default.json was changed
+
+
