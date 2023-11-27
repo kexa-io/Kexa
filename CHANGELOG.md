@@ -124,3 +124,107 @@ documentation/Documentation-Kexa.md was changed
 package.json was changed
 
 
+## 1.8.0-SNAPSHOT.69.12ed96c
+
+### Files added: 0
+
+### Files changed: 8
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+Kexa/services/addOn/githubGathering.service.ts was changed
+
+Kexa/services/addOn/googleDriveGathering.service.ts was changed
+
+Kexa/services/addOn/googleWorkspaceGathering.service.ts was changed
+
+Kexa/services/addOn/kubernetesGathering.service.ts was changed
+
+Kexa/services/addOn/o365Gathering.service.ts was changed
+
+
+## 1.8.0-SNAPSHOT.76.2e20887
+
+### Files added: 0
+
+### Files changed: 1
+
+Kexa/services/addOn/o365Gathering.service.ts was changed
+
+
+## 1.8.0-SNAPSHOT.80.a324899
+
+### Files added: 0
+
+### Files changed: 2
+
+README.md was changed
+
+documentation/Documentation-Kexa.md was changed
+
+
+## 1.8.0-SNAPSHOT.91.b5c4d86
+
+### Files added: 0
+
+### Files changed: 3
+
+Kexa/services/analyse.service.ts was changed
+
+config/env/office365.json was changed
+
+documentation/Documentation-Kexa.md was changed
+
+
+## 1.8.0-SNAPSHOT.93.aa30113
+
+### Files added: 1
+
+config/default.json was added
+
+### Files changed: 1
+
+config/default.json was changed
+
+
+## 1.8.0-SNAPSHOT.98.874b280
+
+### Files added: 0
+
+### Files changed: 5
+
+Kexa/models/azure/resource.models.ts was changed
+
+Kexa/rules/OperationalExcellence.yaml was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
+## 1.8.0-SNAPSHOT.100.29206c4
+
+### Files added: 0
+
+### Files changed: 1
+
+README.md was changed
+
+
+## 1.8.0-SNAPSHOT.102.b8694e9
+
+### Files added: 0
+
+### Files changed: 3
+
+.gitignore was changed
+
+documentation/Documentation-Kexa.md was changed
+
+

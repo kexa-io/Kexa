@@ -1,25 +1,10 @@
 {
-
-      "http":[
-    
+    "azure": [
         {
-    
-          "Description": "main end point for the api 4urcloud",
-    
-          "prefix": "DEMO-",
-    
-          "rules": [
-    
-            "Deployement"
-    
-          ],
-    
-          "METHOD": "GET",
-    
-          "URL": "https://fct-dev-bon-preparation.azurewebsites.net"
-    
+            "description": "organization 4urcloud",
+            "rules": [
+                "OperationalExcellence"
+            ]
         }
-    
-      ]
-    
-    }
+    ]
+}

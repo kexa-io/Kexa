@@ -11,11 +11,15 @@
     *       - secure_score
     *       - auth_methods
     *       - organization
-    *       - directory
+    *       - directory_role
     *       - sp
     *       - alert
     *       - incident
     *       - app_access_policy
+    *       - group
+    *       - policy
+    *       - conditional_access
+    *       - sharepoint_settings
 */
 
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
@@ -49,7 +53,11 @@ export async function collectData(o365Config:o365Config[]): Promise<o365Resource
             "sp": null,
             "alert": null,
             "incident": null,
-            "app_access_policy": null
+            "app_access_policy": null,
+            "group": null,
+            "policy": null,
+            "conditional_access": null,
+            "sharepoint_settings": null
         } as o365Resources;
         try {
             let prefix = config.prefix??(o365Config.indexOf(config).toString());
@@ -77,19 +85,38 @@ export async function collectData(o365Config:o365Config[]): Promise<o365Resource
                 logger.info("- listing O365 resources -");
                 const userList = await listUsers(graphApiEndpoint, accessToken, headers);
                 const promises = [
-                    await listSubscribedSkus(graphApiEndpoint, accessToken, headers),
-                    await listDomains(graphApiEndpoint, accessToken, headers),
-                    await listSecureScore(graphApiEndpoint, accessToken, headers),
-                    await listAuthMethods(graphApiEndpoint, accessToken, userList),
-                    await listOrganization(graphApiEndpoint, accessToken, headers),
-                    await listDirectoryRole(graphApiEndpoint, accessToken, headers),
-                    await listServicePrincipal(graphApiEndpoint, accessToken, headers),
-                    await listAlerts(graphApiEndpoint, accessToken, headers),
-                    await listIncidents(graphApiEndpoint, accessToken, headers),
-                    await listAppAccessPolicy(graphApiEndpoint, accessToken, headers, userList)
-            ];
-                const [skuList, domainList, secure_scoreList, auth_methodsList,
-                    organizationList, directoryList, spList, alertList, incidentList, app_access_policyList] = await Promise.all(promises);
+                    listSubscribedSkus(graphApiEndpoint, accessToken, headers),
+                    listDomains(graphApiEndpoint, accessToken, headers),
+                    listSecureScore(graphApiEndpoint, accessToken, headers),
+                    listAuthMethods(graphApiEndpoint, accessToken, userList),
+                    listOrganization(graphApiEndpoint, accessToken, headers),
+                    listDirectoryRole(graphApiEndpoint, accessToken, headers),
+                    listServicePrincipal(graphApiEndpoint, accessToken, headers),
+                    listAlerts(graphApiEndpoint, accessToken, headers),
+                    listIncidents(graphApiEndpoint, accessToken, headers),
+                    listAppAccessPolicy(graphApiEndpoint, accessToken, headers, userList),
+                    listGroups(graphApiEndpoint, accessToken, headers),
+                    listPolicies(graphApiEndpoint, accessToken, headers),
+                    listConditionalAccess(graphApiEndpoint, accessToken, headers),
+                    listSharepointSettings(graphApiEndpoint, accessToken, headers)
+                ];
+
+                const [
+                    skuList,
+                    domainList,
+                    secure_scoreList,
+                    auth_methodsList,
+                    organizationList,
+                    directoryList,
+                    spList,
+                    alertList,
+                    incidentList,
+                    app_access_policyList,
+                    groupList,
+                    policyList,
+                    conditional_accessList,
+                    sharepoint_settingsList
+                ] = await Promise.all(promises);
 
                 o365Resources = {
                     sku: skuList,
@@ -102,7 +129,11 @@ export async function collectData(o365Config:o365Config[]): Promise<o365Resource
                     sp: spList,
                     alert: alertList,
                     incident: incidentList,
-                    app_access_policy: app_access_policyList
+                    app_access_policy: app_access_policyList,
+                    group: groupList,
+                    policy: policyList,
+                    conditional_access: conditional_accessList,
+                    sharepoint_settings: sharepoint_settingsList
                 };
                 context?.log("- listing O365 resources done -");
                 logger.info("- listing O365 resources done -");
@@ -136,7 +167,7 @@ async function getToken(tenantId: string, clientId: string, clientSecret: string
             return null;
         }
     } catch (error) {
-        console.debug('O365 - Error fetching token:', error);
+        console.error('O365 - Error fetching token:', error);
         throw error;
     }
     return accessToken ?? null;
@@ -145,46 +176,49 @@ async function  listUsers(endpoint: string, accessToken: string, headers: Header
     const axios = require("axios");
     let jsonData = [];
 
-        try {
-            const response = await axios.get(`${endpoint}/users`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            });
-            if (response.status != 200) {
-                logger.error("O365 - Error when calling graph API")
-                return null;
+    try {
+        const response = await axios.get(`${endpoint}/users`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
             }
-            jsonData = JSON.parse(JSON.stringify(response.data.value));
-            for (const element of jsonData) {
-                try {
-                    const licenseResponse = await axios.get(`${endpoint}/users/${element.id}/licenseDetails`, {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`
-                        }
-                    });
-                    element.licenses = licenseResponse.data.value;
-                    const userTypeResponse = await axios.get(`${endpoint}/users/${element.id}?$select=userType,id,passwordPolicies`, {
-                        headers: {
-                            Authorization: `Bearer ${accessToken}`
-                        }
-                    });
-                    if (userTypeResponse.status != 200) {
-                        logger.warn("O365 - Error when calling graph API for user " + element.displayName);
-                        element.userType = null;
-                        continue;
-                    }
-                    element.userType = userTypeResponse.data.userType;
-                    element.passwordPolicies = userTypeResponse.data.passwordPolicies;
-                } catch (e) {
-                    logger.error('O365 - Error fetching user ');
-                    logger.error(e);
-                }
-            }
-        } catch (error: any) {
-            console.debug('O365 - Error fetching :');
-            console.debug(error.response.data);
+        });
+        if (response.status != 200) {
+            logger.error("O365 - Error when calling graph API")
+            return null;
         }
+        jsonData = JSON.parse(JSON.stringify(response.data.value));
+        for (const element of jsonData) {
+            try {
+                const licenseResponse = await axios.get(`${endpoint}/users/${element.id}/licenseDetails`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                });
+                element.licenses = licenseResponse.data.value;
+                const userTypeResponse = await axios.get(`${endpoint}/users/${element.id}?$select=userType,id,passwordPolicies`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`
+                    }
+                });
+                if (userTypeResponse.status != 200) {
+                    logger.warn("O365 - Error when calling graph API for user " + element.displayName);
+                    element.userType = null;
+                    continue;
+                }
+                element.userType = userTypeResponse.data.userType;
+                element.passwordProfile = await genericListing(endpoint, accessToken, "users/" + element.id + "/passwordProfile", "User password profile");
+                if (element.passwordProfile == '')
+                    element.passwordProfile = null;
+                element.passwordPolicies = userTypeResponse.data.passwordPolicies;
+            } catch (e) {
+                logger.error('O365 - Error fetching user ');
+                logger.error(e);
+            }
+        }
+    } catch (error: any) {
+        console.error('O365 - Error fetching :');
+        console.error(error.response.data);
+    }
     return  jsonData ?? null;
 }
 
@@ -192,38 +226,38 @@ async function  listSubscribedSkus(endpoint: string, accessToken: string, header
     let jsonData = [];
 
 
-        try {
-            const response = await axios.get(`${endpoint}/subscribedSkus`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })
-            if (response.status != 200) {
-                logger.warn("O365 - Error when calling graph API for subsribed Skus ");
-                return null;
+    try {
+        const response = await axios.get(`${endpoint}/subscribedSkus`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
             }
-            else {
-                jsonData = JSON.parse(JSON.stringify(response.data.value));
-            }
-            const assignedResponse = await axios.get(`${endpoint}/users?$select=id,assignedLicenses`, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })
-            if (assignedResponse.status != 200) {
-                logger.warn("O365 - Error when calling graph API for users (skus) ");
-            }
-            else {
-                const adaptedResponse = assignedResponse.data.value.map((user: any) => ({
-                    userId: user.id,
-                    assignedLicenses: user.assignedLicenses,
-                }));
-                jsonData.usersLicenses = JSON.parse(JSON.stringify(adaptedResponse));
-            }
-
-        } catch (e: any) {
-            logger.debug(e.response.data);
+        })
+        if (response.status != 200) {
+            logger.warn("O365 - Error when calling graph API for subsribed Skus ");
+            return null;
         }
+        else {
+            jsonData = JSON.parse(JSON.stringify(response.data.value));
+        }
+        const assignedResponse = await axios.get(`${endpoint}/users?$select=id,assignedLicenses`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
+        if (assignedResponse.status != 200) {
+            logger.warn("O365 - Error when calling graph API for users (skus) ");
+        }
+        else {
+            const adaptedResponse = assignedResponse.data.value.map((user: any) => ({
+                userId: user.id,
+                assignedLicenses: user.assignedLicenses,
+            }));
+            jsonData.usersLicenses = JSON.parse(JSON.stringify(adaptedResponse));
+        }
+
+    } catch (e: any) {
+        logger.error(e.response.data);
+    }
     return jsonData ?? null;
 }
 
@@ -241,10 +275,13 @@ async function genericListing(endpoint: string, accessToken: string, queryEndpoi
             return null;
         }
         else {
-            jsonData = JSON.parse(JSON.stringify(response.data.value));
+            if (response.data.value)
+                jsonData = JSON.parse(JSON.stringify(response.data.value));
+            else
+                jsonData = JSON.parse(JSON.stringify(response.data));
         }
     } catch (e: any) {
-        logger.debug(e.response.data);
+        logger.error(e.response.data);
     }
     return jsonData ?? null;
 }
@@ -267,29 +304,30 @@ async function listAuthMethods(endpoint: string, accessToken: string, userList: 
     let jsonData = [];
 
     for (const element of userList) {
-            try {
-                const response = await axios.get(`${endpoint}/users/${element.id}/authentication/methods`, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                })
-                if (response.status != 200) {
-                    logger.warn("O365 - Error when calling graph API for Auth Methods ");
-                    return null;
-                } else {
-                    let tmpJson = {methods: [], userId: {}, userName: {}};
-                    tmpJson.methods = JSON.parse(JSON.stringify(response.data.value));
-                    tmpJson.userId = element.id;
-                    tmpJson.userName = element.displayName;
-                    tmpJson.methods.forEach((method: any) => {
-                        method.dataType = method['@odata.type'];
-                        method.userId = element.id;
-                        delete method['@odata.type'];
-                    })
-                    jsonData.push(tmpJson);
+        try {
+            const response = await axios.get(`${endpoint}/users/${element.id}/authentication/methods`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
                 }
+            })
+            if (response.status != 200) {
+                logger.warn("O365 - Error when calling graph API for Auth Methods ");
+                return null;
+            } else {
+                let tmpJson = {methods: [], userId: {}, userName: {}, userRole: {}};
+                tmpJson.methods = JSON.parse(JSON.stringify(response.data.value));
+                tmpJson.userId = element.id;
+                tmpJson.userName = element.displayName;
+                tmpJson.userRole = element.displayName;
+                tmpJson.methods.forEach((method: any) => {
+                    method.dataType = method['@odata.type'];
+                    method.userId = element.id;
+                    delete method['@odata.type'];
+                })
+                jsonData.push(tmpJson);
+            }
         } catch (e: any) {
-            logger.debug(e.response.data);
+            logger.error(e.response.data);
         }
     }
     return jsonData ?? null;
@@ -304,8 +342,16 @@ async function listOrganization(endpoint: string, accessToken: string, headers: 
 
 async function listDirectoryRole(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null> {
     let jsonData : any[] | null;
+    let jsonDataDetails : any[] | null;
 
     jsonData = await genericListing(endpoint, accessToken, "directoryRoles", "Directory roles");
+
+    if (jsonData) {
+        for (let i = 0; i < jsonData.length; i++) {
+            jsonDataDetails = await genericListing(endpoint, accessToken, "directoryRoles/" + jsonData[i].id + "/members", "Directory roles assignments");
+            jsonData[i].assignedUsers = jsonDataDetails;
+        }
+    }
     return jsonData ?? null;
 }
 
@@ -333,22 +379,93 @@ async function listIncidents(endpoint: string, accessToken: string, headers: Hea
 async function listAppAccessPolicy(endpoint: string, accessToken: string, headers: Headers, userList: any): Promise<Array<any> | null> {
     const axios = require("axios");
     let jsonData: any | [];
-        for (let i = 0; i < userList.length; i++) {
-            try {
-                const licenseResponse = await axios.get(`${endpoint}/users/${userList[i].id}/memberOf`, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    }
-                });
-                if (licenseResponse.status != 200) {
-                    logger.warn("O365 - Error when calling graph API for user " + jsonData[i].displayName);
-                    continue;
+    for (let i = 0; i < userList.length; i++) {
+        try {
+            const licenseResponse = await axios.get(`${endpoint}/users/${userList[i].id}/memberOf`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
                 }
-                jsonData = licenseResponse.data.value;
-            } catch (e) {
-                logger.debug('O365 - Error fetching user ');
-                logger.debug(e);
+            });
+            if (licenseResponse.status != 200) {
+                logger.warn("O365 - Error when calling graph API for user " + jsonData[i].displayName);
+                continue;
             }
+            jsonData = licenseResponse.data.value;
+        } catch (e) {
+            logger.error('O365 - Error fetching user ');
+            logger.error(e);
         }
+    }
+    return jsonData ?? null;
+}
+
+async function listGroups(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null> {
+    let jsonData : any[] | null;
+    let jsonDataOwners: any[] | null;
+
+    jsonData = await genericListing(endpoint, accessToken, "groups", "Groups");
+    if (jsonData) {
+        for (let i = 0; i < jsonData.length; i++) {
+            jsonDataOwners = await genericListing(endpoint, accessToken, "groups/" + jsonData[i].id + "/owners", "Groups");
+        }
+    }
+    return jsonData ?? null;
+}
+
+// NEED TO LINK THIS TO A USER AUTH METHOD ???
+async function listPolicies3(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null> {
+    let jsonData : any[] | null;
+
+    jsonData = await genericListing(endpoint, accessToken, "policies/authenticationStrengthPolicies", "Policies");
+    return jsonData ?? null;
+}
+
+// NEED RESOURCE TO TEST ON PORTAL
+async function listConditionalAccess(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null> {
+    let jsonDataPolicies : any[] | null;
+
+    jsonDataPolicies = await genericListing(endpoint, accessToken, "identity/conditionalAccess/policies", "Identity policies");
+    return jsonDataPolicies ?? null;
+}
+
+
+/// NEED PERMISSIONS VALIDATION ON PORTAL
+async function listPolicies(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null> {
+    //let jsonData : any[] | null;
+    let jsonData = [];
+    let jsonDataAuthMethods, jsonDataTimeout,
+        jsonDataSecurityDefault,jsonDataAuth, jsonTenant : any[] | null;
+
+    jsonDataTimeout = await genericListing(endpoint, accessToken, "policies/activityBasedTimeoutPolicies", "Policies Timeout");
+    if (jsonDataTimeout) {
+        for (let i = 0; i < jsonDataTimeout.length; i++) {
+            jsonDataTimeout[i].definition = JSON.parse(jsonDataTimeout[i].definition);
+            jsonData.push(jsonDataTimeout[i]);
+        }
+    }
+    jsonDataSecurityDefault = await genericListing(endpoint, accessToken, "policies/identitySecurityDefaultsEnforcementPolicy", "Security Default Policy");
+    if (jsonDataSecurityDefault)
+        jsonData.push(jsonDataSecurityDefault);
+    jsonDataAuthMethods = await genericListing(endpoint, accessToken, "policies/authenticationMethodsPolicy", "Auth Methods Policies");
+    if (jsonDataAuthMethods) {
+        jsonData.push(jsonDataAuthMethods);
+    }
+    jsonDataAuth = await genericListing(endpoint, accessToken, "policies/authorizationPolicy", "Authorization Policies");
+    if (jsonDataAuth) {
+        jsonData.push(jsonDataAuth);
+    }
+    jsonTenant = await genericListing(endpoint, accessToken, "policies/defaultAppManagementPolicy", "App Management Policy");
+    if (jsonTenant) {//policies/defaultAppManagementPolicy
+        jsonData.push(jsonTenant);
+    }
+    return jsonData ?? null;
+}
+
+async function listSharepointSettings(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null> {
+    let jsonData = [];
+    let jsonSettings : any[] | null;
+
+    jsonSettings = await genericListing(endpoint, accessToken, "admin/sharepoint/settings", "Sharepoint Settings");
+    jsonData.push(jsonSettings);
     return jsonData ?? null;
 }

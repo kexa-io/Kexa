@@ -12,6 +12,10 @@
     *     - virtualNetwork
     *     - networkInterfaces
     *     - aks
+    *     - mlWorkspace
+    *     - mlJobs
+    *     - mlComputes
+    *     - mlSchedule
 */
 
 import { 
@@ -52,6 +56,10 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
             "virtualNetwork": null,
             "networkInterfaces": null,
             "aks": null,
+            "mlWorkspaces": null,
+            "mlJobs": null,
+            "mlComputes": null,
+            "mlSchedules": null,
         } as AzureResources;
         logger.debug("config: ");
         logger.debug(JSON.stringify(config));
@@ -91,20 +99,25 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
                     virtualNetworksListing(networkClient),
                     aksListing(credential, subscriptionId),
                     ipListing(networkClient),
+                    mlListing(credential, subscriptionId),
                     //getSPKeyInformation(credential, subscriptionId)
                 ];
                 
-                const [nsgList, vmList, rgList, diskList, virtualNetworkList, aksList, ipList] = await Promise.all(promises); //, SPList
+                const [nsgList, vmList, rgList, diskList, virtualNetworkList, aksList, ipList, mlList] = await Promise.all(promises); //, SPList
                 context?.log("- listing cloud resources done -");
                 logger.info("- listing cloud resources done -");
                 azureResource = {
-                    "vm": [...azureResource["vm"]??[], ...vmList],
-                    "rg": [...azureResource["rg"]??[], ...rgList],
-                    "disk": [...azureResource["disk"]??[], ...diskList],
-                    "nsg": [...azureResource["nsg"]??[], ...nsgList],
-                    "virtualNetwork": [...azureResource["virtualNetwork"]??[], ...virtualNetworkList],
-                    "aks": [...azureResource["aks"]??[], ...aksList],
-                    "ip": [...azureResource["ip"]??[], ...ipList],
+                    "vm": [...azureResource["vm"]??[], ...vmList??[]],
+                    "rg": [...azureResource["rg"]??[], ...rgList??[]],
+                    "disk": [...azureResource["disk"]??[], ...diskList??[]],
+                    "nsg": [...azureResource["nsg"]??[], ...nsgList??[]],
+                    "virtualNetwork": [...azureResource["virtualNetwork"]??[], ...virtualNetworkList??[]],
+                    "aks": [...azureResource["aks"]??[], ...aksList??[]],
+                    "ip": [...azureResource["ip"]??[], ...ipList??[]],
+                    "mlWorkspaces": [...azureResource["mlWorkspaces"]??[], ...mlList.workspaces??[]],
+                    "mlJobs": [...azureResource["mlJobs"]??[], ...mlList.jobs??[]],
+                    "mlComputes": [...azureResource["mlComputes"]??[], ...mlList.computes??[]],
+                    "mlSchedules": [...azureResource["mlSchedules"]??[], ...mlList.schedule??[]],
                     //"sp": [...azureResource["sp"]??[], ...SPList],
                 } as AzureResources;
             }
@@ -242,7 +255,6 @@ export async function virtualMachinesListing(client:ComputeManagementClient): Pr
     } 
 }
 
-//resourceGroups.list
 export async function resourceGroupListing(client:ResourceManagementClient): Promise<Array<ResourceGroup>|null> {
     logger.info("starting resourceGroupListing");
     try {
@@ -256,9 +268,6 @@ export async function resourceGroupListing(client:ResourceManagementClient): Pro
         return null;
     }     
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 export async function networkSecurityGroup_analyse(nsgList: Array<NetworkSecurityGroup>): Promise<Array<ckiNetworkSecurityClass.CkiNetworkSecurityGroupClass>|null> {
     try {
@@ -277,4 +286,94 @@ export async function networkSecurityGroup_analyse(nsgList: Array<NetworkSecurit
         logger.debug("error"+e);
         return null;
     }  
+}
+
+
+import { AzureMachineLearningWorkspaces } from "@azure/arm-machinelearning";
+export async function mlListing(credential: DefaultAzureCredential, subscriptionId: string): Promise<any> {
+    logger.info("starting mlListing");
+    try{
+        const client = new AzureMachineLearningWorkspaces(credential, subscriptionId);
+        const result = {
+            "workspaces": new Array(),
+            "jobs": new Array(),
+            "computes": new Array(),
+            "schedule": new Array(),
+        }
+        for await (let item of client.workspaces.listBySubscription()) {
+            result.workspaces = [...result.workspaces??[], item];
+            let resourceGroupName = item?.id?.split("/")[4] ?? "";
+            let workspaceName = item?.name ?? "";
+            const promises = [
+                jobsListing(client, resourceGroupName, workspaceName),
+                computeOperationsListing(client, resourceGroupName, workspaceName),
+                schedulesListing(client, resourceGroupName, workspaceName),
+            ];
+            const [jobsList, computeOperationsList, schedulesList] = await Promise.all(promises);
+            logger.error("jobsList: "+JSON.stringify(jobsList));
+            logger.error("computeOperationsList: "+JSON.stringify(computeOperationsList));
+            logger.error("schedulesList: "+JSON.stringify(schedulesList));
+            result.jobs = [...result.jobs??[], ...jobsList];
+            result.computes = [...result.computes??[], ...computeOperationsList];
+            result.schedule = [...result.schedule??[], ...schedulesList];
+            logger.error("RESULT0: ");
+            logger.error("RESULT0: "+JSON.stringify(result));
+        }
+        logger.error("RESULT1: "+JSON.stringify(result));
+        return result;
+    }catch(e){
+        logger.debug("error in mlListing:"+e);
+        return null;
+    }
+}
+
+export async function jobsListing(client: AzureMachineLearningWorkspaces, resourceGroupName: string, workspaceName: string): Promise<any[]> {
+    //logger.info("starting jobsListing");
+    try{
+        const resArray = new Array();
+        for await (let item of client.jobs.list(resourceGroupName, workspaceName)) {
+            let result:any = item;
+            result.workspace = workspaceName;
+            result.resourceGroupName = resourceGroupName;
+            resArray.push(result);
+        }
+        return resArray;
+    }catch(e){
+        logger.debug("error in jobsListing:"+e);
+        return [];
+    }
+}
+
+export async function computeOperationsListing(client: AzureMachineLearningWorkspaces, resourceGroupName: string, workspaceName: string): Promise<any[]> {
+    //logger.info("starting computeOperationsListing");
+    try{
+        const resArray = new Array();
+        for await (let item of client.computeOperations.list(resourceGroupName, workspaceName)) {
+            let result:any = item;
+            result.workspace = workspaceName;
+            result.resourceGroupName = resourceGroupName;
+            resArray.push(item);
+        }
+        return resArray;
+    }catch(e){
+        logger.debug("error in computeOperationsListing:"+e);
+        return [];
+    }
+}
+
+export async function schedulesListing(client: AzureMachineLearningWorkspaces, resourceGroupName: string, workspaceName: string): Promise<any[]> {
+    //logger.info("starting schedulesListing");
+    try{
+        const resArray = new Array();
+        for await (let item of client.schedules.list(resourceGroupName, workspaceName)) {
+            let result:any = item;
+            result.workspace = workspaceName;
+            result.resourceGroupName = resourceGroupName;
+            resArray.push(item);
+        }
+        return resArray;
+    }catch(e){
+        logger.debug("error in schedulesListing:"+e);
+        return [];
+    }
 }
