@@ -283,3 +283,12 @@ config/default.json was changed
 documentation/Documentation-Kexa.md was changed
 
 
+## 1.8.0-SNAPSHOT.111.ef2090d
+
+### Files added: 0
+
+### Files changed: 1
+
+initKexa.ps1 was changed
+
+
