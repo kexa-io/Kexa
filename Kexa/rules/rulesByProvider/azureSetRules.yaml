@@ -1,0 +1,183 @@
+- version: 1.0.0
+  date: 07-18-2023
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      to: 
+        #- http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "check-vm-reservation"
+      description : "check if VM have a reservation"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName : vm
+      conditions: 
+        - property: priority
+          condition: REGEX
+          value: (?i)reservation
+    - name: "azure-is-disk-orphan"
+      description : "this rules is to check if disk is orphan"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName : disk
+      conditions:
+        - property : diskState
+          condition : DIFFERENT
+          value : Unattached
+    - name: "aks-has-scaleSet"
+      description : "check if aks have a scaleSet"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName : aks
+      conditions: 
+        - property: agentPoolProfiles
+          condition: ALL
+          value: 
+            - property: scaleSetEvictionPolicy
+              condition: EQUAL
+              value: Delete
+    - name: "azure-orphan-nsg"
+      description : "this rules is to check if nsg is orphan"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName : nsg
+      conditions:
+        - operator: OR
+          criteria:
+            - property : networkInterfaces
+              condition : COUNT_SUP_OR_EQUAL
+              value : 1
+            - property : subnets
+              condition : COUNT_SUP_OR_EQUAL
+              value : 1
+    - name: "Orphan virtualNetwork"
+      description : "this rules is to check if virtualNetwork is orphan"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName : virtualNetwork
+      conditions:
+        - property : subnets
+          condition : COUNT_SUP_OR_EQUAL
+          value : 1
+    - name: "azure-virtual-network-minimum-subnets"
+      description : "check if NSG have a minimum of subnets"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName : virtualNetwork
+      conditions: 
+        - property: subnets
+          condition: COUNT_SUP
+          value: 0
+    - name: "aks-is-scaleset-down"
+      description : "check if aks have a scaleSet down"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName : aks
+      conditions: 
+        - property: agentPoolProfiles
+          condition: ALL
+          value: 
+            - property: scaleSetEvictionPolicy
+              condition: EQUAL
+              value: Delete
+    - name: "azure-check-aks-cluster-conformity"
+      description : "this rules is to check if aks cluster are conform to the norms"
+      applied: false
+      level: 2
+      cloudProvider: azure
+      objectName : aks
+      conditions:
+        - property : tags.environment
+          condition : REGEX
+          value : ^(DEV|NPR|PROD)$
+        - property : tags.author
+          condition : DIFFERENT
+          value : NULL
+        - property : tags.billing
+          condition : REGEX
+          value : ^(VADOR|YODA|LUKE)$
+        - property : sku.tier
+          condition : EQUAL
+          value : Free
+        - property : publicNetworkAccess
+          condition : EQUAL
+          value : Enable
+        - property : autoScalerProfile.scaleDownDelayAfterAdd
+          condition : DIFFERENT
+          value : NULL
+    - name: "azure-disk-not-public-or-encrypted"
+      description : "this rules is to check if disk is either not public or encrypted by default"
+      applied: false
+      level: 2
+      cloudProvider: azure
+      objectName : disk
+      conditions:
+        - operator : OR
+          criteria:
+            - property : networkAccessPolicy
+              condition : DIFFERENT
+              value : AllowAll
+            - property : encryption.type
+              condition : EQUAL
+              value : EncryptionAtRestWithPlatformKey
+    - name: "azure-nsg-valid-subnet"
+      description : "check if NSG have a valid subnet"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName : aks
+      conditions:
+        - property: agentPoolProfiles
+          condition: COUNT
+          value: 2

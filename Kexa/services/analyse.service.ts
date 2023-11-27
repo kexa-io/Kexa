@@ -87,12 +87,17 @@ function getListNeedRules(): string[]{
 export async function analyseRule(ruleFilePath:string, listNeedRules:string[], getAll:boolean=false): Promise<SettingFile | null> {
     logger.debug("analyse:"+ruleFilePath);
     try {
-        const doc = (yaml.load(fs.readFileSync(ruleFilePath, 'utf8')) as SettingFile[])[0];
-        const name = ruleFilePath.split('/')[ruleFilePath.split('/').length -1].split(".")[0];
+        let lastBlockSplited = ruleFilePath.split('/')[ruleFilePath.split('/').length -1].split(".");
+        if(lastBlockSplited.length == 1){
+            logger.debug("It's a directory");
+            return null;
+        }
+        const name = lastBlockSplited[0];
         if(!listNeedRules.includes(name) && !getAll){
             logger.debug("rule not needed:"+name);
             return null;
         }
+        const doc = (yaml.load(fs.readFileSync(ruleFilePath, 'utf8')) as SettingFile[])[0];
         let result = await checkDoc(doc);
         logCheckDoc(result);
         result.forEach((value) => {
