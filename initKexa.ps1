@@ -197,7 +197,7 @@ function Configure-Providers {
             Write-Host " "
             $credentials = Get-UserInputForAllCred -provider $askProvider -prefixs $prefixs -credForTheProvider $credByProvider[$askProvider]
             Write-DictionaryToFile -filePath "./.env" -dictionary $credentials
-            $url = "https://raw.githubusercontent.com/4urcloud/Kexa/dev-esteban-scriptinit/Kexa/rules/rulesByProvider/${askProvider}SetRules.yaml"
+            $url = "https://raw.githubusercontent.com/4urcloud/Kexa/main/Kexa/rules/rulesByProvider/${askProvider}SetRules.yaml"
             $text = Invoke-WebRequest -Uri $url -UseBasicParsing
             Save-TextToFile -text $text -filePath "./rules/${askProvider}SetRules.yaml"
         }
