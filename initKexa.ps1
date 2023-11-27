@@ -1,3 +1,16 @@
+function Get-ValidInput {
+    param (
+        [string]$Prompt = "Entrez une valeur : ",
+        [string]$RegexPattern = "^[0-9A-Z_-]*$"
+    )
+
+    do {
+        $input = Read-Host -Prompt $Prompt
+    } until ($input -match $RegexPattern)
+
+    return $input
+}
+
 function Ask-User {
     param (
         [string]$prompt,
@@ -34,9 +47,9 @@ function Get-UserInputForAllCred {
         if (-not $alreadyAsked.ContainsKey($prefix)) {
             Write-Host "For the prefix '$prefix' environment"
             foreach ($cred in $credForTheProvider) {
-                $value = Read-Host -MaskInput -Prompt "$cred" 
+                $value = Read-Host "$cred"
                 if (-not $value) {
-                    Write-Host "You must enter a value for $cred, dont forget to fill it in the .env file"
+                    Write-Host "You must enter a value for $cred. If you dont, dont forget to fill it in the .env file"
                 }
                 $credentials[$prefix+$cred] = $value
             }
@@ -132,7 +145,7 @@ function Configure-Providers {
         if($ask -eq "q"){
             break
         }
-        #Clear-Host
+        Clear-Host
         $prefixs = @()
         $environments = @()
         $numberOfEnvironments = 0
@@ -140,16 +153,17 @@ function Configure-Providers {
         Write-Host "For each environment, enter the name, the description, the prefix and additionnal configuration if needed"
         Write-Host " "
         while($true){
-            $environmentName = Read-Host "Enter the name of the new environment (number: $numberOfEnvironments) (q to finish) "
+            $environmentName = Get-ValidInput -Prompt "Enter the name of the new environment (number: $numberOfEnvironments) (q to finish) "
             if ($environmentName -eq "q") {
                 break
             }
             $environmentDescription = Read-Host "Enter the description (default: $environmentName) "
+            $environmentDescription = $environmentDescription.Trim(' ')
             if (-not $environmentDescription) {
                 $environmentDescription = $environmentName
             }
-            $environmentPrefix = Read-Host "Enter prefix "
-            $prefixs += $environmentPrefix
+            $environmentPrefix = Get-ValidInput -Prompt "Enter prefix "
+            $prefixs += $environmentPrefix.ToUpper()
             $environment = @{
                 "name" = $environmentName
                 "description" = $environmentDescription
@@ -190,7 +204,7 @@ function Configure-Providers {
         $configJson[$askProvider] = $environments
         $askingProvider += $askProvider
         $providers.Remove($askProvider)
-        #Clear-Host
+        Clear-Host
     }
 
     Save-ConfigJson -configJson $configJson -filePath "./config/default.json"
@@ -199,7 +213,7 @@ function Configure-Providers {
 function Press-EnterToContinue {
     Write-Host "Press enter to continue..."
     Read-Host > $null
-    #Clear-Host
+    Clear-Host
 }
 
 Write-Host "Kexa Script initailization"

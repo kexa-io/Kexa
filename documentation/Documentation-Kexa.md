@@ -31,6 +31,7 @@
     <li>
       <a href="#global-configuration">Global Configuration</a>
       <ul>
+        <li><a href="#configuration-via-script">Configuration Via Script</a></li>
         <li><a href="#basic-configuration">Basic Configuration</a></li>
         <li><a href="#multiple-environments-provider-prefix">Multiple Environments provider prefix</a></li>
         <li><a href="#regions">Regions</a></li>
@@ -115,6 +116,26 @@ The principle is simple: scan and verify. That's why you have 2 main elements to
 <br/>
 In the Kexa config folder, edit the default.json (create it if it doesn't exist)
 <br/>
+
+<div id="configuration-via-script"></div>
+
+## **Configuration via script**
+
+A powershell script located at "./initKexa.ps1" allows you to set up a configuration and all your necessary environment variables. It also downloads from our github repo the basic rules per provider you've configured.
+
+- Windows: 
+  ```powershell
+  ./initKexa.ps1
+  ```
+
+- Linux:
+  We don't yet have a Bash script for Linux. You can follow [this documentation](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-linux?view=powershell-7.4) to run the powershell script.
+  ```bash
+  sudo pwsh
+  ./initKexa.ps1
+  ```
+
+
 <div id="basic-configuration"></div>
 
 ## **Basic configuration**
