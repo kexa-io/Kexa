@@ -228,3 +228,58 @@ README.md was changed
 documentation/Documentation-Kexa.md was changed
 
 
+## 1.8.0-SNAPSHOT.109.96001d8
+
+### Files added: 10
+
+Kexa/rules/rulesByProvider/awsSetRules.yaml was added
+
+Kexa/rules/rulesByProvider/azureSetRules.yaml was added
+
+Kexa/rules/rulesByProvider/gcpSetRules.yaml was added
+
+Kexa/rules/rulesByProvider/githubSetRules.yaml was added
+
+Kexa/rules/rulesByProvider/googleDriveSetRules.yaml was added
+
+Kexa/rules/rulesByProvider/googleWorkspaceSetRules.yaml was added
+
+Kexa/rules/rulesByProvider/httpSetRules.yaml was added
+
+Kexa/rules/rulesByProvider/kubernetesSetRules.yaml was added
+
+Kexa/rules/rulesByProvider/o365SetRules.yaml was added
+
+initKexa.ps1 was added
+
+### Files changed: 14
+
+Kexa/rules/rulesByProvider/awsSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/azureSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/gcpSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/githubSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/googleDriveSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/googleWorkspaceSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/httpSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/kubernetesSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/o365SetRules.yaml was changed
+
+initKexa.ps1 was changed
+
+Kexa/services/analyse.service.ts was changed
+
+README.md was changed
+
+config/default.json was changed
+
+documentation/Documentation-Kexa.md was changed
+
+
