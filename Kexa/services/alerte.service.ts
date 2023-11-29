@@ -8,7 +8,7 @@ import { Emails } from "../emails/emails";
 import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
 import { ConfigAlert } from "../models/settingFile/configAlert.models";
 import { Readable } from "stream";
-import { propertyToSend, renderTableAllScan } from "./display.service";
+import { propertyToSend, renderTableAllScan, renderTableAllScanLoud } from "./display.service";
 import { groupBy } from "../helpers/groupBy";
 import { getConfigOrEnvVar } from "./manageVarEnvironnement.service";
 
@@ -18,21 +18,23 @@ const request = require('request');
 const nodemailer = require("nodemailer");
 const levelAlert = ["info", "warning", "error", "critical"];
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
-const config = require('config');
+const config = require('node-config-ts');
 
 import {getContext, getNewLogger} from "./logger.service";
 const logger = getNewLogger("functionLogger");
 export function alertGlobal(allScan: ResultScan[][], alert: GlobalConfigAlert) {
+    let isAlert = false;
     let compteError = [0,0,0,0];
     allScan.forEach((rule) => {
         rule.forEach((scan) => {
-            if(scan.error.length > 0) compteError[scan.rule?.level??4]++;
+            if(scan.error.length > 0) compteError[scan.rule?.level??3]++;
+            if(scan.rule?.loud) isAlert = true;
         });
     });
     logger.debug("compteError:");
     logger.debug(compteError);
-    let isAlert = false;
     alert.conditions.forEach((condition) => {
+        if(isAlert) return;
         logger.debug("condition:");
         logger.debug(condition);
         if(compteError[condition.level] >= condition.min){
@@ -46,7 +48,7 @@ export function alertGlobal(allScan: ResultScan[][], alert: GlobalConfigAlert) {
 }
 
 export function alertFromGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
-    allScan = allScan.map(scan => scan.filter(value => value.error.length>0))
+    allScan = allScan.map(scan => scan.filter(value => value.error.length>0 || value.loud))
     alert.type.forEach((type) => {
         switch(type){
             case AlertEnum.LOG:
@@ -94,11 +96,20 @@ export function alertLogGlobal(alert: GlobalConfigAlert, compteError: number[], 
         logger.info("description:"+value[0].rule?.description);
         context?.log("all resources who not respect the rules:");
         logger.info("all resources who not respect the rules:");
-        value.map((scan:ResultScan) => scan.objectContent).forEach((resource, index) => {
+        value.filter(value => value.error.length>0).map((scan:ResultScan) => scan.objectContent).forEach((resource, index) => {
             context?.log("resource " + (index+1) + ":");
             logger.info("resource " + (index+1) + ":");
             alertLog(value[index].rule, value[index].error, resource, false);
         });
+        if(value[0].rule?.loud){
+            context?.log("all resources who respect the rules:");
+            logger.info("all resources who respect the rules:");
+            value.filter(value => value.loud).map((scan:ResultScan) => scan.objectContent).forEach((resource, index) => {
+                context?.log("resource " + (index+1) + ":");
+                logger.info("resource " + (index+1) + ":");
+                alertLog(value[index].rule, value[index].error, resource, false);
+            });
+        }
     });
     context?.log("_____________________________________-= End Result Global scan =-_________________________________");
     logger.info("_____________________________________-= End Result Global scan =-_________________________________");
@@ -110,7 +121,8 @@ export function alertEmailGlobal(alert: GlobalConfigAlert, compteError: number[]
         if(!email_to.includes("@")) return;
         logger.debug("send email to:"+email_to);
         let render_table = renderTableAllScan(allScan.map(scan => scan.filter(value => value.error.length>0)));
-        let mail = Emails.GlobalAlert(email_to, compteError, render_table, alert);
+        let render_table_loud = renderTableAllScanLoud(allScan.map(scan => scan.filter(value => value.loud)));
+        let mail = Emails.GlobalAlert(email_to, compteError, render_table, render_table_loud, alert);
         SendMailWithAttachment(mail, email_to, "Kexa - Global Alert - "+(alert.name??"Uname"), compteRender(allScan));
     });
 }
@@ -176,13 +188,12 @@ export function compteRender(allScan: ResultScan[][]): any {
         return result.content.push(
             {
                 rule: rule[0].rule,
-                result: rule.filter(value => 
-                    value.error.length > 0
-                )
-                .map((scan) => {
+                result: rule.map((scan) => {
                     return {
                         objectContent: scan.objectContent,
-                        error: scan.error
+                        error: scan?.error,
+                        loud: scan?.loud,
+                        rule: scan?.rule,
                     };
                 })
             }
@@ -194,7 +205,7 @@ export function compteRender(allScan: ResultScan[][]): any {
 export function alertFromRule(rule:Rules, conditions:SubResultScan[], objectResource:any, alert: Alert) {
     let detailAlert = alert[levelAlert[rule.level] as keyof typeof alert];
     if (!detailAlert.enabled) return
-    if(rule.level > LevelEnum.FATAL) rule.level = LevelEnum.INFO;
+    if(rule.level > LevelEnum.FATAL) rule.level = LevelEnum.FATAL;
     detailAlert.type.forEach((type) => {
         switch(type){
             case AlertEnum.LOG:

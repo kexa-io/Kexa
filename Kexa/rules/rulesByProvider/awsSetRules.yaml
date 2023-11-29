@@ -2,14 +2,14 @@
   date: 07-18-2023
   alert:
     fatal:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
-      to: 
+      to:
         - myEmail@gmail.com
     error:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
@@ -17,14 +17,14 @@
       to: 
         - myEmail@gmail.com
     warning:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
       to:
         - myEmail@gmail.com
     info:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
@@ -50,41 +50,37 @@
         - level: 3
           min: 1
   rules:
-    - name: "azure-nsg-valid-subnet"
-      description : "check if NSG have a valid subnet"
+    - name: "aws-ec2-volume-unattached"
+      description: "this rule is to check if an ec2 volume is unattached"
       applied: true
       level: 1
-      cloudProvider: azure
-      objectName : aks
+      cloudProvider: aws
+      objectName: ec2Volume
       conditions:
-        - property: agentPoolProfiles
-          condition: COUNT
-          value: 2
-    - name: "git-is-repository-private"
-      description: "this rules is to check if git repo is private"
+        - property: Attachments
+          condition: COUNT_SUP
+          value: 0
+    - name: "ec2-volume-check-create-less-2-month-expiration"
+      description: "this rule is to check for a ec2 volume create date inferior than 2 months"
       applied: true
-      level: 0
-      cloudProvider: github
-      objectName: repositories
+      level: 2
+      cloudProvider: aws
+      objectName: ec2Volume
       conditions:
-        - property: private
-          condition: EQUAL
-          value: true
-    - name: "git-is-branch-protected"
-      description: "this rules is to check if git branch is protected"
+        - property: CreateTime
+          condition: DATE_INF
+          value: 0 0 0 0 0 2 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    - name: "aws-tagsvalue-check-for-expiration-date"
+      description: "this rule is to check if tags contain an expiration date (separate with \"-\")"
       applied: true
-      level: 0
-      cloudProvider: github
-      objectName: branches
+      level: 1
+      cloudProvider: aws
+      objectName: tagsValue
       conditions:
-        - operator: NAND
-          criteria:
-            - property : protected
-              condition : DIFFERENT
-              value : true
-            - property : name
-              condition : EQUAL
-              value : master
+        - property: name
+          condition: REGEX
+          value: '\b\d{1,4}[-]\d{1,4}[-]\d{1,4}\b'
     - name: "ec2-security-groups-source-defined"
       description: "this rule is to check if a ec2 SG has a defined source (not 0.0.0.0)"
       applied: true
@@ -111,16 +107,3 @@
         - property: PublicIpAddress
           condition: EQUAL
           value: null
-    - name: "o365-is-mfa-activated-on-user"
-      description: "check if at least 2 auth factors are active"
-      applied: true
-      level: 2
-      cloudProvider: o365
-      objectName: auth_methods
-      conditions:
-        - property: methods
-          condition: ONE
-          value:
-            - property: dataType
-              condition: EQUAL
-              value: "#microsoft.graph.microsoftAuthenticatorAuthenticationMethod"

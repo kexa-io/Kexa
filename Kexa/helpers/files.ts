@@ -45,19 +45,27 @@ export function getFile(filePath: string){
     }
 }
 
-export function writeFileSync(data: string, filePath:string):boolean{
+export function createFileSync(data:string, filePath:string, jsonData:boolean=false): boolean{
     try{
-        const fileExists = fs.existsSync(filePath);
-        logger.debug("File exists: " + fileExists);
-        if(!fileExists){
-            logger.debug("Creating file: " + filePath);
-            fs.writeFileSync(filePath, "");
-        }
-        logger.debug("Writing data to file: " + filePath);
-        fs.writeFileSync(filePath, data);
+        let pathFolder = filePath.split("/").slice(0, -1).join("/");
+        createFolderIfNotExists(pathFolder);
+        logger.debug("Writing data to file in "+ (jsonData)?'JSON':'RAW' +": " + filePath);
+        fs.writeFileSync(filePath, (jsonData)?JSON.stringify(JSON.parse(data), null, 4):data);
         return true;
     }catch(error){
-        logger.error(error);
+        logger.debug(error);
         return false;
     }
+}
+
+function createFolderIfNotExists(filePath:string): boolean{
+    try{
+        fs.mkdirSync(filePath, { recursive: true });
+        logger.debug("Folder created: " + filePath);
+        return true;
+    }catch(error){
+        logger.debug(error);
+        return false;
+    }
+
 }

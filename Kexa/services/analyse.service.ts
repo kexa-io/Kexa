@@ -30,7 +30,7 @@ const varEnvMin = {
     "email": ["EMAILPORT", "EMAILHOST", "EMAILUSER", "EMAILPWD", "EMAILFROM"],
     "sms": ["SMSACCOUNTSID", "SMSAUTHTOKEN", "SMSFROM"],
 }
-const config = require('config');
+const config = require('node-config-ts').config;
 const levelAlert = ["info", "warning", "error", "critical"];
 let headers: any;
 //Analyse  list
@@ -69,13 +69,15 @@ export function extractAddOnNeed(settingFileList: SettingFile[]){
 }
 
 function getListNeedRules(): string[]{
-    const config = require('config');
+    const config = require('node-config-ts').config;
     let listNeedRules = new Array<string>();
     for(let cloudProvider of Object.keys(config)){
-        let configAssign = config.get(cloudProvider);
+        let configAssign = config[cloudProvider];
         for(let config of configAssign){
-            for(let rule of config.rules){
-                if(!listNeedRules.includes(rule)) listNeedRules.push(rule);
+            if (Array.isArray(config.rules)) {
+                for (let rule of config.rules) {
+                    if (!listNeedRules.includes(rule)) listNeedRules.push(rule);
+                }
             }
         }
     }
@@ -85,12 +87,17 @@ function getListNeedRules(): string[]{
 export async function analyseRule(ruleFilePath:string, listNeedRules:string[], getAll:boolean=false): Promise<SettingFile | null> {
     logger.debug("analyse:"+ruleFilePath);
     try {
-        const doc = (yaml.load(fs.readFileSync(ruleFilePath, 'utf8')) as SettingFile[])[0];
-        const name = ruleFilePath.split('/')[ruleFilePath.split('/').length -1].split(".")[0];
+        let lastBlockSplited = ruleFilePath.split('/')[ruleFilePath.split('/').length -1].split(".");
+        if(lastBlockSplited.length == 1){
+            logger.debug("It's a directory");
+            return null;
+        }
+        const name = lastBlockSplited[0];
         if(!listNeedRules.includes(name) && !getAll){
             logger.debug("rule not needed:"+name);
             return null;
         }
+        const doc = (yaml.load(fs.readFileSync(ruleFilePath, 'utf8')) as SettingFile[])[0];
         let result = await checkDoc(doc);
         logCheckDoc(result);
         result.forEach((value) => {
@@ -306,11 +313,11 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
         if(!rule.applied) return;
         context?.log("check rule:"+rule.name);
         logger.info("check rule:"+rule.name);
-        if(!config.has(rule.cloudProvider)){
+        if(!config.hasOwnProperty(rule.cloudProvider)){
             logger.debug("cloud provider not found in config:"+rule.cloudProvider);
             return;
         }
-        const configAssign = config.get(rule.cloudProvider);
+        const configAssign = config[rule.cloudProvider];
         let objectResources:any = []
         for(let i = 0; i < configAssign.length; i++){
             if(configAssign[i].rules.includes(alert.global.name)){
@@ -327,28 +334,38 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
         }
         let subResult: ResultScan[] = [];
         if(rule.conditions[0].hasOwnProperty("property") && (rule.conditions[0] as RulesConditions).property === "."){
+            let subResultScan: SubResultScan[] = checkRule(rule.conditions, objectResources);
             subResult.push({
                 objectContent: {
                     "id": "global property",
                 },
                 rule: rule,
-                error: actionAfterCheckRule(rule, objectResources, alert),
+                error: actionAfterCheckRule(rule, objectResources, alert, subResultScan),
             });
         }else{
             objectResources.forEach((objectResource: any) => {
+                let subResultScan: SubResultScan[] = checkRule(rule.conditions, objectResource);
                 subResult.push({
                     objectContent: objectResource,
                     rule: rule,
-                    error: actionAfterCheckRule(rule, objectResource, alert),
+                    error: actionAfterCheckRule(rule, objectResource, alert, subResultScan),
                 });
             });
+        }
+        if(rule.loud && subResult[subResult.length - 1].error.length <= 0){
+            subResult[subResult.length - 1].loud = {
+                value: subResult[subResult.length - 1].objectContent,
+                condition: rule.conditions,
+                result: true,
+                message : rule.loudMessage??rule.name
+            };
         }
         result.push(subResult);
     });
     return result;
 }
-function actionAfterCheckRule(rule: Rules, objectResource: any, alert: Alert): SubResultScan[] {
-    let subResultScan: SubResultScan[] = checkRule(rule.conditions, objectResource);
+function actionAfterCheckRule(rule: Rules, objectResource: any, alert: Alert, subResultScan: SubResultScan[]): SubResultScan[] {
+    logger.debug("subResultScan:"+JSON.stringify(subResultScan));
     let error = subResultScan.filter((value) => !value.result);
     if(error.length > 0){
         alertFromRule(rule, subResultScan, objectResource, alert);

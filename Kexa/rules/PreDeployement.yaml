@@ -46,7 +46,7 @@
         - level: 3
           min: 1
   rules:
-    - name: "Git repo check"
+    - name: "git-is-repository-private"
       description: "this rules is to check if my git repo is private"
       applied: true
       level: 1
@@ -62,7 +62,7 @@
               condition: EQUAL
               #change the name with your repo name
               value: 4urcloud/Kexa_website
-    - name: "Git_branch_protect"
+    - name: "git-is-branch-protected"
       description: "this rules is to check if my git branch is protected"
       applied: true
       level: 1
@@ -81,7 +81,7 @@
             - property : protected
               condition : EQUAL
               value : true
-    - name: alert-if-namespace-not-exist-api-4urcloud
+    - name: "kub-alert-if-namespace-not-exist"
       description : "this rules is to check if namespace exist and notifiable if not"
       applied: true
       level: 0

@@ -1,32 +1,10 @@
 {
-    "github":[
+    "azure": [
         {
             "description": "organization 4urcloud",
-            "prefix": "DEMO-",
             "rules": [
-                "Deployement",
-                "Security"
+                "OperationalExcellence"
             ]
-        }
-    ],
-    "kubernetes": [
-        {
-            "description": "our kube",
-            "prefix": "DEMO-",
-            "rules": [
-                "Deployement"
-            ]
-        }
-    ],
-    "http":[
-        {
-            "Description": "main end point for the api 4urcloud",
-            "prefix": "DEMO-",
-            "rules": [
-                "Deployement"
-            ],
-            "METHOD": "GET",
-            "URL": "https://api.4urcloud.eu/"
         }
     ]
 }

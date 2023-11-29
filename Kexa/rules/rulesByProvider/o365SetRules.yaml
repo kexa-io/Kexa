@@ -2,14 +2,14 @@
   date: 07-18-2023
   alert:
     fatal:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
-      to: 
+      to:
         - myEmail@gmail.com
     error:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
@@ -17,14 +17,14 @@
       to: 
         - myEmail@gmail.com
     warning:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
       to:
         - myEmail@gmail.com
     info:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
@@ -50,37 +50,16 @@
         - level: 3
           min: 1
   rules:
-    - name: "azure-virtual-network-minimum-subnets"
-      description : "check if NSG have a minimum of subnets"
+    - name: "o365-is-skus-not-used"
+      description: "this rule is if a subscribed sku is not being used"
       applied: true
       level: 1
-      cloudProvider: azure
-      objectName : virtualNetwork
-      conditions: 
-        - property: subnets
-          condition: COUNT_SUP
+      cloudProvider: o365
+      objectName: sku
+      conditions:
+        - property: consumedUnits
+          condition: SUP
           value: 0
-    - name: "ec2-volume-check-create-less-2-month-expiration"
-      description: "this rule is to check for a ec2 volume create date inferior than 2 months"
-      applied: true
-      level: 2
-      cloudProvider: aws
-      objectName: ec2Volume
-      conditions:
-        - property: CreateTime
-          condition: DATE_INF
-          value: 0 0 0 0 0 2 0
-          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
-    - name: "aws-tagsvalue-check-for-expiration-date"
-      description: "this rule is to check if tags contain an expiration date (separate with \"-\")"
-      applied: true
-      level: 1
-      cloudProvider: aws
-      objectName: tagsValue
-      conditions:
-        - property: name
-          condition: REGEX
-          value: '\b\d{1,4}[-]\d{1,4}[-]\d{1,4}\b'
     - name: "o365-check-jobtitle-defined"
       description: "this rule is to check for non defined job title"
       applied: true
@@ -101,13 +80,16 @@
         - property: userType
           condition: EQUAL
           value: Member
-    - name: "az-job-ml-check"
-      description: "this rule is to check for ml job if they are not failed"
+    - name: "o365-is-mfa-activated-on-user"
+      description: "check if at least 2 auth factors are active"
       applied: true
-      level: 1
-      cloudProvider: azure
-      objectName: mlJobs
+      level: 2
+      cloudProvider: o365
+      objectName: auth_methods
       conditions:
-        - property: properties.status
-          condition: DIFFERENT
-          value: Failed
+        - property: methods
+          condition: ONE
+          value:
+            - property: dataType
+              condition: EQUAL
+              value: "#microsoft.graph.microsoftAuthenticatorAuthenticationMethod"

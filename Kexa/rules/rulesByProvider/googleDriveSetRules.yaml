@@ -1,12 +1,12 @@
 - version: 1.0.0
-  date: 06-12-2023
+  date: 07-18-2023
   alert:
     fatal:
       enabled: true
       type: 
         - log
         #- email
-      to: 
+      to:
         - myEmail@gmail.com
     error:
       enabled: true
@@ -31,7 +31,7 @@
       to: 
         - myEmail@gmail.com
     global:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- webhook

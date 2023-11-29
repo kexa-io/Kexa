@@ -2,14 +2,14 @@
   date: 07-18-2023
   alert:
     fatal:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
-      to: 
+      to:
         - myEmail@gmail.com
     error:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
@@ -17,14 +17,14 @@
       to: 
         - myEmail@gmail.com
     warning:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
       to:
         - myEmail@gmail.com
     info:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
@@ -50,16 +50,14 @@
         - level: 3
           min: 1
   rules:
-    - name: "aks-is-scaleset-down"
-      description : "check if aks have a scaleSet down"
+    - name: "gcp-disk-check-create-date-2-month-expiration"
+      description: "this rule is to check for a persistent disk create date is inferior than 2 months ago"
       applied: true
-      level: 0
-      cloudProvider: azure
-      objectName : aks
-      conditions: 
-        - property: agentPoolProfiles
-          condition: ALL
-          value: 
-            - property: scaleSetEvictionPolicy
-              condition: EQUAL
-              value: Delete
+      level: 2
+      cloudProvider: gcp
+      objectName: disk
+      conditions:
+        - property: creationTimestamp
+          condition: DATE_INF
+          value: 0 0 0 2 0 0 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
