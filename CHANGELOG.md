@@ -292,3 +292,12 @@ documentation/Documentation-Kexa.md was changed
 initKexa.ps1 was changed
 
 
+## 1.8.0-SNAPSHOT.113.3054896
+
+### Files added: 0
+
+### Files changed: 1
+
+README.md was changed
+
+
