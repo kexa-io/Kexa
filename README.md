@@ -77,7 +77,7 @@ With Kexa, you can [edit your own rules](documentation/Documentation-Kexa.md#rul
 
 ### Built With
 
-* [![NodeJs][NodeJs.com]][NodeJs-url]
+* Node JS
 
 # <div align="center" id="quick-launch">**Quick Launch**</div>
 <br/>
