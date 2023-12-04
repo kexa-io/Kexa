@@ -314,3 +314,14 @@ Kexa/services/analyse.service.ts was changed
 initKexa.ps1 was changed
 
 
+## 1.8.0-SNAPSHOT.124.7d39677
+
+### Files added: 0
+
+### Files changed: 2
+
+.gitignore was changed
+
+initKexa.ps1 was changed
+
+
