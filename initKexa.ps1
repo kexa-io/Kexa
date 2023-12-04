@@ -273,9 +273,13 @@ function Download-Kexa {
     Write-Host "Download Kexa from $url to $path"
     Invoke-WebRequest -Uri $url -OutFile $zipPath
     Expand-Archive -Path $zipPath -DestinationPath $path -Force
-    Move-Item -Path "$unZipPath\*" -Destination $path -ErrorAction SilentlyContinue -Force
+    Move-Item -Path "$unZipPath\*" -Destination $path -Recurse -ErrorAction SilentlyContinue -Force
     Remove-Item -Path $unZipPath -Recurse -Force
     Remove-Item -Path $zipPath -Force
+    #Remove all files and folders of github
+    Remove-Item -Path "$path\.github" -Recurse -ErrorAction SilentlyContinue -Force
+    Remove-Item -Path "$path\.git" -Recurse -ErrorAction SilentlyContinue -Force
+    Remove-Item -Path "$path\.gitignore" -ErrorAction SilentlyContinue -Force
     Write-Host "End of download"
 }
 
