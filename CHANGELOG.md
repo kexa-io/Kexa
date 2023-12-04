@@ -325,3 +325,16 @@ initKexa.ps1 was changed
 initKexa.ps1 was changed
 
 
+## 1.8.0-SNAPSHOT.127.e802885
+
+### Files added: 0
+
+### Files changed: 3
+
+Kexa/rules/OperationalExcellence.yaml was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/display/azureDisplay.service.ts was changed
+
+

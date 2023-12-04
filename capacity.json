@@ -235,9 +235,30 @@
                 "objectName": "mlJobs",
                 "conditions": [
                     {
-                        "property": "properties.status",
-                        "condition": "DIFFERENT",
-                        "value": "Failed"
+                        "operator": "NAND",
+                        "criteria": [
+                            {
+                                "property": "workspace",
+                                "condition": "EQUAL",
+                                "value": "Test-Kexa-Machine-Learning"
+                            },
+                            {
+                                "property": "properties.displayName",
+                                "condition": "EQUAL",
+                                "value": "hello-world-example"
+                            },
+                            {
+                                "property": "properties.status",
+                                "condition": "EQUAL",
+                                "value": "Failed"
+                            },
+                            {
+                                "property": "properties.properties.StartTimeUtc",
+                                "condition": "DATE_INF",
+                                "value": "0 0 0 1 0 0",
+                                "date": "YYYY-MM-DD hh:mm:ss"
+                            }
+                        ]
                     }
                 ]
             },
