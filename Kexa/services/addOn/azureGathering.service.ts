@@ -310,16 +310,10 @@ export async function mlListing(credential: DefaultAzureCredential, subscription
                 schedulesListing(client, resourceGroupName, workspaceName),
             ];
             const [jobsList, computeOperationsList, schedulesList] = await Promise.all(promises);
-            logger.error("jobsList: "+JSON.stringify(jobsList));
-            logger.error("computeOperationsList: "+JSON.stringify(computeOperationsList));
-            logger.error("schedulesList: "+JSON.stringify(schedulesList));
             result.jobs = [...result.jobs??[], ...jobsList];
             result.computes = [...result.computes??[], ...computeOperationsList];
             result.schedule = [...result.schedule??[], ...schedulesList];
-            logger.error("RESULT0: ");
-            logger.error("RESULT0: "+JSON.stringify(result));
         }
-        logger.error("RESULT1: "+JSON.stringify(result));
         return result;
     }catch(e){
         logger.debug("error in mlListing:"+e);
