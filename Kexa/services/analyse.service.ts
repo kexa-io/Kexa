@@ -72,13 +72,18 @@ function getListNeedRules(): string[]{
     const config = require('node-config-ts').config;
     let listNeedRules = new Array<string>();
     for(let cloudProvider of Object.keys(config)){
+        if(["host", "host", "workerId", "requestId", "grpcMaxMessageLength"].includes(cloudProvider)) continue;
         let configAssign = config[cloudProvider];
-        for(let config of configAssign){
-            if (Array.isArray(config.rules)) {
-                for (let rule of config.rules) {
-                    if (!listNeedRules.includes(rule)) listNeedRules.push(rule);
+        try{
+            for(let config of configAssign){
+                if (Array.isArray(config.rules)) {
+                    for (let rule of config.rules) {
+                        if (!listNeedRules.includes(rule)) listNeedRules.push(rule);
+                    }
                 }
             }
+        }catch(err){
+            logger.debug("error in getListNeedRules:"+err);
         }
     }
     return listNeedRules;

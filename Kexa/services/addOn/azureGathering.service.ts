@@ -114,10 +114,10 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
                     "virtualNetwork": [...azureResource["virtualNetwork"]??[], ...virtualNetworkList??[]],
                     "aks": [...azureResource["aks"]??[], ...aksList??[]],
                     "ip": [...azureResource["ip"]??[], ...ipList??[]],
-                    "mlWorkspaces": [...azureResource["mlWorkspaces"]??[], ...mlList.workspaces??[]],
-                    "mlJobs": [...azureResource["mlJobs"]??[], ...mlList.jobs??[]],
-                    "mlComputes": [...azureResource["mlComputes"]??[], ...mlList.computes??[]],
-                    "mlSchedules": [...azureResource["mlSchedules"]??[], ...mlList.schedule??[]],
+                    "mlWorkspaces": [...azureResource["mlWorkspaces"]??[], ...mlList?.workspaces??[]],
+                    "mlJobs": [...azureResource["mlJobs"]??[], ...mlList?.jobs??[]],
+                    "mlComputes": [...azureResource["mlComputes"]??[], ...mlList?.computes??[]],
+                    "mlSchedules": [...azureResource["mlSchedules"]??[], ...mlList?.schedule??[]],
                     //"sp": [...azureResource["sp"]??[], ...SPList],
                 } as AzureResources;
             }
