@@ -301,3 +301,16 @@ initKexa.ps1 was changed
 README.md was changed
 
 
+## 1.8.0-SNAPSHOT.118.4150a43
+
+### Files added: 0
+
+### Files changed: 3
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+initKexa.ps1 was changed
+
+
