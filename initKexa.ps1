@@ -1,8 +1,16 @@
 param (
-    [string]$d = "default"
+    [switch]$help,
+    [switch]$d,
+    [switch]$download,
+    [string]$p,
+    [string]$path,
+    [string]$b,
+    [string]$branch,
+    [switch]$c,
+    [switch]$config
+    #[switch]$r,
+    #[switch]$rules
 )
-
-Write-Host "d: $d"
 
 function Get-ValidInput {
     param (
@@ -15,6 +23,26 @@ function Get-ValidInput {
     } until ($input -match $RegexPattern)
 
     return $input
+}
+
+function getValueFromMultipleChoice {
+    param (
+        [string]$firstOption,
+        [string]$secondOption,
+        [string]$defaultValue
+    )
+
+    if($firstOption -eq $null -or $firstOption -eq ""){
+        if($secondOption -eq $null -or $secondOption -eq ""){
+            $result = $defaultValue
+        }else{
+            $result = $secondOption
+        }
+    }
+    else{
+        $result = $firstOption
+    }
+    return $result
 }
 
 function Ask-User {
@@ -222,9 +250,60 @@ function Press-EnterToContinue {
     Clear-Host
 }
 
+function Help {
+    Write-Host "initKexa.ps1 [-help] [-d | -download] [-c | -config]"
+    Write-Host " "
+    Write-Host "-help : Display help"
+    Write-Host "-d | -download : download the latest version of Kexa"
+    Write-Host "-p | -path : path where Kexa will be installed"
+    Write-Host "-c | -config : configure Kexa"
+    Press-EnterToContinue
+    exit
+}
+
+function downloadKexa {
+    Write-Host "Download the latest version of Kexa"
+    $branch = getValueFromMultipleChoice -firstOption $branch -secondOption $b -default "main"
+    Write-Host "Branch: $branch"
+    Write-Host "Path: $path"
+    $url = "https://github.com/4urcloud/Kexa/archive/refs/heads/$branch.zip"
+    $zipPath = $path + "/Kexa.zip"
+    $unZipPath = $path + "/Kexa-$branch"
+    Write-Host "Download Kexa from $url to $zipPath"
+    Invoke-WebRequest -Uri $url -OutFile $zipPath
+    Expand-Archive -Path $zipPath -DestinationPath $path -Force
+    Move-Item -Path "$unZipPath\*" -Destination $path -ErrorAction SilentlyContinue -Force
+    Remove-Item -Path $unZipPath -Recurse -Force
+    Remove-Item -Path $zipPath -Force
+    Write-Host "End of download"
+}
+
+if($help){
+    Help
+    Press-EnterToContinue
+    exit
+}
+
+$commandTrigger = 0
 Write-Host "Kexa Script initailization"
 
-Configure-Providers
+$path = getValueFromMultipleChoice -firstOption $path -secondOption $p -default "./"
+if($d -or $download){
+    downloadKexa
+    $commandTrigger++
+}
+
+if($c -or $config){
+    cd $path
+    Configure-Providers
+    $commandTrigger++
+}
+
+if($commandTrigger -eq 0){
+    Help
+    Press-EnterToContinue
+    exit
+}
 
 Write-Host "End Script"
 Press-EnterToContinue
