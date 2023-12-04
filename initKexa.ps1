@@ -25,7 +25,7 @@ function Get-ValidInput {
     return $input
 }
 
-function getValueFromMultipleChoice {
+function Get-ValueFromMultipleChoice {
     param (
         [string]$firstOption,
         [string]$secondOption,
@@ -261,21 +261,65 @@ function Help {
     exit
 }
 
-function downloadKexa {
+function Download-Kexa {
     Write-Host "Download the latest version of Kexa"
-    $branch = getValueFromMultipleChoice -firstOption $branch -secondOption $b -default "main"
+    Protect-config
+    $branch = Get-ValueFromMultipleChoice -firstOption $branch -secondOption $b -default "main"
     Write-Host "Branch: $branch"
     Write-Host "Path: $path"
     $url = "https://github.com/4urcloud/Kexa/archive/refs/heads/$branch.zip"
     $zipPath = $path + "/Kexa.zip"
     $unZipPath = $path + "/Kexa-$branch"
-    Write-Host "Download Kexa from $url to $zipPath"
+    Write-Host "Download Kexa from $url to $path"
     Invoke-WebRequest -Uri $url -OutFile $zipPath
     Expand-Archive -Path $zipPath -DestinationPath $path -Force
     Move-Item -Path "$unZipPath\*" -Destination $path -ErrorAction SilentlyContinue -Force
     Remove-Item -Path $unZipPath -Recurse -Force
     Remove-Item -Path $zipPath -Force
     Write-Host "End of download"
+}
+
+function Protect-config {
+    New-Item -ItemType Directory -Path "./savedFolder" -ErrorAction SilentlyContinue | Out-Null
+    Remove-Item "./savedFolder" -Recurse -Force 
+
+    New-Item -ItemType Directory -Path "./savedFolder/config" -ErrorAction SilentlyContinue | Out-Null
+    Copy-Item -Path "./config" -Destination "./savedFolder" -Recurse -ErrorAction SilentlyContinue -Force
+
+    New-Item -ItemType Directory -Path "./savedFolder/rules" -ErrorAction SilentlyContinue | Out-Null
+    Copy-Item -Path "./rules" -Destination "./savedFolder" -Recurse -ErrorAction SilentlyContinue -Force
+
+    New-Item -ItemType Directory -Path "./savedFolder/Kexa/rules" -ErrorAction SilentlyContinue | Out-Null
+    Copy-Item -Path "./Kexa/rules" -Destination "./savedFolder/Kexa" -Recurse -ErrorAction SilentlyContinue -Force
+
+    Copy-Item -Path "./.env" -Destination "./savedFolder" -ErrorAction SilentlyContinue -Force
+}
+
+function Retreive-config{
+    Copy-Item -Path "./savedFolder/config" -Destination "./" -Recurse -Force -ErrorAction SilentlyContinue
+    Copy-Item -Path "./savedFolder/rules" -Destination "./" -Recurse -Force -ErrorAction SilentlyContinue
+    Copy-Item -Path "./savedFolder/Kexa/rules" -Destination "./Kexa" -Recurse -Force -ErrorAction SilentlyContinue
+    Copy-Item -Path "./savedFolder/.env" -Destination "./" -ErrorAction SilentlyContinue -Force
+}
+
+function Test-AndInstallNodeJS {
+    $nodeInstalled = Get-Command node -ErrorAction SilentlyContinue
+
+    if ($nodeInstalled -eq $null) {
+        Write-Host "Node.js n'est pas installe. Tentative d'installation avec Chocolatey..."
+        $chocolateyInstalled = Get-Command choco -ErrorAction SilentlyContinue
+
+        if ($chocolateyInstalled -eq $null) {
+            Write-Host "Chocolatey n'est pas installe. Veuillez installer Chocolatey avant d'installer Node.js."
+        }
+        else {
+            choco install nodejs.install -y
+            Write-Host "Node.js a ete installe avec succès."
+        }
+    }
+    else {
+        Write-Host "Node.js est deja installe."
+    }
 }
 
 if($help){
@@ -287,9 +331,12 @@ if($help){
 $commandTrigger = 0
 Write-Host "Kexa Script initailization"
 
-$path = getValueFromMultipleChoice -firstOption $path -secondOption $p -default "./"
+$path = Get-ValueFromMultipleChoice -firstOption $path -secondOption $p -default "./"
 if($d -or $download){
-    downloadKexa
+    Protect-config
+    Download-Kexa
+    Retreive-config
+    Test-AndInstallNodeJS
     $commandTrigger++
 }
 
