@@ -13,3 +13,4 @@ config/addOnNeed.json
 config/headers.json
 config_kuber
 output/*
+savedFolder/*
