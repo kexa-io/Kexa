@@ -25,7 +25,7 @@ function Get-ValidInput {
     return $input
 }
 
-function getValueFromMultipleChoice {
+function Get-ValueFromMultipleChoice {
     param (
         [string]$firstOption,
         [string]$secondOption,
@@ -172,7 +172,7 @@ function Configure-Providers {
 
     $configJson = @{}
     $askingProvider = @()
-    "RULESDIRECTORY=./rules" | Out-File -FilePath "./.env" -Encoding utf8 -Force
+    "RULESDIRECTORY=./rules" | Out-File -FilePath "$path/.env" -Encoding utf8 -Force
     while($true){
         $ask = Ask-User -prompt "Which providers do you want to configure? (q to finish)" -options $providers.Values
         $askProvider = $providers.Keys | where { $providers[$_] -eq $ask }
@@ -230,10 +230,10 @@ function Configure-Providers {
         if($environments){
             Write-Host " "
             $credentials = Get-UserInputForAllCred -provider $askProvider -prefixs $prefixs -credForTheProvider $credByProvider[$askProvider]
-            Write-DictionaryToFile -filePath "./.env" -dictionary $credentials
-            $url = "https://raw.githubusercontent.com/4urcloud/Kexa/main/Kexa/rules/rulesByProvider/${askProvider}SetRules.yaml"
+            Write-DictionaryToFile -filePath "$path/.env" -dictionary $credentials
+            $url = "https://raw.githubusercontent.com/4urcloud/Kexa/$branch/Kexa/rules/rulesByProvider/${askProvider}SetRules.yaml"
             $text = Invoke-WebRequest -Uri $url -UseBasicParsing
-            Save-TextToFile -text $text -filePath "./rules/${askProvider}SetRules.yaml"
+            Save-TextToFile -text $text -filePath "$path/rules/${askProvider}SetRules.yaml"
         }
         $configJson[$askProvider] = $environments
         $askingProvider += $askProvider
@@ -241,7 +241,7 @@ function Configure-Providers {
         Clear-Host
     }
 
-    Save-ConfigJson -configJson $configJson -filePath "./config/default.json"
+    Save-ConfigJson -configJson $configJson -filePath "$path/config/default.json"
 }
 
 function Press-EnterToContinue {
@@ -255,27 +255,81 @@ function Help {
     Write-Host " "
     Write-Host "-help : Display help"
     Write-Host "-d | -download : download the latest version of Kexa"
-    Write-Host "-p | -path : path where Kexa will be installed"
     Write-Host "-c | -config : configure Kexa"
+    Write-Host "-p | -path : path it will be refer"
+    Write-Host "-b | -branch : branch of Kexa it will be refer"
     Press-EnterToContinue
     exit
 }
 
-function downloadKexa {
+function Download-Kexa {
     Write-Host "Download the latest version of Kexa"
-    $branch = getValueFromMultipleChoice -firstOption $branch -secondOption $b -default "main"
-    Write-Host "Branch: $branch"
-    Write-Host "Path: $path"
+    Protect-config
     $url = "https://github.com/4urcloud/Kexa/archive/refs/heads/$branch.zip"
     $zipPath = $path + "/Kexa.zip"
     $unZipPath = $path + "/Kexa-$branch"
-    Write-Host "Download Kexa from $url to $zipPath"
+    Write-Host "Download Kexa from $url to $path"
     Invoke-WebRequest -Uri $url -OutFile $zipPath
     Expand-Archive -Path $zipPath -DestinationPath $path -Force
-    Move-Item -Path "$unZipPath\*" -Destination $path -ErrorAction SilentlyContinue -Force
+    $absolutePathUnZip = (Get-Item -Path $unZipPath).FullName
+    $absolutePathPath = (Get-Item -Path $path).FullName
+    Get-ChildItem -Path $unZipPath -Recurse | ForEach-Object {
+        $destinationPath = $_.FullName.Replace($absolutePathUnZip, $absolutePathPath)
+        if(Test-Path -Path $destinationPath){
+            Remove-Item -Path $destinationPath -Recurse -Force -ErrorAction SilentlyContinue
+        }
+        Copy-Item -Path $_.FullName -Destination $destinationPath -Force
+    }
     Remove-Item -Path $unZipPath -Recurse -Force
     Remove-Item -Path $zipPath -Force
+    #Remove all files and folders of github
+    Remove-Item -Path "$path/.github" -Recurse -ErrorAction SilentlyContinue -Force
+    Remove-Item -Path "$path/.git" -Recurse -ErrorAction SilentlyContinue -Force
+    Remove-Item -Path "$path/.gitignore" -ErrorAction SilentlyContinue -Force
     Write-Host "End of download"
+}
+
+function Protect-config {
+    New-Item -ItemType Directory -Path "$path/savedFolder" -ErrorAction SilentlyContinue | Out-Null
+    Remove-Item "$path/savedFolder" -Recurse -Force 
+
+    New-Item -ItemType Directory -Path "$path/savedFolder/config" -ErrorAction SilentlyContinue | Out-Null
+    Copy-Item -Path "$path/config" -Destination "$path/savedFolder" -Recurse -ErrorAction SilentlyContinue -Force
+
+    New-Item -ItemType Directory -Path "$path/savedFolder/rules" -ErrorAction SilentlyContinue | Out-Null
+    Copy-Item -Path "$path/rules" -Destination "$path/savedFolder" -Recurse -ErrorAction SilentlyContinue -Force
+
+    New-Item -ItemType Directory -Path "$path/savedFolder/Kexa/rules" -ErrorAction SilentlyContinue | Out-Null
+    Copy-Item -Path "$path/Kexa/rules" -Destination "$path/savedFolder/Kexa" -Recurse -ErrorAction SilentlyContinue -Force
+
+    Copy-Item -Path "$path/.env" -Destination "$path/savedFolder" -ErrorAction SilentlyContinue -Force
+}
+
+function Retreive-config{
+    Copy-Item -Path "$path/savedFolder/config" -Destination "$path/" -Recurse -Force -ErrorAction SilentlyContinue
+    Copy-Item -Path "$path/savedFolder/rules" -Destination "$path/" -Recurse -Force -ErrorAction SilentlyContinue
+    Copy-Item -Path "$path/savedFolder/Kexa/rules" -Destination "$path/Kexa" -Recurse -Force -ErrorAction SilentlyContinue
+    Copy-Item -Path "$path/savedFolder/.env" -Destination "$path/" -ErrorAction SilentlyContinue -Force
+}
+
+function Test-AndInstallNodeJS {
+    $nodeInstalled = Get-Command node -ErrorAction SilentlyContinue
+
+    if ($nodeInstalled -eq $null) {
+        Write-Host "Node.js n'est pas installe. Tentative d'installation avec Chocolatey..."
+        $chocolateyInstalled = Get-Command choco -ErrorAction SilentlyContinue
+
+        if ($chocolateyInstalled -eq $null) {
+            Write-Host "Chocolatey n'est pas installe. Veuillez installer Chocolatey avant d'installer Node.js."
+        }
+        else {
+            choco install nodejs.install -y
+            Write-Host "Node.js a ete installe avec succès."
+        }
+    }
+    else {
+        Write-Host "Node.js est deja installe."
+    }
 }
 
 if($help){
@@ -287,9 +341,14 @@ if($help){
 $commandTrigger = 0
 Write-Host "Kexa Script initailization"
 
-$path = getValueFromMultipleChoice -firstOption $path -secondOption $p -default "./"
+$path = Get-ValueFromMultipleChoice -firstOption $path -secondOption $p -default "."
+$path = $path.Replace("\", "/").TrimEnd('/')
+$branch = Get-ValueFromMultipleChoice -firstOption $branch -secondOption $b -default "main"
 if($d -or $download){
-    downloadKexa
+    Protect-config
+    Download-Kexa
+    Retreive-config
+    #Test-AndInstallNodeJS
     $commandTrigger++
 }
 
