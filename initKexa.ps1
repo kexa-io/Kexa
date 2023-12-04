@@ -1,3 +1,9 @@
+param (
+    [string]$d = "default"
+)
+
+Write-Host "d: $d"
+
 function Get-ValidInput {
     param (
         [string]$Prompt = "Entrez une valeur : ",
