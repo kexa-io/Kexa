@@ -3,6 +3,9 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
+
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
 <div align="center" id="top">
 
   <a href="https://www.kexa.io/">
@@ -20,9 +23,11 @@ Turn complexity into simplicity with Kexa, ensuring unrivalled security and turn
     <a href="https://github.com/4urcloud/Kexa/blob/main/documentation/Documentation-Kexa.md"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/4urcloud/Kexa/issues">Report Bug</a>
+<a class="github-button" href="https://github.com/4urcloud/Kexa/issues" data-color-scheme="no-preference: dark_high_contrast; light: dark_high_contrast; dark: light_high_contrast;" data-icon="octicon-issue-opened" data-size="large" aria-label="Issue 4urcloud/Kexa on GitHub">Report Bug</a>
     ·
-    <a href="https://github.com/4urcloud/Kexa/issues">Request Feature</a>
+<a class="github-button" href="https://github.com/4urcloud/Kexa/discussions" data-color-scheme="no-preference: dark_high_contrast; light: dark_high_contrast; dark: light_high_contrast;" data-icon="octicon-comment-discussion" data-size="large" aria-label="Discuss 4urcloud/Kexa on GitHub">Request Feature</a>
+	·
+<a class="github-button" href="https://github.com/4urcloud/Kexa" data-color-scheme="no-preference: dark_high_contrast; light: dark_high_contrast; dark: light_high_contrast;" data-icon="octicon-star" data-size="large" aria-label="Star 4urcloud/Kexa on GitHub">Put Star</a>
   </p>
 </div>
 
@@ -82,7 +87,15 @@ With Kexa, you can [edit your own rules](documentation/Documentation-Kexa.md#rul
 # <div align="center" id="quick-launch">**Quick Launch**</div>
 <br/>
 
-For a quick launch, we're going to use docker. If you can't use docker you can refer to [this documention](documentation/Documentation-Kexa.md) to try Kexa. However, we have a powershell script to initialize all resources and credentials if you want to get Kexa up and running quickly.
+For a quick launch, we're going to use docker. If you can't use docker you can refer to [this documention](documentation/Documentation-Kexa.md) to try Kexa. However, we have a powershell script to initialize all resources and credentials if you want to get Kexa up and running quickly such as :
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/4urcloud/Kexa/dev/initKexa.ps1" -OutFile "./initKexa.ps1"; & "./initKexa.ps1" -d -c
+#answer all question to setup
+
+#dont forget to get [nodejs](https://nodejs.org/en/download) to launch Kexa:
+npm i
+npm run start
+```
 
 From any folder, create a folder called "config" and create a "default.json" file inside this folder. This file will be populated according to the provider you want to test, as follows.
 
