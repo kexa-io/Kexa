@@ -303,6 +303,12 @@ export async function networkSecurityGroup_analyze(nsgList: Array<NetworkSecurit
 
 import { AzureMachineLearningWorkspaces } from "@azure/arm-machinelearning";
 export async function mlListing(credential: DefaultAzureCredential, subscriptionId: string): Promise<any> {
+    if(
+        !currentConfig.ObjectNameNeed?.includes("mlWorkspaces")
+        && !currentConfig.ObjectNameNeed?.includes("mlJobs")
+        && !currentConfig.ObjectNameNeed?.includes("mlComputes")
+        && !currentConfig.ObjectNameNeed?.includes("mlSchedules")
+    ) return null;
     logger.info("starting mlListing");
     try{
         const client = new AzureMachineLearningWorkspaces(credential, subscriptionId);
@@ -334,6 +340,7 @@ export async function mlListing(credential: DefaultAzureCredential, subscription
 }
 
 export async function jobsListing(client: AzureMachineLearningWorkspaces, resourceGroupName: string, workspaceName: string): Promise<any[]> {
+    if(!currentConfig.ObjectNameNeed?.includes("mlJobs")) return [];
     //logger.info("starting jobsListing");
     try{
         const resArray = new Array();
@@ -351,6 +358,7 @@ export async function jobsListing(client: AzureMachineLearningWorkspaces, resour
 }
 
 export async function computeOperationsListing(client: AzureMachineLearningWorkspaces, resourceGroupName: string, workspaceName: string): Promise<any[]> {
+    if(!currentConfig.ObjectNameNeed?.includes("mlComputes")) return [];
     //logger.info("starting computeOperationsListing");
     try{
         const resArray = new Array();
@@ -368,6 +376,7 @@ export async function computeOperationsListing(client: AzureMachineLearningWorks
 }
 
 export async function schedulesListing(client: AzureMachineLearningWorkspaces, resourceGroupName: string, workspaceName: string): Promise<any[]> {
+    if(!currentConfig.ObjectNameNeed?.includes("mlSchedules")) return [];
     //logger.info("starting schedulesListing");
     try{
         const resArray = new Array();
