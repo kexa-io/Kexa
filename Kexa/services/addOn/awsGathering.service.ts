@@ -30,6 +30,7 @@ let rdsClient: RDS;
 let s3Client: S3;
 let ecsClient: ECS;
 let ecrClient: ECR;
+let currentConfig: AwsConfig;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING CLOUD RESOURCES ///////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,6 +38,7 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
     let context = getContext();
     let resources = new Array<AWSResources>();
     for (let oneConfig of awsConfig ?? []) {
+        currentConfig = oneConfig;
         let awsResource = {
             "ec2Instance": null,
             "ec2SG": null,
@@ -169,6 +171,7 @@ function addRegion(resources:any, region:string) {
 }
 
 async function ec2SGListing(client: EC2, region: string): Promise<any> {
+    if(!currentConfig.ObjectNameNeed?.includes("ec2SG")) return null;
     try {
         const data = await client.describeSecurityGroups().promise();
         let jsonData = JSON.parse(JSON.stringify(data.SecurityGroups));
@@ -182,6 +185,7 @@ async function ec2SGListing(client: EC2, region: string): Promise<any> {
 }
 
 async function ec2VolumesListing(client: EC2, region: string): Promise<any> {
+    if(!currentConfig.ObjectNameNeed?.includes("ec2Volume")) return null;
     try {
         const data = await client.describeVolumes().promise();
         let jsonData = JSON.parse(JSON.stringify(data.Volumes));
@@ -195,6 +199,7 @@ async function ec2VolumesListing(client: EC2, region: string): Promise<any> {
 }
 
 async function ec2InstancesListing(client: EC2, region: string): Promise<Array<EC2.Instance> | null> {
+    if(!currentConfig.ObjectNameNeed?.includes("ec2Instance")) return null;
     try {
         const data = await client.describeInstances().promise();
         let jsonData = JSON.parse(JSON.stringify(data.Reservations));
@@ -208,6 +213,7 @@ async function ec2InstancesListing(client: EC2, region: string): Promise<Array<E
 }
 
 async function rdsInstancesListing(client: RDS, region: string): Promise<any> {
+    if(!currentConfig.ObjectNameNeed?.includes("rds")) return null;
     try {
         const data = await client.describeDBInstances().promise();
         let jsonData = JSON.parse(JSON.stringify(data.DBInstances));
@@ -221,6 +227,7 @@ async function rdsInstancesListing(client: RDS, region: string): Promise<any> {
 }
 
 async function resourceGroupsListing(client: ResourceGroups, region: string): Promise<any> {
+    if(!currentConfig.ObjectNameNeed?.includes("resourceGroup")) return null;
     try {
         const data = await client.listGroups().promise();
         let jsonData = JSON.parse(JSON.stringify(data.Groups));
@@ -234,6 +241,7 @@ async function resourceGroupsListing(client: ResourceGroups, region: string): Pr
 }
 
 async function tagsValueListing(client: ResourceGroupsTaggingAPI, region: string): Promise<any> {
+    if(!currentConfig.ObjectNameNeed?.includes("tagsValue")) return null;
     try {
         interface TagParams {Key: string;}
         const dataKeys = await client.getTagKeys().promise();
@@ -255,6 +263,7 @@ async function tagsValueListing(client: ResourceGroupsTaggingAPI, region: string
 }
 
 async function s3BucketsListing(client: S3, region: string): Promise<Array<S3> | null> {
+    if(!currentConfig.ObjectNameNeed?.includes("s3")) return null;
     try {
         const data = await client.listBuckets().promise();
         let jsonData = JSON.parse(JSON.stringify(data.Buckets));
@@ -268,6 +277,7 @@ async function s3BucketsListing(client: S3, region: string): Promise<Array<S3> |
 }
 
 async function ecsClusterListing(client: ECS, region: string): Promise<any> {
+    if(!currentConfig.ObjectNameNeed?.includes("ecsCluster")) return null;
     try {
         const data = await client.describeClusters().promise();
         let jsonData = JSON.parse(JSON.stringify(data.clusters));
@@ -281,6 +291,7 @@ async function ecsClusterListing(client: ECS, region: string): Promise<any> {
 }
 
 async function ecrImagesListing(client: ECR, region: string): Promise<any> {
+    if(!currentConfig.ObjectNameNeed?.includes("ecrImage")) return null;
     try {
         const data = await client.describeRepositories().promise();
         let jsonData = JSON.parse(JSON.stringify(data.repositories));
