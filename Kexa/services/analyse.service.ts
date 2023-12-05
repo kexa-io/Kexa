@@ -33,7 +33,7 @@ const varEnvMin = {
 const config = require('node-config-ts').config;
 const levelAlert = ["info", "warning", "error", "critical"];
 let headers: any;
-//Analyse  list
+// Analyze  list
 // read the yaml file with rules
 // exam each rules and raise alarm or not
 export async function gatheringRules(rulesDirectory:string, getAll:boolean=false): Promise<SettingFile[]> {
@@ -46,7 +46,7 @@ export async function gatheringRules(rulesDirectory:string, getAll:boolean=false
     let listNeedRules = getListNeedRules();
     for(const p of paths) {
         logger.debug("getting "+rulesDirectory+"/"+p.name+" rules.");
-        let setting = await analyseRule(rulesDirectory+"/"+p.name, listNeedRules, getAll);
+        let setting = await analyzeRule(rulesDirectory+"/"+p.name, listNeedRules, getAll);
         if(setting){
             setting.alert.global.name = p.name.split(".")[0];
             settingFileList.push(setting);
@@ -60,12 +60,16 @@ export async function gatheringRules(rulesDirectory:string, getAll:boolean=false
 
 export function extractAddOnNeed(settingFileList: SettingFile[]){
     let providerList = new Array<string>();
+    let objectNameList:any = {};
     settingFileList.forEach((ruleFile) => {
+        objectNameList[ruleFile.alert.global.name] = {};
         ruleFile.rules.forEach((rule) => {
             if(!providerList.includes(rule.cloudProvider)) providerList.push(rule.cloudProvider);
+            if(!objectNameList[ruleFile.alert.global.name][rule.cloudProvider]) objectNameList[ruleFile.alert.global.name][rule.cloudProvider] = new Array<string>();
+            if(!objectNameList[ruleFile.alert.global.name][rule.cloudProvider].includes(rule.objectName)) objectNameList[ruleFile.alert.global.name][rule.cloudProvider].push(rule.objectName);
         });
     });
-    writeStringToJsonFile(JSON.stringify({ "addOn" : providerList}), "./config/addOnNeed.json");
+    writeStringToJsonFile(JSON.stringify({ "addOn" : providerList, "objectNameNeed": objectNameList }), "./config/addOnNeed.json");
 }
 
 function getListNeedRules(): string[]{
@@ -89,8 +93,8 @@ function getListNeedRules(): string[]{
     return listNeedRules;
 }
 
-export async function analyseRule(ruleFilePath:string, listNeedRules:string[], getAll:boolean=false): Promise<SettingFile | null> {
-    logger.debug("analyse:"+ruleFilePath);
+export async function analyzeRule(ruleFilePath:string, listNeedRules:string[], getAll:boolean=false): Promise<SettingFile | null> {
+    logger.debug("analyze:"+ruleFilePath);
     try {
         let lastBlockSplited = ruleFilePath.split('/')[ruleFilePath.split('/').length -1].split(".");
         if(lastBlockSplited.length == 1){
@@ -130,9 +134,9 @@ export async function checkDoc(doc:SettingFile): Promise<string[]> {
     logger.debug("check doc");
     let result:string[] = [];
     if(!doc.hasOwnProperty("version")) result.push("info - version not found in doc");
-    else if(doc.version.match(/^[0-9]+\.[0-9]+\.[0-9]+$/) === null) result.push("debug - version not valid in doc : "+ doc.version);
+    else if(RegExp(/^[0-9]+\.[0-9]+\.[0-9]+$/).exec(doc.version) === null) result.push("debug - version not valid in doc : "+ doc.version);
     if(!doc.hasOwnProperty("date")) result.push("info - date not found in doc");
-    else if(doc.date.match(/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-(19|20)\d\d$/) === null) result.push("debug - date not valid in doc : "+ doc.date);
+    else if(RegExp(/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-(19|20)\d\d$/).exec(doc.date) === null) result.push("debug - date not valid in doc : "+ doc.date);
     (await checkDocAlert(doc.alert)).forEach((value) => result.push(value));
     checkDocRules(doc.rules).forEach((value) => result.push(value));
     return result;

@@ -1,24 +1,26 @@
 import { Provider, ProviderResource } from "../models/providerResource.models";
 import { Header } from "../models/settingFile/header.models";
 import { writeStringToJsonFile } from "../helpers/files"
-const configuration = require('node-config-ts').config;
+import { Capacity } from "../models/settingFile/capacity.models";
+import {getContext, getNewLogger} from "./logger.service";
+import { SettingFile } from "../models/settingFile/settingFile.models";
 
+const configuration = require('node-config-ts').config;
 const mainFolder = 'Kexa';
 const serviceAddOnPath = './' + mainFolder + '/services/addOn';
 const fs = require('fs');
-
-import {getContext, getNewLogger} from "./logger.service";
-import { Capacity } from "../models/settingFile/capacity.models";
 const logger = getNewLogger("LoaderAddOnLogger");
 
-export async function loadAddOns(resources: ProviderResource): Promise<ProviderResource>{
+
+export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResource>{
+    let resources: ProviderResource = {};
     let context = getContext();
     logger.info("Loading addOns");
     context?.log("Loading addOns");
     const addOnNeed = require('../../config/addOnNeed.json');
     const files = fs.readdirSync(serviceAddOnPath);
     const promises = files.map(async (file: string) => {
-        return await loadAddOn(file, addOnNeed);
+        return await loadAddOn(file, addOnNeed, settings);
     });
     const results = await Promise.all(promises);
     results.forEach((result: { key: string; data: Provider[]; }) => {
@@ -29,7 +31,7 @@ export async function loadAddOns(resources: ProviderResource): Promise<ProviderR
     return resources;
 }
 
-async function loadAddOn(file: string, addOnNeed: any): Promise<{ key: string; data: Provider|null; } | null> {
+async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): Promise<{ key: string; data: Provider|null; } | null> {
     let context = getContext();
     try{
         if (file.endsWith('Gathering.service.ts')){
@@ -43,6 +45,10 @@ async function loadAddOn(file: string, addOnNeed: any): Promise<{ key: string; d
             const { collectData } = await import(`./addOn/${file.replace(".ts", ".js") }`);
             let start = Date.now();
             const addOnConfig = (configuration.hasOwnProperty(nameAddOn)) ? configuration[nameAddOn] : null;
+            addOnConfig?.forEach((config: any) => {
+                config.ObjectNameNeed = []
+                config.rules.forEach((rulesName: string) => config.ObjectNameNeed = [...addOnNeed["objectNameNeed"][rulesName][nameAddOn], ...config.ObjectNameNeed]);
+            });
             const data = await collectData(addOnConfig);
             let delta = Date.now() - start;
             context?.log(`AddOn ${nameAddOn} collect in ${delta}ms`);

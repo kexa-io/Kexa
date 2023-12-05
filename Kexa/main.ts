@@ -46,8 +46,7 @@ export async function main() {
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"./Kexa/rules");
     context?.log("settings", settings);
     if(settings.length != 0){
-        let resources = {};
-        resources = await loadAddOns(resources);
+        let resources = await loadAddOns(settings);
         context?.log("resources", resources);
         if(args.o) createFileSync(JSON.stringify(resources), folderOutput + "/resources/"+ new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '') +".json", true);
         context?.log("good");
