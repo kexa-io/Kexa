@@ -4,8 +4,6 @@
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 
-<script async defer src="https://buttons.github.io/buttons.js"></script>
-
 <div align="center" id="top">
 
   <a href="https://www.kexa.io/">
