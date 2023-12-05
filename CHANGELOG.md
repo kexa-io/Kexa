@@ -338,3 +338,14 @@ Kexa/services/addOn/azureGathering.service.ts was changed
 Kexa/services/addOn/display/azureDisplay.service.ts was changed
 
 
+## 1.8.0-SNAPSHOT.129.168f9b5
+
+### Files added: 0
+
+### Files changed: 2
+
+README.md was changed
+
+documentation/Documentation-Kexa.md was changed
+
+
