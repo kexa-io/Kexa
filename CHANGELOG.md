@@ -374,3 +374,36 @@ README.md was changed
 ### Files changed: 0
 
 
+## 1.10.0-SNAPSHOT.29.a6375e2
+
+### Files added: 0
+
+### Files changed: 13
+
+Kexa/main.ts was changed
+
+Kexa/models/settingFile/config.models.ts was changed
+
+Kexa/services/addOn.service.ts was changed
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+Kexa/services/addOn/githubGathering.service.ts was changed
+
+Kexa/services/addOn/googleWorkspaceGathering.service.ts was changed
+
+Kexa/services/addOn/kubernetesGathering.service.ts was changed
+
+Kexa/services/addOn/o365Gathering.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+config/default.json was changed
+
+documentation/Documentation-Kexa.md was changed
+
+
