@@ -407,3 +407,12 @@ config/default.json was changed
 documentation/Documentation-Kexa.md was changed
 
 
+## 1.10.0-SNAPSHOT.31.b2209bd
+
+### Files added: 0
+
+### Files changed: 1
+
+package-lock.json was changed
+
+
