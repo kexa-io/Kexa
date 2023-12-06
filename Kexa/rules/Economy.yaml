@@ -139,3 +139,15 @@
         - property: consumedUnits
           condition: SUP
           value: 0
+    - name: "under-use-VM"
+      description: "this rule is if a VM is under-used (50% > CPU over 2 weeks) "
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: vm
+      conditions:
+        - operator: NOR
+          criteria:
+            - property: instanceView.PercentageCPU.mean
+              condition: INF
+              value: 0.5

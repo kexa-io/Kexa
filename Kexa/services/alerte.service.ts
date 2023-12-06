@@ -175,7 +175,7 @@ export function alertTeamsGlobal(alert: GlobalConfigAlert, compteError: number[]
     content["title"] = "Kexa - Global Alert - "+(alert.name??"Uname");
     for (const teams_to of alert.to) {
         const regex = /^https:\/\/(?:[a-zA-Z0-9_-]+\.)?webhook\.office\.com\/[^\s"]+$/;
-        if(regex.test(teams_to)) return;
+        if(!regex.test(teams_to)) return;
         logger.debug("send teams to:"+teams_to);
         sendCardMessageToTeamsChannel(teams_to, "Kexa - Global Alert - "+ (alert.name??"Uname"), content);
     }
@@ -307,7 +307,8 @@ export function alertTeams(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rul
     logger.debug("alert Teams");
     for (const teams_to of detailAlert.to) {
         const regex = /^https:\/\/(?:[a-zA-Z0-9_-]+\.)?webhook\.office\.com\/[^\s"]+$/;
-        if(regex.test(teams_to)) return;
+        if(!regex.test(teams_to)) return;
+        logger.debug("send teams to:"+teams_to);
         let content = propertyToSend(rule, objectResource);
         sendCardMessageToTeamsChannel(teams_to, "Kexa - "+levelAlert[rule.level]+" - "+rule.name, content);
     }
