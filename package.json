@@ -65,6 +65,7 @@
         "googleapis": "^105.0.0",
         "helm-ts": "^0.1.5",
         "js-yaml": "^4.1.0",
+        "jsdom": "^23.0.1",
         "jsome": "^2.3.26",
         "moment": "^2.29.4",
         "node-config-ts": "^3.3.1",
