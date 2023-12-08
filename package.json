@@ -5,6 +5,7 @@
         "@azure/arm-containerservice": "^19.0.0",
         "@azure/arm-machinelearning": "^2.1.1",
         "@azure/arm-machinelearningservices": "^5.0.1",
+        "@azure/arm-monitor": "^7.0.0",
         "@azure/arm-network": "^30.1.0",
         "@azure/arm-resources": "^5.1.0",
         "@azure/arm-resources-subscriptions": "^2.1.0",
@@ -65,6 +66,7 @@
         "googleapis": "^105.0.0",
         "helm-ts": "^0.1.5",
         "js-yaml": "^4.1.0",
+        "jsdom": "^23.0.1",
         "jsome": "^2.3.26",
         "moment": "^2.29.4",
         "node-config-ts": "^3.3.1",
@@ -89,7 +91,7 @@
         "typescript": "^4.9.5"
     },
     "name": "Kexa",
-    "version": "1.8.0-SNAPSHOT.111.ef2090d",
+    "version": "1.10.0-SNAPSHOT.40.9bbdd02",
     "main": "./build/index.js",
     "scripts": {
         "postinstall": "node-config-ts",

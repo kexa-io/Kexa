@@ -3,6 +3,7 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
+
 <div align="center" id="top">
 
   <a href="https://www.kexa.io/">
@@ -20,9 +21,11 @@ Turn complexity into simplicity with Kexa, ensuring unrivalled security and turn
     <a href="https://github.com/4urcloud/Kexa/blob/main/documentation/Documentation-Kexa.md"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/4urcloud/Kexa/issues">Report Bug</a>
+<a class="github-button" href="https://github.com/4urcloud/Kexa/issues" data-color-scheme="no-preference: dark_high_contrast; light: dark_high_contrast; dark: light_high_contrast;" data-icon="octicon-issue-opened" data-size="large" aria-label="Issue 4urcloud/Kexa on GitHub">Report Bug</a>
     ·
-    <a href="https://github.com/4urcloud/Kexa/issues">Request Feature</a>
+<a class="github-button" href="https://github.com/4urcloud/Kexa/discussions" data-color-scheme="no-preference: dark_high_contrast; light: dark_high_contrast; dark: light_high_contrast;" data-icon="octicon-comment-discussion" data-size="large" aria-label="Discuss 4urcloud/Kexa on GitHub">Request Feature</a>
+	·
+<a class="github-button" href="https://github.com/4urcloud/Kexa" data-color-scheme="no-preference: dark_high_contrast; light: dark_high_contrast; dark: light_high_contrast;" data-icon="octicon-star" data-size="large" aria-label="Star 4urcloud/Kexa on GitHub">Put Star</a>
   </p>
 </div>
 
@@ -77,12 +80,20 @@ With Kexa, you can [edit your own rules](documentation/Documentation-Kexa.md#rul
 
 ### Built With
 
-* [![NodeJs][NodeJs.com]][NodeJs-url]
+* [![NODE][NODE-shield]](https://nodejs.org/fr)
 
 # <div align="center" id="quick-launch">**Quick Launch**</div>
 <br/>
 
-For a quick launch, we're going to use docker. If you can't use docker you can refer to [this documention](documentation/Documentation-Kexa.md) to try Kexa. However, we have a powershell script to initialize all resources and credentials if you want to get Kexa up and running quickly.
+For a quick launch, we're going to use docker. If you can't use docker you can refer to [this documention](documentation/Documentation-Kexa.md) to try Kexa. However, we have a powershell script to initialize all resources and credentials if you want to get Kexa up and running quickly such as :
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/4urcloud/Kexa/dev/initKexa.ps1" -OutFile "./initKexa.ps1"; & "./initKexa.ps1" -d -c
+#answer all question to setup
+
+#dont forget to get [nodejs](https://nodejs.org/en/download) to launch Kexa:
+npm i
+npm run start
+```
 
 From any folder, create a folder called "config" and create a "default.json" file inside this folder. This file will be populated according to the provider you want to test, as follows.
 
@@ -509,11 +520,16 @@ Distributed under the MIT License. See [`LICENSE.txt`](https://github.com/4urcl
 # <div align="center" id="contact">**Contact**</div>
 <br/>
 
-[contact@4urcloud.com](mailto:contact@4urcloud.com)
+[contact@4urcloud.com](mailto:contact@4urcloud.com) - [![LinkedIn][linkedin-shield]](https://www.linkedin.com/company/4urcloud/?lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_all%3Blkvp7yZwRd2%2BaYEK4b0VWg%3D%3D)
 
-Project Link: [https://github.com/4urcloud/Kexa](https://github.com/4urcloud/Kexa) Public site: [Kexa.io](https://github.com/4urcloud/Kexa/blob/rework-documentation/documentation/www.kexa.io)
+Projects Link: [4urcloud](https://github.com/4urcloud)
+Public site: 
+	- [Kexa.io](https://github.com/4urcloud/Kexa/blob/rework-documentation/documentation/www.kexa.io)
+	- [4urcloud.eu](https://4urcloud.eu/#/)
+	- [www.TheCloudPrices.com](https://www.thecloudprices.com/)
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [contributors-shield]: https://img.shields.io/github/contributors/4urcloud/Kexa.svg?style=for-the-badge
 [contributors-url]: https://github.com/4urcloud/Kexa/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/4urcloud/Kexa.svg?style=for-the-badge
@@ -524,3 +540,4 @@ Project Link: [https://github.com/4urcloud/Kexa](https://github.com/4urcloud/Ke
 [issues-url]: https://github.com/4urcloud/Kexa/issues
 [license-shield]: https://img.shields.io/github/license/4urcloud/Kexa.svg?style=for-the-badge
 [license-url]: https://github.com/4urcloud/Kexa/blob/master/LICENSE.txt
+[NODE-shield]: https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white

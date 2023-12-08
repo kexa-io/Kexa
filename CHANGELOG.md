@@ -292,3 +292,181 @@ documentation/Documentation-Kexa.md was changed
 initKexa.ps1 was changed
 
 
+## 1.8.0-SNAPSHOT.113.3054896
+
+### Files added: 0
+
+### Files changed: 1
+
+README.md was changed
+
+
+## 1.8.0-SNAPSHOT.118.4150a43
+
+### Files added: 0
+
+### Files changed: 3
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+initKexa.ps1 was changed
+
+
+## 1.8.0-SNAPSHOT.124.7d39677
+
+### Files added: 0
+
+### Files changed: 2
+
+.gitignore was changed
+
+initKexa.ps1 was changed
+
+
+## 1.8.0-SNAPSHOT.127.e802885
+
+### Files added: 0
+
+### Files changed: 3
+
+Kexa/rules/OperationalExcellence.yaml was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/display/azureDisplay.service.ts was changed
+
+
+## 1.8.0-SNAPSHOT.129.168f9b5
+
+### Files added: 0
+
+### Files changed: 2
+
+README.md was changed
+
+documentation/Documentation-Kexa.md was changed
+
+
+## 1.8.0-SNAPSHOT.132.427091f
+
+### Files added: 0
+
+### Files changed: 1
+
+README.md was changed
+
+
+## 1.8.0-SNAPSHOT.135.a605443
+
+### Files added: 0
+
+### Files changed: 1
+
+README.md was changed
+
+
+## 1.10.0-SNAPSHOT.25.9ee4861
+
+### Files added: 0
+
+### Files changed: 0
+
+
+## 1.10.0-SNAPSHOT.29.a6375e2
+
+### Files added: 0
+
+### Files changed: 13
+
+Kexa/main.ts was changed
+
+Kexa/models/settingFile/config.models.ts was changed
+
+Kexa/services/addOn.service.ts was changed
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+Kexa/services/addOn/githubGathering.service.ts was changed
+
+Kexa/services/addOn/googleWorkspaceGathering.service.ts was changed
+
+Kexa/services/addOn/kubernetesGathering.service.ts was changed
+
+Kexa/services/addOn/o365Gathering.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+config/default.json was changed
+
+documentation/Documentation-Kexa.md was changed
+
+
+## 1.10.0-SNAPSHOT.31.b2209bd
+
+### Files added: 0
+
+### Files changed: 1
+
+package-lock.json was changed
+
+
+## 1.10.0-SNAPSHOT.34.fd4abd2
+
+### Files added: 3
+
+Kexa/emails/teams.ts was added
+
+Kexa/helpers/extractURL.ts was added
+
+Kexa/helpers/spliter.ts was added
+
+### Files changed: 8
+
+Kexa/emails/teams.ts was changed
+
+Kexa/helpers/extractURL.ts was changed
+
+Kexa/helpers/spliter.ts was changed
+
+Kexa/services/alerte.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+documentation/Documentation-Kexa.md was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
+## 1.10.0-SNAPSHOT.40.9bbdd02
+
+### Files added: 1
+
+Kexa/helpers/statsNumbers.ts was added
+
+### Files changed: 8
+
+Kexa/helpers/statsNumbers.ts was changed
+
+Kexa/main.ts was changed
+
+Kexa/rules/Economy.yaml was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+config/default.json was changed
+
+documentation/AWS.md was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+

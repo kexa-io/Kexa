@@ -108,6 +108,18 @@
       cloudProvider: azure
       objectName: mlJobs
       conditions:
-        - property: properties.status
-          condition: DIFFERENT
-          value: Failed
+        - operator: NAND
+          criteria:
+            - property: workspace
+              condition: EQUAL
+              value: "Test-Kexa-Machine-Learning" #name of the workspace
+            - property: properties.displayName
+              condition: EQUAL
+              value: "hello-world-example" #name of the job
+            - property: properties.status
+              condition: EQUAL
+              value: Failed
+            - property: properties.properties.StartTimeUtc
+              condition: DATE_INF
+              value: 0 0 0 1 0 0
+              date: "YYYY-MM-DD hh:mm:ss"

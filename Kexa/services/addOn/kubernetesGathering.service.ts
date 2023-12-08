@@ -21,10 +21,12 @@ import {getNewLogger} from "../logger.service";
 const logger = getNewLogger("KubernetesLogger");
 
 const k8s = require('@kubernetes/client-node');
+let currentConfig:KubernetesConfig;
 
 export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<KubernetesResources[]|null>{
     let resources = new Array<KubernetesResources>();
     for(let config of kubernetesConfig??[]){
+        currentConfig = config;
         let prefix = config.prefix??(kubernetesConfig.indexOf(config).toString());
         try {
             let pathKubeFile = await getConfigOrEnvVar(config, "KUBECONFIG", prefix);
@@ -78,6 +80,7 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
 }
 
 async function collectHelm(namespace: string): Promise<any> {
+    if(!currentConfig?.ObjectNameNeed?.includes("helm")) return null;
     try{
         let helmData = await helm.list({ namespace: namespace });
         return helmData;
@@ -88,6 +91,7 @@ async function collectHelm(namespace: string): Promise<any> {
 }
 
 async function collectPods(k8sApiCore: any, namespace: string): Promise<any> {
+    if(!currentConfig?.ObjectNameNeed?.includes("pods")) return null;
     try{
         const pods = await k8sApiCore.listNamespacedPod(namespace);
         return pods;
