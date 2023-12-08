@@ -11,12 +11,15 @@ import { Readable } from "stream";
 import { propertyToSend, renderTableAllScan, renderTableAllScanLoud } from "./display.service";
 import { groupBy } from "../helpers/groupBy";
 import { getConfigOrEnvVar } from "./manageVarEnvironnement.service";
+import axios from 'axios';
+import { extractURL } from "../helpers/extractURL";
+import { Teams } from "../emails/teams";
 
 const jsome = require('jsome');
 jsome.level.show = true;
 const request = require('request');
 const nodemailer = require("nodemailer");
-const levelAlert = ["info", "warning", "error", "critical"];
+const levelAlert = ["info", "warning", "error", "fatal"];
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
 const config = require('node-config-ts');
 
@@ -164,20 +167,24 @@ export function alertWebhookGlobal(alert: GlobalConfigAlert, compteError: number
 
 export function alertTeamsGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
     logger.debug("alert Teams Global");
-    let content = compteRender(allScan);
-    let nbrError: { [x: string]: number; }[] = [];
+    let nbrError: { [x: string]: number; } = {};
     compteError.forEach((value, index) => {
-        nbrError.push({
-            [levelAlert[index]] : value
-        });
+        nbrError[levelAlert[index]] = value;
     });
-    content["nbrError"] = nbrError;
-    content["title"] = "Kexa - Global Alert - "+(alert.name??"Uname");
+    let content = ""
+    let render_table = renderTableAllScan(allScan.map(scan => scan.filter(value => value.error.length>0)));
+    let render_table_loud = renderTableAllScanLoud(allScan.map(scan => scan.filter(value => value.loud)));
+    content += render_table;
+    if(render_table_loud.length > 30){
+        content += "\n\n\n<h3>Loud Section:</h3>\n"
+        content += render_table_loud;
+    }
     for (const teams_to of alert.to) {
         const regex = /^https:\/\/(?:[a-zA-Z0-9_-]+\.)?webhook\.office\.com\/[^\s"]+$/;
         if(!regex.test(teams_to)) return;
         logger.debug("send teams to:"+teams_to);
-        sendCardMessageToTeamsChannel(teams_to, "Kexa - Global Alert - "+ (alert.name??"Uname"), content);
+        const payload = Teams.GlobalTeams(colors[0], "Global Alert - "+(alert.name??"Uname"), content, nbrError);
+        sendCardMessageToTeamsChannel(teams_to, payload);
     }
 }
 
@@ -308,11 +315,12 @@ export function alertTeams(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rul
     for (const teams_to of detailAlert.to) {
         const regex = /^https:\/\/(?:[a-zA-Z0-9_-]+\.)?webhook\.office\.com\/[^\s"]+$/;
         if(!regex.test(teams_to)) return;
-        logger.debug("send teams to:"+teams_to);
         let content = propertyToSend(rule, objectResource);
-        sendCardMessageToTeamsChannel(teams_to, "Kexa - "+levelAlert[rule.level]+" - "+rule.name, content);
+        const payload = Teams.OneTeams(colors[rule.level], "Kexa - "+levelAlert[rule.level]+" - "+rule.name, extractURL(content)??"", rule.description??"");
+        sendCardMessageToTeamsChannel(teams_to, payload);
     }
 }
+
 export function alertEmail(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules, conditions:SubResultScan[], objectResource:any){
     logger.debug("alert email");
     detailAlert.to.forEach((email_to) => {
@@ -415,7 +423,7 @@ async function sendWebhook(alert: ConfigAlert, subject: string, content: any) {
     for (const webhook_to of alert.to) {
         if(!webhook_to.includes("http")) continue;
         const payload = {
-            title: "Kexa scan : ",
+            title: "Kexa scan : " + subject,
             text: content.content,
         };
         try {
@@ -427,25 +435,28 @@ async function sendWebhook(alert: ConfigAlert, subject: string, content: any) {
                 logger.error('Failed to send Webhook.');
             }
         } catch (error) {
-            logger.error('Teams webhook : An error occurred:', error);
+            logger.error('Webhook : An error occurred:', error);
         }
     }
 }
 
-import axios from 'axios';
-
-export async function sendCardMessageToTeamsChannel(channelWebhook: string, subject: string, content: any): Promise<void> {
+export async function sendCardMessageToTeamsChannel(channelWebhook: string, payload:string): Promise<void> {
     const context = getContext();
     if (!channelWebhook) {
         logger.error("Cannot retrieve TEAMS_CHANNEL_WEBHOOK_URL from env");
         throw("Error on TEAMS_CHANNEL_WEBHOOK_URL retrieve");
     }
-    const payload = {
-        title: subject,
-        text: content,
+    let config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: channelWebhook,
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        data : payload
     };
     try {
-        const response = await axios.post(channelWebhook, payload);
+        const response = await axios.request(config);
         if (response.status === 200) {
             context?.log('Card sent successfully!');
             logger.info('Card sent successfully!');

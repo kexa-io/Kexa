@@ -416,3 +416,32 @@ documentation/Documentation-Kexa.md was changed
 package-lock.json was changed
 
 
+## 1.10.0-SNAPSHOT.34.fd4abd2
+
+### Files added: 3
+
+Kexa/emails/teams.ts was added
+
+Kexa/helpers/extractURL.ts was added
+
+Kexa/helpers/spliter.ts was added
+
+### Files changed: 8
+
+Kexa/emails/teams.ts was changed
+
+Kexa/helpers/extractURL.ts was changed
+
+Kexa/helpers/spliter.ts was changed
+
+Kexa/services/alerte.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+documentation/Documentation-Kexa.md was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+

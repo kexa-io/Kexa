@@ -472,6 +472,7 @@ Here is the structure and required fields for a new rule :
   conditions: # the list of criteria to match
 		-	property : string 
 	 		# the object field name to check (you can see the objects fields by launching Kexa with npm run start:o option)
+      # for any property with a dot in his name, add "/" before the dot
 			condition : enum 
 			# the condition for this comparison (defined in ./enum/condition.enum.ts)
 			value : string 

@@ -22,6 +22,7 @@ import { extractHeaders } from './addOn.service';
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import {getContext, getNewLogger} from "./logger.service";
+import { splitProperty } from '../helpers/spliter';
 const logger = getNewLogger("AnalyseLogger");
 
 const jsome = require('jsome');
@@ -430,7 +431,7 @@ export function parentResultScan(subResultScans: SubResultScan[], result: boolea
         value: null,
         condition: subResultScans.map((value) => value.condition).flat(),
         result,
-        message : subResultScans.map((value) => value.message).join(" || ")
+        message : subResultScans.map((value) => value.message).filter(item => item != "").join(" || ")
     };
 }
 
@@ -530,7 +531,7 @@ export function resultScan(condition: RulesConditions, value: any, fs: Function[
 
 export function getSubProperty(object:any, property:string): any {
     if (property === ".")  return object;
-    let properties = property.split(".");
+    let properties = splitProperty(property, ".", "/");
     let result = object;
     properties.forEach(prop => {
         result = result[prop];
