@@ -445,3 +445,28 @@ package-lock.json was changed
 package.json was changed
 
 
+## 1.10.0-SNAPSHOT.40.9bbdd02
+
+### Files added: 1
+
+Kexa/helpers/statsNumbers.ts was added
+
+### Files changed: 8
+
+Kexa/helpers/statsNumbers.ts was changed
+
+Kexa/main.ts was changed
+
+Kexa/rules/Economy.yaml was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+config/default.json was changed
+
+documentation/AWS.md was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
