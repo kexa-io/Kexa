@@ -53,7 +53,6 @@ export async function main() {
         settings.forEach(setting => {
             context?.log("setting", setting);
             let result = checkRules(setting.rules, resources, setting.alert);
-            logger.debug(result);
             if(setting.alert.global.enabled){
                 let render_table = renderTableAllScan(result.map(scan => scan.filter(value => value.error.length>0)));
                 let render_table_loud = renderTableAllScanLoud(result.map(scan => scan.filter(value => value.loud)));

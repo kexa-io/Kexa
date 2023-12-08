@@ -3,14 +3,7 @@
         {
             "description": "organization 4urcloud",
             "rules": [
-                "OperationalExcellence",
-                "Security"
-            ]
-        },
-        {
-            "description": "organization 4urcloud",
-            "rules": [
-                "OperationalExcellence"
+                "rules-testing"
             ]
         }
     ]

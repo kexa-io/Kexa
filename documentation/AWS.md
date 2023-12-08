@@ -43,7 +43,6 @@ Example config for 2 environments:
 There are several ways to identify yourself in an AWS environment. Obviously, you can only scan the environment for which you are at least a "reader":
 
 ```shell
-AWS_SECRET_NAME=XXXXXXXXX
 AWS_ACCESS_KEY_ID=XXXXXXXXX  
 AWS_SECRET_ACCESS_KEY=XXXXXXXXX
 ```

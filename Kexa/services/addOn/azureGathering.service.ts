@@ -26,11 +26,13 @@ import {
 } from "@azure/arm-network";
 import { ComputeManagementClient, Disk, VirtualMachine } from "@azure/arm-compute";
 import { ResourceManagementClient , ResourceGroup } from "@azure/arm-resources";
+import { MetricsListOptionalParams, MonitorClient } from "@azure/arm-monitor";
 import * as ckiNetworkSecurityClass from "../../class/azure/ckiNetworkSecurityGroup.class";
 import { AzureResources } from "../../models/azure/resource.models";
 import { DefaultAzureCredential } from "@azure/identity";
 import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
 import { AzureConfig } from "../../models/azure/config.models";
+import axios from "axios";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 const { ContainerServiceClient } = require("@azure/arm-containerservice");
@@ -41,6 +43,7 @@ const logger = getNewLogger("AzureLogger");
 let computeClient: ComputeManagementClient;
 let resourcesClient : ResourceManagementClient ;
 let networkClient: NetworkManagementClient;
+let monitorClient: MonitorClient;
 let currentConfig: AzureConfig;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING CLOUD RESOURCES
@@ -89,13 +92,14 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
                 resourcesClient = new ResourceManagementClient(credential, subscriptionId);
                 computeClient   = new ComputeManagementClient(credential, subscriptionId);
                 networkClient   = new NetworkManagementClient(credential, subscriptionId);
+                monitorClient = new MonitorClient(credential, subscriptionId);
                 context?.log("- loading client microsoft azure done-");
                 logger.info("- loading client microsoft azure done-");
                 ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
         
                 const promises = [
                     networkSecurityGroupListing(networkClient),
-                    virtualMachinesListing(computeClient),
+                    virtualMachinesListing(computeClient, monitorClient),
                     resourceGroupListing(resourcesClient),
                     disksListing(computeClient),
                     virtualNetworksListing(networkClient),
@@ -250,19 +254,88 @@ export async function disksListing(client:ComputeManagementClient): Promise<Arra
 }
 
 //virtualMachines.listAll
-export async function virtualMachinesListing(client:ComputeManagementClient): Promise<Array<VirtualMachine>|null> {
+export async function virtualMachinesListing(client:ComputeManagementClient, monitor:MonitorClient): Promise<Array<VirtualMachine>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("vm")) return null;
     logger.info("starting virtualMachinesListing");
     try {
         const resultList = new Array<VirtualMachine>;
         for await (let item of client.virtualMachines.listAll()){
-            resultList.push(item);
+            let vm:any = item;
+            let rg = item.id?.split("/")[4] ?? "";
+            vm.resourceGroupName = rg;
+            const promises = [
+                getMetrics(monitor, item.id??""),
+                getVMDetails(item.hardwareProfile?.vmSize??""),
+            ];
+            const [metrics, vmDetails] = await Promise.all(promises);
+            vm.instanceView = metrics;
+            vm.details = vmDetails;
+            vm.instanceView.availableMemoryBytes = convertMinMaxMeanMedianToPercentage(vm.instanceView.availableMemoryBytes, convertGbToBytes(vm.details?.MemoryGb??0));
+            resultList.push(vm);
         }
         return resultList;
     }catch (err) {
         logger.debug("error in virtualMachinesListing:"+err);
         return null;
     } 
+}
+
+function convertGbToBytes(gb: number): number {
+    return gb * 1024 * 1024 * 1024;
+}
+
+const VMSizeMemory: {[x:string]: any} = {}
+async function getVMDetails(VMSize:string): Promise<any> {
+    if(VMSizeMemory[VMSize]) return VMSizeMemory[VMSize];
+    try {
+        let capabilities = (await axios.post("https://api.thecloudprices.com/api/props/sku", {"name": VMSize})).data.message.CommonCapabilities;
+        capabilities.MemoryGb = parseFloat(capabilities.MemoryGb.$numberDecimal);
+        return capabilities;
+    } catch (err) {
+        logger.debug("error in getVMDetails:"+err);
+        return null;
+    }
+}
+
+async function getMetrics(client: MonitorClient, vmId:string): Promise<any> {
+    try {
+        const vmMetrics = await client.metrics.list(vmId, {
+            //get all list of metrics available : az vm monitor metrics list-definitions --name MyVmName --resource-group MyRg --query "@[*].name.value" (select max 20)
+            metricnames: "Percentage CPU,Network In,Network Out,Disk Read Operations/Sec,Disk Write Operations/Sec,OS Disk IOPS Consumed Percentage,Data Disk Latency,Available Memory Bytes",
+            aggregation: "Average",
+            timespan: "P14D",
+        });
+        let dataMetricsReformat:any = {};
+        for(const metric of vmMetrics.value??[]){
+            let data = metric.timeseries?.[0].data;
+            if(data?.length){
+                let name = (metric.name?.value??metric.name?.localizedValue)??"";
+                if(name == "") continue;
+                dataMetricsReformat[name.charAt(0).toLowerCase() + name.slice(1).replace(/ /g, "")] = getMinMaxMeanMedian(data.map((item:any)=>item.average).filter((item:any)=>item!=null));
+            }
+        }
+        return dataMetricsReformat;
+    } catch (err) {
+        logger.debug("error in getCPUAndRAMUsage:"+err);
+        return null;
+    }
+}
+
+function getMinMaxMeanMedian(array: Array<number>): any {
+    let min = array[0];
+    let max = array[0];
+    let sum = 0;
+    for(const num of array){
+        if(num < min) min = num;
+        if(num > max) max = num;
+        sum += num;
+    }
+    return {
+        "min": min,
+        "max": max,
+        "mean": sum/array.length,
+        "median": array[Math.floor(array.length/2)],
+    }
 }
 
 export async function resourceGroupListing(client:ResourceManagementClient): Promise<Array<ResourceGroup>|null> {
@@ -302,6 +375,7 @@ export async function networkSecurityGroup_analyze(nsgList: Array<NetworkSecurit
 
 
 import { AzureMachineLearningWorkspaces } from "@azure/arm-machinelearning";
+import { convertMinMaxMeanMedianToPercentage } from "../../helpers/statsNumbers";
 export async function mlListing(credential: DefaultAzureCredential, subscriptionId: string): Promise<any> {
     if(
         !currentConfig.ObjectNameNeed?.includes("mlWorkspaces")
