@@ -518,7 +518,8 @@
             "teamProjects",
             "teamMembers",
             "teamRepositories",
-            "outsideCollaborators"
+            "outsideCollaborators",
+            "runners"
         ],
         "thumbnail": "https://1000logos.net/wp-content/uploads/2021/05/GitHub-logo-768x432.png",
         "documentation": "https://docs.github.com/en/rest?apiVersion=2022-11-28",

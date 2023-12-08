@@ -470,3 +470,24 @@ package-lock.json was changed
 package.json was changed
 
 
+## 1.10.0-SNAPSHOT.43.240dfb5
+
+### Files added: 0
+
+### Files changed: 7
+
+Kexa/main.ts was changed
+
+Kexa/models/git/resource.models.ts was changed
+
+Kexa/rules/rulesByProvider/azureSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/githubSetRules.yaml was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/githubGathering.service.ts was changed
+
+initKexa.ps1 was changed
+
+
