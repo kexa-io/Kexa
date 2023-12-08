@@ -181,3 +181,18 @@
         - property: agentPoolProfiles
           condition: COUNT
           value: 2
+    - name: "not-under-use-VM"
+      description: "this rule is if a VM is under-used (50% > CPU or 50%>RAM over 2 weeks) "
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: vm
+      conditions:
+        - operator: OR
+          criteria:
+            - property: instanceView.percentageCPU.mean
+              condition: SUP
+              value: 50
+            - property: instanceView.availableMemoryBytes.mean
+              condition: SUP
+              value: 50
