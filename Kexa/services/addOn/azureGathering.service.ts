@@ -32,6 +32,7 @@ import { AzureResources } from "../../models/azure/resource.models";
 import { DefaultAzureCredential } from "@azure/identity";
 import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
 import { AzureConfig } from "../../models/azure/config.models";
+import axios from "axios";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 const { ContainerServiceClient } = require("@azure/arm-containerservice");
@@ -262,8 +263,14 @@ export async function virtualMachinesListing(client:ComputeManagementClient, mon
             let vm:any = item;
             let rg = item.id?.split("/")[4] ?? "";
             vm.resourceGroupName = rg;
-            vm.instanceView = await getCPUAndRAMUsage(monitor, item.id??"");
-            vm.details = await getVMDetails(client, item);
+            const promises = [
+                getMetrics(monitor, item.id??""),
+                getVMDetails(item.hardwareProfile?.vmSize??""),
+            ];
+            const [metrics, vmDetails] = await Promise.all(promises);
+            vm.instanceView = metrics;
+            vm.details = vmDetails;
+            vm.instanceView.availableMemoryBytes = convertMinMaxMeanMedianToPercentage(vm.instanceView.availableMemoryBytes, convertGbToBytes(vm.details?.MemoryGb??0));
             resultList.push(vm);
         }
         return resultList;
@@ -273,18 +280,24 @@ export async function virtualMachinesListing(client:ComputeManagementClient, mon
     } 
 }
 
-async function getVMDetails(client: ComputeManagementClient, vm:any): Promise<any> {
+function convertGbToBytes(gb: number): number {
+    return gb * 1024 * 1024 * 1024;
+}
+
+const VMSizeMemory: {[x:string]: any} = {}
+async function getVMDetails(VMSize:string): Promise<any> {
+    if(VMSizeMemory[VMSize]) return VMSizeMemory[VMSize];
     try {
-        const vmDetails = await client.virtualMachines.get(vm.id?.split("/")[4] ?? "", vm.name??"");
-        logger.debug("vmDetails: "+JSON.stringify(vmDetails));
-        return vmDetails;
+        let capabilities = (await axios.post("https://api.thecloudprices.com/api/props/sku", {"name": VMSize})).data.message.CommonCapabilities;
+        capabilities.MemoryGb = parseFloat(capabilities.MemoryGb.$numberDecimal);
+        return capabilities;
     } catch (err) {
         logger.debug("error in getVMDetails:"+err);
         return null;
     }
 }
 
-async function getCPUAndRAMUsage(client: MonitorClient, vmId:string): Promise<any> {
+async function getMetrics(client: MonitorClient, vmId:string): Promise<any> {
     try {
         const vmMetrics = await client.metrics.list(vmId, {
             //get all list of metrics available : az vm monitor metrics list-definitions --name MyVmName --resource-group MyRg --query "@[*].name.value" (select max 20)
@@ -292,7 +305,6 @@ async function getCPUAndRAMUsage(client: MonitorClient, vmId:string): Promise<an
             aggregation: "Average",
             timespan: "P14D",
         });
-        logger.debug("vm1: "+JSON.stringify(vmMetrics));
         let dataMetricsReformat:any = {};
         for(const metric of vmMetrics.value??[]){
             let data = metric.timeseries?.[0].data;
@@ -302,7 +314,6 @@ async function getCPUAndRAMUsage(client: MonitorClient, vmId:string): Promise<an
                 dataMetricsReformat[name.charAt(0).toLowerCase() + name.slice(1).replace(/ /g, "")] = getMinMaxMeanMedian(data.map((item:any)=>item.average).filter((item:any)=>item!=null));
             }
         }
-        logger.debug("vm2: "+JSON.stringify(dataMetricsReformat));
         return dataMetricsReformat;
     } catch (err) {
         logger.debug("error in getCPUAndRAMUsage:"+err);
@@ -364,6 +375,7 @@ export async function networkSecurityGroup_analyze(nsgList: Array<NetworkSecurit
 
 
 import { AzureMachineLearningWorkspaces } from "@azure/arm-machinelearning";
+import { convertMinMaxMeanMedianToPercentage } from "../../helpers/statsNumbers";
 export async function mlListing(credential: DefaultAzureCredential, subscriptionId: string): Promise<any> {
     if(
         !currentConfig.ObjectNameNeed?.includes("mlWorkspaces")
