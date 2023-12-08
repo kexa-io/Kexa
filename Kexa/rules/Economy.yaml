@@ -139,15 +139,18 @@
         - property: consumedUnits
           condition: SUP
           value: 0
-    - name: "under-use-VM"
-      description: "this rule is if a VM is under-used (50% > CPU over 2 weeks) "
+    - name: "not-under-use-VM"
+      description: "this rule is if a VM is under-used (50% > CPU or 50%>RAM over 2 weeks) "
       applied: true
       level: 1
       cloudProvider: azure
       objectName: vm
       conditions:
-        - operator: NOR
+        - operator: OR
           criteria:
-            - property: instanceView.PercentageCPU.mean
-              condition: INF
-              value: 0.5
+            - property: instanceView.percentageCPU.mean
+              condition: SUP
+              value: 50
+            - property: instanceView.availableMemoryBytes.mean
+              condition: SUP
+              value: 50
