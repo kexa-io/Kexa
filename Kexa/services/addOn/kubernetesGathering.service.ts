@@ -7,6 +7,7 @@
     * Resources :
     *     - namespaces
     *     - pods
+    *     - services
     *     - helm
 */
 
@@ -37,6 +38,7 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
             let kubernetesResource = {
                 "namespaces": kubernetesList["namespaces"],
                 "pods": kubernetesList["pods"],
+                "services": kubernetesList["services"],
                 "helm": kubernetesList["helm"],
             } as KubernetesResources;
             resources.push(kubernetesResource);
@@ -60,13 +62,15 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
     let kubResources: any = {};
     kubResources["namespaces"] = namespaces.body.items;
     kubResources["pods"] = [];
+    kubResources["services"] = [];
     kubResources["helm"] = [];
     const namespacePromises = namespaces.body.items.map(async (item: any) => {
         const promises = [
             collectHelm(item.metadata.name),
             collectPods(k8sApiCore, item.metadata.name),
+            collectServices(k8sApiCore, item.metadata.name),
         ];
-        const [helmData, pods] = await Promise.all(promises);
+        const [helmData, pods,services] = await Promise.all(promises);
         helmData?.forEach((helmItem: any) => {
             kubResources["helm"].push(helmItem);
         });
@@ -95,6 +99,16 @@ async function collectPods(k8sApiCore: any, namespace: string): Promise<any> {
         return pods;
     }catch(e){
         logger.error(e);
+        return null;
+    }
+}
+
+async function collectServices(k8sApiCore: any, namespace: string): Promise<any> {
+    try{
+        const services = await k8sApiCore.listNamespacedService(namespace);
+        return services;
+    }catch(e){
+        logger.debug(e);
         return null;
     }
 }

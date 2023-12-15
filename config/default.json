@@ -2,19 +2,9 @@
     "github":[
         {
             "description": "organization 4urcloud",
-            "prefix": "DEMO-",
+            "prefix":"A",
             "rules": [
-                "Deployement",
-                "Security"
-            ]
-        }
-    ],
-    "kubernetes": [
-        {
-            "description": "our kube",
-            "prefix": "DEMO-",
-            "rules": [
-                "Deployement"
+                "Kubernete"
             ]
         }
     ],
