@@ -71,7 +71,7 @@
         "moment": "^2.29.4",
         "node-config-ts": "^3.3.1",
         "nodemailer": "^6.9.3",
-        "octokit": "^2.1.0",
+        "octokit": "^3.1.2",
         "tslog": "^4.7.1",
         "twilio": "^4.13.0",
         "uuid": "^9.0.0"
