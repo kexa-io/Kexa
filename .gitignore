@@ -13,3 +13,5 @@ config/headers.json
 config_kuber
 config/resources*.html
 config/resources*.json
+output/*
+.DS_Store
