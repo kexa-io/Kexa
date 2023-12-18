@@ -159,7 +159,7 @@ function Configure-Providers {
     }
 
     $credByProvider = @{
-        "aws"=@("AWS_SECRET_NAME", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY")
+        "aws"=@("AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY")
         "azure"=@("SUBSCRIPTIONID", "AZURECLIENTID", "AZURETENANTID", "AZURECLIENTSECRET") 
         "gcp"=@("GOOGLE_PROJECT_ID", "GOOGLE_APPLICATION_CREDENTIALS")
         "github"=@("GITHUBTOKEN")
@@ -198,7 +198,7 @@ function Configure-Providers {
         $prefixs = @()
         $environments = @()
         $numberOfEnvironments = 0
-        Write-Host "For the provider $askProvider, enter the environments"
+        Write-Host "For the provider $ask, enter the environments"
         Write-Host "For each environment, enter the name, the description, the prefix and additionnal configuration if needed"
         Write-Host " "
         # loop to ask the user to enter all the environments
@@ -279,7 +279,7 @@ function Press-EnterToContinue {
 
 function Help {
     # display help
-    Write-Host "initKexa.ps1 [-help] [-d | -download] [-c | -config]"
+    Write-Host "initKexa.ps1 [-h | -help] [-d | -download] [-c | -config] [-p | -path] [VALUE] [-b | -branch] [VALUE]"
     Write-Host " "
     Write-Host "-help : Display help"
     Write-Host "-d | -download : download the latest version of Kexa"
