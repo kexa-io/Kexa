@@ -378,7 +378,7 @@ Setup your notification tools. (for those selected in your rules files).
   EMAILFROM='"Kexa" <noreply@4urcloud.eu>'
 ```
 
-For email, EMAILPWD is your Api Key.
+For email, EMAILPWD is your Api Key for the case you use sendgrid.
 
 > sms (with Twilio)
 ```
