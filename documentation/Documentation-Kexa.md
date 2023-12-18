@@ -373,10 +373,13 @@ Setup your notification tools. (for those selected in your rules files).
 ```
  EMAILPORT=587
   EMAILHOST=smtp.sendgrid.net
-  EMAILUSER=XXXXXXXXXXXXXX
+  EMAILUSER=apikey
   EMAILPWD=XXXXXXXXXXXXXXX
   EMAILFROM='"Kexa" <noreply@4urcloud.eu>'
 ```
+
+For email, EMAILPWD is your Api Key for the case you use sendgrid.
+
 > sms (with Twilio)
 ```
  SMSFROM='+00000000000'
