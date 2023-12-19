@@ -169,6 +169,7 @@ function get_user_input_for_all_cred() {
 
 function save_config_json() {
     #TODO
+    echo "TODO save_config_json"
 }
 
 function save_text_file() {
@@ -185,10 +186,10 @@ function configure_provider {
     #     [string[]]$credForTheProvider
     # )
 
-    local provider=( ["aws"]="AWS" ["azure"]="Azure" ["gcp"]="Google Cloud" ["github"]="Github" ["googleDrive"]="Google Drive" ["googleWorkspace"]="Google Workspace" ["http"]="HTTP" ["kubernetes"]="Kubernetes" ["o365"]="Office 365" )
-    local credByProvider= ( ["aws"]=("AWS_ACCESS_KEY_ID" "AWS_SECRET_ACCESS_KEY") ["azure"]=("SUBSCRIPTIONID", "AZURECLIENTID", "AZURETENANTID", "AZURECLIENTSECRET") ["gcp"]=("GOOGLE_PROJECT_ID", "GOOGLE_APPLICATION_CREDENTIALS") ["github"]=("GITHUBTOKEN") ["googleDrive"]=("DRIVECRED") ["googleWorkspace"]=("WORKSPACECRED") ["http"]=("AUTHORIZATION") ["kubernetes"]=("KUBECONFIG") ["o365"]=("SUBSCRIPTIONID", "AZURECLIENTID", "AZURETENANTID", "AZURECLIENTSECRET") )
-    local additionnalConfigurationOptionnal= ( ["aws"]=("regions") ["gcp"]=("regions") ["http"]=("header", "body")) 
-    local additionnalConfigurationNotOptionnal= (["http"]=("header", "body"))
+    local provider=(["aws"]="AWS" ["azure"]="Azure" ["gcp"]="Google Cloud" ["github"]="Github" ["googleDrive"]="Google Drive" ["googleWorkspace"]="Google Workspace" ["http"]="HTTP" ["kubernetes"]="Kubernetes" ["o365"]="Office 365" )
+    local credByProvider=(["aws"]="AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY" ["azure"]="SUBSCRIPTIONID AZURECLIENTID AZURETENANTID AZURECLIENTSECRET" ["gcp"]="GOOGLE_PROJECT_ID GOOGLE_APPLICATION_CREDENTIALS" ["github"]="GITHUBTOKEN" ["googleDrive"]="DRIVECRED" ["googleWorkspace"]="WORKSPACECRED" ["http"]="AUTHORIZATION" ["kubernetes"]="KUBECONFIG" ["o365"]="SUBSCRIPTIONID AZURECLIENTID AZURETENANTID AZURECLIENTSECRET")
+    local additionnalConfigurationOptionnal=(["aws"]="regions" ["gcp"]="regions" ["http"]="header body") 
+    local additionnalConfigurationNotOptionnal=(["http"]="header body")
     local configJson=()
     local askingProvider=()
 
@@ -196,7 +197,7 @@ function configure_provider {
     save_text_file "$path_value/.env" "RULESDIRECTORY=./rules"
 
     # Ask the user which providers he wants to configure
-    while(true); do
+    while [true]; do
         local ask=$(ask_user "Which provider do you want to configure ?" "${provider[@]}")
         if [ "$ask" = "q" ]; then
             break
@@ -219,7 +220,7 @@ function configure_provider {
         info "For each environment, enter the name, the description, the prefix and additionnal configuration if needed"
         info " "
         #loop to ask the user to enter all the environments
-        while(true){
+        while [true]; do
             local environmentName= $(ask_user "Enter the name of the environment (number: $numberOfEnvironments) (q to finish) " )
             if [ "$environmentName" = "q" ]; then
                 break
@@ -234,7 +235,12 @@ function configure_provider {
                 environmentPrefix="$numberOfEnvironments"
             fi
             $prefixs += $environmentPrefix
-            local environment = ( ["name"]="$environmentName" ["description"]="$environmentDescription" ["prefix"]="$environmentPrefix" ["rules"]= "$askingProvider"+"SetRules" )
+            local environment=(
+                ["name"]="$environmentName"
+                ["description"]="$environmentDescription"
+                ["prefix"]="$environmentPrefix"
+                ["rules"]= "$askingProvider"+"SetRules"
+            )
 
             # add additionnal configuration not optional if needed depending on the provider
             if [[ ! ${additionnalConfigurationOptionnal[$askingProvider]+_} ]]; then
@@ -258,7 +264,7 @@ function configure_provider {
 
             $environments += $environment
             $numberOfEnvironments++
-        }
+        done
 
         # if the user enter at least one environment
         if [ "$numberOfEnvironments" -gt 0 ]; then
@@ -295,17 +301,21 @@ function download_kexa() {
     info "Download the latest version of Kexa"
     local path="$1"
     local branch="$2"
-    local url="https://github.com/4urcloud/Kexa/archive/refs/heads/$branch.zip"
-    curl -o "$path/kexa.zip" $url
+    warning "$branch"
+    local url="https://codeload.github.com/4urcloud/Kexa/zip/refs/heads/$branch"
+    warning "$url"
+    curl $url -o "$path/Kexa-$branch.zip"
     info "Kexa downloaded"
     info "Unzip Kexa"
-    unzip "$path/kexa.zip" -d "$path"
-    rm "$path/kexa.zip" #2>/dev/null
-    mv "$path/Kexa-$branch" "$path/kexa" #2>/dev/null
-    rm -rf "$path/kexa/.git" #2>/dev/null
-    rm -rf "$path/kexa/.github" #2>/dev/null
-    rm -rf "$path/kexa/.gitignore" #2>/dev/null
-    rm -rf "$path/kexa/.gitattributes" #2>/dev/null
+    test_and_install_unzip
+    unzip "$path/Kexa-$branch.zip" -d "$path"
+    rm "$path/Kexa-$branch.zip"
+    rsync -a "$path/Kexa-$branch/" "$path/"
+    rm -rf "$path/Kexa-$branch"
+    rm -rf "$path/.git" 2>/dev/null
+    rm -rf "$path/.github" 2>/dev/null
+    rm -rf "$path/.gitignore" 2>/dev/null
+    rm -rf "$path/.gitattributes" 2>/dev/null
     info "Kexa unzipped"
 }
 
@@ -317,11 +327,12 @@ function protect_config(){
     local path="$1"
 
     info "Protect the config files and folder"
-    mkdir "$path/savedFolder" #2>/dev/null
-    mv "$path/config" "$path/savedFolder/config" #2>/dev/null
-    mv "$path/rules" "$path/savedFolder/rules" #2>/dev/null
-    mv "$path/Kexa/rules" "$path/savedFolder/Kexa/rules" #2>/dev/null
-    mv "$path/.env" "$path/savedFolder/.env" #2>/dev/null
+    mkdir -p "$path/savedFolder/Kexa" 2>/dev/null
+    mv "$path/config" "$path/savedFolder/config" 2>/dev/null
+    mv "$path/rules" "$path/savedFolder/rules" 2>/dev/null
+    #mkdir "$path/savedFolder/Kexa" 2>/dev/null
+    mv "$path/Kexa/rules" "$path/savedFolder/Kexa/rules" 2>/dev/null
+    mv "$path/.env" "$path/savedFolder/.env" 2>/dev/null
     info "Config protected"
 }
 
@@ -333,13 +344,12 @@ function retreive-config {
     local path="$1"
 
     info "Retreive the config files and folder"
-    mv "$path/savedFolder/config" "$path/config" #2>/dev/null
-    mv "$path/savedFolder/rules" "$path/rules" #2>/dev/null
-    mv "$path/savedFolder/Kexa/rules" "$path/Kexa/rules" #2>/dev/null
-    mv "$path/savedFolder/.env" "$path/.env" #2>/dev/null
-    rm -rf "$path/savedFolder" #2>/dev/null
+    rsync -a "$path/savedFolder/config" "$path/" 2>/dev/null
+    rsync -a "$path/savedFolder/rules" "$path/" 2>/dev/null
+    rsync -a "$path/savedFolder/Kexa/rules" "$path/Kexa/" 2>/dev/null
+    mv -f "$path/savedFolder/.env" "$path/.env" 2>/dev/null
+    rm -rf "$path/savedFolder" 2>/dev/null
     info "Config retreived"
-
 }
 
 function test_and_install_nodejs {
@@ -348,13 +358,27 @@ function test_and_install_nodejs {
     if ! command -v node &> /dev/null; then
         info "Nodejs is not installed"
         info "Install nodejs"
-        curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-        sudo apt-get install -y nodejs
+        sudo apt update
+        sudo apt install nodejs
         info "Nodejs installed"
     else
         info "Nodejs is installed"
     fi
 
+}
+
+function test_and_install_unzip {
+    # Test if unzip is installed and install it if not
+    info "Test if unzip is installed"
+    if ! command -v unzip &> /dev/null; then
+        info "Unzip is not installed"
+        info "Install unzip"
+        sudo apt update
+        sudo apt install unzip
+        info "Unzip installed"
+    else
+        info "Unzip is installed"
+    fi
 }
 
 while [[ "$#" -gt 0 ]]; do
@@ -395,36 +419,38 @@ echo "p: $path_bool $path_value"
 echo "branch: $branch_bool $branch_value"
 echo "c: $config_bool"
 echo "rules: $rules_bool"
+press_enter_to_continue
 
-command_trigger = 0
+command_trigger=0
 
-if($help_bool); then
+if [ "$help_bool" = true ]; then
     show_help
-    command_trigger++
+    let "command_trigger+=1"
 fi
 
-if($download_bool); then
+if [ "$download_bool" = true ]; then
     echo "Download Kexa"
     protect_config "$path_value"
     download_kexa "$path_value" "$branch_value"
     retreive-config "$path_value"
-    command_trigger++
+    let "command_trigger+=1"
     press_enter_to_continue
 fi
 
-if($config_bool); then
+if [ "$config_bool" = true ]; then
     echo "Configure Kexa"
     test_and_install_nodejs
-    command_trigger++
+    let "command_trigger+=1"
     press_enter_to_continue
 fi
 
-if($rules_bool); then
+if [ "$rules_bool" = true ]; then
     echo "download rules"
-    command_trigger++
+    let "command_trigger+=1"
     press_enter_to_continue
 fi
 
-if($command_trigger -eq 0); then
+if [ "$command_trigger" -eq 0 ]; then
+    retreive-config "$path_value"
     show_help
 fi
