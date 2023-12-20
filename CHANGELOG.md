@@ -491,3 +491,26 @@ Kexa/services/addOn/githubGathering.service.ts was changed
 initKexa.ps1 was changed
 
 
+## 1.10.0-SNAPSHOT.49.f377902
+
+### Files added: 1
+
+Kexa/rules/Kubernete.yaml was added
+
+### Files changed: 7
+
+Kexa/rules/Kubernete.yaml was changed
+
+.gitignore was changed
+
+Kexa/models/kubernetes/kubernetes.models.ts was changed
+
+Kexa/services/addOn/kubernetesGathering.service.ts was changed
+
+config/default.json was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
