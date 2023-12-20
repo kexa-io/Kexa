@@ -75,6 +75,17 @@
           condition : DATE_INF
           value : 0 0 0 0 0 0
           date: "MMM DD HH:mm:ss YYYY GMT"
+    - name: "http-request-certificate"
+      description : "request certificate expire in 15 days"
+      applied: true
+      level: 0
+      cloudProvider: http
+      objectName : request
+      conditions:
+        - property : certificate.valid_to
+          condition : DATE_INF
+          value : 0 0 0 -15 0 0
+          date: "MMM DD HH:mm:ss YYYY GMT"
     - name: "http-request-header"
       description : "http requested header"
       applied: true

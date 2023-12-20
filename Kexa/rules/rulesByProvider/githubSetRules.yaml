@@ -60,7 +60,7 @@
         - property: private
           condition: EQUAL
           value: true
-    - name: "git-is-branch-protectec"
+    - name: "git-is-branch-protected"
       description: "this rules is to check if git branch is protected"
       applied: true
       level: 0
