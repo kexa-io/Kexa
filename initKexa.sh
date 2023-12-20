@@ -413,13 +413,13 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 #TO DEBUG
-echo "help: $help_bool"
-echo "download: $download_bool"
-echo "p: $path_bool $path_value"
-echo "branch: $branch_bool $branch_value"
-echo "c: $config_bool"
-echo "rules: $rules_bool"
-press_enter_to_continue
+#echo "help: $help_bool"
+#echo "download: $download_bool"
+#echo "p: $path_bool $path_value"
+#echo "branch: $branch_bool $branch_value"
+#echo "c: $config_bool"
+#echo "rules: $rules_bool"
+#press_enter_to_continue
 
 command_trigger=0
 
