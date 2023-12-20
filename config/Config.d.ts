@@ -2,10 +2,11 @@
 /* eslint-disable */
 declare module "node-config-ts" {
   interface IConfig {
-    azure: Azure[]
+    kubernetes: Kubernete[]
   }
-  interface Azure {
+  interface Kubernete {
     description: string
+    prefix: string
     rules: string[]
   }
   export const config: Config
