@@ -12,6 +12,10 @@
     *     - virtualNetwork
     *     - networkInterfaces
     *     - aks
+    *     - mlWorkspace
+    *     - mlJobs
+    *     - mlComputes
+    *     - mlSchedule
 */
 
 import { 
@@ -22,11 +26,13 @@ import {
 } from "@azure/arm-network";
 import { ComputeManagementClient, Disk, VirtualMachine } from "@azure/arm-compute";
 import { ResourceManagementClient , ResourceGroup } from "@azure/arm-resources";
+import { MonitorClient } from "@azure/arm-monitor";
 import * as ckiNetworkSecurityClass from "../../class/azure/ckiNetworkSecurityGroup.class";
 import { AzureResources } from "../../models/azure/resource.models";
 import { DefaultAzureCredential } from "@azure/identity";
 import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
 import { AzureConfig } from "../../models/azure/config.models";
+import axios from "axios";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 const { ContainerServiceClient } = require("@azure/arm-containerservice");
@@ -37,6 +43,8 @@ const logger = getNewLogger("AzureLogger");
 let computeClient: ComputeManagementClient;
 let resourcesClient : ResourceManagementClient ;
 let networkClient: NetworkManagementClient;
+let monitorClient: MonitorClient;
+let currentConfig: AzureConfig;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING CLOUD RESOURCES
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,6 +52,7 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
     let context = getContext();
     let resources = new Array<AzureResources>();
     for(let config of azureConfig??[]){
+        currentConfig = config;
         let azureResource = {
             "vm": null,
             "rg": null,
@@ -52,6 +61,10 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
             "virtualNetwork": null,
             "networkInterfaces": null,
             "aks": null,
+            "mlWorkspaces": null,
+            "mlJobs": null,
+            "mlComputes": null,
+            "mlSchedules": null,
         } as AzureResources;
         logger.debug("config: ");
         logger.debug(JSON.stringify(config));
@@ -79,32 +92,38 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
                 resourcesClient = new ResourceManagementClient(credential, subscriptionId);
                 computeClient   = new ComputeManagementClient(credential, subscriptionId);
                 networkClient   = new NetworkManagementClient(credential, subscriptionId);
+                monitorClient = new MonitorClient(credential, subscriptionId);
                 context?.log("- loading client microsoft azure done-");
                 logger.info("- loading client microsoft azure done-");
                 ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
         
                 const promises = [
                     networkSecurityGroupListing(networkClient),
-                    virtualMachinesListing(computeClient),
+                    virtualMachinesListing(computeClient, monitorClient),
                     resourceGroupListing(resourcesClient),
                     disksListing(computeClient),
                     virtualNetworksListing(networkClient),
                     aksListing(credential, subscriptionId),
                     ipListing(networkClient),
+                    mlListing(credential, subscriptionId),
                     //getSPKeyInformation(credential, subscriptionId)
                 ];
                 
-                const [nsgList, vmList, rgList, diskList, virtualNetworkList, aksList, ipList] = await Promise.all(promises); //, SPList
+                const [nsgList, vmList, rgList, diskList, virtualNetworkList, aksList, ipList, mlList] = await Promise.all(promises); //, SPList
                 context?.log("- listing cloud resources done -");
                 logger.info("- listing cloud resources done -");
                 azureResource = {
-                    "vm": [...azureResource["vm"]??[], ...vmList],
-                    "rg": [...azureResource["rg"]??[], ...rgList],
-                    "disk": [...azureResource["disk"]??[], ...diskList],
-                    "nsg": [...azureResource["nsg"]??[], ...nsgList],
-                    "virtualNetwork": [...azureResource["virtualNetwork"]??[], ...virtualNetworkList],
-                    "aks": [...azureResource["aks"]??[], ...aksList],
-                    "ip": [...azureResource["ip"]??[], ...ipList],
+                    "vm": [...azureResource["vm"]??[], ...vmList??[]],
+                    "rg": [...azureResource["rg"]??[], ...rgList??[]],
+                    "disk": [...azureResource["disk"]??[], ...diskList??[]],
+                    "nsg": [...azureResource["nsg"]??[], ...nsgList??[]],
+                    "virtualNetwork": [...azureResource["virtualNetwork"]??[], ...virtualNetworkList??[]],
+                    "aks": [...azureResource["aks"]??[], ...aksList??[]],
+                    "ip": [...azureResource["ip"]??[], ...ipList??[]],
+                    "mlWorkspaces": [...azureResource["mlWorkspaces"]??[], ...mlList?.workspaces??[]],
+                    "mlJobs": [...azureResource["mlJobs"]??[], ...mlList?.jobs??[]],
+                    "mlComputes": [...azureResource["mlComputes"]??[], ...mlList?.computes??[]],
+                    "mlSchedules": [...azureResource["mlSchedules"]??[], ...mlList?.schedule??[]],
                     //"sp": [...azureResource["sp"]??[], ...SPList],
                 } as AzureResources;
             }
@@ -119,6 +138,7 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<AzureResou
 
 //get service principal key information
 export async function getSPKeyInformation(credential: DefaultAzureCredential, subscriptionId: string): Promise<any> {
+    if(!currentConfig.ObjectNameNeed?.includes("sp")) return null;
     const { GraphRbacManagementClient } = require("@azure/graph");
     logger.info("starting getSPKeyInformation");
     try {
@@ -129,13 +149,14 @@ export async function getSPKeyInformation(credential: DefaultAzureCredential, su
         }
         return resultList;
     } catch (err) {
-        logger.error("error in getSPKeyInformation:"+err);
+        logger.debug("error in getSPKeyInformation:"+err);
         return null;
     }
 }
 
 //ip list
 export async function ipListing(client:NetworkManagementClient): Promise<Array<any>|null> {
+    if(!currentConfig.ObjectNameNeed?.includes("ip")) return null;
     logger.info("starting ipListing");
     try{
         const resultList = new Array<any>;
@@ -144,13 +165,14 @@ export async function ipListing(client:NetworkManagementClient): Promise<Array<a
         }
         return resultList;
     }catch(e){
-        logger.error("error in ipListing:"+e);
+        logger.debug("error in ipListing:"+e);
         return null;
     }
 }
 
 //aks list
 export async function aksListing(credential: DefaultAzureCredential, subscriptionId: string): Promise<any> {
+    if(!currentConfig.ObjectNameNeed?.includes("aks")) return null;
     logger.info("starting aksListing");
     try{
         const client = new ContainerServiceClient(credential, subscriptionId);
@@ -160,13 +182,14 @@ export async function aksListing(credential: DefaultAzureCredential, subscriptio
         }
         return resArray;
     }catch(e){
-        logger.error("error in aksListing:"+e);
+        logger.debug("error in aksListing:"+e);
         return null;
     }
 }
 
 //network security group list
 export async function networkSecurityGroupListing(client:NetworkManagementClient): Promise<Array<NetworkSecurityGroup>|null> {
+    if(!currentConfig.ObjectNameNeed?.includes("nsg")) return null;
     logger.info("starting networkSecurityGroupListing");
     try {
         const resultList = new Array<NetworkSecurityGroup>;
@@ -176,13 +199,14 @@ export async function networkSecurityGroupListing(client:NetworkManagementClient
         logger.info("ended networkSecurityGroupListing");
         return resultList;        
     } catch (err) {
-        logger.error("error in networkSecurityGroupListing:"+err);
+        logger.debug("error in networkSecurityGroupListing:"+err);
         return null;
     }
 }
 
 //virtual network list
 export async function virtualNetworksListing(client:NetworkManagementClient): Promise<Array<VirtualNetwork>|null> {
+    if(!currentConfig.ObjectNameNeed?.includes("virtualNetwork")) return null;
     logger.info("starting virtualNetworksListing");
     try {
         const resultList = new Array<VirtualNetwork>;
@@ -192,13 +216,14 @@ export async function virtualNetworksListing(client:NetworkManagementClient): Pr
 
         return resultList;
     } catch (err) {
-        logger.error("error in virtualNetworksListing:"+err);
+        logger.debug("error in virtualNetworksListing:"+err);
         return null;
     }
 }
 
 //network list
 export async function networkInterfacesListing(client:NetworkManagementClient): Promise<Array<NetworkInterface>|null> {
+    if(!currentConfig.ObjectNameNeed?.includes("networkInterfaces")) return null;
     logger.info("starting networkInterfacesListing");
     try {
         const resultList = new Array<NetworkInterface>;
@@ -207,13 +232,14 @@ export async function networkInterfacesListing(client:NetworkManagementClient): 
         }
         return resultList;
     } catch (err) {
-        logger.error("error in networkInterfacesListing:"+err);
+        logger.debug("error in networkInterfacesListing:"+err);
         return null;
     }
 }
 
 //disks.list
 export async function disksListing(client:ComputeManagementClient): Promise<Array<Disk>|null> {
+    if(!currentConfig.ObjectNameNeed?.includes("disk")) return null;
     logger.info("starting disksListing");
     try {
         const resultList = new Array<Disk>;
@@ -222,28 +248,98 @@ export async function disksListing(client:ComputeManagementClient): Promise<Arra
         }
         return resultList;
     } catch (err) {
-        logger.error("error in disksListing:"+err);
+        logger.debug("error in disksListing:"+err);
         return null;
     }    
 }
 
 //virtualMachines.listAll
-export async function virtualMachinesListing(client:ComputeManagementClient): Promise<Array<VirtualMachine>|null> {
+export async function virtualMachinesListing(client:ComputeManagementClient, monitor:MonitorClient): Promise<Array<VirtualMachine>|null> {
+    if(!currentConfig.ObjectNameNeed?.includes("vm")) return null;
     logger.info("starting virtualMachinesListing");
     try {
         const resultList = new Array<VirtualMachine>;
         for await (let item of client.virtualMachines.listAll()){
-            resultList.push(item);
+            let vm:any = item;
+            let rg = item.id?.split("/")[4] ?? "";
+            vm.resourceGroupName = rg;
+            const promises = [
+                getMetrics(monitor, item.id??""),
+                getVMDetails(item.hardwareProfile?.vmSize??""),
+            ];
+            const [metrics, vmDetails] = await Promise.all(promises);
+            vm.instanceView = metrics;
+            vm.details = vmDetails;
+            vm.instanceView.availableMemoryBytes = convertMinMaxMeanMedianToPercentage(vm.instanceView.availableMemoryBytes, convertGbToBytes(vm.details?.MemoryGb??0));
+            resultList.push(vm);
         }
         return resultList;
     }catch (err) {
-        logger.error("error in virtualMachinesListing:"+err);
+        logger.debug("error in virtualMachinesListing:"+err);
         return null;
     } 
 }
 
-//resourceGroups.list
+function convertGbToBytes(gb: number): number {
+    return gb * 1024 * 1024 * 1024;
+}
+
+const VMSizeMemory: {[x:string]: any} = {}
+async function getVMDetails(VMSize:string): Promise<any> {
+    if(VMSizeMemory[VMSize]) return VMSizeMemory[VMSize];
+    try {
+        let capabilities = (await axios.post("https://api.thecloudprices.com/api/props/sku", {"name": VMSize})).data.message.CommonCapabilities;
+        capabilities.MemoryGb = parseFloat(capabilities.MemoryGb.$numberDecimal);
+        return capabilities;
+    } catch (err) {
+        logger.debug("error in getVMDetails:"+err);
+        return null;
+    }
+}
+
+async function getMetrics(client: MonitorClient, vmId:string): Promise<any> {
+    try {
+        const vmMetrics = await client.metrics.list(vmId, {
+            //get all list of metrics available : az vm monitor metrics list-definitions --name MyVmName --resource-group MyRg --query "@[*].name.value" (select max 20)
+            metricnames: "Percentage CPU,Network In,Network Out,Disk Read Operations/Sec,Disk Write Operations/Sec,OS Disk IOPS Consumed Percentage,Data Disk Latency,Available Memory Bytes",
+            aggregation: "Average",
+            timespan: "P14D",
+        });
+        let dataMetricsReformat:any = {};
+        for(const metric of vmMetrics.value??[]){
+            let data = metric.timeseries?.[0].data;
+            if(data?.length){
+                let name = (metric.name?.value??metric.name?.localizedValue)??"";
+                if(name == "") continue;
+                dataMetricsReformat[name.charAt(0).toLowerCase() + name.slice(1).replace(/ /g, "")] = getMinMaxMeanMedian(data.map((item:any)=>item.average).filter((item:any)=>item!=null));
+            }
+        }
+        return dataMetricsReformat;
+    } catch (err) {
+        logger.debug("error in getCPUAndRAMUsage:"+err);
+        return null;
+    }
+}
+
+function getMinMaxMeanMedian(array: Array<number>): any {
+    let min = array[0];
+    let max = array[0];
+    let sum = 0;
+    for(const num of array){
+        if(num < min) min = num;
+        if(num > max) max = num;
+        sum += num;
+    }
+    return {
+        "min": min,
+        "max": max,
+        "mean": sum/array.length,
+        "median": array[Math.floor(array.length/2)],
+    }
+}
+
 export async function resourceGroupListing(client:ResourceManagementClient): Promise<Array<ResourceGroup>|null> {
+    if(!currentConfig.ObjectNameNeed?.includes("rg")) return null;
     logger.info("starting resourceGroupListing");
     try {
         const resultList = new Array<ResourceGroup>;
@@ -252,15 +348,13 @@ export async function resourceGroupListing(client:ResourceManagementClient): Pro
         }
         return resultList;
     }catch (err) {
-        logger.error("error in resourceGroupListing:"+err);
+        logger.debug("error in resourceGroupListing:"+err);
         return null;
     }     
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-export async function networkSecurityGroup_analyse(nsgList: Array<NetworkSecurityGroup>): Promise<Array<ckiNetworkSecurityClass.CkiNetworkSecurityGroupClass>|null> {
+export async function networkSecurityGroup_analyze(nsgList: Array<NetworkSecurityGroup>): Promise<Array<ckiNetworkSecurityClass.CkiNetworkSecurityGroupClass>|null> {
+    if(!currentConfig.ObjectNameNeed?.includes("nsg_analyze")) return null;
     try {
         const resultList = new Array<ckiNetworkSecurityClass.CkiNetworkSecurityGroupClass>;
         for await (let item of nsgList){
@@ -274,7 +368,101 @@ export async function networkSecurityGroup_analyse(nsgList: Array<NetworkSecurit
         }
         return resultList;
     }catch (e) {
-        logger.error("error"+e);
+        logger.debug("error"+e);
         return null;
     }  
+}
+
+
+import { AzureMachineLearningWorkspaces } from "@azure/arm-machinelearning";
+import { convertMinMaxMeanMedianToPercentage } from "../../helpers/statsNumbers";
+export async function mlListing(credential: DefaultAzureCredential, subscriptionId: string): Promise<any> {
+    if(
+        !currentConfig.ObjectNameNeed?.includes("mlWorkspaces")
+        && !currentConfig.ObjectNameNeed?.includes("mlJobs")
+        && !currentConfig.ObjectNameNeed?.includes("mlComputes")
+        && !currentConfig.ObjectNameNeed?.includes("mlSchedules")
+    ) return null;
+    logger.info("starting mlListing");
+    try{
+        const client = new AzureMachineLearningWorkspaces(credential, subscriptionId);
+        const result = {
+            "workspaces": new Array(),
+            "jobs": new Array(),
+            "computes": new Array(),
+            "schedule": new Array(),
+        }
+        for await (let item of client.workspaces.listBySubscription()) {
+            result.workspaces = [...result.workspaces??[], item];
+            let resourceGroupName = item?.id?.split("/")[4] ?? "";
+            let workspaceName = item?.name ?? "";
+            const promises = [
+                jobsListing(client, resourceGroupName, workspaceName),
+                computeOperationsListing(client, resourceGroupName, workspaceName),
+                schedulesListing(client, resourceGroupName, workspaceName),
+            ];
+            const [jobsList, computeOperationsList, schedulesList] = await Promise.all(promises);
+            result.jobs = [...result.jobs??[], ...jobsList];
+            result.computes = [...result.computes??[], ...computeOperationsList];
+            result.schedule = [...result.schedule??[], ...schedulesList];
+        }
+        return result;
+    }catch(e){
+        logger.debug("error in mlListing:"+e);
+        return null;
+    }
+}
+
+export async function jobsListing(client: AzureMachineLearningWorkspaces, resourceGroupName: string, workspaceName: string): Promise<any[]> {
+    if(!currentConfig.ObjectNameNeed?.includes("mlJobs")) return [];
+    //logger.info("starting jobsListing");
+    try{
+        const resArray = new Array();
+        for await (let item of client.jobs.list(resourceGroupName, workspaceName)) {
+            let result:any = item;
+            result.workspace = workspaceName;
+            result.resourceGroupName = resourceGroupName;
+            resArray.push(result);
+        }
+        return resArray;
+    }catch(e){
+        logger.debug("error in jobsListing:"+e);
+        return [];
+    }
+}
+
+export async function computeOperationsListing(client: AzureMachineLearningWorkspaces, resourceGroupName: string, workspaceName: string): Promise<any[]> {
+    if(!currentConfig.ObjectNameNeed?.includes("mlComputes")) return [];
+    //logger.info("starting computeOperationsListing");
+    try{
+        const resArray = new Array();
+        for await (let item of client.computeOperations.list(resourceGroupName, workspaceName)) {
+            let result:any = item;
+            result.workspace = workspaceName;
+            result.resourceGroupName = resourceGroupName;
+            resArray.push(item);
+        }
+        return resArray;
+    }catch(e){
+        logger.debug("error in computeOperationsListing:"+e);
+        return [];
+    }
+}
+
+export async function schedulesListing(client: AzureMachineLearningWorkspaces, resourceGroupName: string, workspaceName: string): Promise<any[]> {
+    if(!currentConfig.ObjectNameNeed?.includes("mlSchedules")) return [];
+    //logger.info("starting schedulesListing");
+    try{
+        const resArray = new Array();
+        for await (let item of client.schedules.list(resourceGroupName, workspaceName)) {
+            let result:any = item;
+            result.workspace = workspaceName;
+            result.resourceGroupName = resourceGroupName;
+            resArray.push(item);
+        }
+        return resArray;
+    }catch(e){
+        logger.debug("error in schedulesListing:"+e);
+        return [];
+    }
 }

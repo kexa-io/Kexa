@@ -33,6 +33,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const {authenticate} = require('@google-cloud/local-auth');
 const {google} = require('googleapis');
+let currentConfig: googleWorkspaceConfig;
 
 /////////////////////////////////////////
 //////   LISTING CLOUD RESOURCES    /////
@@ -64,6 +65,7 @@ export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[])
 
 
     for (let config of googleWorkspaceConfig??[]) {
+        currentConfig = config;
         let googleWorkspaceResources = {
             "user": null,
             "domain": null,
@@ -156,6 +158,7 @@ async function authorize() {
 }
 
 async function listUsers(auth: any): Promise<Array<any> | null> {
+    if(!currentConfig?.ObjectNameNeed?.includes("user")) return null;
     let jsonData = [];
 
     const service = google.admin({version: 'directory_v1', auth});
@@ -186,7 +189,7 @@ async function listUsers(auth: any): Promise<Array<any> | null> {
             });
 
         } catch (error) {
-            logger.error('Error listing user roles:', error);
+            logger.debug('Error listing user roles:', error);
             return [];
         }
         if (isSuperAdmin) {
@@ -199,7 +202,8 @@ async function listUsers(auth: any): Promise<Array<any> | null> {
     return jsonData ?? null;
 }
 async function listDomains(auth: any): Promise<Array<any> | null> {
-   let jsonData = [];
+    if(!currentConfig?.ObjectNameNeed?.includes("domain")) return null;
+    let jsonData = [];
 
     const admin = google.admin({version: 'directory_v1', auth});
     try {
@@ -222,16 +226,17 @@ async function listDomains(auth: any): Promise<Array<any> | null> {
                 }
                 jsonData.push(JSON.parse(JSON.stringify(newJsonEntry)));
             } catch (e) {
-                logger.error(e);
+                logger.debug(e);
             }
         }
     } catch (e) {
-        logger.error(e);
+        logger.debug(e);
     }
     return jsonData ?? null;
 }
 
 async function listGroups(auth: any): Promise<Array<any> | null> {
+    if(!currentConfig?.ObjectNameNeed?.includes("group")) return null;
     let jsonData = [];
 
     const admin = google.admin({version: 'directory_v1', auth});
@@ -245,12 +250,13 @@ async function listGroups(auth: any): Promise<Array<any> | null> {
         else
             return null;
     } catch (e) {
-        logger.error(e);
+        logger.debug(e);
     }
     return jsonData ?? null;
 }
 
 async function listRoles(auth: any): Promise<Array<any> | null> {
+    if(!currentConfig?.ObjectNameNeed?.includes("role")) return null;
     let jsonData = [];
 
     const service = google.admin({version: 'directory_v1', auth});
@@ -261,12 +267,13 @@ async function listRoles(auth: any): Promise<Array<any> | null> {
         });
         jsonData = JSON.parse(JSON.stringify(adminRoles.data.items));
     } catch (error) {
-        logger.error('Error listing user roles:', error);
+        logger.debug('Error listing user roles:', error);
     }
     return jsonData ?? null;
 }
 
 async function listOrganizationalUnits(auth: any): Promise<Array<any> | null> {
+    if(!currentConfig?.ObjectNameNeed?.includes("orgaunit")) return null;
     let jsonData = [];
 
     try {
@@ -280,11 +287,12 @@ async function listOrganizationalUnits(auth: any): Promise<Array<any> | null> {
         const orgUnitList = orgUnits.data;
         jsonData = JSON.parse(JSON.stringify(orgUnitList));
     } catch (error) {
-        console.error('Error listing organizational units:', error);
+        logger.debug('Error listing organizational units:', error);
     }
     return jsonData ?? null;
 }
 async function listCalendars(auth: any): Promise<Array<any> | null> {
+    if(!currentConfig?.ObjectNameNeed?.includes("calendar")) return null;
     let jsonData = [];
 
     try {
@@ -303,12 +311,13 @@ async function listCalendars(auth: any): Promise<Array<any> | null> {
             jsonData[i].calendarACL = JSON.parse(JSON.stringify(calendarACL.items));
         }
     } catch (e) {
-        logger.error(e);
+        logger.debug(e);
     }
     return jsonData ?? null;
 }
 
 async function listFiles(auth: any): Promise<Array<any> | null> {
+    if(!currentConfig?.ObjectNameNeed?.includes("file")) return null;
     let jsonData = [];
 
     try {
@@ -324,12 +333,13 @@ async function listFiles(auth: any): Promise<Array<any> | null> {
             jsonData.push(JSON.parse(JSON.stringify(res.data)));
         }
     } catch (e) {
-        logger.error(e);
+        logger.debug(e);
     }
     return jsonData ?? null;
 }
 
 async function listDrive(auth: any): Promise<Array<any> | null> {
+    if(!currentConfig?.ObjectNameNeed?.includes("drive")) return null;
     let jsonData = [];
 
     try {
@@ -345,7 +355,7 @@ async function listDrive(auth: any): Promise<Array<any> | null> {
             jsonData.push(JSON.parse(JSON.stringify(res.data)));
         }
     } catch (e) {
-        logger.error(e);
+        logger.debug(e);
     }
     return jsonData ?? null;
 }

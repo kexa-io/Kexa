@@ -169,7 +169,7 @@ export const Emails = {
           <![endif]--></div>
     </html>`
   },
-  GlobalAlert : (receiver:string, compteError: number[], allScanRenderTable: string, alert: GlobalConfigAlert) => {return `<!doctype html>
+  GlobalAlert : (receiver:string, compteError: number[], allScanRenderTable: string, allScanLoudRenderTable: string, alert: GlobalConfigAlert) => {return `<!doctype html>
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
     <head>
       <title></title>
@@ -313,6 +313,10 @@ export const Emails = {
       </tr>
       `+
         allScanRenderTable
+      +
+        ((allScanLoudRenderTable.length>30)?'<tr><td><h3>Loud rules section :</h3></td></tr>':'')
+      +
+        allScanLoudRenderTable
       +`
       <tr><td style="word-break:break-word;font-size:0px;padding:0px;" align="left"><div style="cursor:auto;color:#747F8D;font-family:Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;font-size:13px;line-height:16px;text-align:left;">
     <p style="direction:ltr;;padding:20px 0;text-align:center">Thank you, for using Kexa</p>
@@ -342,7 +346,7 @@ export const Emails = {
           <![endif]--></div>
     </html>`
   },
-  Recap : (compteError: number[], allScanRenderTable: string, alert: GlobalConfigAlert) => {return `<!doctype html>
+  Recap : (compteError: number[], allScanRenderTable: string, allScanLoudRenderTable: string, alert: GlobalConfigAlert) => {return `<!doctype html>
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
     <head>
       <title></title>
@@ -479,6 +483,10 @@ export const Emails = {
       </tr>
       `+
         allScanRenderTable
+      +
+        ((allScanLoudRenderTable.length>30)?'<tr><td><h3>Loud rules section :</h3></td></tr>':'')
+      +
+        allScanLoudRenderTable
       +`
       <tr><td style="word-break:break-word;font-size:0px;padding:0px;" align="left"><div style="cursor:auto;color:#747F8D;font-family:Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;font-size:13px;line-height:16px;text-align:left;">
     <p style="direction:ltr;;padding:20px 0;text-align:center">Thank you, for using Kexa</p>

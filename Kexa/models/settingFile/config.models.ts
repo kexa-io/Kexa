@@ -27,4 +27,5 @@ export interface Config {
     name?: string;
     description?: string;
     prefix?: string;
+    ObjectNameNeed?: Array<string>;
 }

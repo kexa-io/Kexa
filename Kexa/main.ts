@@ -1,21 +1,29 @@
 import env from "dotenv";
 import { checkRules, gatheringRules } from "./services/analyse.service";
 import { alertGlobal } from "./services/alerte.service";
-import { AsciiArtText, renderTableAllScan, talkAboutOtherProject} from "./services/display.service";
+import { AsciiArtText, renderTableAllScan, renderTableAllScanLoud, talkAboutOtherProject} from "./services/display.service";
 import { getEnvVar } from "./services/manageVarEnvironnement.service";
 import { loadAddOns } from "./services/addOn.service";
-import { deleteFile, writeFileSync, writeStringToJsonFile } from "./helpers/files";
+import { deleteFile, createFileSync } from "./helpers/files";
 import {getContext, getNewLogger} from "./services/logger.service";
 import { Emails } from "./emails/emails";
 
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const args = yargs(hideBin(process.argv)).argv
+const folderOutput = process.env.OUTPUT??"./output";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-env.config();                                                                    // reading environnement vars                                                       // file system
+env.config();// reading environnement vars
+// file system
+
+let config = require('node-config-ts');
 
 export async function main() {
+
+
+    env.config();
+
     let context = getContext();
     context?.log("entering main");
     const logger = getNewLogger("MainLogger");
@@ -29,8 +37,6 @@ export async function main() {
 
     context?.log("logger configured");
 
-    //logger.debug("args");
-    //logger.debug(args);
     AsciiArtText("Kexa");
     logger.info("___________________________________________________________________________________________________"); 
     logger.info("___________________________________-= running Kexa scan =-_________________________________________");
@@ -38,24 +44,24 @@ export async function main() {
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"./Kexa/rules");
     context?.log("settings", settings);
     if(settings.length != 0){
-        let resources = {};
-        resources = await loadAddOns(resources);
+        let resources = await loadAddOns(settings);
         context?.log("resources", resources);
-        if(args.o) writeStringToJsonFile(JSON.stringify(resources), "./config/resources"+ new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '') +".json");
+        if(args.o) createFileSync(JSON.stringify(resources), folderOutput + "/resources/"+ new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '') +".json", true);
         context?.log("good");
         settings.forEach(setting => {
             context?.log("setting", setting);
             let result = checkRules(setting.rules, resources, setting.alert);
             if(setting.alert.global.enabled){
                 let render_table = renderTableAllScan(result.map(scan => scan.filter(value => value.error.length>0)));
+                let render_table_loud = renderTableAllScanLoud(result.map(scan => scan.filter(value => value.loud)));
                 let compteError = [0,0,0,0];
                 result.forEach((rule) => {
                     rule.forEach((scan) => {
-                        if(scan.error.length > 0) compteError[scan.rule?.level??4]++;
+                        if(scan.error.length > 0) compteError[scan.rule?.level??3]++;
                     });
                 });
-                let mail = Emails.Recap(compteError, render_table, setting.alert.global);
-                writeFileSync(mail, "./config/resources"+ setting.alert.global.name + new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '') +".html");
+                let mail = Emails.Recap(compteError, render_table, render_table_loud, setting.alert.global);
+                createFileSync(mail, folderOutput + "/scans/"+ setting.alert.global.name + "/" + new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '') +".html");
                 alertGlobal(result, setting.alert.global);
             }
         });

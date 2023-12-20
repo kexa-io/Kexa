@@ -12,4 +12,10 @@ export interface o365Resources {
     incident: Array<any> | null;
 
     app_access_policy: Array<any> | null;
+    group: Array<any> | null;
+    policy: Array<any> | null;
+    conditional_access: Array<any> | null;
+
+    sharepoint_settings: Array<any> | null;
+
 }

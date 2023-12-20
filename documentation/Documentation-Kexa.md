@@ -14,11 +14,11 @@
     <a href="https://github.com/4urcloud/Kexa"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/4urcloud/Kexa">View Demo</a>
+    <a class="github-button" href="https://github.com/4urcloud/Kexa/issues" data-color-scheme="no-preference: dark_high_contrast; light: dark_high_contrast; dark: light_high_contrast;" data-icon="octicon-issue-opened" data-size="large" aria-label="Issue 4urcloud/Kexa on GitHub">Report Bug</a>
     ·
-    <a href="https://github.com/4urcloud/Kexa/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/4urcloud/Kexa/issues">Request Feature</a>
+<a class="github-button" href="https://github.com/4urcloud/Kexa/discussions" data-color-scheme="no-preference: dark_high_contrast; light: dark_high_contrast; dark: light_high_contrast;" data-icon="octicon-comment-discussion" data-size="large" aria-label="Discuss 4urcloud/Kexa on GitHub">Request Feature</a>
+	·
+<a class="github-button" href="https://github.com/4urcloud/Kexa" data-color-scheme="no-preference: dark_high_contrast; light: dark_high_contrast; dark: light_high_contrast;" data-icon="octicon-star" data-size="large" aria-label="Star 4urcloud/Kexa on GitHub">Put Star</a>
   </p>
 </div>
 
@@ -29,10 +29,18 @@
   <summary>Table of Contents (Full documentation)</summary>
   <ol>
     <li>
+      <a href="#global-understanding">Global understanding</a>
+    </li>
+    <li>
+      <a href="#prerequisites">Prerequisites</a>
+    </li>
+    <li>
       <a href="#global-configuration">Global Configuration</a>
       <ul>
+        <li><a href="#configuration-via-script">Configuration Via Script</a></li>
         <li><a href="#basic-configuration">Basic Configuration</a></li>
         <li><a href="#multiple-environments-provider-prefix">Multiple Environments provider prefix</a></li>
+	<li><a href="#custom-and-multiple-configurations">Custom and multiple Configurations</a></li>
         <li><a href="#regions">Regions</a></li>
       </ul>
     </li>
@@ -48,8 +56,8 @@
       <a href="#rules-editing">Rules Editing</a>
       <ul>
         <li><a href="#rules-fields">Rules fields</a></li>
-        <li><a href="#full-yaml-rules-file">Full Yaml rules file</a></li>
         <li><a href="#date--time-criteria">Date & Time criteria</a></li>
+        <li><a href="#full-yaml-rules-file">Full Yaml rules file</a></li>
         <li><a href="#utility-examples">Utility examples</a>
             <ul>
                 <li><a href="#cost-savings">Cost savings</a></li>
@@ -88,17 +96,128 @@
   </ol>
 </details>
 
+# <div align="center" id= "global-understanding">**Global Understanding**</div>
+
+We'll discuss how Kexa works in principle, and explain the usefulness of the various elements in the process at each stage.
+
+<img src="../images/schema-engine.png" alt="schema engine kexa">
+
+- The first step is to scan your environment. To avoid trying to scan all environments, we use a config that lets you describe which providers will be used. In this configuration, we then define the project(s) in this provider and the rule sets associated with them.
+
+- To perform the scans, addOns retrieves the credentials you've set up for each project. Priority is given to the credentials present in your key manager, and if not set up, then in the environment variables.
+
+- Once all the scans have been made, we apply the rules you've defined to the data. We detect any resource that doesn't conform to any of your rules.
+
+- Finally, depending on :
+  - the severity levels associated with the rule in question
+  - the notification presets present in the rule set where the rule is present.
+
+  Kexa notifies you on your communication channels
+
+The principle is simple: scan and verify. That's why you have 2 main elements to set up:
+  - the default.json to know what to scan and what to scan with
+  - the set of rules to know what Kexa has to verify
+
+# <div align="center" id= "prerequisites">**Prerequisites**</div>
+
+First of all, Kexa is build with [node](https://nodejs.org/en) so you need to [install it](https://nodejs.org/en/download)
+* npm
+  ```sh
+  npm install npm@latest -g
+  ```
+
+## Installation
+
+### Clone the repo
+
+- CLI:
+
+   ```bash
+   git clone https://github.com/4urcloud/Kexa.git
+   ```
+
+<!--- Github Desktop:
+
+  ```
+  x-github-client://openRepo/https://github.com/4urcloud/Kexa
+  ```
+  [![Github Desktop](https://custom-icon-badges.demolab.com/badge/Download-purple?style=for-the-badge&logo=github&logoColor=white "Github Desktop")](x-github-client://openRepo/https://github.com/4urcloud/Kexa)-->
+
+
+- SSH:
+
+  ```bash
+  git@github.com:4urcloud/Kexa.git
+  ```
+
+- Download ZIP:
+
+  [![Download zip](https://custom-icon-badges.demolab.com/badge/-Download-blue?style=for-the-badge&logo=download&logoColor=white "Download zip")](https://github.com/4urcloud/Kexa/archive/refs/heads/main.zip)
+
+- Visual Studio:
+
+  
+  [![Open in VS Code](https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual%20Studio%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc)](https://vscode.dev/github/4urcloud/Kexa)
+
+### Install NPM packages
+   ```sh
+   npm install
+   ```
 
 # <div align="center" id= "global-configuration">**Global Configuration**</div>
+
 <br/>
 In the Kexa config folder, edit the default.json (create it if it doesn't exist)
 <br/>
+
+<div id="configuration-via-script"></div>
+
+## **Configuration via script**
+
+A powershell script is available for easy downloading, updating and configuration of Kexa versions.
+
+We don't yet have a Bash script for Linux. You can follow [this documentation](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-linux?view=powershell-7.4) to run the powershell script on linux.
+
+### Downloads or update Kexa
+
+You can download a version of Kexa from a specific branch. To do this, there's the "-d" argument to request a Kexa pull locally without Github. To preset from which branch this should be done, you have the "-b" argument followed by a branch name present on our repository (by default: main). Finally, if you don't want to perform the download where you are, you can use "-p" followed by the path to where to perform the manipulation.
+Note: in the event of an upgrade, your configuration files will be preserved.
+
+Here's an example:
+
+```powershell
+#for download the script localy
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/4urcloud/Kexa/dev/initKexa.ps1" -OutFile "./initKexa.ps1"
+
+#to update or download Kexa locally with the main branch
+./initKexa.ps1 -d
+#to update or download Kexa at ./Kexa with the dev branch
+./initKexa.ps1 -d -b dev -p ./Kexa
+```
+
+### Setup configuration
+
+A powershell script located at "./initKexa.ps1" allows you to set up a configuration and all your necessary environment variables. It also downloads from our github repo the basic rules per provider you've configured.
+Note, executing the command is destructive to your previous configuration.
+
+- Windows:
+
+  ```powershell
+  ./initKexa.ps1 -c
+  ```
+
+- Linux:
+  ```bash
+  sudo pwsh
+  ./initKexa.ps1 -c
+  ```
+
+
 <div id="basic-configuration"></div>
 
 ## **Basic configuration**
 
-Here you can define the providers you want to retrieve data from, and for each one, which rules
-file you want to check.
+Here you can define the providers you want to retrieve data from, and for each one, which rules file you want to check.
 - You can find the available providers name for this in /enum/provider.enum.ts
 - The 'rules' field is mandatory to specify the rules to be applied to each environment.
 
@@ -163,6 +282,32 @@ Each projects in this list refers to a "subscription"/"environment". It's a good
 ```
 <br/>
 
+<div id="custom-and-multiple-configurations"></div>
+
+## **Custom and multiple configurations**
+
+As we said before, `/config/default.json` is the default file path for your Kexa projects configuration.
+But you can edit this and have multiple configuration files to switch between.
+
+First, delete the `default.json` configuration file, so it won't be taken into account. (think about backup if you need it)
+
+There is a `/config/env/` folder available in Kexa, if not, you can create it.
+In this folder you will be able to store multiple configuration files, each having a custom name.
+
+To use a custom file, set the following environment variable :
+
+```sh
+NODE_CONFIG_TS_ENV=customName
+```
+
+Replace `customName` by your file name (that will always have '.json' extension).
+Do not forget to delete or move away `default.json` to avoid conflicts.
+
+In addition, you can also use the `/config/deployment/` and `/config/user/` folder, by using for each `DEPLOYMENT=customName` or `USER=customName`.
+For more information, check [node-config-ts](https://www.npmjs.com/package/node-config-ts#custom-config-directory) documentation.
+
+<br/>
+
 <div id="regions"></div>
 
 ## **Regions**
@@ -214,6 +359,11 @@ Without "regions" property (or empty "regions" property), all the regions will b
 Specify a folder to store the rules files.
 ```
   RULESDIRECTORY=./Kexa/rules (default value)
+```
+
+Specify a folder to store the output files.
+```
+  OUTPUT=./output (default value)
 ```
 
 You can modify your rule files to customize the notification channels on which to have your alerts. The "alert" section in rules files is designed for this purpose. It is possible to set up individual alerts by resource and by level of importance, but above all global alerts that summarize the scan. Go to [Full Yaml Rules File](#full-yaml-rules-file) to have more information.
@@ -322,6 +472,7 @@ Here is the structure and required fields for a new rule :
   conditions: # the list of criteria to match
 		-	property : string 
 	 		# the object field name to check (you can see the objects fields by launching Kexa with npm run start:o option)
+      # for any property with a dot in his name, add "/" before the dot
 			condition : enum 
 			# the condition for this comparison (defined in ./enum/condition.enum.ts)
 			value : string 
@@ -378,7 +529,7 @@ With nested operations :
 			condition : enum 
 			value : # nested operation
 				- operator: AND
-			  		criteria:
+			  	criteria:
 						-	property : string 
 							condition : enum 
 							value : string 
@@ -391,6 +542,37 @@ With nested operations :
 		# add more criteria by starting a new '- property:' here #
 
 	
+```
+
+<br/>
+<div id="date-and-time-criteria"></div>
+
+## **Date & time criteria**
+
+You can also set up date and time comparison for your rules, we have built a set of specific conditions and fields for this feature :
+
+```yaml
+property: string
+condition: (
+  DATE_EQUAL |
+  DATE_SUP |
+  DATE_INF |
+  DATE_SUP_OR_EQUAL |
+  DATE_INF_OR_EQUAL |
+  INTERVAL |
+  DATE_INTERVAL
+)
+value: 0 0 0 0 0 0
+# time value to compare. We use NCronTab Normalization format. The values given in this value are subtracted from the current time.
+#In reading order, numbers have values in seconds, minutes, hours, weeks, months, years. That means 0 0 0 0 0 is equal to now.
+# few examples: 
+# - 0 0 1 0 0 0 = now minus one hour
+# - 0 0 0 0 2 0 = now minus 2 month
+date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+# the format of the date you want to parse (the one used in the resource object field).
+# few examples:
+# "2023-10-23" = "YYYY-MM-DD"
+# "23-10 / 12:27" = "DD-MM / HH:mm"
 ```
 
 <br/>
@@ -461,38 +643,6 @@ With nested operations :
 	
 	# Add as much rules as you want by starting a new '-name' #
 	
-```
-
-<br/>
-
-<div id="date-and-time-criteria"></div>
-
-## **Date & time criteria**
-
-You can also set up date and time comparison for your rules, we have built a set of specific conditions and fields for this feature :
-
-```yaml
-property: string
-condition: (
-  DATE_EQUAL |
-  DATE_SUP |
-  DATE_INF |
-  DATE_SUP_OR_EQUAL |
-  DATE_INF_OR_EQUAL |
-  INTERVAL |
-  DATE_INTERVAL
-)
-value: 0 0 0 0 0 0
-# time value to compare. We use NCronTab Normalization format. The values given in this value are subtracted from the current time.
-#In reading order, numbers have values in seconds, minutes, hours, weeks, months, years. That means 0 0 0 0 0 is equal to now.
-# few examples: 
-# - 0 0 1 0 0 0 = now minus one hour
-# - 0 0 0 0 2 0 = now minus 2 month
-date: "YYYY-MM-DDThh:mm:ss.SSSZ"
-# the format of the date you want to parse (the one used in the resource object field).
-# few examples:
-# "2023-10-23" = "YYYY-MM-DD"
-# "23-10 / 12:27" = "DD-MM / HH:mm"
 ```
 
 <br/>
@@ -724,7 +874,7 @@ We've set up a system to facilitate the development of new features. This system
 
 ### **Gathering data**
 
-A file to collect data whose path will be "./Kexa/services/addOn". It is named as follows: [extension's name]Gathering.service.ts . The entry point for this file is a function named "collectData", which takes one arguments. The argument is a list containing all the configs for your addOn. The return format of this function is as shown in the following example. exemple :
+A file to collect data whose path will be "./Kexa/services/addOn". It is named as follows: [extension's name]Gathering.service.ts . The entry point for this file is a function named "collectData", which takes one arguments. The argument is a list containing all the configs for your addOn. This list corresponds to what you can find in the default.json file in the key that has the same name as your addOn. As additional information per item in the list, you have "ObjectNameNeed" which corresponds to the CategoryItem solicity in the rules set up. This helps you, to optimize your addOn and make faster, more targeted collections. The return format of this function is as shown in the following example. exemple :
 	
 ```json
 [
@@ -751,7 +901,7 @@ A file to collect data whose path will be "./Kexa/services/addOn". It is named a
   }
 ]
 ```
-	
+
 The data format is the following for several reasons. The first list corresponds to the different subscriptions or accounts in a sector. To illustrate, in the case of a cloud provider such as Azure, we might need different identifiers to scan all our accounts, and each account scan result is an item in the list. The dictionaries in the main list correspond to your dictionary that you find relevant to create to identify the different resources of your addOn, in the rules this corresponds to your "objectName". Finally, the lowest-level lists correspond to the list of items collected by your addOn.
 
 For project maintainability, we require addOn modules to contain a header to quickly identify certain information. It's also important to update this header according to the capabilities of your addOn. In fact, this header serves as a basis for checking the feasibility of certain rules. This header is a comment that must contain at least 2 pieces of information: the name of the module and the "categoryItems" you've included in your module. example for an "azureComplement" module: file name : azureComplementGathering.service.ts
@@ -767,8 +917,8 @@ For project maintainability, we require addOn modules to contain a header to qui
     *    - azFunction
 */
 
-export async function collectData(myGlobalConfig: any[]){
-  //the type of myGlobalConfig is any but you can make an interface if you want
+export async function collectData(myAddonConfig: any[]){
+  //the type of myAddonConfig is any but you can make an interface if you want
 
   //insert your stuff here
 }
