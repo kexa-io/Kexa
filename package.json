@@ -112,8 +112,15 @@
         "prettier-watch:default": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
         "test": "npm run build && mocha --require ts-node/register --require source-map-support/register 'Kexa/__tests__/**/*.test.ts'"
     },
-    "keywords": [],
-    "author": "4urcloud | Esteban MATHIA | Adrien EPPLING",
+    "keywords": [
+        "compliance",
+        "security",
+        "CI/CD",
+        "cloud",
+        "notifications",
+        "reporting"
+    ],
+    "author": "4urcloud | Esteban MATHIA | Adrien EPPLING | Patrick SZYMKOVIAK",
     "license": "MIT",
-    "description": "Kexa helps you save money and automate the standardization, security and verification of your cloud deployments."
+    "description": "Kexa's simple rules (Open Source) guarantee the security of your entire cloud. With real-time monitoring, instant alerts and detailed, scalable and integrable reporting, it turns complexity into simplicity, turning compliance into a competitive advantage."
 }
