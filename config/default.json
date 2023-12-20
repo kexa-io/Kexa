@@ -1,9 +1,10 @@
 {
-    "azure": [
+    "kubernetes":[
         {
             "description": "organization 4urcloud",
+            "prefix":"A",
             "rules": [
-                "rules-testing"
+                "Kubernete"
             ]
         }
     ]

@@ -14,3 +14,6 @@ config/headers.json
 config_kuber
 output/*
 savedFolder/*
+config/resources*.html
+config/resources*.json
+.DS_Store
