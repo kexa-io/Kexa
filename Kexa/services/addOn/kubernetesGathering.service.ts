@@ -14,40 +14,42 @@
     *     - replicaset
     *     - statefulset
     *     - daemonset
-    *     - job
-    *     - cronjob
-    *     - ingress
-    *     - persistentvolume
-    *     - persistentvolumeclaim
-    *     - secret
-    *     - serviceaccount
-    *     - role
-    *     - rolebinding
-    *     - clusterrole
-    *     - clusterrolebinding
-    *     - storageclass
-    *     - networkpolicy
-    *     - podsecuritypolicy
-    *     - limitrange
-    *     - resourcequota
-    *     - horizontalpodautoscaler
-    *     - verticalpodautoscaler
-    *     - priorityclass
-    *     - customresourcedefinition
-    *     - poddisruptionbudget
-    *     - event
-    *     - endpoint
-    *     - node
-    *     - podtemplate
-    *     - mutatingwebhookconfiguration
-    *     - validatingwebhookconfiguration
-    *     - apiservice
-    *     - controllerrevision
-    *     - lease
-    *     - certificate
-    *     - certificateSigningRequest
-    *     - componentstatus
 */
+
+
+//*     - job
+//*     - cronjob
+//*     - ingress
+//*     - persistentvolume
+//*     - persistentvolumeclaim
+//*     - secret
+//*     - serviceaccount
+//*     - role
+//*     - rolebinding
+//*     - clusterrole
+//*     - clusterrolebinding
+//*     - storageclass
+//*     - networkpolicy
+//*     - podsecuritypolicy
+//*     - limitrange
+//*     - resourcequota
+//*     - horizontalpodautoscaler
+//*     - verticalpodautoscaler
+//*     - priorityclass
+//*     - customresourcedefinition
+//*     - poddisruptionbudget
+//*     - event
+//*     - endpoint
+//*     - node
+//*     - podtemplate
+//*     - mutatingwebhookconfiguration
+//*     - validatingwebhookconfiguration
+//*     - apiservice
+//*     - controllerrevision
+//*     - lease
+//*     - certificate
+//*     - certificateSigningRequest
+//*     - componentstatus
 
 import helm from 'helm-ts';
 import { KubernetesResources } from "../../models/kubernetes/kubernetes.models";
@@ -145,7 +147,7 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
     // const k8scertificatesV1Api = kc.makeApiClient(k8s.certificatesV1Api);
     /////////////////////////////////////////////////////////////////////////////////
     let namespaces = await k8sApiCore.listNamespace();
-    let kubResources: any = {};
+    let kubResources: KubernetesResources = {} as KubernetesResources;
     kubResources["namespaces"] = namespaces.body.items;
     kubResources["pods"] = [];
     kubResources["services"] = [];
@@ -198,8 +200,8 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
             collectReplicaset(k8sAppsV1Api, item.metadata.name),
             collectStatefulset(k8sAppsV1Api, item.metadata.name),
             collectDaemonset(k8sAppsV1Api, item.metadata.name),
-            // collectJob(k8sApiCore, item.metadata.name),
-            // collectCronjob(k8sApiCore, item.metadata.name),
+            collectJob(k8sApiCore, item.metadata.name),
+            collectCronjob(k8sApiCore, item.metadata.name),
             // collectIngress(k8sNetworkingV1Api, item.metadata.name),
             // collectPersistentvolume(k8sApiCore, item.metadata.name),
             // collectPersistentvolumeclaim(k8sApiCore, item.metadata.name),
@@ -233,578 +235,514 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
             // collectComponentstatus(k8sApiCore, item.metadata.name)
         ];
         const [helmData, pods, serviceData, configmapData, deploymentData, replicasetData, statefulsetData, daemonsetData, jobData, cronjobData, ingressData, persistentvolumeData, persistentvolumeclaimData, secretData, serviceaccountData, roleData, rolebindingData, clusterroleData, clusterrolebindingData, storageclassData, networkpolicyData, podsecuritypolicyData, limitrangeData, resourcequotaData, horizontalpodautoscalerData, verticalpodautoscalerData, priorityclassData, customresourcedefinitionData, poddisruptionbudgetData, eventData, endpointData, nodeData, podtemplateData, mutatingwebhookconfigurationData, validatingwebhookconfigurationData, apiserviceData, controllerrevisionData, leaseData, certificateData, certificateSigningRequestData, componentstatusData ] = await Promise.all(promises);
+
+        const resourcesToAddNamespace = [
+            [pods, "pods"],
+            [serviceData, "services"],
+            [configmapData, "configmap"],
+            [deploymentData, "deployment"],
+            [replicasetData, "replicaset"],
+            [statefulsetData, "statefulset"],
+            [daemonsetData, "daemonset"],
+            [jobData, "job"],
+            [cronjobData, "cronjob"],
+            [ingressData, "ingress"],
+            [persistentvolumeData, "persistentvolume"],
+            [persistentvolumeclaimData, "persistentvolumeclaim"],
+            [secretData, "secret"],
+            [serviceaccountData, "serviceaccount"],
+            [roleData, "role"],
+            [rolebindingData, "rolebinding"],
+            [clusterroleData, "clusterrole"],
+            [clusterrolebindingData, "clusterrolebinding"],
+            [storageclassData, "storageclass"],
+            [networkpolicyData, "networkpolicy"],
+            [podsecuritypolicyData, "podsecuritypolicy"],
+            [limitrangeData, "limitrange"],
+            [resourcequotaData, "resourcequota"],
+            [horizontalpodautoscalerData, "horizontalpodautoscaler"],
+            [verticalpodautoscalerData, "verticalpodautoscaler"],
+            [priorityclassData, "priorityclass"],
+            [customresourcedefinitionData, "customresourcedefinition"],
+            [poddisruptionbudgetData, "poddisruptionbudget"],
+            [eventData, "event"],
+            [endpointData, "endpoint"],
+            [nodeData, "node"],
+            [podtemplateData, "podtemplate"],
+            [mutatingwebhookconfigurationData, "mutatingwebhookconfiguration"],
+            [validatingwebhookconfigurationData, "validatingwebhookconfiguration"],
+            [apiserviceData, "apiservice"],
+            [controllerrevisionData, "controllerrevision"],
+            [leaseData, "lease"],
+            [certificateData, "certificate"],
+            [certificateSigningRequestData, "certificateSigningRequest"],
+            [componentstatusData, "componentstatus"],
+        ];
+        Promise.all(resourcesToAddNamespace.map(async (resource: any) => {
+            kubResources = await getAllElementsWithNameSpace(resource, item.metadata.name, kubResources);
+        }));
+        
         helmData?.forEach((helmItem: any) => {
             kubResources["helm"].push(helmItem);
         });
-        pods?.body?.items?.forEach((pod: any) => {
-            pod.metadata.namespace = item.metadata.name;
-            kubResources["pods"].push(pod);
-        });
-        serviceData.body.items?.forEach((service: any) => {
-            service.metadata.namespace = item.metadata.name;
-            kubResources["services"].push(service);
-        });
-        configmapData.body.items?.forEach((configmap:any) => {
-            configmap.metadata.namespace = item.metadata.name;
-            kubResources["configmap"].push(configmap);
-        });
-        deploymentData.body.items?.forEach((deployment:any) => {
-            deployment.metadata.namespace = item.metadata.name;
-            kubResources["deployment"].push(deployment);
-        });
-        replicasetData.body.items?.forEach((replicaset:any) => {
-            replicaset.metadata.namespace = item.metadata.name;
-            kubResources["replicaset"].push(replicaset);
-        });
-        statefulsetData.body.items?.forEach((statefulset:any) => {
-            statefulset.metadata.namespace = item.metadata.name;
-            kubResources["statefulset"].push(statefulset);
-        }); 
-        daemonsetData.body.items?.forEach((daemonset:any) => {
-            daemonset.metadata.namespace = item.metadata.name;
-            kubResources["daemonset"].push(daemonset);
-        });
-        // jobData.body.items?.forEach((job:any) => {
-        //     job.metadata.namespace = item.metadata.name;
-        //     kubResources["job"].push(job);
-        // });
-        // cronjobData.body.items?.forEach((cronjob:any) => {
-        //     cronjob.metadata.namespace = item.metadata.name;
-        //     kubResources["cronjob"].push(cronjob);
-        // });
-        // ingressData.body.items?.forEach((ingress:any) => {
-        //     ingress.metadata.namespace = item.metadata.name;
-        //     kubResources["ingress"].push(ingress);
-        // });
-        // persistentvolumeData.body.items?.forEach((persistentvolume:any) => {
-        //     persistentvolume.metadata.namespace = item.metadata.name;
-        //     kubResources["persistentvolume"].push(persistentvolume);
-        // });
-        // persistentvolumeclaimData.body.items?.forEach((persistentvolumeclaim:any) => {
-        //     persistentvolumeclaim.metadata.namespace = item.metadata.name;
-        //     kubResources["persistentvolumeclaim"].push(persistentvolumeclaim);
-        // });
-        // secretData.body.items?.forEach((secret:any) => {
-        //     secret.metadata.namespace = item.metadata.name;
-        //     kubResources["secret"].push(secret);
-        // });
-        // serviceaccountData.body.items?.forEach((serviceaccount:any) => {
-        //     serviceaccount.metadata.namespace = item.metadata.name;
-        //     kubResources["serviceaccount"].push(serviceaccount);
-        // });
-        // roleData.body.items?.forEach((role:any) => {
-        //     role.metadata.namespace = item.metadata.name;
-        //     kubResources["role"].push(role);
-        // });
-        // rolebindingData.body.items?.forEach((rolebinding:any) => {
-        //     rolebinding.metadata.namespace = item.metadata.name;
-        //     kubResources["rolebinding"].push(rolebinding);
-        // });
-        // clusterroleData.body.items?.forEach((clusterrole:any) => {
-        //     clusterrole.metadata.namespace = item.metadata.name;
-        //     kubResources["clusterrole"].push(clusterrole);
-        // });
-        // clusterrolebindingData.body.items?.forEach((clusterrolebinding:any) => {
-        //     clusterrolebinding.metadata.namespace = item.metadata.name;
-        //     kubResources["clusterrolebinding"].push(clusterrolebinding);
-        // });
-        // storageclassData.body.items?.forEach((storageclass:any) => {
-        //     storageclass.metadata.namespace = item.metadata.name;
-        //     kubResources["storageclass"].push(storageclass);
-        // });
-        // networkpolicyData.body.items?.forEach((networkpolicy:any) => {
-        //     networkpolicy.metadata.namespace = item.metadata.name;
-        //     kubResources["networkpolicy"].push(networkpolicy);
-        // });
-        // podsecuritypolicyData.body.items?.forEach((podsecuritypolicy:any) => {
-        //     podsecuritypolicy.metadata.namespace = item.metadata.name;
-        //     kubResources["podsecuritypolicy"].push(podsecuritypolicy);
-        // });
-        // limitrangeData.body.items?.forEach((limitrange:any) => {
-        //     limitrange.metadata.namespace = item.metadata.name;
-        //     kubResources["limitrange"].push(limitrange);
-        // });
-        // resourcequotaData.body.items?.forEach((resourcequota:any) => {
-        //     resourcequota.metadata.namespace = item.metadata.name;
-        //     kubResources["resourcequota"].push(resourcequota);
-        // });
-        // horizontalpodautoscalerData.body.items?.forEach((horizontalpodautoscaler:any) => {
-        //     horizontalpodautoscaler.metadata.namespace = item.metadata.name;
-        //     kubResources["horizontalpodautoscaler"].push(horizontalpodautoscaler);
-        // }); 
-        // verticalpodautoscalerData.body.items?.forEach((verticalpodautoscaler:any) => {
-        //     verticalpodautoscaler.metadata.namespace = item.metadata.name;
-        //     kubResources["verticalpodautoscaler"].push(verticalpodautoscaler);
-        // });
-        // priorityclassData.body.items?.forEach((priorityclass:any) => {
-        //     priorityclass.metadata.namespace = item.metadata.name;
-        //     kubResources["priorityclass"].push(priorityclass);
-        // });
-        // customresourcedefinitionData.body.items?.forEach((customresourcedefinition:any) => {
-        //     customresourcedefinition.metadata.namespace = item.metadata.name;
-        //     kubResources["customresourcedefinition"].push(customresourcedefinition);
-        // });
-        // poddisruptionbudgetData.body.items?.forEach((poddisruptionbudget:any) => {
-        //     poddisruptionbudget.metadata.namespace = item.metadata.name;
-        //     kubResources["poddisruptionbudget"].push(poddisruptionbudget);
-        // }); 
-        // eventData.body.items?.forEach((event:any) => {
-        //     event.metadata.namespace = item.metadata.name;
-        //     kubResources["event"].push(event);
-        // }); 
-        // endpointData.body.items?.forEach((endpoint:any) => {
-        //     endpoint.metadata.namespace = item.metadata.name;
-        //     kubResources["endpoint"].push(endpoint);
-        // });
-        // nodeData.body.items?.forEach((node:any) => {
-        //     node.metadata.namespace = item.metadata.name;
-        //     kubResources["node"].push(node);
-        // });
-        // podtemplateData.body.items?.forEach((podtemplate:any) => {
-        //     podtemplate.metadata.namespace = item.metadata.name;
-        //     kubResources["podtemplate"].push(podtemplate);
-        // }); 
-        // mutatingwebhookconfigurationData.body.items?.forEach((mutatingwebhookconfiguration:any) => {
-        //     mutatingwebhookconfiguration.metadata.namespace = item.metadata.name;
-        //     kubResources["mutatingwebhookconfiguration"].push(mutatingwebhookconfiguration);
-        // });
-        // validatingwebhookconfigurationData.body.items?.forEach((validatingwebhookconfiguration:any) => {
-        //     validatingwebhookconfiguration.metadata.namespace = item.metadata.name;
-        //     kubResources["validatingwebhookconfiguration"].push(validatingwebhookconfiguration);
-        // });
-        // apiserviceData.body.items?.forEach((apiservice:any) => {
-        //     apiservice.metadata.namespace = item.metadata.name;
-        //     kubResources["apiservice"].push(apiservice);
-        // });
-        // controllerrevisionData.body.items?.forEach((controllerrevision:any) => {
-        //     controllerrevision.metadata.namespace = item.metadata.name;
-        //     kubResources["controllerrevision"].push(controllerrevision);
-        // });
-        // leaseData.body.items?.forEach((lease:any) => {
-        //     lease.metadata.namespace = item.metadata.name;
-        //     kubResources["lease"].push(lease);
-        // });
-        // certificateData.body.items?.forEach((certificate:any) => {
-        //     certificate.metadata.namespace = item.metadata.name;
-        //     kubResources["certificate"].push(certificate);
-        // });
-        // certificateSigningRequestData.body.items?.forEach((certificateSigningRequest:any) => {
-        //     certificateSigningRequest.metadata.namespace = item.metadata.name;
-        //     kubResources["certificateSigningRequest"].push(certificateSigningRequest);
-        // });
-        // componentstatusData.body.items?.forEach((componentstatus:any) => {
-        //     componentstatus.metadata.namespace = item.metadata.name;
-        //     kubResources["componentstatus"].push(componentstatus);
-        // });
-     });
-     await Promise.all(namespacePromises);
-     return kubResources;
- }
+    });
+    await Promise.all(namespacePromises);
+    return kubResources;
+}
+
+async function getAllElementsWithNameSpace(resources: [any, string], namespace:string, kubResources: KubernetesResources): Promise<KubernetesResources>{
+    const [resourceData, resourceName] = resources;
+    if(resourceData == null) return kubResources;
+    await Promise.all(resourceData.map(async (resource:any) => {
+        resource.metadata.namespace = namespace;
+        (kubResources as any)[resourceName].push(resource);
+    }));
+    return kubResources
+}
 
 async function collectHelm(namespace: string): Promise<any> {
-    if(!currentConfig?.ObjectNameNeed?.includes("helm")) return null;
+    if(!currentConfig?.ObjectNameNeed?.includes("helm")) return [];
     try{
         let helmData = await helm.list({ namespace: namespace });
         return helmData;
     }catch(e:any){
-        //logger.error(e);
-        return null;
+        logger.debug(e);
+        return [];
     }
 }
 
 async function collectPods(k8sApiCore: any, namespace: string): Promise<any> {
-    if(!currentConfig?.ObjectNameNeed?.includes("pods")) return null;
+    if(!currentConfig?.ObjectNameNeed?.includes("pods")) return [];
     try{
         const pods = await k8sApiCore.listNamespacedPod(namespace);
-        return pods;
+        return pods?.body?.items;
     }catch(e:any){
-        //logger.error(e);
-        return null;
+        logger.debug(e);
+        return [];
     }
 }
 
 async function collectServices(k8sApiCore: any, namespace: string): Promise<any> {
+    if(!currentConfig?.ObjectNameNeed?.includes("services")) return [];
     try{
         const services = await k8sApiCore.listNamespacedService(namespace);
-        return services;
+        return services?.body?.items;
     }catch(e){
         logger.debug(e);
-        return null;
+        return [];
     }
 }
 async function collectConfigmap(k8sApiCore: any, namespace: string): Promise<any> {
-        try{
+    if(!currentConfig?.ObjectNameNeed?.includes("configmap")) return [];
+    try{
         const configmap = await k8sApiCore.listNamespacedConfigMap(namespace);
-        return configmap;
+        return configmap?.body?.items;
     }catch(e){
         logger.debug(e);
-        return null;
+        return [];
     }
 }
 async function collectDeployment(k8sAppsV1Api: any, namespace: string): Promise<any> {
-        try{
+    if(!currentConfig?.ObjectNameNeed?.includes("deployment")) return [];
+    try{
         const deployment = await k8sAppsV1Api.listNamespacedDeployment(namespace);
-        return deployment;
+        return deployment?.body?.items;
     }catch(e){
         logger.debug(e);
-        return null;
+        return [];
     }
 }
 async function collectReplicaset(k8sAppsV1Api: any, namespace: string): Promise<any> {
+    if(!currentConfig?.ObjectNameNeed?.includes("replicaset")) return [];
     try {
         const replicasets = await k8sAppsV1Api.listNamespacedReplicaSet(namespace);
-        return replicasets;
+        return replicasets?.body?.items;
     } catch (e) {
         logger.debug(e);
-        return null;
+        return [];
     }
 }
 async function collectStatefulset(k8sAppsV1Api: any, namespace: string): Promise<any> {
+    if(!currentConfig?.ObjectNameNeed?.includes("statefulset")) return [];
     try {
         const statefulsets = await k8sAppsV1Api.listNamespacedStatefulSet(namespace);
-        return statefulsets;
+        return statefulsets?.body?.items;
     } catch (e) {
         logger.debug(e);
-        return null;
+        return [];
     }
 }
 
 async function collectDaemonset(k8sAppsV1Api: any, namespace: string): Promise<any> {
+    if(!currentConfig?.ObjectNameNeed?.includes("daemonset")) return [];
     try {
         const daemonsets = await k8sAppsV1Api.listNamespacedDaemonSet(namespace);
-        return daemonsets;
+        return daemonsets?.body?.items;
     } catch (e) {
         logger.debug(e);
-        return null;
+        return [];
     }
 }
 //TODO:find a way to get jobs
 async function collectJob(k8sApiCore: any, namespace: string): Promise<any> {
+    if(!currentConfig?.ObjectNameNeed?.includes("job")) return [];
     try {
-        //const jobs = await k8sApiCore.listNamespacedJob(namespace);
-        //return jobs;
+        const jobs = await k8sApiCore.listNamespacedJob(namespace);
+        return jobs?.body?.items;
     } catch (e) {
         logger.debug(e);
-        return null;
+        return [];
     }
 }
 //TODO:find a way to get cronjobs
 async function collectCronjob(k8sApiCore: any, namespace: string): Promise<any> {
+    if(!currentConfig?.ObjectNameNeed?.includes("cronjob")) return [];
     try {
-        //const cronjobs = await k8sApiCore.listNamespacedCronJob(namespace);
-        //return cronjobs;
+        const cronjobs = await k8sApiCore.listNamespacedCronJob(namespace);
+        return cronjobs?.body?.items;
     } catch (e) {
         logger.debug(e);
-        return null;
+        return [];
     }
 }
 
 // async function collectIngress(k8sNetworkingV1Api: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("ingress")) return [];
 //     try {
 //         const ingress = await k8sNetworkingV1Api.listNamespacedIngress(namespace);
 //         return ingress;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectPersistentvolume(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("persistentvolume")) return [];
 //     try {
 //         const persistentVolumes = await k8sApiCore.listPersistentVolume(namespace);
 //         return persistentVolumes;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectPersistentvolumeclaim(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("persistentvolumeclaim")) return [];
 //     try {
 //         const persistentVolumeClaims = await k8sApiCore.listNamespacedPersistentVolumeClaim(namespace);
 //         return persistentVolumeClaims;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectSecret(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("secret")) return [];
 //     try {
 //         const secrets = await k8sApiCore.listNamespacedSecret(namespace);
 //         return secrets;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectServiceaccount(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("serviceaccount")) return [];
 //     try {
 //         const serviceAccounts = await k8sApiCore.listNamespacedServiceAccount(namespace);
 //         return serviceAccounts;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectRole(k8sRbacAuthorizationV1Api: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("role")) return [];
 //     try {
 //         const roles = await k8sRbacAuthorizationV1Api.listNamespacedRole(namespace);
 //         return roles;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectRolebinding(k8sRbacAuthorizationV1Api: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("rolebinding")) return [];
 //     try {
 //         const roleBindings = await k8sRbacAuthorizationV1Api.listNamespacedRoleBinding(namespace);
 //         return roleBindings;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectClusterrole(k8sRbacAuthorizationV1Api: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("clusterrole")) return [];
 //     try {
 //         const clusterRoles = await k8sRbacAuthorizationV1Api.listClusterRole();
 //         return clusterRoles;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectClusterrolebinding(k8sRbacAuthorizationV1Api: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("clusterrolebinding")) return [];
 //     try {
 //         const clusterRoleBindings = await k8sRbacAuthorizationV1Api.listClusterRoleBinding();
 //         return clusterRoleBindings;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectStorageclass(k8sStorageV1Api: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("storageclass")) return [];
 //     try {
 //         const storageClasses = await k8sStorageV1Api.listStorageClass();
 //         return storageClasses;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectNetworkpolicy(k8sNetworkingV1Api: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("networkpolicy")) return [];
 //     try {
 //         const networkPolicies = await k8sNetworkingV1Api.listNamespacedNetworkPolicy(namespace);
 //         return networkPolicies;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 // //todo: find a way to get podsecuritypolicy
 // async function collectPodsecuritypolicy(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("podsecuritypolicy")) return [];
 //     try {
 //         //const podSecurityPolicies = await k8sApiCore.listPodSecurityPolicy();
 //         //return podSecurityPolicies;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectLimitrange(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("limitrange")) return [];
 //     try {
 //         const limitRanges = await k8sApiCore.listNamespacedLimitRange(namespace);
 //         return limitRanges;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectResourcequota(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("resourcequota")) return [];
 //     try {
 //         const resourceQuotas = await k8sApiCore.listNamespacedResourceQuota(namespace);
 //         return resourceQuotas;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 // //todo: find a way to get horizontalpodautoscaler
 // async function collectHorizontalpodautoscaler(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("horizontalpodautoscaler")) return [];
 //     try {
 //         //const horizontalPodAutoscalers = await k8sApiCore.listNamespacedHorizontalPodAutoscaler(namespace);
 //         //return horizontalPodAutoscalers;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 // //todo: find a way to get verticalpodautoscaler
 // async function collectVerticalpodautoscaler(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("verticalpodautoscaler")) return [];
 //     try {
 //         //const verticalPodAutoscalers = await k8sApiCore.listNamespacedVerticalPodAutoscaler(namespace);
 //         //return verticalPodAutoscalers;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 // //todo: find a way to get priorityclass
 // async function collectPriorityclass(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("priorityclass")) return [];
 //     try {
 //         //const priorityClasses = await k8sApiCore.listPriorityClass();
 //         //return priorityClasses;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 // //todo: find a way to get customresourcedefinition
 // async function collectCustomresourcedefinition(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("customresourcedefinition")) return [];
 //     try {
 //         //const customResourceDefinitions = await k8sApiCore.listCustomResourceDefinition();
 //         //return customResourceDefinitions;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 // //todo: find a way to get poddisruptionbudget
 // async function collectPoddisruptionbudget(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("poddisruptionbudget")) return [];
 //     try {
 //         //const podDisruptionBudgets = await k8sApiCore.listNamespacedPodDisruptionBudget(namespace);
 //         //return podDisruptionBudgets;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectEvent(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("event")) return [];
 //     try {
 //         const events = await k8sApiCore.listNamespacedEvent(namespace);
 //         return events;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectEndpoint(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("endpoint")) return [];
 //     try {
 //         const endpoints = await k8sApiCore.listNamespacedEndpoint(namespace);
 //         return endpoints;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectNode(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("node")) return [];
 //     try {
 //         const nodes = await k8sApiCore.listNode();
 //         return nodes;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectPodtemplate(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("podtemplate")) return [];
 //     try {
 //         const podTemplates = await k8sApiCore.listNamespacedPodTemplate(namespace);
 //         return podTemplates;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectMutatingwebhookconfiguration(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("mutatingwebhookconfiguration")) return [];
 //     try {
 //         const mutatingWebhookConfigurations = await k8sApiCore.listMutatingWebhookConfiguration();
 //         return mutatingWebhookConfigurations;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 // //todo: find a way to get validatingwebhookconfiguration
 // async function collectValidatingwebhookconfiguration(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("validatingwebhookconfiguration")) return [];
 //     try {
 //         //const validatingWebhookConfigurations = await k8sApiCore.listValidatingWebhookConfiguration();
 //         //return validatingWebhookConfigurations;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectApiservice(k8sApiregistrationV1Api: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("apiservice")) return [];
 //     try {
 //         const apiServices = await k8sApiregistrationV1Api.listAPIService();
 //         return apiServices;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 // //todo: find a way to get controllerrevision
 // async function collectControllerrevision(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("controllerrevision")) return [];
 //     try {
 //         //const controllerRevisions = await k8sApiCore.listNamespacedControllerRevision(namespace);
 //         //return controllerRevisions;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectLease(k8CoordinationV1Api: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("lease")) return [];
 //     try {
 //         const leases = await k8CoordinationV1Api.listNamespacedLease(namespace);
 //         return leases;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 // //todo: find a way to get certificate
 // async function collectCertificate(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("certificate")) return [];
 //     try {
 //         const certificates = await k8sApiCore.listNamespacedCertificate(namespace);
 //         return certificates;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 
 // async function collectCertificateSigningRequest(k8scertificatesV1Api: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("certificateSigningRequest")) return [];
 //     try {
 //         const certificateSigningRequests = await k8scertificatesV1Api.listCertificateSigningRequest();
 //         return certificateSigningRequests;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
 // //todo: find a way to get componentstatus
 // async function collectComponentstatus(k8sApiCore: any, namespace: string): Promise<any> {
+//     if(!currentConfig?.ObjectNameNeed?.includes("componentstatus")) return [];
 //     try {
 //         //const componentStatuses = await k8sApiCore.listComponentStatus();
 //         //return componentStatuses;
 //     } catch (e) {
 //         logger.debug(e);
-//         return null;
+//         return [];
 //     }
 // }
