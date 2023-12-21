@@ -7,6 +7,7 @@ import { loadAddOns } from "./services/addOn.service";
 import { deleteFile, createFileSync } from "./helpers/files";
 import {getContext, getNewLogger} from "./services/logger.service";
 import { Emails } from "./emails/emails";
+import { displayVersionAndLatest } from "./helpers/latestVersion";
 
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
@@ -41,8 +42,7 @@ export async function main() {
     logger.info("___________________________________________________________________________________________________"); 
     logger.info("___________________________________-= running Kexa scan =-_________________________________________");
     logger.info("___________________________________________________________________________________________________"); 
-    let version = require('../package.json').version;
-    logger.debug("Kexa version: " + version);
+    await displayVersionAndLatest(logger);
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"./Kexa/rules");
     context?.log("settings", settings);
     if(settings.length != 0){
