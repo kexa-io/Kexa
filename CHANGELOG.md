@@ -539,3 +539,26 @@ package-lock.json was changed
 package.json was changed
 
 
+## 1.10.0-SNAPSHOT.64.d9252e8
+
+### Files added: 0
+
+### Files changed: 8
+
+Kexa/main.ts was changed
+
+Kexa/models/http/config.models.ts was changed
+
+Kexa/models/kubernetes/kubernetes.models.ts was changed
+
+Kexa/services/addOn/httpGathering.service.ts was changed
+
+Kexa/services/addOn/kubernetesGathering.service.ts was changed
+
+config/demo/http.default.json was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
