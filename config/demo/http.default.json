@@ -8,6 +8,7 @@
                 "Name of my rule"
             ],
             "METHOD": "GET",
+            "URL": "https://www.example.com/endpointA",
             "header": {
                 "key": "value",
                 "key2": "value2"
@@ -23,6 +24,10 @@
             "prefix": "ENDPOINTB-",
             "description": "Second environment (1) : EndPoint B environment",
             "METHOD": "POST",
+            "URL": [
+                "https://www.example.com/endpointA",
+                "https:/www.example.com/endpointB"
+            ],
             "rules": [
                 "Name of my rule",
                 "Another rules"

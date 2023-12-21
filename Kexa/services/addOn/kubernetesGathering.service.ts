@@ -51,7 +51,7 @@
 //*     - controllerrevision
 
 import helm from 'helm-ts';
-import { KubernetesResources } from "../../models/kubernetes/kubernetes.models";
+import { KubernetesResources, createKubernetesResourcesDefault } from "../../models/kubernetes/kubernetes.models";
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { deleteFile, getFile, writeStringToJsonFile } from "../../helpers/files";
 import { KubernetesConfig } from "../../models/kubernetes/config.models";
@@ -146,49 +146,8 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
     //const k8scertificatesV1Api = kc.makeApiClient(k8s.certificatesV1Api);
     /////////////////////////////////////////////////////////////////////////////////
     let namespaces = await k8sApiCore.listNamespace();
-    let kubResources: KubernetesResources = {} as KubernetesResources;
-    kubResources["namespaces"] = namespaces.body.items;
-    kubResources["pods"] = [];
-    kubResources["services"] = [];
-    kubResources["helm"] = [];
-    kubResources["configmap"] = [];
-    kubResources["deployment"] = [];
-    kubResources["replicaset"] = [];
-    kubResources["statefulset"] = [];
-    kubResources["daemonset"] = [];
-    //kubResources["job"] = [];
-    //kubResources["cronjob"] = [];
-    kubResources["ingress"] = [];
-    kubResources["persistentvolume"] = [];
-    kubResources["persistentvolumeclaim"] = [];
-    kubResources["secret"] = [];
-    kubResources["serviceaccount"] = [];
-    //kubResources["role"] = [];
-    //kubResources["rolebinding"] = [];
-    //kubResources["clusterrole"] = [];
-    //kubResources["clusterrolebinding"] = [];
-    kubResources["storageclass"] = [];
-    kubResources["networkpolicy"] = [];
-    //kubResources["podsecuritypolicy"] = [];
-    kubResources["limitrange"] = [];
-    kubResources["resourcequota"] = [];
-    //kubResources["horizontalpodautoscaler"] = [];
-    //kubResources["verticalpodautoscaler"] = [];
-    //kubResources["priorityclass"] = [];
-    //kubResources["customresourcedefinition"] = [];
-    //kubResources["poddisruptionbudget"] = [];
-    kubResources["event"] = [];
-    //kubResources["endpoint"] = [];
-    kubResources["node"] = [];
-    kubResources["podtemplate"] = [];
-    //kubResources["mutatingwebhookconfiguration"] = [];
-    //kubResources["validatingwebhookconfiguration"] = [];
-    kubResources["apiservice"] = [];
-    //kubResources["controllerrevision"] = [];
-    kubResources["lease"] = [];
-    //kubResources["certificate"] = [];
-    //kubResources["certificateSigningRequest"] = [];
-    kubResources["componentstatus"] = [];
+    let kubResources: KubernetesResources = createKubernetesResourcesDefault();
+    kubResources.namespaces = namespaces.body.items;
     const namespacePromises = namespaces.body.items.map(async (item: any) => {
         const promises = [
             collectHelm(item.metadata.name),
