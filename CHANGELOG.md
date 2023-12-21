@@ -562,3 +562,16 @@ package-lock.json was changed
 package.json was changed
 
 
+## 1.10.0-SNAPSHOT.67.797e29c
+
+### Files added: 1
+
+Kexa/helpers/latestVersion.ts was added
+
+### Files changed: 2
+
+Kexa/helpers/latestVersion.ts was changed
+
+Kexa/main.ts was changed
+
+
