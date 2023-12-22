@@ -1,14 +1,32 @@
 import { BlobServiceClient } from '@azure/storage-blob';
 import AWS from 'aws-sdk';
 import { Storage } from '@google-cloud/storage';
+import { ResultScan } from '../models/resultScan.models';
+import {getContext, getNewLogger} from "./logger.service";
+import { loadAddOnsCustomUtility } from './addOn.service';
 
-async function saveJsonToAzureBlobStorage(connectionString: string, containerName: string, blobName: string, json: object): Promise<void> {
-    const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
-    const containerClient = blobServiceClient.getContainerClient(containerName);
-    await containerClient.createIfNotExists();
-    const jsonString = JSON.stringify(json);
-    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-    await blockBlobClient.upload(jsonString, jsonString.length);
+const configuration = require('node-config-ts').config;
+const logger = getNewLogger("SaveLogger");
+const context = getContext();
+const addOnSave: { [key: string]: Function; } = loadAddOnsCustomUtility("save", "save");
+
+export async function saveResult(result: ResultScan[][]): Promise<void> {
+    if(!configuration.save) return Promise.resolve();
+    if(!Array.isArray(configuration.save)) configuration.save = [configuration.save];
+    Promise.all(configuration.save.map(async (save: any) => {
+        if(addOnSave[save.type]){
+            try{
+                await addOnSave[save.type](save, result);
+            }catch(e:any){
+                logger.error("Error in save " + save.type + " : " + e.message);
+                context?.log("Error in save " + save.type + " : " + e.message);
+                logger.debug(e);
+            }
+        }else{
+            logger.warn('Unknown save type: ' + save.type);
+            context?.log('Unknown save type: ' + save.type);
+        }
+    }));
 }
 
 async function saveJsonToAwsS3Bucket(bucketName: string, objectKey: string, json: object): Promise<void> {

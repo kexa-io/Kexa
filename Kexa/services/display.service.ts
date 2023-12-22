@@ -1,13 +1,13 @@
 import { ResultScan } from "../models/resultScan.models";
 import { Rules } from "../models/settingFile/rules.models";
-import { loadAddOnsDisplay } from "./addOn.service";
+import { loadAddOnsCustomUtility } from "./addOn.service";
 
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
 import {getContext, getNewLogger} from "./logger.service";
 const logger = getNewLogger("DiplayLogger");
 const cfonts = require('cfonts');
 
-const addOnPropertyToSend: { [key: string]: Function; } = loadAddOnsDisplay();
+const addOnPropertyToSend: { [key: string]: Function; } = loadAddOnsCustomUtility("display", "propertyToSend");
 
 export function renderTableAllScan(allScan: ResultScan[][]): string{
     let lastRule = ""

@@ -8,6 +8,7 @@ import { deleteFile, createFileSync } from "./helpers/files";
 import {getContext, getNewLogger} from "./services/logger.service";
 import { Emails } from "./emails/emails";
 import { displayVersionAndLatest } from "./helpers/latestVersion";
+import { saveResult } from "./services/save.service";
 
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
@@ -21,8 +22,6 @@ env.config();// reading environnement vars
 let config = require('node-config-ts');
 
 export async function main() {
-
-
     env.config();
 
     let context = getContext();
@@ -66,6 +65,7 @@ export async function main() {
                 createFileSync(mail, folderOutput + "/scans/"+ setting.alert.global.name + "/" + new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '') +".html");
                 alertGlobal(result, setting.alert.global);
             }
+            saveResult(result);
         });
     }else {
         logger.error("No correct rules found, please check the rules directory or the rules files.");
