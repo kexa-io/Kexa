@@ -72,7 +72,7 @@ import {
     NetworkInterface,
     NetworkSecurityGroup,
 } from "@azure/arm-network";
-import { ComputeManagementClient, Disk, VirtualMachine } from "@azure/arm-compute";
+import { ComputeManagementClient } from "@azure/arm-compute";
 import { ResourceManagementClient , ResourceGroup } from "@azure/arm-resources";
 import {StorageAccount, StorageManagementClient} from "@azure/arm-storage";
 import { BlobServiceClient } from "@azure/storage-blob";
@@ -84,20 +84,31 @@ import {ApplicationInsightsManagementClient} from '@azure/arm-appinsights';
 import {WebSiteManagementClient} from '@azure/arm-appservice';
 import {RecoveryServicesClient} from '@azure/arm-recoveryservices';
 import {ContainerServiceClient} from '@azure/arm-containerservice';
-
 import {ExternalIdentitiesConfigurationClient} from '@azure/arm-azureadexternalidentities';
 import {AdvisorManagementClient} from '@azure/arm-advisor';
 import {ApiManagementClient } from '@azure/arm-apimanagement';
-
-// NEW STARTING FROM HERE (NOT TESTED)
 import { AttestationManagementClient } from '@azure/arm-attestation';
 import { AppPlatformManagementClient } from '@azure/arm-appplatform';
 import { AzureVMwareSolutionAPI } from '@azure/arm-avs';
 import { AzureStackManagementClient } from '@azure/arm-azurestack';
 import { AzureStackHCIClient } from '@azure/arm-azurestackhci';
-import { AutomationClient } from '@azure/arm-automation';
 import { AutomanageClient } from '@azure/arm-automanage';
-import { AutoSuggestClient } from '@azure/cognitiveservices-autosuggest';
+
+// FAILED
+//import { AutomationClient } from '@azure/arm-automation';
+//import { AutoSuggestClient } from '@azure/cognitiveservices-autosuggest';
+
+// WARNING THIS DELETE DEPENDENCIES
+//import { BatchManagementClient } from '@azure/arm-batch';
+
+// NEW STARTING FROM HERE (NOT TESTED)
+import { BillingManagementClient } from '@azure/arm-billing';
+import { BillingBenefitsRP } from '@azure/arm-billingbenefits';
+import { AzureBotService } from '@azure/arm-botservice';
+import { AzureChangeAnalysisManagementClient } from '@azure/arm-changeanalysis';
+import { ChangesClient } from '@azure/arm-changes';
+import { ChaosManagementClient } from '@azure/arm-chaos';
+
 
 
 
@@ -153,16 +164,23 @@ const clientConstructors: Record<string, any> = {
     ExternalIdentitiesConfigurationClient,
     AdvisorManagementClient,
     ApiManagementClient,
-    ContainerServiceClient
+    ContainerServiceClient,
     
-   /* AttestationManagementClient,
-    AppPlatformManagementClient,
+    AttestationManagementClient,
+   AppPlatformManagementClient,
     AzureVMwareSolutionAPI,
     AzureStackManagementClient,
     AzureStackHCIClient,
-    AutomationClient,
     AutomanageClient,
-    AutoSuggestClient*/
+
+    BillingManagementClient,
+    BillingBenefitsRP,
+    AzureBotService,
+    AzureChangeAnalysisManagementClient,
+    ChangesClient,
+    ChaosManagementClient
+   // AutomationClient,
+    //AutoSuggestClient
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
