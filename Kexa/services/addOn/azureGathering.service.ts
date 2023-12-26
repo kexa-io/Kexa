@@ -152,7 +152,9 @@ const clientConstructors: Record<string, any> = {
     RecoveryServicesClient,
     ExternalIdentitiesConfigurationClient,
     AdvisorManagementClient,
-    ApiManagementClient
+    ApiManagementClient,
+    ContainerServiceClient
+    
    /* AttestationManagementClient,
     AppPlatformManagementClient,
     AzureVMwareSolutionAPI,
@@ -278,46 +280,6 @@ export async function networkSecurityGroup_analyse(nsgList: Array<NetworkSecurit
         logger.debug("error"+e);
         return null;
     }  
-}
-
-
-async function listAppInsight(resourcesClient: ApplicationInsightsManagementClient): Promise<Array<any>|null> {
-    await callGenericClient(resourcesClient);
-    return null;
-}
-
-async function listAppGateway(resourcesClient: NetworkManagementClient): Promise<Array<any>|null> {
-    await callGenericClient(resourcesClient);
-    return null;
-}
-
-async function listAppService(resourcesClient: WebSiteManagementClient): Promise<Array<any>|null> {
-    await callGenericClient(resourcesClient);
-    return null;
-}
-
-async function listAzBackup(resourcesClient: RecoveryServicesClient): Promise<Array<any>|null> {
-    await callGenericClient(resourcesClient);
-    return null;
-}
-
-
-async function listSQL(resourcesClient: SqlManagementClient): Promise<Array<any>|null> {
-    await callGenericClient(resourcesClient);
-    return null;
-}
-
-
-async function listPostgres(resourcesClient: PostgreSQLManagementClient): Promise<Array<any>|null> {
-    await callGenericClient(resourcesClient);
-    return null;
-}
-
-
-async function listRedis(resourcesClient: RedisManagementClient): Promise<Array<any>|null> {
-    await callGenericClient(resourcesClient);
-
-    return null;
 }
 
 function createGenericClient<T>(Client: new (credential: any, subscriptionId: any) => T, credential: any, subscriptionId: any): T {
