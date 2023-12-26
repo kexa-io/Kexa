@@ -66,10 +66,23 @@ console.log("Available clients:");
 console.log(azureClients);
 */
 
+import axios from 'axios';
+
+async function fetchArm() {
+    try {
+      const response = await axios.get('https://api.npms.io/v2/search?q=@azure/arm');
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+    }
+  }
+  fetchArm();
+
+
 import { 
     NetworkManagementClient,
-    VirtualNetwork,
-    NetworkInterface,
     NetworkSecurityGroup,
 } from "@azure/arm-network";
 import { ComputeManagementClient } from "@azure/arm-compute";
