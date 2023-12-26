@@ -13,6 +13,7 @@ param (
 )
 
 function Get-ValidInput {
+    # check if the input is valid with a regex pattern
     param (
         [string]$Prompt = "Entrez une valeur : ",
         [string]$RegexPattern = "^[0-9A-Z_-]*$"
@@ -26,6 +27,7 @@ function Get-ValidInput {
 }
 
 function Get-ValueFromMultipleChoice {
+    # Basically, it lets you choose between two values, one of which is not zero, and if both are empty, you take the default value.
     param (
         [string]$firstOption,
         [string]$secondOption,
@@ -46,6 +48,12 @@ function Get-ValueFromMultipleChoice {
 }
 
 function Ask-User {
+    # it makes a nice table with the options and asks the user to choose an option
+    # exemple:
+    # 1. Option 1
+    # 2. Option 2
+    # 3. Option 3
+    # q. Quit
     param (
         [string]$prompt,
         [string[]]$options
@@ -136,6 +144,8 @@ function Save-TextToFile {
 }
 
 function Configure-Providers {
+    # configure the Kexa
+    # Constants
     $providers = @{
         "aws"="AWS"
         "azure"="Azure"
@@ -149,7 +159,7 @@ function Configure-Providers {
     }
 
     $credByProvider = @{
-        "aws"=@("AWS_SECRET_NAME", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY")
+        "aws"=@("AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY")
         "azure"=@("SUBSCRIPTIONID", "AZURECLIENTID", "AZURETENANTID", "AZURECLIENTSECRET") 
         "gcp"=@("GOOGLE_PROJECT_ID", "GOOGLE_APPLICATION_CREDENTIALS")
         "github"=@("GITHUBTOKEN")
@@ -172,10 +182,15 @@ function Configure-Providers {
 
     $configJson = @{}
     $askingProvider = @()
+    # Create/Overwrite the .env file
     "RULESDIRECTORY=./rules" | Out-File -FilePath "$path/.env" -Encoding utf8 -Force
+
+    # Ask the user which providers he wants to configure
     while($true){
         $ask = Ask-User -prompt "Which providers do you want to configure? (q to finish)" -options $providers.Values
+        # get the key of the provider selected
         $askProvider = $providers.Keys | where { $providers[$_] -eq $ask }
+        # if the user choose to quit, break the loop
         if($ask -eq "q"){
             break
         }
@@ -183,9 +198,10 @@ function Configure-Providers {
         $prefixs = @()
         $environments = @()
         $numberOfEnvironments = 0
-        Write-Host "For the provider $askProvider, enter the environments"
+        Write-Host "For the provider $ask, enter the environments"
         Write-Host "For each environment, enter the name, the description, the prefix and additionnal configuration if needed"
         Write-Host " "
+        # loop to ask the user to enter all the environments
         while($true){
             $environmentName = Get-ValidInput -Prompt "Enter the name of the new environment (number: $numberOfEnvironments) (q to finish) "
             if ($environmentName -eq "q") {
@@ -193,11 +209,13 @@ function Configure-Providers {
             }
             $environmentDescription = Read-Host "Enter the description (default: $environmentName) "
             $environmentDescription = $environmentDescription.Trim(' ')
+            # Set the description to the name if the user dont enter a description
             if (-not $environmentDescription) {
                 $environmentDescription = $environmentName
             }
             $environmentPrefix = Get-ValidInput -Prompt "Enter prefix "
             $prefixs += $environmentPrefix.ToUpper()
+            # Create an environment
             $environment = @{
                 "name" = $environmentName
                 "description" = $environmentDescription
@@ -205,6 +223,7 @@ function Configure-Providers {
                 "rules" = @($askProvider+"SetRules")
             }
 
+            # add additionnal configuration not optional if needed depending on the provider
             if($additionnalConfigurationNotOptionnal[$askProvider]){
                 foreach($addCred in $additionnalConfigurationNotOptionnal[$askProvider]){
                     $value = Read-Host "$addCred"
@@ -214,6 +233,7 @@ function Configure-Providers {
                 }
             }
 
+            # add additionnal configuration optional if needed depending on the provider
             if($additionnalConfigurationOptionnal[$askProvider]){
                 foreach($addCred in $additionnalConfigurationOptionnal[$askProvider]){
                     $value = Read-Host "$addCred (optionnal)"
@@ -227,31 +247,39 @@ function Configure-Providers {
             $environments += $environment
             $numberOfEnvironments++
         }
+        # if the user enter at least one environment
         if($environments){
             Write-Host " "
+            # ask the user to enter the credentials for each prefix
             $credentials = Get-UserInputForAllCred -provider $askProvider -prefixs $prefixs -credForTheProvider $credByProvider[$askProvider]
+            # write the credentials in the .env file
             Write-DictionaryToFile -filePath "$path/.env" -dictionary $credentials
+            # download the rules for the provider from github and save it in the rules folder
             $url = "https://raw.githubusercontent.com/4urcloud/Kexa/$branch/Kexa/rules/rulesByProvider/${askProvider}SetRules.yaml"
             $text = Invoke-WebRequest -Uri $url -UseBasicParsing
             Save-TextToFile -text $text -filePath "$path/rules/${askProvider}SetRules.yaml"
         }
+        # add the provider to the config
         $configJson[$askProvider] = $environments
         $askingProvider += $askProvider
+        # remove the provider from the list of providers to ask
         $providers.Remove($askProvider)
         Clear-Host
     }
-
+    # save the config in the config folder at default.json
     Save-ConfigJson -configJson $configJson -filePath "$path/config/default.json"
 }
 
 function Press-EnterToContinue {
+    # wait for the user to press enter
     Write-Host "Press enter to continue..."
     Read-Host > $null
     Clear-Host
 }
 
 function Help {
-    Write-Host "initKexa.ps1 [-help] [-d | -download] [-c | -config]"
+    # display help
+    Write-Host "initKexa.ps1 [-h | -help] [-d | -download] [-c | -config] [-p | -path] [VALUE] [-b | -branch] [VALUE]"
     Write-Host " "
     Write-Host "-help : Display help"
     Write-Host "-d | -download : download the latest version of Kexa"
@@ -263,6 +291,7 @@ function Help {
 }
 
 function Download-Kexa {
+    # get zip from github and unzip it in the path folder and remove all files and folders of github
     Write-Host "Download the latest version of Kexa"
     Protect-config
     $url = "https://github.com/4urcloud/Kexa/archive/refs/heads/$branch.zip"
@@ -290,6 +319,8 @@ function Download-Kexa {
 }
 
 function Protect-config {
+    # create a folder savedFolder and copy the file (.env) and folders (./config, ./rules and ./Kexa/rules) in it
+    # all the files and folders may not exist
     New-Item -ItemType Directory -Path "$path/savedFolder" -ErrorAction SilentlyContinue | Out-Null
     Remove-Item "$path/savedFolder" -Recurse -Force 
 
@@ -306,6 +337,7 @@ function Protect-config {
 }
 
 function Retreive-config{
+    # copy the file (.env) and folders (./config, ./rules and ./Kexa/rules) from savedFolder to their original location
     Copy-Item -Path "$path/savedFolder/config" -Destination "$path/" -Recurse -Force -ErrorAction SilentlyContinue
     Copy-Item -Path "$path/savedFolder/rules" -Destination "$path/" -Recurse -Force -ErrorAction SilentlyContinue
     Copy-Item -Path "$path/savedFolder/Kexa/rules" -Destination "$path/Kexa" -Recurse -Force -ErrorAction SilentlyContinue
@@ -313,6 +345,7 @@ function Retreive-config{
 }
 
 function Test-AndInstallNodeJS {
+    # test if node is installed and install it if not
     $nodeInstalled = Get-Command node -ErrorAction SilentlyContinue
 
     if ($nodeInstalled -eq $null) {

@@ -60,7 +60,7 @@
         - property: private
           condition: EQUAL
           value: true
-    - name: "git-is-branch-protectec"
+    - name: "git-is-branch-protected"
       description: "this rules is to check if git branch is protected"
       applied: true
       level: 0
@@ -85,3 +85,13 @@
         - property : topics
           condition : COUNT
           value : 0
+    - name: "git-runner-are-online"
+      description : "this rules is to check if git runner are online"
+      applied: true
+      level: 0
+      cloudProvider: github
+      objectName : runners
+      conditions:
+        - property : status
+          condition : DIFFERENT
+          value : offline

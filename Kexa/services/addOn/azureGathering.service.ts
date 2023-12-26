@@ -26,7 +26,7 @@ import {
 } from "@azure/arm-network";
 import { ComputeManagementClient, Disk, VirtualMachine } from "@azure/arm-compute";
 import { ResourceManagementClient , ResourceGroup } from "@azure/arm-resources";
-import { MetricsListOptionalParams, MonitorClient } from "@azure/arm-monitor";
+import { MonitorClient } from "@azure/arm-monitor";
 import * as ckiNetworkSecurityClass from "../../class/azure/ckiNetworkSecurityGroup.class";
 import { AzureResources } from "../../models/azure/resource.models";
 import { DefaultAzureCredential } from "@azure/identity";

@@ -15,6 +15,7 @@
     *     - teamMembers
     *     - teamRepositories
     *     - outsideCollaborators
+    *     - runners
 */
 
 import { Octokit } from "octokit";
@@ -62,7 +63,8 @@ export async function collectData(gitConfig:GitConfig[]): Promise<GitResources[]
                 "teams": secondaryDataOrganization.allTeams,
                 "teamMembers": secondaryDataOrganization.allTeamMembers,
                 "teamRepositories": secondaryDataOrganization.allTeamRepos,
-                "teamProjects": secondaryDataOrganization.allTeamProjects
+                "teamProjects": secondaryDataOrganization.allTeamProjects,
+                "runners": secondaryDataOrganization.allRunners
             });
         }catch(e){
             logger.error(e);
@@ -98,13 +100,15 @@ async function collectOrganizationRelaidInfo(allOrganizations: any): Promise<any
     let allTeamMembers: any[] = [];
     let allTeamRepos: any[] = [];
     let allTeamProjects: any[] = [];
+    let allRunners: any[] = [];
     logger.info("Collecting github members");
     logger.info("Collecting github outside collaborators");
     await Promise.all(allOrganizations.map(async (org: any) => {
-        const [members, outsideCollaborators, teamsData] = await Promise.all([
+        const [members, outsideCollaborators, teamsData, runners] = await Promise.all([
             collectMembers(org.login),
             collectOutsideCollaborators(org.login),
-            collectTeamsRelaidInfo(org.login)
+            collectTeamsRelaidInfo(org.login),
+            collectRunnersInfo(org.login)
         ]);
         allMembers.push(...addInfoOrg(org, members));
         allOutsideCollaborators.push(...addInfoOrg(org, outsideCollaborators));
@@ -112,6 +116,7 @@ async function collectOrganizationRelaidInfo(allOrganizations: any): Promise<any
         allTeamMembers.push(...teamsData.allTeamMembers);
         allTeamRepos.push(...teamsData.allTeamRepos);
         allTeamProjects.push(...teamsData.allTeamProjects);
+        allRunners.push(...runners);
     }));
 
     return {
@@ -120,7 +125,32 @@ async function collectOrganizationRelaidInfo(allOrganizations: any): Promise<any
         allTeams,
         allTeamMembers,
         allTeamRepos,
-        allTeamProjects
+        allTeamProjects,
+        allRunners
+    }
+}
+
+async function collectRunnersInfo(org: string): Promise<any>{
+    let allRunners = [];
+    logger.info("Collecting github runners");
+    try{
+        let octokit = await getOctokit();
+        let runners = (await (octokit).request('GET /orgs/{org}/actions/runners', {
+            org: org,
+            headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+            }
+        })).data;
+        allRunners.push(...runners.runners);
+        allRunners.forEach((runner: any) => {
+            runner["organization"] = org;
+            runner["organizationUrl"] = "https://github.com/" + org;
+        });
+    }catch(e){
+        logger.debug(e);
+    }
+    return {
+        allRunners
     }
 }
 

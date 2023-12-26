@@ -406,52 +406,31 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 <summary>All Achievements</summary>
 
 - ✅ Setting notification levels
+
+<div class='spliter_code'></div>
+
+- ✅ Aws check in:
+    - ✅ ec2Instance
+    - ✅ ec2SG
+    - ✅ ec2Volume
+    - ✅ rds
+    - ✅ resourceGroup
+    - ✅ tagsValue
+    - ✅ ecsCluster
+    - ✅ ecrRepository
 - ✅ Azure check in:
-    - ✅ virtual machine (vm)
-    - ✅ resource groupe (rg)
+    - ✅ vm
+    - ✅ rg
     - ✅ disk
-    - ✅ network security groupe (nsg)
-    - ✅ virtual network (virtualNetwork)
-    - ✅ ip
-    - ✅ namespaces (namespaces)
-    - ✅ pods
+    - ✅ nsg
+    - ✅ virtualNetwork
+    - ✅ networkInterfaces
     - ✅ aks
-    - ✅ mlWorkspaces
+    - ✅ mlWorkspace
     - ✅ mlJobs
     - ✅ mlComputes
     - ✅ mlSchedule
-- ✅ Github check in:
-    - ✅ repositories
-    - ✅ branches
-    - ✅ issues
-    - ✅ organizations
-    - ✅ members
-    - ✅ teams
-    - ✅ teamProjects
-    - ✅ teamMembers
-    - ✅ teamRepositories
-    - ✅ outsideCollaborators
-- ✅ Kubernetes check in:
-    - ✅ namespaces
-    - ✅ pods
-    - ✅ helm
-- ✅ AWS :
-    - ✅ EC2 Instance (ec2Instance)
-    - ✅ EC2 Volume (ec2Volume)
-    - ✅ EC2 Security group (ec2SG)
-    - ✅ Relational Database Service (rds)
-    - ✅ Resource Groups (resourceGroups)
-    - ✅ Tags (tagsValue)
-    - ✅ Elastic Container Service CLUSTER (ecsCluster)
-    - ✅ Elastic Container Repository(ecrRepository)
-- ✅ HTTP and HTTPS request
-    - ✅ request
-        - ✅ certificate
-        - ✅ body
-        - ✅ headers
-        - ✅ http code(code)
-        - ✅ latency
-- ✅ GCP
+- ✅ Gcp check in:
     - ✅ tasks_queue
     - ✅ compute
     - ✅ storage
@@ -461,7 +440,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
     - ✅ workflows
     - ✅ websecurity
     - ✅ connector
-    - ✅ vmware-engine
+    - ✅ vmware
     - ✅ namespace
     - ✅ certificate
     - ✅ secret
@@ -473,27 +452,74 @@ If you want explanations and details about rules in Kexa, please refer to [this 
     - ✅ airflow_image_version
     - ✅ disk
     - ✅ compute_item
-- ✅ Google Workspace
+- ✅ Github check in:
+    - ✅ repositories
+    - ✅ branches
+    - ✅ issues
+    - ✅ organizations
+    - ✅ members
+    - ✅ teams
+    - ✅ teamProjects
+    - ✅ teamMembers
+    - ✅ teamRepositories
+    - ✅ outsideCollaborators
+    - ✅ runners
+- ✅ GoogleDrive check in:
+    - ✅ files
+- ✅ GoogleWorkspace check in:
     - ✅ user
     - ✅ domain
     - ✅ group
     - ✅ role
     - ✅ orgaunit
     - ✅ calendar
-    - ✅ drive
     - ✅ file
-- ✅ O365
+    - ✅ drive
+- ✅ Http check in:
+    - ✅ request
+- ✅ Kubernetes check in:
+    - ✅ namespaces
+    - ✅ pods
+    - ✅ services
+    - ✅ helm
+    - ✅ configmap
+    - ✅ deployment
+    - ✅ replicaset
+    - ✅ statefulset
+    - ✅ daemonset
+    - ✅ ingress
+    - ✅ persistentvolume
+    - ✅ persistentvolumeclaim
+    - ✅ secret
+    - ✅ serviceaccount
+    - ✅ storageclass
+    - ✅ networkpolicy
+    - ✅ event
+    - ✅ node
+    - ✅ apiservice
+    - ✅ lease
+    - ✅ componentstatus
+    - ✅ limitrange
+    - ✅ resourcequota
+    - ✅ podtemplate
+- ✅ O365 check in:
     - ✅ sku
     - ✅ user
     - ✅ domain
     - ✅ secure_score
     - ✅ auth_methods
     - ✅ organization
-    - ✅ directory
+    - ✅ directory_role
     - ✅ sp
     - ✅ alert
     - ✅ incident
     - ✅ app_access_policy
+    - ✅ group
+    - ✅ policy
+    - ✅ conditional_access
+    - ✅ sharepoint_settings
+
+<div class='spliter_code'></div>
 
 </details>
 

@@ -10,6 +10,8 @@
 
 import dns from 'dns';
 import { HttpResources } from "../../models/http/resource.model";
+import tls, { TLSSocket } from 'tls';
+import { HttpRequest } from "../../models/http/request.models";
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { HttpConfig } from "../../models/http/config.models";
 import { isEmpty } from "../../helpers/isEmpty";
@@ -36,27 +38,29 @@ export async function collectData(_httpConfig:HttpConfig[]) {
         promises.push(
             (async () => {
                 logger.info("- add one config for http -");
-                let httpResources = {
-                    certificate: null,
-                    body: null,
-                    headers: null,
-                    code: null,
-                } as HttpRequest;
+                let listHttpResources = new Array<HttpRequest>();
 
                 try {
                     const url = await getConfigOrEnvVar(config, "URL", prefix);
                     if (!url) {
                         throw new Error("- Please pass URL in your config file");
                     }
-
-                    httpResources = await getDataHttp(url, config);
-
+                    if (!Array.isArray(url)) {
+                        let data = await getDataHttp(url, config);
+                        listHttpResources.push(data);
+                    }else{
+                        await Promise.all(url.map(async (url) => {
+                            let data = await getDataHttp(url, config);
+                            listHttpResources.push(data);
+                            return Promise.resolve();
+                        }));
+                    }
                 } catch (e:any) {
                     logger.error("error in collectHttpData with the url: " + ((await getConfigOrEnvVar(config, "URL", prefix)) ?? null));
                     logger.error(e);
                 }
 
-                return { request: [httpResources] };
+                return { request: listHttpResources };
             })()
         );
     }
@@ -83,8 +87,6 @@ function getBody(config: HttpConfig): any{
     return body;
 }
 
-import tls, { TLSSocket } from 'tls';
-import { HttpRequest } from "../../models/http/request.models";
 const URL = require('url')
 
 async function makeHttpRequest<T>(

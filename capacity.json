@@ -518,7 +518,8 @@
             "teamProjects",
             "teamMembers",
             "teamRepositories",
-            "outsideCollaborators"
+            "outsideCollaborators",
+            "runners"
         ],
         "thumbnail": "https://1000logos.net/wp-content/uploads/2021/05/GitHub-logo-768x432.png",
         "documentation": "https://docs.github.com/en/rest?apiVersion=2022-11-28",
@@ -1100,11 +1101,72 @@
         "resources": [
             "namespaces",
             "pods",
-            "helm"
+            "services",
+            "helm",
+            "configmap",
+            "deployment",
+            "replicaset",
+            "statefulset",
+            "daemonset",
+            "ingress",
+            "persistentvolume",
+            "persistentvolumeclaim",
+            "secret",
+            "serviceaccount",
+            "storageclass",
+            "networkpolicy",
+            "event",
+            "node",
+            "apiservice",
+            "lease",
+            "componentstatus",
+            "limitrange",
+            "resourcequota",
+            "podtemplate"
         ],
         "thumbnail": "https://logos-download.com/wp-content/uploads/2018/09/Kubernetes_Logo.png",
         "documentation": "https://github.com/kubernetes-client/javascript",
         "freeRules": [
+            {
+                "name": "namespace-exist-api-4urcloud",
+                "description": "this rules is to check if namespace exist and notifiable if exist",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "kubernetes",
+                "objectName": "namespaces",
+                "conditions": [
+                    {
+                        "property": "metadata.name",
+                        "condition": "DIFFERENT",
+                        "value": "4urcloudwebsitepublic"
+                    }
+                ]
+            },
+            {
+                "name": "all-pods-running-kexawebsite",
+                "description": "this rules is to check if all pods are running for a namespace",
+                "applied": true,
+                "level": 2,
+                "cloudProvider": "kubernetes",
+                "objectName": "pods",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "criteria": [
+                            {
+                                "property": "status.phase",
+                                "condition": "DIFFERENT",
+                                "value": "Running"
+                            },
+                            {
+                                "property": "metadata.namespace",
+                                "condition": "EQUAL",
+                                "value": "kexawebsitepublic"
+                            }
+                        ]
+                    }
+                ]
+            },
             {
                 "name": "namespace-exist-api-4urcloud",
                 "description": "this rules is to check if namespace exist and notifiable if exist",

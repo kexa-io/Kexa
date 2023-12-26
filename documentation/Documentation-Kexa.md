@@ -185,15 +185,29 @@ Note: in the event of an upgrade, your configuration files will be preserved.
 
 Here's an example:
 
-```powershell
-#for download the script localy
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/4urcloud/Kexa/dev/initKexa.ps1" -OutFile "./initKexa.ps1"
+- Linux
 
-#to update or download Kexa locally with the main branch
-./initKexa.ps1 -d
-#to update or download Kexa at ./Kexa with the dev branch
-./initKexa.ps1 -d -b dev -p ./Kexa
-```
+  ```bash
+  #for download the script localy
+  curl -sSL https://raw.githubusercontent.com/4urcloud/Kexa/main/initKexa.sh -o initKexa.sh
+
+  #to update or download Kexa locally with the main branch
+  ./initKexa.sh -d
+  #to update or download Kexa at ./Kexa with the dev branch
+  ./initKexa.sh -d -b dev -p ./Kexa
+  ```
+
+- Windows
+
+  ```powershell
+  #for download the script localy
+  Invoke-WebRequest -Uri "https://raw.githubusercontent.com/4urcloud/Kexa/main/initKexa.ps1" -OutFile "./initKexa.ps1"
+
+  #to update or download Kexa locally with the main branch
+  ./initKexa.ps1 -d
+  #to update or download Kexa at ./Kexa with the dev branch
+  ./initKexa.ps1 -d -b dev -p ./Kexa
+  ```
 
 ### Setup configuration
 
@@ -211,6 +225,7 @@ Note, executing the command is destructive to your previous configuration.
   sudo pwsh
   ./initKexa.ps1 -c
   ```
+  Our bash file does not yet support Kexa configuration. However, our powershell script does.
 
 
 <div id="basic-configuration"></div>

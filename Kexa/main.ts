@@ -4,9 +4,10 @@ import { alertGlobal } from "./services/alerte.service";
 import { AsciiArtText, renderTableAllScan, renderTableAllScanLoud, talkAboutOtherProject} from "./services/display.service";
 import { getEnvVar } from "./services/manageVarEnvironnement.service";
 import { loadAddOns } from "./services/addOn.service";
-import { deleteFile, createFileSync, writeStringToJsonFile } from "./helpers/files";
+import { deleteFile, createFileSync } from "./helpers/files";
 import {getContext, getNewLogger} from "./services/logger.service";
 import { Emails } from "./emails/emails";
+import { displayVersionAndLatest } from "./helpers/latestVersion";
 
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
@@ -37,12 +38,11 @@ export async function main() {
 
     context?.log("logger configured");
 
-    //logger.debug("args");
-    //logger.debug(args);
     AsciiArtText("Kexa");
     logger.info("___________________________________________________________________________________________________"); 
     logger.info("___________________________________-= running Kexa scan =-_________________________________________");
     logger.info("___________________________________________________________________________________________________"); 
+    await displayVersionAndLatest(logger);
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"./Kexa/rules");
     context?.log("settings", settings);
     if(settings.length != 0){
