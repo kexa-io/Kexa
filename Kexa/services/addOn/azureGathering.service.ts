@@ -22,7 +22,103 @@
     *     - all
 */
 
-/*import * as AzureCompute from "@azure/arm-compute";
+
+
+/* ***************************** */
+/*       IMPORTING ALL PKG       */
+/* ***************************** */
+
+import axios from 'axios';
+const fs = require('fs');
+
+async function fetchArmPackages() {
+    try {
+        const searchString = encodeURIComponent('@azure/arm-');
+        let offset = 0;
+        let allResults: any[] = [];
+        let stringResults: any[] = [];
+
+        
+        while (true) {
+          const response = await axios.get(`https://api.npms.io/v2/search?size=250&from=${offset}&q=${searchString}`);
+          
+          if (response.data.results.length === 0) {
+            break;
+          }
+          
+          allResults = allResults.concat(response.data.results);
+          offset += 250;
+        }
+        const searchTerm = '@azure/arm-';
+        const filteredResults = allResults.filter(result => result.package.name.startsWith(searchTerm));
+        const finalResults = filteredResults.filter(result => !/\d/.test(result.package.name));
+
+        let i = 0;
+        finalResults.forEach((element: any) => {
+            i++;
+            const firstSlashIndex = element.package.name.indexOf('/');
+            const extractedAlias = firstSlashIndex !== -1 ? element.package.name.substring(firstSlashIndex + 1) : element.package.name;
+            const aliasName = extractedAlias.replace(/-/g, '');    
+            const obj = {
+                packageName: element.package.name,
+                aliasName: aliasName
+            };
+            stringResults.push(obj);
+         })
+
+
+
+        let fileContent = '';
+        const fileName = "azurePackage.import.ts";
+        stringResults.forEach((item) => {
+            fileContent += `import * as ${item.aliasName} from '${item.packageName}';\n`;
+        });
+        try {
+            fs.writeFileSync("Kexa/services/addOn/" + fileName, fileContent);
+            console.log('File created: azurePackage.import.ts');
+        } catch (error) {
+            console.error('Error writing file:', error);
+        }
+
+        
+         console.log(stringResults);
+         console.trace("total results Azure packages found : " + i);
+         return stringResults;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error;
+    }
+}
+
+async function createImportList() {
+    const packages = await fetchArmPackages();
+   // console.log("PKG");
+    //console.log(packages);
+}
+
+
+createImportList();
+
+/*const importedPackages: any[] = [];
+
+async function importPackages() {
+    (await packages).forEach((element: any) => {
+        try {
+            importedPackages[element] = import(element);
+        } catch (e) {
+            logger.warn("PLease install the required module for import : " + element, e);
+        }
+    })
+}
+
+importPackages().then(() => {
+    console.log("Imported");
+ //   console.log(importedPackages);
+});
+*/
+
+/*
+import * as AzureCompute from "@azure/arm-compute";
 import * as AzureResources from "@azure/arm-resources";
 import * as AzureStorage from "@azure/arm-storage";
 import * as AzureBlob from "@azure/storage-blob";
@@ -33,6 +129,9 @@ import * as AzureRedis from "@azure/arm-rediscache";
 import * as AzureAppInsights from "@azure/arm-appinsights";
 import * as AzureAppService from "@azure/arm-appservice";
 import * as AzureRecoveryServices from "@azure/arm-recoveryservices";
+*/
+
+import * as AzRes from "@azure/arm-resources";
 
 interface AzureClients {
   [key: string]: any;
@@ -41,44 +140,36 @@ interface AzureClients {
 function extractClients(module: any): AzureClients {
   const clients: AzureClients = {};
   Object.keys(module).forEach((key) => {
-    if (key.endsWith("Client")) {
-      clients[key] = module[key];
-    }
+      if (module[key] instanceof Function) {
+        clients[key] = module[key];
+        console.log(`${key} is a class that extends MyBaseClass.`);
+      } else {
+        console.log(`${key} is either not a class or does not extend MyBaseClass.`);
+      }
   });
   return clients;
 }
 
 const azureClients: Record<string, AzureClients> = {
-  AzureCompute: extractClients(AzureCompute),
-  AzureResources: extractClients(AzureResources),
-  AzureStorage: extractClients(AzureStorage),
-  AzureBlob: extractClients(AzureBlob),
-  AzureAppConfiguration: extractClients(AzureAppConfiguration),
-  AzureSql: extractClients(AzureSql),
-  AzurePostgreSQL: extractClients(AzurePostgreSQL),
-  AzureRedis: extractClients(AzureRedis),
-  AzureAppInsights: extractClients(AzureAppInsights),
-  AzureAppService: extractClients(AzureAppService),
-  AzureRecoveryServices: extractClients(AzureRecoveryServices),
+    AzRes: extractClients(AzRes)
 };
 
 console.log("Available clients:");
 console.log(azureClients);
-*/
 
-import axios from 'axios';
 
-async function fetchArm() {
-    try {
-      const response = await axios.get('https://api.npms.io/v2/search?q=@azure/arm');
-      console.log(response.data);
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      throw error;
-    }
-  }
-  fetchArm();
+
+import * as ckiNetworkSecurityClass from "../../class/azure/ckiNetworkSecurityGroup.class";
+import { DefaultAzureCredential } from "@azure/identity";
+import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
+import { AzureConfig } from "../../models/azure/config.models";
+
+import {getContext, getNewLogger} from "../logger.service";
+const logger = getNewLogger("AzureLogger");
+
+
+
+
 
 
 import { 
@@ -106,7 +197,6 @@ import { AzureVMwareSolutionAPI } from '@azure/arm-avs';
 import { AzureStackManagementClient } from '@azure/arm-azurestack';
 import { AzureStackHCIClient } from '@azure/arm-azurestackhci';
 import { AutomanageClient } from '@azure/arm-automanage';
-
 // FAILED
 //import { AutomationClient } from '@azure/arm-automation';
 //import { AutoSuggestClient } from '@azure/cognitiveservices-autosuggest';
@@ -122,49 +212,9 @@ import { AzureChangeAnalysisManagementClient } from '@azure/arm-changeanalysis';
 import { ChangesClient } from '@azure/arm-changes';
 import { ChaosManagementClient } from '@azure/arm-chaos';
 
-
-
-
-import * as ckiNetworkSecurityClass from "../../class/azure/ckiNetworkSecurityGroup.class";
-import { DefaultAzureCredential } from "@azure/identity";
-import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
-import { AzureConfig } from "../../models/azure/config.models";
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-import {getContext, getNewLogger} from "../logger.service";
-const logger = getNewLogger("AzureLogger");
-
-
-import { exec } from 'child_process';
-
-function listAzureArmPackages(): Promise<string[]> {
-  return new Promise((resolve, reject) => {
-    exec('npm search -l @azure/arm-', (error, stdout) => {
-      if (error) {
-        reject(error);
-      } else {
-        const packageList = stdout
-          .split('\n')
-          .filter(line => line.startsWith('@azure/'))
-          .map(line => line.split(' ')[0]);
-        resolve(packageList);
-      }
-    });
-  });
-}
-
-listAzureArmPackages()
-  .then(packages => {
-    console.log('Packages:', packages);
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
-
 const clientConstructors: Record<string, any> = {
     ResourceManagementClient,
-    StorageManagementClient,
+   /* StorageManagementClient,
     ComputeManagementClient,
     NetworkManagementClient,
     AppConfigurationManagementClient,
@@ -180,7 +230,7 @@ const clientConstructors: Record<string, any> = {
     ContainerServiceClient,
     
     AttestationManagementClient,
-   AppPlatformManagementClient,
+    AppPlatformManagementClient,
     AzureVMwareSolutionAPI,
     AzureStackManagementClient,
     AzureStackHCIClient,
@@ -191,7 +241,7 @@ const clientConstructors: Record<string, any> = {
     AzureBotService,
     AzureChangeAnalysisManagementClient,
     ChangesClient,
-    ChaosManagementClient
+    ChaosManagementClient*/
    // AutomationClient,
     //AutoSuggestClient
 };
@@ -308,7 +358,7 @@ export async function networkSecurityGroup_analyse(nsgList: Array<NetworkSecurit
         }
         return resultList;
     }catch (e) {
-        logger.debug("error"+e);
+        logger.debug("error" + e);
         return null;
     }  
 }
