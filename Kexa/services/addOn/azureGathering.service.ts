@@ -20,89 +20,15 @@
     *     - express_route
     *     - private_endpoint
     *     - all
+    *     - NetworkManagementClient
+    *     - ApplicationInsightsManagementClient
+    *     - EducationManagementClient
 */
 
 
-
-/* ***************************** */
-/*       IMPORTING ALL PKG       */
-/* ***************************** */
-
-import axios from 'axios';
-const fs = require('fs');
-
-function writeToFile() {
-
-}
-
-/*async function fetchArmPackages() {
-    try {
-        const searchString = encodeURIComponent('@azure/arm-');
-        let offset = 0;
-        let allResults: any[] = [];
-        let stringResults: any[] = [];
-        while (true) {
-          const response = await axios.get(`https://api.npms.io/v2/search?size=250&from=${offset}&q=${searchString}`);
-          
-          if (response.data.results.length === 0) {
-            break;
-          }
-          
-          allResults = allResults.concat(response.data.results);
-          offset += 250;
-        }
-        const searchTerm = '@azure/arm-';
-        const filteredResults = allResults.filter(result => result.package.name.startsWith(searchTerm));
-        const finalResults = filteredResults.filter(result => !/\d/.test(result.package.name));
-        let i = 0;
-        finalResults.forEach((element: any) => {
-            i++;
-            const firstSlashIndex = element.package.name.indexOf('/');
-            const extractedAlias = firstSlashIndex !== -1 ? element.package.name.substring(firstSlashIndex + 1) : element.package.name;
-            const aliasName = extractedAlias.replace(/-/g, '');    
-            const obj = {
-                packageName: element.package.name,
-                aliasName: aliasName
-            };
-            stringResults.push(obj);
-         })
-        let fileContent = '';
-        const fileName = "azurePackage.import.ts";
-        stringResults.forEach((item) => {
-            fileContent += `import * as ${item.aliasName} from '${item.packageName}';\n`;
-        });
-        fileContent += `export {\n`;
-        stringResults.forEach((item, index) => {
-            if (index === stringResults.length - 1) {
-                fileContent += `${item.aliasName}`;
-            } else {
-                fileContent += `${item.aliasName},\n`;
-            }
-        });
-        fileContent += `};\n`;
-        try {
-            fs.writeFileSync("Kexa/services/addOn/" + fileName, fileContent);
-            console.log('File created: azurePackage.import.ts');
-        } catch (error) {
-            console.error('Error writing file:', error);
-        }
-         console.trace("total results Azure packages found : " + i);
-         return stringResults;
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      throw error;
-    }
-}
-
-async function createImportList() {
-    const packages = await fetchArmPackages();
-   // console.log("PKG");
-    //console.log(packages);
-}
-
-
-createImportList();*/
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//// RETRIEVING ALL IMPORTS & CLIENTS
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 import { ServiceClient } from "@azure/core-client";
@@ -157,13 +83,15 @@ const logger = getNewLogger("AzureLogger");
 //// LISTING CLOUD RESOURCES
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|null>{
+
+    console.log(azureConfig);
     let context = getContext();
     let resources = new Array<Object>();
     for(let config of azureConfig??[]){
         logger.debug("config: ");
         logger.debug(JSON.stringify(config));
         let prefix = config.prefix??(azureConfig.indexOf(config).toString());
-        try{
+        try {
             logger.debug("prefix: " + prefix);
             let subscriptionId = await getConfigOrEnvVar(config, "SUBSCRIPTIONID", prefix);
             let azureClientId = await getConfigOrEnvVar(config, "AZURECLIENTID", prefix);
@@ -195,7 +123,6 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
                     const clientName = constructor.name;
                     azureRet[clientName] = await callGenericClient(createGenericClient(constructor, credential, subscriptionId));
                 }
-                console.log(azureRet);
                 resources.push(azureRet);
             }
         } catch(e) {
@@ -203,10 +130,10 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
             logger.error(e);
         }
     }
-    console.log(resources);
     return resources??null;
 }
-
+  
+  
 //get service principal key information
 export async function getSPKeyInformation(credential: DefaultAzureCredential, subscriptionId: string): Promise<any> {
     const { GraphRbacManagementClient } = require("@azure/graph");
@@ -273,17 +200,17 @@ function createGenericClient<T>(Client: new (credential: any, subscriptionId: an
 }
 
 async function callGenericClient(client: any) {
+    let results = [];
     logger.info("starting " + client.constructor.name + " Listing");
-    let results = await listAllResources(client);
-    logger.info(results);
+    results.push(await listAllResources(client));
     return results;
 }
 
 async function listAllResources(client: any) {
     logger.trace("Automatic gathering...");
     const properties = Object.getOwnPropertyNames(client);
-    logger.trace("Properties of client:");
-    logger.trace(properties);
+    logger.silly("Properties of client:");
+    logger.silly(properties);
 
     const resultList: Record<string, any> = {};
 
@@ -305,11 +232,12 @@ async function listAllResources(client: any) {
                         }
                         const keyStr = key as string;
                         const toExec = "resourcesClient." + (key as string) + "." + method + "()";
-                        console.log("To exec: " + toExec);
+                        logger.trace("To exec: " + toExec);
                         let resultObject: Record<string, any> = {};
                         try {
                             resultObject = await resource[method]();
-                            resultList[keyStr] = resultObject;
+                            // IS .VALUE ALWAYS HERE IN A GOOD RESPONSE??
+                            resultList[keyStr] = resultObject.value ? resultObject.value : [];
                         } catch (e) {
                             logger.debug("Error on function :", e);
                         }
