@@ -69,6 +69,7 @@
         "jsdom": "^23.0.1",
         "jsome": "^2.3.26",
         "moment": "^2.29.4",
+        "mongoose": "^8.0.3",
         "node-config-ts": "^3.3.1",
         "nodemailer": "^6.9.3",
         "octokit": "^2.1.0",

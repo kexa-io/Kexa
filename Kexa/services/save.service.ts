@@ -1,9 +1,9 @@
-import { BlobServiceClient } from '@azure/storage-blob';
 import AWS from 'aws-sdk';
 import { Storage } from '@google-cloud/storage';
 import { ResultScan } from '../models/resultScan.models';
 import {getContext, getNewLogger} from "./logger.service";
 import { loadAddOnsCustomUtility } from './addOn.service';
+import { SaveConfig } from '../models/export/config.models';
 
 const configuration = require('node-config-ts').config;
 const logger = getNewLogger("SaveLogger");
@@ -13,10 +13,16 @@ const addOnSave: { [key: string]: Function; } = loadAddOnsCustomUtility("save", 
 export async function saveResult(result: ResultScan[][]): Promise<void> {
     if(!configuration.save) return Promise.resolve();
     if(!Array.isArray(configuration.save)) configuration.save = [configuration.save];
-    Promise.all(configuration.save.map(async (save: any) => {
+    let resultOnlyWithErrors = result.map((resultScan) => {
+        return resultScan.filter((resultScan) => {
+            return resultScan.error.length > 0;
+        });
+    });
+    let dataToSave = [ result, resultOnlyWithErrors ];
+    Promise.all(configuration.save.map(async (save: SaveConfig) => {
         if(addOnSave[save.type]){
             try{
-                await addOnSave[save.type](save, result);
+                await addOnSave[save.type](save, dataToSave[save.onlyErrors??false ? 1 : 0]);
             }catch(e:any){
                 logger.error("Error in save " + save.type + " : " + e.message);
                 context?.log("Error in save " + save.type + " : " + e.message);

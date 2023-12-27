@@ -47,7 +47,13 @@
     <li>
       <a href="#environment-variables-and-auth">Environment variables & Auth</a>
       <ul>
-        <li><a href="#directory--notifications">Directory & Notifications</a></li>
+        <li><a href="#directory--notifications">Directory & Notifications</a>
+          <ul>
+            <li><a href="#default-folder-input-and-output">Default folder input and output</a></li>
+            <li><a href="#notification">Notification</a></li>
+            <li><a href="#save-result-of-the-scan">Save result of the scan</a></li>
+          </ul>
+        </li>
         <li><a href="#providers-authentications">Providers Authentications</a></li>
         <li><a href="#password-manager">Password Manager</a></li>
       </ul>
@@ -371,6 +377,10 @@ Without "regions" property (or empty "regions" property), all the regions will b
 
 ## **Directory & Notifications**
 
+<div id="default-folder-input-and-output"></div>
+
+### **Default folder input and output**
+
 Specify a folder to store the rules files.
 ```
   RULESDIRECTORY=./Kexa/rules (default value)
@@ -382,6 +392,10 @@ Specify a folder to store the output files.
 ```
 
 You can modify your rule files to customize the notification channels on which to have your alerts. The "alert" section in rules files is designed for this purpose. It is possible to set up individual alerts by resource and by level of importance, but above all global alerts that summarize the scan. Go to [Full Yaml Rules File](#full-yaml-rules-file) to have more information.
+
+<div id="notification"></div>
+
+### **Notification**
 
 Setup your notification tools. (for those selected in your rules files).
 >email
@@ -402,6 +416,34 @@ For email, EMAILPWD is your Api Key for the case you use sendgrid.
   SMSAUTHTOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
+<div id="save-result-of-the-scan"></div>
+
+### **Save result of the scan**
+
+You can save your scan results in various places :
+- [Azure Blob Storage](./save/AzureBlobStorage.md)
+- [Mongo DB](./save/MongoDB.md)
+
+To save your scan results in different places, a "save" attribute must be created in your default.json file. It's a list of "SaveConfig" objects, as follows : 
+
+![example SaveConfig](../Kexa/models/export/config.models.ts)
+
+Here's the table of correspondence for each attribute:
+- type: corresponds to the name of the addon solicited to save your scan
+- urlName: 2 functions to choose from:
+  - is used to provide the name of the environment variable storing the endpoint url
+  - provide endpoint url
+- name: reserved attribute for naming the backup location (maintenance aid)
+- description: reserved attribute to describe the backup location (maintenance aid)
+- origin: attribute to specify kexa run location
+- tags: additional information dictionary for tagging the backup
+- onlyErrors: Boolean to record only errors detected or not
+
+Each addOn brings its own unique set of attributes to the table. We invite you to refer to the documentation of the addOn you wish to use for all the subtleties.
+Here an example of configuration to save in Azure Blob Storage and MongoDB:
+
+![example config with save](../config/demo/exemple3.default.json)
+
 <br/>
 <div id="provider-authentications"></div>
 
@@ -409,15 +451,15 @@ For email, EMAILPWD is your Api Key for the case you use sendgrid.
 
 For each environment you want to test, you'll need to provide the environment variables needed to authenticate to it. For this you can refer to the addons section corresponding to each addon:
 
-- [AWS](./AWS.md)
-- [Azure](./Azure.md)
-- [GCP](./GCP.md)
-- [Github](./Github.md)
-- [Google drive](./GoogleDrive.md)
-- [Google workspace](./GoogleWorkspace.md)
-- [HTTP(HTTPS)](./HTTP.md)
-- [Kubernetes](./Kubernetes.md)
-- [O365](./O365.md)
+- [AWS](./provider/AWS.md)
+- [Azure](./provider/Azure.md)
+- [GCP](./provider/GCP.md)
+- [Github](./provider/Github.md)
+- [Google drive](./provider/GoogleDrive.md)
+- [Google workspace](./provider/GoogleWorkspace.md)
+- [HTTP(HTTPS)](./provider/HTTP.md)
+- [Kubernetes](./provider/Kubernetes.md)
+- [O365](./provider/O365.md)
 
 An environment file is also available in our repository, with every official addon's needed variables.
 You can use it by filling the field corresponding to the providers you want to authenticate to.
@@ -774,7 +816,7 @@ Whether you want to check specific elements of your infrastructure or take a mor
 
 Strengthen the security of your AWS resources with our state-of-the-art data scan addon, guaranteeing complete protection of your sensitive data, enhanced compliance and unrivalled peace of mind in the cloud.
 
-- [AWS](./AWS.md)
+- [AWS](./provider/AWS.md)
 
 <div id="azure"></div>
 
@@ -782,7 +824,7 @@ Strengthen the security of your AWS resources with our state-of-the-art data sca
 
 Optimize your Azure experience with our new data scan add-on, simplifying the management and analysis of your critical information, for more informed decisions than ever.
 
-- [Azure](./Azure.md)
+- [Azure](./provider/Azure.md)
 
 <div id="gcp"></div>
 
@@ -790,7 +832,7 @@ Optimize your Azure experience with our new data scan add-on, simplifying the ma
 
 Optimize the security of your assets on Google Cloud with our industry-leading data scan addon, offering advanced protection, complete visibility and foolproof compliance to ensure your data remains secure in the cloud.
 
-- [GCP](./GCP.md)
+- [GCP](./provider/GCP.md)
 
 <div id="github"></div>
 
@@ -798,7 +840,7 @@ Optimize the security of your assets on Google Cloud with our industry-leading d
 
 Optimize your GitHub workflow easily with our brand new data collection addon, enabling you to analyze and make the most of your development data, for projects that perform better than ever.
 
-- [Github](./Github.md)
+- [Github](./provider/Github.md)
 
 <div id="google-drive"></div>
 
@@ -806,7 +848,7 @@ Optimize your GitHub workflow easily with our brand new data collection addon, e
 
 Reinvent the way you work with Google Drive with our revolutionary data scan add-on, simplifying the collection, organization and analysis of your files and information for unprecedented productivity in the cloud.
 
-- [Google Drive](./GoogleDrive.md)
+- [Google Drive](./provider/GoogleDrive.md)
 
 <div id="google-workspace"></div>
 
@@ -814,7 +856,7 @@ Reinvent the way you work with Google Drive with our revolutionary data scan add
 
 Increase the security and compliance of your Google workspace with our state-of-the-art data scan add-on, offering proactive protection, comprehensive monitoring and seamless data management for confident communications and collaboration.
 
-- [Google Workspace](./GoogleWorkspace.md)
+- [Google Workspace](./provider/GoogleWorkspace.md)
 
 <div id="http"></div>
 
@@ -822,7 +864,7 @@ Increase the security and compliance of your Google workspace with our state-of-
 
 Ensure optimal service performance with our API endpoint data scan add-on, which gives you a real-time view of your systems' health, enabling you to maintain robust, uninterrupted online services.
 
-- [HTTP](./HTTP.md)
+- [HTTP](./provider/HTTP.md)
 
 <div id="kubernetes-addon"></div>
 
@@ -830,7 +872,7 @@ Ensure optimal service performance with our API endpoint data scan add-on, which
 
 Take the security of your Kubernetes environments to the next level with our data scan addon, guaranteeing proactive monitoring and unrivalled protection of your clusters, for total peace of mind in the container world.
 
-- [Kubernetes](./Kubernetes.md)
+- [Kubernetes](./provider/Kubernetes.md)
 
 <div id="o365"></div>
 
@@ -838,7 +880,7 @@ Take the security of your Kubernetes environments to the next level with our dat
 
 Ensure total confidentiality and seamless compliance within your Office 365 environment with our industry-leading data scan addon, giving you real-time monitoring, advanced protection and simplified management of sensitive information.
 
-- [O365](./O365.md)
+- [O365](./provider/O365.md)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 <div id="community-addons"></div>
@@ -881,8 +923,8 @@ If you have a suggestion that would make this better, please fork the repo and c
 
 ### **Adding functionalities**
 	
-  Each published addOn is free to set its own mandatory key values for its default.config configuration schema.
-  Our minimum values for any addOn are "rules". Keys such as "prefix", "name" and "description" are strongly recommended to maintain ease of use.
+Each published addOn is free to set its own mandatory key values for its default.config configuration schema.
+Our minimum values for any addOn are "rules". Keys such as "prefix", "name" and "description" are strongly recommended to maintain ease of use.
 
 We've set up a system to facilitate the development of new features. This system is based on the "addOn" system. To develop a new feature, you don't need to know the whole project. You can develop additional services to collect additional data, among which you can make rules.
 
@@ -936,7 +978,7 @@ For project maintainability, we require addOn modules to contain a header to qui
 */
 
 export async function collectData(myAddonConfig: any[]){
-  //the type of myAddonConfig is any but you can make an interface if you want
+  //the type of myAddonConfig is "any" but you can make an interface if you want
 
   //insert your stuff here
 }
@@ -952,9 +994,7 @@ export async function collectData(myAddonConfig: any[]){
 
 The display data file has for name schema : [same extension's name]Display.service.ts, its path will be: "./Kexa/services/addOn/display". This file is used to display precise attributes of an object to quickly identify it in its environment. This return is done by returning a string, with the possibility of putting html in this sting. The function used as an entry point is named "propertyToSend". It takes 3 arguments. The first is a "Rules", and the relative path to the object definition is
 
-```ts
-import { Rules } from "../../../models/settingFile/rules.models";
-```
+![interface of a Rules](../Kexa/models/settingFile/rules.models.ts)
 
 The second is an "any", corresponding to an object you've collected previously. Finally, the last element is a boolean, which you'll set to false by default. It corresponds to your obligation not to put html in your string. Example display file for an "azureComplement" module: file name : azureComplementGathering.service.ts
 
@@ -968,6 +1008,33 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
         return `Id : `+ objectContent?.id + `https://portal.azure.com/#@/resource/` + objectContent?.id
     else
         return `Id : <a href="https://portal.azure.com/#@/resource/` + objectContent?.id + '">' + objectContent?.id + `</a>`
+}
+
+//can add other function here
+```
+
+<br/>
+
+<div id="save-results"></div>
+
+### **Save results**
+
+You can also add AddOns to save your data. These extensions are based on the same principle as Display AddOn. The Save AddOn file is named [extension name]Save.service.ts, and its path is "./Kexa/services/addOn/save". This file is used to store the scanned data in a specific location. No return is attempted. The function used as an entry point is called "save". It takes 2 arguments. The first is a "save", corresponding to :
+
+![interface of a SaveConfig](../Kexa/models/export/config.models.ts)
+
+But you can make your own by extends this interface.
+The second is a table of ResultScan:
+
+![interface of a SaveConfig](../Kexa/models/resultScan.models.ts)
+
+example of fresh template of save addOn:
+
+```ts
+import { ResultScan } from "../../../models/resultScan.models";
+
+export async function save(save: SaveConfig, result: ResultScan[][]): Promise<void>{
+  //insert your stuff here
 }
 
 //can add other function here

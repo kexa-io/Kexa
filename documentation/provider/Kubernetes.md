@@ -1,6 +1,6 @@
 <div align="center">
     <a href="https://www.kexa.io/addOn/azure">
-        <img src="../images/kubernetes-logo.png" alt="Logo" width="300">
+        <img src="../../images/kubernetes-logo.png" alt="Logo" width="300">
     </a>
 
 # <h3 align="center">Kubernetes addOn</h3>
@@ -29,7 +29,7 @@ The following keys are recommended to ensure better readability when re-reading 
 - "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.
 
 Example config for 2 environments:
-![example config for http](../config/demo/kubernetes.default.json)
+![example config for http](../../config/demo/kubernetes.default.json)
 
 ### Environment
 

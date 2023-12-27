@@ -1,6 +1,6 @@
 <div align="center">
     <a href="https://www.kexa.io/addOn/github">
-        <img src="../images/google-drive-logo.png" alt="Logo" width="200">
+        <img src="../../images/google-drive-logo.png" alt="Logo" width="200">
     </a>
 
 # <h3 align="center">Google Drive addOn</h3>
@@ -29,7 +29,7 @@ The following keys are recommended to ensure better readability when re-reading 
 - "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.
 
 Example config for 2 environments:
-![example config for google drive](../config/demo/googleDrive.default.json)
+![example config for google drive](../../config/demo/googleDrive.default.json)
 
 ### Environment
 

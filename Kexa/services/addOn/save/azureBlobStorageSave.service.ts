@@ -1,5 +1,5 @@
 import { AnonymousCredential, BlobServiceClient, BlockBlobParallelUploadOptions, StoragePipelineOptions, StorageSharedKeyCredential } from "@azure/storage-blob";
-import { AzureBlobStorageSaveConfig } from "../../../models/export/azuezBlobStorage.models";
+import { AzureBlobStorageSaveConfig } from "../../../models/export/azureBlobStorage/config.models";
 import { ResultScan } from "../../../models/resultScan.models";
 import { getEnvVar } from "../../manageVarEnvironnement.service";
 import { getContext, getNewLogger } from "../../logger.service";
@@ -9,9 +9,7 @@ const logger = getNewLogger("AzureBlobStorageLogger");
 const context = getContext();
 
 export async function save(save: AzureBlobStorageSaveConfig, result: ResultScan[][]): Promise<void>{
-    if(!save.urlName) throw new Error("urlName is required");
-    if(!save.blobName) throw new Error("blobName is required");
-    if(!save.containerName) throw new Error("containerName is required");
+    if(!save.containerName) throw new Error("containerName is missing");
     let url = (await getEnvVar(save.urlName))??save.urlName;
     await saveJsonToAzureBlobStorage(url, save, {data: result});
 }
@@ -20,8 +18,13 @@ async function saveJsonToAzureBlobStorage(connectionString: string, save: AzureB
     let blobServiceClient: BlobServiceClient;
     if (save?.accountName && save?.accountKey) {
         blobServiceClient = getBlobServiceClientWithAccountAndKey(save?.accountName ?? "", ((await getEnvVar(save?.accountKey??""))??save?.accountKey)??"");
-    } else {
+    } else if (connectionString) {
         blobServiceClient = getBlobServiceClientFromConnectionString(connectionString);
+    } else {
+        if(!save?.accountName){
+            throw new Error("accountName is missing; It is required to authenticate to Azure Blob Storage. Maybe you forgot to set it in the config file or in the environment variable");
+        } 
+        blobServiceClient = getBlobServiceClientFromDefaultAzureCredential(save?.accountName ?? "");
     }
     const containerClient = blobServiceClient.getContainerClient(save?.containerName ?? "");
     await containerClient.createIfNotExists();
@@ -36,10 +39,8 @@ async function saveJsonToAzureBlobStorage(connectionString: string, save: AzureB
 }
 
 function getBlobServiceClientFromConnectionString(urlConnection:string): BlobServiceClient {
-    const storagePipelineOptions: StoragePipelineOptions = {};
     const client: BlobServiceClient = BlobServiceClient.fromConnectionString(
-        urlConnection,
-        storagePipelineOptions
+        urlConnection
     );
     return client;
 }

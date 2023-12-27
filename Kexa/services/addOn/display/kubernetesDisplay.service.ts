@@ -12,6 +12,6 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
         case "helm":
             return `Helm name : ` + objectContent?.metadata?.name + ` with uid : ` + objectContent?.metadata?.uid
         default:
-            return 'AWS Scan : Id : ' + objectContent.id;
+            return 'resource : Id : ' + objectContent?.metadata?.name + ' in NameSpace : ' + objectContent?.metadata?.namespace;
     }
 }

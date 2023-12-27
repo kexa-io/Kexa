@@ -1,0 +1,42 @@
+{
+    "azure": [
+        {
+            "name": "Project A",
+            "prefix": "PROJECTA-",
+            "description": "First subscription (0) : Project A subscription",
+            "rules": [
+                "Name of my rule"
+            ]
+        },
+        {
+            "name": "Project B",
+            "prefix": "PROJECTB-",
+            "description": "Second subscription (1) : Project B subscription",
+            "rules": [
+                "Name of my rule",
+                "Another rules"
+            ]
+        }
+    ],
+    "save": [
+        { // auth with account and key
+            "type": "azureBlobStorage",
+            "name": "Azure Blob Storage 1",
+            "description": "Azure Blob Storage 1 description",
+            "accountName": "name you can find in the Azure portal",
+            "accountKey": "key you can find in the Azure portal"
+        },
+        { // auth with url and credentials
+            "type": "azureBlobStorage",
+            "name": "Azure Blob Storage 2",
+            "description": "Azure Blob Storage 2 description",
+            "urlName": "url with credentials you can find in the Azure portal or the name of the var environment where the url is stored"
+        },
+        { // auth with default credentials (Azure CLI)
+            "type": "azureBlobStorage",
+            "name": "Azure Blob Storage 3",
+            "description": "Azure Blob Storage 3 description",
+            "accountName": "name you can find in the Azure portal"
+        }
+    ]
+}

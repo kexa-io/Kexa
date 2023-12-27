@@ -123,10 +123,15 @@ async function getCertificateFromResponse(response: AxiosResponse<any>): Promise
             socket: response.config.httpsAgent?.keepAliveSocket,
         }, () => {
             const cert = socket.getPeerCertificate();
+            const cipherName = socket.encrypted ? socket.getCipher().name : null;
+            const protocolVersion = socket.encrypted ? socket.getProtocol() : null;
+            const TLS = {
+                cipherName,
+                protocolVersion,
+            };
             socket.end();
-            resolve(cert);
+            resolve({cert, TLS});
         });
-
         socket.on('error', (err) => {
             resolve(null);
         });
@@ -175,7 +180,9 @@ async function getDataHttp(url: string, config: HttpConfig): Promise<HttpRequest
         httpResources.code = response?.status;
         httpResources.url = url;
         httpResources.ip = await dnsLookup(URL.parse(url).hostname!);
-        httpResources.certificate = await getCertificateFromResponse(response);
+        const {cert, TLS} = await getCertificateFromResponse(response);
+        httpResources.certificate = cert;
+        httpResources.tls = TLS
         httpResources.delays = response?.delays;
     }catch(e:any){
         logger.error("error in getDataHttp with the url: " + url);

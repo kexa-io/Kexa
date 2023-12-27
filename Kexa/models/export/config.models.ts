@@ -3,6 +3,7 @@ export interface SaveConfig {
     urlName: string;
     name?: string;
     description?: string;
-    port?: string;
     origin?: string;
+    tags?: {[key: string]: string};
+    onlyErrors?: boolean;
 }
