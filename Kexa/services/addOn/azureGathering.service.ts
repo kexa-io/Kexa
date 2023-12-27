@@ -31,14 +31,16 @@
 import axios from 'axios';
 const fs = require('fs');
 
-async function fetchArmPackages() {
+function writeToFile() {
+
+}
+
+/*async function fetchArmPackages() {
     try {
         const searchString = encodeURIComponent('@azure/arm-');
         let offset = 0;
         let allResults: any[] = [];
         let stringResults: any[] = [];
-
-        
         while (true) {
           const response = await axios.get(`https://api.npms.io/v2/search?size=250&from=${offset}&q=${searchString}`);
           
@@ -52,7 +54,6 @@ async function fetchArmPackages() {
         const searchTerm = '@azure/arm-';
         const filteredResults = allResults.filter(result => result.package.name.startsWith(searchTerm));
         const finalResults = filteredResults.filter(result => !/\d/.test(result.package.name));
-
         let i = 0;
         finalResults.forEach((element: any) => {
             i++;
@@ -65,23 +66,26 @@ async function fetchArmPackages() {
             };
             stringResults.push(obj);
          })
-
-
-
         let fileContent = '';
         const fileName = "azurePackage.import.ts";
         stringResults.forEach((item) => {
             fileContent += `import * as ${item.aliasName} from '${item.packageName}';\n`;
         });
+        fileContent += `export {\n`;
+        stringResults.forEach((item, index) => {
+            if (index === stringResults.length - 1) {
+                fileContent += `${item.aliasName}`;
+            } else {
+                fileContent += `${item.aliasName},\n`;
+            }
+        });
+        fileContent += `};\n`;
         try {
             fs.writeFileSync("Kexa/services/addOn/" + fileName, fileContent);
             console.log('File created: azurePackage.import.ts');
         } catch (error) {
             console.error('Error writing file:', error);
         }
-
-        
-         console.log(stringResults);
          console.trace("total results Azure packages found : " + i);
          return stringResults;
     } catch (error) {
@@ -97,41 +101,21 @@ async function createImportList() {
 }
 
 
-createImportList();
+createImportList();*/
 
-/*const importedPackages: any[] = [];
 
-async function importPackages() {
-    (await packages).forEach((element: any) => {
-        try {
-            importedPackages[element] = import(element);
-        } catch (e) {
-            logger.warn("PLease install the required module for import : " + element, e);
-        }
-    })
+
+import { ServiceClient } from "@azure/core-client";
+import * as AzureImports from "./azurePackage.import";
+
+let allClients: AzureClients = {};
+
+for (const key of Object.keys(AzureImports)) {
+    const currentItem = (AzureImports as { [key: string]: unknown })[key];
+    const clientsFromModule = extractClients(currentItem);
+    allClients = { ...allClients, ...clientsFromModule };
 }
 
-importPackages().then(() => {
-    console.log("Imported");
- //   console.log(importedPackages);
-});
-*/
-
-/*
-import * as AzureCompute from "@azure/arm-compute";
-import * as AzureResources from "@azure/arm-resources";
-import * as AzureStorage from "@azure/arm-storage";
-import * as AzureBlob from "@azure/storage-blob";
-import * as AzureAppConfiguration from "@azure/arm-appconfiguration";
-import * as AzureSql from "@azure/arm-sql";
-import * as AzurePostgreSQL from "@azure/arm-postgresql";
-import * as AzureRedis from "@azure/arm-rediscache";
-import * as AzureAppInsights from "@azure/arm-appinsights";
-import * as AzureAppService from "@azure/arm-appservice";
-import * as AzureRecoveryServices from "@azure/arm-recoveryservices";
-*/
-
-import * as AzRes from "@azure/arm-resources";
 
 interface AzureClients {
   [key: string]: any;
@@ -140,23 +124,24 @@ interface AzureClients {
 function extractClients(module: any): AzureClients {
   const clients: AzureClients = {};
   Object.keys(module).forEach((key) => {
-      if (module[key] instanceof Function) {
+      if ((module[key] instanceof Function && module[key].prototype instanceof ServiceClient && module[key].prototype !== undefined)) {
         clients[key] = module[key];
-        console.log(`${key} is a class that extends MyBaseClass.`);
-      } else {
-        console.log(`${key} is either not a class or does not extend MyBaseClass.`);
       }
   });
   return clients;
 }
 
-const azureClients: Record<string, AzureClients> = {
-    AzRes: extractClients(AzRes)
+import { 
+    NetworkSecurityGroup
+} from "@azure/arm-network";
+import { ResourceManagementClient , ResourceGroup } from "@azure/arm-resources";
+import {StorageAccount, StorageManagementClient} from "@azure/arm-storage";
+import { BlobServiceClient } from "@azure/storage-blob";
+
+const clientConstructors: Record<string, any> = {
+    ResourceManagementClient,
 };
-
-console.log("Available clients:");
-console.log(azureClients);
-
+Object.assign(clientConstructors, allClients);
 
 
 import * as ckiNetworkSecurityClass from "../../class/azure/ckiNetworkSecurityGroup.class";
@@ -167,84 +152,6 @@ import { AzureConfig } from "../../models/azure/config.models";
 import {getContext, getNewLogger} from "../logger.service";
 const logger = getNewLogger("AzureLogger");
 
-
-
-
-
-
-import { 
-    NetworkManagementClient,
-    NetworkSecurityGroup,
-} from "@azure/arm-network";
-import { ComputeManagementClient } from "@azure/arm-compute";
-import { ResourceManagementClient , ResourceGroup } from "@azure/arm-resources";
-import {StorageAccount, StorageManagementClient} from "@azure/arm-storage";
-import { BlobServiceClient } from "@azure/storage-blob";
-import { AppConfigurationManagementClient } from "@azure/arm-appconfiguration";
-import  {SqlManagementClient} from '@azure/arm-sql';
-import  {PostgreSQLManagementClient} from '@azure/arm-postgresql';
-import  {RedisManagementClient} from '@azure/arm-rediscache';
-import {ApplicationInsightsManagementClient} from '@azure/arm-appinsights';
-import {WebSiteManagementClient} from '@azure/arm-appservice';
-import {RecoveryServicesClient} from '@azure/arm-recoveryservices';
-import {ContainerServiceClient} from '@azure/arm-containerservice';
-import {ExternalIdentitiesConfigurationClient} from '@azure/arm-azureadexternalidentities';
-import {AdvisorManagementClient} from '@azure/arm-advisor';
-import {ApiManagementClient } from '@azure/arm-apimanagement';
-import { AttestationManagementClient } from '@azure/arm-attestation';
-import { AppPlatformManagementClient } from '@azure/arm-appplatform';
-import { AzureVMwareSolutionAPI } from '@azure/arm-avs';
-import { AzureStackManagementClient } from '@azure/arm-azurestack';
-import { AzureStackHCIClient } from '@azure/arm-azurestackhci';
-import { AutomanageClient } from '@azure/arm-automanage';
-// FAILED
-//import { AutomationClient } from '@azure/arm-automation';
-//import { AutoSuggestClient } from '@azure/cognitiveservices-autosuggest';
-
-// WARNING THIS DELETE DEPENDENCIES
-//import { BatchManagementClient } from '@azure/arm-batch';
-
-// NEW STARTING FROM HERE (NOT TESTED)
-import { BillingManagementClient } from '@azure/arm-billing';
-import { BillingBenefitsRP } from '@azure/arm-billingbenefits';
-import { AzureBotService } from '@azure/arm-botservice';
-import { AzureChangeAnalysisManagementClient } from '@azure/arm-changeanalysis';
-import { ChangesClient } from '@azure/arm-changes';
-import { ChaosManagementClient } from '@azure/arm-chaos';
-
-const clientConstructors: Record<string, any> = {
-    ResourceManagementClient,
-   /* StorageManagementClient,
-    ComputeManagementClient,
-    NetworkManagementClient,
-    AppConfigurationManagementClient,
-    SqlManagementClient,
-    PostgreSQLManagementClient,
-    RedisManagementClient,
-    ApplicationInsightsManagementClient,
-    WebSiteManagementClient,
-    RecoveryServicesClient,
-    ExternalIdentitiesConfigurationClient,
-    AdvisorManagementClient,
-    ApiManagementClient,
-    ContainerServiceClient,
-    
-    AttestationManagementClient,
-    AppPlatformManagementClient,
-    AzureVMwareSolutionAPI,
-    AzureStackManagementClient,
-    AzureStackHCIClient,
-    AutomanageClient,
-
-    BillingManagementClient,
-    BillingBenefitsRP,
-    AzureBotService,
-    AzureChangeAnalysisManagementClient,
-    ChangesClient,
-    ChaosManagementClient*/
-   // AutomationClient,
-    //AutoSuggestClient
-};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING CLOUD RESOURCES
@@ -283,7 +190,7 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
                     [key: string]: any;
                 }
                 const azureRet: AzureRet = {};
-                for (const clientService in clientConstructors) {
+                for (const clientService in allClients) {
                     const constructor = clientConstructors[clientService];
                     const clientName = constructor.name;
                     azureRet[clientName] = await callGenericClient(createGenericClient(constructor, credential, subscriptionId));
@@ -342,8 +249,6 @@ export async function listAllBlob(client:StorageManagementClient, credentials: a
         logger.debug("error in resourceGroupListing:"+err);
         return null;
     }
-
-    return null;
 }
 
 export async function networkSecurityGroup_analyse(nsgList: Array<NetworkSecurityGroup>): Promise<Array<ckiNetworkSecurityClass.CkiNetworkSecurityGroupClass>|null> {

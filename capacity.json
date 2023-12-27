@@ -111,7 +111,15 @@
             "nsg",
             "virtualNetwork",
             "networkInterfaces",
-            "aks"
+            "aks",
+            "storage",
+            "blob",
+            "firewall",
+            "route_table",
+            "network_interface",
+            "express_route",
+            "private_endpoint",
+            "all"
         ],
         "thumbnail": "https://cdn.icon-icons.com/icons2/2699/PNG/512/microsoft_azure_logo_icon_168977.png",
         "documentation": "https://learn.microsoft.com/fr-fr/javascript/api/overview/azure/?view=azure-node-latest",
@@ -244,21 +252,6 @@
                 ]
             },
             {
-                "name": "azure-nsg-valid-subnet",
-                "description": "check if NSG have a valid subnet",
-                "applied": true,
-                "level": 1,
-                "cloudProvider": "azure",
-                "objectName": "aks",
-                "conditions": [
-                    {
-                        "property": "agentPoolProfiles",
-                        "condition": "COUNT",
-                        "value": 2
-                    }
-                ]
-            },
-            {
                 "name": "azure-is-disk-orphan",
                 "description": "this rules is to check if disk is orphan",
                 "applied": false,
@@ -385,6 +378,21 @@
                 "description": "this rules is to test the onList function",
                 "applied": false,
                 "level": 0,
+                "cloudProvider": "azure",
+                "objectName": "aks",
+                "conditions": [
+                    {
+                        "property": "agentPoolProfiles",
+                        "condition": "COUNT",
+                        "value": 2
+                    }
+                ]
+            },
+            {
+                "name": "azure-nsg-valid-subnet",
+                "description": "check if NSG have a valid subnet",
+                "applied": true,
+                "level": 1,
                 "cloudProvider": "azure",
                 "objectName": "aks",
                 "conditions": [
@@ -556,46 +564,6 @@
             {
                 "name": "git-is-repository-private",
                 "description": "this rules is to check if git repo is private",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "github",
-                "objectName": "repositories",
-                "conditions": [
-                    {
-                        "property": "private",
-                        "condition": "EQUAL",
-                        "value": true
-                    }
-                ]
-            },
-            {
-                "name": "git-is-branch-protected",
-                "description": "this rules is to check if git branch is protected",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "github",
-                "objectName": "branches",
-                "conditions": [
-                    {
-                        "operator": "NAND",
-                        "criteria": [
-                            {
-                                "property": "protected",
-                                "condition": "DIFFERENT",
-                                "value": true
-                            },
-                            {
-                                "property": "name",
-                                "condition": "EQUAL",
-                                "value": "master"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "git-is-repository-private",
-                "description": "this rules is to check if git repo is private",
                 "applied": false,
                 "level": 0,
                 "cloudProvider": "github",
@@ -645,6 +613,46 @@
                         "property": "topics",
                         "condition": "COUNT",
                         "value": 0
+                    }
+                ]
+            },
+            {
+                "name": "git-is-repository-private",
+                "description": "this rules is to check if git repo is private",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "github",
+                "objectName": "repositories",
+                "conditions": [
+                    {
+                        "property": "private",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "git-is-branch-protected",
+                "description": "this rules is to check if git branch is protected",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "github",
+                "objectName": "branches",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "criteria": [
+                            {
+                                "property": "protected",
+                                "condition": "DIFFERENT",
+                                "value": true
+                            },
+                            {
+                                "property": "name",
+                                "condition": "EQUAL",
+                                "value": "master"
+                            }
+                        ]
                     }
                 ]
             }
