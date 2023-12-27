@@ -86,7 +86,7 @@ async function fetchArmPackages() {
         } catch (error) {
             console.error('Error writing file:', error);
         }
-         console.trace("total results Azure packages found : " + i);
+         console.log("total results Azure packages found : " + i);
          return stringResults;
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -95,9 +95,74 @@ async function fetchArmPackages() {
 }
 
 async function createAzureArmPkgImportList() {
-    await fetchArmPackages();
+    try {
+        await fetchArmPackages();
+        retrieveAzureArmClients();
+    } catch (e) {
+        console.error("Error fetching ARM Packages", e);
+    }
 }
 
+/* ****************************************** */
+/*        RETRIEVE CLIENT FROM PKG AZURE      */
+/* ****************************************** */
+
+import { ServiceClient } from "@azure/core-client";
+import * as AzureImports from "./addOn/azurePackage.import";
+
+interface AzureClients {
+    [key: string]: any;
+}
+
+function extractClients(module: any): AzureClients {
+  const clients: AzureClients = {};
+  Object.keys(module).forEach((key) => {
+      if ((module[key] instanceof Function && module[key].prototype instanceof ServiceClient && module[key].prototype !== undefined)) {
+        clients[key] = module[key];
+      }
+  });
+  return clients;
+}
+
+
+function generateResourceList(resources: Record<string, boolean>): string {
+    const resourceList = Object.keys(resources).map(resource => `*\t- ${resource}`).join('\n');
+    return `${resourceList}`;
+}
+
+const testHeader = `/*
+    * Provider : azure
+    * Thumbnail : https://cdn.icon-icons.com/icons2/2699/PNG/512/microsoft_azure_logo_icon_168977.png
+    * Documentation : https://learn.microsoft.com/fr-fr/javascript/api/overview/azure/?view=azure-node-latest
+    * Creation date : 2023-08-14
+    * Note : 
+    * Resources :
+    *   - test
+    *   - test2
+    *   - test3
+    *   - test4
+    *   - test5
+    */
+    DONOTDELETE`;
+
+function retrieveAzureArmClients() {
+    let allClients: AzureClients = {};
+
+    console.log("retrieve clients from arm pkg...");
+
+    for (const key of Object.keys(AzureImports)) {
+        const currentItem = (AzureImports as { [key: string]: unknown })[key];
+        const clientsFromModule = extractClients(currentItem);
+        allClients = { ...allClients, ...clientsFromModule };
+    }
+
+    console.log("Writing clients to header...");
+    console.log(generateResourceList(allClients));
+    
+    const regex = /(\* Resources :)[\s\S]*?(\*\/)/;
+    const updatedHeader = testHeader.replace(regex, `$1\n${generateResourceList(allClients)}\n$2`);
+    console.log(updatedHeader);
+}
 
 if (require.main === module) {
     releaseCapability();

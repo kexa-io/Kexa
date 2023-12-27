@@ -63,3 +63,13 @@
             - property : isDataAction
               condition : DIFFERENT
               value : false
+    - name: "azure-testing-nsg"
+      description : "automatensg"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName : NetworkManagementClient
+      conditions:
+        - property: networkSecurityGroups
+          condition: COUNT_SUP_OR_EQUAL
+          value: 1

@@ -237,7 +237,8 @@ async function listAllResources(client: any) {
                         try {
                             resultObject = await resource[method]();
                             // IS .VALUE ALWAYS HERE IN A GOOD RESPONSE??
-                            resultList[keyStr] = resultObject.value ? resultObject.value : [];
+                           // resultList[keyStr] = resultObject.value ? resultObject.value : [];
+                            resultList[keyStr] = resultObject;
                         } catch (e) {
                             logger.debug("Error on function :", e);
                         }

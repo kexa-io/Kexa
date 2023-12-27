@@ -407,57 +407,6 @@
                 ]
             },
             {
-                "name": "check-vm-reservation",
-                "description": "check if VM have a reservation",
-                "applied": false,
-                "level": 0,
-                "cloudProvider": "azure",
-                "objectName": "vm",
-                "conditions": [
-                    {
-                        "property": "priority",
-                        "condition": "REGEX",
-                        "value": "(?i)reservation"
-                    }
-                ]
-            },
-            {
-                "name": "azure-is-disk-orphan",
-                "description": "this rules is to check if disk is orphan",
-                "applied": false,
-                "level": 1,
-                "cloudProvider": "azure",
-                "objectName": "disk",
-                "conditions": [
-                    {
-                        "property": "diskState",
-                        "condition": "DIFFERENT",
-                        "value": "Unattached"
-                    }
-                ]
-            },
-            {
-                "name": "aks-has-scaleSet",
-                "description": "check if aks have a scaleSet",
-                "applied": false,
-                "level": 0,
-                "cloudProvider": "azure",
-                "objectName": "aks",
-                "conditions": [
-                    {
-                        "property": "agentPoolProfiles",
-                        "condition": "ALL",
-                        "value": [
-                            {
-                                "property": "scaleSetEvictionPolicy",
-                                "condition": "EQUAL",
-                                "value": "Delete"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
                 "name": "azure-testing-automate",
                 "description": "testingautomate",
                 "applied": true,
@@ -479,15 +428,15 @@
                 ]
             },
             {
-                "name": "Orphan virtualNetwork",
-                "description": "this rules is to check if virtualNetwork is orphan",
-                "applied": false,
+                "name": "azure-testing-nsg",
+                "description": "automatensg",
+                "applied": true,
                 "level": 1,
                 "cloudProvider": "azure",
-                "objectName": "virtualNetwork",
+                "objectName": "NetworkManagementClient",
                 "conditions": [
                     {
-                        "property": "subnets",
+                        "property": "networkSecurityGroups",
                         "condition": "COUNT_SUP_OR_EQUAL",
                         "value": 1
                     }
