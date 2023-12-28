@@ -61,10 +61,11 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): 
     return null;
 }
 
-export function loadAddOnsCustomUtility(usage: string, funcName:string) : { [key: string]: Function; }{
+export function loadAddOnsCustomUtility(usage: string, funcName:string, onlyFiles: string[]|null = null) : { [key: string]: Function; }{
     let dictFunc: { [key: string]: Function; } = {};
     const files = fs.readdirSync(serviceAddOnPath + "/" + usage);
     files.map((file: string) => {
+        if(onlyFiles && !onlyFiles.some((onlyFile:string) => {return file.includes(onlyFile)})) return;
         let result = loadAddOnCustomUtility(file.replace(".ts", ".js"), usage, funcName);
         if(result?.data){
             dictFunc[result.key] = result.data;
