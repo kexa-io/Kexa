@@ -575,3 +575,12 @@ Kexa/helpers/latestVersion.ts was changed
 Kexa/main.ts was changed
 
 
+## 1.10.2-SNAPSHOT.28.119321d
+
+### Files added: 0
+
+### Files changed: 1
+
+documentation/Documentation-Kexa.md was changed
+
+
