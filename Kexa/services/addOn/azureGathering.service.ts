@@ -1804,13 +1804,27 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
                         logger.debug("Error constructing client", e);
                     }
                 }
-                resources.push(azureRet);
+
+                const flattenObject: { [key: string]: any } = {};
+                Object.keys(azureRet).forEach(parentKey => {
+                    azureRet[parentKey].forEach((childObj: any) => {
+                    Object.keys(childObj).forEach(childKey => {
+                        const newKey = parentKey + '.' + childKey;
+                        flattenObject[newKey as string] = childObj[childKey];
+                    });
+                });
+                });
+
+                console.log(flattenObject);
+               // console.log(azureRet);
+                resources.push(flattenObject);
             }
         } catch(e) {
             logger.error("error in collectAzureData with the subscription ID: " + (await getConfigOrEnvVar(config, "SUBSCRIPTIONID", prefix))??null);
             logger.error(e);
         }
     }
+    console.log(resources);
     return resources??null;
 }
   

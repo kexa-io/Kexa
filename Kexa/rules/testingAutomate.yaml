@@ -38,6 +38,7 @@
         #- sms
         #- email
       to: 
+       # npm run start :nobuild
         #- http://127.0.0.1:5000/test
         - myEmail@gmail.com
       conditions:
@@ -50,26 +51,18 @@
         - level: 3
           min: 1
   rules:
-    - name: "azure-testing-automate"
-      description : "testingautomate"
+    - name: "azure-orphan-nsg"
+      description : "this rules is to check if nsg is orphan"
       applied: true
       level: 1
       cloudProvider: azure
-      objectName : EducationManagementClient
+      objectName : NetworkManagementClient.networkSecurityGroups
       conditions:
-        - property: operations
-          condition: ALL
-          value: 
-            - property : isDataAction
-              condition : DIFFERENT
-              value : false
-    - name: "azure-testing-nsg"
-      description : "automatensg"
-      applied: true
-      level: 1
-      cloudProvider: azure
-      objectName : NetworkManagementClient
-      conditions:
-        - property: networkSecurityGroups
-          condition: COUNT_SUP_OR_EQUAL
-          value: 1
+        - operator: OR
+          criteria:
+            - property : networkInterfaces
+              condition : COUNT_SUP_OR_EQUAL
+              value : 15
+            - property : subnets
+              condition : COUNT_SUP_OR_EQUAL
+              value : 1
