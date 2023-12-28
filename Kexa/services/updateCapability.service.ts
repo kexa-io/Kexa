@@ -96,7 +96,7 @@ async function fetchArmPackages() {
 
 async function createAzureArmPkgImportList() {
     try {
-       // await fetchArmPackages();
+        await fetchArmPackages();
         retrieveAzureArmClients();
     } catch (e) {
         console.error("Error fetching ARM Packages", e);
@@ -132,8 +132,7 @@ function extractClients(module: any): AzureClients {
     const credentials = new DefaultAzureCredential();
 
     Object.keys(module).forEach((key) => {
-        if ((module[key] instanceof Function && module[key].prototype !== undefined)) {
-            
+        if ((module[key] instanceof Function && module[key].prototype !== undefined && module[key].name.endsWith("Client"))) {
             clients[key] = module[key];
             try {
                 clients[key] = callGenericClient(createGenericClient(module[key], credentials, null));
@@ -155,7 +154,10 @@ let blackListObject = [
     "_endpoint",
     "_allowInsecureConnection",
     "_httpClient",
-    "$host"
+    "$host",
+    "pipeline",
+    "apiVersion",
+    "subscriptionId"
 ];
 
 function generateResourceList(resources: Record<string, boolean>): string {
@@ -164,16 +166,16 @@ function generateResourceList(resources: Record<string, boolean>): string {
     Object.keys(resources).forEach(key => {
         let value = resources[key];
         if (Array.isArray(value)) {
-            if (!(value.length == 1 && value[0] === "client")) {
+            if (!(value.length == 1 && value[0] === "client") || (value.length <= 2)) {
                     value.forEach((element: any) => {
-                        if (!blackListObject.includes(element))
+                        if (!blackListObject.includes(element) && !(element.startsWith("_")))
                             concatedArray.push(key + "." + element);
                     })
             }
         }
     });
-    console.log(concatedArray);
-    const resourceList = Object.keys(concatedArray).map(resource => `\t*\t- ${resource}`).join('\n');
+   console.log(concatedArray);
+    const resourceList = concatedArray.map(line => `\t*\t- ${line}`).join('\n');
     return `${resourceList}`;
 }
 
@@ -227,7 +229,7 @@ function retrieveAzureArmClients() {
 }
 
 if (require.main === module) {
-    //releaseCapability();
-   // updateVersion();
+    releaseCapability();
+    updateVersion();
     createAzureArmPkgImportList();
 }
