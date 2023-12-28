@@ -96,7 +96,7 @@ async function fetchArmPackages() {
 
 async function createAzureArmPkgImportList() {
     try {
-        await fetchArmPackages();
+    //    await fetchArmPackages();
         retrieveAzureArmClients();
     } catch (e) {
         console.error("Error fetching ARM Packages", e);
@@ -126,25 +126,41 @@ function extractClients(module: any): AzureClients {
 
 
 function generateResourceList(resources: Record<string, boolean>): string {
-    const resourceList = Object.keys(resources).map(resource => `*\t- ${resource}`).join('\n');
+    const resourceList = Object.keys(resources).map(resource => `\t*\t- ${resource}`).join('\n');
     return `${resourceList}`;
 }
 
-const testHeader = `/*
-    * Provider : azure
-    * Thumbnail : https://cdn.icon-icons.com/icons2/2699/PNG/512/microsoft_azure_logo_icon_168977.png
-    * Documentation : https://learn.microsoft.com/fr-fr/javascript/api/overview/azure/?view=azure-node-latest
-    * Creation date : 2023-08-14
-    * Note : 
-    * Resources :
-    *   - test
-    *   - test2
-    *   - test3
-    *   - test4
-    *   - test5
-    */
-    DONOTDELETE`;
+function writeFileContent(outputFilePath: string, content: string) {
+    try {
+        fs.writeFileSync(outputFilePath, content, 'utf-8');
+        console.log("Updated " + outputFilePath + " resources header.");
+    } catch (e) {
+        console.error("Error when writing to file: ", e);
+    }
+}
 
+function readFileContent(inputFilePath: string) {
+    try {
+        const file = fs.readFileSync(inputFilePath, 'utf-8');
+        return (file);
+    } catch (e) {
+        console.error("Error when reading file: ", e);
+    }
+}
+
+async function copyFileContents(inputFilePath: string, outputFilePath: string, allClients: AzureClients) {
+    try {
+      const fileContent = await readFileContent(inputFilePath);
+      console.log(fileContent);
+      const regex = /(\* Resources :)[\s\S]*?(\*\/)/;
+      const updatedContent = fileContent.replace(regex, `$1\n${generateResourceList(allClients)}\n$2`);  
+      writeFileContent(outputFilePath, updatedContent);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+}
+ 
+      
 function retrieveAzureArmClients() {
     let allClients: AzureClients = {};
 
@@ -157,11 +173,11 @@ function retrieveAzureArmClients() {
     }
 
     console.log("Writing clients to header...");
-    console.log(generateResourceList(allClients));
     
-    const regex = /(\* Resources :)[\s\S]*?(\*\/)/;
-    const updatedHeader = testHeader.replace(regex, `$1\n${generateResourceList(allClients)}\n$2`);
-    console.log(updatedHeader);
+    const path = require("path");
+    const filePath = path.resolve(__dirname, "../../Kexa/services/addOn/azureGathering.service.ts");
+    const testDest = path.resolve(__dirname, "../../Kexa/services/addOn/azureGathering.service.ts");
+    copyFileContents(filePath, testDest, allClients);
 }
 
 if (require.main === module) {
