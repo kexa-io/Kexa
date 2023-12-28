@@ -416,7 +416,6 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
                         logger.debug("Error constructing client", e);
                     }
                 }
-                console.log(azureRet.PostgreSQLManagementClient);
                 resources.push(azureRet);
             }
         } catch(e) {
@@ -503,7 +502,7 @@ async function callGenericClient(client: any) {
 async function listAllResources(client: any) {
     logger.trace("Automatic gathering...");
     const properties = Object.getOwnPropertyNames(client);
-    logger.silly("Properties of client:");
+    logger.silly("Properties of client:" + client);
     logger.silly(properties);
 
     const resultList: Record<string, any> = {};

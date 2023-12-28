@@ -96,7 +96,7 @@ async function fetchArmPackages() {
 
 async function createAzureArmPkgImportList() {
     try {
-    //    await fetchArmPackages();
+       // await fetchArmPackages();
         retrieveAzureArmClients();
     } catch (e) {
         console.error("Error fetching ARM Packages", e);
@@ -109,27 +109,71 @@ async function createAzureArmPkgImportList() {
 
 import { ServiceClient } from "@azure/core-client";
 import * as AzureImports from "./addOn/imports/azurePackage.import";
+import { AnonymousCredential } from "@azure/storage-blob";
+import { DefaultAzureCredential } from "@azure/identity";
 
 interface AzureClients {
     [key: string]: any;
 }
 
+function createGenericClient<T>(Client: new (credential: any, subscriptionId: any) => T, credential: any, subscriptionId: any): T {
+    return new Client(credential, credential);
+}
+
+function callGenericClient(client: any) {
+    console.log("starting " + client.constructor.name + " Listing");
+    const properties = Object.getOwnPropertyNames(client);
+    return properties;
+}
+
 function extractClients(module: any): AzureClients {
     const clients: AzureClients = {};
+
+    const credentials = new DefaultAzureCredential();
+
     Object.keys(module).forEach((key) => {
         if ((module[key] instanceof Function && module[key].prototype !== undefined)) {
             
             clients[key] = module[key];
+            try {
+                clients[key] = callGenericClient(createGenericClient(module[key], credentials, null));
+            } catch (e) {
+                console.error("Error when using client constructor in update capability.", e);
+            }
+
         }
     });
     return clients;
-  }
+}
+
 /* ********************************************* */
 /*        GENERATING RESOURCES HEADER AZURE      */
 /* ********************************************* */
 
+let blackListObject = [
+    "_requestContentType",
+    "_endpoint",
+    "_allowInsecureConnection",
+    "_httpClient",
+    "$host"
+];
+
 function generateResourceList(resources: Record<string, boolean>): string {
-    const resourceList = Object.keys(resources).map(resource => `\t*\t- ${resource}`).join('\n');
+    let concatedArray: string[];
+    concatedArray = [];
+    Object.keys(resources).forEach(key => {
+        let value = resources[key];
+        if (Array.isArray(value)) {
+            if (!(value.length == 1 && value[0] === "client")) {
+                    value.forEach((element: any) => {
+                        if (!blackListObject.includes(element))
+                            concatedArray.push(key + "." + element);
+                    })
+            }
+        }
+    });
+    console.log(concatedArray);
+    const resourceList = Object.keys(concatedArray).map(resource => `\t*\t- ${resource}`).join('\n');
     return `${resourceList}`;
 }
 
@@ -151,7 +195,7 @@ function readFileContent(inputFilePath: string) {
     }
 }
 
-async function copyFileContents(inputFilePath: string, outputFilePath: string, allClients: AzureClients) {
+async function fileReplaceContent(inputFilePath: string, outputFilePath: string, allClients: AzureClients) {
     try {
       const fileContent = await readFileContent(inputFilePath);
       console.log(fileContent);
@@ -179,7 +223,7 @@ function retrieveAzureArmClients() {
     
     const path = require("path");
     const filePath = path.resolve(__dirname, "../../Kexa/services/addOn/azureGathering.service.ts");
-    copyFileContents(filePath, filePath, allClients);
+    fileReplaceContent(filePath, filePath, allClients);
 }
 
 if (require.main === module) {
