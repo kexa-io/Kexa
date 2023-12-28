@@ -1755,13 +1755,11 @@ import {getContext, getNewLogger} from "../logger.service";
 import { Logger } from "azure";
 const logger = getNewLogger("AzureLogger");
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING CLOUD RESOURCES
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|null>{
 
-    console.log(azureConfig);
     let context = getContext();
     let resources = new Array<Object>();
     for(let config of azureConfig??[]){
@@ -1799,33 +1797,29 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
                     const constructor = clientConstructors[clientService];
                     const clientName = constructor.name;
                     try {
-                        azureRet[clientName] = await callGenericClient(createGenericClient(constructor, credential, subscriptionId));
+                        azureRet[clientName] = await callGenericClient(createGenericClient(constructor, credential, subscriptionId), config);
                     } catch (e) {
                         logger.debug("Error constructing client", e);
                     }
                 }
 
-                const flattenObject: { [key: string]: any } = {};
+                const flatRessources: { [key: string]: any } = {};
                 Object.keys(azureRet).forEach(parentKey => {
                     azureRet[parentKey].forEach((childObj: any) => {
                     Object.keys(childObj).forEach(childKey => {
                         const newKey = parentKey + '.' + childKey;
-                        flattenObject[newKey as string] = childObj[childKey];
+                        flatRessources[newKey as string] = childObj[childKey];
                     });
                 });
                 });
-
-                console.log(flattenObject);
-               // console.log(azureRet);
-                resources.push(flattenObject);
+                resources.push(flatRessources);
             }
         } catch(e) {
             logger.error("error in collectAzureData with the subscription ID: " + (await getConfigOrEnvVar(config, "SUBSCRIPTIONID", prefix))??null);
             logger.error(e);
         }
     }
-    console.log(resources);
-    return resources??null;
+	return resources??null;
 }
   
   
@@ -1894,22 +1888,24 @@ function createGenericClient<T>(Client: new (credential: any, subscriptionId: an
     return new Client(credential, subscriptionId);
 }
 
-async function callGenericClient(client: any) {
+async function callGenericClient(client: any, config: any) {
     let results = [];
     logger.info("starting " + client.constructor.name + " Listing");
-    results.push(await listAllResources(client));
+    results.push(await listAllResources(client, config));
     return results;
 }
 
-async function listAllResources(client: any) {
+async function listAllResources(client: any, currentConfig: any) {
     logger.trace("Automatic gathering...");
     const properties = Object.getOwnPropertyNames(client);
-    logger.silly("Properties of client:" + client);
-    logger.silly(properties);
 
     const resultList: Record<string, any> = {};
 
+
     const promises = properties.map(async (element) => {
+		const toCheck = client.constructor.name + '.' + element;
+		if(!currentConfig.ObjectNameNeed?.includes(toCheck))
+			return null;
         type StatusKey = keyof typeof client;
         let key: StatusKey = element;
         const methods = ["listAll", "list"];

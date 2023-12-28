@@ -66,3 +66,46 @@
             - property : subnets
               condition : COUNT_SUP_OR_EQUAL
               value : 1
+    - name: "check-vm-reservation"
+      description : "check if VM have a reservation"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName : ComputeManagementClient.virtualMachines
+      conditions: 
+        - property: priority
+          condition: REGEX
+          value: (?i)reservation
+    - name: "azure-is-disk-orphan"
+      description : "this rules is to check if disk is orphan"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName : ComputeManagementClient.disks
+      conditions:
+        - property : diskState
+          condition : DIFFERENT
+          value : Unattached
+    - name: "aks-has-scaleSet"
+      description : "check if aks have a scaleSet"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName : ContainerServiceClient.managedClusters
+      conditions: 
+        - property: agentPoolProfiles
+          condition: ALL
+          value: 
+            - property: scaleSetEvictionPolicy
+              condition: EQUAL
+              value: Delete
+    - name: "Orphan virtualNetwork"
+      description : "this rules is to check if virtualNetwork is orphan"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName : NetworkManagementClient.virtualNetworks
+      conditions:
+        - property : subnets
+          condition : COUNT_SUP_OR_EQUAL
+          value : 1
