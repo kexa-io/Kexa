@@ -5,24 +5,312 @@
     * Creation date : 2023-08-14
     * Note : 
     * Resources :
-    *     - vm
-    *     - rg
-    *     - disk
-    *     - nsg
-    *     - virtualNetwork
-    *     - networkInterfaces
-    *     - aks
-    *     - storage
-    *     - blob
-    *     - firewall
-    *     - route_table
-    *     - network_interface
-    *     - express_route
-    *     - private_endpoint
-    *     - all
-    *     - NetworkManagementClient
-    *     - ApplicationInsightsManagementClient
-    *     - EducationManagementClient
+	*	- ResourceManagementClient
+	*	- getContinuationToken
+	*	- SubscriptionClient
+	*	- SqlManagementClient
+	*	- StorageManagementClient
+	*	- WebSiteManagementClient
+	*	- MonitorClient
+	*	- ServiceBusManagementClient
+	*	- KeyVaultManagementClient
+	*	- ComputeManagementClient
+	*	- EventHubManagementClient
+	*	- RedisManagementClient
+	*	- PostgreSQLManagementClient
+	*	- AzureMapsManagementClient
+	*	- MariaDBManagementClient
+	*	- AzureMediaServices
+	*	- ContainerServiceClient
+	*	- ContainerRegistryManagementClient
+	*	- CosmosDBManagementClient
+	*	- StreamAnalyticsManagementClient
+	*	- ConsumptionManagementClient
+	*	- RecoveryServicesBackupClient
+	*	- ManagementLockClient
+	*	- EventGridManagementClient
+	*	- PolicyClient
+	*	- IotCentralClient
+	*	- DevTestLabsClient
+	*	- LogicManagementClient
+	*	- DnsManagementClient
+	*	- PurviewManagementClient
+	*	- ServiceFabricManagementClient
+	*	- ApplicationClient
+	*	- ManagedServiceIdentityClient
+	*	- BillingManagementClient
+	*	- SearchManagementClient
+	*	- ManagementGroupsAPI
+	*	- CdnManagementClient
+	*	- MicrosoftResourceHealth
+	*	- AzureMachineLearningWorkspaces
+	*	- PrivateDnsManagementClient
+	*	- ContainerInstanceManagementClient
+	*	- AuthorizationManagementClient
+	*	- KustoManagementClient
+	*	- PowerBIEmbeddedManagementClient
+	*	- HybridComputeManagementClient
+	*	- SignalRManagementClient
+	*	- AzureChangeAnalysisManagementClient
+	*	- AttestationManagementClient
+	*	- ImageBuilderClient
+	*	- MarketplaceOrderingAgreements
+	*	- CommunicationServiceManagementClient
+	*	- CognitiveServicesManagementClient
+	*	- PolicyInsightsClient
+	*	- StorageCacheManagementClient
+	*	- FrontDoorManagementClient
+	*	- MixedRealityClient
+	*	- PeeringManagementClient
+	*	- FeatureClient
+	*	- NetAppManagementClient
+	*	- VMwareCloudSimple
+	*	- HDInsightManagementClient
+	*	- StorageImportExport
+	*	- AzureMLWebServicesManagementClient
+	*	- MicrosoftStorageSync
+	*	- PowerBIDedicated
+	*	- ACEProvisioningManagementPartnerAPI
+	*	- DataCatalogRestClient
+	*	- AzureMigrateV2
+	*	- BatchManagementClient
+	*	- MicrosoftSerialConsoleClient
+	*	- RedisEnterpriseManagementClient
+	*	- RelayAPI
+	*	- TrafficManagerManagementClient
+	*	- DomainServicesResourceProvider
+	*	- PostgreSQLManagementFlexibleServerClient
+	*	- SiteRecoveryManagementClient
+	*	- APIKeys
+	*	- AnalyticsItems
+	*	- Annotations
+	*	- ApplicationInsightsManagementClient
+	*	- ApplicationInsightsManagementClientContext
+	*	- ComponentAvailableFeatures
+	*	- ComponentCurrentBillingFeatures
+	*	- ComponentFeatureCapabilities
+	*	- ComponentLinkedStorageAccountsOperations
+	*	- ComponentQuotaStatus
+	*	- Components
+	*	- ExportConfigurations
+	*	- Favorites
+	*	- LiveToken
+	*	- MyWorkbooks
+	*	- Operations
+	*	- ProactiveDetectionConfigurations
+	*	- WebTestLocations
+	*	- WebTests
+	*	- WorkItemConfigurations
+	*	- WorkbookTemplates
+	*	- Workbooks
+	*	- AppPlatformManagementClient
+	*	- ManagementAssociations
+	*	- ManagementConfigurations
+	*	- OperationsManagementClient
+	*	- OperationsManagementClientContext
+	*	- Solutions
+	*	- SourceControlConfigurationClient
+	*	- AppConfigurationManagementClient
+	*	- LabServicesClient
+	*	- HanaInstances
+	*	- HanaManagementClient
+	*	- HanaManagementClientContext
+	*	- SapMonitors
+	*	- AzureStackManagementClient
+	*	- AzureStackManagementClientContext
+	*	- CustomerSubscriptions
+	*	- Products
+	*	- Registrations
+	*	- Accounts
+	*	- Extensions
+	*	- Projects
+	*	- VisualStudioResourceProviderClient
+	*	- VisualStudioResourceProviderClientContext
+	*	- DataBoxManagementClient
+	*	- MachineLearningCompute
+	*	- MachineLearningComputeManagementClient
+	*	- MachineLearningComputeManagementClientContext
+	*	- OperationalizationClusters
+	*	- DataMigrationServiceClient
+	*	- DataMigrationServiceClientContext
+	*	- Files
+	*	- ResourceSkus
+	*	- ServiceTasks
+	*	- Services
+	*	- Tasks
+	*	- Usages
+	*	- ArtifactSources
+	*	- AzureDeploymentManager
+	*	- AzureDeploymentManagerContext
+	*	- Rollouts
+	*	- ServiceTopologies
+	*	- ServiceUnits
+	*	- Steps
+	*	- ComputePolicies
+	*	- DataLakeAnalyticsAccountManagementClient
+	*	- DataLakeAnalyticsAccountManagementClientContext
+	*	- DataLakeStoreAccounts
+	*	- FirewallRules
+	*	- Locations
+	*	- StorageAccounts
+	*	- IoTSpacesClient
+	*	- IoTSpacesClientContext
+	*	- IoTSpaces
+	*	- BatchAIManagementClient
+	*	- BatchAIManagementClientContext
+	*	- Workspaces
+	*	- Experiments
+	*	- Jobs
+	*	- FileServers
+	*	- Clusters
+	*	- VideoAnalyzerManagementClient
+	*	- AzureQuotaExtensionAPI
+	*	- Portal
+	*	- AzureOrbital
+	*	- DesktopVirtualizationAPIClient
+	*	- LoadTestClient
+	*	- CustomLocationsManagementClient
+	*	- MLTeamAccountManagementClient
+	*	- MLTeamAccountManagementClientContext
+	*	- ServiceFabricMeshManagementClient
+	*	- ServiceFabricMeshManagementClientContext
+	*	- Secret
+	*	- SecretValueOperations
+	*	- Volume
+	*	- Network
+	*	- Gateway
+	*	- Application
+	*	- Service
+	*	- ServiceReplica
+	*	- CodePackage
+	*	- AzureMLCommitmentPlansManagementClient
+	*	- AzureMLCommitmentPlansManagementClientContext
+	*	- Skus
+	*	- CommitmentAssociations
+	*	- CommitmentPlans
+	*	- UsageHistory
+	*	- DnsResolverManagementClient
+	*	- DataBoxEdgeManagementClient
+	*	- DataBoxEdgeManagementClientContext
+	*	- Devices
+	*	- Alerts
+	*	- BandwidthSchedules
+	*	- OperationsStatus
+	*	- Orders
+	*	- Roles
+	*	- Shares
+	*	- StorageAccountCredentials
+	*	- Triggers
+	*	- Users
+	*	- MobileNetworkManagementClient
+	*	- NetworkManagementClient
+	*	- SynapseManagementClient
+	*	- MySQLManagementClient
+	*	- SecurityCenter
+	*	- AzureBotService
+	*	- TemplateSpecsClient
+	*	- ManagementLinkClient
+	*	- ResourceMoverServiceAPI
+	*	- AzureVMwareSolutionAPI
+	*	- MicrosoftDatadogClient
+	*	- IotHubClient
+	*	- AzureStackHCIClient
+	*	- MicrosoftSupport
+	*	- MachineLearningWorkspacesManagementClient
+	*	- OperationalInsightsManagementClient
+	*	- ActivityOperations
+	*	- AgentRegistrationInformation
+	*	- AutomationAccountOperations
+	*	- AutomationClient
+	*	- AutomationClientContext
+	*	- CertificateOperations
+	*	- ConnectionOperations
+	*	- ConnectionTypeOperations
+	*	- CredentialOperations
+	*	- DscCompilationJobOperations
+	*	- DscCompilationJobStream
+	*	- DscConfigurationOperations
+	*	- DscNodeConfigurationOperations
+	*	- DscNodeOperations
+	*	- Fields
+	*	- HybridRunbookWorkerGroupOperations
+	*	- JobOperations
+	*	- JobScheduleOperations
+	*	- JobStreamOperations
+	*	- Keys
+	*	- LinkedWorkspaceOperations
+	*	- ModuleOperations
+	*	- NodeCountInformation
+	*	- NodeReports
+	*	- ObjectDataTypes
+	*	- Python2Package
+	*	- RunbookDraftOperations
+	*	- RunbookOperations
+	*	- ScheduleOperations
+	*	- SoftwareUpdateConfigurationMachineRuns
+	*	- SoftwareUpdateConfigurationRuns
+	*	- SoftwareUpdateConfigurations
+	*	- SourceControlOperations
+	*	- SourceControlSyncJobOperations
+	*	- SourceControlSyncJobStreams
+	*	- StatisticsOperations
+	*	- TestJobOperations
+	*	- TestJobStreams
+	*	- VariableOperations
+	*	- WatcherOperations
+	*	- WebhookOperations
+	*	- ResourceGraphClient
+	*	- ResourceGraphClientContext
+	*	- RateCard
+	*	- UsageAggregates
+	*	- UsageManagementClient
+	*	- UsageManagementClientContext
+	*	- ConfluentManagementClient
+	*	- ServicemapManagementClient
+	*	- ServicemapManagementClientContext
+	*	- Machines
+	*	- Processes
+	*	- Ports
+	*	- ClientGroups
+	*	- Maps
+	*	- Summaries
+	*	- MachineGroups
+	*	- OpenEnergyPlatformManagementServiceAPIs
+	*	- ApiManagementClient
+	*	- AvailabilityGroupListeners
+	*	- SqlVirtualMachineGroups
+	*	- SqlVirtualMachineManagementClient
+	*	- SqlVirtualMachineManagementClientContext
+	*	- SqlVirtualMachines
+	*	- RecoveryServicesClient
+	*	- AzureDatabricksManagementClient
+	*	- DataFactoryManagementClient
+	*	- TimeSeriesInsightsClient
+	*	- AzureDigitalTwinsManagementClient
+	*	- AzureReservationAPI
+	*	- WebPubSubManagementClient
+	*	- NotificationHubsManagementClient
+	*	- ConnectedKubernetesClient
+	*	- AdvisorManagementClient
+	*	- HealthbotClient
+	*	- AzureAnalysisServices
+	*	- HealthcareApisManagementClient
+	*	- CustomerInsightsManagementClient
+	*	- IotDpsClient
+	*	- DevSpacesManagementClient
+	*	- MySQLManagementFlexibleServerClient
+	*	- SecurityInsights
+	*	- ContainerAppsAPIClient
+	*	- ChangesClient
+	*	- ServiceLinkerManagementClient
+	*	- ConfidentialLedgerClient
+	*	- DeviceUpdate
+	*	- DynatraceObservability
+	*	- EducationManagementClient
+	*	- AzureDedicatedHSMResourceProvider
+	*	- ExternalIdentitiesConfigurationClient
+	*	- DashboardManagementClient
+	*	- Scvmm
 */
 
 
@@ -32,7 +320,7 @@
 
 
 import { ServiceClient } from "@azure/core-client";
-import * as AzureImports from "./azurePackage.import";
+import * as AzureImports from "./imports/azurePackage.import";
 
 let allClients: AzureClients = {};
 
@@ -50,7 +338,7 @@ interface AzureClients {
 function extractClients(module: any): AzureClients {
   const clients: AzureClients = {};
   Object.keys(module).forEach((key) => {
-      if ((module[key] instanceof Function && module[key].prototype instanceof ServiceClient && module[key].prototype !== undefined)) {
+      if ((module[key] instanceof Function && module[key].prototype !== undefined)) {
         clients[key] = module[key];
       }
   });
@@ -76,6 +364,7 @@ import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service"
 import { AzureConfig } from "../../models/azure/config.models";
 
 import {getContext, getNewLogger} from "../logger.service";
+import { Logger } from "azure";
 const logger = getNewLogger("AzureLogger");
 
 
@@ -106,7 +395,7 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
             let UAI = {}
             let useAzureIdentity = await getConfigOrEnvVar(config, "USERAZUREIDENTITYID", prefix);
             if(useAzureIdentity) UAI = {managedIdentityClientId: useAzureIdentity};
-            const credential = new DefaultAzureCredential(UAI);
+            const credential = new DefaultAzureCredential();
 
             if(!subscriptionId) {
                 throw new Error("- Please pass "+ prefix + "SUBSCRIPTIONID in your config file");
@@ -121,8 +410,13 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
                 for (const clientService in allClients) {
                     const constructor = clientConstructors[clientService];
                     const clientName = constructor.name;
-                    azureRet[clientName] = await callGenericClient(createGenericClient(constructor, credential, subscriptionId));
+                    try {
+                        azureRet[clientName] = await callGenericClient(createGenericClient(constructor, credential, subscriptionId));
+                    } catch (e) {
+                        logger.debug("Error constructing client", e);
+                    }
                 }
+                console.log(azureRet.PostgreSQLManagementClient);
                 resources.push(azureRet);
             }
         } catch(e) {
@@ -237,8 +531,8 @@ async function listAllResources(client: any) {
                         try {
                             resultObject = await resource[method]();
                             // IS .VALUE ALWAYS HERE IN A GOOD RESPONSE??
-                           // resultList[keyStr] = resultObject.value ? resultObject.value : [];
-                            resultList[keyStr] = resultObject;
+                            resultList[keyStr] = resultObject.value ? resultObject.value : [];
+                           // resultList[keyStr] = resultObject;
                         } catch (e) {
                             logger.debug("Error on function :", e);
                         }

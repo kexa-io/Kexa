@@ -81,7 +81,7 @@ async function fetchArmPackages() {
         });
         fileContent += `};\n`;
         try {
-            fs.writeFileSync("Kexa/services/addOn/" + fileName, fileContent);
+            fs.writeFileSync("Kexa/services/addOn/imports/" + fileName, fileContent);
             console.log('File created: azurePackage.import.ts');
         } catch (error) {
             console.error('Error writing file:', error);
@@ -108,22 +108,25 @@ async function createAzureArmPkgImportList() {
 /* ****************************************** */
 
 import { ServiceClient } from "@azure/core-client";
-import * as AzureImports from "./addOn/azurePackage.import";
+import * as AzureImports from "./addOn/imports/azurePackage.import";
 
 interface AzureClients {
     [key: string]: any;
 }
 
 function extractClients(module: any): AzureClients {
-  const clients: AzureClients = {};
-  Object.keys(module).forEach((key) => {
-      if ((module[key] instanceof Function && module[key].prototype instanceof ServiceClient && module[key].prototype !== undefined)) {
-        clients[key] = module[key];
-      }
-  });
-  return clients;
-}
-
+    const clients: AzureClients = {};
+    Object.keys(module).forEach((key) => {
+        if ((module[key] instanceof Function && module[key].prototype !== undefined)) {
+            
+            clients[key] = module[key];
+        }
+    });
+    return clients;
+  }
+/* ********************************************* */
+/*        GENERATING RESOURCES HEADER AZURE      */
+/* ********************************************* */
 
 function generateResourceList(resources: Record<string, boolean>): string {
     const resourceList = Object.keys(resources).map(resource => `\t*\t- ${resource}`).join('\n');
@@ -176,12 +179,11 @@ function retrieveAzureArmClients() {
     
     const path = require("path");
     const filePath = path.resolve(__dirname, "../../Kexa/services/addOn/azureGathering.service.ts");
-    const testDest = path.resolve(__dirname, "../../Kexa/services/addOn/azureGathering.service.ts");
-    copyFileContents(filePath, testDest, allClients);
+    copyFileContents(filePath, filePath, allClients);
 }
 
 if (require.main === module) {
-    releaseCapability();
-    updateVersion();
+    //releaseCapability();
+   // updateVersion();
     createAzureArmPkgImportList();
 }
