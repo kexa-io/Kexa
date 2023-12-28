@@ -11,6 +11,7 @@ const context = getContext();
 const addOnPropertyToSend: { [key: string]: Function; } = loadAddOnsCustomUtility("display", "propertyToSend");
 
 export async function save(save: PrometheusSaveConfig, result: ResultScan[][]): Promise<void>{
+    throw new Error("Not finish implemented yet");
     if(!save.urlName) throw new Error("urlName is required");
     let url = (await getEnvVar(save.urlName))??save.urlName;
     logger.info(`Saving to Prometheus`);

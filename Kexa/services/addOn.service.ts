@@ -83,7 +83,7 @@ function loadAddOnCustomUtility(file: string, usage: string, funcName:string): {
             return { key: nameAddOn, data:funcCall};
         }
     }catch(e){
-        logger.warn(e);
+        logger.warn("Error loading addOn " + file + " : " + e);
     }
     return null;
 }
