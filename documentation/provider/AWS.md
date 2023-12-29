@@ -1,6 +1,6 @@
 <div align="center">
     <a href="https://www.kexa.io/addOn/aws">
-        <img src="../images/aws-logo.png" alt="Logo" width="200">
+        <img src="../../images/aws-logo.png" alt="Logo" width="200">
     </a>
 
 # <h3 align="center">AWS addOn</h3>
@@ -36,7 +36,7 @@ Without specifying this, all regions will be scan.
   - <https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.RegionsAndAvailabilityZones.html>
 
 Example config for 2 environments:
-![example config for aws](../config/demo/aws.default.json)
+![example config for aws](../../config/demo/aws.default.json)
 
 ### Environment
 

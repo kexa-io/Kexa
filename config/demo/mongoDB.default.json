@@ -1,0 +1,29 @@
+{
+    "azure": [
+        {
+            "name": "Project A",
+            "prefix": "PROJECTA-",
+            "description": "First subscription (0) : Project A subscription",
+            "rules": [
+                "Name of my rule"
+            ]
+        },
+        {
+            "name": "Project B",
+            "prefix": "PROJECTB-",
+            "description": "Second subscription (1) : Project B subscription",
+            "rules": [
+                "Name of my rule",
+                "Another rules"
+            ]
+        }
+    ],
+    "save": [
+        {
+            "type": "mongoDB",
+            "name": "DB2",
+            "description": "Database to save the data in subscription EFQD",
+            "urlName": "url to connect to the database or the name of the var environment where the url is stored"
+        }
+    ]
+}

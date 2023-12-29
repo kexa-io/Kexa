@@ -31,7 +31,7 @@
       to: 
         - myEmail@gmail.com
     global:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- webhook
@@ -106,3 +106,13 @@
         - property : headers.content-type
           condition : INCLUDE
           value : "application/json"
+    - name: "http-TLS-version"
+      description : "check TLS version is superior to 1.2"
+      applied: true
+      level: 1
+      cloudProvider: http
+      objectName : request
+      conditions:
+        - property : tls.protocolVersion
+          condition : REGEX
+          value : "TLSv1.[2-9]"

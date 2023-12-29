@@ -511,7 +511,7 @@ export function checkCondition(condition:RulesConditions, resource:any): SubResu
                 };
         }
     }catch(err) {
-        logger.error("error in checkCondition:"+err);
+        logger.debug("error in checkCondition:"+err);
         return {
             value: resource,
             condition: [condition],
