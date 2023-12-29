@@ -584,3 +584,12 @@ Kexa/main.ts was changed
 documentation/Documentation-Kexa.md was changed
 
 
+## 1.11.0-SNAPSHOT.40.d73b9e6
+
+### Files added: 0
+
+### Files changed: 1
+
+capacity.json was changed
+
+
