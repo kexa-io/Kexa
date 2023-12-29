@@ -17,4 +17,26 @@ export interface AzureResources {
     mlJobs: Array<any>|null;
     mlComputes: Array<any>|null;
     mlSchedules: Array<any>|null;
+    storage: Array<any>|null;
+
+    blob: Array<any>|null;
+
+    firewall: Array<any>|null;
+    route_table: Array<any>|null;
+
+    network_interface: Array<any>|null;
+
+    express_route: Array<any>|null;
+
+    private_endpoint: Array<any>|null;
+    all: Array<any>|null;
+    insight: Array<any>|null;
+    gateway: Array<any>|null;
+    service: Array<any>|null;
+
+    backup: Array<any>|null;
+
+    sql: Array<any>|null;
+    postgres: Array<any>|null;
+    redis: Array<any>|null;
 }

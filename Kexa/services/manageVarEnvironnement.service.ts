@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const AWS = require('aws-sdk');
 
 import {getNewLogger} from "./logger.service";
@@ -68,6 +70,67 @@ async function getEnvVarWithAwsSecretManager(name:string){
         }
     });
 }
+
+function possibleWithBitwarden(){
+    return (Boolean(process.env.BITWARDEN_CLIENTID && process.env.BITWARDEN_CLIENTSECRET));
+}
+
+import { BitwardenClient, ClientSettings, DeviceType, LogLevel } from "@bitwarden/sdk-napi";
+
+async function getEnvVarWithBitwarden(){
+    let bitwardenClientId = process.env.BITWARDEN_CLIENTID;
+    let bitwtardenClientSecret = process.env.BITWARDEN_CLIENTSECRET;
+
+    /* need to use api.organization with orga api key ??? */
+    /* not available yet, maintenance from Bitwarden      */
+
+    /*   const postData = {
+         grant_type: 'client_credentials',
+         scope: 'api',
+         client_id: bitwardenClientId as string,
+         client_secret: bitwtardenClientSecret as string
+     };
+
+   axios.post('https://identity.bitwarden.com/connect/token',
+         new URLSearchParams(postData), {
+             headers: {
+                 'Content-Type': 'application/x-www-form-urlencoded'
+             }
+         })
+         .then(response => {
+             console.log('Response:', response.data);
+         })
+         .catch(error => {
+             console.error('Error:', error);
+         });*/
+
+
+    /* ******************************* */
+    /* this is getting a 401 forbidden */
+    /* ******************************* */
+
+    /*const settings: ClientSettings = {
+        apiUrl: "https://api.bitwarden.com",
+        identityUrl: "https://identity.bitwarden.com",
+        userAgent: "Bitwarden SDK",
+        deviceType: DeviceType.SDK,
+    };
+    const accessToken = process.env.BITWARDEN_TOKEN;
+    const client = new BitwardenClient(settings, LogLevel.Info);
+    let result;
+    if (accessToken)
+        result = await client.loginWithAccessToken(accessToken);
+    console.log("Result :", result);
+    if (result) {
+        if (!result.success) {
+            logger.error("Error when authenticate for Bitwarden secret manager")
+            throw Error("Authentication failed");
+        }
+    }*/
+//    const secrets = await client.secrets().list(ogranizationId);
+}
+
+
 
 import {listSecrets} from "./addOn/gcpGathering.service";
 import {deleteFile, writeStringToJsonFile} from "../helpers/files";
