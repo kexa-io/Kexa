@@ -187,6 +187,7 @@ We don't yet have a Bash script for Linux. You can follow [this documentation](h
 ### Downloads or update Kexa
 
 You can download a version of Kexa from a specific branch. To do this, there's the "-d" argument to request a Kexa pull locally without Github. To preset from which branch this should be done, you have the "-b" argument followed by a branch name present on our repository (by default: main). Finally, if you don't want to perform the download where you are, you can use "-p" followed by the path to where to perform the manipulation.
+An option is available for Kexa to update itself automatically with the 'AUTOUPDATE' environment variable. It will update on all non-breaking updates. If you decide not to update it automatically, Kexa will notify you via the logs of the latest available version.
 Note: in the event of an upgrade, your configuration files will be preserved.
 
 Here's an example:

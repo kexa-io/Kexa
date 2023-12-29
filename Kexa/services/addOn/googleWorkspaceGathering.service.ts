@@ -53,7 +53,8 @@ const SCOPES = [
     'https://www.googleapis.com/auth/calendar.settings.readonly',
     'https://www.googleapis.com/auth/calendar.acls.readonly',
     'https://www.googleapis.com/auth/admin.directory.resource.calendar.readonly',
-    'https://www.googleapis.com/auth/drive.readonly'];
+    'https://www.googleapis.com/auth/drive.readonly'
+];
 
 //getConfigOrEnvVar();
 const TOKEN_PATH = path.join(process.cwd(), '/config/token_workspace.json');
