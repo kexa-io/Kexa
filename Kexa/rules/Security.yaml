@@ -55,7 +55,7 @@
       applied: true
       level: 1
       cloudProvider: azure
-      objectName : aks
+      objectName : ContainerServiceClient.managedClusters
       conditions:
         - property: agentPoolProfiles
           condition: COUNT
