@@ -2,14 +2,14 @@
   date: 07-18-2023
   alert:
     fatal:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
-      to: 
+      to:
         - myEmail@gmail.com
     error:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
@@ -17,14 +17,14 @@
       to: 
         - myEmail@gmail.com
     warning:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
       to:
         - myEmail@gmail.com
     info:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
@@ -50,14 +50,14 @@
         - level: 3
           min: 1
   rules:
-    - name: "azure-virtual-network-minimum-subnets"
-      description : "check if NSG have a minimum of subnets"
+    - name: "aws-ec2-volume-unattached"
+      description: "this rule is to check if an ec2 volume is unattached"
       applied: true
       level: 1
-      cloudProvider: azure
-      objectName : virtualNetwork
-      conditions: 
-        - property: subnets
+      cloudProvider: aws
+      objectName: ec2Volume
+      conditions:
+        - property: Attachments
           condition: COUNT_SUP
           value: 0
     - name: "ec2-volume-check-create-less-2-month-expiration"
@@ -81,45 +81,29 @@
         - property: name
           condition: REGEX
           value: '\b\d{1,4}[-]\d{1,4}[-]\d{1,4}\b'
-    - name: "o365-check-jobtitle-defined"
-      description: "this rule is to check for non defined job title"
+    - name: "ec2-security-groups-source-defined"
+      description: "this rule is to check if a ec2 SG has a defined source (not 0.0.0.0)"
       applied: true
       level: 1
-      cloudProvider: o365
-      objectName: user
+      cloudProvider: aws
+      objectName: ec2SG
       conditions:
-        - property: jobTitle
-          condition: DIFFERENT
-          value: null
-    - name: "o365-is-simple-member"
-      description: "this rule is to check for simple members"
+        - property: IpPermissions
+          condition: ALL
+          value:
+            - property: IpRanges
+              condition: ALL
+              value:
+                - property: CidrIp
+                  condition: DIFFERENT
+                  value: "0.0.0.0/0"
+    - name: "aws-ec2-public-ip-address"
+      description : "this rule is to check if an ec2 ip address is public"
       applied: true
-      level: 1
-      cloudProvider: o365
-      objectName: user
+      level: 2
+      cloudProvider: aws
+      objectName: ec2Instance
       conditions:
-        - property: userType
+        - property: PublicIpAddress
           condition: EQUAL
-          value: Member
-    - name: "az-job-ml-check"
-      description: "this rule is to check for ml job if they are not failed"
-      applied: true
-      level: 1
-      cloudProvider: azure
-      objectName: mlJobs
-      conditions:
-        - operator: NAND
-          criteria:
-            - property: workspace
-              condition: EQUAL
-              value: "Test-Kexa-Machine-Learning" #name of the workspace
-            - property: properties.displayName
-              condition: EQUAL
-              value: "hello-world-example" #name of the job
-            - property: properties.status
-              condition: EQUAL
-              value: Failed
-            - property: properties.properties.StartTimeUtc
-              condition: DATE_INF
-              value: 0 0 0 1 0 0
-              date: "YYYY-MM-DD hh:mm:ss"
+          value: null

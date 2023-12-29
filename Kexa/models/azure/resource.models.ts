@@ -13,7 +13,10 @@ export interface AzureResources {
     pods: Array<any>|null;
     aks: Array<any>|null;
     ip: Array<any>|null;
-
+    mlWorkspaces: Array<any>|null;
+    mlJobs: Array<any>|null;
+    mlComputes: Array<any>|null;
+    mlSchedules: Array<any>|null;
     storage: Array<any>|null;
 
     blob: Array<any>|null;

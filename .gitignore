@@ -4,6 +4,7 @@ build/*
 *.js
 .idea
 config/default.json
+config/Config.d.ts
 build
 Kexa/rules/aws-tests.yaml
 config_kuber
@@ -12,3 +13,7 @@ config/addOnNeed.json
 config/headers.json
 config_kuber
 output/*
+savedFolder/*
+config/resources*.html
+config/resources*.json
+.DS_Store

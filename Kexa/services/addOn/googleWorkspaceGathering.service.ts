@@ -33,6 +33,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const {authenticate} = require('@google-cloud/local-auth');
 const {google} = require('googleapis');
+let currentConfig: googleWorkspaceConfig;
 
 /////////////////////////////////////////
 //////   LISTING CLOUD RESOURCES    /////
@@ -64,6 +65,7 @@ export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[])
 
 
     for (let config of googleWorkspaceConfig??[]) {
+        currentConfig = config;
         let googleWorkspaceResources = {
             "user": null,
             "domain": null,
@@ -156,6 +158,7 @@ async function authorize() {
 }
 
 async function listUsers(auth: any): Promise<Array<any> | null> {
+    if(!currentConfig?.ObjectNameNeed?.includes("user")) return null;
     let jsonData = [];
 
     const service = google.admin({version: 'directory_v1', auth});
@@ -199,7 +202,8 @@ async function listUsers(auth: any): Promise<Array<any> | null> {
     return jsonData ?? null;
 }
 async function listDomains(auth: any): Promise<Array<any> | null> {
-   let jsonData = [];
+    if(!currentConfig?.ObjectNameNeed?.includes("domain")) return null;
+    let jsonData = [];
 
     const admin = google.admin({version: 'directory_v1', auth});
     try {
@@ -232,6 +236,7 @@ async function listDomains(auth: any): Promise<Array<any> | null> {
 }
 
 async function listGroups(auth: any): Promise<Array<any> | null> {
+    if(!currentConfig?.ObjectNameNeed?.includes("group")) return null;
     let jsonData = [];
 
     const admin = google.admin({version: 'directory_v1', auth});
@@ -251,6 +256,7 @@ async function listGroups(auth: any): Promise<Array<any> | null> {
 }
 
 async function listRoles(auth: any): Promise<Array<any> | null> {
+    if(!currentConfig?.ObjectNameNeed?.includes("role")) return null;
     let jsonData = [];
 
     const service = google.admin({version: 'directory_v1', auth});
@@ -267,6 +273,7 @@ async function listRoles(auth: any): Promise<Array<any> | null> {
 }
 
 async function listOrganizationalUnits(auth: any): Promise<Array<any> | null> {
+    if(!currentConfig?.ObjectNameNeed?.includes("orgaunit")) return null;
     let jsonData = [];
 
     try {
@@ -285,6 +292,7 @@ async function listOrganizationalUnits(auth: any): Promise<Array<any> | null> {
     return jsonData ?? null;
 }
 async function listCalendars(auth: any): Promise<Array<any> | null> {
+    if(!currentConfig?.ObjectNameNeed?.includes("calendar")) return null;
     let jsonData = [];
 
     try {
@@ -309,6 +317,7 @@ async function listCalendars(auth: any): Promise<Array<any> | null> {
 }
 
 async function listFiles(auth: any): Promise<Array<any> | null> {
+    if(!currentConfig?.ObjectNameNeed?.includes("file")) return null;
     let jsonData = [];
 
     try {
@@ -330,6 +339,7 @@ async function listFiles(auth: any): Promise<Array<any> | null> {
 }
 
 async function listDrive(auth: any): Promise<Array<any> | null> {
+    if(!currentConfig?.ObjectNameNeed?.includes("drive")) return null;
     let jsonData = [];
 
     try {

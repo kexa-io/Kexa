@@ -3,6 +3,7 @@ import { Rules } from "../models/settingFile/rules.models";
 import { SettingFile } from "../models/settingFile/settingFile.models";
 import { extractHeaders } from "./addOn.service";
 import { gatheringRules } from "./analyse.service";
+import { getNewLogger } from "./logger.service";
 
 const fs = require("fs");
 import axios from 'axios';
@@ -18,8 +19,6 @@ async function releaseCapability(){
             headers[rule.cloudProvider].freeRules.push(rule);
         }
     });
-
-    console.log(JSON.stringify(headers, null, 4));
     writeStringToJsonFile(JSON.stringify(headers, null, 4), "./capacity.json");
 }
 
@@ -30,6 +29,22 @@ function updateVersion(){
     fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 4));
 }
 
+function updateREADME(){
+    let readme = fs.readFileSync("./README.md", "utf8");
+    let packageJson = require("../../capacity.json");
+    const tab = "    ";
+    let gaol = "\n\n"
+    Object.keys(packageJson).forEach((key: string) => {
+        gaol += `- ✅ ${key.charAt(0).toUpperCase() + key.slice(1)} check in:\n`
+        packageJson[key]["resources"].forEach((resource: string) => {
+            gaol += `${tab}- ✅ ${resource}\n`
+        });
+    });
+    readme = readme.split("<div class='spliter_code'></div>")
+    readme[1] = gaol + "\n";
+    readme = readme.join("<div class='spliter_code'></div>")
+    fs.writeFileSync("./README.md", readme);
+}
 
 /* ***************************** */
 /*            PKG FOR AZURE      */
@@ -228,6 +243,7 @@ function retrieveAzureArmClients() {
 
 if (require.main === module) {
     releaseCapability();
+    updateREADME();
     updateVersion();
     createAzureArmPkgImportList();
 }

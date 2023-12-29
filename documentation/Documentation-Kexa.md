@@ -14,9 +14,11 @@
     <a href="https://github.com/4urcloud/Kexa"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/4urcloud/Kexa/issues">Report Bug</a>
+    <a class="github-button" href="https://github.com/4urcloud/Kexa/issues" data-color-scheme="no-preference: dark_high_contrast; light: dark_high_contrast; dark: light_high_contrast;" data-icon="octicon-issue-opened" data-size="large" aria-label="Issue 4urcloud/Kexa on GitHub">Report Bug</a>
     ·
-    <a href="https://github.com/4urcloud/Kexa/issues">Request Feature</a>
+<a class="github-button" href="https://github.com/4urcloud/Kexa/discussions" data-color-scheme="no-preference: dark_high_contrast; light: dark_high_contrast; dark: light_high_contrast;" data-icon="octicon-comment-discussion" data-size="large" aria-label="Discuss 4urcloud/Kexa on GitHub">Request Feature</a>
+	·
+<a class="github-button" href="https://github.com/4urcloud/Kexa" data-color-scheme="no-preference: dark_high_contrast; light: dark_high_contrast; dark: light_high_contrast;" data-icon="octicon-star" data-size="large" aria-label="Star 4urcloud/Kexa on GitHub">Put Star</a>
   </p>
 </div>
 
@@ -35,8 +37,10 @@
     <li>
       <a href="#global-configuration">Global Configuration</a>
       <ul>
+        <li><a href="#configuration-via-script">Configuration Via Script</a></li>
         <li><a href="#basic-configuration">Basic Configuration</a></li>
         <li><a href="#multiple-environments-provider-prefix">Multiple Environments provider prefix</a></li>
+	<li><a href="#custom-and-multiple-configurations">Custom and multiple Configurations</a></li>
         <li><a href="#regions">Regions</a></li>
       </ul>
     </li>
@@ -165,6 +169,65 @@ First of all, Kexa is build with [node](https://nodejs.org/en) so you need to [i
 <br/>
 In the Kexa config folder, edit the default.json (create it if it doesn't exist)
 <br/>
+
+<div id="configuration-via-script"></div>
+
+## **Configuration via script**
+
+A powershell script is available for easy downloading, updating and configuration of Kexa versions.
+
+We don't yet have a Bash script for Linux. You can follow [this documentation](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-linux?view=powershell-7.4) to run the powershell script on linux.
+
+### Downloads or update Kexa
+
+You can download a version of Kexa from a specific branch. To do this, there's the "-d" argument to request a Kexa pull locally without Github. To preset from which branch this should be done, you have the "-b" argument followed by a branch name present on our repository (by default: main). Finally, if you don't want to perform the download where you are, you can use "-p" followed by the path to where to perform the manipulation.
+Note: in the event of an upgrade, your configuration files will be preserved.
+
+Here's an example:
+
+- Linux
+
+  ```bash
+  #for download the script localy
+  curl -sSL https://raw.githubusercontent.com/4urcloud/Kexa/main/initKexa.sh -o initKexa.sh
+
+  #to update or download Kexa locally with the main branch
+  ./initKexa.sh -d
+  #to update or download Kexa at ./Kexa with the dev branch
+  ./initKexa.sh -d -b dev -p ./Kexa
+  ```
+
+- Windows
+
+  ```powershell
+  #for download the script localy
+  Invoke-WebRequest -Uri "https://raw.githubusercontent.com/4urcloud/Kexa/main/initKexa.ps1" -OutFile "./initKexa.ps1"
+
+  #to update or download Kexa locally with the main branch
+  ./initKexa.ps1 -d
+  #to update or download Kexa at ./Kexa with the dev branch
+  ./initKexa.ps1 -d -b dev -p ./Kexa
+  ```
+
+### Setup configuration
+
+A powershell script located at "./initKexa.ps1" allows you to set up a configuration and all your necessary environment variables. It also downloads from our github repo the basic rules per provider you've configured.
+Note, executing the command is destructive to your previous configuration.
+
+- Windows:
+
+  ```powershell
+  ./initKexa.ps1 -c
+  ```
+
+- Linux:
+  ```bash
+  sudo pwsh
+  ./initKexa.ps1 -c
+  ```
+  Our bash file does not yet support Kexa configuration. However, our powershell script does.
+
+
 <div id="basic-configuration"></div>
 
 ## **Basic configuration**
@@ -234,6 +297,32 @@ Each projects in this list refers to a "subscription"/"environment". It's a good
 ```
 <br/>
 
+<div id="custom-and-multiple-configurations"></div>
+
+## **Custom and multiple configurations**
+
+As we said before, `/config/default.json` is the default file path for your Kexa projects configuration.
+But you can edit this and have multiple configuration files to switch between.
+
+First, delete the `default.json` configuration file, so it won't be taken into account. (think about backup if you need it)
+
+There is a `/config/env/` folder available in Kexa, if not, you can create it.
+In this folder you will be able to store multiple configuration files, each having a custom name.
+
+To use a custom file, set the following environment variable :
+
+```sh
+NODE_CONFIG_TS_ENV=customName
+```
+
+Replace `customName` by your file name (that will always have '.json' extension).
+Do not forget to delete or move away `default.json` to avoid conflicts.
+
+In addition, you can also use the `/config/deployment/` and `/config/user/` folder, by using for each `DEPLOYMENT=customName` or `USER=customName`.
+For more information, check [node-config-ts](https://www.npmjs.com/package/node-config-ts#custom-config-directory) documentation.
+
+<br/>
+
 <div id="regions"></div>
 
 ## **Regions**
@@ -299,10 +388,13 @@ Setup your notification tools. (for those selected in your rules files).
 ```
  EMAILPORT=587
   EMAILHOST=smtp.sendgrid.net
-  EMAILUSER=XXXXXXXXXXXXXX
+  EMAILUSER=apikey
   EMAILPWD=XXXXXXXXXXXXXXX
   EMAILFROM='"Kexa" <noreply@4urcloud.eu>'
 ```
+
+For email, EMAILPWD is your Api Key for the case you use sendgrid.
+
 > sms (with Twilio)
 ```
  SMSFROM='+00000000000'
@@ -398,6 +490,7 @@ Here is the structure and required fields for a new rule :
   conditions: # the list of criteria to match
 		-	property : string 
 	 		# the object field name to check (you can see the objects fields by launching Kexa with npm run start:o option)
+      # for any property with a dot in his name, add "/" before the dot
 			condition : enum 
 			# the condition for this comparison (defined in ./enum/condition.enum.ts)
 			value : string 
@@ -799,7 +892,7 @@ We've set up a system to facilitate the development of new features. This system
 
 ### **Gathering data**
 
-A file to collect data whose path will be "./Kexa/services/addOn". It is named as follows: [extension's name]Gathering.service.ts . The entry point for this file is a function named "collectData", which takes one arguments. The argument is a list containing all the configs for your addOn. The return format of this function is as shown in the following example. exemple :
+A file to collect data whose path will be "./Kexa/services/addOn". It is named as follows: [extension's name]Gathering.service.ts . The entry point for this file is a function named "collectData", which takes one arguments. The argument is a list containing all the configs for your addOn. This list corresponds to what you can find in the default.json file in the key that has the same name as your addOn. As additional information per item in the list, you have "ObjectNameNeed" which corresponds to the CategoryItem solicity in the rules set up. This helps you, to optimize your addOn and make faster, more targeted collections. The return format of this function is as shown in the following example. exemple :
 	
 ```json
 [
@@ -826,7 +919,7 @@ A file to collect data whose path will be "./Kexa/services/addOn". It is named a
   }
 ]
 ```
-	
+
 The data format is the following for several reasons. The first list corresponds to the different subscriptions or accounts in a sector. To illustrate, in the case of a cloud provider such as Azure, we might need different identifiers to scan all our accounts, and each account scan result is an item in the list. The dictionaries in the main list correspond to your dictionary that you find relevant to create to identify the different resources of your addOn, in the rules this corresponds to your "objectName". Finally, the lowest-level lists correspond to the list of items collected by your addOn.
 
 For project maintainability, we require addOn modules to contain a header to quickly identify certain information. It's also important to update this header according to the capabilities of your addOn. In fact, this header serves as a basis for checking the feasibility of certain rules. This header is a comment that must contain at least 2 pieces of information: the name of the module and the "categoryItems" you've included in your module. example for an "azureComplement" module: file name : azureComplementGathering.service.ts
@@ -842,8 +935,8 @@ For project maintainability, we require addOn modules to contain a header to qui
     *    - azFunction
 */
 
-export async function collectData(myGlobalConfig: any[]){
-  //the type of myGlobalConfig is any but you can make an interface if you want
+export async function collectData(myAddonConfig: any[]){
+  //the type of myAddonConfig is any but you can make an interface if you want
 
   //insert your stuff here
 }

@@ -1,0 +1,11 @@
+{
+    "kubernetes":[
+        {
+            "description": "organization 4urcloud",
+            "prefix":"A",
+            "rules": [
+                "Kubernete"
+            ]
+        }
+    ]
+}
