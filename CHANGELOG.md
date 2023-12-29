@@ -593,3 +593,12 @@ documentation/Documentation-Kexa.md was changed
 capacity.json was changed
 
 
+## 1.11.0-SNAPSHOT.43.78eb25e
+
+### Files added: 0
+
+### Files changed: 1
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+
