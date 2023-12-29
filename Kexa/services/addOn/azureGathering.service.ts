@@ -1707,6 +1707,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+import {ComputeManagementClient, VirtualMachine} from "@azure/arm-compute";
 import { ServiceClient } from "@azure/core-client";
 import * as AzureImports from "./imports/azurePackage.import";
 
@@ -1826,7 +1827,7 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
   
   
 //get service principal key information
-export async function getSPKeyInformation(credential: DefaultAzureCredential, subscriptionId: string): Promise<any> {
+export async function getSPKeyInformation(credential: DefaultAzureCredential, subscriptionId: string, currentConfig: any): Promise<any> {
     if(!currentConfig.ObjectNameNeed?.includes("sp")) return null;
     const { GraphRbacManagementClient } = require("@azure/graph");
     logger.info("starting getSPKeyInformation");
@@ -1844,7 +1845,7 @@ export async function getSPKeyInformation(credential: DefaultAzureCredential, su
 }
 
 //virtualMachines.listAll
-export async function virtualMachinesListing(client:ComputeManagementClient, monitor:MonitorClient): Promise<Array<VirtualMachine>|null> {
+export async function virtualMachinesListing(client:ComputeManagementClient, monitor:MonitorClient, currentConfig: any): Promise<Array<VirtualMachine>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("vm")) return null;
     logger.info("starting virtualMachinesListing");
     try {
@@ -1954,7 +1955,7 @@ export async function listAllBlob(client:StorageManagementClient, credentials: a
     }
 }
 
-export async function networkSecurityGroup_analyze(nsgList: Array<NetworkSecurityGroup>): Promise<Array<ckiNetworkSecurityClass.CkiNetworkSecurityGroupClass>|null> {
+export async function networkSecurityGroup_analyze(nsgList: Array<NetworkSecurityGroup>, currentConfig: any): Promise<Array<ckiNetworkSecurityClass.CkiNetworkSecurityGroupClass>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("nsg_analyze")) return null;
     try {
         const resultList = new Array<ckiNetworkSecurityClass.CkiNetworkSecurityGroupClass>;
@@ -1974,7 +1975,7 @@ export async function networkSecurityGroup_analyze(nsgList: Array<NetworkSecurit
 
 import { AzureMachineLearningWorkspaces } from "@azure/arm-machinelearning";
 import { convertMinMaxMeanMedianToPercentage } from "../../helpers/statsNumbers";
-export async function mlListing(credential: DefaultAzureCredential, subscriptionId: string): Promise<any> {
+export async function mlListing(credential: DefaultAzureCredential, subscriptionId: string, currentConfig: any): Promise<any> {
     if(
         !currentConfig.ObjectNameNeed?.includes("mlWorkspaces")
         && !currentConfig.ObjectNameNeed?.includes("mlJobs")
@@ -1995,9 +1996,9 @@ export async function mlListing(credential: DefaultAzureCredential, subscription
             let resourceGroupName = item?.id?.split("/")[4] ?? "";
             let workspaceName = item?.name ?? "";
             const promises = [
-                jobsListing(client, resourceGroupName, workspaceName),
-                computeOperationsListing(client, resourceGroupName, workspaceName),
-                schedulesListing(client, resourceGroupName, workspaceName),
+                jobsListing(client, resourceGroupName, workspaceName, currentConfig),
+                computeOperationsListing(client, resourceGroupName, workspaceName, currentConfig),
+                schedulesListing(client, resourceGroupName, workspaceName, currentConfig),
             ];
             const [jobsList, computeOperationsList, schedulesList] = await Promise.all(promises);
             result.jobs = [...result.jobs??[], ...jobsList];
@@ -2011,7 +2012,7 @@ export async function mlListing(credential: DefaultAzureCredential, subscription
     }
 }
 
-export async function jobsListing(client: AzureMachineLearningWorkspaces, resourceGroupName: string, workspaceName: string): Promise<any[]> {
+export async function jobsListing(client: AzureMachineLearningWorkspaces, resourceGroupName: string, workspaceName: string, currentConfig: any): Promise<any[]> {
     if(!currentConfig.ObjectNameNeed?.includes("mlJobs")) return [];
     //logger.info("starting jobsListing");
     try{
@@ -2029,7 +2030,7 @@ export async function jobsListing(client: AzureMachineLearningWorkspaces, resour
     }
 }
 
-export async function computeOperationsListing(client: AzureMachineLearningWorkspaces, resourceGroupName: string, workspaceName: string): Promise<any[]> {
+export async function computeOperationsListing(client: AzureMachineLearningWorkspaces, resourceGroupName: string, workspaceName: string, currentConfig: any): Promise<any[]> {
     if(!currentConfig.ObjectNameNeed?.includes("mlComputes")) return [];
     //logger.info("starting computeOperationsListing");
     try{
@@ -2047,7 +2048,7 @@ export async function computeOperationsListing(client: AzureMachineLearningWorks
     }
 }
 
-export async function schedulesListing(client: AzureMachineLearningWorkspaces, resourceGroupName: string, workspaceName: string): Promise<any[]> {
+export async function schedulesListing(client: AzureMachineLearningWorkspaces, resourceGroupName: string, workspaceName: string, currentConfig: any): Promise<any[]> {
     if(!currentConfig.ObjectNameNeed?.includes("mlSchedules")) return [];
     //logger.info("starting schedulesListing");
     try{
