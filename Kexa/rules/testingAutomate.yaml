@@ -62,7 +62,7 @@
           criteria:
             - property : networkInterfaces
               condition : COUNT_SUP_OR_EQUAL
-              value : 15
+              value : 1
             - property : subnets
               condition : COUNT_SUP_OR_EQUAL
               value : 1

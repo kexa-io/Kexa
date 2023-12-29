@@ -174,7 +174,6 @@ function generateResourceList(resources: Record<string, boolean>): string {
             }
         }
     });
-   console.log(concatedArray);
     const resourceList = concatedArray.map(line => `\t*\t- ${line}`).join('\n');
     return `${resourceList}`;
 }
@@ -200,7 +199,6 @@ function readFileContent(inputFilePath: string) {
 async function fileReplaceContent(inputFilePath: string, outputFilePath: string, allClients: AzureClients) {
     try {
       const fileContent = await readFileContent(inputFilePath);
-      console.log(fileContent);
       const regex = /(\* Resources :)[\s\S]*?(\*\/)/;
       const updatedContent = fileContent.replace(regex, `$1\n${generateResourceList(allClients)}\n$2`);  
       writeFileContent(outputFilePath, updatedContent);
