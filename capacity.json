@@ -26,7 +26,7 @@
             "mlWorkspace",
             "mlJobs",
             "mlComputes",
-            "mlSchedule"
+            "mlSchedule",
             "ResourceManagementClient.operations",
             "ResourceManagementClient.deployments",
             "ResourceManagementClient.providers",
