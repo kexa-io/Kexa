@@ -1799,13 +1799,20 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
                 for (const clientService in allClients) {
                     const constructor = clientConstructors[clientService];
                     const clientName = constructor.name;
-                    try {
-                        azureRet[clientName] = await callGenericClient(createGenericClient(constructor, credential, subscriptionId), config);
-                    } catch (e) {
-                        logger.debug("Error constructing client", e);
-                    }
+					let requireClient = false;
+					if (Array.isArray(config.ObjectNameNeed)) {
+						requireClient = config.ObjectNameNeed.some((item: string) => item.startsWith(constructor.name));
+					} else {
+						requireClient = false;
+					}
+					if (requireClient) {
+						try {
+							azureRet[clientName] = await callGenericClient(createGenericClient(constructor, credential, subscriptionId), config);
+						} catch (e) {
+							logger.debug("Error constructing client", e);
+						}
+					}
                 }
-
                 const flatRessources: { [key: string]: any } = {};
                 Object.keys(azureRet).forEach(parentKey => {
                     azureRet[parentKey].forEach((childObj: any) => {
@@ -1825,25 +1832,6 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
 	return resources??null;
 }
   
-  
-//get service principal key information
-export async function getSPKeyInformation(credential: DefaultAzureCredential, subscriptionId: string, currentConfig: any): Promise<any> {
-    if(!currentConfig.ObjectNameNeed?.includes("sp")) return null;
-    const { GraphRbacManagementClient } = require("@azure/graph");
-    logger.info("starting getSPKeyInformation");
-    try {
-        const client = new GraphRbacManagementClient(credential,subscriptionId);
-        const resultList = new Array<any>;
-        for await (const item of client.servicePrincipals.list('')) {
-            resultList.push(item);
-        }
-        return resultList;
-    } catch (err) {
-        logger.debug("error in getSPKeyInformation:"+err);
-        return null;
-    }
-}
-
 //virtualMachines.listAll
 export async function virtualMachinesListing(client:ComputeManagementClient, monitor:MonitorClient, currentConfig: any): Promise<Array<VirtualMachine>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("vm")) return null;
@@ -1875,6 +1863,8 @@ function convertGbToBytes(gb: number): number {
     return gb * 1024 * 1024 * 1024;
 }
 
+// KEEP THIS //
+
 const VMSizeMemory: {[x:string]: any} = {}
 async function getVMDetails(VMSize:string): Promise<any> {
     if(VMSizeMemory[VMSize]) return VMSizeMemory[VMSize];
@@ -1888,6 +1878,7 @@ async function getVMDetails(VMSize:string): Promise<any> {
     }
 }
 
+// KEEP THIS //
 async function getMetrics(client: MonitorClient, vmId:string): Promise<any> {
     try {
         const vmMetrics = await client.metrics.list(vmId, {
@@ -1949,7 +1940,7 @@ export async function listAllBlob(client:StorageManagementClient, credentials: a
             }
         }
         return resultList;
-    }catch (err) {
+    } catch (err) {
         logger.debug("error in resourceGroupListing:"+err);
         return null;
     }
@@ -2110,7 +2101,6 @@ async function listAllResources(client: any, currentConfig: any) {
                         let resultObject: Record<string, any> = {};
                         try {
                             resultObject = await resource[method]();
-                            // IS .VALUE ALWAYS HERE IN A GOOD RESPONSE??
                             resultList[keyStr] = resultObject.value ? resultObject.value : [];
                            // resultList[keyStr] = resultObject;
                         } catch (e) {
