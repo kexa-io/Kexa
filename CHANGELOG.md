@@ -636,3 +636,14 @@ Kexa/services/updateCapability.service.ts was changed
 Kexa/services/addOn/azureGathering.service.ts was changed
 
 
+## 1.11.0-SNAPSHOT.55.bdc5559
+
+### Files added: 0
+
+### Files changed: 2
+
+Kexa/helpers/latestVersion.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+
