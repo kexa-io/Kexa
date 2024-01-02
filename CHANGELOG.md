@@ -602,3 +602,28 @@ capacity.json was changed
 Kexa/services/addOn/azureGathering.service.ts was changed
 
 
+## 1.11.0-SNAPSHOT.49.cde3daf
+
+### Files added: 0
+
+### Files changed: 10
+
+Kexa/models/azure/resource.models.ts was changed
+
+Kexa/rules/Economy.yaml was changed
+
+Kexa/rules/OperationalExcellence.yaml was changed
+
+Kexa/rules/Performance.yaml was changed
+
+Kexa/rules/Security.yaml was changed
+
+Kexa/rules/rules-testing.yaml was changed
+
+Kexa/rules/rulesByProvider/azureSetRules.yaml was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/updateCapability.service.ts was changed
+
+
