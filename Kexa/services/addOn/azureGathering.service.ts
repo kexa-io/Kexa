@@ -1937,7 +1937,7 @@ const customGatherFunctions: FunctionMap = {
 			const mlClient = new AzureMachineLearningWorkspaces(credential, subscriptionId);
 			return workspacesListing(mlClient)
 		} catch (e) {
-			logger.warn("Error creating Azure client: ", e);
+			logger.warn("Error creating Azure client: " + name, e);
 			return null;
 		}
     },
@@ -1947,9 +1947,16 @@ const customGatherFunctions: FunctionMap = {
 
 		try {
 			const mlClient = new AzureMachineLearningWorkspaces(credential, subscriptionId);
-			return jobsListing(mlClient, resourceGroupName, workspacesListing(mlClient));
+			return workspacesListing(mlClient)
+            .then(workspaces => {
+                return jobsListing(mlClient, workspaces);
+            })
+            .catch(e => {
+                logger.warn("Error creating Azure client: ", e);
+                return null;
+            });
 		} catch (e) {
-			logger.warn("Error creating Azure client: ", e);
+			logger.warn("Error creating Azure client: " + name, e);
 			return null;
 		}
     },
@@ -1959,9 +1966,16 @@ const customGatherFunctions: FunctionMap = {
 
 		try {
 			const mlClient = new AzureMachineLearningWorkspaces(credential, subscriptionId);
-			return computeOperationsListing(mlClient, resourceGroupName, workspaceName);
+			return workspacesListing(mlClient)
+            .then(workspaces => {
+                return computeOperationsListing(mlClient, workspaces);
+            })
+            .catch(e => {
+                logger.warn("Error creating Azure client: ", e);
+                return null;
+            });
 		} catch (e) {
-			logger.warn("Error creating Azure client: ", e);
+			logger.warn("Error creating Azure client: " + name, e);
 			return ;
 		}
     },
@@ -1971,9 +1985,16 @@ const customGatherFunctions: FunctionMap = {
 
 		try {
 			const mlClient = new AzureMachineLearningWorkspaces(credential, subscriptionId);
-			return schedulesListing(mlClient, resourceGroupName, workspaceName);
+			return workspacesListing(mlClient)
+            .then(workspaces => {
+                return schedulesListing(mlClient, workspaces);
+            })
+            .catch(e => {
+                logger.warn("Error creating Azure client: ", e);
+                return null;
+            });
 		} catch (e) {
-			logger.warn("Error creating Azure client: ", e);
+			logger.warn("Error creating Azure client: " + name, e);
 			return ;
 		}
     },
@@ -2107,29 +2128,15 @@ async function listAllBlob(client:StorageManagementClient, credentials: any): Pr
     }
 }
 
-import { AzureMachineLearningWorkspaces } from "@azure/arm-machinelearning";
+import { AzureMachineLearningWorkspaces, Workspace } from "@azure/arm-machinelearning";
 import { convertMinMaxMeanMedianToPercentage } from "../../helpers/statsNumbers";
 import { Credentials } from "aws-sdk";
 
 async function workspacesListing(mlClient: AzureMachineLearningWorkspaces): Promise<any> {
 	let workspacesResult;
-	let jobs;
-	let schedule;
-	let computes;
 	try {
 		for await (let item of mlClient.workspaces.listBySubscription()) {
 			workspacesResult = [...workspacesResult??[], item];
-			let resourceGroupName = item?.id?.split("/")[4] ?? "";
-			let workspaceName = item?.name ?? "";
-			const promises = [
-				jobsListing(mlClient, resourceGroupName, workspaceName),
-				computeOperationsListing(mlClient, resourceGroupName, workspaceName),
-				schedulesListing(mlClient, resourceGroupName, workspaceName),
-			];
-			const [jobsList, computeOperationsList, schedulesList] = await Promise.all(promises);
-			jobs = [...jobs??[], ...jobsList];
-			computes = [...computes??[], ...computeOperationsList];
-			schedule = [...schedule??[], ...schedulesList];
 		}
 	} catch(e) {
 		logger.debug("Error when listing ml workspace in Azure");
@@ -2138,50 +2145,62 @@ async function workspacesListing(mlClient: AzureMachineLearningWorkspaces): Prom
 	return workspacesResult;
 }
 
-async function jobsListing(client: AzureMachineLearningWorkspaces, resourceGroupName: string, workspaces: Array<any>): Promise<any[]> {
-    try{
-        const resArray = new Array();
-        for await (let item of client.jobs.list(resourceGroupName, workspaceName)) {
-            let result:any = item;
-            result.workspace = workspaceName;
-            result.resourceGroupName = resourceGroupName;
-            resArray.push(result);
-        }
-        return resArray;
-    }catch(e){
-        logger.debug("error in jobsListing:"+e);
-        return [];
-    }
+async function jobsListing(client: AzureMachineLearningWorkspaces, workspaces: Array<Workspace>): Promise<any> {
+	for (let i = 0; i < workspaces.length; i++) {
+		try {
+			let resourceGroupName = workspaces[i]?.id?.split("/")[4] ?? "";
+			let workspaceName = workspaces[i]?.name ?? "";
+			const resArray = new Array();
+			for await (let item of client.jobs.list(resourceGroupName, workspaceName)) {
+				let result:any = item;
+				result.workspace = workspaceName;
+				result.resourceGroupName = resourceGroupName;
+				resArray.push(result);
+			}
+			return resArray;
+		} catch(e){
+			logger.debug("error in jobsListing:"+e);
+			return [];
+		}
+	}
 }
 
-async function computeOperationsListing(client: AzureMachineLearningWorkspaces, resourceGroupName: string, workspaceName: string): Promise<any[]> {
-    try{
-        const resArray = new Array();
-        for await (let item of client.computeOperations.list(resourceGroupName, workspaceName)) {
-            let result:any = item;
-            result.workspace = workspaceName;
-            result.resourceGroupName = resourceGroupName;
-            resArray.push(item);
-        }
-        return resArray;
-    }catch(e){
-        logger.debug("error in computeOperationsListing:"+e);
-        return [];
-    }
+async function computeOperationsListing(client: AzureMachineLearningWorkspaces, workspaces: Array<Workspace>): Promise<any> {
+	for (let i = 0; i < workspaces.length; i++) {
+		try{
+			let resourceGroupName = workspaces[i]?.id?.split("/")[4] ?? "";
+			let workspaceName = workspaces[i]?.name ?? "";
+			const resArray = new Array();
+			for await (let item of client.computeOperations.list(resourceGroupName, workspaceName)) {
+				let result:any = item;
+				result.workspace = workspaceName;
+				result.resourceGroupName = resourceGroupName;
+				resArray.push(item);
+			}
+			return resArray;
+		}catch(e){
+			logger.debug("error in computeOperationsListing:"+e);
+			return [];
+		}
+	}
 }
 
-async function schedulesListing(client: AzureMachineLearningWorkspaces, resourceGroupName: string, workspaceName: string): Promise<any[]> {
-    try{
-        const resArray = new Array();
-        for await (let item of client.schedules.list(resourceGroupName, workspaceName)) {
-            let result:any = item;
-            result.workspace = workspaceName;
-            result.resourceGroupName = resourceGroupName;
-            resArray.push(item);
-        }
-        return resArray;
-    }catch(e){
-        logger.debug("error in schedulesListing:"+e);
-        return [];
-    }
+async function schedulesListing(client: AzureMachineLearningWorkspaces, workspaces: Array<Workspace>): Promise<any> {
+	for (let i = 0; i < workspaces.length; i++) {
+		try {
+			let resourceGroupName = workspaces[i]?.id?.split("/")[4] ?? "";
+			let workspaceName = workspaces[i]?.name ?? "";
+			const resArray = new Array();
+			for await (let item of client.schedules.list(resourceGroupName, workspaceName)) {
+				let result:any = item;
+				result.workspace = workspaceName;
+				result.resourceGroupName = resourceGroupName;
+				resArray.push(item);
+			}
+			return resArray;
+		} catch(e){
+			logger.debug("error in schedulesListing:"+e);
+			return [];
+		}
+	}
 }
