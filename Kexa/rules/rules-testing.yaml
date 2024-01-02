@@ -130,7 +130,7 @@
       applied: false
       level: 2
       cloudProvider: azure
-      objectName : aks
+      objectName : ContainerServiceClient.managedClusters
       conditions:
         - property : tags.environment
           condition : REGEX
@@ -165,7 +165,7 @@
       applied: false
       level: 2
       cloudProvider: azure
-      objectName : disk
+      objectName : ComputeManagementClient.disks
       conditions:
         - operator : OR
           criteria:
@@ -190,7 +190,7 @@
       applied: false
       level: 0
       cloudProvider: azure
-      objectName : aks
+      objectName : ContainerServiceClient.managedClusters
       conditions:
         - property: agentPoolProfiles
           condition: ALL
@@ -203,7 +203,7 @@
       applied: false
       level: 0
       cloudProvider: azure
-      objectName : aks
+      objectName : ContainerServiceClient.managedClusters
       conditions:
         - property: agentPoolProfiles
           condition: SOME
@@ -216,7 +216,7 @@
       applied: false
       level: 0
       cloudProvider: azure
-      objectName : aks
+      objectName : ContainerServiceClient.managedClusters
       conditions:
         - property: agentPoolProfiles
           condition: COUNT

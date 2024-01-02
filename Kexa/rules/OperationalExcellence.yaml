@@ -55,7 +55,7 @@
       applied: true
       level: 1
       cloudProvider: azure
-      objectName : virtualNetwork
+      objectName : NetworkManagementClient.virtualNetworks
       conditions: 
         - property: subnets
           condition: COUNT_SUP
@@ -106,7 +106,7 @@
       applied: true
       level: 1
       cloudProvider: azure
-      objectName: mlJobs
+      objectName: KexaAzure.mlJobs
       conditions:
         - operator: NAND
           criteria:

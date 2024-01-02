@@ -136,7 +136,6 @@ function createGenericClient<T>(Client: new (credential: any, subscriptionId: an
 }
 
 function callGenericClient(client: any) {
-    console.log("starting " + client.constructor.name + " Listing");
     const properties = Object.getOwnPropertyNames(client);
     return properties;
 }
@@ -175,6 +174,14 @@ let blackListObject = [
     "subscriptionId"
 ];
 
+import {stringKeys} from "../models/azure/resource.models";
+
+function displayTotalGatheredMessage(provider: string, amount: number) {
+    console.log("------------------------------------------");
+    console.log("Gathered " + provider + " objects : " + amount + " items.");
+    console.log("------------------------------------------");
+}
+
 function generateResourceList(resources: Record<string, boolean>): string {
     let concatedArray: string[];
     concatedArray = [];
@@ -189,6 +196,9 @@ function generateResourceList(resources: Record<string, boolean>): string {
             }
         }
     });
+    displayTotalGatheredMessage("Azure", concatedArray.length);
+    for (const key of stringKeys)
+        concatedArray.push(key.toString());
     const resourceList = concatedArray.map(line => `\t*\t- ${line}`).join('\n');
     return `${resourceList}`;
 }
