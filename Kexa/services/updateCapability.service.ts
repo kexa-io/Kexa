@@ -111,7 +111,7 @@ async function fetchArmPackages() {
 
 async function createAzureArmPkgImportList() {
     try {
-        //await fetchArmPackages();
+        await fetchArmPackages();
         retrieveAzureArmClients();
     } catch (e) {
         console.error("Error fetching ARM Packages", e);
@@ -252,8 +252,8 @@ function retrieveAzureArmClients() {
 }
 
 if (require.main === module) {
- //   releaseCapability();
-   // updateREADME();
-   // updateVersion();
+    releaseCapability();
+    updateREADME();
+    updateVersion();
     createAzureArmPkgImportList();
 }
