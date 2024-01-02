@@ -45,8 +45,7 @@ async function displayUpgrade(logger: any, betterUpgrade: number, currentVersion
     ];
     logger.info(`Current version: ${currentVersion} ${betterUpgrade != -1 ? "" : "(latest)"}`);
     if(betterUpgrade != -1){
-        logger.info(`Latest version in Github: ${latestVersionInGithub}`);
-        logger.info(`You should upgrade to the latest version to get the best experience.`);
+        logger.info(`Latest version in Github: ${latestVersionInGithub}\nYou should upgrade to the latest version to get the best experience.`);
         if(betterUpgrade == 0) logger.info(`It's a major upgrade, be aware that some breaking changes may have been made.`);
         if(betterUpgrade != 0 && ((await getEnvVar("AUTOUPDATE"))??false)){
             const { spawn } = require('child_process')
