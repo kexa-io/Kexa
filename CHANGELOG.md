@@ -627,3 +627,12 @@ Kexa/services/addOn/azureGathering.service.ts was changed
 Kexa/services/updateCapability.service.ts was changed
 
 
+## 1.11.0-SNAPSHOT.52.0e3b498
+
+### Files added: 0
+
+### Files changed: 1
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+

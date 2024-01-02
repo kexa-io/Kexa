@@ -2113,6 +2113,13 @@ If you want explanations and details about rules in Kexa, please refer to [this 
     - ✅ DashboardManagementClient.privateEndpointConnections
     - ✅ DashboardManagementClient.privateLinkResources
     - ✅ DashboardManagementClient.managedPrivateEndpoints
+    - ✅ KexaAzure.vm
+    - ✅ KexaAzure.mlWorkspaces
+    - ✅ KexaAzure.mlJobs
+    - ✅ KexaAzure.mlComputes
+    - ✅ KexaAzure.mlSchedules
+    - ✅ KexaAzure.storage
+    - ✅ KexaAzure.blob
 - ✅ Gcp check in:
     - ✅ tasks_queue
     - ✅ compute
