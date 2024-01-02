@@ -584,3 +584,66 @@ Kexa/main.ts was changed
 documentation/Documentation-Kexa.md was changed
 
 
+## 1.11.0-SNAPSHOT.40.d73b9e6
+
+### Files added: 0
+
+### Files changed: 1
+
+capacity.json was changed
+
+
+## 1.11.0-SNAPSHOT.43.78eb25e
+
+### Files added: 0
+
+### Files changed: 1
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+
+## 1.11.0-SNAPSHOT.49.cde3daf
+
+### Files added: 0
+
+### Files changed: 10
+
+Kexa/models/azure/resource.models.ts was changed
+
+Kexa/rules/Economy.yaml was changed
+
+Kexa/rules/OperationalExcellence.yaml was changed
+
+Kexa/rules/Performance.yaml was changed
+
+Kexa/rules/Security.yaml was changed
+
+Kexa/rules/rules-testing.yaml was changed
+
+Kexa/rules/rulesByProvider/azureSetRules.yaml was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/updateCapability.service.ts was changed
+
+
+## 1.11.0-SNAPSHOT.52.0e3b498
+
+### Files added: 0
+
+### Files changed: 1
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+
+## 1.11.0-SNAPSHOT.55.bdc5559
+
+### Files added: 0
+
+### Files changed: 2
+
+Kexa/helpers/latestVersion.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+

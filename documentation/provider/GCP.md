@@ -1,6 +1,6 @@
 <div align="center">
     <a href="https://www.kexa.io/addOn/gcp">
-        <img src="../images/gcp-logo.png" alt="Logo" width="200">
+        <img src="../../images/gcp-logo.png" alt="Logo" width="200">
     </a>
 
 # <h3 align="center">Google Cloud addOn</h3>
@@ -38,7 +38,7 @@ Here is the GCP regions official documentation :
 - <https://cloud.google.com/compute/docs/regions-zones>
 
 Example config for 2 environments:
-![example config for GCP](../config/demo/gcp.default.json)
+![example config for GCP](../../config/demo/gcp.default.json)
 
 ### Environment
 

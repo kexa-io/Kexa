@@ -7,5 +7,23 @@
                 "Kubernete"
             ]
         }
+    ],
+    "http": [
+        {
+            "description": "organization 4urcloud",
+            "prefix":"A",
+            "rules": [
+                "HTTPRules"
+            ],
+            "URL": "https://www.4urcloud.eu"
+        }
+    ],
+    "save": [
+        {
+            "type": "mongoDB",
+            "urlName": "mongodb://localhost:28000",
+            "collectionName": "kexa",
+            "onlyErrors": true
+        }
     ]
 }

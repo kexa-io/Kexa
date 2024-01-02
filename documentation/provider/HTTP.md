@@ -1,6 +1,6 @@
 <div align="center">
     <a href="https://www.kexa.io/addOn/azure">
-        <img src="../images/https-logo.png" alt="Logo" width="200">
+        <img src="../../images/https-logo.png" alt="Logo" width="200">
     </a>
 
 # <h3 align="center">HTTP addOn</h3>
@@ -36,7 +36,7 @@ The following keys are recommended to ensure better readability when re-reading 
 - "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.
 
 Example config for 2 environments:
-![example config for http](../config/demo/http.default.json)
+![example config for http](../../config/demo/http.default.json)
 
 ### Environment
 

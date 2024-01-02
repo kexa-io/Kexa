@@ -1,12 +1,12 @@
 <div align="center">
-    <a href="https://www.kexa.io/addOn/o365">
-        <img src="../images/office-icon.png" alt="Logo" width="200">
+    <a href="https://www.kexa.io/addOn/azure">
+        <img src="../../images/azure-logo.png" alt="Logo" width="200">
     </a>
 
-# <h3 align="center">Office 365 addOn</h3>
+# <h3 align="center">Azure addOn</h3>
 
   <p align="center">
-    Ensure total confidentiality and seamless compliance within your Office 365 environment with our industry-leading data scan addon, giving you real-time monitoring, advanced protection and simplified management of sensitive information.
+    Optimize your Azure experience with our new data scan add-on, simplifying the management and analysis of your critical information, for more informed decisions than ever.
     <br />
     <a href="https://github.com/4urcloud/Kexa/issues">Report Bug</a>
     ·
@@ -29,7 +29,7 @@ The following keys are recommended to ensure better readability when re-reading 
 - "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.
 
 Example config for 2 environments:
-![example config for Office 365](../config/demo/o365.default.json)
+![example config for azure](../../config/demo/azure.default.json)
 
 ### Environment
 
@@ -54,4 +54,4 @@ USERAZUREIDENTITYID=XXXXXXXX
 
 ## Additional documentation
 
-[Microsoft Graph API](https://learn.microsoft.com/en-us/graph/api/overview?view=graph-rest-1.0)
+[Azure NodeJs SDK](https://github.com/Azure/azure-sdk-for-js/tree/main)

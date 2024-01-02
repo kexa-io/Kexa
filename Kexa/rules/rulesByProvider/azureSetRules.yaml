@@ -55,7 +55,7 @@
       applied: true
       level: 0
       cloudProvider: azure
-      objectName : vm
+      objectName : ComputeManagementClient.virtualMachines
       conditions: 
         - property: priority
           condition: REGEX
@@ -65,7 +65,7 @@
       applied: true
       level: 1
       cloudProvider: azure
-      objectName : disk
+      objectName : ComputeManagementClient.disks
       conditions:
         - property : diskState
           condition : DIFFERENT
@@ -75,7 +75,7 @@
       applied: true
       level: 0
       cloudProvider: azure
-      objectName : aks
+      objectName : ContainerServiceClient.managedClusters
       conditions: 
         - property: agentPoolProfiles
           condition: ALL
@@ -88,7 +88,7 @@
       applied: true
       level: 1
       cloudProvider: azure
-      objectName : nsg
+      objectName : NetworkManagementClient.networkSecurityGroups
       conditions:
         - operator: OR
           criteria:
@@ -103,7 +103,7 @@
       applied: true
       level: 1
       cloudProvider: azure
-      objectName : virtualNetwork
+      objectName : NetworkManagementClient.virtualNetworks
       conditions:
         - property : subnets
           condition : COUNT_SUP_OR_EQUAL
@@ -113,7 +113,7 @@
       applied: true
       level: 1
       cloudProvider: azure
-      objectName : virtualNetwork
+      objectName : NetworkManagementClient.virtualNetworks
       conditions: 
         - property: subnets
           condition: COUNT_SUP
@@ -123,7 +123,7 @@
       applied: true
       level: 0
       cloudProvider: azure
-      objectName : aks
+      objectName : ContainerServiceClient.managedClusters
       conditions: 
         - property: agentPoolProfiles
           condition: ALL
@@ -136,7 +136,7 @@
       applied: false
       level: 2
       cloudProvider: azure
-      objectName : aks
+      objectName : ContainerServiceClient.managedClusters
       conditions:
         - property : tags.environment
           condition : REGEX
@@ -161,7 +161,7 @@
       applied: false
       level: 2
       cloudProvider: azure
-      objectName : disk
+      objectName : ComputeManagementClient.disks
       conditions:
         - operator : OR
           criteria:
@@ -176,7 +176,7 @@
       applied: true
       level: 1
       cloudProvider: azure
-      objectName : aks
+      objectName : ContainerServiceClient.managedClusters
       conditions:
         - property: agentPoolProfiles
           condition: COUNT
@@ -186,7 +186,7 @@
       applied: true
       level: 1
       cloudProvider: azure
-      objectName: vm
+      objectName: ComputeManagementClient.virtualMachines
       conditions:
         - operator: OR
           criteria:

@@ -8,4 +8,10 @@ export interface HttpRequest {
     url: string|null;
     ip: any|null;
     delays: number|null;
+    tls: TLSObject|null;
+}
+
+interface TLSObject {
+    cipherName: string;
+    protocolVersion: string;
 }

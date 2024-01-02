@@ -61,11 +61,12 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): 
     return null;
 }
 
-export function loadAddOnsDisplay() : { [key: string]: Function; }{
+export function loadAddOnsCustomUtility(usage: string, funcName:string, onlyFiles: string[]|null = null) : { [key: string]: Function; }{
     let dictFunc: { [key: string]: Function; } = {};
-    const files = fs.readdirSync(serviceAddOnPath + "/display");
+    const files = fs.readdirSync(serviceAddOnPath + "/" + usage);
     files.map((file: string) => {
-        let result = loadAddOnDisplay(file.replace(".ts", ".js"));
+        if(onlyFiles && !onlyFiles.some((onlyFile:string) => {return file.includes(onlyFile)})) return;
+        let result = loadAddOnCustomUtility(file.replace(".ts", ".js"), usage, funcName);
         if(result?.data){
             dictFunc[result.key] = result.data;
         }
@@ -73,16 +74,17 @@ export function loadAddOnsDisplay() : { [key: string]: Function; }{
     return dictFunc;
 }
 
-function loadAddOnDisplay(file: string): { key: string; data: Function; } | null {
+function loadAddOnCustomUtility(file: string, usage: string, funcName:string): { key: string; data: Function; } | null {
     try{
-        if (file.endsWith('Display.service.js')){
-            let nameAddOn = file.split('Display.service.js')[0];
-            const moduleExports = require(`./addOn/display/${nameAddOn}Display.service.js`);
-            const displayFn = moduleExports.propertyToSend;
-            return { key: nameAddOn, data:displayFn};
+        let formatUsage = usage.slice(0,1).toUpperCase() + usage.slice(1);
+        if (file.endsWith(formatUsage+ '.service.js')){
+            let nameAddOn = file.split(formatUsage + '.service.js')[0];
+            const moduleExports = require(`./addOn/${usage}/${nameAddOn}${formatUsage}.service.js`);
+            const funcCall = moduleExports[funcName];
+            return { key: nameAddOn, data:funcCall};
         }
     }catch(e){
-        logger.warn(e);
+        logger.warn("Error loading addOn " + file + " : " + e);
     }
     return null;
 }

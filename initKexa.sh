@@ -179,116 +179,47 @@ function save_text_file() {
 }
 
 function configure_provider {
-    # Configure a provider
-    # param (
-    #     [string]$provider,
-    #     [string[]]$prefixs,
-    #     [string[]]$credForTheProvider
-    # )
+    if command -v pwsh &> /dev/null; then
+        echo "PowerShell est déjà installé." >&2
+    else
+        ###################################
+        # Install pre-requisites
+        
+        # Installer PowerShell
+        echo "Installation de PowerShell..."
+        # Update the list of packages
+        sudo apt-get update
 
-    local provider=(["aws"]="AWS" ["azure"]="Azure" ["gcp"]="Google Cloud" ["github"]="Github" ["googleDrive"]="Google Drive" ["googleWorkspace"]="Google Workspace" ["http"]="HTTP" ["kubernetes"]="Kubernetes" ["o365"]="Office 365" )
-    local credByProvider=(["aws"]="AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY" ["azure"]="SUBSCRIPTIONID AZURECLIENTID AZURETENANTID AZURECLIENTSECRET" ["gcp"]="GOOGLE_PROJECT_ID GOOGLE_APPLICATION_CREDENTIALS" ["github"]="GITHUBTOKEN" ["googleDrive"]="DRIVECRED" ["googleWorkspace"]="WORKSPACECRED" ["http"]="AUTHORIZATION" ["kubernetes"]="KUBECONFIG" ["o365"]="SUBSCRIPTIONID AZURECLIENTID AZURETENANTID AZURECLIENTSECRET")
-    local additionnalConfigurationOptionnal=(["aws"]="regions" ["gcp"]="regions" ["http"]="header body") 
-    local additionnalConfigurationNotOptionnal=(["http"]="header body")
-    local configJson=()
-    local askingProvider=()
+        # Install pre-requisite packages.
+        sudo apt-get install -y wget apt-transport-https software-properties-common
 
-    # Create/Overwrite the .env file
-    save_text_file "$path_value/.env" "RULESDIRECTORY=./rules"
+        # Get the version of os
+        source /etc/os-release
 
-    # Ask the user which providers he wants to configure
-    while [true]; do
-        local ask=$(ask_user "Which provider do you want to configure ?" "${provider[@]}")
-        if [ "$ask" = "q" ]; then
-            break
-        fi
+        # Download the Microsoft repository keys
+        wget -q https://packages.microsoft.com/config/ubuntu/$VERSION_ID/packages-microsoft-prod.deb
 
-        # Get the display value of the provider
-        for key in "${!providers[@]}"; do
-            if [ "${providers[$key]}" = "$ask" ]; then
-                $askingProvider="$key"
-                break
-            fi
-        done
+        # Register the Microsoft repository keys
+        sudo dpkg -i packages-microsoft-prod.deb
 
-        clear
-        local prefixs=()
-        local credForTheProvider=()
-        local numberOfEnvironments=0
+        # Delete the Microsoft repository keys file
+        rm packages-microsoft-prod.deb
 
-        info "For the provider $ask, enter the environments"
-        info "For each environment, enter the name, the description, the prefix and additionnal configuration if needed"
-        info " "
-        #loop to ask the user to enter all the environments
-        while [true]; do
-            local environmentName= $(ask_user "Enter the name of the environment (number: $numberOfEnvironments) (q to finish) " )
-            if [ "$environmentName" = "q" ]; then
-                break
-            fi
-            read -p "Enter the description (default: $environmentName): " environmentDescription
-            if [ -z "$environmentDescription" ]; then
-                environmentDescription="$environmentName"
-            fi
+        # Update the list of packages after we added packages.microsoft.com
+        sudo apt-get update
 
-            read -p "Enter the prefix (default: $numberOfEnvironments): " environmentPrefix
-            if [ -z "$environmentPrefix" ]; then
-                environmentPrefix="$numberOfEnvironments"
-            fi
-            $prefixs += $environmentPrefix
-            local environment=(
-                ["name"]="$environmentName"
-                ["description"]="$environmentDescription"
-                ["prefix"]="$environmentPrefix"
-                ["rules"]= "$askingProvider"+"SetRules"
-            )
+        ###################################
+        # Install PowerShell
+        sudo apt-get install -y powershell
+    fi
 
-            # add additionnal configuration not optional if needed depending on the provider
-            if [[ ! ${additionnalConfigurationOptionnal[$askingProvider]+_} ]]; then
-                for additionnalConfiguration in "${additionnalConfigurationOptionnal[$askingProvider]}"; do
-                    read -p "Enter the $additionnalConfiguration (default: $additionnalConfiguration): " environmentAdditionnalConfiguration
-                    if [[ ! -z "$environmentAdditionnalConfiguration" ]]; then
-                        environment["$additionnalConfiguration"]="$environmentAdditionnalConfiguration"
-                    fi
-                done
-            fi
-
-            # add additionnal configuration optional if needed depending on the provider
-            if [[ ! ${additionnalConfigurationNotOptionnal[$askingProvider]+_} ]]; then
-                for additionnalConfiguration in "${additionnalConfigurationNotOptionnal[$askingProvider]}"; do
-                    read -p "Enter the $additionnalConfiguration (default: $additionnalConfiguration): " environmentAdditionnalConfiguration
-                    if [[ ! -z "$environmentAdditionnalConfiguration" ]]; then
-                        environment["$additionnalConfiguration"]="$environmentAdditionnalConfiguration"
-                    fi
-                done
-            fi
-
-            $environments += $environment
-            $numberOfEnvironments++
-        done
-
-        # if the user enter at least one environment
-        if [ "$numberOfEnvironments" -gt 0 ]; then
-            info " "
-            # ask the user to enter the credentials for each prefix
-            declare -A result=$(get_user_input_for_all_cred "$ask" "${prefixs[@]}" "${credForTheProvider['$askingProvider']}")
-
-            # write the credentials in the .env file
-            for key in  "${!result[@]}" ; do
-                echo "$key=${result[$key]}" >> "$path_value/.env"
-            done
-            # download the rules for the provider from github and save it in the rules folder
-            $url = "https://raw.githubusercontent.com/4urcloud/Kexa/$branch/Kexa/rules/rulesByProvider/$askProvider" + "SetRules.yaml"
-            curl -o "$path_value/rules/$askProvider" + "SetRules.yaml" $url
-        fi
-        # add the provider to the config
-        $configJson["$ask"]="$environments"
-        $askingProvider+= $askProvider
-        # remove the provider from the list of providers to ask
-        unset provider["$askProvider"]
-        clear
-    done
-    # save the config in the config folder at default.json
-    save_config_json "$path_value/config/default.json" "$configJson"
+    if pwsh -File ./initKexa.ps1 -p "$path_value" -b "$branch_value" -c; then
+        info "Configuration done"
+    else
+        error "Configuration failed; Retry"
+        powershell.exe -File ./initKexa.ps1 -p "$path_value" -b "$branch_value" -c
+    fi
+    
 }
 
 function download_kexa() {
@@ -440,6 +371,7 @@ fi
 if [ "$config_bool" = true ]; then
     echo "Configure Kexa"
     test_and_install_nodejs
+    configure_provider
     let "command_trigger+=1"
     press_enter_to_continue
 fi
