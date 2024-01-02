@@ -30,8 +30,7 @@ export async function displayVersionAndLatest(logger: any): Promise<void>{
     });
     logger.info(`Current version: ${version}`);
     if(betterUpgrade != -1){
-        logger.info(`Latest version in Github: ${latestVersionInGithub}`);
-        logger.info(`You should upgrade to the latest version to get the best experience.`);
+        logger.info(`Latest version in Github: ${latestVersionInGithub}\nYou should upgrade to the latest version to get the best experience.`);
         if(betterUpgrade == 0) logger.info(`It's a major upgrade, be aware that some breaking changes may have been made.`);
     }
     return Promise.resolve();
