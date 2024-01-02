@@ -1791,7 +1791,7 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
             let UAI = {}
             let useAzureIdentity = await getConfigOrEnvVar(config, "USERAZUREIDENTITYID", prefix);
             if(useAzureIdentity) UAI = {managedIdentityClientId: useAzureIdentity};
-            const credential = new DefaultAzureCredential();
+            const credential = new DefaultAzureCredential(UAI);
 
             if(!subscriptionId) {
                 throw new Error("- Please pass "+ prefix + "SUBSCRIPTIONID in your config file");
