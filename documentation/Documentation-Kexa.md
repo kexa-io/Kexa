@@ -472,7 +472,7 @@ You can use it by filling the field corresponding to the providers you want to a
 
 You can optionally use a key manager; for these variables no prefix are needed. Those variables does not refer to any specific environment, but simply to the runner space. The following environment variables must be present in the runner environment. The preceding environment variables cited in this or other documentation may not be present in the runner environment, but in your password manager. Variables in your manager will be "simulated" as being present locally and will only be known in the environment when the value is used:
 
-- Azure: To refer to your Key Vault add this following environement variable :
+- **Azure**: To refer to your Key Vault add this following environement variable :
     
     ```
       AZUREKEYVAULTNAME=MyKeyVault
@@ -488,7 +488,7 @@ You can optionally use a key manager; for these variables no prefix are needed. 
       USERAZUREIDENTITYID=XXXXXXXX
     ```
     
-- AWS: To refer to your Key Vault add this following environement variable :
+- **AWS**: To refer to your Key Vault add this following environement variable :
     
     ```
       AWS_SECRET_NAME=XXXXXXXXX
@@ -496,14 +496,23 @@ You can optionally use a key manager; for these variables no prefix are needed. 
       AWS_SECRET_ACCESS_KEY=XXXXXXXXX
     ```
     
-<!--
-- GCP: To refer to your Key Vault add this following environment variable :
+- **Hashicorp Vault**: To refer to your Hashicorp Vault add this following environement variable :
     
     ```
-      GOOGLE_APPLICATION_CREDENTIALS=PATH_TO_JSON_CRED
-      GOOGLE_STORAGE_PROJECT_ID=
+      HCP_CLIENT_ID=XXXXXXXXX
+      HCP_CLIENT_SECRET=XXXXXXXXX  
+      HCP_API_URL=XXXXXXXXX
     ```
--->
+    You will find your HCP_CLIENT_ID and HCP_CLIENT_SECRET by creating a service principal on Hashicorp and generating them : [Create a service principal on Hashicorp](https://developer.hashicorp.com/hcp/docs/hcp/admin/iam/service-principals)
+
+    You will find your HCP_API_URL in your application secret list, in the bottom "api" section, "Read Your Secrets" -> 'location' field.
+    
+    Or you can create it like so :
+     ```
+     https://api.cloud.hashicorp.com/secrets/2023-06-13/organizations/{yourOrganizationID}/projects/{yourProjectID}/apps/{yourAppName}/open
+    ```
+
+    You will need to change the date '2023-06-13' to the latest Hashicorp Vault api version : [Hashicorp Vault API references](https://developer.hashicorp.com/hcp/api-docs/vault-secrets#OpenAppSecret)
 
 <br/>
 <p align="right">(<a href="#top">back to top</a>)</p>
