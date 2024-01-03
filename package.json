@@ -219,6 +219,7 @@
         "aws-sdk": "^2.1424.0",
         "cfonts": "^3.2.0",
         "dotenv": "^16.0.3",
+        "extract-zip": "^2.0.1",
         "googleapis": "^105.0.0",
         "helm-ts": "^0.1.5",
         "js-yaml": "^4.1.0",
