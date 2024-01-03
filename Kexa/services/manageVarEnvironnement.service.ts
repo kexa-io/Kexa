@@ -8,7 +8,6 @@ const logger = getNewLogger("KubernetesLogger");
 
 const { SecretClient } = require("@azure/keyvault-secrets");
 const { DefaultAzureCredential } = require("@azure/identity");
-//const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
 
 export async function getEnvVar(name:string) {
     return (await getFromManager(name))??process.env[name];
@@ -20,8 +19,8 @@ async function getFromManager(name:string){
             return await getEnvVarWithAzureKeyVault(name);
         else if (possibleWithAwsSecretManager())
             return await getEnvVarWithAwsSecretManager(name);
-        else if (await possibleWithGoogleSecretManager(process.env["GOOGLE_PROJECT_ID"]))
-            return await getEnvVarWithGoogleSecretManager(name, process.env["GOOGLE_PROJECT_ID"]);
+        else if (possibleWithHashipcorpVault())
+            return await getEnvVarWithHashicorpVault(name);
         } catch(e) {}
     return null;
 }
@@ -71,8 +70,52 @@ async function getEnvVarWithAwsSecretManager(name:string){
     });
 }
 
+function possibleWithHashipcorpVault() {
+    return (Boolean(process.env.HCP_CLIENT_ID && process.env.HCP_CLIENT_SECRET && process.env.HCP_API_URL));
+}
+
 function possibleWithBitwarden(){
     return (Boolean(process.env.BITWARDEN_CLIENTID && process.env.BITWARDEN_CLIENTSECRET));
+}
+
+async function getEnvVarWithHashicorpVault(name:string) {
+    let hcpClientId = process.env.HCP_CLIENT_ID;
+    let hcpClientSecret = process.env.HCP_CLIENT_SECRET;
+    let hcpApiUrl = process.env.HCP_API_URL;
+
+    const authData = {
+        audience: 'https://api.hashicorp.cloud',
+        grant_type: 'client_credentials',
+        client_id: hcpClientId,
+        client_secret: hcpClientSecret,
+    };
+    
+    const authHeaders = {
+        'Content-Type': 'application/json',
+    };
+    try {
+        const response = await axios.post('https://auth.hashicorp.com/oauth/token', authData, {
+            headers: authHeaders,
+        });
+        const accessToken = response.data.access_token;
+        const apiHeaders = {
+            Authorization: `Bearer ${accessToken}`,
+        };
+        try {
+            const secretUrl = hcpApiUrl + '/' + name;
+            const responseSecret = await axios.get(secretUrl, {
+                headers: apiHeaders,
+            });
+            if (responseSecret.status != 200)
+                return;
+            return responseSecret.data.secret.version.value;
+        } catch (error) {
+            throw error;
+        }
+    } catch (error) {
+        logger.silly('Error fetching hashicorp secret:', error);
+        return ;
+    }
 }
 
 import { BitwardenClient, ClientSettings, DeviceType, LogLevel } from "@bitwarden/sdk-napi";
@@ -81,7 +124,6 @@ async function getEnvVarWithBitwarden(){
     let bitwardenClientId = process.env.BITWARDEN_CLIENTID;
     let bitwtardenClientSecret = process.env.BITWARDEN_CLIENTSECRET;
 
-    /* need to use api.organization with orga api key ??? */
     /* not available yet, maintenance from Bitwarden      */
 
     /*   const postData = {
@@ -104,30 +146,6 @@ async function getEnvVarWithBitwarden(){
              console.error('Error:', error);
          });*/
 
-
-    /* ******************************* */
-    /* this is getting a 401 forbidden */
-    /* ******************************* */
-
-    /*const settings: ClientSettings = {
-        apiUrl: "https://api.bitwarden.com",
-        identityUrl: "https://identity.bitwarden.com",
-        userAgent: "Bitwarden SDK",
-        deviceType: DeviceType.SDK,
-    };
-    const accessToken = process.env.BITWARDEN_TOKEN;
-    const client = new BitwardenClient(settings, LogLevel.Info);
-    let result;
-    if (accessToken)
-        result = await client.loginWithAccessToken(accessToken);
-    console.log("Result :", result);
-    if (result) {
-        if (!result.success) {
-            logger.error("Error when authenticate for Bitwarden secret manager")
-            throw Error("Authentication failed");
-        }
-    }*/
-//    const secrets = await client.secrets().list(ogranizationId);
 }
 
 
@@ -136,22 +154,9 @@ import {listSecrets} from "./addOn/gcpGathering.service";
 import {deleteFile, writeStringToJsonFile} from "../helpers/files";
 import {Storage} from "@google-cloud/storage";
 async function possibleWithGoogleSecretManager(projectId: any): Promise<boolean> {
-    // HERE LIST AND CHECK FOR NAME ///
     if ((process.env["GOOGLE_APPLICATION_CREDENTIALS"]
         && process.env["GOOGLE_STORAGE_PROJECT_ID"]))
     {
-        /*console.log("OUI OUI");
-        const config = require('config');
-        const gcpConfig = (config.has('gcp'))?config.get('gcp'):null;
-        setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", "./config/gcp.json");
-        writeStringToJsonFile(process.env["0-GOOGLE_APPLICATION_CREDENTIALS"].toString(), "./config/gcp.json");
-        setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", "./config/gcp.json");
-        const storage = new Storage({
-            projectId,
-        });
-        let secret = await listSecrets(projectId);
-        console.log("got secrets here...: " + secret);
-        deleteFile("./config/gcp.json");*/
         return false;
     }
     else {
