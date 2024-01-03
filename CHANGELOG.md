@@ -647,3 +647,18 @@ Kexa/helpers/latestVersion.ts was changed
 Kexa/services/addOn/azureGathering.service.ts was changed
 
 
+## 1.11.0-SNAPSHOT.59.7e61738
+
+### Files added: 0
+
+### Files changed: 4
+
+Kexa/services/manageVarEnvironnement.service.ts was changed
+
+documentation/Documentation-Kexa.md was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
