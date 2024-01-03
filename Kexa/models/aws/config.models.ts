@@ -1,6 +1,6 @@
 import { Config } from "../settingFile/config.models";
 
 export interface AwsConfig extends Config {
-    AWSACCESSKEYID?: string;
-    AWSSECRETACCESSKEY?: string;
+    AWS_ACCESS_KEY_ID?: string;
+    AWS_SECRET_ACCESS_KEY?: string;
 }

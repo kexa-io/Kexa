@@ -16,10 +16,12 @@
 */
 import { Credentials, EC2, RDS, S3, ECS, ECR, ResourceGroups, ResourceGroupsTaggingAPI, config, SharedIniFileCredentials } from "aws-sdk";
 import { AWSResources } from "../../models/aws/ressource.models";
-import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
-import { EC2Client, DescribeRegionsCommand } from "@aws-sdk/client-ec2";
+import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
+import { DescribeRegionsCommand } from "@aws-sdk/client-ec2";
 import { AwsConfig } from "../../models/aws/config.models";
 
+import { fromNodeProviderChain } from "@aws-sdk/credential-providers";
+import {EC2Client, DescribeVolumesCommand, DescribeSecurityGroupsCommand } from "@aws-sdk/client-ec2";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import {getContext, getNewLogger} from "../logger.service";
@@ -55,15 +57,28 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
         try {
             let awsKeyId = await getConfigOrEnvVar(oneConfig, "AWS_ACCESS_KEY_ID", prefix);
             let awsSecretKey = await getConfigOrEnvVar(oneConfig, "AWS_SECRET_ACCESS_KEY", prefix);
-            let credentials: Credentials = new SharedIniFileCredentials({profile: 'default'});
+            if (awsKeyId)
+                setEnvVar("AWS_ACCESS_KEY_ID", awsKeyId);
+            else
+                logger.warn(prefix + "AWS_ACCESS_KEY_ID not found");
+            if (awsSecretKey)
+                setEnvVar("AWS_SECRET_ACCESS_KEY", awsSecretKey);
+            else
+                logger.warn(prefix + "AWS_SECRET_ACCESS_KEY not found");
+
+            const credentialProvider = fromNodeProviderChain();
+           /* let credentials: Credentials = new SharedIniFileCredentials({profile: 'default'});
             if(awsKeyId && awsSecretKey){
                 credentials = new Credentials({
                     accessKeyId: awsKeyId,
                     secretAccessKey: awsSecretKey
                 });
-            }
-            const client = new EC2Client({region: "us-east-1", credentials: credentials});
-            const command = new DescribeRegionsCommand({AllRegions: false,});
+            }*/
+            //const client = new EC2Client({region: "us-east-1", credentials: credentials});
+
+            const client = new EC2Client({region: "us-east-1", credentials: credentialProvider});
+            const command = new DescribeRegionsCommand({AllRegions: false});
+            const ec2InstancesPromise = await ec2SGListing(client, "us-east-1");
             const response = await client.send(command);
             let gatherAll = false;
             let userRegions = new Array<string>();
@@ -106,7 +121,7 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
                         }
                         context?.log("Retrieving AWS Region : " + region.RegionName);
                         logger.info("Retrieving AWS Region : " + region.RegionName);
-                        config.update({credentials: credentials, region: region.RegionName});
+                        config.update({region: region.RegionName});
                         ec2Client = new EC2();
                         rdsClient = new RDS();
                         //    s3Client = new AWS.S3(config);
@@ -114,10 +129,9 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
                         ecrClient = new ECR();
                         const resourceGroups = new ResourceGroups();
                         const tags = new ResourceGroupsTaggingAPI();
-
                         const ec2InstancesPromise = ec2InstancesListing(ec2Client, region.RegionName as string);
-                        const ec2VolumesPromise = ec2VolumesListing(ec2Client, region.RegionName as string);
-                        const ec2SGPromise = ec2SGListing(ec2Client, region.RegionName as string);
+                        const ec2VolumesPromise = ec2VolumesListing(client, region.RegionName as string);
+                        const ec2SGPromise = ec2SGListing(client, region.RegionName as string);
                         const rdsListPromise = rdsInstancesListing(rdsClient, region.RegionName as string);
                         const resourceGroupPromise = resourceGroupsListing(resourceGroups, region.RegionName as string);
                         const tagsValuePromise = tagsValueListing(tags, region.RegionName as string);
@@ -135,7 +149,7 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
                             ecsCluster
                         };
                     } catch (e) {
-                        logger.error("error in collectAWSData with AWSACCESSKEYID: " + oneConfig["AWSACCESSKEYID"] ?? null);
+                        logger.error("error in collectAWSData with AWS_ACCESS_KEY_ID: " + oneConfig["AWS_ACCESS_KEY_ID"] ?? null);
                         logger.error(e);
                     }
                 });
@@ -155,8 +169,8 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
                 resources.push(awsResource as any);
             }
         } catch (e) {
-            context?.log("error in AWS connect with AWSACCESSKEYID: " + oneConfig["AWSACCESSKEYID"] ?? null);
-            logger.error("error in AWS connect with AWSACCESSKEYID: " + oneConfig["AWSACCESSKEYID"] ?? null);
+            context?.log("error in AWS connect with AWS_ACCESS_KEY_ID: " + oneConfig["AWS_ACCESS_KEY_ID"] ?? null);
+            logger.error("error in AWS connect with AWS_ACCESS_KEY_ID: " + oneConfig["AWS_ACCESS_KEY_ID"] ?? null);
             logger.error(e);
         }
     }
@@ -170,12 +184,16 @@ function addRegion(resources:any, region:string) {
     return resources;
 }
 
-async function ec2SGListing(client: EC2, region: string): Promise<any> {
-    if(!currentConfig.ObjectNameNeed?.includes("ec2SG")) return null;
+async function ec2SGListing(client: EC2Client, region: string): Promise<any> {
+   // if(!currentConfig.ObjectNameNeed?.includes("ec2SG")) return null;
     try {
-        const data = await client.describeSecurityGroups().promise();
+        const input = {};
+        const command = new DescribeSecurityGroupsCommand(input);
+        const data = await client.send(command);
+
         let jsonData = JSON.parse(JSON.stringify(data.SecurityGroups));
         jsonData = addRegion(jsonData, region);
+        console.log(jsonData);
         logger.debug(region + " - ec2SGListing Done");
         return jsonData;
     } catch (err) {
@@ -184,13 +202,15 @@ async function ec2SGListing(client: EC2, region: string): Promise<any> {
     }
 }
 
-async function ec2VolumesListing(client: EC2, region: string): Promise<any> {
-    if(!currentConfig.ObjectNameNeed?.includes("ec2Volume")) return null;
+async function ec2VolumesListing(client: EC2Client, region: string): Promise<any> {
+   // if(!currentConfig.ObjectNameNeed?.includes("ec2Volume")) return null;
     try {
-        const data = await client.describeVolumes().promise();
+        const input = {};
+        const data = await client.send(new DescribeVolumesCommand({MaxResults: 20}));
         let jsonData = JSON.parse(JSON.stringify(data.Volumes));
         jsonData = addRegion(jsonData, region);
         logger.debug(region, " - ec2VolumesListing Done");
+        console.log(jsonData);
         return jsonData;
     } catch (err) {
         logger.debug("Error in ec2VolumesListing: ", err);
