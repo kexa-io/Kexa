@@ -36,7 +36,7 @@ export async function unzipFile(relativePath: string): Promise<void> {
     const absolutePath = process.cwd() + relativePath.replace("./", ["/", "\\"][process.platform == "win32" ? 1:0]);
     logger.debug(`Unzipping file: ${absolutePath}`)
     try {
-        if(fs.existsSync(absolutePath)) fs.unlinkSync(absolutePath);
+        if(fs.existsSync(absolutePath)) fs.rmSync(absolutePath, { recursive: true, force: true });
         await extract(absolutePath + ".zip", { dir: absolutePath });
         await moveSubFilesToRoot(absolutePath);
         fs.unlinkSync(relativePath + ".zip");

@@ -43,14 +43,10 @@ export async function main() {
     logger.info("___________________________________________________________________________________________________"); 
     await displayVersionAndLatest(logger);
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"./Kexa/rules");
-    context?.log("settings", settings);
     if(settings.length != 0){
         let resources = await loadAddOns(settings);
-        context?.log("resources", resources);
         if(args.o) createFileSync(JSON.stringify(resources), folderOutput + "/resources/"+ new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '') +".json", true);
-        context?.log("good");
         settings.forEach(setting => {
-            context?.log("setting", setting);
             let result = checkRules(setting.rules, resources, setting.alert);
             if(setting.alert.global.enabled){
                 let render_table = renderTableAllScan(result.map(scan => scan.filter(value => value.error.length>0)));
