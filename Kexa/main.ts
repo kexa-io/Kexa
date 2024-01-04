@@ -16,10 +16,7 @@ const args = yargs(hideBin(process.argv)).argv
 const folderOutput = process.env.OUTPUT??"./output";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-env.config();// reading environnement vars
-// file system
-
-let config = require('node-config-ts');
+env.config();
 
 export async function main() {
     env.config();

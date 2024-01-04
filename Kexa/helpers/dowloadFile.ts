@@ -2,17 +2,21 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import fs from "fs";
 import { getNewLogger } from '../services/logger.service';
 import path from 'path';
+import { getEnvVar } from '../services/manageVarEnvironnement.service';
 
 const logger = getNewLogger("DownloadLogger");
 
 export async function downloadFile(url: string, destinationPath: string, type:string): Promise<void> {
     try {
         if(!await checkFileType(url)) throw new Error("File type not valid");
-        const response: AxiosResponse = await axios({
-            method: 'get',
+        let authorization = await getEnvVar("RULESAUTHORIZATION");
+        let axiosConfig: AxiosRequestConfig = {
+            method: "get",
             url: url,
-            responseType: 'stream',
-        });
+            responseType: "stream",
+        };
+        if(authorization) axiosConfig.headers = { "Authorization": authorization };
+        const response: AxiosResponse = await axios(axiosConfig);
         const fileStream = fs.createWriteStream(destinationPath+".zip");
         response.data.pipe(fileStream);
         return new Promise<void>((resolve, reject) => {
@@ -47,7 +51,10 @@ export async function unzipFile(relativePath: string): Promise<void> {
 }
 
 async function checkFileType(url: string, type:string="application/zip"): Promise<boolean> {
-    const response: AxiosResponse = await axios.head(url);
+    let authorization = await getEnvVar("RULESAUTHORIZATION");
+    let axiosConfig: AxiosRequestConfig = {};
+    if(authorization) axiosConfig.headers = { "Authorization": authorization };
+    const response: AxiosResponse = await axios.head(url, axiosConfig);
     const fileType = response.headers['content-type'];
     if (!fileType || fileType !== type) {
         return false;

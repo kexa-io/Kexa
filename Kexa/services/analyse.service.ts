@@ -67,9 +67,15 @@ export async function gatheringRules(rulesDirectory:string, getAll:boolean=false
     return settingFileList;
 }
 
-export async function gatheringDistantRules(rulesDirectory:string): Promise<void> {
-    await downloadFile(rulesDirectory, defaultRulesDirectory, "application/zip");
-    await unzipFile(defaultRulesDirectory);
+export async function gatheringDistantRules(rulesDirectory:string): Promise<boolean> {
+    try{
+        await downloadFile(rulesDirectory, defaultRulesDirectory, "application/zip");
+        await unzipFile(defaultRulesDirectory);
+        return true;
+    }catch(err){
+        logger.error("error in gatheringDistantRules:"+err);
+        return false;
+    }
 }
 
 export function extractAddOnNeed(settingFileList: SettingFile[]){
@@ -120,7 +126,9 @@ export async function analyzeRule(ruleFilePath:string, listNeedRules:string[], g
             logger.debug("rule not needed:"+name);
             return null;
         }
-        const doc = (yaml.load(fs.readFileSync(ruleFilePath, 'utf8')) as SettingFile[])[0];
+        let contentRuleFile = fs.readFileSync(ruleFilePath, 'utf8');
+        contentRuleFile = replaceElement(contentRuleFile, require('node-config-ts').config?.variable?.[name]);
+        const doc = (yaml.load(contentRuleFile) as SettingFile[])[0];
         let result = await checkDoc(doc);
         logCheckDoc(result);
         result.forEach((value) => {
@@ -132,6 +140,40 @@ export async function analyzeRule(ruleFilePath:string, listNeedRules:string[], g
         logger.error("error - "+ ruleFilePath + " was not load properly : "+e);
         return null;
     }    
+}
+
+export function replaceElement(contentRuleFile:string, variable: any){
+    if(!variable) return contentRuleFile;
+    if(typeof variable !== "object") return contentRuleFile
+    for(let key of Object.keys(variable)){
+        if(typeof variable[key] === "object"){
+            contentRuleFile = replaceBlockVariable(contentRuleFile, variable[key], key);
+        }else{
+            contentRuleFile = replaceVariable(contentRuleFile, variable[key], key);
+        }
+    }
+    return contentRuleFile;
+}
+
+export function replaceVariable(contentRuleFile:string, variable: string|number|boolean, key: string){
+    if(!variable) return contentRuleFile;
+    let regex = new RegExp('\\b' + key + ': &' + key + '\\b', 'g')
+    if(regex.test(contentRuleFile)){
+        contentRuleFile = contentRuleFile.slice(0, regex.lastIndex).trimEnd() + " " + variable.toString() + contentRuleFile.slice(regex.lastIndex)
+    }
+    return contentRuleFile;
+}
+
+export function replaceBlockVariable(contentRuleFile:string, variable: any, key:string){
+    if(!variable) return contentRuleFile;
+    let indentation = contentRuleFile.split('\n').filter((line:string) => {return line.trim() !== '' && /^(\s+)/.test(line)})[0].match(/^(\s+)/)?.[0]??"  ";
+    variable = yaml.dump(variable, { indent: indentation.length });
+    let regex = new RegExp('\\b' + key + ': &' + key + '\\b', 'g')
+    if(regex.test(contentRuleFile)){
+        const lastIndex = regex.lastIndex;
+        contentRuleFile = contentRuleFile.slice(0, lastIndex).trimEnd() +"\n"+ variable.toString().split('\n').map((line: string) => indentation + indentation + line).join('\n') + contentRuleFile.slice(lastIndex)
+    }
+    return contentRuleFile;
 }
 
 export function logCheckDoc(result:string[]): void {
