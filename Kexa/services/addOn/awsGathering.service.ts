@@ -15,7 +15,6 @@
     *     - ecrRepository
 */
 
-//import { config } from "aws-sdk";
 import { AWSResources } from "../../models/aws/ressource.models";
 import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
 import { DescribeRegionsCommand } from "@aws-sdk/client-ec2";
@@ -178,7 +177,7 @@ function addRegion(resources:any, region:string) {
 }
 
 async function ec2SGListing(client: EC2Client, region: string): Promise<any> {
-   if(!currentConfig.ObjectNameNeed?.includes("ec2SG")) return null;
+   // if(!currentConfig.ObjectNameNeed?.includes("ec2SG")) return null;
     try {
         const input = {};
         const command = new DescribeSecurityGroupsCommand(input);
@@ -187,6 +186,7 @@ async function ec2SGListing(client: EC2Client, region: string): Promise<any> {
         let jsonData = JSON.parse(JSON.stringify(data.SecurityGroups));
         jsonData = addRegion(jsonData, region);
         logger.debug(region + " - ec2SGListing Done");
+        console.log(jsonData);
         return jsonData ?? null;
     } catch (err) {
         logger.debug("Error in ec2SGListing: ", err);

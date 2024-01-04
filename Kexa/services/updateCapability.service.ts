@@ -46,13 +46,13 @@ function updateREADME(){
     fs.writeFileSync("./README.md", readme);
 }
 
-/* ***************************** */
-/*            PKG FOR AZURE      */
-/* ***************************** */
+/* ********************************* */
+/*        GENERIC PACKAGE FETCH      */
+/* ********************************* */
 
-async function fetchArmPackages() {
+async function fetchArmPackages(packageNeedle: string, destFile: string, destFileScript: string,exceptionEndNeedles?: Array<string>) {
     try {
-        const searchString = encodeURIComponent('@azure/arm-');
+        const searchString = encodeURIComponent(packageNeedle);
         let offset = 0;
         let allResults: any[] = [];
         let stringResults: any[] = [];
@@ -66,8 +66,18 @@ async function fetchArmPackages() {
           allResults = allResults.concat(response.data.results);
           offset += 250;
         }
-        const searchTerm = '@azure/arm-';
-        const filteredResults = allResults.filter(result => result.package.name.startsWith(searchTerm));
+        const searchTerm = packageNeedle;
+        let filteredResults;
+        if (exceptionEndNeedles) {
+            filteredResults = allResults.filter(result => {
+                const packageName = result.package.name;
+                const startsWithSearchTerm = packageName.startsWith(searchTerm);
+                const endsWithExcludedTerm = exceptionEndNeedles.some(term => packageName.endsWith(term));
+                return startsWithSearchTerm && !endsWithExcludedTerm;
+              });
+        } else {
+            filteredResults = allResults.filter(result => result.package.name.startsWith(searchTerm));
+        }
         const finalResults = filteredResults.filter(result => !/\d/.test(result.package.name));
         let i = 0;
         finalResults.forEach((element: any) => {
@@ -81,8 +91,16 @@ async function fetchArmPackages() {
             };
             stringResults.push(obj);
          })
+         stringResults.forEach((element: any) => {
+            console.log(element.packageName);
+         })
+         console.log("Gathered " + stringResults.length + " npm package for " + packageNeedle);
+
+         /* ****************************************** */
+         /* *  Write the addonPackage.import.ts file * */
+         /* ****************************************** */
         let fileContent = '';
-        const fileName = "azurePackage.import.ts";
+        const fileName = destFile;
         stringResults.forEach((item) => {
             fileContent += `import * as ${item.aliasName} from '${item.packageName}';\n`;
         });
@@ -97,11 +115,22 @@ async function fetchArmPackages() {
         fileContent += `};\n`;
         try {
             fs.writeFileSync("Kexa/services/addOn/imports/" + fileName, fileContent);
-            console.log('File created: azurePackage.import.ts');
+            console.log('File created: ' + destFile);
         } catch (error) {
             console.error('Error writing file:', error);
         }
-         console.log("total results Azure packages found : " + i);
+
+         /* ************************************************ */
+         /* *  Write the addonPackageImport.script.sh file * */
+         /* ************************************************ */
+
+         try {
+            fs.writeFileSync("Kexa/services/addOn/imports/scripts/" + destFileScript, generateShellScript(stringResults));
+            console.log('File created: ' + destFileScript);
+        } catch (error) {
+            console.error('Error writing file:', error);
+
+        }
          return stringResults;
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -109,14 +138,22 @@ async function fetchArmPackages() {
     }
 }
 
-async function createAzureArmPkgImportList() {
-    try {
-        await fetchArmPackages();
-        retrieveAzureArmClients();
-    } catch (e) {
-        console.error("Error fetching ARM Packages", e);
-    }
+function generateShellScript(stringResults: any): string {
+    const packageNames = stringResults.map((item: any) => item.packageName);
+
+    const scriptContent = `packages=(
+${packageNames.map((pkg: any) => `    '${pkg}'`).join('\n')}
+)
+
+for pkg in "\${packages[@]}"
+do
+    npm install "\$pkg" || echo "Failed to install \$pkg"
+    echo "done for \$pkg"
+done`;
+    console.log(scriptContent);
+    return scriptContent;
 }
+
 
 /* ****************************************** */
 /*        RETRIEVE CLIENT FROM PKG AZURE      */
@@ -131,6 +168,15 @@ interface AzureClients {
     [key: string]: any;
 }
 
+async function createAzureArmPkgImportList() {
+    try {
+        await fetchArmPackages('@azure/arm-', 'azurePackage.import.ts', 'azurePackageInstall.script.sh');
+        retrieveAzureArmClients();
+    } catch (e) {
+        console.error("Error fetching Azure Packages", e);
+    }
+}
+
 function createGenericClient<T>(Client: new (credential: any, subscriptionId: any) => T, credential: any, subscriptionId: any): T {
     return new Client(credential, credential);
 }
@@ -140,7 +186,7 @@ function callGenericClient(client: any) {
     return properties;
 }
 
-function extractClients(module: any): AzureClients {
+function extractClientsAzure(module: any): AzureClients {
     const clients: AzureClients = {};
 
     const credentials = new DefaultAzureCredential();
@@ -163,7 +209,7 @@ function extractClients(module: any): AzureClients {
 /*        GENERATING RESOURCES HEADER AZURE      */
 /* ********************************************* */
 
-let blackListObject = [
+let blackListObjectAzure = [
     "_requestContentType",
     "_endpoint",
     "_allowInsecureConnection",
@@ -182,7 +228,7 @@ function displayTotalGatheredMessage(provider: string, amount: number) {
     console.log("------------------------------------------");
 }
 
-function generateResourceList(resources: Record<string, boolean>): string {
+function generateResourceListAzure(resources: Record<string, boolean>): string {
     let concatedArray: string[];
     concatedArray = [];
     Object.keys(resources).forEach(key => {
@@ -190,7 +236,7 @@ function generateResourceList(resources: Record<string, boolean>): string {
         if (Array.isArray(value)) {
             if (!(value.length == 1 && value[0] === "client") || (value.length <= 2)) {
                     value.forEach((element: any) => {
-                        if (!blackListObject.includes(element) && !(element.startsWith("_")))
+                        if (!blackListObjectAzure.includes(element) && !(element.startsWith("_")))
                             concatedArray.push(key + "." + element);
                     })
             }
@@ -221,11 +267,11 @@ function readFileContent(inputFilePath: string) {
     }
 }
 
-async function fileReplaceContent(inputFilePath: string, outputFilePath: string, allClients: AzureClients) {
+async function fileReplaceContentAzure(inputFilePath: string, outputFilePath: string, allClients: AzureClients) {
     try {
       const fileContent = await readFileContent(inputFilePath);
       const regex = /(\* Resources :)[\s\S]*?(\*\/)/;
-      const updatedContent = fileContent.replace(regex, `$1\n${generateResourceList(allClients)}\n$2`);  
+      const updatedContent = fileContent.replace(regex, `$1\n${generateResourceListAzure(allClients)}\n$2`);  
       writeFileContent(outputFilePath, updatedContent);
     } catch (error) {
       console.error('Error:', error);
@@ -240,7 +286,7 @@ function retrieveAzureArmClients() {
 
     for (const key of Object.keys(AzureImports)) {
         const currentItem = (AzureImports as { [key: string]: unknown })[key];
-        const clientsFromModule = extractClients(currentItem);
+        const clientsFromModule = extractClientsAzure(currentItem);
         allClients = { ...allClients, ...clientsFromModule };
     }
 
@@ -248,12 +294,133 @@ function retrieveAzureArmClients() {
     
     const path = require("path");
     const filePath = path.resolve(__dirname, "../../Kexa/services/addOn/azureGathering.service.ts");
-    fileReplaceContent(filePath, filePath, allClients);
+    fileReplaceContentAzure(filePath, filePath, allClients);
 }
 
 if (require.main === module) {
-    releaseCapability();
+/*    releaseCapability();
     updateREADME();
-    updateVersion();
-    createAzureArmPkgImportList();
+    updateVersion();*/
+   /* createAzureArmPkgImportList(); */
+    createAwsArmPkgImportList();
+}
+
+
+/* ***************************** */
+/*            PKG FOR AWS        */
+/* ***************************** */
+
+
+import * as AwsImports from "./addOn/imports/awsPackage.import";
+
+
+interface AwsClient {
+    [key: string]: any;
+}
+
+async function createAwsArmPkgImportList() {
+    try {
+        await fetchArmPackages('@aws-sdk/client-', 'awsPackage.import.ts', 'awsPackageInstall.script.sh', ["data", "browser", "node", "catalog", "service", "generator", "redshift-serverless"]);
+        retrieveAwsClients();
+    } catch (e) {
+        console.error("Error fetching AWS Packages", e);
+    }
+}
+
+import { fromNodeProviderChain } from "@aws-sdk/credential-providers";
+
+function extractClientsAws(module: any): AzureClients {
+    const clients: AwsClient = {};
+
+    Object.keys(module).forEach((key) => {
+        if ((module[key] instanceof Function && module[key].prototype !== undefined && module[key].name.endsWith("Client"))) {
+            clients[key] = module[key];
+            try {
+                console.log(clients[key]);
+            } catch (e) {
+                console.error("Error when using client constructor in update capability.", e);
+            }
+
+        }
+    });
+    return clients;
+}
+
+function extractFunctionsAws(module: any): AzureClients {
+    const clients: AwsClient = {};
+
+    const credentials = fromNodeProviderChain();
+
+    Object.keys(module).forEach((key) => {
+        if ((module[key] instanceof Function && module[key].prototype !== undefined 
+            && module[key].name.endsWith("Command") &&
+             (module[key].name.startsWith("Describe") || module[key].name.startsWith("Get") || module[key].name.startsWith("List")))) {
+            clients[key] = module[key];
+            try {
+                console.log(clients[key]);
+            } catch (e) {
+                console.error("Error when using client constructor in update capability.", e);
+            }
+
+        }
+    });
+    return clients;
+}
+
+function retrieveAwsClients() {
+    let allClients: AwsClient = {};
+    let allClients2: AwsClient = {};
+
+    console.log("retrieve clients from aws pkg...");
+
+    for (const key of Object.keys(AwsImports)) {
+        const currentItem = (AwsImports as { [key: string]: unknown })[key];
+        const clientsFromModule = extractClientsAws(currentItem);
+        allClients = { ...allClients, ...clientsFromModule };
+    }
+
+    for (const key of Object.keys(AwsImports)) {
+        const currentItem = (AwsImports as { [key: string]: unknown })[key];
+        const clientsFromModule = extractFunctionsAws(currentItem);
+        allClients2 = { ...allClients, ...clientsFromModule };
+    }
+    console.log("Writing clients to header...");
+    
+    const path = require("path");
+    const filePath = path.resolve(__dirname, "../../Kexa/services/addOn/awsGatheringTest.service.ts");
+    fileReplaceContentAws(filePath, filePath, allClients);
+}
+
+async function fileReplaceContentAws(inputFilePath: string, outputFilePath: string, allClients: AzureClients) {
+    try {
+      const fileContent = await readFileContent(inputFilePath);
+      const regex = /(\* Resources :)[\s\S]*?(\*\/)/;
+      const updatedContent = fileContent.replace(regex, `$1\n${generateResourceListAws(allClients)}\n$2`);  
+      writeFileContent(outputFilePath, updatedContent);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+}
+
+function generateResourceListAws(resources: Record<string, boolean>): string {
+    let concatedArray: string[];
+    concatedArray = [];
+    // DESCRIBE IS IN THE SAME LEVEL AND PACKAGE AS THE CLIENT
+    Object.keys(resources).forEach(key => {
+        let value = resources[key];
+//        console.log("Key : " + key);
+        if (Array.isArray(value)) {
+            if (!(value.length == 1 && value[0] === "client") || (value.length <= 2)) {
+                    value.forEach((element: any) => {
+                            console.log("elem :" + element);
+                            concatedArray.push(key + "." + element);
+                    })
+            }
+        }
+    });
+    displayTotalGatheredMessage("Aws", concatedArray.length);
+    for (const key of stringKeys)
+        concatedArray.push(key.toString());
+    const resourceList = concatedArray.map(line => `\t*\t- ${line}`).join('\n');
+    return `${resourceList}`;
 }
