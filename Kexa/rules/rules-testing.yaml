@@ -1,12 +1,6 @@
 - version: 1.0.0
   alert_template: &alert_template
-    enabled: false
-    type:
-      - log
-      #- email
-    to:
-      - myEmail@gmail.com
-  min: &min 1
+  min: &min
   date: 06-12-2023
   alert:
     fatal:
