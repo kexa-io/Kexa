@@ -42,6 +42,7 @@
         <li><a href="#multiple-environments-provider-prefix">Multiple Environments provider prefix</a></li>
 	<li><a href="#custom-and-multiple-configurations">Custom and multiple Configurations</a></li>
         <li><a href="#regions">Regions</a></li>
+        <li><a href="#advanced-configurations">Advanced Configurations</a></li>
       </ul>
     </li>
     <li>
@@ -64,6 +65,7 @@
         <li><a href="#rules-fields">Rules fields</a></li>
         <li><a href="#date--time-criteria">Date & Time criteria</a></li>
         <li><a href="#full-yaml-rules-file">Full Yaml rules file</a></li>
+        <li><a href="#variabilization-rules">Variabilization Rules</a></li>
         <li><a href="#utility-examples">Utility examples</a>
             <ul>
                 <li><a href="#cost-savings">Cost savings</a></li>
@@ -371,6 +373,18 @@ Without "regions" property (or empty "regions" property), all the regions will b
 <br/>
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+<div id="advanced-configurations"></div>
+
+## **Advanced Configurations**
+
+You can load rules containing variables. To do this, you need to add a "variable" section. This attribute will be an object whose keys are the names of your rules with variables. Each of its keys has a dictionary value. This dictionary has as keys the names of the variables present in the rule and as value, the value of the variable.
+
+Here we are an example of configuration file with variable:
+*in this example only the rule :"Name_of_my_rule" have variables*
+![example config with variable](../config/demo/exemple4.default.json)
+
+For more details on variabilized rules, please refer to the section [Variabilization Rules](#variabilization-rules)
+
 # <div align="center" id="environment-variables-and-auth">**Environment variables & Auth**</div>
 <br/>
 
@@ -385,6 +399,12 @@ Without "regions" property (or empty "regions" property), all the regions will b
 Specify a folder to store the rules files.
 ```
   RULESDIRECTORY=./Kexa/rules (default value)
+```
+It is also possible to use a remote zipper folder hosted on private server or a github repository.
+It's could be either a public endpoint or a private one. To authenticate your self, use RULESAUTHORIZATION.
+```
+  RULESDIRECTORY="https://api.github.com/repos/OWNER/REPO/zipball/main"
+  RULESAUTHORIZATION="Bearer github_pat_XXXXXXXXXXXXXXXXXXXXXXXX" (optional)
 ```
 
 Specify a folder to store the output files.
@@ -716,6 +736,84 @@ date: "YYYY-MM-DDThh:mm:ss.SSSZ"
 ```
 
 <br/>
+<div id="variabilization-rules"></div>
+
+### **Variabilization Rules**
+
+To simplify maintenance, it is possible to variabilize rules either for values or for complete blocks of the YAML file.
+The main advantage of setting up a remote repo for your instances is that you can manage and administer general rules for all your productions.
+
+#### Initialization
+
+Initializing a value or block variable is done in the same way. At the same indentation level as version or date, insert the name of your variable, a colon then an ampersand, followed by the name of your variable again.
+In our example "toto" :
+```yaml
+- version: string
+  date: string
+  toto: &toto
+  ...
+```
+
+#### Use
+
+The use of a variable can vary, depending on whether you want to use it as a value or as a block.
+
+- Use as a value:
+  You can insert the name of your variable preceded by an asterisk, anywhere you'd put a conventional value.
+  It's can be usefull to check element like name or quantity
+  ```yaml
+  - version: string
+    date: string
+    toto: &toto
+    ...
+    rules:
+      - name: "Generalize-test" 
+        description : generic test for a project test if X exist 
+        applied: true 
+        level: 1 
+        cloudProvider: XXXX 
+        objectName : YYYY
+        conditions:
+          -	property : name
+            condition : EQUAL
+            value : *toto
+  ```
+
+- Use as a block:
+  You can insert the name of your variable preceded by "<<: *", anywhere you'd put a key.
+  In this example, we variabilize the "applied and level" section to define groups and their level of importance.
+  Another possible example is the notifications section, to variabilize the recipients.
+  ```yaml
+  - version: string
+    date: string
+    group1: &group1
+    ...
+    rules:
+      - name: "Generalize-test" 
+        description : generic test for a project test if A exist
+        <<: *group1
+        cloudProvider: XXXX 
+        objectName : YYYY
+        conditions:
+          -	property : A
+            condition : EQUAL
+            value : A
+      - name: "Generalize-test-2" 
+        description : generic test for a project test if B exist
+        <<: *group1
+        cloudProvider: XXXX 
+        objectName : YYYY
+        conditions:
+          -	property : B
+            condition : EQUAL
+            value : B
+  ```
+
+
+The values of the variable must be fill in the [configuration file](#advanced-configurations)
+
+
+<br/>
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <div id="utility-examples"></div>
@@ -816,6 +914,7 @@ Whether you want to check specific elements of your infrastructure or take a mor
 
 <br/>
 <p align="right">(<a href="#top">back to top</a>)</p>
+
 <div id="official-addons"></div>
 
 ## <div align="center">**Official Addons**</div>
