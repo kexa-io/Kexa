@@ -669,3 +669,30 @@ package.json was changed
 ### Files changed: 0
 
 
+## 1.12.0-SNAPSHOT.11.f8eceed
+
+### Files added: 2
+
+Kexa/helpers/dowloadFile.ts was added
+
+config/demo/exemple4.default.json was added
+
+### Files changed: 8
+
+Kexa/helpers/dowloadFile.ts was changed
+
+config/demo/exemple4.default.json was changed
+
+Kexa/main.ts was changed
+
+Kexa/rules/rules-testing.yaml was changed
+
+Kexa/services/analyse.service.ts was changed
+
+documentation/Documentation-Kexa.md was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
