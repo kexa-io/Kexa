@@ -37,17 +37,17 @@ export async function downloadFile(url: string, destinationPath: string, type:st
 
 export async function unzipFile(relativePath: string): Promise<void> {
     const extract = require('extract-zip');
-    const absolutePath = process.cwd() + relativePath.replace("./", ["/", "\\"][process.platform == "win32" ? 1:0]);
+    const absolutePath = path.resolve(relativePath)
     logger.debug(`Unzipping file: ${absolutePath}`)
     try {
         if(fs.existsSync(absolutePath)) fs.rmSync(absolutePath, { recursive: true, force: true });
         await extract(absolutePath + ".zip", { dir: absolutePath });
         await moveSubFilesToRoot(absolutePath);
-        fs.unlinkSync(relativePath + ".zip");
     } catch (err:any) {
         logger.error(`Error unzipping file: ${err}`);
         throw new Error(`Error unzipping file: ${err.message}`);
     }
+    fs.unlinkSync(relativePath + ".zip");
 }
 
 async function checkFileType(url: string, type:string="application/zip"): Promise<boolean> {

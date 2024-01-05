@@ -24,6 +24,7 @@ import { extractHeaders } from './addOn.service';
 import {getContext, getNewLogger} from "./logger.service";
 import { splitProperty } from '../helpers/spliter';
 import { downloadFile, unzipFile } from '../helpers/dowloadFile';
+import { getConfig } from '../helpers/loaderConfig';
 const logger = getNewLogger("AnalyseLogger");
 
 const jsome = require('jsome');
@@ -32,7 +33,7 @@ const varEnvMin = {
     "email": ["EMAILPORT", "EMAILHOST", "EMAILUSER", "EMAILPWD", "EMAILFROM"],
     "sms": ["SMSACCOUNTSID", "SMSAUTHTOKEN", "SMSFROM"],
 }
-const config = require('node-config-ts').config;
+const config = getConfig();
 const levelAlert = ["info", "warning", "error", "critical"];
 const defaultRulesDirectory = "./rules";
 
@@ -67,10 +68,10 @@ export async function gatheringRules(rulesDirectory:string, getAll:boolean=false
     return settingFileList;
 }
 
-export async function gatheringDistantRules(rulesDirectory:string): Promise<boolean> {
+export async function gatheringDistantRules(rulesOrigin:string, rulesDirectory:string=defaultRulesDirectory): Promise<boolean> {
     try{
-        await downloadFile(rulesDirectory, defaultRulesDirectory, "application/zip");
-        await unzipFile(defaultRulesDirectory);
+        await downloadFile(rulesOrigin, rulesDirectory, "application/zip");
+        await unzipFile(rulesDirectory);
         return true;
     }catch(err){
         logger.error("error in gatheringDistantRules:"+err);
@@ -93,7 +94,7 @@ export function extractAddOnNeed(settingFileList: SettingFile[]){
 }
 
 function getListNeedRules(): string[]{
-    const config = require('node-config-ts').config;
+    const config = getConfig();
     let listNeedRules = new Array<string>();
     for(let cloudProvider of Object.keys(config)){
         if(["host", "host", "workerId", "requestId", "grpcMaxMessageLength"].includes(cloudProvider)) continue;
@@ -127,7 +128,7 @@ export async function analyzeRule(ruleFilePath:string, listNeedRules:string[], g
             return null;
         }
         let contentRuleFile = fs.readFileSync(ruleFilePath, 'utf8');
-        contentRuleFile = replaceElement(contentRuleFile, require('node-config-ts').config?.variable?.[name]);
+        contentRuleFile = replaceElement(contentRuleFile, getConfig()?.variable?.[name]);
         const doc = (yaml.load(contentRuleFile) as SettingFile[])[0];
         let result = await checkDoc(doc);
         logCheckDoc(result);
