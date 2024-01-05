@@ -48,7 +48,6 @@ describe('Add On', function() {
             if(files.some((file: string) => file.endsWith(folderName+'.service.ts'))){
                 describe(`Add On ${folderName}`, () => {
                     let subAddons = loadAddOnsCustomUtility(folder, folder);
-                    //console.log('subAddons', subAddons);
                     //Object.keys(subAddons).forEach((addOnName: string) => {
                     //    describe(`Add On ${addOnName} for ${folderName}`, () => {
                     //        it(`File ${addOnName}${folderName}.service should be load`, async () => {
@@ -69,7 +68,7 @@ describe('Add On', function() {
                         }
                     });
                     it('Number of subAddons should be equal to number of files', async () => {
-                        expect(subAddons.length).to.be.equal(files.length);
+                        expect(Object.keys(subAddons).length).to.be.equal(files.length);
                     });
                 });
             }

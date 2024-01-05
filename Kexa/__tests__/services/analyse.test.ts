@@ -26,11 +26,11 @@ describe('analyse service', () => {
         });
 
         it('Gathering distant rules', async () => {
-            fs.mkdirSync("../rules/distantRules", { recursive: true });
-            await gatheringDistantRules("https://api.github.com/repos/4urcloud/Kexa_Rules/zipball/main", "../rules/distantRules");
+            fs.mkdirSync("./distantRules", { recursive: true });
+            await gatheringDistantRules("https://api.github.com/repos/4urcloud/Kexa_Rules/zipball/main", "./distantRules");
             let rules = fs.readdirSync("./distantRules");
             expect(rules).to.be.an('array').that.is.not.empty;
-            fs.rmSync("../rules/distantRules", { recursive: true, force: true });
+            fs.rmSync("./distantRules", { recursive: true, force: true });
         });
 
         describe('Format Rules with variables', () => {
