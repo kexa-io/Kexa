@@ -696,3 +696,14 @@ package-lock.json was changed
 package.json was changed
 
 
+## 1.12.0-SNAPSHOT.17.bc4bd72
+
+### Files added: 0
+
+### Files changed: 2
+
+Kexa/__tests__/services/addOn.test.ts was changed
+
+Kexa/__tests__/services/analyse.test.ts was changed
+
+
