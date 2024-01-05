@@ -1,0 +1,26 @@
+{
+    "http": [
+        {
+            "description": "organization 4urcloud",
+            "prefix":"A",
+            "rules": [
+                "rule-test"
+            ],
+            "URL": "https://www.4urcloud.eu"
+        }
+    ],
+    "variable":{
+        "rule-test": {
+            "alert_template": {
+                "enabled": true,
+                "type": [
+                    "log",
+                    "email"
+                ],
+                "to": [
+                    "test@test.com"
+                ]
+            }
+        }
+    }
+}

@@ -3,7 +3,6 @@ import { LevelEnum } from "../enum/level.enum";
 import { ResultScan, SubResultScan } from "../models/resultScan.models";
 import { Alert } from "../models/settingFile/alert.models";
 import { Rules } from "../models/settingFile/rules.models";
-import { Logger } from "tslog";
 import { Emails } from "../emails/emails";
 import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
 import { ConfigAlert } from "../models/settingFile/configAlert.models";
@@ -14,6 +13,8 @@ import { getConfigOrEnvVar } from "./manageVarEnvironnement.service";
 import axios from 'axios';
 import { extractURL } from "../helpers/extractURL";
 import { Teams } from "../emails/teams";
+import {getContext, getNewLogger} from "./logger.service";
+import { getConfig } from "../helpers/loaderConfig";
 
 const jsome = require('jsome');
 jsome.level.show = true;
@@ -21,9 +22,8 @@ const request = require('request');
 const nodemailer = require("nodemailer");
 const levelAlert = ["info", "warning", "error", "fatal"];
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
-const config = require('node-config-ts');
+const config = getConfig();
 
-import {getContext, getNewLogger} from "./logger.service";
 const logger = getNewLogger("functionLogger");
 export function alertGlobal(allScan: ResultScan[][], alert: GlobalConfigAlert) {
     let isAlert = false;

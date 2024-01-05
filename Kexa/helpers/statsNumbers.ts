@@ -16,7 +16,6 @@ export function getMinMaxMeanMedian(array: Array<number>): MinMaxMeanMedian {
 }
 
 export function convertToPercentage(num: number, total: number): number {
-    // pourcentage avec 2 chiffres après la virgule
     return Math.round((num/total)*10000)/100;
 }
 

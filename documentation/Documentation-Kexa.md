@@ -403,7 +403,7 @@ Specify a folder to store the rules files.
 It is also possible to use a remote zipper folder hosted on private server or a github repository.
 It's could be either a public endpoint or a private one. To authenticate your self, use RULESAUTHORIZATION.
 ```
-  RULESDIRECTORY="https://api.github.com/repos/OWNER/REPO/zipball/main"
+  RULESDIRECTORY="https://api.github.com/repos/4urcloud/Kexa_Rules/zipball/main"
   RULESAUTHORIZATION="Bearer github_pat_XXXXXXXXXXXXXXXXXXXXXXXX" (optional)
 ```
 

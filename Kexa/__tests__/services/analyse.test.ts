@@ -1,8 +1,17 @@
 import { ConditionEnum } from "../../enum/condition.enum";
 import { RulesConditions } from "../../models/settingFile/conditions.models";
-import { checkAll, checkCount, checkEndsWith, checkEqual, checkEqualDate, checkEqualThanDate, checkGreaterThan, checkGreaterThanDate, checkInclude, checkIncludeNS, checkInterval, checkIntervalDate, checkLessThan, checkLessThanDate, checkOne, checkRegex, checkSome, checkStartsWith, gatheringRules, generateDate } from "../../services/analyse.service";
+import { checkAll, checkCount, checkEndsWith, checkEqual, checkEqualDate, checkEqualThanDate, checkGreaterThan, checkGreaterThanDate, checkInclude, checkIncludeNS, checkInterval, checkIntervalDate, checkLessThan, checkLessThanDate, checkOne, checkRegex, checkSome, checkStartsWith, gatheringDistantRules, gatheringRules, generateDate } from "../../services/analyse.service";
 
 const { expect } = require('chai');
+const fs = require('fs');
+
+function loadConfig(configPath: string): any {
+    process.env.SPECIALCONFIG = configPath;
+}
+
+function unloadConfig(): void {
+    delete process.env.SPECIALCONFIG;
+}
 
 describe('analyse service', () => {
     describe('Gathering rules', () => {
@@ -14,6 +23,38 @@ describe('analyse service', () => {
         it('should return 0 rules', async () => {
             const result = await gatheringRules("./Kexa/__tests__/rules/test3");
             expect(result.length).to.equal(0);
+        });
+
+        it('Gathering distant rules', async () => {
+            fs.mkdirSync("../rules/distantRules", { recursive: true });
+            await gatheringDistantRules("https://api.github.com/repos/4urcloud/Kexa_Rules/zipball/main", "../rules/distantRules");
+            let rules = fs.readdirSync("./distantRules");
+            expect(rules).to.be.an('array').that.is.not.empty;
+            fs.rmSync("../rules/distantRules", { recursive: true, force: true });
+        });
+
+        describe('Format Rules with variables', () => {
+            it('Rules with var value', async () => {
+                loadConfig("./Kexa/__tests__/rules/var/test2/default.json");
+                const result = await gatheringRules("./Kexa/__tests__/rules/var/test2");
+                unloadConfig();
+                expect(result[0]?.alert.global.conditions[0].min).to.equal(1);
+            });
+
+            it('Rules with var block', async () => {
+                loadConfig("./Kexa/__tests__/rules/var/test3/default.json");
+                const result = await gatheringRules("./Kexa/__tests__/rules/var/test3");
+                unloadConfig();
+                expect(result[0]?.alert.error.enabled).to.equal(true);
+            });
+
+            it('Rules with var block and value', async () => {
+                loadConfig("./Kexa/__tests__/rules/var/test1/default.json");
+                const result = await gatheringRules("./Kexa/__tests__/rules/var/test1");
+                unloadConfig();
+                expect(result[0]?.alert.error.enabled).to.equal(true);
+                expect(result[0]?.alert.global.conditions[0].min).to.equal(1);
+            });
         });
     });
 

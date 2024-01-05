@@ -4,8 +4,9 @@ import { writeStringToJsonFile } from "../helpers/files"
 import { Capacity } from "../models/settingFile/capacity.models";
 import {getContext, getNewLogger} from "./logger.service";
 import { SettingFile } from "../models/settingFile/settingFile.models";
+import { getConfig } from "../helpers/loaderConfig";
 
-const configuration = require('node-config-ts').config;
+const configuration = getConfig();
 const mainFolder = 'Kexa';
 const serviceAddOnPath = './' + mainFolder + '/services/addOn';
 const fs = require('fs');
@@ -66,7 +67,7 @@ export function loadAddOnsCustomUtility(usage: string, funcName:string, onlyFile
     const files = fs.readdirSync(serviceAddOnPath + "/" + usage);
     files.map((file: string) => {
         if(onlyFiles && !onlyFiles.some((onlyFile:string) => {return file.includes(onlyFile)})) return;
-        let result = loadAddOnCustomUtility(file.replace(".ts", ".js"), usage, funcName);
+        let result = loadAddOnCustomUtility(file, usage, funcName);
         if(result?.data){
             dictFunc[result.key] = result.data;
         }
@@ -77,9 +78,9 @@ export function loadAddOnsCustomUtility(usage: string, funcName:string, onlyFile
 function loadAddOnCustomUtility(file: string, usage: string, funcName:string): { key: string; data: Function; } | null {
     try{
         let formatUsage = usage.slice(0,1).toUpperCase() + usage.slice(1);
-        if (file.endsWith(formatUsage+ '.service.js')){
-            let nameAddOn = file.split(formatUsage + '.service.js')[0];
-            const moduleExports = require(`./addOn/${usage}/${nameAddOn}${formatUsage}.service.js`);
+        if (file.includes(formatUsage+ '.service')){
+            let nameAddOn = file.split(formatUsage + '.service')[0];
+            const moduleExports = require(`./addOn/${usage}/${nameAddOn}${formatUsage}.service`);
             const funcCall = moduleExports[funcName];
             return { key: nameAddOn, data:funcCall};
         }
