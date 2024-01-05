@@ -318,10 +318,10 @@ function retrieveAzureArmClients() {
 }
 
 if (require.main === module) {
-/*    releaseCapability();
+    releaseCapability();
     updateREADME();
-    updateVersion();*/
-   /* createAzureArmPkgImportList(); */
+    updateVersion();
+    createAzureArmPkgImportList();
     createAwsArmPkgImportList();
 }
 
@@ -462,7 +462,7 @@ function retrieveAwsClients() {
     }
     console.log("Writing clients to header...");
     const path = require("path");
-    const filePath = path.resolve(__dirname, "../../Kexa/services/addOn/awsGathering_TEST_TMP.service.ts");
+    const filePath = path.resolve(__dirname, "../../Kexa/services/addOn/awsGathering.service.ts");
     fileReplaceContentAws(filePath, filePath, allObjects);
 }
 
