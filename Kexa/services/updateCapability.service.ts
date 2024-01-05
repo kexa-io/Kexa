@@ -460,10 +460,9 @@ function retrieveAwsClients() {
         const clientsFromModule = extractObjectsOrFunctionsAws(currentItem, true);
         allObjects = { ...allObjects, ...clientsFromModule };
     }
-    console.log(allObjects);
     console.log("Writing clients to header...");
     const path = require("path");
-    const filePath = path.resolve(__dirname, "../../Kexa/services/addOn/awsGathering.service.ts");
+    const filePath = path.resolve(__dirname, "../../Kexa/services/addOn/awsGathering_TEST_TMP.service.ts");
     fileReplaceContentAws(filePath, filePath, allObjects);
 }
 
