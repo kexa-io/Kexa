@@ -46,10 +46,11 @@ function updateREADME(){
     fs.writeFileSync("./README.md", readme);
 }
 
-/* ********************************* */
-/*        GENERIC PACKAGE FETCH      */
-/* ********************************* */
-
+/* ************************************ */
+/*        GENERIC PACKAGE FETCH         */
+/*  this can be used by many addons for */
+/*          automatization              */
+/* ************************************ */
 async function fetchArmPackages(packageNeedle: string, destFile: string, destFileScript: string,exceptionEndNeedles?: Array<string>) {
     try {
         const searchString = encodeURIComponent(packageNeedle);
@@ -91,20 +92,25 @@ async function fetchArmPackages(packageNeedle: string, destFile: string, destFil
             };
             stringResults.push(obj);
          })
-         stringResults.forEach((element: any) => {
-            console.log(element.packageName);
-         })
-         console.log("Gathered " + stringResults.length + " npm package for " + packageNeedle);
-
-         /* ****************************************** */
-         /* *  Write the addonPackage.import.ts file * */
-         /* ****************************************** */
+         /* ********************************************* */
+         /* *  Generate the addonPackage.import.ts file * */
+         /* ********************************************* */
         let fileContent = '';
         const fileName = destFile;
         stringResults.forEach((item) => {
             fileContent += `import * as ${item.aliasName} from '${item.packageName}';\n`;
         });
+        if (packageNeedle == "@aws-sdk/client-") {
+            additionalAwsImports.forEach((element: string) => {
+                fileContent += element;
+            })
+        }
         fileContent += `export {\n`;
+        if (packageNeedle == "@aws-sdk/client-") {
+            additionalAwsImportsKeys.forEach((element: string) => {
+                fileContent += `${element},\n`;
+            })
+        }
         stringResults.forEach((item, index) => {
             if (index === stringResults.length - 1) {
                 fileContent += `${item.aliasName}`;
@@ -121,9 +127,8 @@ async function fetchArmPackages(packageNeedle: string, destFile: string, destFil
         }
 
          /* ************************************************ */
-         /* *  Write the addonPackageImport.script.sh file * */
+         /* *  Write the addonPackageImport.script.sh      * */
          /* ************************************************ */
-
          try {
             fs.writeFileSync("Kexa/services/addOn/imports/scripts/" + destFileScript, generateShellScript(stringResults));
             console.log('File created: ' + destFileScript);
@@ -138,6 +143,10 @@ async function fetchArmPackages(packageNeedle: string, destFile: string, destFil
     }
 }
 
+
+/* Generate a Shell script to install easily all the packages */
+/* if they're not already in package.json, this could also be */
+/* use to make modulable dependencies                         */
 function generateShellScript(stringResults: any): string {
     const packageNames = stringResults.map((item: any) => item.packageName);
 
@@ -150,14 +159,16 @@ do
     npm install "\$pkg" || echo "Failed to install \$pkg"
     echo "done for \$pkg"
 done`;
-    console.log(scriptContent);
     return scriptContent;
 }
 
 
-/* ****************************************** */
-/*        RETRIEVE CLIENT FROM PKG AZURE      */
-/* ****************************************** */
+
+/* ***************************** */
+/*                               */
+/*        Microsoft Azure        */
+/*                               */
+/* ***************************** */
 
 import { ServiceClient } from "@azure/core-client";
 import * as AzureImports from "./addOn/imports/azurePackage.import";
@@ -177,6 +188,9 @@ async function createAzureArmPkgImportList() {
     }
 }
 
+/* Here we're creating the Azure client from their */
+/* constructors, so we can retrieve the objects    */
+/* name they contains                              */
 function createGenericClient<T>(Client: new (credential: any, subscriptionId: any) => T, credential: any, subscriptionId: any): T {
     return new Client(credential, credential);
 }
@@ -209,6 +223,9 @@ function extractClientsAzure(module: any): AzureClients {
 /*        GENERATING RESOURCES HEADER AZURE      */
 /* ********************************************* */
 
+
+/* Add matching string you want to bannish when gathering object */
+/* from Azure clients                                            */
 let blackListObjectAzure = [
     "_requestContentType",
     "_endpoint",
@@ -249,6 +266,9 @@ function generateResourceListAzure(resources: Record<string, boolean>): string {
     return `${resourceList}`;
 }
 
+
+/* Those two read & write functions are for      */
+/* the auto-generated header in addon.service.ts */
 function writeFileContent(outputFilePath: string, content: string) {
     try {
         fs.writeFileSync(outputFilePath, content, 'utf-8');
@@ -257,7 +277,6 @@ function writeFileContent(outputFilePath: string, content: string) {
         console.error("Error when writing to file: ", e);
     }
 }
-
 function readFileContent(inputFilePath: string) {
     try {
         const file = fs.readFileSync(inputFilePath, 'utf-8');
@@ -266,6 +285,7 @@ function readFileContent(inputFilePath: string) {
         console.error("Error when reading file: ", e);
     }
 }
+
 
 async function fileReplaceContentAzure(inputFilePath: string, outputFilePath: string, allClients: AzureClients) {
     try {
@@ -306,13 +326,22 @@ if (require.main === module) {
 }
 
 
+
+
+
 /* ***************************** */
-/*            PKG FOR AWS        */
+/*                               */
+/*      Amazon Web Services      */
+/*                               */
 /* ***************************** */
 
 
 import * as AwsImports from "./addOn/imports/awsPackage.import";
 
+const additionalAwsImports = ["import * as clientec2 from '@aws-sdk/client-ec2';\n",
+"import * as clients3 from '@aws-sdk/client-s3';\n"];
+
+const additionalAwsImportsKeys = ["clientec2", "clients3"];
 
 interface AwsClient {
     [key: string]: any;
@@ -335,57 +364,80 @@ function extractClientsAws(module: any): AzureClients {
     Object.keys(module).forEach((key) => {
         if ((module[key] instanceof Function && module[key].prototype !== undefined && module[key].name.endsWith("Client"))) {
             clients[key] = module[key];
-            try {
-                console.log(clients[key]);
-            } catch (e) {
-                console.error("Error when using client constructor in update capability.", e);
-            }
-
         }
     });
     return clients;
 }
 
+
+/* For getting objects name in AWS, we extract the name between                 */
+/* the two researched string when extracting function (ex : "List" & "Command") */
 const extractObjectBetween = (inputString: string, startStrings: string[], endString: string): string | null => {
     let startIndex: number = -1;
     let foundStartString: string | undefined;
 
-    for (const element of startStrings) {
-        const index = inputString.indexOf(element);
-        if (index !== -1 && (startIndex === -1 || index < startIndex)) {
-            startIndex = index;
-            foundStartString = element;
+    if (startStrings.length == 0)
+        startIndex = 0;
+    else {
+        for (const element of startStrings) {
+            const index = inputString.indexOf(element);
+            if (index !== -1 && (startIndex === -1 || index < startIndex)) {
+                startIndex = index;
+                foundStartString = element;
+            }
         }
     }
-
     if (startIndex === -1 || inputString.indexOf(endString, startIndex) === -1) {
         return null;
     }
 
-    if (!foundStartString)
+    let extractedContent;
+    if (startIndex == 0 && !foundStartString) {
+        const endIndex = inputString.indexOf(endString, startIndex);
+        extractedContent = inputString.substring(startIndex, endIndex);
+    }
+    else if (!foundStartString)
         return null;
-    const endIndex = inputString.indexOf(endString, startIndex);
-    const extractedContent = inputString.substring(startIndex + foundStartString.length, endIndex);
+    else {
+        const endIndex = inputString.indexOf(endString, startIndex);
+        extractedContent = inputString.substring(startIndex + foundStartString.length, endIndex);
+    }
     return extractedContent;
 }
 
 
-function extractFunctionsAws(module: any): AzureClients {
+function extractObjectsOrFunctionsAws(module: any, isObject: Boolean): AzureClients {
     const clients: AwsClient = {};
-    const startStrings =  ["List", "Describe"];
+    let clientsMatch: string[] = [];
 
+    /* Start and End string to match for extract client listing functions */
+    /* You can edit those as you wish, addind as much startStrings as you want */ 
+    const startStrings =  ["List", "Describe"];
+    const endString = "Command";
+    let clientName;
 
     Object.keys(module).forEach((key) => {
-        if ((module[key] instanceof Function && module[key].prototype !== undefined 
-            && module[key].name.endsWith("Command") && startStrings.some(startStr => module[key].name.startsWith(startStr)))) {
-                clients[key] = module[key];
-                clients[key].objectExtractedName = extractObjectBetween(module[key].name, startStrings, "Command");
-            try {
-                console.log(clients[key]);
-            } catch (e) {
-                console.error("Error when using client constructor in update capability.", e);
+        if ((module[key] instanceof Function && module[key].prototype !== undefined && module[key].name.endsWith("Client"))) {
+            clientName = module[key].name;
+            if (clientName != "Client") {
+                clientsMatch.push(clientName);
+                if (clientsMatch.length > 1)
+                    console.warn("WARNING: Multiple client found for AWS objects, header & gather could be wrong.");
+                else if (clientsMatch.length < 1)
+                    console.warn("WARNING: No client found for AWS objects, header & gather could be wrong.");
             }
-
+        }
+        if ((module[key] instanceof Function && module[key].prototype !== undefined 
+            && module[key].name.endsWith(endString) && startStrings.some(startString => module[key].name.startsWith(startString)))) {
+                if (isObject) {
+                    const objectName = extractObjectBetween(module[key].name, startStrings, endString);
+                    if (clientsMatch.length < 1)
+                        clients[key] = objectName;
+                    else
+                        clients[key] = clientsMatch[clientsMatch.length - 1] + "." + objectName;
+                }
+                else
+                    clients[key] = module[key];
         }
     });
     return clients;
@@ -393,7 +445,7 @@ function extractFunctionsAws(module: any): AzureClients {
 
 function retrieveAwsClients() {
     let allClients: AwsClient = {};
-    let allClients2: AwsClient = {};
+    let allObjects: AwsClient = {};
 
     console.log("retrieve clients from aws pkg...");
 
@@ -405,42 +457,33 @@ function retrieveAwsClients() {
 
     for (const key of Object.keys(AwsImports)) {
         const currentItem = (AwsImports as { [key: string]: unknown })[key];
-        const clientsFromModule = extractFunctionsAws(currentItem);
-        allClients2 = { ...allClients, ...clientsFromModule };
+        const clientsFromModule = extractObjectsOrFunctionsAws(currentItem, true);
+        allObjects = { ...allObjects, ...clientsFromModule };
     }
+    console.log(allObjects);
     console.log("Writing clients to header...");
-    
     const path = require("path");
-    const filePath = path.resolve(__dirname, "../../Kexa/services/addOn/awsGatheringTest.service.ts");
-    fileReplaceContentAws(filePath, filePath, allClients);
+    const filePath = path.resolve(__dirname, "../../Kexa/services/addOn/awsGathering.service.ts");
+    fileReplaceContentAws(filePath, filePath, allObjects);
 }
 
-async function fileReplaceContentAws(inputFilePath: string, outputFilePath: string, allClients: AzureClients) {
+async function fileReplaceContentAws(inputFilePath: string, outputFilePath: string, allObjects: AzureClients) {
     try {
       const fileContent = await readFileContent(inputFilePath);
       const regex = /(\* Resources :)[\s\S]*?(\*\/)/;
-      const updatedContent = fileContent.replace(regex, `$1\n${generateResourceListAws(allClients)}\n$2`);  
+      const updatedContent = fileContent.replace(regex, `$1\n${generateResourceListAws(allObjects)}\n$2`);  
       writeFileContent(outputFilePath, updatedContent);
     } catch (error) {
       console.error('Error:', error);
     }
 }
 
-function generateResourceListAws(resources: Record<string, boolean>): string {
+function generateResourceListAws(resources: AzureClients): string {
     let concatedArray: string[];
     concatedArray = [];
-    // DESCRIBE IS IN THE SAME LEVEL AND PACKAGE AS THE CLIENT
+
     Object.keys(resources).forEach(key => {
-        let value = resources[key];
-//        console.log("Key : " + key);
-        if (Array.isArray(value)) {
-            if (!(value.length == 1 && value[0] === "client") || (value.length <= 2)) {
-                    value.forEach((element: any) => {
-                            console.log("elem :" + element);
-                            concatedArray.push(key + "." + element);
-                    })
-            }
-        }
+        concatedArray.push(resources[key]);
     });
     displayTotalGatheredMessage("Aws", concatedArray.length);
     for (const key of stringKeys)

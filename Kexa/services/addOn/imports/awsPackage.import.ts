@@ -262,7 +262,11 @@ import * as clientkinesisvideoarchivedmedia from '@aws-sdk/client-kinesis-video-
 import * as clientmigrationhubrefactorspaces from '@aws-sdk/client-migration-hub-refactor-spaces';
 import * as clientredshiftserverless from '@aws-sdk/client-redshiftserverless';
 import * as clientcommander from '@aws-sdk/client-commander';
+import * as clientec2 from '@aws-sdk/client-ec2';
+import * as clients3 from '@aws-sdk/client-s3';
 export {
+clientec2,
+clients3,
 clientsso,
 clientsts,
 clientdynamodb,
