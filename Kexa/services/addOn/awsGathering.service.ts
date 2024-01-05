@@ -2622,12 +2622,6 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
             const credentialProvider = fromNodeProviderChain();
 
             const client = new EC2Client({region: "us-east-1", credentials: credentialProvider});
-            const clientRds = new RDSClient({region: "us-east-1", credentials: credentialProvider});
-            const clientEcs = new ECSClient({region: "us-east-1", credentials: credentialProvider});
-            const clientS3 = new S3Client({region: "us-east-1", credentials: credentialProvider});
-            const clientEcr = new ECRClient({region: "us-east-1", credentials: credentialProvider});
-            const clientRg = new ResourceGroupsClient({region: "us-east-1", credentials: credentialProvider});
-            const clientRgTags = new ResourceGroupsTaggingAPIClient({region: "us-east-1", credentials: credentialProvider});
 
             const command = new DescribeRegionsCommand({AllRegions: false});
             const response = await client.send(command);
@@ -2664,7 +2658,7 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
                 logger.info("AWS - Config n°" + awsConfig.indexOf(oneConfig) + " correctly loaded user regions.");
             }
             if (response.Regions) {
-                const promises = response.Regions.map(async (region) => {
+                response.Regions.forEach((region) => {
                     try {
                         if (!gatherAll) {
                             if (!(userRegions.includes(region.RegionName as string)))
@@ -2672,32 +2666,16 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
                         }
                         context?.log("Retrieving AWS Region : " + region.RegionName);
                         logger.info("Retrieving AWS Region : " + region.RegionName);
-                        const ec2InstancesPromise = ec2InstancesListing(client, region.RegionName as string);
-                        const ec2VolumesPromise = ec2VolumesListing(client, region.RegionName as string);
-                        const ec2SGPromise = ec2SGListing(client, region.RegionName as string);
-                        const rdsListPromise = rdsInstancesListing(clientRds, region.RegionName as string);
-                        const resourceGroupPromise = resourceGroupsListing(clientRg, region.RegionName as string);
-                        const tagsValuePromise = tagsValueListing(clientRgTags, region.RegionName as string);
-                        const ecsClusterPromise = ecsClusterListing(clientEcs, region.RegionName as string);
-
-                        const [ec2Instances, ec2Volumes, ec2SG, rdsList, resourceGroup, tagsValue, ecsCluster] =
-                            await Promise.all([ec2InstancesPromise, ec2VolumesPromise, ec2SGPromise, rdsListPromise, resourceGroupPromise, tagsValuePromise, ecsClusterPromise]);
-                        return {
-                            ec2Instance: ec2Instances,
-                            ec2SG,
-                            ec2Volume: ec2Volumes,
-                            rds: rdsList,
-                            resourceGroup,
-                            tagsValue,
-                            ecsCluster
-                        };
+                        // GATHER ALL HERE
+                        
                     } catch (e) {
                         logger.error("error in collectAWSData with AWS_ACCESS_KEY_ID: " + oneConfig["AWS_ACCESS_KEY_ID"] ?? null);
                         logger.error(e);
                     }
                 });
-                const awsResourcesPerRegion = await Promise.all(promises);
-                const awsResource: { [key: string]: any[] } = {};
+         //       const awsResourcesPerRegion = await Promise.all(promises);
+         
+                /*   const awsResource: { [key: string]: any[] } = {};
                 awsResourcesPerRegion.forEach((regionResources) => {
                     if (regionResources) {
                         Object.keys(regionResources).forEach((resourceType) => {
@@ -2709,7 +2687,7 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
                 });
                 context?.log("- Listing AWS resources done -");
                 logger.info("- Listing AWS resources done -");
-                resources.push(awsResource as any);
+                resources.push(awsResource as any);*/
             }
         } catch (e) {
             context?.log("error in AWS connect with AWS_ACCESS_KEY_ID: " + oneConfig["AWS_ACCESS_KEY_ID"] ?? null);
