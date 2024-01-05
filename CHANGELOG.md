@@ -707,3 +707,14 @@ Kexa/__tests__/services/addOn.test.ts was changed
 Kexa/__tests__/services/analyse.test.ts was changed
 
 
+## 1.12.0-SNAPSHOT.19.3049a4a
+
+### Files added: 0
+
+### Files changed: 2
+
+Dockerfile was changed
+
+package-lock.json was changed
+
+
