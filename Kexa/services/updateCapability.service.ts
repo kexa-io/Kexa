@@ -346,16 +346,40 @@ function extractClientsAws(module: any): AzureClients {
     return clients;
 }
 
+const extractObjectBetween = (inputString: string, startStrings: string[], endString: string): string | null => {
+    let startIndex: number = -1;
+    let foundStartString: string | undefined;
+
+    for (const element of startStrings) {
+        const index = inputString.indexOf(element);
+        if (index !== -1 && (startIndex === -1 || index < startIndex)) {
+            startIndex = index;
+            foundStartString = element;
+        }
+    }
+
+    if (startIndex === -1 || inputString.indexOf(endString, startIndex) === -1) {
+        return null;
+    }
+
+    if (!foundStartString)
+        return null;
+    const endIndex = inputString.indexOf(endString, startIndex);
+    const extractedContent = inputString.substring(startIndex + foundStartString.length, endIndex);
+    return extractedContent;
+}
+
+
 function extractFunctionsAws(module: any): AzureClients {
     const clients: AwsClient = {};
+    const startStrings =  ["List", "Describe"];
 
-    const credentials = fromNodeProviderChain();
 
     Object.keys(module).forEach((key) => {
         if ((module[key] instanceof Function && module[key].prototype !== undefined 
-            && module[key].name.endsWith("Command") &&
-             (module[key].name.startsWith("Describe") || module[key].name.startsWith("Get") || module[key].name.startsWith("List")))) {
-            clients[key] = module[key];
+            && module[key].name.endsWith("Command") && startStrings.some(startStr => module[key].name.startsWith(startStr)))) {
+                clients[key] = module[key];
+                clients[key].objectExtractedName = extractObjectBetween(module[key].name, startStrings, "Command");
             try {
                 console.log(clients[key]);
             } catch (e) {
