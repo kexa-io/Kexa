@@ -14,8 +14,7 @@
             "alert_template": {
                 "enabled": true,
                 "type": [
-                    "log",
-                    "email"
+                    "log"
                 ],
                 "to": [
                     "test@test.com"
