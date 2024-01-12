@@ -2172,20 +2172,15 @@
 	*	- KexaAzure.mlSchedules
 	*	- KexaAzure.storage
 	*	- KexaAzure.blob
+	*	- KexaAwsCustoms.tagsValueListing
 */
 
-import { AWSResources } from "../../models/aws/ressource.models";
 import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
 import { DescribeRegionsCommand } from "@aws-sdk/client-ec2";
 import { AwsConfig } from "../../models/aws/config.models";
 
 import { fromNodeProviderChain } from "@aws-sdk/credential-providers";
-import { EC2Client, DescribeVolumesCommand, DescribeSecurityGroupsCommand, DescribeInstancesCommand } from "@aws-sdk/client-ec2";
-import { RDSClient, DescribeDBInstancesCommand } from "@aws-sdk/client-rds";
-import { ECSClient, DescribeClustersCommand } from "@aws-sdk/client-ecs";
-import { S3Client, ListBucketsCommand } from "@aws-sdk/client-s3";
-import { ECRClient, DescribeRepositoriesCommand } from "@aws-sdk/client-ecr";
-import { ResourceGroupsClient, ListGroupsCommand } from "@aws-sdk/client-resource-groups";
+import { EC2Client } from "@aws-sdk/client-ec2";
 import { ResourceGroupsTaggingAPIClient, GetTagKeysCommand } from "@aws-sdk/client-resource-groups-tagging-api";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2204,7 +2199,13 @@ interface AwsClient {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING CLOUD RESOURCES ///////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[] | null> {
+
+
+/* ****************************************** */
+/*  	     Main listing function            */
+/* ****************************************** */
+
+export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null> {
     let context = getContext();
     let resources = new Array<Object>();
     for (let oneConfig of awsConfig ?? []) {
@@ -2271,8 +2272,12 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
                                 return;
                         }
 						context?.log("Retrieving AWS Region : " + region.RegionName);
-						const newResources = await collectAuto(credentialProvider, region.RegionName as string, currentConfig);
-						collectedResults.push(newResources);						
+						let newResources = await collectAuto(credentialProvider, region.RegionName as string);
+						const newCustomResources = await collectCustom(credentialProvider, region.RegionName as string);
+						newCustomResources.forEach((customRes: any) => {
+							newResources = {...newResources, ...customRes};
+						})
+						collectedResults.push(newResources);
                     } catch (e) {
                         logger.error("error in collectAWSData with AWS_ACCESS_KEY_ID: " + oneConfig["AWS_ACCESS_KEY_ID"] ?? null);
                         logger.error(e);
@@ -2282,9 +2287,9 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
      
                 context?.log("- Listing AWS resources done -");
                 logger.info("- Listing AWS resources done -");
-				const groupedObjects = groupObjectsByCommonKey(collectedResults);
-				console.log(groupedObjects);
-                resources.push(collectedResults);
+				
+				const concatedResults = concatAllObjects(collectedResults);
+                resources.push(concatedResults);
             }
         } catch (e) {
             context?.log("error in AWS connect with AWS_ACCESS_KEY_ID: " + oneConfig["AWS_ACCESS_KEY_ID"] ?? null);
@@ -2292,80 +2297,16 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
             logger.error(e);
         }
     }
-	//console.log(resources);
     return null;
 }
 
-function addRegion(resources:any, region:string) {
-    for (let resource of resources) {
-        resource.region = region;
-    }
-    return resources;
-}
 
-type KeyedObject<T> = Record<string, T>;
-
-function groupObjectsByCommonKey<T>(objects: KeyedObject<T>[]): Record<string, T[]> {
-  const groupedObjects: Record<string, T[]> = {};
-
-  objects.forEach((obj) => {
-    const key = Object.keys(obj)[0];
-    const value = obj[key];
-
-    if (groupedObjects[key]) {
-      groupedObjects[key].push(value);
-    } else {
-      groupedObjects[key] = [value];
-    }
-  });
-
-  return groupedObjects;
-}
-
-async function collectAuto(credential: any, region: string, config: AwsConfig) {
-	logger.info("Retrieving AWS Region : " + region);
-
-	let azureRet: any[] = [];
-	// RETRIEVE OBJECT BEFORE THIS TO LOOP BEFORE REGION AND EASIER FLATTEN
-	let objectToGather = retrieveAwsClients();
-	for (const client of objectToGather) {
-		const promises = client.map(async (object: any) => {
-			const gathered = await gatherAwsObject(credential, region, config, object);
-			azureRet = { ...azureRet, ...gathered };
-		});
-		await Promise.all(promises);
-	}
-	console.log(azureRet);
-	return (azureRet);
-}
-
-async function gatherAwsObject(credential: any, region:string, config: AwsConfig, object: ClientResultsInterface) {
-  	if(!currentConfig.ObjectNameNeed?.includes(object.clientName + "." + object.objectName)) return null;
-	console.log("Gathering:" + object.clientName + "." + object.objectName);
-	try {
-		const client = new object.clientFunc({region: region, credentials: credential});
-
-		const input = {};
-		const command = new object.objectFunc(input);
-		const data = await client.send(command);
-
-		let jsonData = JSON.parse(JSON.stringify(data[object.objectName]));
-		jsonData = addRegion(jsonData, region);
-		logger.debug(region + " - " + object.clientName + "." + object.objectName + " Listing  Done");
-		const customJsonObject = {
-			[object.clientName + "." + object.objectName]: jsonData
-		  };
-		return customJsonObject ?? null;
-	} catch (err) {
-		logger.debug("Error in ec2SGListing: ", err);
-		return null;
-	}
-}
+/* ****************************************** */
+/*  	Retrieving clients & objects names    */
+/* ****************************************** */
 
 function retrieveAwsClients(): Array<any> {
     let allObjects = [];
-
-    console.log("retrieve clients, related object and function to gather...");
 
     for (const key of Object.keys(AwsImports)) {
         const currentItem = (AwsImports as { [key: string]: unknown })[key];
@@ -2390,7 +2331,8 @@ function extractObjectsOrFunctions(module: any, isObject: Boolean): ClientResult
 	let clientsResults: ClientResultsInterface[] = [];
 
     /* Start and End string to match for extract client listing functions */
-    /* You can edit those as you wish, addind as much startStrings as you want */ 
+    /* Edit those as needed, addind as much startStrings as you want */
+	/* This can be use if the aws SDK functions name standards changes */
     const startStrings =  ["List", "Describe"];
     const endString = "Command";
     let clientName;
@@ -2426,11 +2368,117 @@ function extractObjectsOrFunctions(module: any, isObject: Boolean): ClientResult
     return clientsResults;
 }
 
-async function tagsValueListing(client: ResourceGroupsTaggingAPIClient, region: string): Promise<any> {
-    if(!currentConfig.ObjectNameNeed?.includes("tagsValue")) return null;
+/* ****************************************** */
+/*  	Collecting & structuring objects      */
+/* ****************************************** */
+
+function addRegion(resources:any, region:string) {
+    for (let resource of resources) {
+        resource.region = region;
+    }
+    return resources;
+}
+
+function concatAllObjects(collectedResults: any) {
+	let finalResults: any = {};
+
+	collectedResults.forEach((element: any) => {
+    	for (const key of Object.keys(element)) {
+			if (finalResults[key]) {
+				element[key].forEach((subElement: any) => {
+					finalResults[key].push(subElement);
+				})
+			}
+			else {
+				finalResults[key] = element[key];
+			}
+		}
+	});
+	return (finalResults);
+}
+
+async function collectAuto(credential: any, region: string) {
+	logger.info("Retrieving AWS Region : " + region);
+
+	let azureRet: any[] = [];
+	let objectToGather = retrieveAwsClients();
+	for (const client of objectToGather) {
+		const promises = client.map(async (object: any) => {
+			const gathered = await gatherAwsObject(credential, region, object);
+			azureRet = { ...azureRet, ...gathered };
+		});
+		await Promise.all(promises);
+	}
+	return (azureRet);
+}
+
+async function gatherAwsObject(credential: any, region:string, object: ClientResultsInterface) {
+  	if(!currentConfig.ObjectNameNeed?.includes(object.clientName + "." + object.objectName)) return null;
+	try {
+		const client = new object.clientFunc({region: region, credentials: credential});
+
+		const input = {};
+		const command = new object.objectFunc(input);
+		const data = await client.send(command);
+
+		let jsonData = JSON.parse(JSON.stringify(data[object.objectName]));
+		jsonData = addRegion(jsonData, region);
+		logger.debug(region + " - " + object.clientName + "." + object.objectName + " Listing  Done");
+		const customJsonObject = {
+			[object.clientName + "." + object.objectName]: jsonData
+		  };
+		return customJsonObject ?? null;
+	} catch (err) {
+		logger.debug("Error in " + object.clientName + "." + object.objectName + " listing:", err);
+		return null;
+	}
+}
+
+/* ****************************************** */
+/*  	Collecting custom data objects        */
+/* ****************************************** */
+// custom gathering can be use to operate on data before making it availabe for Kexa
+// or else restructure the data if needed, gather exception objects
+
+import {stringKeys} from "../../models/aws/ressource.models";
+
+interface FunctionMap {
+    [key: string]: (credential: any, region: string, object: any) => void;
+}
+
+
+async function collectCustom(credential: any, region: string) {
+
+	let azureRet;
+	azureRet = await Promise.all(stringKeys.map(async (element: any) => {
+		if(!currentConfig.ObjectNameNeed?.includes(element)) return {};
+		logger.info("Retrieving AWS Region (custom resources) : " + region);
+		if (!customGatherFunctions[element]) {
+			logger.error("This object gathering function has no match in 'customGatherFunctions' FunctionMap.\nYou must correct the object name, or if you're developping an addon, build the required gathering function");
+			return ;
+		}
+		return { [element] : await customGatherFunctions[element](credential, region, element)};
+	}));
+	return (azureRet);
+}
+
+const customGatherFunctions: FunctionMap = {
+    'KexaAwsCustoms.tagsValueListing': async (credential: any, region: string, object: any) => {
+		try {
+			const client = new ResourceGroupsTaggingAPIClient({region: region, credentials: credential});
+			const input = {};
+			const command = new GetTagKeysCommand(input);
+			return await tagsValueListing(client, command, region);
+		} catch (e) {
+			logger.warn("Error creating Azure client: ", e);
+			return ;
+		}
+    }
+};
+
+async function tagsValueListing(client: ResourceGroupsTaggingAPIClient, command: GetTagKeysCommand, region: string): Promise<any> {
     try {
-        const input = {};
-        const dataKeys = await client.send(new GetTagKeysCommand(input));
+        const dataKeys = await client.send(command);
         const jsonDataKeys = JSON.parse(JSON.stringify(dataKeys.TagKeys));
         let jsonData: any[] = [];
         for (const element of jsonDataKeys) {
@@ -2441,7 +2489,7 @@ async function tagsValueListing(client: ResourceGroupsTaggingAPIClient, region: 
             jsonData.push(newData);
         }
         logger.debug(region + " - Tags Done");
-        return jsonDataKeys ?? null;
+        return jsonData ?? null;
     } catch (err) {
         logger.debug("Error in Tags Value Listing: ", err);
         return null;

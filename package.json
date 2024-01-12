@@ -23,6 +23,7 @@
         "@aws-sdk/client-batch": "^3.485.0",
         "@aws-sdk/client-billingconductor": "^3.485.0",
         "@aws-sdk/client-braket": "^3.485.0",
+        "@aws-sdk/client-budgets": "^3.490.0",
         "@aws-sdk/client-chime": "^3.485.0",
         "@aws-sdk/client-chime-sdk-identity": "^3.485.0",
         "@aws-sdk/client-chime-sdk-meetings": "^3.485.0",

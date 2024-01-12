@@ -320,10 +320,10 @@ function retrieveAzureArmClients() {
 }
 
 if (require.main === module) {
-   // releaseCapability();
-    //updateREADME();
-   // updateVersion();
-  //  createAzureArmPkgImportList();
+    releaseCapability();
+    updateREADME();
+    updateVersion();
+    createAzureArmPkgImportList();
     createAwsArmPkgImportList();
 }
 
@@ -472,7 +472,7 @@ async function fileReplaceContentAws(inputFilePath: string, outputFilePath: stri
     try {
       const fileContent = await readFileContent(inputFilePath);
       const regex = /(\* Resources :)[\s\S]*?(\*\/)/;
-      const updatedContent = fileContent.replace(regex, `$1\n${generateResourceListAws(allObjects)}\n$2`);  
+      const updatedContent = fileContent.replace(regex, `$1\n${generateResourceListAws(allObjects)}\n${generateCustomResourceListAws()}\n$2`);  
       writeFileContent(outputFilePath, updatedContent);
     } catch (error) {
       console.error('Error:', error);
@@ -492,3 +492,11 @@ function generateResourceListAws(resources: AzureClients): string {
     const resourceList = concatedArray.map(line => `\t*\t- ${line}`).join('\n');
     return `${resourceList}`;
 }
+
+import {stringKeys as AwsCustomObjects} from "../models/aws/ressource.models";
+
+function generateCustomResourceListAws(): string {
+    const resourceList = AwsCustomObjects.map((line: String) => `\t*\t- ${line}`).join('\n');
+    return `${resourceList}`;
+}
+
