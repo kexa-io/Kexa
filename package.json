@@ -47,6 +47,7 @@
         "@aws-sdk/client-comprehend": "^3.485.0",
         "@aws-sdk/client-comprehendmedical": "^3.485.0",
         "@aws-sdk/client-connect": "^3.485.0",
+        "@aws-sdk/client-connectparticipant": "^3.489.0",
         "@aws-sdk/client-cost-explorer": "^3.485.0",
         "@aws-sdk/client-data-pipeline": "^3.485.0",
         "@aws-sdk/client-databrew": "^3.485.0",

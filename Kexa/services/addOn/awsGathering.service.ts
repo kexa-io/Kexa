@@ -8,7 +8,7 @@
 	*	- OpsWorksCMClient.AccountAttributes
 	*	- EC2Client.AddressTransfers
 	*	- EC2Client.AddressesAttribute
-	*	- SnowballClient.Addresses
+	*	- EC2Client.Addresses
 	*	- EC2Client.AggregateIdFormat
 	*	- EC2Client.AvailabilityZones
 	*	- EC2Client.AwsNetworkPerformanceMetricSubscriptions
@@ -117,7 +117,7 @@
 	*	- EC2Client.StaleSecurityGroups
 	*	- EC2Client.StoreImageTasks
 	*	- EC2Client.Subnets
-	*	- MachineLearningClient.Tags
+	*	- ElasticLoadBalancingClient.Tags
 	*	- EC2Client.TrafficMirrorFilters
 	*	- EC2Client.TrafficMirrorSessions
 	*	- EC2Client.TrafficMirrorTargets
@@ -193,7 +193,7 @@
 	*	- CognitoIdentityClient.IdentityPool
 	*	- SESClient.Identities
 	*	- CognitoIdentityClient.IdentityPools
-	*	- CommanderClient.TagsForResource
+	*	- IoTAnalyticsClient.TagsForResource
 	*	- SQSClient.DeadLetterSourceQueues
 	*	- SQSClient.MessageMoveTasks
 	*	- SQSClient.QueueTags
@@ -234,7 +234,7 @@
 	*	- QuickSightClient.TemplateVersions
 	*	- QuickSightClient.Templates
 	*	- RekognitionClient.Collection
-	*	- CognitoSyncClient.Dataset
+	*	- IoTAnalyticsClient.Dataset
 	*	- RekognitionClient.ProjectVersions
 	*	- RekognitionClient.Projects
 	*	- RekognitionClient.StreamProcessor
@@ -260,11 +260,11 @@
 	*	- ComprehendClient.FlywheelIteration
 	*	- ComprehendClient.KeyPhrasesDetectionJob
 	*	- ComprehendClient.PiiEntitiesDetectionJob
-	*	- NetworkFirewallClient.ResourcePolicy
+	*	- LookoutEquipmentClient.ResourcePolicy
 	*	- ComprehendClient.SentimentDetectionJob
 	*	- ComprehendClient.TargetedSentimentDetectionJob
 	*	- ComprehendClient.TopicsDetectionJob
-	*	- CognitoSyncClient.Datasets
+	*	- IoTAnalyticsClient.Datasets
 	*	- ComprehendClient.DocumentClassificationJobs
 	*	- ComprehendClient.DocumentClassifierSummaries
 	*	- ComprehendClient.DocumentClassifiers
@@ -364,13 +364,13 @@
 	*	- LambdaClient.LayerVersions
 	*	- LambdaClient.Layers
 	*	- LambdaClient.ProvisionedConcurrencyConfigs
-	*	- AlexaForBusinessClient.Tags
+	*	- DAXClient.Tags
 	*	- LambdaClient.VersionsByFunction
 	*	- SESClient.ActiveReceiptRuleSet
 	*	- SESClient.ConfigurationSet
 	*	- SESClient.ReceiptRule
 	*	- SESClient.ReceiptRuleSet
-	*	- PinpointSMSVoiceClient.ConfigurationSets
+	*	- PinpointEmailClient.ConfigurationSets
 	*	- SESClient.CustomVerificationEmailTemplates
 	*	- SESClient.IdentityPolicies
 	*	- SESClient.ReceiptFilters
@@ -386,14 +386,14 @@
 	*	- CloudWatchEventsClient.Rule
 	*	- CloudWatchEventsClient.ApiDestinations
 	*	- CloudWatchEventsClient.Archives
-	*	- CodeStarConnectionsClient.Connections
+	*	- CloudWatchEventsClient.Connections
 	*	- CloudWatchEventsClient.EventBuses
 	*	- CloudWatchEventsClient.EventSources
 	*	- CloudWatchEventsClient.PartnerEventSourceAccounts
 	*	- CloudWatchEventsClient.PartnerEventSources
 	*	- CloudWatchEventsClient.Replays
 	*	- CloudWatchEventsClient.RuleNamesByTarget
-	*	- WAFRegionalClient.Rules
+	*	- RbinClient.Rules
 	*	- CloudWatchEventsClient.TargetsByRule
 	*	- ECRClient.ImageReplicationStatus
 	*	- ECRClient.ImageScanFindings
@@ -413,9 +413,9 @@
 	*	- CognitoIdentityProviderClient.UserPoolClient
 	*	- CognitoIdentityProviderClient.UserPool
 	*	- CognitoIdentityProviderClient.UserPoolDomain
-	*	- SnowDeviceManagementClient.Devices
+	*	- WorkLinkClient.Devices
 	*	- GreengrassClient.Groups
-	*	- WorkSpacesWebClient.IdentityProviders
+	*	- CognitoIdentityProviderClient.IdentityProviders
 	*	- CognitoIdentityProviderClient.ResourceServers
 	*	- CognitoIdentityProviderClient.UserImportJobs
 	*	- CognitoIdentityProviderClient.UserPoolClients
@@ -463,13 +463,13 @@
 	*	- CloudWatchClient.MetricStreams
 	*	- CloudWatchClient.Metrics
 	*	- SFNClient.Activity
-	*	- SnowDeviceManagementClient.Execution
+	*	- TransferClient.Execution
 	*	- SFNClient.MapRun
 	*	- SFNClient.StateMachineAlias
 	*	- SFNClient.StateMachine
 	*	- SFNClient.StateMachineForExecution
 	*	- SFNClient.Activities
-	*	- SnowDeviceManagementClient.Executions
+	*	- TransferClient.Executions
 	*	- SFNClient.MapRuns
 	*	- SFNClient.StateMachineAliases
 	*	- SFNClient.StateMachineVersions
@@ -504,19 +504,19 @@
 	*	- ECSClient.CapacityProviders
 	*	- DAXClient.Clusters
 	*	- ECSClient.ContainerInstances
-	*	- SupportClient.Services
+	*	- PricingClient.Services
 	*	- ECSClient.TaskDefinition
 	*	- ECSClient.TaskSets
 	*	- ECSClient.Tasks
 	*	- ECSClient.AccountSettings
 	*	- ECSClient.Attributes
-	*	- SnowballClient.Clusters
+	*	- SageMakerClient.Clusters
 	*	- ECSClient.ContainerInstances
 	*	- ECSClient.ServicesByNamespace
-	*	- MigrationHubRefactorSpacesClient.Services
+	*	- ProtonClient.Services
 	*	- ECSClient.TaskDefinitionFamilies
 	*	- ECSClient.TaskDefinitions
-	*	- SnowDeviceManagementClient.Tasks
+	*	- DataSyncClient.Tasks
 	*	- CloudFrontClient.Function
 	*	- CloudFrontClient.KeyValueStore
 	*	- CloudFrontClient.CachePolicies
@@ -590,7 +590,7 @@
 	*	- GameLiftClient.Builds
 	*	- CodeBuildClient.BuildsForProject
 	*	- CodeBuildClient.CuratedEnvironmentImages
-	*	- CodeStarClient.Projects
+	*	- DataBrewClient.Projects
 	*	- CodeBuildClient.ReportGroups
 	*	- CodeBuildClient.Reports
 	*	- CodeBuildClient.ReportsForReportGroup
@@ -603,7 +603,7 @@
 	*	- CodePipelineClient.ActionExecutions
 	*	- CodePipelineClient.ActionTypes
 	*	- SageMakerClient.PipelineExecutions
-	*	- DataPipelineClient.Pipelines
+	*	- IoTAnalyticsClient.Pipelines
 	*	- AmplifyClient.Webhooks
 	*	- AthenaClient.ApplicationDPUSizes
 	*	- AthenaClient.CalculationExecutions
@@ -635,13 +635,13 @@
 	*	- MemoryDBClient.ServiceUpdates
 	*	- ElastiCacheClient.UpdateActions
 	*	- ElastiCacheClient.UserGroups
-	*	- WorkDocsClient.Users
+	*	- MemoryDBClient.Users
 	*	- ElastiCacheClient.AllowedNodeTypeModifications
 	*	- TimestreamWriteClient.BatchLoadTask
 	*	- TimestreamWriteClient.Database
 	*	- TimestreamWriteClient.BatchLoadTasks
 	*	- CodeDeployClient.ApplicationRevisions
-	*	- MigrationHubRefactorSpacesClient.Applications
+	*	- IoTFleetHubClient.Applications
 	*	- CodeDeployClient.DeploymentConfigs
 	*	- CodeDeployClient.DeploymentGroups
 	*	- CodeDeployClient.DeploymentInstances
@@ -669,8 +669,8 @@
 	*	- IoTClient.EventConfigurations
 	*	- IoTClient.FleetMetric
 	*	- KendraClient.Index
-	*	- SnowballClient.Job
-	*	- IoTJobsDataPlaneClient.JobExecution
+	*	- DataBrewClient.Job
+	*	- IoTClient.JobExecution
 	*	- EMRContainersClient.JobTemplate
 	*	- IoTClient.ManagedJobTemplate
 	*	- IoTClient.MitigationAction
@@ -705,7 +705,7 @@
 	*	- IoTClient.JobExecutionsForJob
 	*	- IoTClient.JobExecutionsForThing
 	*	- EMRContainersClient.JobTemplates
-	*	- SnowballClient.Jobs
+	*	- DataBrewClient.Jobs
 	*	- IoTClient.ManagedJobTemplates
 	*	- IoTClient.MetricValues
 	*	- IoTClient.MitigationActions
@@ -742,11 +742,11 @@
 	*	- EKSClient.Addon
 	*	- EKSClient.AddonConfiguration
 	*	- EKSClient.AddonVersions
-	*	- SnowballClient.Cluster
+	*	- SageMakerClient.Cluster
 	*	- EKSClient.EksAnywhereSubscription
 	*	- EKSClient.FargateProfile
 	*	- EKSClient.IdentityProviderConfig
-	*	- DevOpsGuruClient.Insight
+	*	- EKSClient.Insight
 	*	- EKSClient.Nodegroup
 	*	- EKSClient.PodIdentityAssociation
 	*	- EKSClient.Update
@@ -757,13 +757,13 @@
 	*	- EKSClient.EksAnywhereSubscriptions
 	*	- EKSClient.FargateProfiles
 	*	- EKSClient.IdentityProviderConfigs
-	*	- DevOpsGuruClient.Insights
+	*	- EKSClient.Insights
 	*	- EKSClient.Nodegroups
 	*	- EKSClient.PodIdentityAssociations
 	*	- EKSClient.Updates
 	*	- OpenSearchClient.DomainAutoTunes
 	*	- OpenSearchClient.DomainChangeProgress
-	*	- VoiceIDClient.Domain
+	*	- WorkLinkClient.Domain
 	*	- OpenSearchClient.DomainConfig
 	*	- OpenSearchClient.DomainHealth
 	*	- OpenSearchClient.DomainNodes
@@ -788,7 +788,7 @@
 	*	- PanoramaClient.Package
 	*	- PanoramaClient.PackageVersion
 	*	- CodeartifactClient.Repository
-	*	- VoiceIDClient.Domains
+	*	- WorkLinkClient.Domains
 	*	- CodeartifactClient.PackageVersionAssets
 	*	- CodeartifactClient.PackageVersionDependencies
 	*	- ProtonClient.Repositories
@@ -810,7 +810,7 @@
 	*	- GlueClient.Statements
 	*	- GlueClient.TableOptimizerRuns
 	*	- GlueClient.Triggers
-	*	- CustomerProfilesClient.Workflows
+	*	- ImagebuilderClient.Workflows
 	*	- SyntheticsClient.GroupResources
 	*	- CodeCommitClient.MergeConflicts
 	*	- CodeCommitClient.PullRequestEvents
@@ -854,7 +854,7 @@
 	*	- RedshiftClient.ReservedNodeOfferings
 	*	- MemoryDBClient.ReservedNodes
 	*	- RedshiftClient.Resize
-	*	- ApplicationAutoScalingClient.ScheduledActions
+	*	- AutoScalingClient.ScheduledActions
 	*	- RedshiftClient.SnapshotCopyGrants
 	*	- RedshiftClient.SnapshotSchedules
 	*	- RedshiftClient.Storage
@@ -863,7 +863,7 @@
 	*	- ElasticTranscoderClient.Presets
 	*	- AppConfigClient.ConfigurationProfiles
 	*	- AppConfigClient.DeploymentStrategies
-	*	- MigrationHubRefactorSpacesClient.Environments
+	*	- FinspaceClient.Environments
 	*	- AppConfigClient.ExtensionAssociations
 	*	- GameSparksClient.Extensions
 	*	- AppConfigClient.HostedConfigurationVersions
@@ -900,7 +900,7 @@
 	*	- QuickSightClient.IAMPolicyAssignment
 	*	- QuickSightClient.Ingestion
 	*	- QuickSightClient.IpRestriction
-	*	- IoTThingsGraphClient.Namespace
+	*	- QuickSightClient.Namespace
 	*	- QuickSightClient.RefreshSchedule
 	*	- QuickSightClient.RoleCustomPermission
 	*	- QuickSightClient.TemplateAlias
@@ -928,7 +928,7 @@
 	*	- QuickSightClient.IAMPolicyAssignmentsForUser
 	*	- QuickSightClient.IdentityPropagationConfigs
 	*	- QuickSightClient.Ingestions
-	*	- RedshiftServerlessClient.Namespaces
+	*	- ServiceDiscoveryClient.Namespaces
 	*	- QuickSightClient.RefreshSchedules
 	*	- QuickSightClient.RoleMemberships
 	*	- QuickSightClient.TemplateAliases
@@ -979,7 +979,7 @@
 	*	- EMRClient.BootstrapActions
 	*	- EMRClient.InstanceFleets
 	*	- EMRClient.InstanceGroups
-	*	- SSOAdminClient.Instances
+	*	- ConnectClient.Instances
 	*	- EMRClient.NotebookExecutions
 	*	- EMRClient.ReleaseLabels
 	*	- EMRClient.SecurityConfigurations
@@ -1026,7 +1026,7 @@
 	*	- FisClient.TargetResourceTypes
 	*	- MediaLiveClient.AccountConfiguration
 	*	- IoTAnalyticsClient.Channel
-	*	- IoTEventsClient.Input
+	*	- MediaLiveClient.Input
 	*	- MediaLiveClient.InputDevice
 	*	- MediaLiveClient.InputDeviceThumbnail
 	*	- MediaLiveClient.InputSecurityGroup
@@ -1039,7 +1039,7 @@
 	*	- MediaLiveClient.InputDeviceTransfers
 	*	- MediaLiveClient.InputDevices
 	*	- MediaLiveClient.InputSecurityGroups
-	*	- IoTEventsClient.Inputs
+	*	- MediaLiveClient.Inputs
 	*	- MediaLiveClient.MultiplexPrograms
 	*	- MediaLiveClient.Multiplexes
 	*	- DeviceFarmClient.Offerings
@@ -1058,18 +1058,18 @@
 	*	- MqClient.ConfigurationRevisions
 	*	- MqClient.Configurations
 	*	- KafkaClient.KafkaVersions
-	*	- ManagedBlockchainClient.Nodes
+	*	- PanoramaClient.Nodes
 	*	- KafkaClient.Replicators
 	*	- KafkaClient.ScramSecrets
 	*	- KafkaClient.VpcConnections
 	*	- ConnectClient.AgentStatus
-	*	- GroundStationClient.Contact
+	*	- ConnectClient.Contact
 	*	- ConnectClient.ContactEvaluation
 	*	- ConnectClient.ContactFlow
 	*	- ConnectClient.ContactFlowModule
 	*	- ConnectClient.EvaluationForm
 	*	- ConnectClient.HoursOfOperation
-	*	- SSOAdminClient.Instance
+	*	- ConnectClient.Instance
 	*	- ConnectClient.InstanceStorageConfig
 	*	- ConnectClient.PhoneNumber
 	*	- ConnectClient.PredefinedAttribute
@@ -1190,7 +1190,7 @@
 	*	- ChimeSDKMessagingClient.ChannelMessages
 	*	- ChimeSDKMessagingClient.ChannelModerators
 	*	- ChimeSDKMessagingClient.ChannelsModeratedByAppInstanceUser
-	*	- ChimeSDKMediaPipelinesClient.MediaCapturePipelines
+	*	- ChimeClient.MediaCapturePipelines
 	*	- ChimeClient.MeetingTags
 	*	- ChimeClient.Meetings
 	*	- ChimeClient.PhoneNumberOrders
@@ -1219,7 +1219,7 @@
 	*	- SageMakerClient.CompilationJob
 	*	- SageMakerClient.Context
 	*	- SageMakerClient.DataQualityJobDefinition
-	*	- SnowDeviceManagementClient.Device
+	*	- WorkLinkClient.Device
 	*	- SageMakerClient.DeviceFleet
 	*	- SageMakerClient.EdgeDeploymentPlan
 	*	- SageMakerClient.EdgePackagingJob
@@ -1254,7 +1254,7 @@
 	*	- SageMakerClient.PipelineDefinitionForExecution
 	*	- SageMakerClient.PipelineExecution
 	*	- SageMakerClient.ProcessingJob
-	*	- CodeStarClient.Project
+	*	- DataBrewClient.Project
 	*	- SageMakerClient.Space
 	*	- SageMakerClient.StudioLifecycleConfig
 	*	- SageMakerClient.SubscribedWorkteam
@@ -1262,7 +1262,7 @@
 	*	- SageMakerClient.TransformJob
 	*	- SageMakerClient.Trial
 	*	- SageMakerClient.TrialComponent
-	*	- CodeStarClient.UserProfile
+	*	- SageMakerClient.UserProfile
 	*	- SageMakerClient.Workforce
 	*	- SageMakerClient.Workteam
 	*	- SageMakerClient.Algorithms
@@ -1322,11 +1322,11 @@
 	*	- SageMakerClient.TransformJobs
 	*	- SageMakerClient.TrialComponents
 	*	- SageMakerClient.Trials
-	*	- CodeStarClient.UserProfiles
+	*	- SageMakerClient.UserProfiles
 	*	- SageMakerClient.Workforces
 	*	- SageMakerClient.Workteams
 	*	- CloudControlClient.ResourceRequests
-	*	- CodeStarClient.Resources
+	*	- LakeFormationClient.Resources
 	*	- BackupClient.BackupJob
 	*	- BackupClient.BackupVault
 	*	- BackupClient.CopyJob
@@ -1374,7 +1374,7 @@
 	*	- AutoScalingClient.MetricCollectionTypes
 	*	- AutoScalingClient.NotificationConfigurations
 	*	- AutoScalingClient.Policies
-	*	- ApplicationAutoScalingClient.ScalingActivities
+	*	- AutoScalingClient.ScalingActivities
 	*	- AutoScalingClient.ScalingProcessTypes
 	*	- AutoScalingClient.TerminationPolicyTypes
 	*	- AutoScalingClient.TrafficSources
@@ -1390,7 +1390,7 @@
 	*	- RAMClient.PendingInvitationResources
 	*	- RAMClient.PermissionAssociations
 	*	- RAMClient.PermissionVersions
-	*	- ACMPCAClient.Permissions
+	*	- GrafanaClient.Permissions
 	*	- RAMClient.Principals
 	*	- RAMClient.ReplacePermissionAssociationsWork
 	*	- RAMClient.ResourceSharePermissions
@@ -1405,8 +1405,8 @@
 	*	- SecurityHubClient.ConfigurationPolicyAssociations
 	*	- SecurityHubClient.EnabledProductsForImport
 	*	- SecurityHubClient.FindingAggregators
-	*	- ManagedBlockchainClient.Invitations
-	*	- ManagedBlockchainClient.Members
+	*	- DetectiveClient.Invitations
+	*	- DetectiveClient.Members
 	*	- DetectiveClient.OrganizationAdminAccounts
 	*	- SecurityHubClient.SecurityControlDefinitions
 	*	- SecurityHubClient.StandardsControlAssociations
@@ -1468,7 +1468,7 @@
 	*	- DataSyncClient.StorageSystem
 	*	- DataSyncClient.StorageSystemResourceMetrics
 	*	- DataSyncClient.StorageSystemResources
-	*	- SnowDeviceManagementClient.Task
+	*	- DataSyncClient.Task
 	*	- DataSyncClient.TaskExecution
 	*	- DataSyncClient.Agents
 	*	- DataSyncClient.DiscoveryJobs
@@ -1482,7 +1482,7 @@
 	*	- HealthLakeClient.FHIRExportJobs
 	*	- HealthLakeClient.FHIRImportJobs
 	*	- ImagebuilderClient.ComponentBuildVersions
-	*	- ApplicationInsightsClient.Components
+	*	- AmplifyUIBuilderClient.Components
 	*	- ImagebuilderClient.ContainerRecipes
 	*	- ImagebuilderClient.DistributionConfigurations
 	*	- ImagebuilderClient.ImageBuildVersions
@@ -1507,13 +1507,13 @@
 	*	- MediaConnectClient.Bridges
 	*	- MediaConnectClient.Entitlements
 	*	- MediaConnectClient.GatewayInstances
-	*	- AlexaForBusinessClient.Gateways
+	*	- IoTSiteWiseClient.Gateways
 	*	- GuardDutyClient.MalwareScans
 	*	- GuardDutyClient.PublishingDestination
 	*	- GuardDutyClient.Coverage
 	*	- GuardDutyClient.Detectors
 	*	- PersonalizeClient.Filters
-	*	- WAFRegionalClient.IPSets
+	*	- WAFClient.IPSets
 	*	- GuardDutyClient.PublishingDestinations
 	*	- GuardDutyClient.ThreatIntelSets
 	*	- AccessAnalyzerClient.AccessPreviewFindings
@@ -1620,7 +1620,7 @@
 	*	- FSxClient.SharedVpcConfiguration
 	*	- FSxClient.StorageVirtualMachines
 	*	- IoTSiteWiseClient.AccessPolicy
-	*	- MediaPackageVodClient.Asset
+	*	- IoTSiteWiseClient.Asset
 	*	- IoTSiteWiseClient.AssetCompositeModel
 	*	- IoTSiteWiseClient.AssetModel
 	*	- IoTSiteWiseClient.AssetModelCompositeModel
@@ -1628,7 +1628,7 @@
 	*	- IoTSiteWiseClient.BulkImportJob
 	*	- IoTSiteWiseClient.DefaultEncryptionConfiguration
 	*	- IoTSiteWiseClient.GatewayCapabilityConfiguration
-	*	- IoTEventsClient.LoggingOptions
+	*	- IoTAnalyticsClient.LoggingOptions
 	*	- IoTSiteWiseClient.Portal
 	*	- IoTSiteWiseClient.StorageConfiguration
 	*	- IoTSiteWiseClient.TimeSeries
@@ -1637,11 +1637,11 @@
 	*	- IoTSiteWiseClient.AssetModels
 	*	- IoTSiteWiseClient.AssetProperties
 	*	- IoTSiteWiseClient.AssetRelationships
-	*	- MediaPackageVodClient.Assets
+	*	- OutpostsClient.Assets
 	*	- IoTSiteWiseClient.AssociatedAssets
 	*	- IoTSiteWiseClient.BulkImportJobs
 	*	- IoTSiteWiseClient.CompositionRelationships
-	*	- WorkSpacesWebClient.Portals
+	*	- IoTSiteWiseClient.Portals
 	*	- IoTSiteWiseClient.ProjectAssets
 	*	- IoTSiteWiseClient.TimeSeries
 	*	- ForecastClient.AutoPredictor
@@ -1694,11 +1694,11 @@
 	*	- GameLiftClient.MatchmakingRuleSets
 	*	- GameLiftClient.PlayerSessions
 	*	- GameLiftClient.RuntimeConfiguration
-	*	- ApplicationAutoScalingClient.ScalingPolicies
+	*	- GameLiftClient.ScalingPolicies
 	*	- GameLiftClient.Script
 	*	- GameLiftClient.VpcPeeringAuthorizations
 	*	- GameLiftClient.Compute
-	*	- RoboMakerClient.Fleets
+	*	- WorkLinkClient.Fleets
 	*	- GameLiftClient.GameServerGroups
 	*	- GameLiftClient.GameServers
 	*	- GameLiftClient.Scripts
@@ -1714,19 +1714,19 @@
 	*	- CloudSearchClient.ScalingParameters
 	*	- CloudSearchClient.ServiceAccessPolicies
 	*	- CloudSearchClient.Suggesters
-	*	- WAFRegionalClient.ActivatedRulesInRuleGroup
-	*	- WAFRegionalClient.ByteMatchSets
-	*	- WAFRegionalClient.GeoMatchSets
-	*	- WAFRegionalClient.LoggingConfigurations
-	*	- WAFRegionalClient.RateBasedRules
-	*	- WAFRegionalClient.RegexMatchSets
-	*	- WAFRegionalClient.RegexPatternSets
-	*	- WAFRegionalClient.RuleGroups
-	*	- WAFRegionalClient.SizeConstraintSets
-	*	- WAFRegionalClient.SqlInjectionMatchSets
-	*	- WAFRegionalClient.SubscribedRuleGroups
-	*	- WAFRegionalClient.WebACLs
-	*	- WAFRegionalClient.XssMatchSets
+	*	- WAFClient.ActivatedRulesInRuleGroup
+	*	- WAFClient.ByteMatchSets
+	*	- WAFClient.GeoMatchSets
+	*	- IvschatClient.LoggingConfigurations
+	*	- WAFClient.RateBasedRules
+	*	- WAFClient.RegexMatchSets
+	*	- WAFClient.RegexPatternSets
+	*	- WAFClient.RuleGroups
+	*	- WAFClient.SizeConstraintSets
+	*	- WAFClient.SqlInjectionMatchSets
+	*	- WAFClient.SubscribedRuleGroups
+	*	- WAFClient.WebACLs
+	*	- WAFClient.XssMatchSets
 	*	- ServiceQuotasClient.AWSDefaultServiceQuotas
 	*	- ServiceQuotasClient.RequestedServiceQuotaChangeHistoryByQuota
 	*	- ServiceQuotasClient.RequestedServiceQuotaChangeHistory
@@ -1740,7 +1740,7 @@
 	*	- SignerClient.SigningProfiles
 	*	- PersonalizeClient.BatchInferenceJob
 	*	- PersonalizeClient.BatchSegmentJob
-	*	- ConnectCampaignsClient.Campaign
+	*	- PersonalizeClient.Campaign
 	*	- PersonalizeClient.DatasetExportJob
 	*	- PersonalizeClient.EventTracker
 	*	- PersonalizeClient.FeatureTransformation
@@ -1752,7 +1752,7 @@
 	*	- PersonalizeClient.SolutionVersion
 	*	- PersonalizeClient.BatchInferenceJobs
 	*	- PersonalizeClient.BatchSegmentJobs
-	*	- ConnectCampaignsClient.Campaigns
+	*	- PersonalizeClient.Campaigns
 	*	- PersonalizeClient.DatasetExportJobs
 	*	- PersonalizeClient.EventTrackers
 	*	- PersonalizeClient.MetricAttributionMetrics
@@ -1782,7 +1782,7 @@
 	*	- DataBrewClient.JobRun
 	*	- EMRContainersClient.ManagedEndpoint
 	*	- EMRContainersClient.VirtualCluster
-	*	- EMRServerlessClient.JobRuns
+	*	- DataBrewClient.JobRuns
 	*	- EMRContainersClient.ManagedEndpoints
 	*	- EMRContainersClient.VirtualClusters
 	*	- MemoryDBClient.ACLs
@@ -1826,7 +1826,7 @@
 	*	- ProtonClient.EnvironmentProvisionedResources
 	*	- ProtonClient.EnvironmentTemplateVersions
 	*	- ProtonClient.EnvironmentTemplates
-	*	- CodeStarConnectionsClient.RepositorySyncDefinitions
+	*	- ProtonClient.RepositorySyncDefinitions
 	*	- ProtonClient.ServiceInstanceOutputs
 	*	- ProtonClient.ServiceInstanceProvisionedResources
 	*	- ProtonClient.ServiceInstances
@@ -1931,7 +1931,7 @@
 	*	- NimbleClient.StudioComponents
 	*	- NimbleClient.StudioMembers
 	*	- AmpClient.AlertManagerDefinition
-	*	- NetworkFirewallClient.LoggingConfiguration
+	*	- AmpClient.LoggingConfiguration
 	*	- AmpClient.RuleGroupsNamespace
 	*	- AmpClient.Scraper
 	*	- AmpClient.RuleGroupsNamespaces
@@ -1993,7 +1993,7 @@
 	*	- GameSparksClient.ExtensionVersions
 	*	- GameSparksClient.Games
 	*	- GameSparksClient.GeneratedCodeJobs
-	*	- RedshiftServerlessClient.Snapshots
+	*	- GameSparksClient.Snapshots
 	*	- GameSparksClient.StageDeployments
 	*	- GameSparksClient.Stages
 	*	- DataBrewClient.Ruleset
@@ -2043,8 +2043,8 @@
 	*	- WellArchitectedClient.ShareInvitations
 	*	- WellArchitectedClient.TemplateShares
 	*	- WellArchitectedClient.WorkloadShares
-	*	- ApplicationInsightsClient.Workloads
-	*	- KinesisAnalyticsClient.Application
+	*	- WellArchitectedClient.Workloads
+	*	- IoTFleetHubClient.Application
 	*	- MTurkClient.AssignmentsForHIT
 	*	- MTurkClient.BonusPayments
 	*	- MTurkClient.HITs
@@ -2118,8 +2118,8 @@
 	*	- FMSClient.AdminsManagingAccount
 	*	- FMSClient.AppsLists
 	*	- FMSClient.ComplianceStatus
-	*	- MigrationHubClient.DiscoveredResources
-	*	- MacieClient.MemberAccounts
+	*	- FMSClient.DiscoveredResources
+	*	- FMSClient.MemberAccounts
 	*	- FMSClient.ProtocolsLists
 	*	- FMSClient.ResourceSetResources
 	*	- FMSClient.ResourceSets
@@ -2165,398 +2165,6 @@
 	*	- IoTAnalyticsClient.Datastore
 	*	- IoTAnalyticsClient.DatasetContents
 	*	- IoTAnalyticsClient.Datastores
-	*	- BudgetsClient.BudgetAction
-	*	- BudgetsClient.BudgetActionHistories
-	*	- BudgetsClient.BudgetActionsForAccount
-	*	- BudgetsClient.BudgetActionsForBudget
-	*	- BudgetsClient.Budget
-	*	- BudgetsClient.BudgetNotificationsForAccount
-	*	- BudgetsClient.BudgetPerformanceHistory
-	*	- BudgetsClient.Budgets
-	*	- BudgetsClient.NotificationsForBudget
-	*	- BudgetsClient.SubscribersForNotification
-	*	- FraudDetectorClient.Detector
-	*	- FraudDetectorClient.ModelVersions
-	*	- FraudDetectorClient.EventPredictions
-	*	- DataPipelineClient.Objects
-	*	- DataPipelineClient.Pipelines
-	*	- MobileClient.Bundle
-	*	- MobileClient.Bundles
-	*	- CodeStarClient.TagsForProject
-	*	- CodeStarClient.TeamMembers
-	*	- IoTThingsGraphClient.FlowExecutionMessages
-	*	- SnowballClient.Address
-	*	- SnowballClient.ReturnShippingLabel
-	*	- SnowballClient.ClusterJobs
-	*	- SnowballClient.CompatibleImages
-	*	- SnowballClient.LongTermPricing
-	*	- SnowballClient.PickupLocations
-	*	- SnowballClient.ServiceVersions
-	*	- MacieClient.S3Resources
-	*	- CodeGuruProfilerClient.ProfilingGroup
-	*	- CodeGuruProfilerClient.FindingsReports
-	*	- CodeGuruProfilerClient.ProfileTimes
-	*	- CodeGuruProfilerClient.ProfilingGroups
-	*	- CloudHSMClient.Hapg
-	*	- CloudHSMClient.Hsm
-	*	- CloudHSMClient.LunaClient
-	*	- CloudHSMClient.AvailableZones
-	*	- CloudHSMClient.Hapgs
-	*	- CloudHSMClient.Hsms
-	*	- CloudHSMClient.LunaClients
-	*	- RoboMakerClient.DeploymentJob
-	*	- RoboMakerClient.Fleet
-	*	- RoboMakerClient.RobotApplication
-	*	- RoboMakerClient.Robot
-	*	- RoboMakerClient.SimulationApplication
-	*	- RoboMakerClient.SimulationJobBatch
-	*	- RoboMakerClient.SimulationJob
-	*	- RoboMakerClient.World
-	*	- RoboMakerClient.WorldExportJob
-	*	- RoboMakerClient.WorldGenerationJob
-	*	- RoboMakerClient.WorldTemplate
-	*	- RoboMakerClient.DeploymentJobs
-	*	- RoboMakerClient.RobotApplications
-	*	- RoboMakerClient.Robots
-	*	- RoboMakerClient.SimulationApplications
-	*	- RoboMakerClient.SimulationJobBatches
-	*	- RoboMakerClient.SimulationJobs
-	*	- RoboMakerClient.WorldExportJobs
-	*	- RoboMakerClient.WorldGenerationJobs
-	*	- RoboMakerClient.WorldTemplates
-	*	- RoboMakerClient.Worlds
-	*	- PIClient.DimensionKeys
-	*	- PIClient.AvailableResourceDimensions
-	*	- PIClient.AvailableResourceMetrics
-	*	- PIClient.PerformanceAnalysisReports
-	*	- WorkDocsClient.Activities
-	*	- WorkDocsClient.Comments
-	*	- WorkDocsClient.DocumentVersions
-	*	- WorkDocsClient.FolderContents
-	*	- WorkDocsClient.Groups
-	*	- WorkDocsClient.NotificationSubscriptions
-	*	- WorkDocsClient.ResourcePermissions
-	*	- WorkDocsClient.RootFolders
-	*	- SupportClient.Attachment
-	*	- SupportClient.Cases
-	*	- SupportClient.Communications
-	*	- SupportClient.CreateCaseOptions
-	*	- SupportClient.SeverityLevels
-	*	- SupportClient.SupportedLanguages
-	*	- SupportClient.TrustedAdvisorCheckRefreshStatuses
-	*	- SupportClient.TrustedAdvisorCheckResult
-	*	- SupportClient.TrustedAdvisorCheckSummaries
-	*	- SupportClient.TrustedAdvisorChecks
-	*	- ManagedBlockchainClient.Accessors
-	*	- ManagedBlockchainClient.Networks
-	*	- ManagedBlockchainClient.ProposalVotes
-	*	- ManagedBlockchainClient.Proposals
-	*	- GroundStationClient.Ephemeris
-	*	- GroundStationClient.Configs
-	*	- SSMContactsClient.Contacts
-	*	- GroundStationClient.DataflowEndpointGroups
-	*	- GroundStationClient.Ephemerides
-	*	- GroundStationClient.GroundStations
-	*	- GroundStationClient.MissionProfiles
-	*	- GroundStationClient.Satellites
-	*	- NetworkFirewallClient.Firewall
-	*	- NetworkFirewallClient.FirewallPolicy
-	*	- NetworkFirewallClient.RuleGroup
-	*	- NetworkFirewallClient.RuleGroupMetadata
-	*	- NetworkFirewallClient.TLSInspectionConfiguration
-	*	- NetworkFirewallClient.FirewallPolicies
-	*	- NetworkFirewallClient.Firewalls
-	*	- NetworkFirewallClient.TLSInspectionConfigurations
-	*	- CustomerProfilesClient.AccountIntegrations
-	*	- CustomerProfilesClient.CalculatedAttributeDefinitions
-	*	- CustomerProfilesClient.CalculatedAttributesForProfile
-	*	- CustomerProfilesClient.EventStreams
-	*	- CustomerProfilesClient.IdentityResolutionJobs
-	*	- CustomerProfilesClient.Integrations
-	*	- CustomerProfilesClient.ProfileObjectTypeTemplates
-	*	- CustomerProfilesClient.ProfileObjectTypes
-	*	- CustomerProfilesClient.ProfileObjects
-	*	- CustomerProfilesClient.RuleBasedMatches
-	*	- AppMeshClient.GatewayRoute
-	*	- AppMeshClient.Mesh
-	*	- AppMeshClient.Route
-	*	- AppMeshClient.VirtualGateway
-	*	- AppMeshClient.VirtualNode
-	*	- AppMeshClient.VirtualRouter
-	*	- AppMeshClient.VirtualService
-	*	- AppMeshClient.GatewayRoutes
-	*	- AppMeshClient.Meshes
-	*	- MigrationHubRefactorSpacesClient.Routes
-	*	- AppMeshClient.VirtualGateways
-	*	- AppMeshClient.VirtualNodes
-	*	- AppMeshClient.VirtualRouters
-	*	- AppMeshClient.VirtualServices
-	*	- ACMPCAClient.CertificateAuthorityAuditReport
-	*	- ACMPCAClient.CertificateAuthority
-	*	- ACMPCAClient.CertificateAuthorities
-	*	- SSOAdminClient.AccountAssignmentCreationStatus
-	*	- SSOAdminClient.AccountAssignmentDeletionStatus
-	*	- SSOAdminClient.ApplicationAssignment
-	*	- SSOAdminClient.ApplicationProvider
-	*	- SSOAdminClient.InstanceAccessControlAttributeConfiguration
-	*	- SSOAdminClient.PermissionSet
-	*	- SSOAdminClient.PermissionSetProvisioningStatus
-	*	- SSOAdminClient.TrustedTokenIssuer
-	*	- SSOAdminClient.AccountAssignmentCreationStatus
-	*	- SSOAdminClient.AccountAssignmentDeletionStatus
-	*	- SSOAdminClient.AccountAssignments
-	*	- SSOAdminClient.AccountAssignmentsForPrincipal
-	*	- SSOAdminClient.AccountsForProvisionedPermissionSet
-	*	- SSOAdminClient.ApplicationAccessScopes
-	*	- SSOAdminClient.ApplicationAssignments
-	*	- SSOAdminClient.ApplicationAssignmentsForPrincipal
-	*	- SSOAdminClient.ApplicationAuthenticationMethods
-	*	- SSOAdminClient.ApplicationGrants
-	*	- SSOAdminClient.ApplicationProviders
-	*	- SSOAdminClient.CustomerManagedPolicyReferencesInPermissionSet
-	*	- SSOAdminClient.ManagedPoliciesInPermissionSet
-	*	- SSOAdminClient.PermissionSetProvisioningStatus
-	*	- SSOAdminClient.PermissionSets
-	*	- SSOAdminClient.PermissionSetsProvisionedToAccount
-	*	- SSOAdminClient.TrustedTokenIssuers
-	*	- GlobalAcceleratorClient.AcceleratorAttributes
-	*	- GlobalAcceleratorClient.Accelerator
-	*	- GlobalAcceleratorClient.CrossAccountAttachment
-	*	- GlobalAcceleratorClient.CustomRoutingAcceleratorAttributes
-	*	- GlobalAcceleratorClient.CustomRoutingAccelerator
-	*	- GlobalAcceleratorClient.CustomRoutingEndpointGroup
-	*	- GlobalAcceleratorClient.CustomRoutingListener
-	*	- GlobalAcceleratorClient.EndpointGroup
-	*	- GlobalAcceleratorClient.Listener
-	*	- GlobalAcceleratorClient.Accelerators
-	*	- GlobalAcceleratorClient.ByoipCidrs
-	*	- GlobalAcceleratorClient.CrossAccountAttachments
-	*	- GlobalAcceleratorClient.CrossAccountResourceAccounts
-	*	- GlobalAcceleratorClient.CrossAccountResources
-	*	- GlobalAcceleratorClient.CustomRoutingAccelerators
-	*	- GlobalAcceleratorClient.CustomRoutingEndpointGroups
-	*	- GlobalAcceleratorClient.CustomRoutingListeners
-	*	- GlobalAcceleratorClient.CustomRoutingPortMappingsByDestination
-	*	- GlobalAcceleratorClient.CustomRoutingPortMappings
-	*	- GlobalAcceleratorClient.EndpointGroups
-	*	- GlobalAcceleratorClient.Listeners
-	*	- MediaPackageVodClient.PackagingConfiguration
-	*	- MediaPackageVodClient.PackagingGroup
-	*	- MediaPackageVodClient.PackagingConfigurations
-	*	- MediaPackageVodClient.PackagingGroups
-	*	- BackupGatewayClient.Hypervisors
-	*	- BackupGatewayClient.VirtualMachines
-	*	- VoiceIDClient.Fraudster
-	*	- VoiceIDClient.FraudsterRegistrationJob
-	*	- VoiceIDClient.Speaker
-	*	- VoiceIDClient.SpeakerEnrollmentJob
-	*	- VoiceIDClient.Watchlist
-	*	- VoiceIDClient.FraudsterRegistrationJobs
-	*	- VoiceIDClient.Fraudsters
-	*	- VoiceIDClient.SpeakerEnrollmentJobs
-	*	- VoiceIDClient.Speakers
-	*	- VoiceIDClient.Watchlists
-	*	- DevOpsGuruClient.AccountHealth
-	*	- DevOpsGuruClient.AccountOverview
-	*	- DevOpsGuruClient.Anomaly
-	*	- DevOpsGuruClient.EventSourcesConfig
-	*	- DevOpsGuruClient.Feedback
-	*	- DevOpsGuruClient.OrganizationHealth
-	*	- DevOpsGuruClient.OrganizationOverview
-	*	- DevOpsGuruClient.OrganizationResourceCollectionHealth
-	*	- DevOpsGuruClient.ResourceCollectionHealth
-	*	- DevOpsGuruClient.ServiceIntegration
-	*	- DevOpsGuruClient.AnomaliesForInsight
-	*	- DevOpsGuruClient.AnomalousLogGroups
-	*	- DevOpsGuruClient.Events
-	*	- DevOpsGuruClient.MonitoredResources
-	*	- DevOpsGuruClient.NotificationChannels
-	*	- DevOpsGuruClient.OrganizationInsights
-	*	- CodeGuruReviewerClient.Recommendations
-	*	- WorkSpacesWebClient.BrowserSettings
-	*	- WorkSpacesWebClient.IpAccessSettings
-	*	- WorkSpacesWebClient.NetworkSettings
-	*	- WorkSpacesWebClient.TrustStoreCertificates
-	*	- WorkSpacesWebClient.TrustStores
-	*	- WorkSpacesWebClient.UserAccessLoggingSettings
-	*	- WorkSpacesWebClient.UserSettings
-	*	- SSMIncidentsClient.IncidentFindings
-	*	- CommanderClient.IncidentRecords
-	*	- CommanderClient.RelatedItems
-	*	- CommanderClient.ReplicationSets
-	*	- CommanderClient.ResponsePlans
-	*	- CommanderClient.TimelineEvents
-	*	- DirectConnectClient.ConnectionLoa
-	*	- DirectConnectClient.Connections
-	*	- DirectConnectClient.ConnectionsOnInterconnect
-	*	- DirectConnectClient.CustomerMetadata
-	*	- DirectConnectClient.DirectConnectGatewayAssociationProposals
-	*	- DirectConnectClient.DirectConnectGatewayAssociations
-	*	- DirectConnectClient.DirectConnectGatewayAttachments
-	*	- DirectConnectClient.DirectConnectGateways
-	*	- DirectConnectClient.HostedConnections
-	*	- DirectConnectClient.InterconnectLoa
-	*	- DirectConnectClient.Interconnects
-	*	- DirectConnectClient.Lags
-	*	- DirectConnectClient.Loa
-	*	- DirectConnectClient.Locations
-	*	- DirectConnectClient.RouterConfiguration
-	*	- DirectConnectClient.VirtualGateways
-	*	- DirectConnectClient.VirtualInterfaces
-	*	- DirectConnectClient.VirtualInterfaceTestHistory
-	*	- ConnectContactLensClient.RealtimeContactAnalysisSegments
-	*	- SSMContactsClient.Engagement
-	*	- SSMContactsClient.Page
-	*	- SSMContactsClient.ContactChannels
-	*	- SSMContactsClient.Engagements
-	*	- SSMContactsClient.PageReceipts
-	*	- SSMContactsClient.PageResolutions
-	*	- SSMContactsClient.PagesByContact
-	*	- SSMContactsClient.PagesByEngagement
-	*	- SSMContactsClient.PreviewRotationShifts
-	*	- SSMContactsClient.RotationOverrides
-	*	- SSMContactsClient.RotationShifts
-	*	- SSMContactsClient.Rotations
-	*	- ApplicationAutoScalingClient.ScalableTargets
-	*	- CognitoSyncClient.IdentityPoolUsage
-	*	- CognitoSyncClient.IdentityUsage
-	*	- CognitoSyncClient.IdentityPoolUsage
-	*	- CognitoSyncClient.Records
-	*	- CodeStarConnectionsClient.Hosts
-	*	- CodeStarConnectionsClient.RepositoryLinks
-	*	- CodeStarConnectionsClient.SyncConfigurations
-	*	- MachineLearningClient.BatchPredictions
-	*	- MachineLearningClient.DataSources
-	*	- MachineLearningClient.Evaluations
-	*	- MachineLearningClient.MLModels
-	*	- ApplicationInsightsClient.Component
-	*	- ApplicationInsightsClient.ComponentConfiguration
-	*	- ApplicationInsightsClient.ComponentConfigurationRecommendation
-	*	- ApplicationInsightsClient.LogPattern
-	*	- ApplicationInsightsClient.Observation
-	*	- ApplicationInsightsClient.Problem
-	*	- ApplicationInsightsClient.ProblemObservations
-	*	- ApplicationInsightsClient.Workload
-	*	- ApplicationInsightsClient.ConfigurationHistory
-	*	- ApplicationInsightsClient.LogPatternSets
-	*	- ApplicationInsightsClient.LogPatterns
-	*	- ApplicationInsightsClient.Problems
-	*	- LicenseManagerClient.AssociationsForLicenseConfiguration
-	*	- LicenseManagerClient.DistributedGrants
-	*	- LicenseManagerClient.FailuresForLicenseConfigurationOperations
-	*	- LicenseManagerClient.LicenseConfigurations
-	*	- LicenseManagerClient.LicenseConversionTasks
-	*	- LicenseManagerClient.LicenseManagerReportGenerators
-	*	- LicenseManagerClient.LicenseSpecificationsForResource
-	*	- LicenseManagerClient.LicenseVersions
-	*	- LicenseManagerClient.Licenses
-	*	- LicenseManagerClient.ReceivedGrants
-	*	- LicenseManagerClient.ReceivedGrantsForOrganization
-	*	- LicenseManagerClient.ReceivedLicenses
-	*	- LicenseManagerClient.ReceivedLicensesForOrganization
-	*	- LicenseManagerClient.ResourceInventory
-	*	- LicenseManagerClient.Tokens
-	*	- LicenseManagerClient.UsageForLicenseConfiguration
-	*	- StorageGatewayClient.AvailabilityMonitorTest
-	*	- StorageGatewayClient.BandwidthRateLimit
-	*	- StorageGatewayClient.BandwidthRateLimitSchedule
-	*	- StorageGatewayClient.Cache
-	*	- StorageGatewayClient.CachediSCSIVolumes
-	*	- StorageGatewayClient.ChapCredentials
-	*	- StorageGatewayClient.FileSystemAssociations
-	*	- StorageGatewayClient.GatewayInformation
-	*	- StorageGatewayClient.MaintenanceStartTime
-	*	- StorageGatewayClient.NFSFileShares
-	*	- StorageGatewayClient.SMBFileShares
-	*	- StorageGatewayClient.SMBSettings
-	*	- StorageGatewayClient.SnapshotSchedule
-	*	- StorageGatewayClient.StorediSCSIVolumes
-	*	- StorageGatewayClient.TapeArchives
-	*	- StorageGatewayClient.TapeRecoveryPoints
-	*	- StorageGatewayClient.Tapes
-	*	- StorageGatewayClient.UploadBuffer
-	*	- StorageGatewayClient.VTLDevices
-	*	- StorageGatewayClient.WorkingStorage
-	*	- StorageGatewayClient.AutomaticTapeCreationPolicies
-	*	- StorageGatewayClient.FileShares
-	*	- StorageGatewayClient.FileSystemAssociations
-	*	- StorageGatewayClient.LocalDisks
-	*	- StorageGatewayClient.TapePools
-	*	- StorageGatewayClient.Tapes
-	*	- StorageGatewayClient.VolumeInitiators
-	*	- StorageGatewayClient.VolumeRecoveryPoints
-	*	- StorageGatewayClient.Volumes
-	*	- IoTEventsClient.AlarmModel
-	*	- IoTEventsClient.DetectorModelAnalysis
-	*	- IoTEventsClient.DetectorModel
-	*	- IoTEventsClient.AlarmModelVersions
-	*	- IoTEventsClient.AlarmModels
-	*	- IoTEventsClient.DetectorModelVersions
-	*	- IoTEventsClient.DetectorModels
-	*	- IoTEventsClient.InputRoutings
-	*	- MigrationHubConfigClient.HomeRegionControls
-	*	- CodeGuruReviewerClient.CodeReview
-	*	- CodeGuruReviewerClient.RecommendationFeedback
-	*	- CodeGuruReviewerClient.RepositoryAssociation
-	*	- CodeGuruReviewerClient.CodeReviews
-	*	- CodeGuruReviewerClient.RecommendationFeedback
-	*	- CodeGuruReviewerClient.RepositoryAssociations
-	*	- WAFRegionalClient.ResourcesForWebACL
-	*	- ElasticInferenceClient.AcceleratorOfferings
-	*	- ElasticInferenceClient.AcceleratorTypes
-	*	- ElasticInferenceClient.Accelerators
-	*	- CodestarNotificationsClient.NotificationRule
-	*	- CodestarNotificationsClient.EventTypes
-	*	- CodestarNotificationsClient.NotificationRules
-	*	- CodestarNotificationsClient.Targets
-	*	- MigrationHubClient.ApplicationState
-	*	- MigrationHubClient.MigrationTask
-	*	- MigrationHubClient.ApplicationStates
-	*	- MigrationHubClient.CreatedArtifacts
-	*	- MigrationHubClient.MigrationTasks
-	*	- MigrationHubClient.ProgressUpdateStreams
-	*	- ComputeOptimizerClient.RecommendationExportJobs
-	*	- ChimeSDKMediaPipelinesClient.MediaInsightsPipelineConfigurations
-	*	- ChimeSDKMediaPipelinesClient.MediaPipelineKinesisVideoStreamPools
-	*	- ChimeSDKMediaPipelinesClient.MediaPipelines
-	*	- IoTWirelessClient.Destinations
-	*	- IoTWirelessClient.DeviceProfiles
-	*	- IoTWirelessClient.DevicesForWirelessDeviceImportTask
-	*	- IoTWirelessClient.EventConfigurations
-	*	- IoTWirelessClient.FuotaTasks
-	*	- IoTWirelessClient.MulticastGroupsByFuotaTask
-	*	- IoTWirelessClient.MulticastGroups
-	*	- IoTWirelessClient.NetworkAnalyzerConfigurations
-	*	- IoTWirelessClient.PartnerAccounts
-	*	- IoTWirelessClient.PositionConfigurations
-	*	- IoTWirelessClient.QueuedMessages
-	*	- IoTWirelessClient.ServiceProfiles
-	*	- IoTWirelessClient.WirelessDeviceImportTasks
-	*	- IoTWirelessClient.WirelessDevices
-	*	- IoTWirelessClient.WirelessGatewayTaskDefinitions
-	*	- IoTWirelessClient.WirelessGateways
-	*	- SnowDeviceManagementClient.DeviceEc2Instances
-	*	- SnowDeviceManagementClient.DeviceResources
-	*	- AlexaForBusinessClient.BusinessReportSchedules
-	*	- AlexaForBusinessClient.ConferenceProviders
-	*	- AlexaForBusinessClient.DeviceEvents
-	*	- AlexaForBusinessClient.GatewayGroups
-	*	- AlexaForBusinessClient.Skills
-	*	- AlexaForBusinessClient.SkillsStoreCategories
-	*	- AlexaForBusinessClient.SkillsStoreSkillsByCategory
-	*	- AlexaForBusinessClient.SmartHomeAppliances
-	*	- AutoScalingPlansClient.ScalingPlanResources
-	*	- AutoScalingPlansClient.ScalingPlans
-	*	- ServiceCatalogAppRegistryClient.AssociatedAttributeGroups
-	*	- ServiceCatalogAppRegistryClient.AssociatedResources
-	*	- ServiceCatalogAppRegistryClient.AttributeGroups
-	*	- ServiceCatalogAppRegistryClient.AttributeGroupsForApplication
-	*	- KinesisVideoArchivedMediaClient.Fragments
-	*	- MigrationHubRefactorSpacesClient.EnvironmentVpcs
-	*	- RedshiftServerlessClient.EndpointAccess
-	*	- RedshiftServerlessClient.RecoveryPoints
-	*	- RedshiftServerlessClient.UsageLimits
-	*	- RedshiftServerlessClient.Workgroups
 	*	- KexaAzure.vm
 	*	- KexaAzure.mlWorkspaces
 	*	- KexaAzure.mlJobs
@@ -2586,26 +2194,21 @@ import { getContext, getNewLogger } from "../logger.service";
 const logger = getNewLogger("AWSLogger");
 
 let currentConfig: AwsConfig;
+
+
+import * as AwsImports from "./imports/awsPackage.import";
+
+interface AwsClient {
+	[key: string]: any;
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING CLOUD RESOURCES ///////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[] | null> {
     let context = getContext();
-    let resources = new Array<AWSResources>();
+    let resources = new Array<Object>();
     for (let oneConfig of awsConfig ?? []) {
         currentConfig = oneConfig;
-        let awsResource = {
-            "ec2Instance": null,
-            "ec2SG": null,
-            "ec2Volume": null,
-            "rds": null,
-            //      "s3": null,
-            "resourceGroup": null,
-            "tagsValue": null,
-            "ecsCluster": null,
-            //   "ecrImage": null
-            // Add more AWS resource
-        } as AWSResources;
         let prefix = oneConfig["prefix"]??( awsConfig.indexOf(oneConfig).toString())
         try {
             let awsKeyId = await getConfigOrEnvVar(oneConfig, "AWS_ACCESS_KEY_ID", prefix);
@@ -2658,36 +2261,29 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
                 logger.info("AWS - Config n°" + awsConfig.indexOf(oneConfig) + " correctly loaded user regions.");
             }
             if (response.Regions) {
-                response.Regions.forEach((region) => {
+
+				// HERE GATHER OBJECTS FIRST
+				const collectedResults: any[] = [];
+
+                const promises = response.Regions.map(async(region) => {
                     try {
                         if (!gatherAll) {
                             if (!(userRegions.includes(region.RegionName as string)))
                                 return;
                         }
-                        context?.log("Retrieving AWS Region : " + region.RegionName);
-                        logger.info("Retrieving AWS Region : " + region.RegionName);
-                        // GATHER ALL HERE
-                        
+						context?.log("Retrieving AWS Region : " + region.RegionName);
+						const newResources = await collectAuto(credentialProvider, region.RegionName as string, currentConfig);
+						collectedResults.push(newResources);						
                     } catch (e) {
                         logger.error("error in collectAWSData with AWS_ACCESS_KEY_ID: " + oneConfig["AWS_ACCESS_KEY_ID"] ?? null);
                         logger.error(e);
                     }
                 });
-         //       const awsResourcesPerRegion = await Promise.all(promises);
-         
-                /*   const awsResource: { [key: string]: any[] } = {};
-                awsResourcesPerRegion.forEach((regionResources) => {
-                    if (regionResources) {
-                        Object.keys(regionResources).forEach((resourceType) => {
-                            const key = resourceType.toString();
-                            const regionKey = resourceType.toString();
-                            awsResource[key] = [...(awsResource[key] || []), ...regionResources[regionKey as keyof typeof regionResources]];
-                        });
-                    }
-                });
+				await Promise.all(promises);
+     
                 context?.log("- Listing AWS resources done -");
                 logger.info("- Listing AWS resources done -");
-                resources.push(awsResource as any);*/
+                resources.push(collectedResults);
             }
         } catch (e) {
             context?.log("error in AWS connect with AWS_ACCESS_KEY_ID: " + oneConfig["AWS_ACCESS_KEY_ID"] ?? null);
@@ -2695,7 +2291,8 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
             logger.error(e);
         }
     }
-    return resources ?? null;
+	//console.log(resources);
+    return null;
 }
 
 function addRegion(resources:any, region:string) {
@@ -2705,82 +2302,109 @@ function addRegion(resources:any, region:string) {
     return resources;
 }
 
-async function ec2SGListing(client: EC2Client, region: string): Promise<any> {
-   // if(!currentConfig.ObjectNameNeed?.includes("ec2SG")) return null;
-    try {
-        const input = {};
-        const command = new DescribeSecurityGroupsCommand(input);
-        const data = await client.send(command);
 
-        let jsonData = JSON.parse(JSON.stringify(data.SecurityGroups));
-        jsonData = addRegion(jsonData, region);
-        logger.debug(region + " - ec2SGListing Done");
-        console.log(jsonData);
-        return jsonData ?? null;
-    } catch (err) {
-        logger.debug("Error in ec2SGListing: ", err);
-        return null;
-    }
+async function collectAuto(credential: any, region: string, config: AwsConfig) {
+	logger.info("Retrieving AWS Region : " + region);
+
+	let azureRet: any[] = [];
+	// RETRIEVE OBJECT BEFORE THIS TO LOOP BEFORE REGION AND EASIER FLATTEN
+	let objectToGather = retrieveAwsClients();
+	for (const client of objectToGather) {
+		const promises = client.map(async (object: any) => {
+			const gathered = await gatherAwsObject(credential, region, config, object);
+			azureRet = { ...azureRet, ...gathered };
+		});
+		await Promise.all(promises);
+	}
+	const flattenedAzureRet = Object.values(azureRet);
+	console.log(flattenedAzureRet);
+	console.log("Displayed in collect auto for region");
+	return (azureRet);
 }
 
-async function ec2VolumesListing(client: EC2Client, region: string): Promise<any> {
-    if(!currentConfig.ObjectNameNeed?.includes("ec2Volume")) return null;
-    try {
-        const input = {};
-        const data = await client.send(new DescribeVolumesCommand(input));
-        let jsonData = JSON.parse(JSON.stringify(data.Volumes));
-        jsonData = addRegion(jsonData, region);
-        logger.debug(region, " - ec2VolumesListing Done");
-        return jsonData ?? null;
-    } catch (err) {
-        logger.debug("Error in ec2VolumesListing: ", err);
-        return null;
-    }
+async function gatherAwsObject(credential: any, region:string, config: AwsConfig, object: ClientResultsInterface) {
+  	if(!currentConfig.ObjectNameNeed?.includes(object.clientName + "." + object.objectName)) return null;
+	console.log("Gathering:" + object.clientName + "." + object.objectName);
+	try {
+		const client = new object.clientFunc({region: region, credentials: credential});
+
+		const input = {};
+		const command = new object.objectFunc(input);
+		const data = await client.send(command);
+
+		let jsonData = JSON.parse(JSON.stringify(data[object.objectName]));
+		jsonData = addRegion(jsonData, region);
+		logger.debug(region + " - " + object.clientName + "." + object.objectName + " Listing  Done");
+		
+		return jsonData ?? null;
+	} catch (err) {
+		logger.debug("Error in ec2SGListing: ", err);
+		return null;
+	}
 }
 
-async function ec2InstancesListing(client: EC2Client, region: string): Promise<Array<any> | null> {
-    if(!currentConfig.ObjectNameNeed?.includes("ec2Instance")) return null;
-    try {
-        const input = {};
-        const data = await client.send(new DescribeInstancesCommand(input));
-        let jsonData = JSON.parse(JSON.stringify(data.Reservations));
-        jsonData = addRegion(jsonData, region);
-        logger.debug(region + " - ec2InstancesListing Done");
-        return jsonData ?? null;
-    } catch (err) {
-        logger.debug("Error in ec2InstancesListing: ", err);
-        return null;
+function retrieveAwsClients(): Array<any> {
+    let allObjects = [];
+
+    console.log("retrieve clients, related object and function to gather...");
+
+    for (const key of Object.keys(AwsImports)) {
+        const currentItem = (AwsImports as { [key: string]: unknown })[key];
+        const clientsFromModule = extractObjectsOrFunctions(currentItem, true);
+        allObjects.push(clientsFromModule);
     }
+	return (allObjects);
 }
 
-async function rdsInstancesListing(client: RDSClient, region: string): Promise<any> {
-    if(!currentConfig.ObjectNameNeed?.includes("rds")) return null;
-    try {
-        const input = {};
-        const data = await client.send(new DescribeDBInstancesCommand(input));
-        let jsonData = JSON.parse(JSON.stringify(data.DBInstances));
-        jsonData = addRegion(jsonData, region);
-        logger.debug(region + " - rdsInstancesListing Done");
-        return jsonData ?? null;
-    } catch (err) {
-        logger.debug("Error in rdsInstancesListing: ", err);
-        return null;
-    }
-}
+interface ClientResultsInterface {
+	clientName: string;
+	clientFunc: new (args: any) => any;
+	objectName: string;
+	objectFunc: new (args: any) => any;
+  };
 
-async function resourceGroupsListing(client: ResourceGroupsClient, region: string): Promise<any> {
-    if(!currentConfig.ObjectNameNeed?.includes("resourceGroup")) return null;
-    try {
-        const input = {};
-        const data = await client.send(new ListGroupsCommand(input));
-        let jsonData = JSON.parse(JSON.stringify(data.Groups));
-        jsonData = addRegion(jsonData, region);
-        logger.debug(region + " - Ressource Group Done");
-        return jsonData ?? null;
-    } catch (err) {
-        logger.debug("Error in Ressource Group Listing: ", err);
-        return null;
-    }
+import {extractObjectBetween} from "../updateCapability.service";
+
+function extractObjectsOrFunctions(module: any, isObject: Boolean): ClientResultsInterface[] {
+    const clients: AwsClient = {};
+	let clientsMatch: { name: string; func: new () => any }[] = [];
+	let clientsResults: ClientResultsInterface[] = [];
+
+    /* Start and End string to match for extract client listing functions */
+    /* You can edit those as you wish, addind as much startStrings as you want */ 
+    const startStrings =  ["List", "Describe"];
+    const endString = "Command";
+    let clientName;
+
+    Object.keys(module).forEach((key) => {
+        if ((module[key] instanceof Function && module[key].prototype !== undefined && module[key].name.endsWith("Client"))) {
+            clientName = module[key].name;
+            if (clientName != "Client") {
+				clientsMatch.push({ name: clientName, func: module[key] });
+                if (clientsMatch.length > 1)
+                    logger.warn("WARNING: Multiple client found for AWS objects, gather could be wrong.");
+                else if (clientsMatch.length < 1)
+					logger.warn("WARNING: No client found for AWS objects, gather could be wrong.");
+            }
+        }
+        if ((module[key] instanceof Function && module[key].prototype !== undefined 
+            && module[key].name.endsWith(endString) && startStrings.some(startString => module[key].name.startsWith(startString)))) {
+                if (isObject) {
+                    const objectName = extractObjectBetween(module[key].name, startStrings, endString);
+                    if (clientsMatch.length < 1)
+                        clients[key] = objectName;
+                    else {
+						clientsResults.push({ clientName: clientsMatch[clientsMatch.length - 1].name, 
+							clientFunc: clientsMatch[clientsMatch.length - 1].func,
+							 objectName: objectName as string, objectFunc: module[key] });
+                        clients[key] = clientsMatch[clientsMatch.length - 1].name + "." + objectName + "." + module[key].name;
+					}
+                }
+                else
+                    clients[key] = module[key];
+        }
+    });
+    return clientsResults;
 }
 
 async function tagsValueListing(client: ResourceGroupsTaggingAPIClient, region: string): Promise<any> {
@@ -2801,51 +2425,6 @@ async function tagsValueListing(client: ResourceGroupsTaggingAPIClient, region: 
         return jsonDataKeys ?? null;
     } catch (err) {
         logger.debug("Error in Tags Value Listing: ", err);
-        return null;
-    }
-}
-
-async function s3BucketsListing(client: S3Client, region: string): Promise<Array<any> | null> {
-    if(!currentConfig.ObjectNameNeed?.includes("s3")) return null;
-    try {
-        const input = {};
-        const data = await client.send(new ListBucketsCommand(input));
-        let jsonData = JSON.parse(JSON.stringify(data.Buckets));
-        jsonData = addRegion(jsonData, region);
-        logger.debug(region + " - s3BucketsListing Done");
-        return jsonData ?? null;
-    } catch (err) {
-        logger.debug("Error in s3BucketsListing: ", err);
-        return null;
-    }
-}
-
-async function ecsClusterListing(client: ECSClient, region: string): Promise<any> {
-    if(!currentConfig.ObjectNameNeed?.includes("ecsCluster")) return null;
-    try {
-        const input = {};
-        const data = await client.send(new DescribeClustersCommand(input));
-        let jsonData = JSON.parse(JSON.stringify(data.clusters));
-        jsonData = addRegion(jsonData, region);
-        logger.debug(region + " - ECS Done");
-        return jsonData ?? null;
-    } catch (err) {
-        logger.debug("Error in ECS Listing: ", err);
-        return null;
-    }
-}
-
-async function ecrImagesListing(client: ECRClient, region: string): Promise<any> {
-    if(!currentConfig.ObjectNameNeed?.includes("ecrRepository")) return null;
-    try {
-        const input = {};
-        const data = await client.send(new DescribeRepositoriesCommand(input));
-        let jsonData = JSON.parse(JSON.stringify(data.repositories));
-        jsonData = addRegion(jsonData, region);
-        logger.debug(region + " - ECR Done");
-        return jsonData ?? null;
-    } catch (err) {
-        logger.debug("Error in ECR Listing: ", err);
         return null;
     }
 }

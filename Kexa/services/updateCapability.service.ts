@@ -183,7 +183,7 @@ interface AzureClients {
 
 async function createAzureArmPkgImportList() {
     try {
-        await fetchArmPackages('@azure/arm-', 'azurePackage.import.ts', 'azurePackageInstall.script.sh');
+      //  await fetchArmPackages('@azure/arm-', 'azurePackage.import.ts', 'azurePackageInstall.script.sh');
         retrieveAzureArmClients();
     } catch (e) {
         console.error("Error fetching Azure Packages", e);
@@ -320,10 +320,10 @@ function retrieveAzureArmClients() {
 }
 
 if (require.main === module) {
-    releaseCapability();
-    updateREADME();
-    updateVersion();
-    createAzureArmPkgImportList();
+   // releaseCapability();
+    //updateREADME();
+   // updateVersion();
+  //  createAzureArmPkgImportList();
     createAwsArmPkgImportList();
 }
 
@@ -360,7 +360,7 @@ async function createAwsArmPkgImportList() {
 
 import { fromNodeProviderChain } from "@aws-sdk/credential-providers";
 
-function extractClientsAws(module: any): AzureClients {
+export function extractClientsAws(module: any): AzureClients {
     const clients: AwsClient = {};
 
     Object.keys(module).forEach((key) => {
@@ -374,7 +374,7 @@ function extractClientsAws(module: any): AzureClients {
 
 /* For getting objects name in AWS, we extract the name between                 */
 /* the two researched string when extracting function (ex : "List" & "Command") */
-const extractObjectBetween = (inputString: string, startStrings: string[], endString: string): string | null => {
+export const extractObjectBetween = (inputString: string, startStrings: string[], endString: string): string | null => {
     let startIndex: number = -1;
     let foundStartString: string | undefined;
 
@@ -408,7 +408,7 @@ const extractObjectBetween = (inputString: string, startStrings: string[], endSt
 }
 
 
-function extractObjectsOrFunctionsAws(module: any, isObject: Boolean): AzureClients {
+export function extractObjectsOrFunctionsAws(module: any, isObject: Boolean): AwsClient {
     const clients: AwsClient = {};
     let clientsMatch: string[] = [];
 
