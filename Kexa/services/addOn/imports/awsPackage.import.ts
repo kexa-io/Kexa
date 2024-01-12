@@ -197,7 +197,7 @@ import * as clientoutposts from '@aws-sdk/client-outposts';
 import * as clientworklink from '@aws-sdk/client-worklink';
 import * as clientconnectparticipant from '@aws-sdk/client-connectparticipant';
 import * as clientiotanalytics from '@aws-sdk/client-iotanalytics';
-import * as clientbudgets from '@aws-sdk/client-budgets';
+/*import * as clientbudgets from '@aws-sdk/client-budgets';
 import * as clientfrauddetector from '@aws-sdk/client-frauddetector';
 import * as clientdatapipeline from '@aws-sdk/client-data-pipeline';
 import * as clientmobile from '@aws-sdk/client-mobile';
@@ -262,7 +262,7 @@ import * as clientsagemakerfeaturestoreruntime from '@aws-sdk/client-sagemaker-f
 import * as clientkinesisvideoarchivedmedia from '@aws-sdk/client-kinesis-video-archived-media';
 import * as clientmigrationhubrefactorspaces from '@aws-sdk/client-migration-hub-refactor-spaces';
 import * as clientredshiftserverless from '@aws-sdk/client-redshiftserverless';
-import * as clientcommander from '@aws-sdk/client-commander';
+import * as clientcommander from '@aws-sdk/client-commander';*/
 import * as clientec2 from '@aws-sdk/client-ec2';
 import * as clients3 from '@aws-sdk/client-s3';
 export {
@@ -465,7 +465,7 @@ clientdlm,
 clientoutposts,
 clientworklink,
 clientconnectparticipant,
-clientiotanalytics,
+clientiotanalytics/*,
 clientbudgets,
 clientfrauddetector,
 clientdatapipeline,
@@ -531,4 +531,4 @@ clientsagemakerfeaturestoreruntime,
 clientkinesisvideoarchivedmedia,
 clientmigrationhubrefactorspaces,
 clientredshiftserverless,
-clientcommander};
+clientcommander*/};

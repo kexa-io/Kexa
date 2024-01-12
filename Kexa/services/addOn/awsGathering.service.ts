@@ -2261,8 +2261,7 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
                 logger.info("AWS - Config n°" + awsConfig.indexOf(oneConfig) + " correctly loaded user regions.");
             }
             if (response.Regions) {
-
-				// HERE GATHER OBJECTS FIRST
+				
 				const collectedResults: any[] = [];
 
                 const promises = response.Regions.map(async(region) => {
@@ -2283,6 +2282,8 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<AWSResources[
      
                 context?.log("- Listing AWS resources done -");
                 logger.info("- Listing AWS resources done -");
+				const groupedObjects = groupObjectsByCommonKey(collectedResults);
+				console.log(groupedObjects);
                 resources.push(collectedResults);
             }
         } catch (e) {
@@ -2302,6 +2303,24 @@ function addRegion(resources:any, region:string) {
     return resources;
 }
 
+type KeyedObject<T> = Record<string, T>;
+
+function groupObjectsByCommonKey<T>(objects: KeyedObject<T>[]): Record<string, T[]> {
+  const groupedObjects: Record<string, T[]> = {};
+
+  objects.forEach((obj) => {
+    const key = Object.keys(obj)[0];
+    const value = obj[key];
+
+    if (groupedObjects[key]) {
+      groupedObjects[key].push(value);
+    } else {
+      groupedObjects[key] = [value];
+    }
+  });
+
+  return groupedObjects;
+}
 
 async function collectAuto(credential: any, region: string, config: AwsConfig) {
 	logger.info("Retrieving AWS Region : " + region);
@@ -2316,9 +2335,7 @@ async function collectAuto(credential: any, region: string, config: AwsConfig) {
 		});
 		await Promise.all(promises);
 	}
-	const flattenedAzureRet = Object.values(azureRet);
-	console.log(flattenedAzureRet);
-	console.log("Displayed in collect auto for region");
+	console.log(azureRet);
 	return (azureRet);
 }
 
@@ -2335,8 +2352,10 @@ async function gatherAwsObject(credential: any, region:string, config: AwsConfig
 		let jsonData = JSON.parse(JSON.stringify(data[object.objectName]));
 		jsonData = addRegion(jsonData, region);
 		logger.debug(region + " - " + object.clientName + "." + object.objectName + " Listing  Done");
-		
-		return jsonData ?? null;
+		const customJsonObject = {
+			[object.clientName + "." + object.objectName]: jsonData
+		  };
+		return customJsonObject ?? null;
 	} catch (err) {
 		logger.debug("Error in ec2SGListing: ", err);
 		return null;
