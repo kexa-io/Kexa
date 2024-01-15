@@ -21,9 +21,16 @@
     "save": [
         {
             "type": "mongoDB",
-            "urlName": "mongodb://localhost:28000",
+            "urlName": "mongodb://localhost:28000/test",
             "collectionName": "kexa",
             "onlyErrors": true
+        }
+    ],
+    "export": [
+        {
+            "type": "mongoDB",
+            "urlName": "mongodb://localhost:28000/test",
+            "collectionName": "kexaTest"
         }
     ]
 }

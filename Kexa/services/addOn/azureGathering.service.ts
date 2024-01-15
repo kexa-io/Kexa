@@ -1799,13 +1799,11 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
                 context?.log("- loading client microsoft azure done-");
                 logger.info("- loading client microsoft azure done-");
                 
-				const dataComplementary = await collectKexaRestructuredData(credential, subscriptionId, config);
-
 				const [ autoFlatResources, dataComplementaryFlat ] = await Promise.all([
 					collectAuto(credential, subscriptionId, config),
 					collectKexaRestructuredData(credential, subscriptionId, config)
 				]);
-				let finalResources = {...autoFlatResources, ...dataComplementary};
+				let finalResources = {...autoFlatResources, ...dataComplementaryFlat};
                 resources.push(finalResources);
             }
         } catch(e) {
@@ -1953,8 +1951,8 @@ const customGatherFunctions: FunctionMap = {
 			const monitorClient = new MonitorClient(credential, subscriptionId);
 			return await virtualMachinesListing(computeClient, monitorClient);
 		} catch (e) {
-			logger.warn("Error creating Azure client: ", e);
-			return ;
+			logger.debug("Error creating Azure client: ", e);
+			return [];
 		}
     },
 
@@ -1965,7 +1963,7 @@ const customGatherFunctions: FunctionMap = {
 			const mlClient = new AzureMachineLearningWorkspaces(credential, subscriptionId);
 			return await workspacesListing(mlClient)
 		} catch (e) {
-			logger.warn("Error creating Azure client: " + name, e);
+			logger.debug("Error creating Azure client: " + name, e);
 			return [];
 		}
     },
@@ -1991,7 +1989,7 @@ const customGatherFunctions: FunctionMap = {
 			let workspaces = await workspacesListing(mlClient);
             return await computeOperationsListing(mlClient, workspaces);
 		} catch (e) {
-			logger.warn("Error creating Azure client: " + name, e);
+			logger.debug("Error creating Azure client: " + name, e);
 			return [];
 		}
     },
@@ -2003,7 +2001,7 @@ const customGatherFunctions: FunctionMap = {
 			let workspaces = await workspacesListing(mlClient);
             return await schedulesListing(mlClient, workspaces);
 		} catch (e) {
-			logger.warn("Error creating Azure client: " + name, e);
+			logger.debug("Error creating Azure client: " + name, e);
 			return [];
 		}
     },
