@@ -36,9 +36,9 @@ export async function main() {
     context?.log("logger configured");
 
     AsciiArtText("Kexa");
-    logger.info("___________________________________________________________________________________________________"); 
+    logger.info("___________________________________________________________________________________________________");
     logger.info("___________________________________-= running Kexa scan =-_________________________________________");
-    logger.info("___________________________________________________________________________________________________"); 
+    logger.info("___________________________________________________________________________________________________");
     await displayVersionAndLatest(logger);
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"./Kexa/rules");
     let allPromises = [];

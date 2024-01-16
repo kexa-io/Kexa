@@ -1,195 +1,137 @@
-import { createPool, PoolOptions, PoolConnection } from 'mysql2/promise';
-import { ProviderResource } from '../../models/providerResource.models';
+import { createPool, PoolOptions, PoolConnection, Pool, RowDataPacket } from 'mysql2/promise';
+import { TableIQuery } from '../../query/table.iquery';
+import { CRUDProvidersIQuery } from '../../query/CRUD/providers.iquery';
+import { CRUDOriginIQuery } from '../../query/CRUD/origins.iquery';
+import { CRUDProviderItemsIQuery } from '../../query/CRUD/providerItems.iquery';
+import { CRUDResourcesIQuery } from '../../query/CRUD/resources.iquery';
 
-function getConnection(host:string, user:string, password:string, database: string): Promise<PoolConnection> {
-    const dbConfig: PoolOptions = {
-        host,
-        user,
-        password,
-        database,
-    };
-    const dbPool = createPool(dbConfig);
-    return dbPool.getConnection();
-}
+import { getContext, getNewLogger } from "../logger.service";
+import { Rules } from '../../models/settingFile/rules.models';
+import { CRUDRulesIQuery } from '../../query/CRUD/rules.iquery';
+import { ResultScan } from '../../models/resultScan.models';
+const logger = getNewLogger("mySQLLogger");
+export class MySQLSingleton {
+    private static poolConnection: Pool;
 
-async function createTable(tableName: string, connection:PoolConnection): Promise<void> {
-    try {
-        await connection.query(`
-            CREATE TABLE IF NOT EXISTS ${tableName} (
-                ID INT AUTO_INCREMENT PRIMARY KEY,
-                datetime TIMESTAMP,
-                origine VARCHAR(255),
-                tags BLOB,
-                objectType VARCHAR(255),
-                object BLOB
-            )
-        `);
-    } finally {
-        connection.release();
+    private constructor() {}
+
+    public static initPool(host: string, port:number, user: string, password: string, database: string): void {
+        if (!MySQLSingleton.poolConnection) {
+            const dbConfig: PoolOptions = {
+                host,
+                user,
+                password,
+                database,
+                port
+            };
+            MySQLSingleton.poolConnection = createPool(dbConfig);
+        }
+    }
+
+    public static async getConnection(config?: PoolOptions): Promise<PoolConnection> {
+        if(config){
+            MySQLSingleton.poolConnection = createPool(config);
+        }
+        return MySQLSingleton.poolConnection.getConnection();
+    }
+
+    public static async createTables(config?: PoolOptions): Promise<boolean> {
+        let conn = await MySQLSingleton.getConnection(config);
+        try{
+            await Promise.all(Object.values(TableIQuery).map(async (query) => {
+                return await conn.execute(query);
+            }));
+            conn.release();
+            return true;
+        }catch(error){
+            conn.release();
+            return false;
+        }
+    }
+
+    public static async disconnect(): Promise<void> {
+        if (MySQLSingleton.poolConnection) {
+            await MySQLSingleton.poolConnection.end();
+        }
     }
 }
 
-async function createTablesFromObject(dataObject: ProviderResource, connection:PoolConnection): Promise<void> {
-    const tableNames = Object.keys(dataObject);
-    for (const tableName of tableNames) {
-        await createTable(tableName, connection);
-    }
+export async function createAndGetProviders(providers: string[]): Promise<{[key:string]: number}> {
+    const providerDict: {[key:string]: number} = {};
+    await Promise.all(providers.map(async (provider) => {
+        let conn = await MySQLSingleton.getConnection();
+        await conn.execute(CRUDProvidersIQuery.Create.One, [provider]);
+        conn.release();
+    }));
+    let conn = await MySQLSingleton.getConnection();
+    let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDProvidersIQuery.Read.All);
+    conn.release();
+    rows.forEach(row => {
+        providerDict[row.name] = row.ID;
+    });
+    return providerDict;
 }
 
-async function createProviderTable(connection:PoolConnection): Promise<boolean> {
-    try {
-        await connection.query(`
-            CREATE TABLE IF NOT EXISTS Providers (
-                ID INT AUTO_INCREMENT PRIMARY KEY,
-                name VARCHAR(255),
-            )
-        `);
-        return true;
-    } catch (error) {
-        return false;
-    }
+export async function getOneProviderByName(name: string): Promise<any> {
+    let conn = await MySQLSingleton.getConnection();
+    let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDProvidersIQuery.Read.OneByName, [name]);
+    conn.release();
+    return rows[0];
 }
 
-async function createProviderItemTable(connection:PoolConnection): Promise<boolean> {
-    try {
-        await connection.query(`
-            CREATE TABLE IF NOT EXISTS ProviderItems (
-                ID INT AUTO_INCREMENT PRIMARY KEY,
-                name VARCHAR(255),
-                providerId INT,
-                FOREIGN KEY (providerId) REFERENCES Providers(ID)
-            )
-        `);
-        return true;
-    } catch (error) {
-        return false;
-    }
+export async function createAndGetOrigin(dataEnvConfig: any): Promise<number> {
+    let conn = await MySQLSingleton.getConnection();
+    await conn.execute(CRUDOriginIQuery.Create.One, [dataEnvConfig?.name??"Unknown", dataEnvConfig?.description??"No description"]);
+    let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDOriginIQuery.Read.OneByName, [dataEnvConfig?.name??"Unknown"]);
+    conn.release();
+    return rows[0].ID;
 }
 
-async function createOriginTable(connection:PoolConnection): Promise<boolean> {
-    try {
-        await connection.query(`
-            CREATE TABLE IF NOT EXISTS Origins (
-                ID INT AUTO_INCREMENT PRIMARY KEY,
-                name VARCHAR(255),
-                description TEXT
-            )
-        `);
-        return true;
-    } catch (error) {
-        return false;
-    }
+export async function createAndGetProviderItems(providerId:number, providerItems: string[]): Promise<{[key:string]: number}> {
+    const providerItemsDict: {[key:string]: number} = {};
+    await Promise.all(providerItems.map(async (item) => {
+        let firstItem = await getProviderItemsByNameAndProvider(providerId, item);
+        providerItemsDict[firstItem.name] = firstItem.ID;
+    }));
+    return providerItemsDict;
 }
 
-async function createTagTable(connection:PoolConnection): Promise<boolean> {
-    try {
-        await connection.query(`
-            CREATE TABLE IF NOT EXISTS Tags (
-                ID INT AUTO_INCREMENT PRIMARY KEY,
-                name VARCHAR(255),
-                value TEXT
-            )
-        `);
-        return true;
-    } catch (error) {
-        return false;
+export async function getProviderItemsByNameAndProvider(providerId: number, name: string): Promise<any> {
+    let conn = await MySQLSingleton.getConnection();
+    let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDProviderItemsIQuery.Read.OneByNameAndProvider, [name, providerId]);
+    if(rows.length === 0){
+        await conn.execute(CRUDProviderItemsIQuery.Create.One, [name, providerId]);
+        [rows, _] = await conn.execute(CRUDProviderItemsIQuery.Read.OneByNameAndProvider, [name, providerId]);
     }
+    conn.release();
+    return rows[0];
 }
 
-async function createResourceTable(connection:PoolConnection): Promise<boolean> {
-    try {
-        await connection.query(`
-            CREATE TABLE IF NOT EXISTS Resources (
-                ID INT AUTO_INCREMENT PRIMARY KEY,
-                mainProperty TEXT,
-                content BLOB,
-                timestamp TIMESTAMP,
-                originId INT,
-                providerItemId INT,
-                FOREIGN KEY (originId) REFERENCES Origins(ID),
-                FOREIGN KEY (providerItemId) REFERENCES ProviderItems(ID)
-            )
-        `);
-        return true;
-    } catch (error) {
-        return false;
-    }
+export async function createAndGetResources(resources: any, originId: number, providerItemsId: number): Promise<number[]> {
+    let [ids] = await Promise.all(resources.map(async (resource: any) => {
+        return await createAndGetResource(resource, originId, providerItemsId);
+    }));
+    return ids;
 }
 
-async function createTagItemTable(connection:PoolConnection): Promise<boolean> {
-    try {
-        await connection.query(`
-            CREATE TABLE IF NOT EXISTS TagItems (
-                ID INT AUTO_INCREMENT PRIMARY KEY,
-                tagId INT,
-                resourceId INT,
-                FOREIGN KEY (tagId) REFERENCES Tags(ID),
-                FOREIGN KEY (resourceId) REFERENCES Resources(ID)
-            )
-        `);
-        return true;
-    } catch (error) {
-        return false;
-    }
+export async function createAndGetResource(resource: any, originId: number, providerItemsId: number): Promise<number> {
+    let conn = await MySQLSingleton.getConnection();
+    await conn.execute(CRUDResourcesIQuery.Create.One, [JSON.stringify(resource), originId, providerItemsId]);
+    let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDResourcesIQuery.Read.OneByContent, [JSON.stringify(resource)]);
+    conn.release();
+    return rows[0].ID;
 }
 
-async function createRulesTable(connection:PoolConnection): Promise<boolean> {
-    try {
-        await connection.query(`
-            CREATE TABLE IF NOT EXISTS Rules (
-                ID INT AUTO_INCREMENT PRIMARY KEY,
-                name VARCHAR(255),
-                description TEXT,
-                applied BOOLEAN,
-                loud BOOLEAN,
-                level INT,
-                providerId INT,
-                providerItemId INT,
-                FOREIGN KEY (providerId) REFERENCES Providers(ID),
-                FOREIGN KEY (providerItemId) REFERENCES ProviderItems(ID)
-            )
-        `);
-        return true;
-    } catch (error) {
-        return false;
-    }
+export async function createAndGetRule(rule: Rules, providerId:number, providerItemId:number): Promise<number> {
+    let conn = await MySQLSingleton.getConnection();
+    await conn.execute(CRUDRulesIQuery.Create.One, [rule.name??"Unknown", rule.description??"No description", rule?.loud??0, rule.level, providerId, providerItemId]);
+    let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDRulesIQuery.Read.OneByName, [rule.name]);
+    conn.release();
+    return rows[0].ID;
 }
 
-async function createScanTable(connection:PoolConnection): Promise<boolean> {
-    try {
-        await connection.query(`
-            CREATE TABLE IF NOT EXISTS Scans (
-                ID INT AUTO_INCREMENT PRIMARY KEY,
-                timestamp TIMESTAMP,
-                error boolean,
-                resourceId INT,
-                ruleId INT,
-                detail BLOB,
-                originId INT,
-                FOREIGN KEY (originId) REFERENCES Origins(ID),
-                FOREIGN KEY (resourceId) REFERENCES Resources(ID),
-                FOREIGN KEY (ruleId) REFERENCES Rules(ID)
-            )
-        `);
-        return true;
-    } catch (error) {
-        return false;
-    }
-}
-
-async function createTagScanTable(connection:PoolConnection): Promise<boolean> {
-    try {
-        await connection.query(`
-            CREATE TABLE IF NOT EXISTS TagItems (
-                ID INT AUTO_INCREMENT PRIMARY KEY,
-                tagId INT,
-                scanId INT,
-                FOREIGN KEY (tagId) REFERENCES Tags(ID),
-                FOREIGN KEY (scanId) REFERENCES Scans(ID)
-            )
-        `);
-        return true;
-    } catch (error) {
-        return false;
-    }
+export async function createScan(resultScan: ResultScan, resourceId: number, ruleId: number): Promise<void> {
+    let conn = await MySQLSingleton.getConnection();
+    await conn.execute(CRUDRulesIQuery.Create.One, [(resultScan.error.length > 0), resourceId, ruleId]);
+    conn.release();
 }
