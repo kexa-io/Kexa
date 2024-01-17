@@ -53,6 +53,7 @@
             <li><a href="#default-folder-input-and-output">Default folder input and output</a></li>
             <li><a href="#notification">Notification</a></li>
             <li><a href="#save-result-of-the-scan">Save result of the scan</a></li>
+            <li><a href="#export-data-gathering">Export data gathering</a></li>
           </ul>
         </li>
         <li><a href="#providers-authentications">Providers Authentications</a></li>
@@ -89,6 +90,8 @@
                     <li><a href="#adding-functionalities">Adding functionalities</a></li>
                     <li><a href="#gathering-data">Gathering data</a></li>
                     <li><a href="#display-results">Display results</a></li>
+                    <li><a href="#save-results">Save results</a></li>
+                    <li><a href="#export-gather">Export Gather</a></li>
                     <li><a href="#tests">Tests</a></li>
                 </ul></li>
         </ul>
