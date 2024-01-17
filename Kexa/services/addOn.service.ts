@@ -24,15 +24,26 @@ export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResour
         return await loadAddOn(file, addOnNeed, settings);
     });
     const results = await Promise.all(promises);
-    results.forEach((result: { key: string; data: Provider[]; }) => {
+    let addOnShortCollect: string[] = [];
+    results.forEach((result: { key: string; data: Provider[]; delta: number }) => {
         if (result?.data) {
             resources[result.key] = result.data;
         }
+        if((result?.delta)??0 > 15){
+            logger.info(`AddOn ${result.key} collect in ${result.delta}ms`);
+            context?.log(`AddOn ${result.key} collect in ${result.delta}ms`);
+        }else{
+            if(result?.delta) addOnShortCollect.push(result.key);
+        }
     });
+    if(addOnShortCollect.length > 0){
+        logger.info(`AddOn ${addOnShortCollect} load in less than 15ms; No data has been collected for these addOns`);
+        context?.log(`AddOn ${addOnShortCollect} load in less than 15ms; No data has been collected for these addOns`);
+    }
     return resources;
 }
 
-async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): Promise<{ key: string; data: Provider|null; } | null> {
+async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): Promise<{ key: string; data: Provider|null; delta: number } | null> {
     let context = getContext();
     try{
         if (file.endsWith('Gathering.service.ts')){
@@ -48,13 +59,21 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): 
             const addOnConfig = (configuration.hasOwnProperty(nameAddOn)) ? configuration[nameAddOn] : null;
             addOnConfig?.forEach((config: any) => {
                 config.ObjectNameNeed = []
-                config.rules.forEach((rulesName: string) => config.ObjectNameNeed = [...addOnNeed["objectNameNeed"][rulesName][nameAddOn], ...config.ObjectNameNeed]);
+                config.rules.forEach((rulesName: string) => {
+                    let addOnNeedRules = addOnNeed["objectNameNeed"][rulesName];
+                    if(addOnNeedRules){
+                        addOnNeedRules = addOnNeedRules[nameAddOn];
+                        if(addOnNeedRules){
+                            config.ObjectNameNeed = [...config.ObjectNameNeed, ...addOnNeedRules];
+                        }
+                    }
+                });
             });
             const data = await collectData(addOnConfig);
             let delta = Date.now() - start;
-            context?.log(`AddOn ${nameAddOn} collect in ${delta}ms`);
-            logger.info(`AddOn ${nameAddOn} collect in ${delta}ms`);
-            return { key: nameAddOn, data:(checkIfDataIsProvider(data) ? data : null)};
+            //context?.log(`AddOn ${nameAddOn} collect in ${delta}ms`);
+            //logger.info(`AddOn ${nameAddOn} collect in ${delta}ms`);
+            return { key: nameAddOn, data:(checkIfDataIsProvider(data) ? data : null), delta};
         }
     }catch(e){
         logger.warn(e);

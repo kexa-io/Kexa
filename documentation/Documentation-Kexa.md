@@ -53,6 +53,7 @@
             <li><a href="#default-folder-input-and-output">Default folder input and output</a></li>
             <li><a href="#notification">Notification</a></li>
             <li><a href="#save-result-of-the-scan">Save result of the scan</a></li>
+            <li><a href="#export-data-gathering">Export data gathering</a></li>
           </ul>
         </li>
         <li><a href="#providers-authentications">Providers Authentications</a></li>
@@ -89,6 +90,8 @@
                     <li><a href="#adding-functionalities">Adding functionalities</a></li>
                     <li><a href="#gathering-data">Gathering data</a></li>
                     <li><a href="#display-results">Display results</a></li>
+                    <li><a href="#save-results">Save results</a></li>
+                    <li><a href="#export-gather">Export Gather</a></li>
                     <li><a href="#tests">Tests</a></li>
                 </ul></li>
         </ul>
@@ -444,6 +447,7 @@ For email, EMAILPWD is your Api Key for the case you use sendgrid.
 You can save your scan results in various places :
 - [Azure Blob Storage](./save/AzureBlobStorage.md)
 - [Mongo DB](./save/MongoDB.md)
+- [MySQL](./save/MySQL.md)
 
 To save your scan results in different places, a "save" attribute must be created in your default.json file. It's a list of "SaveConfig" objects, as follows : 
 
@@ -464,6 +468,34 @@ Each addOn brings its own unique set of attributes to the table. We invite you t
 Here an example of configuration to save in Azure Blob Storage and MongoDB:
 
 ![example config with save](../config/demo/exemple3.default.json)
+
+<div id="export-data-gathering"></div>
+
+### **Export data gathering**
+
+You can export the data gathering from your environment in various places :
+- [Azure Blob Storage](./save/AzureBlobStorage.md)
+- [Mongo DB](./save/MongoDB.md)
+- [MySQL](./save/MySQL.md)
+
+Pour exporter ces données, cela fonctionne comme la section [Save result of the scan](#save-result-of-the-scan) à l'exception de l'attribut "save" qui devient l'attribu "export". It's a list of "SaveConfig" objects, as follows : 
+
+![example SaveConfig](../Kexa/models/export/config.models.ts)
+
+Here's the table of correspondence for each attribute:
+- type: corresponds to the name of the addon solicited to save your scan
+- urlName: 2 functions to choose from:
+  - is used to provide the name of the environment variable storing the endpoint url
+  - provide endpoint url
+- name: reserved attribute for naming the backup location (maintenance aid)
+- description: reserved attribute to describe the backup location (maintenance aid)
+- origin: attribute to specify kexa run location
+- tags: additional information dictionary for tagging the backup (not implement for sql)
+
+Each addOn brings its own unique set of attributes to the table. We invite you to refer to the documentation of the addOn you wish to use for all the subtleties.
+Here an example of configuration to export in Azure Blob Storage, MongoDB and MySQL:
+
+![example config with export](../config/demo/exemple5.default.json)
 
 <br/>
 <div id="provider-authentications"></div>
@@ -1135,19 +1167,30 @@ You can also add AddOns to save your data. These extensions are based on the sam
 But you can make your own by extends this interface.
 The second is a table of ResultScan:
 
-![interface of a SaveConfig](../Kexa/models/resultScan.models.ts)
+![interface of a resultScan](../Kexa/models/resultScan.models.ts)
 
 example of fresh template of save addOn:
 
-```ts
-import { ResultScan } from "../../../models/resultScan.models";
+![fresh template of save addOn](../config/freshTemplatesAddOn/XXXSave.service.ts)
 
-export async function save(save: SaveConfig, result: ResultScan[][]): Promise<void>{
-  //insert your stuff here
-}
+<br/>
 
-//can add other function here
-```
+<div id="export-gather"></div>
+
+### **Export gather**
+
+You can also add AddOns to export your data. These extensions are based on the same principle as Save AddOn. The Exportation AddOn file is named [extension name]Exportation.service.ts, and its path is "./Kexa/services/addOn/exportation". This file is used to store the scanned data in a specific location. No return is attempted. The function used as an entry point is called "exportation". It takes 2 arguments. The first is a "save", corresponding to :
+
+![interface of a SaveConfig](../Kexa/models/export/config.models.ts)
+
+But you can make your own by extends this interface.
+The second is a ProviderResource:
+
+![interface of a ProviderResource](../Kexa/models/providerResource.models.ts)
+
+example of fresh template of exportation addOn:
+
+![fresh template of exportation addOn](../config/freshTemplatesAddOn/XXXExportation.service.ts)
 
 <br/>
 
