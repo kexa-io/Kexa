@@ -26,7 +26,7 @@
             ]
         }
     ],
-    "save": [
+    "export": [
         {
             "type": "azureBlobStorage",
             "name": "ABS4568745",
@@ -50,8 +50,14 @@
             "tags": {
                 "env": "dev",
                 "project": "myproject"
-            },
-            "onlyErrors": true
+            }
+        },
+        {
+            "type": "mySQL",
+            "name": "MySQL 4568745",
+            "description": "MySQL in our clever cloud",
+            "urlName": "mysql://root:root@localhost:7575/Kexa",
+            "origin": "Github repo X"
         }
     ]
 }

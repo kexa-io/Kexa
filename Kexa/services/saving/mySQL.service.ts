@@ -9,14 +9,16 @@ import { getContext, getNewLogger } from "../logger.service";
 import { Rules } from '../../models/settingFile/rules.models';
 import { CRUDRulesIQuery } from '../../query/CRUD/rules.iquery';
 import { ResultScan } from '../../models/resultScan.models';
+import { CRUDScansIQuery } from '../../query/CRUD/scans.iquery';
 const logger = getNewLogger("mySQLLogger");
-export class MySQLSingleton {
-    private static poolConnection: Pool;
+export class MySQLClass {
+    private poolConnection!: Pool;
+    private nbrConnection: number = 0;
 
-    private constructor() {}
+    public constructor() {}
 
-    public static initPool(host: string, port:number, user: string, password: string, database: string): void {
-        if (!MySQLSingleton.poolConnection) {
+    public initPool(host: string, port:number, user: string, password: string, database: string): void {
+        if (!this.poolConnection) {
             const dbConfig: PoolOptions = {
                 host,
                 user,
@@ -24,114 +26,132 @@ export class MySQLSingleton {
                 database,
                 port
             };
-            MySQLSingleton.poolConnection = createPool(dbConfig);
+            this.poolConnection = createPool(dbConfig);
         }
     }
 
-    public static async getConnection(config?: PoolOptions): Promise<PoolConnection> {
+    public async getConnection(config?: PoolOptions): Promise<PoolConnection> {
         if(config){
-            MySQLSingleton.poolConnection = createPool(config);
+            this.poolConnection = createPool(config);
         }
-        return MySQLSingleton.poolConnection.getConnection();
+        this.nbrConnection++;
+        return this.poolConnection.getConnection();
     }
 
-    public static async createTables(config?: PoolOptions): Promise<boolean> {
-        let conn = await MySQLSingleton.getConnection(config);
+    public async createTables(config?: PoolOptions): Promise<boolean> {
+        let conn = await this.getConnection(config);
         try{
             await Promise.all(Object.values(TableIQuery).map(async (query) => {
                 return await conn.execute(query);
             }));
-            conn.release();
+            this.closeConnection(conn);
             return true;
         }catch(error){
-            conn.release();
+            this.closeConnection(conn);
             return false;
         }
     }
 
-    public static async disconnect(): Promise<void> {
-        if (MySQLSingleton.poolConnection) {
-            await MySQLSingleton.poolConnection.end();
+    public async disconnect(force:Boolean=false): Promise<void> {
+        logger.debug("Number of connection: " + this.nbrConnection);
+        if ((this.poolConnection && this.nbrConnection === 0) || force) {
+            logger.debug("Disconnecting from MySQL");
+            await this.poolConnection?.end();
         }
     }
-}
 
-export async function createAndGetProviders(providers: string[]): Promise<{[key:string]: number}> {
-    const providerDict: {[key:string]: number} = {};
-    await Promise.all(providers.map(async (provider) => {
-        let conn = await MySQLSingleton.getConnection();
-        await conn.execute(CRUDProvidersIQuery.Create.One, [provider]);
-        conn.release();
-    }));
-    let conn = await MySQLSingleton.getConnection();
-    let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDProvidersIQuery.Read.All);
-    conn.release();
-    rows.forEach(row => {
-        providerDict[row.name] = row.ID;
-    });
-    return providerDict;
-}
-
-export async function getOneProviderByName(name: string): Promise<any> {
-    let conn = await MySQLSingleton.getConnection();
-    let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDProvidersIQuery.Read.OneByName, [name]);
-    conn.release();
-    return rows[0];
-}
-
-export async function createAndGetOrigin(dataEnvConfig: any): Promise<number> {
-    let conn = await MySQLSingleton.getConnection();
-    await conn.execute(CRUDOriginIQuery.Create.One, [dataEnvConfig?.name??"Unknown", dataEnvConfig?.description??"No description"]);
-    let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDOriginIQuery.Read.OneByName, [dataEnvConfig?.name??"Unknown"]);
-    conn.release();
-    return rows[0].ID;
-}
-
-export async function createAndGetProviderItems(providerId:number, providerItems: string[]): Promise<{[key:string]: number}> {
-    const providerItemsDict: {[key:string]: number} = {};
-    await Promise.all(providerItems.map(async (item) => {
-        let firstItem = await getProviderItemsByNameAndProvider(providerId, item);
-        providerItemsDict[firstItem.name] = firstItem.ID;
-    }));
-    return providerItemsDict;
-}
-
-export async function getProviderItemsByNameAndProvider(providerId: number, name: string): Promise<any> {
-    let conn = await MySQLSingleton.getConnection();
-    let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDProviderItemsIQuery.Read.OneByNameAndProvider, [name, providerId]);
-    if(rows.length === 0){
-        await conn.execute(CRUDProviderItemsIQuery.Create.One, [name, providerId]);
-        [rows, _] = await conn.execute(CRUDProviderItemsIQuery.Read.OneByNameAndProvider, [name, providerId]);
+    public async closeConnection(conn: PoolConnection): Promise<void> {
+        if (conn) {
+            this.nbrConnection--;
+            await conn.release();
+        }
     }
-    conn.release();
-    return rows[0];
-}
 
-export async function createAndGetResources(resources: any, originId: number, providerItemsId: number): Promise<number[]> {
-    let [ids] = await Promise.all(resources.map(async (resource: any) => {
-        return await createAndGetResource(resource, originId, providerItemsId);
-    }));
-    return ids;
-}
+    public async createAndGetProviders(providers: string[]): Promise<{[key:string]: number}> {
+        const providerDict: {[key:string]: number} = {};
+        await Promise.all(providers.map(async (provider) => {
+            let conn = await this.getConnection();
+            await conn.execute(CRUDProvidersIQuery.Create.One, [provider]);
+            this.closeConnection(conn);
+        }));
+        let conn = await this.getConnection();
+        let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDProvidersIQuery.Read.All);
+        this.closeConnection(conn);
+        rows.forEach(row => {
+            providerDict[row.name] = row.ID;
+        });
+        return providerDict;
+    }
 
-export async function createAndGetResource(resource: any, originId: number, providerItemsId: number): Promise<number> {
-    let conn = await MySQLSingleton.getConnection();
-    await conn.execute(CRUDResourcesIQuery.Create.One, [JSON.stringify(resource), originId, providerItemsId]);
-    let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDResourcesIQuery.Read.OneByContent, [JSON.stringify(resource)]);
-    conn.release();
-    return rows[0].ID;
-}
-
-export async function createAndGetRule(rule: Rules, providerId:number, providerItemId:number): Promise<number> {
-    let conn = await MySQLSingleton.getConnection();
-    await conn.execute(CRUDRulesIQuery.Create.One, [rule.name??"Unknown", rule.description??"No description", rule?.loud??0, rule.level, providerId, providerItemId]);
-    let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDRulesIQuery.Read.OneByName, [rule.name]);
-    conn.release();
-    return rows[0].ID;
-}
-
-export async function createScan(resultScan: ResultScan, resourceId: number, ruleId: number): Promise<void> {
-    let conn = await MySQLSingleton.getConnection();
-    await conn.execute(CRUDRulesIQuery.Create.One, [(resultScan.error.length > 0), resourceId, ruleId]);
-    conn.release();
+    public async createAndGetProvider(provider: string): Promise<number> {
+        let conn = await this.getConnection();
+        await conn.execute(CRUDProvidersIQuery.Create.One, [provider]);
+        let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDProvidersIQuery.Read.OneByName, [provider]);
+        this.closeConnection(conn);
+        return rows[0].ID;
+    }
+    
+    public async getOneProviderByName(name: string): Promise<any> {
+        let conn = await this.getConnection();
+        let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDProvidersIQuery.Read.OneByName, [name]);
+        this.closeConnection(conn);
+        return rows[0];
+    }
+    
+    public async createAndGetOrigin(dataEnvConfig: any): Promise<number> {
+        let conn = await this.getConnection();
+        await conn.execute(CRUDOriginIQuery.Create.One, [dataEnvConfig?.name??"Unknown", dataEnvConfig?.description??"No description"]);
+        let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDOriginIQuery.Read.OneByName, [dataEnvConfig?.name??"Unknown"]);
+        this.closeConnection(conn);
+        return rows[0].ID;
+    }
+    
+    public async createAndGetProviderItems(providerId:number, providerItems: string[]): Promise<{[key:string]: number}> {
+        const providerItemsDict: {[key:string]: number} = {};
+        await Promise.all(providerItems.map(async (item) => {
+            let firstItem = await this.getProviderItemsByNameAndProvider(providerId, item);
+            providerItemsDict[firstItem.name] = firstItem.ID;
+        }));
+        return providerItemsDict;
+    }
+    
+    public async getProviderItemsByNameAndProvider(providerId: number, name: string): Promise<any> {
+        let conn = await this.getConnection();
+        let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDProviderItemsIQuery.Read.OneByNameAndProvider, [name, providerId]);
+        if(rows.length === 0){
+            await conn.execute(CRUDProviderItemsIQuery.Create.One, [name, providerId]);
+            [rows, _] = await conn.execute(CRUDProviderItemsIQuery.Read.OneByNameAndProvider, [name, providerId]);
+        }
+        this.closeConnection(conn);
+        return rows[0];
+    }
+    
+    public async createAndGetResources(resources: any, originId: number, providerItemsId: number): Promise<number[]> {
+        let [ids] = await Promise.all(resources.map(async (resource: any) => {
+            return await this.createAndGetResource(resource, originId, providerItemsId);
+        }));
+        return ids;
+    }
+    
+    public async createAndGetResource(resource: any, originId: number, providerItemsId: number): Promise<number> {
+        let conn = await this.getConnection();
+        await conn.execute(CRUDResourcesIQuery.Create.One, [JSON.stringify(resource), originId, providerItemsId]);
+        let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDResourcesIQuery.Read.OneByContent, [JSON.stringify(resource)]);
+        this.closeConnection(conn);
+        return rows[0].ID;
+    }
+    
+    public async createAndGetRule(rule: Rules, providerId:number, providerItemId:number): Promise<number> {
+        let conn = await this.getConnection();
+        await conn.execute(CRUDRulesIQuery.Create.One, [rule.name??"Unknown", rule.description??"No description", rule?.loud??0, rule.level, providerId, providerItemId]);
+        let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDRulesIQuery.Read.OneByName, [rule.name]);
+        this.closeConnection(conn);
+        return rows[0].ID;
+    }
+    
+    public async createScan(resultScan: ResultScan, resourceId: number, ruleId: number): Promise<void> {
+        let conn = await this.getConnection();
+        await conn.execute(CRUDScansIQuery.Create.One, [(resultScan.error.length > 0), resourceId, ruleId]);
+        this.closeConnection(conn);
+    }
 }
