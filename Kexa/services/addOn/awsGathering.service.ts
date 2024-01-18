@@ -3033,7 +3033,7 @@ async function collectAuto(credential: any, region: string) {
 async function gatherAwsObject(credential: any, region:string, object: ClientResultsInterface) {
 
 	if (object.objectName == "Instances" && object.clientName == "EC2Client") {
-		console.log("exits here in Gather Function Start");
+		console.log("y");
 	}
 	else if(!currentConfig.ObjectNameNeed?.includes(object.clientName + "." + object.objectName)) return null;
   //	if(!currentConfig.ObjectNameNeed?.includes(object.clientName + "." + object.objectName)) return null;
@@ -3046,21 +3046,19 @@ async function gatherAwsObject(credential: any, region:string, object: ClientRes
 		const data = await client.send(command);
 
 		let jsonData;
-		if (data[object.objectName])
-			jsonData = JSON.parse(JSON.stringify(data[object.objectName]));
-		else
-			jsonData = JSON.parse(JSON.stringify(data));
-		//jsonData = addRegion(jsonData, region);
-		// USE COMMMANDOUTPUT TO GET OBECTS LIST
+
+		Object.keys(data).forEach((key) => {
+			if ((key != "$metadata") && (key != "NextToken")) {
+				jsonData = JSON.parse(JSON.stringify(data[key]));
+			}
+		});
+		console.log("END HEEEEEEEEEEEEERE");
 		logger.debug(region + " - " + object.clientName + "." + object.objectName + " Listing  Done");
 		const customJsonObject = {
 			[object.clientName + "." + object.objectName]: jsonData
 		  };
 		if (object.objectName == "Instances" && object.clientName == "EC2Client") {
-			console.log(region + " - " + object.clientName + "." + object.objectName + " Listing  Done");
 			console.log(customJsonObject);
-
-			console.log("exits here in Gather Function AFTER");
 		}
 		return customJsonObject ?? null;
 	} catch (err) {

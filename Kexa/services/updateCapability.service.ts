@@ -368,6 +368,12 @@ export function extractClientsAws(module: any): AzureClients {
 }
 
 
+export const extractObjectFromOutputCommand  = (listingCommand: string): string | null => {
+    const outputCommand = listingCommand + "Output";
+    console.log(outputCommand);
+    return null;
+}
+
 /* For getting objects name in AWS, we extract the name between                 */
 /* the two researched string when extracting function (ex : "List" & "Command") */
 export const extractObjectBetween = (inputString: string, startStrings: string[], endString: string): string | null => {
@@ -412,8 +418,8 @@ export function extractObjectsOrFunctionsAws(module: any, isObject: Boolean): Aw
     /* You can edit those as you wish, addind as much startStrings as you want */ 
     const startStrings =  ["List", "Describe"];
     const endString = "Command";
-    let clientName;
 
+    let clientName;
     Object.keys(module).forEach((key) => {
         if ((module[key] instanceof Function && module[key].prototype !== undefined && module[key].name.endsWith("Client"))) {
             clientName = module[key].name;
@@ -428,6 +434,7 @@ export function extractObjectsOrFunctionsAws(module: any, isObject: Boolean): Aw
         if ((module[key] instanceof Function && module[key].prototype !== undefined 
             && module[key].name.endsWith(endString) && startStrings.some(startString => module[key].name.startsWith(startString)))) {
                 if (isObject) {
+                    //extractObjectFromOutputCommand(module[key].name);
                     const objectName = extractObjectBetween(module[key].name, startStrings, endString);
                     if (clientsMatch.length < 1)
                         clients[key] = objectName;
@@ -458,7 +465,6 @@ function retrieveAwsClients() {
         const clientsFromModule = extractObjectsOrFunctionsAws(currentItem, true);
         allObjects.push(clientsFromModule);
     }
-    console.log(allObjects);
     console.log("Writing clients to header...");
     const path = require("path");
     const filePath = path.resolve(__dirname, "../../Kexa/services/addOn/awsGathering.service.ts");
