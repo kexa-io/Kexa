@@ -856,3 +856,16 @@ package.json was changed
 README.md was changed
 
 
+## 1.12.0-SNAPSHOT.30.bcfe35d
+
+### Files added: 0
+
+### Files changed: 3
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
