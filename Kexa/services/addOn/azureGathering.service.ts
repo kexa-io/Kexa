@@ -1944,7 +1944,7 @@ interface FunctionMap {
 const customGatherFunctions: FunctionMap = {
 
     'KexaAzure.vm': async (name: string, credential: any, subscriptionId: any) => {
-        console.log("Starting " + name + " listing...");
+        logger.info("Starting " + name + " listing...");
 
 		try {
 			const computeClient = new ComputeManagementClient(credential, subscriptionId);
@@ -1957,7 +1957,7 @@ const customGatherFunctions: FunctionMap = {
     },
 
     'KexaAzure.mlWorkspaces': async (name: string, credential: any, subscriptionId: any) => {
-        console.log("Starting " + name + " listing...");
+        logger.info("Starting " + name + " listing...");
 
 		try {
 			const mlClient = new AzureMachineLearningWorkspaces(credential, subscriptionId);
@@ -1969,7 +1969,7 @@ const customGatherFunctions: FunctionMap = {
     },
 
 	'KexaAzure.mlJobs': async (name: string, credential: any, subscriptionId: any) => {
-        console.log("Starting " + name + " listing...");
+        logger.info("Starting " + name + " listing...");
 
 		try {
 			const mlClient = new AzureMachineLearningWorkspaces(credential, subscriptionId);
@@ -1982,7 +1982,7 @@ const customGatherFunctions: FunctionMap = {
     },
 
 	'KexaAzure.mlComputes': async (name: string, credential: any, subscriptionId: any) => {
-        console.log("Starting " + name + " listing...");
+        logger.info("Starting " + name + " listing...");
 
 		try {
 			const mlClient = new AzureMachineLearningWorkspaces(credential, subscriptionId);
@@ -1995,7 +1995,7 @@ const customGatherFunctions: FunctionMap = {
     },
 
 	'KexaAzure.mlSchedules': async (name: string, credential: any, subscriptionId: any) => {
-        console.log("Starting " + name + " listing...");
+        logger.info("Starting " + name + " listing...");
 		try {
 			const mlClient = new AzureMachineLearningWorkspaces(credential, subscriptionId);
 			let workspaces = await workspacesListing(mlClient);
@@ -2007,12 +2007,12 @@ const customGatherFunctions: FunctionMap = {
     },
 
 	'KexaAzure.storage': (name: string, credential: any, subscriptionId: any) => {
-        console.log("Starting " + name + " listing...");
+        logger.info("Starting " + name + " listing...");
 		return [];
     },
 
 	'KexaAzure.blob': (name: string, credential: any, subscriptionId: any) => {
-        console.log("Starting " + name + " listing...");
+        logger.info("Starting " + name + " listing...");
 		//listAllBlob();
 		return [];
     },
@@ -2046,7 +2046,7 @@ export async function virtualMachinesListing(client:ComputeManagementClient, mon
             vm.instanceView.availableMemoryBytes = convertMinMaxMeanMedianToPercentage(vm.instanceView.availableMemoryBytes, convertGbToBytes(vm.details?.MemoryGb??0));
             resultList.push(vm);
         }
-        return resultList;
+        return resultList ?? null;
     }catch (err) {
         logger.debug("error in virtualMachinesListing:"+err);
         return null;
@@ -2131,7 +2131,7 @@ async function listAllBlob(client:StorageManagementClient, credentials: any): Pr
                 }
             }
         }
-        return resultList;
+        return resultList ?? null;
     } catch (err) {
         logger.debug("error in resourceGroupListing:"+err);
         return null;
@@ -2146,7 +2146,7 @@ async function workspacesListing(mlClient: AzureMachineLearningWorkspaces): Prom
 	for await (let item of mlClient.workspaces.listBySubscription()) {
 		workspacesResult = [...workspacesResult??[], item];
 	}
-	return workspacesResult;
+	return workspacesResult ?? null;
 }
 
 async function jobsListing(client: AzureMachineLearningWorkspaces, workspaces: Array<Workspace>): Promise<any> {
@@ -2161,10 +2161,10 @@ async function jobsListing(client: AzureMachineLearningWorkspaces, workspaces: A
 				result.resourceGroupName = resourceGroupName;
 				resArray.push(result);
 			}
-			return resArray;
+			return resArray ?? null;
 		} catch(e){
 			logger.debug("error in jobsListing:"+e);
-			return [];
+			return null;
 		}
 	}
 }
@@ -2181,10 +2181,10 @@ async function computeOperationsListing(client: AzureMachineLearningWorkspaces, 
 				result.resourceGroupName = resourceGroupName;
 				resArray.push(item);
 			}
-			return resArray;
+			return resArray ?? null;
 		}catch(e){
 			logger.debug("error in computeOperationsListing:"+e);
-			return [];
+			return null;
 		}
 	}
 }
@@ -2201,10 +2201,10 @@ async function schedulesListing(client: AzureMachineLearningWorkspaces, workspac
 				result.resourceGroupName = resourceGroupName;
 				resArray.push(item);
 			}
-			return resArray;
+			return resArray ?? null;
 		} catch(e){
 			logger.debug("error in schedulesListing:"+e);
-			return [];
+			return null;
 		}
 	}
 }
