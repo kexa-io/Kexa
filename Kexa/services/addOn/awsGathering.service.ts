@@ -2915,7 +2915,7 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
             logger.error(e);
         }
     }
-    return null;
+    return resources ?? null;
 }
 
 
@@ -2955,9 +2955,9 @@ function extractObjectsOrFunctions(module: any, isObject: Boolean): ClientResult
     const endString = "Command";
     let clientName;
 
-    Object.keys(module).forEach((key) => {
+	Object.keys(module).forEach((key) => {
         if ((module[key] instanceof Function && module[key].prototype !== undefined && module[key].name.endsWith("Client"))) {
-            clientName = module[key].name;
+			clientName = module[key].name;
             if (clientName != "Client") {
 				clientsMatch.push({ name: clientName, func: module[key] });
                 if (clientsMatch.length > 1)
@@ -2965,7 +2965,10 @@ function extractObjectsOrFunctions(module: any, isObject: Boolean): ClientResult
                 else if (clientsMatch.length < 1)
 					logger.warn("WARNING: No client found for AWS objects, gather could be wrong.");
             }
-        }
+		}
+	});
+
+    Object.keys(module).forEach((key) => {
         if ((module[key] instanceof Function && module[key].prototype !== undefined 
             && module[key].name.endsWith(endString) && startStrings.some(startString => module[key].name.startsWith(startString)))) {
 				if (isObject) {
@@ -3032,11 +3035,7 @@ async function collectAuto(credential: any, region: string) {
 
 async function gatherAwsObject(credential: any, region:string, object: ClientResultsInterface) {
 
-	if (object.objectName == "Instances" && object.clientName == "EC2Client") {
-		console.log("y");
-	}
-	else if(!currentConfig.ObjectNameNeed?.includes(object.clientName + "." + object.objectName)) return null;
-  //	if(!currentConfig.ObjectNameNeed?.includes(object.clientName + "." + object.objectName)) return null;
+  	if(!currentConfig.ObjectNameNeed?.includes(object.clientName + "." + object.objectName)) return null;
 	try {
 
 		const client = new object.clientFunc({region: region, credentials: credential});
@@ -3049,17 +3048,19 @@ async function gatherAwsObject(credential: any, region:string, object: ClientRes
 
 		Object.keys(data).forEach((key) => {
 			if ((key != "$metadata") && (key != "NextToken")) {
-				jsonData = JSON.parse(JSON.stringify(data[key]));
+				if (Array.isArray(data[key])) {
+					jsonData = JSON.parse(JSON.stringify(data[key]));
+				}
+				else
+					jsonData = [];
 			}
 		});
-		console.log("END HEEEEEEEEEEEEERE");
 		logger.debug(region + " - " + object.clientName + "." + object.objectName + " Listing  Done");
 		const customJsonObject = {
 			[object.clientName + "." + object.objectName]: jsonData
 		  };
-		if (object.objectName == "Instances" && object.clientName == "EC2Client") {
-			console.log(customJsonObject);
-		}
+
+		  console.log(customJsonObject);
 		return customJsonObject ?? null;
 	} catch (err) {
 		logger.debug("Error in " + object.clientName + "." + object.objectName + " listing:", err);

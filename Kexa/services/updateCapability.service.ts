@@ -431,6 +431,9 @@ export function extractObjectsOrFunctionsAws(module: any, isObject: Boolean): Aw
                     console.warn("WARNING: No client found for AWS objects, header & gather could be wrong.");
             }
         }
+    });
+
+    Object.keys(module).forEach((key) => {
         if ((module[key] instanceof Function && module[key].prototype !== undefined 
             && module[key].name.endsWith(endString) && startStrings.some(startString => module[key].name.startsWith(startString)))) {
                 if (isObject) {
