@@ -320,16 +320,12 @@ function retrieveAzureArmClients() {
 }
 
 if (require.main === module) {
-    releaseCapability();
+    /*releaseCapability();
     updateREADME();
     updateVersion();
-    createAzureArmPkgImportList();
+    createAzureArmPkgImportList();*/
     createAwsArmPkgImportList();
 }
-
-
-
-
 
 /* ***************************** */
 /*                               */
@@ -447,7 +443,7 @@ export function extractObjectsOrFunctionsAws(module: any, isObject: Boolean): Aw
 
 function retrieveAwsClients() {
     let allClients: AwsClient = {};
-    let allObjects: AwsClient = {};
+    let allObjects: AwsClient = [];
 
     console.log("retrieve clients from aws pkg...");
 
@@ -460,8 +456,9 @@ function retrieveAwsClients() {
     for (const key of Object.keys(AwsImports)) {
         const currentItem = (AwsImports as { [key: string]: unknown })[key];
         const clientsFromModule = extractObjectsOrFunctionsAws(currentItem, true);
-        allObjects = { ...allObjects, ...clientsFromModule };
+        allObjects.push(clientsFromModule);
     }
+    console.log(allObjects);
     console.log("Writing clients to header...");
     const path = require("path");
     const filePath = path.resolve(__dirname, "../../Kexa/services/addOn/awsGathering.service.ts");
@@ -480,12 +477,14 @@ async function fileReplaceContentAws(inputFilePath: string, outputFilePath: stri
 }
 
 function generateResourceListAws(resources: AzureClients): string {
-    let concatedArray: string[];
-    concatedArray = [];
+    let concatedArray: string[] = [];
 
-    Object.keys(resources).forEach(key => {
-        concatedArray.push(resources[key]);
-    });
+    resources.forEach((element: any) => {
+        Object.keys(element).forEach(key => {
+            concatedArray.push(element[key]);
+        });
+    })
+ 
     displayTotalGatheredMessage("Aws", concatedArray.length);
     for (const key of stringKeys)
         concatedArray.push(key.toString());
@@ -499,4 +498,3 @@ function generateCustomResourceListAws(): string {
     const resourceList = AwsCustomObjects.map((line: String) => `\t*\t- ${line}`).join('\n');
     return `${resourceList}`;
 }
-
