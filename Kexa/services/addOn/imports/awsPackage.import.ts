@@ -202,7 +202,7 @@ import * as clientbudgets from '@aws-sdk/client-budgets';
 import * as clientfrauddetector from '@aws-sdk/client-frauddetector';
 import * as clientdatapipeline from '@aws-sdk/client-data-pipeline';
 import * as clientmobile from '@aws-sdk/client-mobile';
-/*import * as clientcodestar from '@aws-sdk/client-codestar';
+import * as clientcodestar from '@aws-sdk/client-codestar';
 import * as clientiotthingsgraph from '@aws-sdk/client-iotthingsgraph';
 import * as clientworkmailmessageflow from '@aws-sdk/client-workmailmessageflow';
 import * as clientsnowball from '@aws-sdk/client-snowball';
@@ -262,7 +262,7 @@ import * as clientservicecatalogappregistry from '@aws-sdk/client-service-catalo
 import * as clientsagemakerfeaturestoreruntime from '@aws-sdk/client-sagemaker-featurestore-runtime';
 import * as clientkinesisvideoarchivedmedia from '@aws-sdk/client-kinesis-video-archived-media';
 import * as clientmigrationhubrefactorspaces from '@aws-sdk/client-migration-hub-refactor-spaces';
-import * as clientredshiftserverless from '@aws-sdk/client-redshiftserverless';*/
+import * as clientredshiftserverless from '@aws-sdk/client-redshiftserverless';
 import * as clientcommander from '@aws-sdk/client-commander';
 import * as clientec2 from '@aws-sdk/client-ec2';
 import * as clients3 from '@aws-sdk/client-s3';
@@ -471,7 +471,7 @@ clientbudgets,
 clientfrauddetector,
 clientdatapipeline,
 clientmobile,
-/*clientcodestar,
+clientcodestar,
 clientiotthingsgraph,
 clientworkmailmessageflow,
 clientsnowball,
@@ -531,5 +531,5 @@ clientservicecatalogappregistry,
 clientsagemakerfeaturestoreruntime,
 clientkinesisvideoarchivedmedia,
 clientmigrationhubrefactorspaces,
-clientredshiftserverless,*/
+clientredshiftserverless,
 clientcommander};

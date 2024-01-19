@@ -55,7 +55,7 @@
       applied: true
       level: 1
       cloudProvider: aws
-      objectName: ec2Volume
+      objectName: EC2Client.Volumes
       conditions:
         - property: Attachments
           condition: COUNT_SUP
@@ -65,7 +65,7 @@
       applied: true
       level: 2
       cloudProvider: aws
-      objectName: ec2Volume
+      objectName: EC2Client.Volumes
       conditions:
         - property: CreateTime
           condition: DATE_INF
@@ -76,7 +76,7 @@
       applied: true
       level: 1
       cloudProvider: aws
-      objectName: tagsValue
+      objectName: KexaAwsCustoms.tagsValueListing
       conditions:
         - property: name
           condition: REGEX
@@ -86,7 +86,7 @@
       applied: true
       level: 1
       cloudProvider: aws
-      objectName: ec2SG
+      objectName: EC2Client.SecurityGroups
       conditions:
         - property: IpPermissions
           condition: ALL
@@ -102,8 +102,11 @@
       applied: true
       level: 2
       cloudProvider: aws
-      objectName: ec2Instance
+      objectName: EC2Client.Instances
       conditions:
-        - property: PublicIpAddress
-          condition: EQUAL
-          value: null
+        - property: Instances
+          condition: ALL
+          value:
+            - property: PublicIpAddress
+              condition: EQUAL
+              value: null
