@@ -878,3 +878,12 @@ package.json was changed
 .github/workflows/ci.yml was changed
 
 
+## 1.12.0-SNAPSHOT.34.78cb84a
+
+### Files added: 0
+
+### Files changed: 1
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+
