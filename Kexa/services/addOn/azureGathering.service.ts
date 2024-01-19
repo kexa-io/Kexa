@@ -2029,7 +2029,7 @@ async function collectKexaRestructuredData(credential: any, subscriptionId: any,
 	}, {});
 }
 
-export async function virtualMachinesListing(client:ComputeManagementClient, monitor:MonitorClient): Promise<Array<VirtualMachine>|null> {
+export async function virtualMachinesListing(client:ComputeManagementClient, monitor:MonitorClient): Promise<Array<VirtualMachine>> {
     try {
         const resultList = new Array<VirtualMachine>;
         for await (let item of client.virtualMachines.listAll()){
@@ -2046,10 +2046,10 @@ export async function virtualMachinesListing(client:ComputeManagementClient, mon
             vm.instanceView.availableMemoryBytes = convertMinMaxMeanMedianToPercentage(vm.instanceView.availableMemoryBytes, convertGbToBytes(vm.details?.MemoryGb??0));
             resultList.push(vm);
         }
-        return resultList ?? null;
+        return resultList ?? [];
     }catch (err) {
         logger.debug("error in virtualMachinesListing:"+err);
-        return null;
+        return [];
     } 
 }
 
@@ -2112,7 +2112,7 @@ function getMinMaxMeanMedian(array: Array<number>): any {
 }
 
 // verify
-async function listAllBlob(client:StorageManagementClient, credentials: any): Promise<Array<StorageAccount>|null> {
+async function listAllBlob(client:StorageManagementClient, credentials: any): Promise<Array<StorageAccount>> {
     logger.info("starting listAllBlob");
     try {
         const resultList = new Array<ResourceGroup>;
@@ -2131,10 +2131,10 @@ async function listAllBlob(client:StorageManagementClient, credentials: any): Pr
                 }
             }
         }
-        return resultList ?? null;
+        return resultList ?? [];
     } catch (err) {
         logger.debug("error in resourceGroupListing:"+err);
-        return null;
+        return [];
     }
 }
 
@@ -2146,7 +2146,7 @@ async function workspacesListing(mlClient: AzureMachineLearningWorkspaces): Prom
 	for await (let item of mlClient.workspaces.listBySubscription()) {
 		workspacesResult = [...workspacesResult??[], item];
 	}
-	return workspacesResult ?? null;
+	return workspacesResult ?? [];
 }
 
 async function jobsListing(client: AzureMachineLearningWorkspaces, workspaces: Array<Workspace>): Promise<any> {
@@ -2161,10 +2161,10 @@ async function jobsListing(client: AzureMachineLearningWorkspaces, workspaces: A
 				result.resourceGroupName = resourceGroupName;
 				resArray.push(result);
 			}
-			return resArray ?? null;
+			return resArray ?? [];
 		} catch(e){
 			logger.debug("error in jobsListing:"+e);
-			return null;
+			return [];
 		}
 	}
 }
@@ -2181,10 +2181,10 @@ async function computeOperationsListing(client: AzureMachineLearningWorkspaces, 
 				result.resourceGroupName = resourceGroupName;
 				resArray.push(item);
 			}
-			return resArray ?? null;
+			return resArray ?? [];
 		}catch(e){
 			logger.debug("error in computeOperationsListing:"+e);
-			return null;
+			return [];
 		}
 	}
 }
@@ -2201,10 +2201,10 @@ async function schedulesListing(client: AzureMachineLearningWorkspaces, workspac
 				result.resourceGroupName = resourceGroupName;
 				resArray.push(item);
 			}
-			return resArray ?? null;
+			return resArray ?? [];
 		} catch(e){
 			logger.debug("error in schedulesListing:"+e);
-			return null;
+			return [];
 		}
 	}
 }
