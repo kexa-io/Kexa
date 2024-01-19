@@ -320,10 +320,10 @@ function retrieveAzureArmClients() {
 }
 
 if (require.main === module) {
-    /*releaseCapability();
+    releaseCapability();
     updateREADME();
     updateVersion();
-    createAzureArmPkgImportList();*/
+    createAzureArmPkgImportList();
     createAwsArmPkgImportList();
 }
 
