@@ -1,0 +1,63 @@
+{
+    "aws": [
+        {
+            "name": "Project A",
+            "prefix": "AWSPROJECTA-",
+            "description": "First subscription (0) : Project A subscription",
+            "rules": [
+                "Name of my rule"
+            ],
+            "regions": [
+                "us-east-1"
+            ]
+        }
+    ],
+    "gcp": [
+        {
+            "name": "Project B",
+            "prefix": "GCPPROJECTB-",
+            "description": "First subscription (0) : Project B subscription",
+            "rules": [
+                "Name of my rule",
+                "Another rules"
+            ],
+            "regions": [
+                "us-east1"
+            ]
+        }
+    ],
+    "export": [
+        {
+            "type": "azureBlobStorage",
+            "name": "ABS4568745",
+            "description": "Azure Blob Storage 4568745 in subscription 123456789",
+            "urlName": "NAMEOFVARTOSTOREMYURL",
+            "blobName": "myblobname",
+            "containerName": "mycontainername",
+            "origin": "Github repo X",
+            "tags": {
+                "env": "dev",
+                "project": "myproject"
+            }
+        },
+        {
+            "type": "mongoDB",
+            "name": "MongoDB 4568745",
+            "description": "MongoDB 4568745 in our main kube",
+            "collectionName": "KexaCollection",
+            "urlName": "mongo", // name of the variable to store the url
+            "origin": "Github repo X",
+            "tags": {
+                "env": "dev",
+                "project": "myproject"
+            }
+        },
+        {
+            "type": "mySQL",
+            "name": "MySQL 4568745",
+            "description": "MySQL in our clever cloud",
+            "urlName": "mysql://root:root@localhost:7575/Kexa",
+            "origin": "Github repo X"
+        }
+    ]
+}

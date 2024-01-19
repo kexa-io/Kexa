@@ -9,7 +9,7 @@ const fs = require("fs");
 import axios from 'axios';
 
 async function releaseCapability(){
-    let rules = await gatheringRules("./Kexa/rules", true);
+    let rules = await gatheringRules("https://api.github.com/repos/4urcloud/Kexa_Rules/zipball/main", true);
     let freeRules = [...rules.map((rule: SettingFile) => {
         return rule.rules
     })];
@@ -22,26 +22,26 @@ async function releaseCapability(){
     writeStringToJsonFile(JSON.stringify(headers, null, 4), "./capacity.json");
 }
 
-function updateVersion(){
+export function updateVersion(){
     let packageJson = require("../../package.json");
     let version = fs.readFileSync("./VERSION", "utf8");
     packageJson.version = version.split("\n")[0];
     fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 4));
 }
 
-function updateREADME(){
+export function updateREADME(){
     let readme = fs.readFileSync("./README.md", "utf8");
-    let packageJson = require("../../capacity.json");
+    let capacityJson = require("../../capacity.json");
     const tab = "    ";
-    let gaol = "\n\n"
-    Object.keys(packageJson).forEach((key: string) => {
-        gaol += `- ✅ ${key.charAt(0).toUpperCase() + key.slice(1)} check in:\n`
-        packageJson[key]["resources"].forEach((resource: string) => {
-            gaol += `${tab}- ✅ ${resource}\n`
+    let goal = "\n\n"
+    Object.keys(capacityJson).forEach((key: string) => {
+        goal += `- ✅ ${key.charAt(0).toUpperCase() + key.slice(1)} check in:\n`
+        capacityJson[key]["resources"].forEach((resource: string) => {
+            goal += `${tab}- ✅ ${resource}\n`
         });
     });
     readme = readme.split("<div class='spliter_code'></div>")
-    readme[1] = gaol + "\n";
+    readme[1] = goal + "\n";
     readme = readme.join("<div class='spliter_code'></div>")
     fs.writeFileSync("./README.md", readme);
 }
@@ -57,14 +57,12 @@ async function fetchArmPackages() {
         let allResults: any[] = [];
         let stringResults: any[] = [];
         while (true) {
-          const response = await axios.get(`https://api.npms.io/v2/search?size=250&from=${offset}&q=${searchString}`);
-          
-          if (response.data.results.length === 0) {
-            break;
-          }
-          
-          allResults = allResults.concat(response.data.results);
-          offset += 250;
+            const response = await axios.get(`https://api.npms.io/v2/search?size=250&from=${offset}&q=${searchString}`);
+            if (response.data.results.length === 0) {
+                break;
+            }
+            allResults = allResults.concat(response.data.results);
+            offset += 250;
         }
         const searchTerm = '@azure/arm-';
         const filteredResults = allResults.filter(result => result.package.name.startsWith(searchTerm));
@@ -80,7 +78,7 @@ async function fetchArmPackages() {
                 aliasName: aliasName
             };
             stringResults.push(obj);
-         })
+        })
         let fileContent = '';
         const fileName = "azurePackage.import.ts";
         stringResults.forEach((item) => {
@@ -101,11 +99,11 @@ async function fetchArmPackages() {
         } catch (error) {
             console.error('Error writing file:', error);
         }
-         console.log("total results Azure packages found : " + i);
-         return stringResults;
+        console.log("total results Azure packages found : " + i);
+        return stringResults;
     } catch (error) {
-      console.error('Error fetching data:', error);
-      throw error;
+        console.error('Error fetching data:', error);
+        throw error;
     }
 }
 
@@ -223,16 +221,15 @@ function readFileContent(inputFilePath: string) {
 
 async function fileReplaceContent(inputFilePath: string, outputFilePath: string, allClients: AzureClients) {
     try {
-      const fileContent = await readFileContent(inputFilePath);
-      const regex = /(\* Resources :)[\s\S]*?(\*\/)/;
-      const updatedContent = fileContent.replace(regex, `$1\n${generateResourceList(allClients)}\n$2`);  
-      writeFileContent(outputFilePath, updatedContent);
+        const fileContent = await readFileContent(inputFilePath);
+        const regex = /(\* Resources :)[\s\S]*?(\*\/)/;
+        const updatedContent = fileContent.replace(regex, `$1\n${generateResourceList(allClients)}\n$2`);  
+        writeFileContent(outputFilePath, updatedContent);
     } catch (error) {
-      console.error('Error:', error);
+        console.error('Error:', error);
     }
 }
- 
-      
+
 function retrieveAzureArmClients() {
     let allClients: AzureClients = {};
 

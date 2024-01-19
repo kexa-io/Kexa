@@ -647,3 +647,243 @@ Kexa/helpers/latestVersion.ts was changed
 Kexa/services/addOn/azureGathering.service.ts was changed
 
 
+## 1.11.0-SNAPSHOT.59.7e61738
+
+### Files added: 0
+
+### Files changed: 4
+
+Kexa/services/manageVarEnvironnement.service.ts was changed
+
+documentation/Documentation-Kexa.md was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
+## 1.11.1-SNAPSHOT.5.94bca52
+
+### Files added: 0
+
+### Files changed: 0
+
+
+## 1.12.0-SNAPSHOT.11.f8eceed
+
+### Files added: 2
+
+Kexa/helpers/dowloadFile.ts was added
+
+config/demo/exemple4.default.json was added
+
+### Files changed: 8
+
+Kexa/helpers/dowloadFile.ts was changed
+
+config/demo/exemple4.default.json was changed
+
+Kexa/main.ts was changed
+
+Kexa/rules/rules-testing.yaml was changed
+
+Kexa/services/analyse.service.ts was changed
+
+documentation/Documentation-Kexa.md was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
+## 1.12.0-SNAPSHOT.17.bc4bd72
+
+### Files added: 0
+
+### Files changed: 2
+
+Kexa/__tests__/services/addOn.test.ts was changed
+
+Kexa/__tests__/services/analyse.test.ts was changed
+
+
+## 1.12.0-SNAPSHOT.19.3049a4a
+
+### Files added: 0
+
+### Files changed: 2
+
+Dockerfile was changed
+
+package-lock.json was changed
+
+
+## 1.12.0-SNAPSHOT.25.6a978ff
+
+### Files added: 23
+
+Kexa/models/export/mysql/config.models.ts was added
+
+Kexa/query/CRUD/origins.iquery.ts was added
+
+Kexa/query/CRUD/providerItems.iquery.ts was added
+
+Kexa/query/CRUD/providers.iquery.ts was added
+
+Kexa/query/CRUD/resources.iquery.ts was added
+
+Kexa/query/CRUD/rules.iquery.ts was added
+
+Kexa/query/CRUD/scans.iquery.ts was added
+
+Kexa/query/table.iquery.ts was added
+
+Kexa/services/addOn/exportation/azureBlobStorageExportation.service.ts was added
+
+Kexa/services/addOn/exportation/mongoDBExportation.service.ts was added
+
+Kexa/services/addOn/exportation/mySQLExportation.service.ts was added
+
+Kexa/services/addOn/save/mySQLSave.service.ts was added
+
+Kexa/services/exportation.service.ts was added
+
+Kexa/services/saving/azureBlobStorage.service.ts was added
+
+Kexa/services/saving/mongoDB.service.ts was added
+
+Kexa/services/saving/mySQL.service.ts was added
+
+config/demo/exemple5.default.json was added
+
+config/demo/mySQL.default.json was added
+
+config/freshTemplatesAddOn/XXXExportation.service.ts was added
+
+config/freshTemplatesAddOn/XXXSave.service.ts was added
+
+documentation/save/MySQL.md was added
+
+images/MySQL-logo.png was added
+
+images/schema-UML-SQL.png was added
+
+### Files changed: 38
+
+Kexa/models/export/mysql/config.models.ts was changed
+
+Kexa/query/CRUD/origins.iquery.ts was changed
+
+Kexa/query/CRUD/providerItems.iquery.ts was changed
+
+Kexa/query/CRUD/providers.iquery.ts was changed
+
+Kexa/query/CRUD/resources.iquery.ts was changed
+
+Kexa/query/CRUD/rules.iquery.ts was changed
+
+Kexa/query/CRUD/scans.iquery.ts was changed
+
+Kexa/query/table.iquery.ts was changed
+
+Kexa/services/addOn/exportation/azureBlobStorageExportation.service.ts was changed
+
+Kexa/services/addOn/exportation/mongoDBExportation.service.ts was changed
+
+Kexa/services/addOn/exportation/mySQLExportation.service.ts was changed
+
+Kexa/services/addOn/save/mySQLSave.service.ts was changed
+
+Kexa/services/exportation.service.ts was changed
+
+Kexa/services/saving/azureBlobStorage.service.ts was changed
+
+Kexa/services/saving/mongoDB.service.ts was changed
+
+Kexa/services/saving/mySQL.service.ts was changed
+
+config/demo/exemple5.default.json was changed
+
+config/demo/mySQL.default.json was changed
+
+config/freshTemplatesAddOn/XXXExportation.service.ts was changed
+
+config/freshTemplatesAddOn/XXXSave.service.ts was changed
+
+documentation/save/MySQL.md was changed
+
+images/MySQL-logo.png was changed
+
+images/schema-UML-SQL.png was changed
+
+Kexa/main.ts was changed
+
+Kexa/models/export/azureBlobStorage/config.models.ts was changed
+
+Kexa/services/addOn.service.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/save/azureBlobStorageSave.service.ts was changed
+
+Kexa/services/addOn/save/mongoDBSave.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+Kexa/services/save.service.ts was changed
+
+config/default.json was changed
+
+config/demo/exemple3.default.json was changed
+
+documentation/Documentation-Kexa.md was changed
+
+function.json was changed
+
+host.json was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
+## 1.12.0-SNAPSHOT.27.b972da9
+
+### Files added: 0
+
+### Files changed: 1
+
+README.md was changed
+
+
+## 1.12.0-SNAPSHOT.30.bcfe35d
+
+### Files added: 0
+
+### Files changed: 3
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
+## 1.12.0-SNAPSHOT.32.7c2677b
+
+### Files added: 0
+
+### Files changed: 1
+
+.github/workflows/ci.yml was changed
+
+
+## 1.12.0-SNAPSHOT.34.78cb84a
+
+### Files added: 0
+
+### Files changed: 1
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+

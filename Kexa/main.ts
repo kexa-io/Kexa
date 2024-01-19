@@ -9,6 +9,7 @@ import {getContext, getNewLogger} from "./services/logger.service";
 import { Emails } from "./emails/emails";
 import { displayVersionAndLatest } from "./helpers/latestVersion";
 import { saveResult } from "./services/save.service";
+import { exportationData } from "./services/exportation.service";
 
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
@@ -16,10 +17,7 @@ const args = yargs(hideBin(process.argv)).argv
 const folderOutput = process.env.OUTPUT??"./output";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-env.config();// reading environnement vars
-// file system
-
-let config = require('node-config-ts');
+env.config();
 
 export async function main() {
     env.config();
@@ -38,19 +36,17 @@ export async function main() {
     context?.log("logger configured");
 
     AsciiArtText("Kexa");
-    logger.info("___________________________________________________________________________________________________"); 
+    logger.info("___________________________________________________________________________________________________");
     logger.info("___________________________________-= running Kexa scan =-_________________________________________");
-    logger.info("___________________________________________________________________________________________________"); 
+    logger.info("___________________________________________________________________________________________________");
     await displayVersionAndLatest(logger);
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"./Kexa/rules");
-    context?.log("settings", settings);
+    let allPromises = [];
     if(settings.length != 0){
         let resources = await loadAddOns(settings);
-        context?.log("resources", resources);
+        allPromises.push(exportationData(resources));
         if(args.o) createFileSync(JSON.stringify(resources), folderOutput + "/resources/"+ new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '') +".json", true);
-        context?.log("good");
         settings.forEach(setting => {
-            context?.log("setting", setting);
             let result = checkRules(setting.rules, resources, setting.alert);
             if(setting.alert.global.enabled){
                 let render_table = renderTableAllScan(result.map(scan => scan.filter(value => value.error.length>0)));
@@ -65,8 +61,9 @@ export async function main() {
                 createFileSync(mail, folderOutput + "/scans/"+ setting.alert.global.name + "/" + new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '') +".html");
                 alertGlobal(result, setting.alert.global);
             }
-            saveResult(result);
+            allPromises.push(saveResult(result));
         });
+        await Promise.all(allPromises);
     }else {
         logger.error("No correct rules found, please check the rules directory or the rules files.");
     }
