@@ -85,6 +85,7 @@ export function extractAddOnNeed(settingFileList: SettingFile[]){
     settingFileList.forEach((ruleFile) => {
         objectNameList[ruleFile.alert.global.name] = {};
         ruleFile.rules.forEach((rule) => {
+            if(rule.applied === false) return;
             if(!providerList.includes(rule.cloudProvider)) providerList.push(rule.cloudProvider);
             if(!objectNameList[ruleFile.alert.global.name][rule.cloudProvider]) objectNameList[ruleFile.alert.global.name][rule.cloudProvider] = new Array<string>();
             if(!objectNameList[ruleFile.alert.global.name][rule.cloudProvider].includes(rule.objectName)) objectNameList[ruleFile.alert.global.name][rule.cloudProvider].push(rule.objectName);
