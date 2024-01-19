@@ -3055,12 +3055,11 @@ async function gatherAwsObject(credential: any, region:string, object: ClientRes
 					jsonData = [];
 			}
 		});
+		jsonData = addRegion(jsonData, region);
 		logger.debug(region + " - " + object.clientName + "." + object.objectName + " Listing  Done");
 		const customJsonObject = {
 			[object.clientName + "." + object.objectName]: jsonData
 		  };
-
-		  console.log(customJsonObject);
 		return customJsonObject ?? null;
 	} catch (err) {
 		logger.debug("Error in " + object.clientName + "." + object.objectName + " listing:", err);

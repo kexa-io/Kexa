@@ -109,4 +109,4 @@
           value:
             - property: PublicIpAddress
               condition: EQUAL
-              value: null
+              value: ''

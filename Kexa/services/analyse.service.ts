@@ -439,6 +439,10 @@ export function parentResultScan(subResultScans: SubResultScan[], result: boolea
 export function checkCondition(condition:RulesConditions, resource:any): SubResultScan {
     try{
         let value = getSubProperty(resource, condition.property);
+        if (!condition.value)
+            condition.value =  '';
+        if (value === undefined)
+            value = '';
         switch(condition.condition){
             case ConditionEnum.EQUAL:
                 return resultScan(condition, value, [checkEqual]);

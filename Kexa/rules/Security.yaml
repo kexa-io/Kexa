@@ -90,7 +90,7 @@
       applied: true
       level: 1
       cloudProvider: aws
-      objectName: ec2SG
+      objectName: EC2Client.SecurityGroups
       conditions:
         - property: IpPermissions
           condition: ALL
@@ -106,7 +106,7 @@
       applied: true
       level: 2
       cloudProvider: aws
-      objectName: ec2Instance
+      objectName: EC2Client.Instances
       conditions:
         - property: PublicIpAddress
           condition: EQUAL
