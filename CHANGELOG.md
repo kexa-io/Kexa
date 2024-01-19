@@ -896,3 +896,18 @@ Kexa/services/addOn/azureGathering.service.ts was changed
 Kexa/services/analyse.service.ts was changed
 
 
+## 1.12.0-SNAPSHOT.58.7d0768c
+
+### Files added: 0
+
+### Files changed: 4
+
+Kexa/__tests__/rules/test1/rule-test.yaml was changed
+
+Kexa/__tests__/rules/test2/rule-test.yaml was changed
+
+Kexa/__tests__/rules/test2/rule-test2.yaml was changed
+
+Kexa/__tests__/rules/test3/rule-test.yaml was changed
+
+
