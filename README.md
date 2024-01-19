@@ -86,10 +86,21 @@ With Kexa, you can [edit your own rules](documentation/Documentation-Kexa.md#rul
 <br/>
 
 For a quick launch, we're going to use docker. If you can't use docker you can refer to [this documention](documentation/Documentation-Kexa.md) to try Kexa. However, we have a powershell script to initialize all resources and credentials if you want to get Kexa up and running quickly such as :
-```powershell
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/4urcloud/Kexa/dev/initKexa.ps1" -OutFile "./initKexa.ps1"; & "./initKexa.ps1" -d -c
-#answer all question to setup
 
+- Windows:
+  ```powershell
+  Invoke-WebRequest -Uri "https://raw.githubusercontent.com/4urcloud/Kexa/dev/initKexa.ps1" -OutFile "./initKexa.ps1"; & "./initKexa.ps1" -d -c
+  #answer all question to setup
+  ```
+- Linux:
+  ```bash
+  curl -sSL https://raw.githubusercontent.com/4urcloud/Kexa/main/initKexa.sh -o initKexa.sh && chmod +x initKexa.sh && ./initKexa.sh -d -c
+  #answer all question to setup
+  ```
+
+then:
+
+```bash
 #dont forget to get [nodejs](https://nodejs.org/en/download) to launch Kexa:
 npm i
 npm run start

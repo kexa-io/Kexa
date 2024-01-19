@@ -3,8 +3,9 @@ import { ResultScan } from '../models/resultScan.models';
 import { getContext, getNewLogger } from "./logger.service";
 import { loadAddOnsCustomUtility } from './addOn.service';
 import { SaveConfig } from '../models/export/config.models';
+import { getConfig } from '../helpers/loaderConfig';
 
-const configuration = require('node-config-ts').config;
+const configuration = getConfig();
 const logger = getNewLogger("SaveLogger");
 const context = getContext();
 
@@ -31,6 +32,7 @@ export async function saveResult(result: ResultScan[][]): Promise<void> {
             logger.warn('Unknown save type: ' + save.type);
             context?.log('Unknown save type: ' + save.type);
         }
+        return Promise.resolve();
     }));
 }
 

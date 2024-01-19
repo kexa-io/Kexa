@@ -1793,13 +1793,11 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
                 context?.log("- loading client microsoft azure done-");
                 logger.info("- loading client microsoft azure done-");
                 
-				const dataComplementary = await collectKexaRestructuredData(credential, subscriptionId, config);
-
 				const [ autoFlatResources, dataComplementaryFlat ] = await Promise.all([
 					collectAuto(credential, subscriptionId, config),
 					collectKexaRestructuredData(credential, subscriptionId, config)
 				]);
-				let finalResources = {...autoFlatResources, ...dataComplementary};
+				let finalResources = {...autoFlatResources, ...dataComplementaryFlat};
                 resources.push(finalResources);
             }
         } catch(e) {
@@ -1944,25 +1942,27 @@ const customGatherFunctions: FunctionMap = {
 			const monitorClient = new MonitorClient(credential, subscriptionId);
 			return await virtualMachinesListing(computeClient, monitorClient);
 		} catch (e) {
-			logger.warn("Error creating Azure client: ", e);
-			return ;
+			logger.debug("Error creating Azure client: ", e);
+			return [];
 		}
     },
 
     'KexaAzure.mlWorkspaces': async (name: string, credential: any, subscriptionId: any) => {
         logger.debug("Starting " + name + " listing...");
 
+
 		try {
 			const mlClient = new AzureMachineLearningWorkspaces(credential, subscriptionId);
 			return await workspacesListing(mlClient)
 		} catch (e) {
-			logger.warn("Error creating Azure client: " + name, e);
+			logger.debug("Error creating Azure client: " + name, e);
 			return [];
 		}
     },
 
 	'KexaAzure.mlJobs': async (name: string, credential: any, subscriptionId: any) => {
         logger.debug("Starting " + name + " listing...");
+
 
 		try {
 			const mlClient = new AzureMachineLearningWorkspaces(credential, subscriptionId);
@@ -1977,30 +1977,33 @@ const customGatherFunctions: FunctionMap = {
 	'KexaAzure.mlComputes': async (name: string, credential: any, subscriptionId: any) => {
         logger.debug("Starting " + name + " listing...");
 
+
 		try {
 			const mlClient = new AzureMachineLearningWorkspaces(credential, subscriptionId);
 			let workspaces = await workspacesListing(mlClient);
             return await computeOperationsListing(mlClient, workspaces);
 		} catch (e) {
-			logger.warn("Error creating Azure client: " + name, e);
+			logger.debug("Error creating Azure client: " + name, e);
 			return [];
 		}
     },
 
 	'KexaAzure.mlSchedules': async (name: string, credential: any, subscriptionId: any) => {
         logger.debug("Starting " + name + " listing...");
+
 		try {
 			const mlClient = new AzureMachineLearningWorkspaces(credential, subscriptionId);
 			let workspaces = await workspacesListing(mlClient);
             return await schedulesListing(mlClient, workspaces);
 		} catch (e) {
-			logger.warn("Error creating Azure client: " + name, e);
+			logger.debug("Error creating Azure client: " + name, e);
 			return [];
 		}
     },
 
 	'KexaAzure.storage': (name: string, credential: any, subscriptionId: any) => {
         logger.debug("Starting " + name + " listing...");
+
 		return [];
     },
 
@@ -2022,7 +2025,7 @@ async function collectKexaRestructuredData(credential: any, subscriptionId: any,
 	}, {});
 }
 
-export async function virtualMachinesListing(client:ComputeManagementClient, monitor:MonitorClient): Promise<Array<VirtualMachine>|null> {
+export async function virtualMachinesListing(client:ComputeManagementClient, monitor:MonitorClient): Promise<Array<VirtualMachine>> {
     try {
         const resultList = new Array<VirtualMachine>;
         for await (let item of client.virtualMachines.listAll()){
@@ -2039,10 +2042,10 @@ export async function virtualMachinesListing(client:ComputeManagementClient, mon
             vm.instanceView.availableMemoryBytes = convertMinMaxMeanMedianToPercentage(vm.instanceView.availableMemoryBytes, convertGbToBytes(vm.details?.MemoryGb??0));
             resultList.push(vm);
         }
-        return resultList;
+        return resultList ?? [];
     }catch (err) {
         logger.debug("error in virtualMachinesListing:"+err);
-        return null;
+        return [];
     } 
 }
 
@@ -2105,7 +2108,7 @@ function getMinMaxMeanMedian(array: Array<number>): any {
 }
 
 // verify
-async function listAllBlob(client:StorageManagementClient, credentials: any): Promise<Array<StorageAccount>|null> {
+async function listAllBlob(client:StorageManagementClient, credentials: any): Promise<Array<StorageAccount>> {
     logger.info("starting listAllBlob");
     try {
         const resultList = new Array<ResourceGroup>;
@@ -2124,10 +2127,10 @@ async function listAllBlob(client:StorageManagementClient, credentials: any): Pr
                 }
             }
         }
-        return resultList;
+        return resultList ?? [];
     } catch (err) {
         logger.debug("error in resourceGroupListing:"+err);
-        return null;
+        return [];
     }
 }
 
@@ -2139,7 +2142,7 @@ async function workspacesListing(mlClient: AzureMachineLearningWorkspaces): Prom
 	for await (let item of mlClient.workspaces.listBySubscription()) {
 		workspacesResult = [...workspacesResult??[], item];
 	}
-	return workspacesResult;
+	return workspacesResult ?? [];
 }
 
 async function jobsListing(client: AzureMachineLearningWorkspaces, workspaces: Array<Workspace>): Promise<any> {
@@ -2154,7 +2157,7 @@ async function jobsListing(client: AzureMachineLearningWorkspaces, workspaces: A
 				result.resourceGroupName = resourceGroupName;
 				resArray.push(result);
 			}
-			return resArray;
+			return resArray ?? [];
 		} catch(e){
 			logger.debug("error in jobsListing:"+e);
 			return [];
@@ -2174,7 +2177,7 @@ async function computeOperationsListing(client: AzureMachineLearningWorkspaces, 
 				result.resourceGroupName = resourceGroupName;
 				resArray.push(item);
 			}
-			return resArray;
+			return resArray ?? [];
 		}catch(e){
 			logger.debug("error in computeOperationsListing:"+e);
 			return [];
@@ -2194,7 +2197,7 @@ async function schedulesListing(client: AzureMachineLearningWorkspaces, workspac
 				result.resourceGroupName = resourceGroupName;
 				resArray.push(item);
 			}
-			return resArray;
+			return resArray ?? [];
 		} catch(e){
 			logger.debug("error in schedulesListing:"+e);
 			return [];

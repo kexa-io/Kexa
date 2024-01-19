@@ -44,8 +44,8 @@
             "type": "mongoDB",
             "name": "MongoDB 4568745",
             "description": "MongoDB 4568745 in our main kube",
-            "collectionName": "mongodb://localhost:27017/",
-            "urlName": "mongo",
+            "collectionName": "KexaCollection",
+            "urlName": "mongo", // name of the variable to store the url
             "origin": "Github repo X",
             "tags": {
                 "env": "dev",

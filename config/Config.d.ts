@@ -5,6 +5,12 @@ declare module "node-config-ts" {
     kubernetes: Kubernete[]
     http: Http[]
     save: Save[]
+    export: Export[]
+  }
+  interface Export {
+    type: string
+    urlName: string
+    collectionName: string
   }
   interface Save {
     type: string

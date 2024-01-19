@@ -4,8 +4,9 @@ import { writeStringToJsonFile } from "../helpers/files"
 import { Capacity } from "../models/settingFile/capacity.models";
 import {getContext, getNewLogger} from "./logger.service";
 import { SettingFile } from "../models/settingFile/settingFile.models";
+import { getConfig } from "../helpers/loaderConfig";
 
-const configuration = require('node-config-ts').config;
+const configuration = getConfig();
 const mainFolder = 'Kexa';
 const serviceAddOnPath = './' + mainFolder + '/services/addOn';
 const fs = require('fs');
@@ -23,15 +24,26 @@ export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResour
         return await loadAddOn(file, addOnNeed, settings);
     });
     const results = await Promise.all(promises);
-    results.forEach((result: { key: string; data: Provider[]; }) => {
+    let addOnShortCollect: string[] = [];
+    results.forEach((result: { key: string; data: Provider[]; delta: number }) => {
         if (result?.data) {
             resources[result.key] = result.data;
         }
+        if((result?.delta)??0 > 15){
+            logger.info(`AddOn ${result.key} collect in ${result.delta}ms`);
+            context?.log(`AddOn ${result.key} collect in ${result.delta}ms`);
+        }else{
+            if(result?.delta) addOnShortCollect.push(result.key);
+        }
     });
+    if(addOnShortCollect.length > 0){
+        logger.info(`AddOn ${addOnShortCollect} load in less than 15ms; No data has been collected for these addOns`);
+        context?.log(`AddOn ${addOnShortCollect} load in less than 15ms; No data has been collected for these addOns`);
+    }
     return resources;
 }
 
-async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): Promise<{ key: string; data: Provider|null; } | null> {
+async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): Promise<{ key: string; data: Provider|null; delta: number } | null> {
     let context = getContext();
     try{
         if (file.endsWith('Gathering.service.ts')){
@@ -47,13 +59,21 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): 
             const addOnConfig = (configuration.hasOwnProperty(nameAddOn)) ? configuration[nameAddOn] : null;
             addOnConfig?.forEach((config: any) => {
                 config.ObjectNameNeed = []
-                config.rules.forEach((rulesName: string) => config.ObjectNameNeed = [...addOnNeed["objectNameNeed"][rulesName][nameAddOn], ...config.ObjectNameNeed]);
+                config.rules.forEach((rulesName: string) => {
+                    let addOnNeedRules = addOnNeed["objectNameNeed"][rulesName];
+                    if(addOnNeedRules){
+                        addOnNeedRules = addOnNeedRules[nameAddOn];
+                        if(addOnNeedRules){
+                            config.ObjectNameNeed = [...config.ObjectNameNeed, ...addOnNeedRules];
+                        }
+                    }
+                });
             });
             const data = await collectData(addOnConfig);
             let delta = Date.now() - start;
-            context?.log(`AddOn ${nameAddOn} collect in ${delta}ms`);
-            logger.info(`AddOn ${nameAddOn} collect in ${delta}ms`);
-            return { key: nameAddOn, data:(checkIfDataIsProvider(data) ? data : null)};
+            //context?.log(`AddOn ${nameAddOn} collect in ${delta}ms`);
+            //logger.info(`AddOn ${nameAddOn} collect in ${delta}ms`);
+            return { key: nameAddOn, data:(checkIfDataIsProvider(data) ? data : null), delta};
         }
     }catch(e){
         logger.warn(e);
@@ -66,7 +86,7 @@ export function loadAddOnsCustomUtility(usage: string, funcName:string, onlyFile
     const files = fs.readdirSync(serviceAddOnPath + "/" + usage);
     files.map((file: string) => {
         if(onlyFiles && !onlyFiles.some((onlyFile:string) => {return file.includes(onlyFile)})) return;
-        let result = loadAddOnCustomUtility(file.replace(".ts", ".js"), usage, funcName);
+        let result = loadAddOnCustomUtility(file, usage, funcName);
         if(result?.data){
             dictFunc[result.key] = result.data;
         }
@@ -77,9 +97,9 @@ export function loadAddOnsCustomUtility(usage: string, funcName:string, onlyFile
 function loadAddOnCustomUtility(file: string, usage: string, funcName:string): { key: string; data: Function; } | null {
     try{
         let formatUsage = usage.slice(0,1).toUpperCase() + usage.slice(1);
-        if (file.endsWith(formatUsage+ '.service.js')){
-            let nameAddOn = file.split(formatUsage + '.service.js')[0];
-            const moduleExports = require(`./addOn/${usage}/${nameAddOn}${formatUsage}.service.js`);
+        if (file.includes(formatUsage+ '.service')){
+            let nameAddOn = file.split(formatUsage + '.service')[0];
+            const moduleExports = require(`./addOn/${usage}/${nameAddOn}${formatUsage}.service`);
             const funcCall = moduleExports[funcName];
             return { key: nameAddOn, data:funcCall};
         }

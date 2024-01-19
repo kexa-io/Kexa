@@ -485,6 +485,7 @@
         "@types/rimraf": "^4.0.5",
         "cfonts": "^3.2.0",
         "dotenv": "^16.0.3",
+        "extract-zip": "^2.0.1",
         "googleapis": "^105.0.0",
         "helm-ts": "^0.1.5",
         "js-yaml": "^4.1.0",
@@ -492,6 +493,7 @@
         "jsome": "^2.3.26",
         "moment": "^2.29.4",
         "mongoose": "^8.0.3",
+        "mysql2": "^3.7.0",
         "node-config-ts": "^3.3.1",
         "nodemailer": "^6.9.3",
         "octokit": "^2.1.0",
@@ -505,16 +507,16 @@
         "@types/chai": "^4.3.5",
         "@types/js-yaml": "^4.0.5",
         "@types/mocha": "^10.0.1",
-        "@types/node": "^18.16.19",
+        "@types/node": "^18.19.7",
         "chai": "^4.3.7",
         "mocha": "^10.2.0",
         "nodemon": "^3.0.1",
         "rimraf": "^5.0.1",
-        "ts-node": "^10.9.1",
+        "ts-node": "^10.9.2",
         "typescript": "^4.9.5"
     },
     "name": "Kexa",
-    "version": "1.11.0-SNAPSHOT.55.bdc5559\r",
+    "version": "1.12.0-SNAPSHOT.36.6b1305c",
     "main": "./build/index.js",
     "scripts": {
         "postinstall": "node-config-ts",
@@ -533,7 +535,8 @@
         "prettier-watch:win32": "onchange \"src/**/*.ts\" -- prettier --write {{changed}}",
         "prettier-watch:darwin:linux": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
         "prettier-watch:default": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
-        "test": "npm run build && mocha --require ts-node/register --require source-map-support/register 'Kexa/__tests__/**/*.test.ts'"
+        "test": "npm run build && mocha --require ts-node/register --require source-map-support/register 'Kexa/__tests__/**/*.test.ts'",
+        "test:nobuild": "mocha --require ts-node/register --require source-map-support/register 'Kexa/__tests__/**/*.test.ts'"
     },
     "keywords": [
         "compliance",

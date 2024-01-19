@@ -1,0 +1,63 @@
+{
+    "aws": {
+        "resources": [
+            "ec2Instance",
+            "ec2SG",
+            "ec2Volume"
+        ]
+    },
+    "azure": {
+        "resources": [
+            "KexaAzure.mlJobs",
+            "KexaAzure.mlComputes",
+            "KexaAzure.mlSchedules",
+            "KexaAzure.storage",
+            "KexaAzure.blob"
+        ]
+    },
+    "gcp": {
+        "resources": [
+            "tasks_queue",
+            "computervision"
+        ]
+    },
+    "github": {
+        "resources": [
+            "repositories",
+            "branches"
+        ]
+    },
+    "googleDrive": {
+        "resources": [
+            "files",
+            "test2"
+        ]
+    },
+    "googleWorkspace": {
+        "resources": [
+            "usertemplate",
+            "domainOrigin"
+        ]
+    },
+    "http": {
+        "resources": [
+            "requestAndResponse",
+            "test"
+        ]
+    },
+    "kubernetes": {
+        "resources": [
+            "namespaces",
+            "poda",
+            "services",
+            "helm"
+        ]
+    },
+    "o365": {
+        "resources": [
+            "sku",
+            "user",
+            "domain"
+        ]
+    }
+}

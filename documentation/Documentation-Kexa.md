@@ -42,6 +42,7 @@
         <li><a href="#multiple-environments-provider-prefix">Multiple Environments provider prefix</a></li>
 	<li><a href="#custom-and-multiple-configurations">Custom and multiple Configurations</a></li>
         <li><a href="#regions">Regions</a></li>
+        <li><a href="#advanced-configurations">Advanced Configurations</a></li>
       </ul>
     </li>
     <li>
@@ -52,6 +53,7 @@
             <li><a href="#default-folder-input-and-output">Default folder input and output</a></li>
             <li><a href="#notification">Notification</a></li>
             <li><a href="#save-result-of-the-scan">Save result of the scan</a></li>
+            <li><a href="#export-data-gathering">Export data gathering</a></li>
           </ul>
         </li>
         <li><a href="#providers-authentications">Providers Authentications</a></li>
@@ -64,6 +66,7 @@
         <li><a href="#rules-fields">Rules fields</a></li>
         <li><a href="#date--time-criteria">Date & Time criteria</a></li>
         <li><a href="#full-yaml-rules-file">Full Yaml rules file</a></li>
+        <li><a href="#variabilization-rules">Variabilization Rules</a></li>
         <li><a href="#utility-examples">Utility examples</a>
             <ul>
                 <li><a href="#cost-savings">Cost savings</a></li>
@@ -87,6 +90,8 @@
                     <li><a href="#adding-functionalities">Adding functionalities</a></li>
                     <li><a href="#gathering-data">Gathering data</a></li>
                     <li><a href="#display-results">Display results</a></li>
+                    <li><a href="#save-results">Save results</a></li>
+                    <li><a href="#export-gather">Export Gather</a></li>
                     <li><a href="#tests">Tests</a></li>
                 </ul></li>
         </ul>
@@ -371,6 +376,18 @@ Without "regions" property (or empty "regions" property), all the regions will b
 <br/>
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+<div id="advanced-configurations"></div>
+
+## **Advanced Configurations**
+
+You can load rules containing variables. To do this, you need to add a "variable" section. This attribute will be an object whose keys are the names of your rules with variables. Each of its keys has a dictionary value. This dictionary has as keys the names of the variables present in the rule and as value, the value of the variable.
+
+Here we are an example of configuration file with variable:
+*in this example only the rule :"Name_of_my_rule" have variables*
+![example config with variable](../config/demo/exemple4.default.json)
+
+For more details on variabilized rules, please refer to the section [Variabilization Rules](#variabilization-rules)
+
 # <div align="center" id="environment-variables-and-auth">**Environment variables & Auth**</div>
 <br/>
 
@@ -385,6 +402,12 @@ Without "regions" property (or empty "regions" property), all the regions will b
 Specify a folder to store the rules files.
 ```
   RULESDIRECTORY=./Kexa/rules (default value)
+```
+It is also possible to use a remote zipper folder hosted on private server or a github repository.
+It's could be either a public endpoint or a private one. To authenticate your self, use RULESAUTHORIZATION.
+```
+  RULESDIRECTORY="https://api.github.com/repos/4urcloud/Kexa_Rules/zipball/main"
+  RULESAUTHORIZATION="Bearer github_pat_XXXXXXXXXXXXXXXXXXXXXXXX" (optional)
 ```
 
 Specify a folder to store the output files.
@@ -424,6 +447,7 @@ For email, EMAILPWD is your Api Key for the case you use sendgrid.
 You can save your scan results in various places :
 - [Azure Blob Storage](./save/AzureBlobStorage.md)
 - [Mongo DB](./save/MongoDB.md)
+- [MySQL](./save/MySQL.md)
 
 To save your scan results in different places, a "save" attribute must be created in your default.json file. It's a list of "SaveConfig" objects, as follows : 
 
@@ -444,6 +468,34 @@ Each addOn brings its own unique set of attributes to the table. We invite you t
 Here an example of configuration to save in Azure Blob Storage and MongoDB:
 
 ![example config with save](../config/demo/exemple3.default.json)
+
+<div id="export-data-gathering"></div>
+
+### **Export data gathering**
+
+You can export the data gathering from your environment in various places :
+- [Azure Blob Storage](./save/AzureBlobStorage.md)
+- [Mongo DB](./save/MongoDB.md)
+- [MySQL](./save/MySQL.md)
+
+Pour exporter ces données, cela fonctionne comme la section [Save result of the scan](#save-result-of-the-scan) à l'exception de l'attribut "save" qui devient l'attribu "export". It's a list of "SaveConfig" objects, as follows : 
+
+![example SaveConfig](../Kexa/models/export/config.models.ts)
+
+Here's the table of correspondence for each attribute:
+- type: corresponds to the name of the addon solicited to save your scan
+- urlName: 2 functions to choose from:
+  - is used to provide the name of the environment variable storing the endpoint url
+  - provide endpoint url
+- name: reserved attribute for naming the backup location (maintenance aid)
+- description: reserved attribute to describe the backup location (maintenance aid)
+- origin: attribute to specify kexa run location
+- tags: additional information dictionary for tagging the backup (not implement for sql)
+
+Each addOn brings its own unique set of attributes to the table. We invite you to refer to the documentation of the addOn you wish to use for all the subtleties.
+Here an example of configuration to export in Azure Blob Storage, MongoDB and MySQL:
+
+![example config with export](../config/demo/exemple5.default.json)
 
 <br/>
 <div id="provider-authentications"></div>
@@ -716,6 +768,84 @@ date: "YYYY-MM-DDThh:mm:ss.SSSZ"
 ```
 
 <br/>
+<div id="variabilization-rules"></div>
+
+### **Variabilization Rules**
+
+To simplify maintenance, it is possible to variabilize rules either for values or for complete blocks of the YAML file.
+The main advantage of setting up a remote repo for your instances is that you can manage and administer general rules for all your productions.
+
+#### Initialization
+
+Initializing a value or block variable is done in the same way. At the same indentation level as version or date, insert the name of your variable, a colon then an ampersand, followed by the name of your variable again.
+In our example "toto" :
+```yaml
+- version: string
+  date: string
+  toto: &toto
+  ...
+```
+
+#### Use
+
+The use of a variable can vary, depending on whether you want to use it as a value or as a block.
+
+- Use as a value:
+  You can insert the name of your variable preceded by an asterisk, anywhere you'd put a conventional value.
+  It's can be usefull to check element like name or quantity
+  ```yaml
+  - version: string
+    date: string
+    toto: &toto
+    ...
+    rules:
+      - name: "Generalize-test" 
+        description : generic test for a project test if X exist 
+        applied: true 
+        level: 1 
+        cloudProvider: XXXX 
+        objectName : YYYY
+        conditions:
+          -	property : name
+            condition : EQUAL
+            value : *toto
+  ```
+
+- Use as a block:
+  You can insert the name of your variable preceded by "<<: *", anywhere you'd put a key.
+  In this example, we variabilize the "applied and level" section to define groups and their level of importance.
+  Another possible example is the notifications section, to variabilize the recipients.
+  ```yaml
+  - version: string
+    date: string
+    group1: &group1
+    ...
+    rules:
+      - name: "Generalize-test" 
+        description : generic test for a project test if A exist
+        <<: *group1
+        cloudProvider: XXXX 
+        objectName : YYYY
+        conditions:
+          -	property : A
+            condition : EQUAL
+            value : A
+      - name: "Generalize-test-2" 
+        description : generic test for a project test if B exist
+        <<: *group1
+        cloudProvider: XXXX 
+        objectName : YYYY
+        conditions:
+          -	property : B
+            condition : EQUAL
+            value : B
+  ```
+
+
+The values of the variable must be fill in the [configuration file](#advanced-configurations)
+
+
+<br/>
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <div id="utility-examples"></div>
@@ -816,6 +946,7 @@ Whether you want to check specific elements of your infrastructure or take a mor
 
 <br/>
 <p align="right">(<a href="#top">back to top</a>)</p>
+
 <div id="official-addons"></div>
 
 ## <div align="center">**Official Addons**</div>
@@ -1036,19 +1167,30 @@ You can also add AddOns to save your data. These extensions are based on the sam
 But you can make your own by extends this interface.
 The second is a table of ResultScan:
 
-![interface of a SaveConfig](../Kexa/models/resultScan.models.ts)
+![interface of a resultScan](../Kexa/models/resultScan.models.ts)
 
 example of fresh template of save addOn:
 
-```ts
-import { ResultScan } from "../../../models/resultScan.models";
+![fresh template of save addOn](../config/freshTemplatesAddOn/XXXSave.service.ts)
 
-export async function save(save: SaveConfig, result: ResultScan[][]): Promise<void>{
-  //insert your stuff here
-}
+<br/>
 
-//can add other function here
-```
+<div id="export-gather"></div>
+
+### **Export gather**
+
+You can also add AddOns to export your data. These extensions are based on the same principle as Save AddOn. The Exportation AddOn file is named [extension name]Exportation.service.ts, and its path is "./Kexa/services/addOn/exportation". This file is used to store the scanned data in a specific location. No return is attempted. The function used as an entry point is called "exportation". It takes 2 arguments. The first is a "save", corresponding to :
+
+![interface of a SaveConfig](../Kexa/models/export/config.models.ts)
+
+But you can make your own by extends this interface.
+The second is a ProviderResource:
+
+![interface of a ProviderResource](../Kexa/models/providerResource.models.ts)
+
+example of fresh template of exportation addOn:
+
+![fresh template of exportation addOn](../config/freshTemplatesAddOn/XXXExportation.service.ts)
 
 <br/>
 
