@@ -911,3 +911,12 @@ Kexa/__tests__/rules/test2/rule-test2.yaml was changed
 Kexa/__tests__/rules/test3/rule-test.yaml was changed
 
 
+## 1.12.2-SNAPSHOT.28.6ef96c9
+
+### Files added: 0
+
+### Files changed: 1
+
+package-lock.json was changed
+
+
