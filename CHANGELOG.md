@@ -887,3 +887,12 @@ package.json was changed
 Kexa/services/addOn/azureGathering.service.ts was changed
 
 
+## 1.12.0-SNAPSHOT.36.6b1305c
+
+### Files added: 0
+
+### Files changed: 1
+
+Kexa/services/analyse.service.ts was changed
+
+
