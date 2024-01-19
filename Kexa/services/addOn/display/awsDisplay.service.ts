@@ -9,24 +9,14 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
     else
         fullLink = webLink.concat(link.toString());
     switch (rule?.objectName) {
-        case "ec2Volume":
-            return fullLink + `ec2/home?region=` + objectContent?.Region + `#VolumeDetails:volumeId=`+ objectContent?.VolumeId + (isSms ? ' ' : '">') + objectContent?.VolumeId + (isSms ? `.` : `</a>`)
+        case "KexaAwsCustoms.tagsValueListing":
+            return  'AWS Scan : Tag name : ' + objectContent.Value + ' in Region : ' + objectContent.Region;
         case "ec2SG":
             return fullLink + `ec2/home?region=` + objectContent?.Region + `#SecurityGroup:groupId=`+ objectContent?.GroupId + (isSms ? ' ' : '">') + objectContent?.GroupId + (isSms ? `.` : `</a>`)
-        case "ec2Instance":
-            return fullLink + `ec2/home?region=` + objectContent?.Region + `#InstanceDetails:instanceId=`+ objectContent?.Instances[0]?.InstanceId + (isSms ? ' ' : '">') + objectContent?.Instances[0]?.InstanceId + (isSms ? `.` : `</a>`)
-        case "rds":
-            return fullLink + `rds/home?region=` + objectContent?.Region + `#InstanceDetails:instanceId=`+ objectContent?.Instances[0]?.InstanceId + (isSms ? ' ' : '">') + objectContent?.Instances[0]?.InstanceId + (isSms ? `.` : `</a>`)
-        case "tagsValue":
-            return fullLink + `resource-groups/tag-editor/find-resources?region=` + objectContent?.Region + (isSms ? ' ' : '">') + objectContent?.name + (isSms ? `.` : `</a>`)
-        case "ecrRepository":
-            return fullLink + objectContent?.repositoryUri + (isSms ? ' ' : '">') + objectContent?.repositoryName + (isSms ? `.` : `</a>`)
-        case "ecsCluster":
-            return 'ClusterArn :' + objectContent?.clusterArn;
         case "resourceGroups":
             return 'GroupArn :' + objectContent?.GroupArn;
         default:
-            return 'AWS Scan : Id : ' + objectContent.id;
+            return 'AWS Scan : Object Id(s) : ' + awsFindIdToDisplay(objectContent);
     }
 }
 
@@ -37,4 +27,14 @@ function cutAWSAvailabilityToRegion(inputString: string): string {
         return inputString.substring(0, regionNumber + 1);
     }
     return inputString;
+}
+
+function awsFindIdToDisplay(object: any): string[] | null {
+    const result: any[] = [];
+    for (const key in object) {
+      if (object.hasOwnProperty(key) && typeof object[key] !== 'function' && key.endsWith('Id')) {
+        result.push(key + "=" + object[key]);
+      }
+    }
+    return result ?? null;
 }
