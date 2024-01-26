@@ -5068,7 +5068,7 @@ async function collectAuto(credential: any, region: string) {
 				 data = await client.send(command);
 				 iamUsers = data[iamCmd.objectName];
 			} catch (e) {
-				console.log("Error when retrieving resources dependencies : " + iamCmd.clientName + "." + iamCmd.objectName);
+				logger.warn("Error when retrieving resources dependencies from : " + iamCmd.clientName + "." + iamCmd.objectName);
 			}
 		}
 	}
@@ -5152,7 +5152,6 @@ async function gatherAwsObject(credential: any, region:string, object: ClientRes
 		const customJsonObject = {
 			[object.clientName + "." + object.objectName]: jsonData
 		  };
-		console.log(customJsonObject);
 		return customJsonObject ?? [];
 	} catch (err) {
 		logger.debug("Error in " + object.clientName + "." + object.objectName + " listing:", err);
