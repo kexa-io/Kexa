@@ -413,7 +413,7 @@ export function extractObjectsOrFunctionsAws(module: any, isObject: Boolean): Aw
 
     /* Start and End string to match for extract client listing functions */
     /* You can edit those as you wish, addind as much startStrings as you want */ 
-    const startStrings =  ["List", "Describe"];
+    const startStrings =  ["Get", "List", "Describe"];
     const endString = "Command";
 
     let clientName;
