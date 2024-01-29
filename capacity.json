@@ -5385,7 +5385,7 @@
                             {
                                 "property": "full_name",
                                 "condition": "EQUAL",
-                                "value": "4urcloud/Kexa_website"
+                                "value": null
                             }
                         ]
                     }
@@ -5405,7 +5405,7 @@
                             {
                                 "property": "repo",
                                 "condition": "DIFFERENT",
-                                "value": "Kexa_website"
+                                "value": null
                             },
                             {
                                 "property": "name",
@@ -6171,7 +6171,7 @@
                     {
                         "property": "metadata.name",
                         "condition": "DIFFERENT",
-                        "value": "4urcloudwebsitepublic"
+                        "value": null
                     }
                 ]
             },
@@ -6194,7 +6194,7 @@
                             {
                                 "property": "metadata.namespace",
                                 "condition": "EQUAL",
-                                "value": "kexawebsitepublic"
+                                "value": null
                             }
                         ]
                     }
@@ -6211,7 +6211,7 @@
                     {
                         "property": "metadata.name",
                         "condition": "DIFFERENT",
-                        "value": "4urcloudwebsitepublic"
+                        "value": null
                     }
                 ]
             },
@@ -6234,7 +6234,7 @@
                             {
                                 "property": "metadata.namespace",
                                 "condition": "EQUAL",
-                                "value": "kexawebsitepublic"
+                                "value": "myNamespace"
                             }
                         ]
                     }
@@ -6255,7 +6255,7 @@
                             {
                                 "property": "metadata.name",
                                 "condition": "EQUAL",
-                                "value": "kexawebsitepublic"
+                                "value": null
                             }
                         ]
                     }
@@ -6272,7 +6272,7 @@
                     {
                         "property": "metadata.name",
                         "condition": "DIFFERENT",
-                        "value": "4urcloudwebsitepublic"
+                        "value": null
                     }
                 ]
             },
@@ -6295,7 +6295,7 @@
                             {
                                 "property": "metadata.namespace",
                                 "condition": "EQUAL",
-                                "value": "kexawebsitepublic"
+                                "value": null
                             }
                         ]
                     }
@@ -6320,7 +6320,7 @@
                             {
                                 "property": "metadata.namespace",
                                 "condition": "EQUAL",
-                                "value": "thecloudprices-manorga"
+                                "value": null
                             }
                         ]
                     }

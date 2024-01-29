@@ -597,6 +597,7 @@
 	*	- RDSClient.DBProxyTargets
 	*	- RDSClient.DBRecommendations
 	*	- RDSClient.DBSecurityGroups
+	*	- RDSClient.DBShardGroups
 	*	- RDSClient.DBSnapshotAttributes
 	*	- RDSClient.DBSnapshotTenantDatabases
 	*	- RDSClient.DBSnapshots
@@ -626,6 +627,7 @@
 	*	- CodeBuildClient.Builds
 	*	- CodeBuildClient.BuildsForProject
 	*	- CodeBuildClient.CuratedEnvironmentImages
+	*	- CodeBuildClient.Fleets
 	*	- CodeBuildClient.Projects
 	*	- CodeBuildClient.ReportGroups
 	*	- CodeBuildClient.Reports
@@ -962,6 +964,7 @@
 	*	- CloudTrailClient.EventDataStores
 	*	- CloudTrailClient.ImportFailures
 	*	- CloudTrailClient.Imports
+	*	- CloudTrailClient.InsightsMetricData
 	*	- CloudTrailClient.PublicKeys
 	*	- CloudTrailClient.Queries
 	*	- CloudTrailClient.Tags

@@ -920,3 +920,20 @@ Kexa/__tests__/rules/test3/rule-test.yaml was changed
 package-lock.json was changed
 
 
+## 1.12.2-SNAPSHOT.30.2d3d2cb
+
+### Files added: 1
+
+Kexa/rules/rules-with-var.yaml was added
+
+### Files changed: 4
+
+Kexa/rules/rules-with-var.yaml was changed
+
+.github/ISSUE_TEMPLATE/bug_report.md was changed
+
+.github/ISSUE_TEMPLATE/feature_request.md was changed
+
+package-lock.json was changed
+
+
