@@ -78,21 +78,36 @@ Run it and get all the available optimizations with the different notification t
 
 With Kexa, you can [edit your own rules](documentation/Documentation-Kexa.md#rules-fields) and retrieve rules or even addons [built by the community](documentation/Documentation-Kexa.md#community-addons).
 
-### Built With
+## Built With
 
 * [![NODE][NODE-shield]](https://nodejs.org/fr)
+
+## Runnable in
+
+* [![Scripts][TS-shield]](#by-local-script)
+* [![Kubernetes][KUB-shield]](documentation/Documentation-Kexa.md#kubernetes-1)
+* [![Docker][DOCKER-shield]](documentation/Documentation-Kexa.md#docker)
+* [![Github Action][GITACT-shield]](https://github.com/4urcloud/Kexa_githubAction)
+* [![Azure Function][AZURE-shield]](documentation/Documentation-Kexa.md#azure-function)
 
 # <div align="center" id="quick-launch">**Quick Launch**</div>
 <br/>
 
-For a quick launch, we're going to use docker. If you can't use docker you can refer to [this documention](documentation/Documentation-Kexa.md) to try Kexa. However, we have a powershell script to initialize all resources and credentials if you want to get Kexa up and running quickly such as :
+If you want a complet installation detail, you can refer to [this documention](documentation/Documentation-Kexa.md#how-to-launch-kexa)
 
-- Windows:
+## By local script
+
+A script to initialize all resources and credentials if you want to get Kexa up and running quickly such as :
+
+* Windows:
+
   ```powershell
   Invoke-WebRequest -Uri "https://raw.githubusercontent.com/4urcloud/Kexa/dev/initKexa.ps1" -OutFile "./initKexa.ps1"; & "./initKexa.ps1" -d -c
   #answer all question to setup
   ```
-- Linux:
+
+* Linux:
+
   ```bash
   curl -sSL https://raw.githubusercontent.com/4urcloud/Kexa/main/initKexa.sh -o initKexa.sh && chmod +x initKexa.sh && ./initKexa.sh -d -c
   #answer all question to setup
@@ -105,6 +120,8 @@ then:
 npm i
 npm run start
 ```
+
+## By docker
 
 From any folder, create a folder called "config" and create a "default.json" file inside this folder. This file will be populated according to the provider you want to test, as follows.
 
@@ -5556,3 +5573,10 @@ Public site: 
 [license-shield]: https://img.shields.io/github/license/4urcloud/Kexa.svg?style=for-the-badge
 [license-url]: https://github.com/4urcloud/Kexa/blob/master/LICENSE.txt
 [NODE-shield]: https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white
+[KUB-shield]: https://img.shields.io/badge/kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white
+[DOCKER-shield]: https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
+[GITACT-shield]: https://img.shields.io/badge/githubactions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white
+[TS-shield]: https://img.shields.io/badge/local_with_typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white
+[AZURE-shield]: https://img.shields.io/badge/azure_functions-0062AD?style=for-the-badge&logo=azurefunctions&logoColor=white
+[AWS-shield]: https://img.shields.io/badge/aws_lambda-FF9900?style=for-the-badge&logo=awslambda&logoColor=white
+[GCP-shield]: https://img.shields.io/badge/cloud_function-4285F4?style=for-the-badge&logo=googlecloud&logoColor=white
