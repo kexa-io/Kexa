@@ -937,3 +937,100 @@ Kexa/rules/rules-with-var.yaml was changed
 package-lock.json was changed
 
 
+## 1.12.2-SNAPSHOT.33.8b1176f
+
+### Files added: 10
+
+.github/ISSUE_TEMPLATE/bug_report.md was added
+
+.github/ISSUE_TEMPLATE/feature_request.md was added
+
+CODE_OF_CONDUCT.md was added
+
+CONTRIBUTING.md was added
+
+Kexa/rules/awsSetRules.yaml was added
+
+Kexa/rules/rules-with-var.yaml was added
+
+Kexa/services/addOn/imports/awsPackage.import.ts was added
+
+Kexa/services/addOn/imports/scripts/awsPackageInstall.script.sh was added
+
+Kexa/services/addOn/imports/scripts/azurePackageInstall.script.sh was added
+
+SECURITY.md was added
+
+### Files changed: 35
+
+.github/ISSUE_TEMPLATE/bug_report.md was changed
+
+.github/ISSUE_TEMPLATE/feature_request.md was changed
+
+CODE_OF_CONDUCT.md was changed
+
+CONTRIBUTING.md was changed
+
+Kexa/rules/awsSetRules.yaml was changed
+
+Kexa/rules/rules-with-var.yaml was changed
+
+Kexa/services/addOn/imports/awsPackage.import.ts was changed
+
+Kexa/services/addOn/imports/scripts/awsPackageInstall.script.sh was changed
+
+Kexa/services/addOn/imports/scripts/azurePackageInstall.script.sh was changed
+
+SECURITY.md was changed
+
+.github/workflows/ci.yml was changed
+
+CHANGELOG.md was changed
+
+Kexa/__tests__/rules/test1/rule-test.yaml was changed
+
+Kexa/__tests__/rules/test2/rule-test.yaml was changed
+
+Kexa/__tests__/rules/test2/rule-test2.yaml was changed
+
+Kexa/__tests__/rules/test3/rule-test.yaml was changed
+
+Kexa/models/aws/config.models.ts was changed
+
+Kexa/models/aws/ressource.models.ts was changed
+
+Kexa/rules/Economy.yaml was changed
+
+Kexa/rules/OperationalExcellence.yaml was changed
+
+Kexa/rules/Security.yaml was changed
+
+Kexa/rules/rulesByProvider/awsSetRules.yaml was changed
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/display/awsDisplay.service.ts was changed
+
+Kexa/services/addOn/imports/azurePackage.import.ts was changed
+
+Kexa/services/addOn/save/amazonS3Save.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+Kexa/services/manageVarEnvironnement.service.ts was changed
+
+Kexa/services/updateCapability.service.ts was changed
+
+README.md was changed
+
+VERSION was changed
+
+capacity.json was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
