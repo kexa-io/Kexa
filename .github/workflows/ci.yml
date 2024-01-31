@@ -1,10 +1,10 @@
 name: cicd
 
 on:
-  #push:
-  #  branches:
+  push:
+    branches:
   #    - main
-  #    - dev
+      - dev
   pull_request:
     branches:
       - main
