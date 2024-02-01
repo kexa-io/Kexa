@@ -1034,3 +1034,22 @@ package-lock.json was changed
 package.json was changed
 
 
+## 1.12.2-SNAPSHOT.40.a175873
+
+### Files added: 0
+
+### Files changed: 6
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/updateCapability.service.ts was changed
+
+capacity.json was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+

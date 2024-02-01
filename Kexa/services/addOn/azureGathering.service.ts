@@ -1884,10 +1884,12 @@ async function listAllResources(client: any, currentConfig: any) {
                         }
                         const keyStr = key as string;
                         const toExec = "resourcesClient." + (key as string) + "." + method + "()";
-                        logger.trace("To exec: " + toExec);
+                        logger.debug("To exec: " + toExec);
                         let resultObject: any[] = [];
                         try {
-							for await (let item of resource[method]()) {
+							const resourceMethodResult = await resource[method]();
+    
+							for await (let item of resourceMethodResult) {
 								item = addingResourceGroups(item);
 								resultObject.push(item);
 							}
@@ -1910,7 +1912,6 @@ async function listAllResources(client: any, currentConfig: any) {
         }
 		return Promise.resolve();
     });
-
     await Promise.all(promises);
     return resultList;
 }
@@ -2112,7 +2113,6 @@ async function listAllBlob(client:StorageManagementClient, credentials: any): Pr
     logger.info("starting listAllBlob");
     try {
         const resultList = new Array<ResourceGroup>;
-        console.log("storage :", test);
         for await (let item of client.storageAccounts.list()){
             resultList.push(item);
             const blobServiceClient = new BlobServiceClient(
@@ -2120,9 +2120,7 @@ async function listAllBlob(client:StorageManagementClient, credentials: any): Pr
                 credentials
             );
             for await (const container of blobServiceClient.listContainers()) {
-                console.log(`Container: ${container.name}`);
                 for await (const blob of blobServiceClient.getContainerClient(container.name).listBlobsFlat()) {
-                    console.log(` - Blob: ${blob.name}`);
                     // Process each blob as needed
                 }
             }
