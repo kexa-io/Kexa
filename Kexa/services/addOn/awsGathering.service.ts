@@ -4799,13 +4799,6 @@
 	*	- CommanderClient.ResponsePlans
 	*	- CommanderClient.TagsForResource
 	*	- CommanderClient.TimelineEvents
-	*	- KexaAzure.vm
-	*	- KexaAzure.mlWorkspaces
-	*	- KexaAzure.mlJobs
-	*	- KexaAzure.mlComputes
-	*	- KexaAzure.mlSchedules
-	*	- KexaAzure.storage
-	*	- KexaAzure.blob
 	*	- KexaAwsCustoms.tagsValueListing
 */
 
