@@ -413,7 +413,7 @@ export function extractObjectsOrFunctionsAws(module: any, isObject: Boolean): Aw
 
     /* Start and End string to match for extract client listing functions */
     /* You can edit those as you wish, addind as much startStrings as you want */ 
-    const startStrings =  ["List", "Describe"];
+    const startStrings =  ["Get", "List", "Describe"];
     const endString = "Command";
 
     let clientName;
@@ -482,6 +482,8 @@ async function fileReplaceContentAws(inputFilePath: string, outputFilePath: stri
     }
 }
 
+import {stringKeys as AwsCustomObjects} from "../models/aws/ressource.models";
+
 function generateResourceListAws(resources: AzureClients): string {
     let concatedArray: string[] = [];
 
@@ -492,13 +494,10 @@ function generateResourceListAws(resources: AzureClients): string {
     })
  
     displayTotalGatheredMessage("Aws", concatedArray.length);
-    for (const key of stringKeys)
-        concatedArray.push(key.toString());
     const resourceList = concatedArray.map(line => `\t*\t- ${line}`).join('\n');
     return `${resourceList}`;
 }
 
-import {stringKeys as AwsCustomObjects} from "../models/aws/ressource.models";
 
 function generateCustomResourceListAws(): string {
     const resourceList = AwsCustomObjects.map((line: String) => `\t*\t- ${line}`).join('\n');
