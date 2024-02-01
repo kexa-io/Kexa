@@ -516,7 +516,7 @@
         "typescript": "^4.9.5"
     },
     "name": "Kexa",
-    "version": "1.12.2-SNAPSHOT.40.a175873",
+    "version": "1.12.2-SNAPSHOT.44.d9a12a1",
     "main": "./build/index.js",
     "scripts": {
         "postinstall": "node-config-ts",
