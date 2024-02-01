@@ -35,10 +35,11 @@ export function updateREADME(){
     const tab = "    ";
     let goal = "\n\n"
     Object.keys(capacityJson).forEach((key: string) => {
-        goal += `- ✅ ${key.charAt(0).toUpperCase() + key.slice(1)} check in:\n`
+        goal += `<details>\n<summary>✅ ${key.charAt(0).toUpperCase() + key.slice(1)} check in:</summary>\n\n`
         capacityJson[key]["resources"].forEach((resource: string) => {
-            goal += `${tab}- ✅ ${resource}\n`
+            goal += `- ✅ ${resource}\n`
         });
+        goal += `</details>\n`
     });
     readme = readme.split("<div class='spliter_code'></div>")
     readme[1] = goal + "\n";
