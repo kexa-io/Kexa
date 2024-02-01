@@ -65,7 +65,7 @@
       applied: true
       level: 2
       cloudProvider: aws
-      objectName: ec2Volume
+      objectName: EC2Client.Volumes
       conditions:
         - property: CreateTime
           condition: DATE_INF
@@ -76,7 +76,7 @@
       applied: true
       level: 1
       cloudProvider: aws
-      objectName: tagsValue
+      objectName: KexaAwsCustoms.tagsValueListing
       conditions:
         - property: name
           condition: REGEX

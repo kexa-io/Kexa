@@ -56,7 +56,7 @@
       applied: false
       level: 1
       cloudProvider: aws
-      objectName: ec2Instance
+      objectName: EC2Client.Instances
       conditions:
         - property: PublicIpAddress
           condition: EQUAL
@@ -66,7 +66,7 @@
       applied: false
       level: 1
       cloudProvider: aws
-      objectName: ec2Volume
+      objectName: EC2Client.Volumes
       conditions:
         - property: Attachments
           condition: COUNT_SUP
@@ -76,7 +76,7 @@
       applied: false
       level: 1
       cloudProvider: aws
-      objectName: ec2Instance
+      objectName: EC2Client.Instances
       conditions:
         - operator: NAND
           criteria:
@@ -91,7 +91,7 @@
       applied: false
       level: 1
       cloudProvider: aws
-      objectName: ec2SG
+      objectName: EC2Client.SecurityGroups
       conditions:
         - property: IpPermissions
           condition: ALL
@@ -104,7 +104,7 @@
       applied: false
       level: 1
       cloudProvider: aws
-      objectName: ec2SG
+      objectName: EC2Client.SecurityGroups
       conditions:
         - property: IpPermissions
           condition: ALL

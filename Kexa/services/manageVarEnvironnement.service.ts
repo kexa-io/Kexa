@@ -1,7 +1,5 @@
 import axios from "axios";
 
-const AWS = require('aws-sdk');
-
 import {getNewLogger} from "./logger.service";
 const logger = getNewLogger("KubernetesLogger");
 
@@ -40,34 +38,29 @@ async function getEnvVarWithAzureKeyVault(name:string){
 }
 
 function possibleWithAwsSecretManager(){
-    return (Boolean(process.env.AWS_SECRET_NAME));
+    return (Boolean(process.env.AWS_SECRET_NAME && process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY));
 }
 
-import { Credentials, SharedIniFileCredentials } from "aws-sdk";
+
+import { fromNodeProviderChain } from "@aws-sdk/credential-providers";
+import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-secrets-manager";
+
 async function getEnvVarWithAwsSecretManager(name:string){
-    let awsKeyId = process.env.AWS_ACCESS_KEY_ID;
-    let awsSecretKey = process.env.AWS_SECRET_ACCESS_KEY;
-    let credentials: Credentials = new SharedIniFileCredentials({profile: 'default'});
-    if(awsKeyId && awsSecretKey){
-        credentials = new Credentials({
-            accessKeyId: awsKeyId,
-            secretAccessKey: awsSecretKey
-        });
-    }
-    const secretsmanager = new AWS.SecretsManager({credentials});
+
+    const credentials = fromNodeProviderChain();
+    
+    const secretsmanager = new SecretsManagerClient({credentials});
     const secName = process.env.AWS_SECRET_NAME;
-    const params = { SecretId: secName };
-    secretsmanager.getSecretValue(params, function(err : any, data : any) {
-        if (err) {
-            console.log("Error when looking for AWS secrets");
-            console.log(err, err.stack); // an error occurred
-        }
-        else {
-            const secretData = JSON.parse(data.SecretString);
-            const value = secretData[name];
-            return (value);
-        }
-    });
+
+    try {
+        const input = { SecretId: secName };
+        const data = await secretsmanager.send(new GetSecretValueCommand(input));
+        const secretData = JSON.parse(JSON.stringify(data.SecretString));
+        const value = secretData[name];
+        return (value);
+    } catch (e) {
+        console.error("Error fetching secret from AWS");
+    }
 }
 
 function possibleWithHashipcorpVault() {

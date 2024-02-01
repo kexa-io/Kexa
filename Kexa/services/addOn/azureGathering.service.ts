@@ -1715,7 +1715,6 @@
 
 
 import {ComputeManagementClient, VirtualMachine} from "@azure/arm-compute";
-import { ServiceClient } from "@azure/core-client";
 import * as AzureImports from "./imports/azurePackage.import";
 
 let allClients: AzureClients = {};
@@ -1741,9 +1740,6 @@ function extractClients(module: any): AzureClients {
 	return clients;
 }
 
-import { 
-    NetworkSecurityGroup
-} from "@azure/arm-network";
 import { ResourceManagementClient , ResourceGroup } from "@azure/arm-resources";
 import { MonitorClient } from "@azure/arm-monitor";
 import {StorageAccount, StorageManagementClient} from "@azure/arm-storage";
@@ -1755,14 +1751,12 @@ const clientConstructors: Record<string, any> = {
 Object.assign(clientConstructors, allClients);
 
 
-import * as ckiNetworkSecurityClass from "../../class/azure/ckiNetworkSecurityGroup.class";
 import { DefaultAzureCredential } from "@azure/identity";
 import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
 import { AzureConfig } from "../../models/azure/config.models";
 import axios from "axios";
 
 import {getContext, getNewLogger} from "../logger.service";
-import { Logger } from "azure";
 const logger = getNewLogger("AzureLogger");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1819,8 +1813,6 @@ async function collectAuto(credential: any, subscriptionId: any, config: AzureCo
 		[key: string]: any;
 	}
 	const azureRet: AzureRet = {};
-	logger.debug("allClients: ");
-	logger.debug(allClients);
 	for (const clientService in allClients) {
 		const constructor = clientConstructors[clientService];
 		const clientName = constructor.name;
@@ -1892,11 +1884,12 @@ async function listAllResources(client: any, currentConfig: any) {
                         }
                         const keyStr = key as string;
                         const toExec = "resourcesClient." + (key as string) + "." + method + "()";
-                        logger.trace("To exec: " + toExec);
+                        logger.debug("To exec: " + toExec);
                         let resultObject: any[] = [];
                         try {
-                            //resultObject = await resource[method]();
-							for await (let item of resource[method]()) {
+							const resourceMethodResult = await resource[method]();
+    
+							for await (let item of resourceMethodResult) {
 								item = addingResourceGroups(item);
 								resultObject.push(item);
 							}
@@ -1919,7 +1912,6 @@ async function listAllResources(client: any, currentConfig: any) {
         }
 		return Promise.resolve();
     });
-
     await Promise.all(promises);
     return resultList;
 }
@@ -1944,7 +1936,7 @@ interface FunctionMap {
 const customGatherFunctions: FunctionMap = {
 
     'KexaAzure.vm': async (name: string, credential: any, subscriptionId: any) => {
-        logger.info("Starting " + name + " listing...");
+        logger.debug("Starting " + name + " listing...");
 
 		try {
 			const computeClient = new ComputeManagementClient(credential, subscriptionId);
@@ -1957,7 +1949,8 @@ const customGatherFunctions: FunctionMap = {
     },
 
     'KexaAzure.mlWorkspaces': async (name: string, credential: any, subscriptionId: any) => {
-        logger.info("Starting " + name + " listing...");
+        logger.debug("Starting " + name + " listing...");
+
 
 		try {
 			const mlClient = new AzureMachineLearningWorkspaces(credential, subscriptionId);
@@ -1969,7 +1962,8 @@ const customGatherFunctions: FunctionMap = {
     },
 
 	'KexaAzure.mlJobs': async (name: string, credential: any, subscriptionId: any) => {
-        logger.info("Starting " + name + " listing...");
+        logger.debug("Starting " + name + " listing...");
+
 
 		try {
 			const mlClient = new AzureMachineLearningWorkspaces(credential, subscriptionId);
@@ -1982,7 +1976,8 @@ const customGatherFunctions: FunctionMap = {
     },
 
 	'KexaAzure.mlComputes': async (name: string, credential: any, subscriptionId: any) => {
-        logger.info("Starting " + name + " listing...");
+        logger.debug("Starting " + name + " listing...");
+
 
 		try {
 			const mlClient = new AzureMachineLearningWorkspaces(credential, subscriptionId);
@@ -1995,7 +1990,8 @@ const customGatherFunctions: FunctionMap = {
     },
 
 	'KexaAzure.mlSchedules': async (name: string, credential: any, subscriptionId: any) => {
-        logger.info("Starting " + name + " listing...");
+        logger.debug("Starting " + name + " listing...");
+
 		try {
 			const mlClient = new AzureMachineLearningWorkspaces(credential, subscriptionId);
 			let workspaces = await workspacesListing(mlClient);
@@ -2007,12 +2003,13 @@ const customGatherFunctions: FunctionMap = {
     },
 
 	'KexaAzure.storage': (name: string, credential: any, subscriptionId: any) => {
-        logger.info("Starting " + name + " listing...");
+        logger.debug("Starting " + name + " listing...");
+
 		return [];
     },
 
 	'KexaAzure.blob': (name: string, credential: any, subscriptionId: any) => {
-        logger.info("Starting " + name + " listing...");
+        logger.debug("Starting " + name + " listing...");
 		//listAllBlob();
 		return [];
     },
@@ -2116,7 +2113,6 @@ async function listAllBlob(client:StorageManagementClient, credentials: any): Pr
     logger.info("starting listAllBlob");
     try {
         const resultList = new Array<ResourceGroup>;
-        console.log("storage :", test);
         for await (let item of client.storageAccounts.list()){
             resultList.push(item);
             const blobServiceClient = new BlobServiceClient(
@@ -2124,9 +2120,7 @@ async function listAllBlob(client:StorageManagementClient, credentials: any): Pr
                 credentials
             );
             for await (const container of blobServiceClient.listContainers()) {
-                console.log(`Container: ${container.name}`);
                 for await (const blob of blobServiceClient.getContainerClient(container.name).listBlobsFlat()) {
-                    console.log(` - Blob: ${blob.name}`);
                     // Process each blob as needed
                 }
             }

@@ -24,10 +24,10 @@ describe('Update Capability Service', () => {
         const readme = fs.readFileSync('./README.md', 'utf8');
         const tab = '    ';
         Object.keys(capacityJson).forEach((key: string) => {
-            let sentence = `- ✅ ${key.charAt(0).toUpperCase() + key.slice(1)} check in:\n`;
+            let sentence = `<details>\n<summary>✅ ${key.charAt(0).toUpperCase() + key.slice(1)} check in:</summary>\n\n`;
             expect((readme.match(new RegExp(sentence, "g")) || []).length).to.equal(1);
             capacityJson[key]['resources'].forEach((resource: string) => {
-                sentence = `${tab}- ✅ ${resource}\n`
+                sentence = `- ✅ ${resource}\n`
                 expect(readme.match(new RegExp(sentence, "g")) || []).not.to.be.empty;
             });
         });

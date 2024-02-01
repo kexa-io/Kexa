@@ -789,6 +789,7 @@ In our example "toto" :
 #### Use
 
 The use of a variable can vary, depending on whether you want to use it as a value or as a block.
+The values of the variable must be fill in the [configuration file](#advanced-configurations)
 
 - Use as a value:
   You can insert the name of your variable preceded by an asterisk, anywhere you'd put a conventional value.
@@ -806,7 +807,7 @@ The use of a variable can vary, depending on whether you want to use it as a val
         cloudProvider: XXXX 
         objectName : YYYY
         conditions:
-          -	property : name
+          - property : name
             condition : EQUAL
             value : *toto
   ```
@@ -840,9 +841,6 @@ The use of a variable can vary, depending on whether you want to use it as a val
             condition : EQUAL
             value : B
   ```
-
-
-The values of the variable must be fill in the [configuration file](#advanced-configurations)
 
 
 <br/>
