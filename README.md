@@ -1408,7 +1408,6 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ RDSClient.DBProxyTargets
 - ✅ RDSClient.DBRecommendations
 - ✅ RDSClient.DBSecurityGroups
-- ✅ RDSClient.DBShardGroups
 - ✅ RDSClient.DBSnapshotAttributes
 - ✅ RDSClient.DBSnapshotTenantDatabases
 - ✅ RDSClient.DBSnapshots
@@ -1440,7 +1439,6 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ CodeBuildClient.Builds
 - ✅ CodeBuildClient.BuildsForProject
 - ✅ CodeBuildClient.CuratedEnvironmentImages
-- ✅ CodeBuildClient.Fleets
 - ✅ CodeBuildClient.Projects
 - ✅ CodeBuildClient.ReportGroups
 - ✅ CodeBuildClient.Reports
@@ -1976,7 +1974,6 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ CloudTrailClient.EventDataStores
 - ✅ CloudTrailClient.ImportFailures
 - ✅ CloudTrailClient.Imports
-- ✅ CloudTrailClient.InsightsMetricData
 - ✅ CloudTrailClient.PublicKeys
 - ✅ CloudTrailClient.Queries
 - ✅ CloudTrailClient.Tags
