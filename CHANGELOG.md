@@ -1154,3 +1154,12 @@ package-lock.json was changed
 package.json was changed
 
 
+## 1.12.2-SNAPSHOT.47.98d29cd
+
+### Files added: 0
+
+### Files changed: 1
+
+documentation/Documentation-Kexa.md was changed
+
+
