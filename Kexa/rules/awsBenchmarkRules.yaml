@@ -1,0 +1,197 @@
+- version: 1.0.0
+  date: 07-18-2023
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      to: 
+        #- http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    # rules to validate
+    - name: "aws-acceskey-rotate-time-limit"
+      description: "this rule is to check if an access key as exceeded the rotate time limit"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.AccessKeys
+      conditions:
+        - property: CreateDate
+          condition: DATE_INF
+          value: 0 0 0 0 0 1 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    # not possible yet
+    - name: "aws-acceskey-only-one-per-user"
+      description: "this rule is to check if there is maximum one accesskey per user"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.AccessKeys
+      conditions:
+        - property: .
+          condition: ONE
+          value:
+            - property: UserName
+              condition: EQUAL
+    # to test
+    - name: "aws-mfa-active-for-user"
+      description: "this rule is to check if mfa is active for user"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.MFADevices
+      conditions:
+        - property: CreateDate
+          condition: DATE_INF
+          value: 0 0 0 0 0 2 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    # ok
+    - name: "aws-iam-password-length"
+      description: "this rule is to check if password policy require a 14 character password length"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.AccountPasswordPolicy
+      conditions:
+        - property: MinimumPasswordLength
+          condition: SUP_OR_EQUAL
+          value: 14
+    # ok
+    - name: "aws-iam-password-reuse-prevention"
+      description: "this rule is to check if password policy remember at least the last 24 used passwords"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.AccountPasswordPolicy
+      conditions:
+        - property: PasswordReusePrevention
+          condition: SUP_OR_EQUAL
+          value: 24
+    # ok
+    - name: "aws-iam-password-max-age-policy"
+      description: "this rule is to check if maximum age policy is set for the users passwords"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.AccountPasswordPolicy
+      conditions:
+        - property: MaxPasswordAge
+          condition: INF_OR_EQUAL
+          value: 90
+    # ok
+    - name: "aws-iam-accesskey-last-used"
+      description: "this rule is to check for acceskeys unused for 1 month"
+      applied: false
+      level: 0
+      cloudProvider: aws
+      objectName: IAMClient.AccessKeyLastUsed
+      conditions:
+        - property: AccessKeyLastUsed.LastUsedDate
+          condition: DATE_INF
+          value: 0 0 0 0 0 1 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    # ok
+    - name: "aws-verify-no-user-attached-policy"
+      description: "Policies should be attached to group and user to a group."
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.AttachedUserPolicies
+      conditions:
+        - property: AttachedPolicies
+          condition: COUNT_SUP
+          value: 0
+        
+    # check if error when mfa is not activate for root
+    - name: "aws-iam-virtuel-mfa-enable-root-account"
+      description: "this rule is to check if mfa is enable for root account"
+      applied: false
+      level: 0
+      cloudProvider: aws
+      objectName: IAMClient.VirtualMFADevices
+      conditions:
+        - operator: NAND
+          criteria:
+            - property: SerialNumber
+              condition: REGEX
+              value: '\broot-account-mfa-device\b'
+            - property: EnableDate
+              condition: EQUAL
+              value: NULL
+
+    # no rule yet but interesting objects
+    - name: "aws-summary"
+      description: "this rule is to check if mfa is active for user"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.GroupPolicies
+      conditions:
+        - property: CreateDate
+          condition: DATE_INF
+          value: 0 0 0 0 0 2 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    - name: "aws-summary"
+      description: "this rule is to check if mfa is active for user"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.AccountSummary
+      conditions:
+        - property: CreateDate
+          condition: DATE_INF
+          value: 0 0 0 0 0 2 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    - name: "aws-summary"
+      description: "this rule is to check if mfa is active for user"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.AttachedRolePolicies
+      conditions:
+        - property: CreateDate
+          condition: DATE_INF
+          value: 0 0 0 0 0 2 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
