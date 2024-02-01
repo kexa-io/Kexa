@@ -4948,11 +4948,13 @@ let awsGatherDependencies = [
 			{ 
 				name: "Users",
 				toSend: "UserName",
+				toFill: "UserName",
 				results: {}
 			}, 
 			{ 
 				name: "Groups",
 				toSend: "GroupName",
+				toFill: "GroupName",
 				results: {}
 			}
 		],
@@ -5084,43 +5086,37 @@ async function collectAuto(credential: any, region: string) {
 	/* ------------------------- */
 	/* HERE GET THE DEPENDENCIES */
 	/* ------------------------- */
-    if (awsGatherDependencies) {
-        for (const dependence of awsGatherDependencies) {
-            if (Array.isArray(dependence.functions)) {
-                for (let i = 0; i < dependence.functions.length; i++) {
-                    const func = dependence.functions[i];
-                    dependence.objects.forEach(async (element: any) => {
-                        if (element.name == func.objectName) {
-                            const input = {};
-                            const command = new func.objectFunc(input);
-                            const client = new func.clientFunc({ region: region, credentials: credential });
-                            let data: Record<string, any> = {};
-                            try {
-                                data = await client.send(command);
-                                element.results = data[func.objectName];
-                            } catch (e) {
-                                console.log("Error when retrieving resources dependencies from : " + func.clientName + "." + func.objectName);
-                            }
-                        }
-                    });
-                }
-            }
-        }
-    }
-	/*for (const iamCmd of iamClientGlobalForRegion) {
-		if (iamCmd.objectName == "Users") {
-			const input = {};
-			const command = new iamCmd.objectFunc(input);
-			const client = new iamCmd.clientFunc({region: region, credentials: credential});
-			let data: Record<string, any> = {};
-			try {
-				 data = await client.send(command);
-				 iamUsers = data[iamCmd.objectName];
-			} catch (e) {
-				logger.warn("Error when retrieving resources dependencies from : " + iamCmd.clientName + "." + iamCmd.objectName);
+	if (awsGatherDependencies) {
+		const promises: Promise<void>[] = [];
+	
+		for (const dependence of awsGatherDependencies) {
+			if (Array.isArray(dependence.functions)) {
+				for (let i = 0; i < dependence.functions.length; i++) {
+					const func = dependence.functions[i];
+					dependence.objects.forEach(async (element: any) => {
+						if (element.name == func.objectName) {
+							const input = {};
+							const command = new func.objectFunc(input);
+							const client = new func.clientFunc({ region: region, credentials: credential });
+							let data: Record<string, any> = {};
+							
+							const promise = (async () => {
+								try {
+									data = await client.send(command);
+									element.results = data[func.objectName];
+								} catch (e) {
+									logger.warn("Error when retrieving resources dependencies from : " + func.clientName + "." + func.objectName);
+								}
+							})();
+	
+							promises.push(promise);
+						}
+					});
+				}
 			}
 		}
-	}*/
+		await Promise.all(promises);
+	}
 
 	/* ------------------------- */
 	/*   AFTER GET DEPENDENCIES  */
@@ -5141,6 +5137,8 @@ function gatherDependenciesResources(credential: any, region:string, object: Cli
 
 async function gatherAwsObject(credential: any, region:string, object: ClientResultsInterface) {
 
+	let alreadyStructured = false;
+	let customJsonObjectBef;
   	if(!currentConfig.ObjectNameNeed?.includes(object.clientName + "." + object.objectName)) return null;
 	try {
 
@@ -5160,74 +5158,69 @@ async function gatherAwsObject(credential: any, region:string, object: ClientRes
 		} catch (e) {
 			if (e instanceof Error) {
 				const error = e;
-
-				awsGatherDependencies.forEach(async (dependence: any) => {
+			
+				for (const dependence of awsGatherDependencies) {
 					if (dependence.matchingError == error.constructor.name) {
-						console.log("Matched for :" + error.constructor.name);
-						for (const obj of dependence.objects) {
-							console.log("try with:" + obj.name);
-							let promises;
+						let promises = [];
+						for (const obj of dependence.objects) {			
 							if (Array.isArray(obj.results)) {
-								promises = obj.results.map(async (objToTest: any) => {
-									console.log(objToTest[obj.toSend]);
+								const objPromises = obj.results.map(async (objToTest: any) => {
 									try {
-										const input = { [obj.toSend]: objToTest[obj.toSend] };
+										const input = { [obj.toFill]: objToTest[obj.toSend] };
 										const command = new object.objectFunc(input);
 										const result = await client.send(command);
 										result[obj.toSend] = objToTest[obj.toSend];
 										results2.push(result);
 									} catch (e2) {
-										logger.warn("Cannot retrieve resource with unknown dependencies");
+										logger.debug("Cannot retrieve resource with unknown dependencies");
+										logger.trace(e2);
 									}
 								});
+								promises.push(...objPromises);
 							}
-							if (promises) {
-								await Promise.all(promises);
-							}
-							console.log(results2);
-/*							try {
-								const input = { UserName: user.UserName };
-								const command = new object.objectFunc(input);
-								const result = await client.send(command);
-								result.UserName = user.UserName;
-								results2.push(result);
-							} catch (e2) {
-								logger.warn("Cannot retrieve resource with unknow dependencies", e2);
-							}*/
 						}
-					}
-				})
-				/*if (e.constructor.name == awsGatherDependencies.'IAMServiceException') {
-					for (const user of iamUsers) {
-						try {
-							const input = { UserName: user.UserName };
-							const command = new object.objectFunc(input);
-							const result = await client.send(command);
-							result.UserName = user.UserName;
-							results2.push(result);
-						} catch (e2) {
-							logger.warn("Cannot retrieve resource with unknow dependencies", e2);
+			
+						if (promises.length > 0) {
+							await Promise.all(promises);
 						}
+				// OLD PLACEMENT LOG AND ASSIgn
 					}
-					data = { retrievingFullName: results2 };
-				}*/
-			} 
+				}
+				customJsonObjectBef = {
+					[object.clientName + "." + object.objectName]: results2
+				  };
+				alreadyStructured = true;
+				data = results2;
+				// SET IN OBJECT WITH NAME AND SKIP THE FOLLOWING 
+			}
+			 
 		}
 
 		let jsonData;
 
+		if (alreadyStructured)
+			return (customJsonObjectBef);
+
 		Object.keys(data).forEach((key) => {
 			if (Object.keys(data).length == 2 && key != "$metadata") {
-				if (Array.isArray(data[key])) {
-					jsonData = JSON.parse(JSON.stringify(data[key]));
-				}
-				else {
-					jsonData = JSON.parse(JSON.stringify([data[key]]));
+				try {
+					if (Array.isArray(data[key])) {
+						jsonData = JSON.parse(JSON.stringify(data[key]));
+					}
+					else {
+						jsonData = JSON.parse(JSON.stringify([data[key]]));
+					}
+				} catch (e) {
+					jsonData = [];
 				}
 			}
 			else if ((key != "$metadata") && (key != "NextToken")) {
-				if (Array.isArray(data[key])) {
-					jsonData = JSON.parse(JSON.stringify(data[key]));
+				try {
+					if (Array.isArray(data[key])) {
+						jsonData = JSON.parse(JSON.stringify(data[key]));
+					}
+				} catch (e) {
+					jsonData = [];
 				}
 			}
 		});
