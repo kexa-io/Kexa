@@ -495,7 +495,7 @@
         "mongoose": "^8.0.3",
         "mysql2": "^3.7.0",
         "node-config-ts": "^3.3.1",
-        "nodemailer": "^6.9.3",
+        "nodemailer": "^6.9.9",
         "octokit": "^2.1.0",
         "tslog": "^4.7.1",
         "twilio": "^4.13.0",
