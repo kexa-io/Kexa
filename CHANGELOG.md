@@ -1163,3 +1163,14 @@ package.json was changed
 package-lock.json was changed
 
 
+## 1.13.0-dependabotnpmandyarnnodemailer.50.0cce912
+
+### Files added: 0
+
+### Files changed: 2
+
+package-lock.json was changed
+
+package.json was changed
+
+
