@@ -4850,6 +4850,7 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
             else
                 logger.warn(prefix + "AWS_SECRET_ACCESS_KEY not found");
 
+
             const credentialProvider = fromNodeProviderChain();
 
             const client = new EC2Client({region: "us-east-1", credentials: credentialProvider});
@@ -4935,23 +4936,78 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
 let iamClientGlobalForRegion: any;
 
 let awsGatherDependencies = [
+
+	/* every object define a error to match with dependencies */
+	/* for each object, there is a client and a matching error code, */
+	/* as well as objects that will be retrieve to match missing dependencies */
 	{
+		/* aws sdk client name from awsPackage.import.ts */
 		client: "clientiam",
+
+		/* the list of objects to retrieve and send as dependencies */
 		objects: [
 			{ 
+				/* Name of object to be gathered */
 				name: "Users",
+
+				/* Name of the object result property to be gathered */
+				subGatherName: "Users",
+				
+				/* Name of the field to be sent and where to sent it (toFill) */
 				toSend: "UserName",
 				toFill: "UserName",
+				
+				/* Keep this empty it will be fill at runtime */
 				results: {}
 			}, 
 			{ 
 				name: "Groups",
+				subGatherName: "Groups",
 				toSend: "GroupName",
 				toFill: "GroupName",
 				results: {}
+			},
+			{ 
+				name: "AccessKeys",
+				subGatherName: "AccessKeyMetadata",
+				toSend: "AccessKeyId",
+				toFill: "AccessKeyId",
+				results: {}
+			},
+			{ 
+				name: "Policies",
+				subGatherName: "Policies",
+				toSend: "PolicyName",
+				toFill: "PolicyName",
+				results: {}
+			},
+			{ 
+				name: "Roles",
+				subGatherName: "Roles",
+				toSend: "RoleName",
+				toFill: "RoleName",
+				results: {}
 			}
 		],
+		
+		/* the error code to match */
 		matchingError: "IAMServiceException",
+
+		/* leave this empty, this will be filled at runtime */
+		functions: {}
+	},
+	{
+		client: "clients3",
+		objects: [
+			{ 
+				name: "Buckets",
+				subGatherName: "Buckets",
+				toSend: "Name", // TO SEND IS THE OBJECTS, ADD BOLLEAN VALUE
+				toFill: "Bucket",
+				results: {}
+			}
+		],
+		matchingError: "Error",
 		functions: {}
 	}
 ]
@@ -4963,13 +5019,7 @@ function retrieveAwsClients(): Array<any> {
         const currentItem = (AwsImports as { [key: string]: unknown })[key];
 		const match = awsGatherDependencies.find(dep => dep.client === key);
 		if (match) {
-			// KEY IS A DEPENDENCE
 			match.functions = extractObjectsOrFunctions(currentItem, true);
-			// HERE SUPPRESS USELESS GATHERING FUNCTION
-
-
-			//iamClientGlobalForRegion = null;
-			//iamClientGlobalForRegion = extractObjectsOrFunctions(currentItem, true);			
 		}
 		const clientsFromModule = extractObjectsOrFunctions(currentItem, true);
 		allObjects.push(clientsFromModule);
@@ -4982,8 +5032,6 @@ interface ClientResultsInterface {
 	clientFunc: new (args: any) => any;
 	objectName: string;
 	objectFunc: new (args: any) => any;
-	/*inputFunc: Object;
-	outputFunc: Object;*/
 };
 
 import {extractObjectBetween} from "../updateCapability.service";
@@ -5096,7 +5144,7 @@ async function collectAuto(credential: any, region: string) {
 							const promise = (async () => {
 								try {
 									data = await client.send(command);
-									element.results = data[func.objectName];
+									element.results = data[element.subGatherName];
 								} catch (e) {
 									logger.warn("Error when retrieving resources dependencies from : " + func.clientName + "." + func.objectName);
 								}
@@ -5151,32 +5199,37 @@ async function gatherAwsObject(credential: any, region:string, object: ClientRes
 		} catch (e) {
 			if (e instanceof Error) {
 				const error = e;
-			
 				for (const dependence of awsGatherDependencies) {
 					if (dependence.matchingError == error.constructor.name) {
 						let promises = [];
-						for (const obj of dependence.objects) {			
+						let validated = false;
+						for (const obj of dependence.objects) {
+							if (validated)
+								break;
 							if (Array.isArray(obj.results)) {
 								const objPromises = obj.results.map(async (objToTest: any) => {
 									try {
 										const input = { [obj.toFill]: objToTest[obj.toSend] };
 										const command = new object.objectFunc(input);
 										const result = await client.send(command);
+										if (result) { validated = true; }
 										result[obj.toSend] = objToTest[obj.toSend];
 										results2.push(result);
 									} catch (e2) {
-										logger.debug("Cannot retrieve resource with unknown dependencies");
-										logger.trace(e2);
+										// DISPLAY THIS ERR ONLY IF ALL OBJ SENT FAILED
+										logger.warn("Cannot retrieve resource with unknown dependencies for " + retrievingFullName);
+										logger.debug(e2);
 									}
 								});
 								promises.push(...objPromises);
 							}
 						}
-			
+						if (validated == false) {
+							logger.warn("Cannot retrieve resource with unknown dependencies for " + retrievingFullName);
+						}
 						if (promises.length > 0) {
 							await Promise.all(promises);
 						}
-				// OLD PLACEMENT LOG AND ASSIgn
 					}
 				}
 				customJsonObjectBef = {
@@ -5184,7 +5237,6 @@ async function gatherAwsObject(credential: any, region:string, object: ClientRes
 				  };
 				alreadyStructured = true;
 				data = results2;
-				// SET IN OBJECT WITH NAME AND SKIP THE FOLLOWING 
 			}
 			 
 		}
