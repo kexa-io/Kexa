@@ -1176,3 +1176,12 @@ Kexa/rules/awsBenchmarkRules.yaml was changed
 Kexa/services/addOn/awsGathering.service.ts was changed
 
 
+## 1.12.2-SNAPSHOT.54.145d9f9
+
+### Files added: 0
+
+### Files changed: 1
+
+Kexa/rules/awsBenchmarkRules.yaml was changed
+
+
