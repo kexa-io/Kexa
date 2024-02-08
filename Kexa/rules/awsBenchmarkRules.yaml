@@ -284,7 +284,7 @@
     # ok
     - name: "aws-ec2-instances-not-older-than-180-days"
       description: "ensure no ec2 instances is older than 180 days (6 month)"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: aws
       objectName: EC2Client.Instances
@@ -299,7 +299,7 @@
     # ok
     - name: "aws-ec2-instances-monitoring-enable"
       description: "ensure ec2 instances has monitoring enabled"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: aws
       objectName: EC2Client.Instances
@@ -313,7 +313,7 @@
     # ok
     - name: "aws-ec2-instances-no-default-SG"
       description: "ensure ec2 instances are not linked to the default ec2 SG"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: aws
       objectName: EC2Client.Instances
@@ -330,7 +330,7 @@
     # ok
     - name: "aws-ec2-instances-IMDSv2-enforced"
       description: "ensure IMDSv2 is enforced on all ec2 instances"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: aws
       objectName: EC2Client.Instances
@@ -344,3 +344,14 @@
             - property: MetadataOptions.HttpEndpoint
               condition: EQUAL
               value: 'enabled'
+    # ok
+    - name: "aws-ec2-check-unused-network-interfaces"
+      description: "ensure there is no unused ec2 network interfaces"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.NetworkInterfaces
+      conditions:
+        - property: Status
+          condition: DIFFERENT
+          value: 'available'
