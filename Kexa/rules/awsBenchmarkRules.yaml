@@ -281,3 +281,66 @@
             - property: AttachmentCount
               condition: COUNT_SUP
               value: 0
+    # ok
+    - name: "aws-ec2-instances-not-older-than-180-days"
+      description: "ensure no ec2 instances is older than 180 days (6 month)"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.Instances
+      conditions:
+        - property: Instances
+          condition: ALL
+          value:
+            - property: LaunchTime
+              condition: DATE_INF
+              value: 0 0 0 0 0 6 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    # ok
+    - name: "aws-ec2-instances-monitoring-enable"
+      description: "ensure ec2 instances has monitoring enabled"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.Instances
+      conditions:
+        - property: Instances
+          condition: ALL
+          value:
+            - property: Monitoring.State
+              condition: DIFFERENT
+              value: 'disabled'
+    # ok
+    - name: "aws-ec2-instances-no-default-SG"
+      description: "ensure ec2 instances are not linked to the default ec2 SG"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.Instances
+      conditions:
+        - property: Instances
+          condition: ALL
+          value:
+            - property: SecurityGroups
+              condition: ALL
+              value:
+                - property: GroupName
+                  condition: DIFFERENT
+                  value: 'default'
+    # ok
+    - name: "aws-ec2-instances-IMDSv2-enforced"
+      description: "ensure IMDSv2 is enforced on all ec2 instances"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.Instances
+      conditions:
+        - property: Instances
+          condition: ALL
+          value:
+            - property: MetadataOptions.HttpTokens
+              condition: EQUAL
+              value: 'required'
+            - property: MetadataOptions.HttpEndpoint
+              condition: EQUAL
+              value: 'enabled'
