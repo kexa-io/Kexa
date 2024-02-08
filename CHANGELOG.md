@@ -1163,3 +1163,16 @@ package.json was changed
 documentation/Documentation-Kexa.md was changed
 
 
+## 1.12.2-SNAPSHOT.51.6431447
+
+### Files added: 1
+
+Kexa/rules/awsBenchmarkRules.yaml was added
+
+### Files changed: 2
+
+Kexa/rules/awsBenchmarkRules.yaml was changed
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+
