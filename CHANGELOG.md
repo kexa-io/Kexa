@@ -896,3 +896,10 @@ Kexa/services/addOn/azureGathering.service.ts was changed
 Kexa/services/analyse.service.ts was changed
 
 
+## 1.12.0-devadrienawsauth.64.b3da08c
+
+### Files added: 0
+
+### Files changed: 0
+
+

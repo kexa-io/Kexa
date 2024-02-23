@@ -4795,13 +4795,6 @@
             "CommanderClient.ResponsePlans",
             "CommanderClient.TagsForResource",
             "CommanderClient.TimelineEvents",
-            "KexaAzure.vm",
-            "KexaAzure.mlWorkspaces",
-            "KexaAzure.mlJobs",
-            "KexaAzure.mlComputes",
-            "KexaAzure.mlSchedules",
-            "KexaAzure.storage",
-            "KexaAzure.blob",
             "KexaAwsCustoms.tagsValueListing"
         ],
         "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/1024px-Amazon_Web_Services_Logo.svg.png",
@@ -6516,6 +6509,27 @@
         "documentation": "https://learn.microsoft.com/fr-fr/javascript/api/overview/azure/?view=azure-node-latest",
         "freeRules": [
             {
+                "name": "aks-is-scaleset-down",
+                "description": "check if aks have a scaleSet down",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "azure",
+                "objectName": "ContainerServiceClient.managedClusters",
+                "conditions": [
+                    {
+                        "property": "agentPoolProfiles",
+                        "condition": "ALL",
+                        "value": [
+                            {
+                                "property": "scaleSetEvictionPolicy",
+                                "condition": "EQUAL",
+                                "value": "Delete"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
                 "name": "check-vm-reservation",
                 "description": "check if VM have a reservation",
                 "applied": true,
@@ -6746,27 +6760,6 @@
                         ]
                     }
                 ]
-            },
-            {
-                "name": "aks-is-scaleset-down",
-                "description": "check if aks have a scaleSet down",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "azure",
-                "objectName": "ContainerServiceClient.managedClusters",
-                "conditions": [
-                    {
-                        "property": "agentPoolProfiles",
-                        "condition": "ALL",
-                        "value": [
-                            {
-                                "property": "scaleSetEvictionPolicy",
-                                "condition": "EQUAL",
-                                "value": "Delete"
-                            }
-                        ]
-                    }
-                ]
             }
         ]
     },
@@ -6874,6 +6867,61 @@
             },
             {
                 "name": "git-is-repository-private",
+                "description": "this rules is to check if my git repo is private",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "github",
+                "objectName": "repositories",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "criteria": [
+                            {
+                                "property": "private",
+                                "condition": "EQUAL",
+                                "value": false
+                            },
+                            {
+                                "property": "full_name",
+                                "condition": "EQUAL",
+                                "value": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "git-is-branch-protected",
+                "description": "this rules is to check if my git branch is protected",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "github",
+                "objectName": "branches",
+                "conditions": [
+                    {
+                        "operator": "OR",
+                        "criteria": [
+                            {
+                                "property": "repo",
+                                "condition": "DIFFERENT",
+                                "value": null
+                            },
+                            {
+                                "property": "name",
+                                "condition": "DIFFERENT",
+                                "value": "main"
+                            },
+                            {
+                                "property": "protected",
+                                "condition": "EQUAL",
+                                "value": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "git-is-repository-private",
                 "description": "this rules is to check if git repo is private",
                 "applied": true,
                 "level": 0,
@@ -6939,61 +6987,6 @@
                         "property": "status",
                         "condition": "DIFFERENT",
                         "value": "offline"
-                    }
-                ]
-            },
-            {
-                "name": "git-is-repository-private",
-                "description": "this rules is to check if my git repo is private",
-                "applied": true,
-                "level": 1,
-                "cloudProvider": "github",
-                "objectName": "repositories",
-                "conditions": [
-                    {
-                        "operator": "NAND",
-                        "criteria": [
-                            {
-                                "property": "private",
-                                "condition": "EQUAL",
-                                "value": false
-                            },
-                            {
-                                "property": "full_name",
-                                "condition": "EQUAL",
-                                "value": "4urcloud/Kexa_website"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "git-is-branch-protected",
-                "description": "this rules is to check if my git branch is protected",
-                "applied": true,
-                "level": 1,
-                "cloudProvider": "github",
-                "objectName": "branches",
-                "conditions": [
-                    {
-                        "operator": "OR",
-                        "criteria": [
-                            {
-                                "property": "repo",
-                                "condition": "DIFFERENT",
-                                "value": "Kexa_website"
-                            },
-                            {
-                                "property": "name",
-                                "condition": "DIFFERENT",
-                                "value": "main"
-                            },
-                            {
-                                "property": "protected",
-                                "condition": "EQUAL",
-                                "value": true
-                            }
-                        ]
                     }
                 ]
             }
@@ -7488,6 +7481,62 @@
                 "description": "request date in body",
                 "applied": true,
                 "level": 0,
+                "cloudProvider": "http",
+                "objectName": "request",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "criteria": [
+                            {
+                                "property": "body.date",
+                                "condition": "EQUAL",
+                                "value": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "http-request-certificate",
+                "description": "request certificate",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "http",
+                "objectName": "request",
+                "conditions": [
+                    {
+                        "property": "certificate.issuer.CN",
+                        "condition": "EQUAL",
+                        "value": "Kubernetes Ingress Controller Fake Certificate"
+                    },
+                    {
+                        "property": "certificate.valid_to",
+                        "condition": "DATE_INF",
+                        "value": "0 0 0 0 0 0",
+                        "date": "MMM DD HH:mm:ss YYYY GMT"
+                    }
+                ]
+            },
+            {
+                "name": "http-request-header",
+                "description": "request header content",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "http",
+                "objectName": "request",
+                "conditions": [
+                    {
+                        "property": "headers.content-type",
+                        "condition": "INCLUDE",
+                        "value": "application/json"
+                    }
+                ]
+            },
+            {
+                "name": "http-request-date-in-body",
+                "description": "request date in body",
+                "applied": true,
+                "level": 0,
                 "loudMessage": "date is present in body",
                 "cloudProvider": "http",
                 "objectName": "request",
@@ -7577,62 +7626,6 @@
                         ]
                     }
                 ]
-            },
-            {
-                "name": "http-request-date-in-body",
-                "description": "request date in body",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "http",
-                "objectName": "request",
-                "conditions": [
-                    {
-                        "operator": "NAND",
-                        "criteria": [
-                            {
-                                "property": "body.date",
-                                "condition": "EQUAL",
-                                "value": null
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "http-request-certificate",
-                "description": "request certificate",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "http",
-                "objectName": "request",
-                "conditions": [
-                    {
-                        "property": "certificate.issuer.CN",
-                        "condition": "EQUAL",
-                        "value": "Kubernetes Ingress Controller Fake Certificate"
-                    },
-                    {
-                        "property": "certificate.valid_to",
-                        "condition": "DATE_INF",
-                        "value": "0 0 0 0 0 0",
-                        "date": "MMM DD HH:mm:ss YYYY GMT"
-                    }
-                ]
-            },
-            {
-                "name": "http-request-header",
-                "description": "request header content",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "http",
-                "objectName": "request",
-                "conditions": [
-                    {
-                        "property": "headers.content-type",
-                        "condition": "INCLUDE",
-                        "value": "application/json"
-                    }
-                ]
             }
         ]
     },
@@ -7677,7 +7670,7 @@
                     {
                         "property": "metadata.name",
                         "condition": "DIFFERENT",
-                        "value": "4urcloudwebsitepublic"
+                        "value": null
                     }
                 ]
             },
@@ -7700,7 +7693,7 @@
                             {
                                 "property": "metadata.namespace",
                                 "condition": "EQUAL",
-                                "value": "kexawebsitepublic"
+                                "value": null
                             }
                         ]
                     }
@@ -7717,7 +7710,7 @@
                     {
                         "property": "metadata.name",
                         "condition": "DIFFERENT",
-                        "value": "4urcloudwebsitepublic"
+                        "value": null
                     }
                 ]
             },
@@ -7740,7 +7733,28 @@
                             {
                                 "property": "metadata.namespace",
                                 "condition": "EQUAL",
-                                "value": "kexawebsitepublic"
+                                "value": "myNamespace"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "kub-alert-if-namespace-not-exist",
+                "description": "this rules is to check if namespace exist and notifiable if not",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "kubernetes",
+                "objectName": "namespaces",
+                "conditions": [
+                    {
+                        "property": ".",
+                        "condition": "SOME",
+                        "value": [
+                            {
+                                "property": "metadata.name",
+                                "condition": "EQUAL",
+                                "value": null
                             }
                         ]
                     }
@@ -7757,7 +7771,7 @@
                     {
                         "property": "metadata.name",
                         "condition": "DIFFERENT",
-                        "value": "4urcloudwebsitepublic"
+                        "value": null
                     }
                 ]
             },
@@ -7780,7 +7794,7 @@
                             {
                                 "property": "metadata.namespace",
                                 "condition": "EQUAL",
-                                "value": "kexawebsitepublic"
+                                "value": null
                             }
                         ]
                     }
@@ -7805,7 +7819,7 @@
                             {
                                 "property": "metadata.namespace",
                                 "condition": "EQUAL",
-                                "value": "thecloudprices-manorga"
+                                "value": null
                             }
                         ]
                     }
@@ -7848,27 +7862,6 @@
                         "property": "status",
                         "condition": "EQUAL",
                         "value": "deployed"
-                    }
-                ]
-            },
-            {
-                "name": "kub-alert-if-namespace-not-exist",
-                "description": "this rules is to check if namespace exist and notifiable if not",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "kubernetes",
-                "objectName": "namespaces",
-                "conditions": [
-                    {
-                        "property": ".",
-                        "condition": "SOME",
-                        "value": [
-                            {
-                                "property": "metadata.name",
-                                "condition": "EQUAL",
-                                "value": "kexawebsitepublic"
-                            }
-                        ]
                     }
                 ]
             }
