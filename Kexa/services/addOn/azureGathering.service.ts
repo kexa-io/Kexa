@@ -1798,6 +1798,9 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
 					collectKexaRestructuredData(credential, subscriptionId, config)
 				]);
 				let finalResources = {...autoFlatResources, ...dataComplementaryFlat};
+				finalResources['ResourceManagementClient.resources'].forEach((item: any) => {
+					console.log(item.name);
+				});
                 resources.push(finalResources);
             }
         } catch(e) {
