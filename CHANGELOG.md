@@ -1194,3 +1194,14 @@ Kexa/rules/awsBenchmarkRules.yaml was changed
 Kexa/rules/awsBenchmarkRules.yaml was changed
 
 
+## 1.12.2-SNAPSHOT.59.a530fc6
+
+### Files added: 1
+
+ROADMAP.md was added
+
+### Files changed: 1
+
+ROADMAP.md was changed
+
+
