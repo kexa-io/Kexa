@@ -436,7 +436,6 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ Setting notification levels
 
 <div class='spliter_code'></div>
-
 <details>
 <summary>✅ Aws check in:</summary>
 

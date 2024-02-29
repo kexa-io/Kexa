@@ -895,7 +895,6 @@ Kexa/services/addOn/azureGathering.service.ts was changed
 
 Kexa/services/analyse.service.ts was changed
 
-
 ## 1.12.0-SNAPSHOT.58.7d0768c
 
 ### Files added: 0

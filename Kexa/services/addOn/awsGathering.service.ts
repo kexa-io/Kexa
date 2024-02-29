@@ -4800,6 +4800,7 @@
 	*	- CommanderClient.TagsForResource
 	*	- CommanderClient.TimelineEvents
 	*	- KexaAwsCustoms.tagsValueListing
+	*	- KexaAwsCustoms.resourcesTags
 */
 
 import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
@@ -4808,7 +4809,7 @@ import { AwsConfig } from "../../models/aws/config.models";
 
 import { fromNodeProviderChain } from "@aws-sdk/credential-providers";
 import { EC2Client } from "@aws-sdk/client-ec2";
-import { ResourceGroupsTaggingAPIClient, GetTagKeysCommand } from "@aws-sdk/client-resource-groups-tagging-api";
+import { ResourceGroupsTaggingAPIClient, GetTagKeysCommand, GetResourcesCommand, GetComplianceSummaryCommand } from "@aws-sdk/client-resource-groups-tagging-api";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -5291,6 +5292,7 @@ async function gatherAwsObject(credential: any, region:string, object: ClientRes
 // or else restructure the data if needed, gather exception objects
 
 import {stringKeys} from "../../models/aws/ressource.models";
+import { GetResourceCommand } from "@aws-sdk/client-api-gateway";
 
 interface FunctionMap {
     [key: string]: (credential: any, region: string, object: any) => void;
@@ -5323,6 +5325,17 @@ const customGatherFunctions: FunctionMap = {
 			logger.warn("Error creating Azure client: ", e);
 			return ;
 		}
+    },
+	'KexaAwsCustoms.resourcesTags': async (credential: any, region: string, object: any) => {
+		try {
+			const client = new ResourceGroupsTaggingAPIClient({region: region, credentials: credential});
+			const input = {};
+			const command = new GetResourcesCommand(input);
+			return await complianceSummaryListing(client, command, region);
+		} catch (e) {
+			logger.warn("Error creating Azure client: ", e);
+			return ;
+		}
     }
 };
 
@@ -5338,6 +5351,25 @@ async function tagsValueListing(client: ResourceGroupsTaggingAPIClient, command:
             };
             jsonData.push(newData);
         }
+        logger.debug(region + " - Tags Done");
+        return jsonData ?? null;
+    } catch (err) {
+        logger.debug("Error in Tags Value Listing: ", err);
+        return null;
+    }
+}
+
+async function complianceSummaryListing(client: ResourceGroupsTaggingAPIClient, command: GetResourcesCommand, region: string): Promise<any> {
+    try {
+        const dataKeys = await client.send(command);
+        const jsonData = JSON.parse(JSON.stringify(dataKeys.ResourceTagMappingList));
+      /*  for (const element of jsonDataKeys) {
+            const newData = { 
+                Value: element,
+                Region: region,
+            };
+            jsonData.push(newData);
+        }*/
         logger.debug(region + " - Tags Done");
         return jsonData ?? null;
     } catch (err) {
