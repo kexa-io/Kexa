@@ -4795,7 +4795,8 @@
             "CommanderClient.ResponsePlans",
             "CommanderClient.TagsForResource",
             "CommanderClient.TimelineEvents",
-            "KexaAwsCustoms.tagsValueListing"
+            "KexaAwsCustoms.tagsValueListing",
+            "KexaAwsCustoms.resourcesTags"
         ],
         "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/1024px-Amazon_Web_Services_Logo.svg.png",
         "documentation": "https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/welcome.html",
