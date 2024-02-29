@@ -895,11 +895,327 @@ Kexa/services/addOn/azureGathering.service.ts was changed
 
 Kexa/services/analyse.service.ts was changed
 
-
-## 1.12.0-devadrienawsauth.64.b3da08c
+## 1.12.0-SNAPSHOT.58.7d0768c
 
 ### Files added: 0
 
-### Files changed: 0
+### Files changed: 4
+
+Kexa/__tests__/rules/test1/rule-test.yaml was changed
+
+Kexa/__tests__/rules/test2/rule-test.yaml was changed
+
+Kexa/__tests__/rules/test2/rule-test2.yaml was changed
+
+Kexa/__tests__/rules/test3/rule-test.yaml was changed
+
+
+## 1.12.2-SNAPSHOT.28.6ef96c9
+
+### Files added: 0
+
+### Files changed: 1
+
+package-lock.json was changed
+
+
+## 1.12.2-SNAPSHOT.30.2d3d2cb
+
+### Files added: 1
+
+Kexa/rules/rules-with-var.yaml was added
+
+### Files changed: 4
+
+Kexa/rules/rules-with-var.yaml was changed
+
+.github/ISSUE_TEMPLATE/bug_report.md was changed
+
+.github/ISSUE_TEMPLATE/feature_request.md was changed
+
+package-lock.json was changed
+
+
+## 1.12.2-SNAPSHOT.33.8b1176f
+
+### Files added: 10
+
+.github/ISSUE_TEMPLATE/bug_report.md was added
+
+.github/ISSUE_TEMPLATE/feature_request.md was added
+
+CODE_OF_CONDUCT.md was added
+
+CONTRIBUTING.md was added
+
+Kexa/rules/awsSetRules.yaml was added
+
+Kexa/rules/rules-with-var.yaml was added
+
+Kexa/services/addOn/imports/awsPackage.import.ts was added
+
+Kexa/services/addOn/imports/scripts/awsPackageInstall.script.sh was added
+
+Kexa/services/addOn/imports/scripts/azurePackageInstall.script.sh was added
+
+SECURITY.md was added
+
+### Files changed: 35
+
+.github/ISSUE_TEMPLATE/bug_report.md was changed
+
+.github/ISSUE_TEMPLATE/feature_request.md was changed
+
+CODE_OF_CONDUCT.md was changed
+
+CONTRIBUTING.md was changed
+
+Kexa/rules/awsSetRules.yaml was changed
+
+Kexa/rules/rules-with-var.yaml was changed
+
+Kexa/services/addOn/imports/awsPackage.import.ts was changed
+
+Kexa/services/addOn/imports/scripts/awsPackageInstall.script.sh was changed
+
+Kexa/services/addOn/imports/scripts/azurePackageInstall.script.sh was changed
+
+SECURITY.md was changed
+
+.github/workflows/ci.yml was changed
+
+CHANGELOG.md was changed
+
+Kexa/__tests__/rules/test1/rule-test.yaml was changed
+
+Kexa/__tests__/rules/test2/rule-test.yaml was changed
+
+Kexa/__tests__/rules/test2/rule-test2.yaml was changed
+
+Kexa/__tests__/rules/test3/rule-test.yaml was changed
+
+Kexa/models/aws/config.models.ts was changed
+
+Kexa/models/aws/ressource.models.ts was changed
+
+Kexa/rules/Economy.yaml was changed
+
+Kexa/rules/OperationalExcellence.yaml was changed
+
+Kexa/rules/Security.yaml was changed
+
+Kexa/rules/rulesByProvider/awsSetRules.yaml was changed
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/display/awsDisplay.service.ts was changed
+
+Kexa/services/addOn/imports/azurePackage.import.ts was changed
+
+Kexa/services/addOn/save/amazonS3Save.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+Kexa/services/manageVarEnvironnement.service.ts was changed
+
+Kexa/services/updateCapability.service.ts was changed
+
+README.md was changed
+
+VERSION was changed
+
+capacity.json was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
+## 1.12.2-SNAPSHOT.40.a175873
+
+### Files added: 0
+
+### Files changed: 6
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/updateCapability.service.ts was changed
+
+capacity.json was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
+## 1.12.2-SNAPSHOT.44.d9a12a1
+
+### Files added: 10
+
+.github/ISSUE_TEMPLATE/bug_report.md was added
+
+.github/ISSUE_TEMPLATE/feature_request.md was added
+
+CODE_OF_CONDUCT.md was added
+
+CONTRIBUTING.md was added
+
+Kexa/rules/awsSetRules.yaml was added
+
+Kexa/rules/rules-with-var.yaml was added
+
+Kexa/services/addOn/imports/awsPackage.import.ts was added
+
+Kexa/services/addOn/imports/scripts/awsPackageInstall.script.sh was added
+
+Kexa/services/addOn/imports/scripts/azurePackageInstall.script.sh was added
+
+SECURITY.md was added
+
+### Files changed: 37
+
+.github/ISSUE_TEMPLATE/bug_report.md was changed
+
+.github/ISSUE_TEMPLATE/feature_request.md was changed
+
+CODE_OF_CONDUCT.md was changed
+
+CONTRIBUTING.md was changed
+
+Kexa/rules/awsSetRules.yaml was changed
+
+Kexa/rules/rules-with-var.yaml was changed
+
+Kexa/services/addOn/imports/awsPackage.import.ts was changed
+
+Kexa/services/addOn/imports/scripts/awsPackageInstall.script.sh was changed
+
+Kexa/services/addOn/imports/scripts/azurePackageInstall.script.sh was changed
+
+SECURITY.md was changed
+
+.github/workflows/ci.yml was changed
+
+CHANGELOG.md was changed
+
+Kexa/__tests__/rules/test1/rule-test.yaml was changed
+
+Kexa/__tests__/rules/test2/rule-test.yaml was changed
+
+Kexa/__tests__/rules/test2/rule-test2.yaml was changed
+
+Kexa/__tests__/rules/test3/rule-test.yaml was changed
+
+Kexa/__tests__/services/updateCapability.test.ts was changed
+
+Kexa/models/aws/config.models.ts was changed
+
+Kexa/models/aws/ressource.models.ts was changed
+
+Kexa/rules/Economy.yaml was changed
+
+Kexa/rules/OperationalExcellence.yaml was changed
+
+Kexa/rules/Security.yaml was changed
+
+Kexa/rules/rulesByProvider/awsSetRules.yaml was changed
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/display/awsDisplay.service.ts was changed
+
+Kexa/services/addOn/imports/azurePackage.import.ts was changed
+
+Kexa/services/addOn/save/amazonS3Save.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+Kexa/services/manageVarEnvironnement.service.ts was changed
+
+Kexa/services/updateCapability.service.ts was changed
+
+README.md was changed
+
+VERSION was changed
+
+capacity.json was changed
+
+documentation/Documentation-Kexa.md was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
+## 1.12.2-SNAPSHOT.47.98d29cd
+
+### Files added: 0
+
+### Files changed: 1
+
+documentation/Documentation-Kexa.md was changed
+
+
+## 1.12.2-SNAPSHOT.51.6431447
+
+### Files added: 1
+
+Kexa/rules/awsBenchmarkRules.yaml was added
+
+### Files changed: 2
+
+Kexa/rules/awsBenchmarkRules.yaml was changed
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+
+## 1.12.2-SNAPSHOT.54.145d9f9
+
+### Files added: 0
+
+### Files changed: 1
+
+Kexa/rules/awsBenchmarkRules.yaml was changed
+
+
+## 1.12.2-SNAPSHOT.57.9ec508d
+
+### Files added: 0
+
+### Files changed: 1
+
+Kexa/rules/awsBenchmarkRules.yaml was changed
+
+
+## 1.12.2-SNAPSHOT.59.a530fc6
+
+### Files added: 1
+
+ROADMAP.md was added
+
+### Files changed: 1
+
+ROADMAP.md was changed
+
+
+## 1.12.2-SNAPSHOT.62.8a7a340
+
+### Files added: 2
+
+MAINTAINERS.md was added
+
+RESPONSIBILITIES.md was added
+
+### Files changed: 2
+
+MAINTAINERS.md was changed
+
+RESPONSIBILITIES.md was changed
 
 
