@@ -1275,3 +1275,36 @@ package-lock.json was changed
 package.json was changed
 
 
+## 1.12.2-SNAPSHOT.75.d947268
+
+### Files added: 1
+
+Kexa/rules/GcpComplianceSetRules.yaml was added
+
+### Files changed: 12
+
+Kexa/rules/GcpComplianceSetRules.yaml was changed
+
+CHANGELOG.md was changed
+
+Kexa/models/gcp/resource.models.ts was changed
+
+Kexa/rules/AwsComplianceSetRules.yaml was changed
+
+Kexa/rules/AzureComplianceSetRules.yaml was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+README.md was changed
+
+VERSION was changed
+
+capacity.json was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
