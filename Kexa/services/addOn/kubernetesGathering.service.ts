@@ -311,12 +311,38 @@ async function collectHelm(namespace: string): Promise<any> {
     }
 }
 
-async function collectPods(k8sApiCore: any, namespace: string): Promise<any> {
+/*async function collectPods(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("pods")) return [];
     try{
         const pods = await k8sApiCore.listNamespacedPod(namespace);
         return pods?.body?.items;
     }catch(e:any){
+        logger.debug(e);
+        return [];
+    }
+}*/
+
+async function collectPods(k8sApiCore: any, namespace: string): Promise<any> {
+    if (!currentConfig?.ObjectNameNeed?.includes("pods")) return [];
+    try {
+        const pods = await k8sApiCore.listNamespacedPod(namespace);
+        const formattedPods = pods?.body?.items.map((pod: any) => {
+            const formattedLabels = Object.entries(pod.metadata.labels || {}).map(([key, value]) => ({
+                key,
+                value,
+            }));
+
+            return {
+                ...pod,
+                metadata: {
+                    ...pod.metadata,
+                    labels: formattedLabels,
+                },
+            };
+        });
+
+        return formattedPods;
+    } catch (e: any) {
         logger.debug(e);
         return [];
     }
