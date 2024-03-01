@@ -777,26 +777,27 @@ The main advantage of setting up a remote repo for your instances is that you ca
 
 #### Initialization
 
-Initializing a value or block variable is done in the same way. At the same indentation level as version or date, insert the name of your variable, a colon then an ampersand, followed by the name of your variable again.
-In our example "toto" :
+Initializing a value or block variable is done in the same way. At the same indentation level as version or date. Insert the name of your variable, a colon then an ampersand, followed by the name of your variable again.
+We follow the yaml syntax as much as possible
+In our example "name" :
+
 ```yaml
-- version: string
-  date: string
-  toto: &toto
-  ...
+name: &name
 ```
 
 #### Use
 
 The use of a variable can vary, depending on whether you want to use it as a value or as a block.
+The values of the variable must be fill in the [configuration file](#advanced-configurations)
 
 - Use as a value:
   You can insert the name of your variable preceded by an asterisk, anywhere you'd put a conventional value.
   It's can be usefull to check element like name or quantity
+
   ```yaml
-  - version: string
-    date: string
-    toto: &toto
+  - version: 1.0.0
+    date: 12-12-2024
+    name: &name
     ...
     rules:
       - name: "Generalize-test" 
@@ -806,24 +807,25 @@ The use of a variable can vary, depending on whether you want to use it as a val
         cloudProvider: XXXX 
         objectName : YYYY
         conditions:
-          -	property : name
+          - property : name
             condition : EQUAL
-            value : *toto
+            value : *name
   ```
 
 - Use as a block:
   You can insert the name of your variable preceded by "<<: *", anywhere you'd put a key.
   In this example, we variabilize the "applied and level" section to define groups and their level of importance.
   Another possible example is the notifications section, to variabilize the recipients.
+
   ```yaml
-  - version: string
-    date: string
-    group1: &group1
+  - version: 1.0.0
+    date: 12-12-2024
+    applied_and_level: &applied_and_level
     ...
     rules:
       - name: "Generalize-test" 
         description : generic test for a project test if A exist
-        <<: *group1
+        <<: *applied_and_level
         cloudProvider: XXXX 
         objectName : YYYY
         conditions:
@@ -832,7 +834,7 @@ The use of a variable can vary, depending on whether you want to use it as a val
             value : A
       - name: "Generalize-test-2" 
         description : generic test for a project test if B exist
-        <<: *group1
+        <<: *applied_and_level
         cloudProvider: XXXX 
         objectName : YYYY
         conditions:
@@ -840,9 +842,6 @@ The use of a variable can vary, depending on whether you want to use it as a val
             condition : EQUAL
             value : B
   ```
-
-
-The values of the variable must be fill in the [configuration file](#advanced-configurations)
 
 
 <br/>
