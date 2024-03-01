@@ -61,22 +61,42 @@
           condition: REGEX
           value: '\b\d{1,4}[-]\d{1,4}[-]\d{1,4}\b'
     # need to define behavior
-    - name: "aws-resources-tags-check"
-      description: "this rule is to check if tags contain an expiration date (separate with \"-\")"
-      applied: false
+    - name: "aws-resources-tags-key-value-check"
+      description: "this rule is to check if tags and their value match your tagging policy"
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: KexaAwsCustoms.resourcesTags
       conditions:
         - property: Tags
           condition: ALL
-          value:
-            - property: Key
-              condition : REGEX
-              value : ^(Name|AmazonECSManaged|test-tag-rg)$
-            - property: Value
-              condition: DIFFERENT
-              value: 'titi'
+          value:     
+            - operator: OR
+              criteria:
+                - operator: AND
+                  criteria:
+                    - property: Key
+                      condition : EQUAL 
+                      value : Name
+                    - property: Value
+                      condition: DIFFERENT
+                      value: null
+                - operator: AND
+                  criteria:
+                    - property: Key
+                      condition : EQUAL
+                      value : Environment
+                    - property: Value
+                      condition : REGEX
+                      value : ^(prod|dev)$
+                - operator: AND
+                  criteria:
+                    - property: Key
+                      condition : EQUAL
+                      value : AmazonECSManaged
+                    - property: Value
+                      condition : REGEX
+                      value : ^(true|false)$
     # need to define behavior
     - name: "aws-user-tags-check"
       description: "this rule is to check if tags contain an expiration date (separate with \"-\")"
@@ -97,7 +117,7 @@
     # need to define behavior
     - name: "aws-instance-profile-tags-check"
       description: "this rule is to check if tags contain an expiration date (separate with \"-\")"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: aws
       objectName: IAMClient.InstanceProfileTags

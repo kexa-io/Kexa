@@ -50,25 +50,38 @@
         - level: 3
           min: 1
   rules:
-    # WorkloadName Tags checking
+    # Azure tag/value checking
     - name: "azure-tags-check"
       description: "this rule is to check on azure tags for a specific pattern"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: ResourceManagementClient.tagsOperations
       conditions:
-        - operator: XNOR
+        - operator: OR
           criteria:
-            - property: tagName
-              condition: REGEX
-              value: 'WorkloadName'
-            - property: values
-              condition: ALL
-              value:
-                - property: value
-                  condition: REGEX
-                  value : ^(ControlCharts|OtherValue|AnotherValue)$
+            - operator: AND
+              criteria:
+                - property: tagName
+                  condition: EQUAL
+                  value: environment
+                - property: values
+                  condition: ALL
+                  value:
+                    - property: tagValue
+                      condition: REGEX
+                      value : ^(npr|prd)$
+            - operator: AND
+              criteria:
+                - property: tagName
+                  condition: EQUAL
+                  value: billing
+                - property: values
+                  condition: ALL
+                  value:
+                    - property: tagValue
+                      condition: REGEX
+                      value : ^(project1|project2)$
     # Azure naming convention : resouceType-WorkloadApplication-Environment-Region-Instance
     # Example : pip-sharepoint-prod-westus-001
     - name: "azure-resources-name-convention-check"
@@ -81,3 +94,18 @@
         - property: name
           condition: REGEX
           value: '^[a-zA-Z0-9]+-[a-zA-Z0-9]+-[a-zA-Z0-9]+-[a-zA-Z0-9]+-[a-zA-Z0-9]+$'
+    - name: "azure-check-logs"
+      description: "this rule is to check logs"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: OperationalInsightsManagementClient.operationStatuses
+      conditions:
+        - operator: OR
+          criteria:
+            - property: tagName
+              condition: REGEX
+              value: 'ExpirationDate'
+            - property: tagName
+              condition: REGEX
+              value: 'expirationdate'

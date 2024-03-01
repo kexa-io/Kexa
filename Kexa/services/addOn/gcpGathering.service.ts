@@ -26,6 +26,7 @@
     *     - airflow_image_version
     *     - disk
     *     - compute_item
+    *     - tags_keys
 */
 
 import { getConfigOrEnvVar, getEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
@@ -89,7 +90,8 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
             "artifact_repository": null,
             "app_gateway": null,
             "disk": null,
-            "compute_item": null
+            "compute_item": null,
+            "tags_keys": null
         } as GCPResources;
         let projectId = await getConfigOrEnvVar(config, "GOOGLE_PROJECT_ID", prefix);
         let googleCred = await getConfigOrEnvVar(config, "GOOGLE_APPLICATION_CREDENTIALS", prefix)
@@ -99,7 +101,6 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
             projectId = JSON.parse(getFile(defaultPathCred)??"")?.project_id;
         }
         let regionsList = new Array<string>();
-        await retrieveAllRegions(projectId, regionsList);
         if ('regions' in config) {
             const userRegions = config.regions as Array<string>;
             if (userRegions.length <= 0) {
@@ -112,8 +113,9 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 regionsList = userRegions as Array<string>;
             }
         } else {
-            context?.log("GCP - No Regions found in Config, gathering all regions...")
-            logger.info("GCP - No Regions found in Config, gathering all regions...")
+            context?.log("GCP - No Regions found in Config, gathering all regions...");
+            logger.info("GCP - No Regions found in Config, gathering all regions...");
+            await retrieveAllRegions(projectId, regionsList); 
         }
         try {
             context?.log("- listing GCP resources -");
@@ -152,7 +154,8 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 listArtifactsRepositories(projectId, regionsList),
                 listAppGateways(projectId, regionsList),
                 listPersistentDisks(projectId),
-                listSSHKey(projectId)
+                listSSHKey(projectId),
+                listTagsKeys(projectId, regionsList)
         ];
             const [taskList, computeList, bucketList, projectList, billingAccountList,
                 clusterList, workflowList, webSecurityList, connectorList,
@@ -162,7 +165,7 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 notebookList, lineage_processList, dashboardList, identity_domainList,
                 kms_crypto_keyList, kms_key_ringList, domain_registrationList, dns_zoneList,
                 pipelineList, certificateList, batchJobList, workloadList, artifactRepoList,
-                app_gatewayList, diskList, compute_itemList] = await Promise.all(promises);
+                app_gatewayList, diskList, compute_itemList, tags_keysList] = await Promise.all(promises);
             
             context?.log("- listing cloud resources done -");
             logger.info("- listing cloud resources done -");
@@ -204,7 +207,8 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 artifact_repository: artifactRepoList,
                 app_gateway: app_gatewayList,
                 disk: diskList,
-                compute_item: compute_itemList
+                compute_item: compute_itemList,
+                tags_keys: tags_keysList
             };
         }
         catch (e) {
@@ -249,7 +253,7 @@ async function retrieveAllRegions(projectId: number, regionsList: Array<string>)
             regionsList.push(response.name);
         }
     } catch (e) {
-        logger.debug("GCP : Error while retrieving all regions")
+        logger.debug("GCP : Error while retrieving all regions", e)
     }
 }
 
@@ -258,9 +262,11 @@ async function retrieveAllRegions(projectId: number, regionsList: Array<string>)
 /////////////////////////////////////////////////////////
 async function executeAllRegions(projectId: number, serviceFunction: Function, client: any,
                                  regionsList: Array<string>, isIterable: Boolean) : Promise<Array<any>> {
+                                    
     const processRegion = async (currentRegion: any) => {
         const parent = 'projects/' + projectId + '/locations/' + currentRegion;
         try {
+
             const jsonResponses = [];
             const request = { parent };
             if (!isIterable) {
@@ -280,6 +286,7 @@ async function executeAllRegions(projectId: number, serviceFunction: Function, c
             }
             return jsonResponses;
         } catch (e) {
+            console.log(e);
             logger.warn(`GCP : Error while retrieving data in multiple regions - Region: ${currentRegion} not found or access not authorized for ${serviceFunction.name}`);
         }
     };
@@ -929,6 +936,32 @@ async function listAppGateways(projectId: any, regionsList: Array<string>): Prom
     return jsonData ?? null;
 }
 
+async function listTagsKeys(projectId: any, regionsList: Array<string>): Promise<Array<any> | null> {
+    if(!currentConfig.ObjectNameNeed?.includes("tags_keys")) return null;
+    const {TagKeysClient, TagValuesClient} = require('@google-cloud/resource-manager').v3;
+    let jsonData = [];
+
+    console.log("regions", regionsList);
+    try {
+        const tagsKeyClient = new TagKeysClient();
+        const tagsValueClient = new TagValuesClient();
+        const rep = await tagsValueClient.listTagValues();
+        console.log("reponse here");
+        console.log(rep);
+        jsonData = JSON.parse(JSON.stringify(rep));
+       /* const iterable = await tagsKeyClient.listTagKeysAsync();
+        for await (const response of iterable) {
+            console.log(response);
+            jsonData = JSON.parse(JSON.stringify(response));
+        }*/
+    } catch (e) {
+        console.log("error tags:",e);
+        logger.debug(e);
+    }
+    console.log(jsonData);
+    logger.info("GCP Tags Keys Listing Done");
+    return jsonData ?? null;
+}
 /////////////////////////////////////////////////////////
 /// THE FOLLOWINGS RESOURCES HAVE NOT BEEN TESTED YET ///
 /////////////////////////////////////////////////////////

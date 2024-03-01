@@ -43,4 +43,6 @@ export interface GCPResources {
     disk: Array<any> | null;
 
     compute_item: Array<any> | null;
+    tags_keys: Array<any> | null;
+
 }
