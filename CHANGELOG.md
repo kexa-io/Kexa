@@ -1219,10 +1219,32 @@ MAINTAINERS.md was changed
 RESPONSIBILITIES.md was changed
 
 
-## 1.12.2-devadrienawsauth.67.3e48c16
+## 1.12.2-SNAPSHOT.68.be1133c
 
-### Files added: 0
+### Files added: 2
 
-### Files changed: 0
+Kexa/rules/AwsComplianceSetRules.yaml was added
+
+Kexa/rules/AzureComplianceSetRules.yaml was added
+
+### Files changed: 9
+
+Kexa/rules/AwsComplianceSetRules.yaml was changed
+
+Kexa/rules/AzureComplianceSetRules.yaml was changed
+
+CHANGELOG.md was changed
+
+Kexa/models/aws/ressource.models.ts was changed
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+README.md was changed
+
+VERSION was changed
+
+config/default.json was changed
 
 
