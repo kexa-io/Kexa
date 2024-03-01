@@ -1248,3 +1248,30 @@ VERSION was changed
 config/default.json was changed
 
 
+## 1.12.2-devadrienawsauth.73.41f5ced
+
+### Files added: 1
+
+Kexa/rules/GcpComplianceSetRules.yaml was added
+
+### Files changed: 9
+
+Kexa/rules/GcpComplianceSetRules.yaml was changed
+
+Kexa/models/gcp/resource.models.ts was changed
+
+Kexa/rules/AwsComplianceSetRules.yaml was changed
+
+Kexa/rules/AzureComplianceSetRules.yaml was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+capacity.json was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+

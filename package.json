@@ -436,6 +436,7 @@
         "@azure/graph": "^5.0.3",
         "@azure/keyvault-secrets": "^4.7.0",
         "@azure/logger": "^1.0.3",
+        "@azure/monitor-query": "^1.1.1",
         "@azure/storage-blob": "^12.16.0",
         "@bitwarden/sdk-napi": "^0.3.1",
         "@google-cloud/appgateways": "^1.0.0",
@@ -461,7 +462,7 @@
         "@google-cloud/org-policy": "^3.0.0",
         "@google-cloud/os-config": "^3.0.0",
         "@google-cloud/redis": "^4.0.0",
-        "@google-cloud/resource-manager": "^5.0.0",
+        "@google-cloud/resource-manager": "^5.1.0",
         "@google-cloud/resource-settings": "^3.0.0",
         "@google-cloud/retail": "^3.0.0",
         "@google-cloud/secret-manager": "^5.0.0",
@@ -516,7 +517,7 @@
         "typescript": "^4.9.5"
     },
     "name": "Kexa",
-    "version": "1.12.2-SNAPSHOT.68.be1133c",
+    "version": "1.12.2-devadrienawsauth.73.41f5ced",
     "main": "./build/index.js",
     "scripts": {
         "postinstall": "node-config-ts",
