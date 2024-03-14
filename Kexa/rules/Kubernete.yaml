@@ -153,14 +153,17 @@
     # this is an example of pod autoscaler rule
     - name: "kube-hozizontal-pod-autoscaler-min-max-replicas"
       description : "this rules is to verify horizontal pod autoscaler min and max replicas"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: kubernetes
-      objectName : hpa
+      objectName : podLogs
       conditions:
-        - property : spec.minReplicas
-          condition : SUP_OR_EQUAL
-          value: 1
-        - property : spec.maxReplicas
-          condition : INF_OR_EQUAL
-          value: 2
+        - property : logs
+          condition : ALL
+          value: 
+            - property : message
+              condition : DIFFERENT
+              value: 'error'
+            - property : message
+              condition : DIFFERENT
+              value: 'warning'
