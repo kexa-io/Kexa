@@ -110,3 +110,25 @@
             - property: PublicIpAddress
               condition: EQUAL
               value: ''
+   # storage rule
+    - name: "aws-bucket-public-access-block"
+      description: "this rule is to verify if the public access block is enabled on the bucket"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: S3Client.PublicAccessBlock
+      conditions:
+        - operator: AND
+          criteria:
+            - property: PublicAccessBlockConfiguration.BlockPublicAcls
+              condition: EQUAL
+              value: true
+            - property: PublicAccessBlockConfiguration.IgnorePublicAcls
+              condition: EQUAL
+              value: true
+            - property: PublicAccessBlockConfiguration.BlockPublicPolicy
+              condition: EQUAL
+              value: true
+            - property: PublicAccessBlockConfiguration.RestrictPublicBuckets
+              condition: EQUAL
+              value: true

@@ -196,3 +196,28 @@
             - property: instanceView.availableMemoryBytes.mean
               condition: SUP
               value: 50
+    - name: "azure-storage-account-no-public-access"
+      description: "this rule is to check on azure storage account for public access"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: StorageManagementClient.storageAccounts
+      conditions:
+        - property: publicNetworkAccess
+          condition: DIFFERENT
+          value: 'Enabled'
+    - name: "azure-storage-account-encryption-enabled"
+      description: "this rule is to check on azure storage account for encryption enabled"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: StorageManagementClient.storageAccounts
+      conditions:
+        - operator: AND
+          criteria:
+            - property: encryption.services.file.enabled
+              condition: EQUAL
+              value: true
+            - property: encryption.services.blob.enabled
+              condition: EQUAL
+              value: true

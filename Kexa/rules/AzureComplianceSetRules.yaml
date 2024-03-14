@@ -53,7 +53,7 @@
     # Azure tag/value checking
     - name: "azure-tags-check"
       description: "this rule is to check on azure tags for a specific pattern"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: azure
       objectName: ResourceManagementClient.tagsOperations
@@ -86,7 +86,7 @@
     # Example : pip-sharepoint-prod-westus-001
     - name: "azure-resources-name-convention-check"
       description: "this rule is to check on azure resources name for a Azure naming convention pattern"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: azure
       objectName: ResourceManagementClient.resources
