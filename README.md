@@ -7072,7 +7072,7 @@ If you would like additional functionality, please send us your request. : <a hr
 # <div align="center" id="license">**License**</div>
 <br/>
 
-Distributed under the MIT License. See [`LICENSE.txt`](https://github.com/4urcloud/Kexa/blob/main/LICENCE.txt) for more information just [here](https://github.com/4urcloud/Kexa/blob/main/LICENCE.txt).
+Distributed under the Apache 2.0 License. See [`LICENSE.txt`](https://github.com/4urcloud/Kexa/blob/main/LICENCE.txt) for more information just [here](https://github.com/4urcloud/Kexa/blob/main/LICENCE.txt).
 
 
 # <div align="center" id="contact">**Contact**</div>
