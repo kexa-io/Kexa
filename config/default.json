@@ -1,36 +1,31 @@
 {
-    "kubernetes":[
+    "azure":[
         {
             "description": "organization 4urcloud",
-            "prefix":"A",
+            "prefix": "O365PROJECT_",
             "rules": [
-                "Kubernete"
+                "AzureComplianceSetRules"
             ]
         }
     ],
-    "http": [
+    "gcp":[
         {
             "description": "organization 4urcloud",
-            "prefix":"A",
+            "prefix": "GCPPROJ1_",
             "rules": [
-                "HTTPRules"
-            ],
-            "URL": "https://www.4urcloud.eu"
+                "Economy"
+            ]
         }
     ],
-    "save": [
-        {
-            "type": "mongoDB",
-            "urlName": "mongodb://localhost:28000/test",
-            "collectionName": "kexa",
-            "onlyErrors": true
+    "variable": {
+        "azure-tags-check": {
+            "var1": "value1",
+            "var2": {
+                "var2.1": "value2.1",
+                "var2.2": "value2.2"
+            },
+            "var3": true,
+            "var4": 42
         }
-    ],
-    "export": [
-        {
-            "type": "mongoDB",
-            "urlName": "mongodb://localhost:28000/test",
-            "collectionName": "kexaTest"
-        }
-    ]
+    }
 }

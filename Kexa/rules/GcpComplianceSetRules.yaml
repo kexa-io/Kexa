@@ -1,0 +1,71 @@
+- version: 1.0.0
+  date: 02-23-2024
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      to: 
+        #- http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    # WorkloadName Tags checking
+    - name: "gcp-tags-check"
+      description: "this rule is to check on gcp tags for a specific pattern"
+      applied: false
+      level: 1
+      cloudProvider: gcp
+      objectName: tags_keys
+      conditions:
+        - operator: XNOR
+          criteria:
+            - property: tagName
+              condition: REGEX
+              value: 'WorkloadName'
+            - property: values
+              condition: ALL
+              value:
+                - property: value
+                  condition: REGEX
+                  value : ^(ControlCharts|OtherValue|AnotherValue)$

@@ -2,29 +2,24 @@
 /* eslint-disable */
 declare module "node-config-ts" {
   interface IConfig {
-    kubernetes: Kubernete[]
-    http: Http[]
-    save: Save[]
-    export: Export[]
+    azure: Azure[]
+    gcp: Azure[]
+    variable: Variable
   }
-  interface Export {
-    type: string
-    urlName: string
-    collectionName: string
+  interface Variable {
+    "azure-tags-check": Azuretagscheck
   }
-  interface Save {
-    type: string
-    urlName: string
-    collectionName: string
-    onlyErrors: boolean
+  interface Azuretagscheck {
+    var1: string
+    var2: Var2
+    var3: boolean
+    var4: number
   }
-  interface Http {
-    description: string
-    prefix: string
-    rules: string[]
-    URL: string
+  interface Var2 {
+    "var2.1": string
+    "var2.2": string
   }
-  interface Kubernete {
+  interface Azure {
     description: string
     prefix: string
     rules: string[]

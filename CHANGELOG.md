@@ -895,7 +895,6 @@ Kexa/services/addOn/azureGathering.service.ts was changed
 
 Kexa/services/analyse.service.ts was changed
 
-
 ## 1.12.0-SNAPSHOT.58.7d0768c
 
 ### Files added: 0
@@ -1155,6 +1154,7 @@ package.json was changed
 
 
 ## 1.13.0-dependabotnpmandyarnfollowredi.47.f89bb35
+## 1.12.2-SNAPSHOT.47.98d29cd
 
 ### Files added: 0
 
@@ -1168,6 +1168,150 @@ package-lock.json was changed
 ### Files added: 0
 
 ### Files changed: 2
+
+documentation/Documentation-Kexa.md was changed
+
+
+## 1.12.2-SNAPSHOT.51.6431447
+
+### Files added: 1
+
+Kexa/rules/awsBenchmarkRules.yaml was added
+
+### Files changed: 2
+
+Kexa/rules/awsBenchmarkRules.yaml was changed
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+
+## 1.12.2-SNAPSHOT.54.145d9f9
+
+### Files added: 0
+
+### Files changed: 1
+
+Kexa/rules/awsBenchmarkRules.yaml was changed
+
+
+## 1.12.2-SNAPSHOT.57.9ec508d
+
+### Files added: 0
+
+### Files changed: 1
+
+Kexa/rules/awsBenchmarkRules.yaml was changed
+
+
+## 1.12.2-SNAPSHOT.59.a530fc6
+
+### Files added: 1
+
+ROADMAP.md was added
+
+### Files changed: 1
+
+ROADMAP.md was changed
+
+
+## 1.12.2-SNAPSHOT.62.8a7a340
+
+### Files added: 2
+
+MAINTAINERS.md was added
+
+RESPONSIBILITIES.md was added
+
+### Files changed: 2
+
+MAINTAINERS.md was changed
+
+RESPONSIBILITIES.md was changed
+
+
+## 1.12.2-SNAPSHOT.68.be1133c
+
+### Files added: 2
+
+Kexa/rules/AwsComplianceSetRules.yaml was added
+
+Kexa/rules/AzureComplianceSetRules.yaml was added
+
+### Files changed: 9
+
+Kexa/rules/AwsComplianceSetRules.yaml was changed
+
+Kexa/rules/AzureComplianceSetRules.yaml was changed
+
+CHANGELOG.md was changed
+
+Kexa/models/aws/ressource.models.ts was changed
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+README.md was changed
+
+VERSION was changed
+
+config/default.json was changed
+
+
+## 1.12.2-devadrienawsauth.73.41f5ced
+
+### Files added: 1
+
+Kexa/rules/GcpComplianceSetRules.yaml was added
+
+### Files changed: 9
+
+Kexa/rules/GcpComplianceSetRules.yaml was changed
+
+Kexa/models/gcp/resource.models.ts was changed
+
+Kexa/rules/AwsComplianceSetRules.yaml was changed
+
+Kexa/rules/AzureComplianceSetRules.yaml was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+capacity.json was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
+## 1.12.2-SNAPSHOT.75.d947268
+
+### Files added: 1
+
+Kexa/rules/GcpComplianceSetRules.yaml was added
+
+### Files changed: 12
+
+Kexa/rules/GcpComplianceSetRules.yaml was changed
+
+CHANGELOG.md was changed
+
+Kexa/models/gcp/resource.models.ts was changed
+
+Kexa/rules/AwsComplianceSetRules.yaml was changed
+
+Kexa/rules/AzureComplianceSetRules.yaml was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+README.md was changed
+
+VERSION was changed
+
+capacity.json was changed
 
 package-lock.json was changed
 

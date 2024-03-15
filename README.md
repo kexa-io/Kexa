@@ -5235,6 +5235,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ CommanderClient.TagsForResource
 - ✅ CommanderClient.TimelineEvents
 - ✅ KexaAwsCustoms.tagsValueListing
+- ✅ KexaAwsCustoms.resourcesTags
 </details>
 <details>
 <summary>✅ Azure check in:</summary>
@@ -6965,6 +6966,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ airflow_image_version
 - ✅ disk
 - ✅ compute_item
+- ✅ tags_keys
 </details>
 <details>
 <summary>✅ Github check in:</summary>
