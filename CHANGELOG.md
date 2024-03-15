@@ -1153,11 +1153,21 @@ package-lock.json was changed
 package.json was changed
 
 
+## 1.13.0-dependabotnpmandyarnfollowredi.47.f89bb35
 ## 1.12.2-SNAPSHOT.47.98d29cd
 
 ### Files added: 0
 
 ### Files changed: 1
+
+package-lock.json was changed
+
+
+## 1.13.0-dependabotnpmandyarnnodemailer.50.0cce912
+
+### Files added: 0
+
+### Files changed: 2
 
 documentation/Documentation-Kexa.md was changed
 
@@ -1306,5 +1316,14 @@ capacity.json was changed
 package-lock.json was changed
 
 package.json was changed
+
+
+## 1.13.0-dependabotnpmandyarnjose4155.53.d16c734
+
+### Files added: 0
+
+### Files changed: 1
+
+package-lock.json was changed
 
 
