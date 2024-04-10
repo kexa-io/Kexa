@@ -155,11 +155,19 @@ function generateShellScript(stringResults: any): string {
 ${packageNames.map((pkg: any) => `    '${pkg}'`).join('\n')}
 )
 
-for pkg in "\${packages[@]}"
-do
-    npm install "\$pkg" || echo "Failed to install \$pkg"
-    echo "done for \$pkg"
-done`;
+# for pkg in "\${packages[@]}"
+# do
+#     npm install "\$pkg" || echo "Failed to install \$pkg"
+#     echo "done for \$pkg"
+# done
+
+package_string=""
+for package in "\${packages[@]}"; do
+    package_string+=" $package"
+done
+
+# Install packages using npm
+npm install $package_string`;
     return scriptContent;
 }
 
@@ -290,10 +298,10 @@ function readFileContent(inputFilePath: string) {
 
 async function fileReplaceContentAzure(inputFilePath: string, outputFilePath: string, allClients: AzureClients) {
     try {
-      const fileContent = await readFileContent(inputFilePath);
-      const regex = /(\* Resources :)[\s\S]*?(\*\/)/;
-      const updatedContent = fileContent.replace(regex, `$1\n${generateResourceListAzure(allClients)}\n$2`);  
-      writeFileContent(outputFilePath, updatedContent);
+        const fileContent = await readFileContent(inputFilePath);
+        const regex = /(\* Resources :)[\s\S]*?(\*\/)/;
+        const updatedContent = fileContent.replace(regex, `$1\n${generateResourceListAzure(allClients)}\n$2`);  
+        writeFileContent(outputFilePath, updatedContent);
     } catch (error) {
         console.error('Error:', error);
     }

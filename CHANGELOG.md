@@ -1335,4 +1335,22 @@ package-lock.json was changed
 
 package-lock.json was changed
 
+## 1.13.0-SNAPSHOT.92.e733089
+
+### Files added: 0
+
+### Files changed: 6
+
+CHANGELOG.md was changed
+
+LICENCE.txt was changed
+
+README.md was changed
+
+VERSION was changed
+
+package-lock.json was changed
+
+package.json was changed
+
 
