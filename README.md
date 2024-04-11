@@ -80,7 +80,7 @@ With Kexa, you can [edit your own rules](documentation/Documentation-Kexa.md#rul
 
 ## Built With
 
-* [![NODE][NODE-shield]](https://nodejs.org/fr)
+* [![PNPM][PNPM-SHIELD]](https://pnpm.io/fr)
 
 ## Runnable in
 
@@ -117,8 +117,8 @@ then:
 
 ```bash
 #dont forget to get [nodejs](https://nodejs.org/en/download) to launch Kexa:
-npm i
-npm run start
+pnpm i --frozen-lockfile
+pnpm run start
 ```
 
 ## By docker
@@ -7101,6 +7101,7 @@ Public site: 
 [license-shield]: https://img.shields.io/github/license/4urcloud/Kexa.svg?style=for-the-badge
 [license-url]: https://github.com/4urcloud/Kexa/blob/master/LICENSE.txt
 [NODE-shield]: https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white
+[PNPM-SHIELD]:https://img.shields.io/badge/PNPM-FB8B23?style=for-the-badge&logo=pnpm&logoColor=white
 [KUB-shield]: https://img.shields.io/badge/kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white
 [DOCKER-shield]: https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
 [GITACT-shield]: https://img.shields.io/badge/githubactions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white
