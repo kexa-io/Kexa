@@ -1354,3 +1354,26 @@ package-lock.json was changed
 package.json was changed
 
 
+## 1.13.2-testpnpm.4.15cbed8
+
+### Files added: 1
+
+pnpm-lock.yaml was added
+
+### Files changed: 7
+
+pnpm-lock.yaml was changed
+
+.github/workflows/ci.yml was changed
+
+Dockerfile was changed
+
+README.md was changed
+
+documentation/Documentation-Kexa.md was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
