@@ -1419,3 +1419,32 @@ package-lock.json was changed
 package.json was changed
 
 
+## 1.14.0-SNAPSHOT.11.a6d1c0e
+
+### Files added: 1
+
+pnpm-lock.yaml was added
+
+### Files changed: 10
+
+pnpm-lock.yaml was changed
+
+.github/workflows/ci.yml was changed
+
+CHANGELOG.md was changed
+
+Dockerfile was changed
+
+Kexa/services/updateCapability.service.ts was changed
+
+README.md was changed
+
+VERSION was changed
+
+documentation/Documentation-Kexa.md was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+
