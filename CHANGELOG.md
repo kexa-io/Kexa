@@ -1353,7 +1353,6 @@ package-lock.json was changed
 
 package.json was changed
 
-
 ## 1.13.2-testpnpm.4.15cbed8
 
 ### Files added: 1
@@ -1371,6 +1370,18 @@ Dockerfile was changed
 README.md was changed
 
 documentation/Documentation-Kexa.md was changed
+
+## 1.13.1-SNAPSHOT.7.d659914
+
+### Files added: 0
+
+### Files changed: 5
+
+CHANGELOG.md was changed
+
+Kexa/services/updateCapability.service.ts was changed
+
+VERSION was changed
 
 package-lock.json was changed
 
