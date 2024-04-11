@@ -131,10 +131,10 @@ The principle is simple: scan and verify. That's why you have 2 main elements to
 
 # <div align="center" id= "prerequisites">**Prerequisites**</div>
 
-First of all, Kexa is build with [node](https://nodejs.org/en) so you need to [install it](https://nodejs.org/en/download)
-* npm
+First of all, Kexa is build with [pnpm](https://pnpm.io/en/) so you need to [install it](https://pnpm.io/en/installation)
+* pnpm
   ```sh
-  npm install npm@latest -g
+  winget install pnpm
   ```
 
 ## Installation
@@ -170,9 +170,9 @@ First of all, Kexa is build with [node](https://nodejs.org/en) so you need to [i
   
   [![Open in VS Code](https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual%20Studio%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc)](https://vscode.dev/github/4urcloud/Kexa)
 
-### Install NPM packages
+### Install PNPM packages
    ```sh
-   npm install
+   pnpm i --frozen-lockfile
    ```
 
 # <div align="center" id= "global-configuration">**Global Configuration**</div>
@@ -593,7 +593,7 @@ Here is the structure and required fields for a new rule :
   # the target object name. You can have the list of the objectName supported by your provider in the headers of his addOn
   conditions: # the list of criteria to match
 		-	property : string 
-	 		# the object field name to check (you can see the objects fields by launching Kexa with npm run start:o option)
+	 		# the object field name to check (you can see the objects fields by launching Kexa with pnpm run start:o option)
       # for any property with a dot in his name, add "/" before the dot
 			condition : enum 
 			# the condition for this comparison (defined in ./enum/condition.enum.ts)
@@ -1200,7 +1200,7 @@ example of fresh template of exportation addOn:
 We've set up some tests you can use to validate the integration of your addOn:
 
 ```shell
-npm run test
+pnpm run test
 ```
 
 Other checks are carried out at various stages to validate the integration of your addOn and the rules you can design. However, these checks are only carried out during software execution. Indeed, due to the nature of certain data collections, it is not possible to carry out "cold" tests without having access to dedicated environments.
@@ -1217,7 +1217,7 @@ Other checks are carried out at various stages to validate the integration of yo
 Use this command to launch scans:
 
 ```shell
-npm run start
+pnpm run start
 ```
 
 <br/>
@@ -1273,7 +1273,7 @@ npm i -g azure-functions-core-tools@4 --unsafe-perm true
 Build your version with your config
 
 ```shell
-npm run build
+pnpm run build
 ```
 
 To test azure function locally :

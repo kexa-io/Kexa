@@ -198,8 +198,8 @@ dependencies:
     specifier: ^3.552.0
     version: 3.552.0
   '@aws-sdk/client-connect':
-    specifier: ^3.552.0
-    version: 3.552.0
+    specifier: ^3.553.0
+    version: 3.553.0
   '@aws-sdk/client-connect-contact-lens':
     specifier: ^3.552.0
     version: 3.552.0
@@ -633,8 +633,8 @@ dependencies:
     specifier: ^3.112.0
     version: 3.112.0
   '@aws-sdk/client-rekognition':
-    specifier: ^3.552.0
-    version: 3.552.0
+    specifier: ^3.553.0
+    version: 3.553.0
   '@aws-sdk/client-resiliencehub':
     specifier: ^3.552.0
     version: 3.552.0
@@ -1302,8 +1302,8 @@ dependencies:
     specifier: ^1.1.0
     version: 1.1.0
   '@azure/core-client':
-    specifier: ^1.9.1
-    version: 1.9.1
+    specifier: ^1.9.2
+    version: 1.9.2
   '@azure/functions':
     specifier: ^3.5.1
     version: 3.5.1
@@ -1314,8 +1314,8 @@ dependencies:
     specifier: ^4.8.0
     version: 4.8.0
   '@azure/logger':
-    specifier: ^1.1.1
-    version: 1.1.1
+    specifier: ^1.1.2
+    version: 1.1.2
   '@azure/monitor-query':
     specifier: ^1.2.0
     version: 1.2.0
@@ -4936,8 +4936,8 @@ packages:
       - aws-crt
     dev: false
 
-  /@aws-sdk/client-connect@3.552.0:
-    resolution: {integrity: sha512-d1PjaF8G1uJUNrFYuxYo5Z/NM92avUvUw3zUrS3uSewHsF7KNB8SnAbrndvfNwU5dUGTa/APiBdbPAugaugRpQ==}
+  /@aws-sdk/client-connect@3.553.0:
+    resolution: {integrity: sha512-Bm9wrjGrRytDHsqzs9anZIPaaMsqebbu7CSexxBliqr6wRJLnsciCt9BRvwv/TSFWiW0PdhHHgseLgsDDzATMA==}
     engines: {node: '>=14.0.0'}
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
@@ -11929,8 +11929,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@aws-sdk/client-rekognition@3.552.0:
-    resolution: {integrity: sha512-I11qtl00tsn+Li429doOau/NEKyNKYGdORiFAaswsLOXVAH/0wY3eCAkBEUPnHwDAgvxlKQVqlBa8Xwu2InBxg==}
+  /@aws-sdk/client-rekognition@3.553.0:
+    resolution: {integrity: sha512-P08TDVN7ztjiNHrXAiam4i6JRwgn1sRx/c2AHKb8Lue6MuGuuqsON/LVgkAvU/cyuJsnXhlAmlHOpVsAE1qjcA==}
     engines: {node: '>=14.0.0'}
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
@@ -16984,8 +16984,8 @@ packages:
     dependencies:
       tslib: 2.6.2
 
-  /@azure/abort-controller@2.1.1:
-    resolution: {integrity: sha512-NhzeNm5zu2fPlwGXPUjzsRCRuPx5demaZyNcyNYJDqpa/Sbxzvo/RYt9IwUaAOnDW5+r7J9UOE6f22TQnb9nhQ==}
+  /@azure/abort-controller@2.1.2:
+    resolution: {integrity: sha512-nBrLsEWm4J2u5LpAPjxADTlq3trDgVZZXHNKabeXZtpq3d3AbN/KGO82R87rdDz5/lYB024rtEf10/q0urNgsA==}
     engines: {node: '>=18.0.0'}
     dependencies:
       tslib: 2.6.2
@@ -16994,10 +16994,10 @@ packages:
     resolution: {integrity: sha512-Xjh0/6Jd2Kb5JT9xOd19wmhjNNvua9NVTb9jevrBLT6CLsZUUpQybJiPSs6kRTTkRgwbj5e8gNKyERYmtyUByQ==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17008,11 +17008,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17023,11 +17023,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17039,11 +17039,11 @@ packages:
     deprecated: This package has been deprecated due to a package rename, please switch to new package @azure/arm-appcontainers (https://www.npmjs.com/package/@azure/arm-appcontainers). No more new features or bug fix would be provided to this package.
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17054,11 +17054,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17069,11 +17069,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17082,7 +17082,7 @@ packages:
   /@azure/arm-appinsights@4.0.0:
     resolution: {integrity: sha512-P36NpLn49raSh4xtsHUSBCUJ9SRiH2FJXENBQYZhD+MILObRKQYYU8izPxkqMR0oMROQFU2dL/G/sAp+SeSpYQ==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 2.1.0
       '@azure/ms-rest-js': 2.7.0
       tslib: 1.14.1
@@ -17095,11 +17095,11 @@ packages:
     engines: {node: '>=12.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17110,11 +17110,11 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17124,10 +17124,10 @@ packages:
     resolution: {integrity: sha512-BDC3TJdRrwNoiqs6ptNW888Du8fsWRpEQXurps1KqRrTNaV7teiF1NuxgrizD2p+OSLme68lB3dxksg64wKYvw==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17137,10 +17137,10 @@ packages:
     resolution: {integrity: sha512-GdiCA8IA1gO+qcCbFEPj+iLC4+3ByjfKzmeAnkP7MdlL84Yo30Huo/EwbZzwRjYybXYUBuFxGPBB+yeTT4Ebxg==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17150,10 +17150,10 @@ packages:
     resolution: {integrity: sha512-HEX80dbv8s/8Whgwxkh+23t5pYVAH7I6QG05PqRf566XIHhLYY8PW2cmt1ZbfVsBw0AJqFeWRA6EU+0KcHRMtw==}
     engines: {node: '>=12.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17162,7 +17162,7 @@ packages:
   /@azure/arm-automation@10.1.1:
     resolution: {integrity: sha512-7XcawiT/K/ULB6AaE3sD91As37tEKt6YKeUllILZAclWiCRxebssbl0RaWBuT9N0boyOf3qYaPXjhG0dIWVvew==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 2.1.0
       '@azure/ms-rest-js': 2.7.0
       tslib: 1.14.1
@@ -17175,11 +17175,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17190,11 +17190,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17203,7 +17203,7 @@ packages:
   /@azure/arm-azurestack@2.1.1:
     resolution: {integrity: sha512-5BNxxqd+CHBuo36Onfo0IpAgk87+tIboXPvFi4LqLhuwUkUZA1woTgbbXlZhwtq4qo07sU102pubha5Xra+Ngw==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 2.1.0
       '@azure/ms-rest-js': 2.7.0
       tslib: 1.14.1
@@ -17216,11 +17216,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17231,11 +17231,11 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17245,7 +17245,7 @@ packages:
     resolution: {integrity: sha512-+RIgeaIgvfjvU7D2gzGFSA1f5Tu84dOgcbtx+abdeSIqWZLW1eDxPyjV2Z5pXR74g+DQgpsi8pV9rv9fFHlQpw==}
     deprecated: This library is deprecated and no longer supported. The Azure Batch AI service that this library supported has been retired(https://learn.microsoft.com/en-us/previous-versions/azure/batch-ai/overview-what-happened-batch-ai ). Please consider using the Azure Machine Learning service (https://learn.microsoft.com/en-us/azure/machine-learning/overview-what-is-azure-machine-learning).
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 1.4.0
       '@azure/ms-rest-js': 1.11.2
       tslib: 1.14.1
@@ -17258,11 +17258,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17273,11 +17273,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17288,11 +17288,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17303,11 +17303,11 @@ packages:
     engines: {node: '>=16.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17317,10 +17317,10 @@ packages:
     resolution: {integrity: sha512-uNXtqL+CW+0xv8NU9OjfJo4mPntLIsn/tPFeEuhZY9ywwL5ozIiicI0E23JMYNvMQthwq4u6Uw6/ZKH29LvCKg==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17330,10 +17330,10 @@ packages:
     resolution: {integrity: sha512-r3o/CiUiB2HE+a1tqSK4elWBwJoSk4owsC86nknSJDIzvqndtlQWOs0o5/EOnhWJ7eqjtdGLnx0AtH4jI0d7dg==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17344,11 +17344,11 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17359,11 +17359,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17372,7 +17372,7 @@ packages:
   /@azure/arm-commerce@3.0.0:
     resolution: {integrity: sha512-7tDkihAYi/RjPvlZS/pWmeWiP4y/2zPs54yOB6B9qdacva70LmjrbNbRXlAwBE1NtTdxSazGYHHzZdotqm7nQA==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 2.1.0
       '@azure/ms-rest-js': 2.7.0
       tslib: 1.14.1
@@ -17383,7 +17383,7 @@ packages:
   /@azure/arm-commitmentplans@1.3.1:
     resolution: {integrity: sha512-xYN2IbAq0xoFmseWL7wq7DmNENqA/es91TzgFE+HVqYq3aqnoRd1kzpeRRfp1IJeC+5MzCWDTqBsmxThB5cpyA==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 1.4.0
       '@azure/ms-rest-js': 1.11.2
       tslib: 1.14.1
@@ -17396,11 +17396,11 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17411,11 +17411,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17426,11 +17426,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17441,11 +17441,11 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17455,10 +17455,10 @@ packages:
     resolution: {integrity: sha512-oLAElshfdPwN/vuzMWt5S+68EPH6gR8fTdNndClFMNI3tvYuvWATSLgHpbcXA9h2oX0P0NGU9h/h9fgZIptycQ==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17469,11 +17469,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17484,11 +17484,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17499,11 +17499,11 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17514,11 +17514,11 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17529,11 +17529,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17544,11 +17544,11 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17559,11 +17559,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17574,11 +17574,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17589,11 +17589,11 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17604,10 +17604,10 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17618,11 +17618,11 @@ packages:
     engines: {node: '>=16.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17633,11 +17633,11 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17646,7 +17646,7 @@ packages:
   /@azure/arm-datalake-analytics@1.1.1:
     resolution: {integrity: sha512-5utcBDcGmqQR/HJ8+BJ+CbdzjsqAf4EcLuWqDsdtC9vSEuNkThdQLwJZo+uhBuGIE/T9RPrHCYQzFbC+cdhhCQ==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 2.1.0
       '@azure/ms-rest-js': 2.7.0
       tslib: 1.14.1
@@ -17657,7 +17657,7 @@ packages:
   /@azure/arm-datamigration@2.1.1:
     resolution: {integrity: sha512-WkK6ouly1Hlf8R32SqrNnVDW2apzH0zQYXin9mrKc6GGDEYU2WI8gEGpEjzRU+TRNldwN7Kgr/JWsYCmzbDmfw==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 2.1.0
       '@azure/ms-rest-js': 2.7.0
       tslib: 1.14.1
@@ -17668,7 +17668,7 @@ packages:
   /@azure/arm-deploymentmanager@3.1.1:
     resolution: {integrity: sha512-SloJay8yvxML1OnEQDGbygtC3izH59bC4pwXdACaaV+mUG7uItx5A3yxTDAzU0SNNqwH1aRDlrwdpvDav4whFA==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 2.1.0
       '@azure/ms-rest-js': 2.7.0
       tslib: 1.14.1
@@ -17680,10 +17680,10 @@ packages:
     resolution: {integrity: sha512-64vb5G/7pvbWh4FKIanL4rJBuUjvx4DafbL6w606RiwT95kxemB4w+lH8gy46e46grjvdHk4+ECzi5GOMvxpnw==}
     engines: {node: '>=16.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17694,11 +17694,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17709,11 +17709,11 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17724,11 +17724,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17739,11 +17739,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17754,11 +17754,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17769,11 +17769,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17784,11 +17784,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17799,11 +17799,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17814,11 +17814,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17828,7 +17828,7 @@ packages:
     resolution: {integrity: sha512-dlzNsg+Vn5df/xCiyVeUBnXqXKpyNnnpeJb6YccX4Xb7yLyygPADq9Dnttd0apqqhRhIF6hLsopUwA6wmkMLWQ==}
     deprecated: This package has been deprecated due to a package rename, please switch to new package @azure/arm-databoxedge (https://www.npmjs.com/package/@azure/arm-databoxedge). No more new features or bug fix would be provided to this package.
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 2.1.0
       '@azure/ms-rest-js': 2.7.0
       tslib: 1.14.1
@@ -17840,10 +17840,10 @@ packages:
     resolution: {integrity: sha512-OkFKXImvLnaMM6mb5tfzkRHRytmzX6QG1U0L7UbxgEeX/tsCnV9NZmj4rv2O4pbdi6U84dewaQPZCqjig6ueSg==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17854,11 +17854,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17869,11 +17869,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17884,11 +17884,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17898,10 +17898,10 @@ packages:
     resolution: {integrity: sha512-qw2JbK80G1DwevhPvofLJg9uSlfNKHN5fQJQ5CQoT5OkuTNz+48p+1B30JTwtClSv5/7G4Th3ECL6sZOO80NCw==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17912,11 +17912,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17925,7 +17925,7 @@ packages:
   /@azure/arm-hanaonazure@3.1.1:
     resolution: {integrity: sha512-Gs9m9L6FJ2qRImy0MwuV1d1kTkmg18zkZIIfmzGIP0HMnzrcBMfpQevdAyKuDIlWhGuCYc+wFPufZEdUgBfBqA==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 2.1.0
       '@azure/ms-rest-js': 2.7.0
       tslib: 1.14.1
@@ -17938,11 +17938,11 @@ packages:
     engines: {node: '>=12.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17953,11 +17953,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17968,11 +17968,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17983,11 +17983,11 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -17998,11 +17998,11 @@ packages:
     engines: {node: '>=12.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18013,11 +18013,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18028,11 +18028,11 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18043,11 +18043,11 @@ packages:
     engines: {node: '>=12.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18058,11 +18058,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18072,7 +18072,7 @@ packages:
     resolution: {integrity: sha512-MV4mEu++AmbtJ6tCO7wx1bw2uLKf/j+At8M0Nv36A6+HzSLctZnHdixdJFPusYWkVsxCEL8WJ0cQTfhYpp6YzQ==}
     deprecated: This library is deprecated and no longer supported. The Azure IoTSpaces service that this library supported has been retired as of the end of 2020. Please consider using the Azure Digital Twins service (https://learn.microsoft.com/en-us/azure/digital-twins/overview)
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 1.4.0
       '@azure/ms-rest-js': 1.11.2
       tslib: 1.14.1
@@ -18085,11 +18085,11 @@ packages:
     engines: {node: '>=16.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18100,11 +18100,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18115,11 +18115,11 @@ packages:
     engines: {node: '>=16.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18130,11 +18130,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18144,10 +18144,10 @@ packages:
     resolution: {integrity: sha512-0UUm8O9Pt/BYqi3WEVkRgk9GYzQNFugH5cQ7w02DfP2ED4599PLppzrUXF2qM0rSVqjzuAUypCXcRVqJ6q/aOA==}
     engines: {node: '>=12.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18159,11 +18159,11 @@ packages:
     deprecated: This package has been deprecated due to a package rename, please switch to new package @azure/arm-loadtesting (https://www.npmjs.com/package/@azure/arm-loadtesting). No more new features or bug fix would be provided to this package.
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18173,10 +18173,10 @@ packages:
     resolution: {integrity: sha512-p2E29GyNvW+2+YrS39S9moDUefoWBOciFkF0J3l6iizDU2m2avPcMMV7WKsfhQOlNza/Do7Tk8+p8zZ9Kju3dA==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18187,11 +18187,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18202,11 +18202,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18215,7 +18215,7 @@ packages:
   /@azure/arm-machinelearningcompute@2.1.1:
     resolution: {integrity: sha512-wTD9XMyynqbGxm1W6CcSemYMnyksp5soOoyPwGnCR22mGxWpWUrN0hErXDAPp0UQxQqjWQpr15pJeTC5t4/sBQ==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 2.1.0
       '@azure/ms-rest-js': 2.7.0
       tslib: 1.14.1
@@ -18226,7 +18226,7 @@ packages:
   /@azure/arm-machinelearningexperimentation@1.2.1:
     resolution: {integrity: sha512-SG1mkJ4yzGSR5BVPf1h84vRHPvvQwELLOIfar6pMVRgZ9zunUVCqBqRkRqK1Xm8Gg7cgyTojoLkBPLO3CkC4BQ==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 1.4.0
       '@azure/ms-rest-js': 1.11.2
       tslib: 1.14.1
@@ -18240,11 +18240,11 @@ packages:
     deprecated: This package has been deprecated due to a package rename, please switch to new package @azure/arm-machinelearning (https://www.npmjs.com/package/@azure/arm-machinelearning). No more new features or bug fix would be provided to this package.
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18255,11 +18255,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18270,11 +18270,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18284,10 +18284,10 @@ packages:
     resolution: {integrity: sha512-i9xSGccDpiew9LJZrrgQa2C8VNi2sJ4Op9UHDJr/ZQk3om1g7KdyMO2K5lQ/OHfOa9NgR2+xRZSQsHKSud3TMw==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18297,10 +18297,10 @@ packages:
     resolution: {integrity: sha512-qal3sqO+Lcal31dGZuC8TZVy0yWcrRVBxCB1vxY46piDaw05l8KpGw/N0od6R+bgVBxVAXzImHRUR1yH3XKIdQ==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18311,11 +18311,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18325,10 +18325,10 @@ packages:
     resolution: {integrity: sha512-yaU9jPvDYv5P3m6vkFkXUc2NooufcKZKAf/2EFyFCrUdfOlqMOmypU3AYtLyOFAltZVwAwYn+FlBQeUd6ELL4w==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18339,11 +18339,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18353,10 +18353,10 @@ packages:
     resolution: {integrity: sha512-qSNYCcKa7ogWWFMEPzPGlKwe04synBnmFCXXL+U9zfmds04Za53VJOu7KYf80XtkcSG52J8iognxBZHwIixCjQ==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18366,10 +18366,10 @@ packages:
     resolution: {integrity: sha512-G5yyQdmRg2IheaoJWuKRn4JmLmsSOBvNyHl3Y6p9KsG6kxq3JhcHDdrvQhsTH05pzC3WloHqaujslikHu4yd8A==}
     engines: {node: '>=12.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18380,11 +18380,11 @@ packages:
     engines: {node: '>=16.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18395,11 +18395,11 @@ packages:
     engines: {node: '>=12.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18409,10 +18409,10 @@ packages:
     resolution: {integrity: sha512-qP2BXpXkZ/I5gO479Dj6HFVkgSrAlYOG2AGVTqxTu0YIVdZdmrlZLH7SNl1Um9id+p7uNGNRdVKIBO5rcQgeJw==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18423,11 +18423,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18438,11 +18438,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18453,11 +18453,11 @@ packages:
     engines: {node: '>=16.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18468,11 +18468,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18483,11 +18483,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18498,11 +18498,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18513,11 +18513,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18526,7 +18526,7 @@ packages:
   /@azure/arm-operations@3.0.0:
     resolution: {integrity: sha512-FXFCV5lPDyZGws5P6InlSxVq5+OsEfxxpOFOI2xopRL2/QanRlZgeoBeiF9P3qYFoGL9xKJiXTYXpeFXsqOBAQ==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 2.1.0
       '@azure/ms-rest-js': 2.7.0
       tslib: 1.14.1
@@ -18539,11 +18539,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18553,10 +18553,10 @@ packages:
     resolution: {integrity: sha512-vahHYtg6d5tlhgJGD1VHP53ZMnsNCwxmX+l7e+aiuCYyrWGPquUv7Ycl4oy7unRwGgSZZFkimX/eVcCpUbyqWg==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18566,10 +18566,10 @@ packages:
     resolution: {integrity: sha512-biNqsIV3uQqxCLYkHnDAJjvex3zATpvjhldbRWbew32HJQVmDxiLcep2kRoDy+8G4RoPJyo/fDTVYR+j5OpJ3Q==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18580,11 +18580,11 @@ packages:
     engines: {node: '>=12.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18594,10 +18594,10 @@ packages:
     resolution: {integrity: sha512-wW6ckCOKOJx+vldRwxh9jDZHn3eRkKWoavobFYuEeW3Fdr2DKvXgpeBVUP3eMnmm1tI3ynfVTddx4dxKGLamsA==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18608,11 +18608,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18623,11 +18623,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18638,11 +18638,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18653,11 +18653,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18668,11 +18668,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18683,11 +18683,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18698,11 +18698,11 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18713,11 +18713,11 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18728,11 +18728,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18743,11 +18743,11 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18758,11 +18758,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18773,11 +18773,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18788,11 +18788,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18803,11 +18803,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18816,7 +18816,7 @@ packages:
   /@azure/arm-resourcegraph@4.2.1:
     resolution: {integrity: sha512-PDuRJ6I7wpy/bu2dqX3OVvX6fpM3YzXkFLGnmYpevYFBQBgueNhHruBAk5r1xh2VRTv1M0lAdaYy6LmVHiCRTw==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 2.1.0
       '@azure/ms-rest-js': 2.7.0
       tslib: 1.14.1
@@ -18828,10 +18828,10 @@ packages:
     resolution: {integrity: sha512-TDckOTGJA7aLfV8//+CYFz7Cp/9qQghMQvM07fkmdl2NKDMmIDtWVklBXCqz7nAwS2rxajUDrWYEs7Ui8DIGHw==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18842,11 +18842,11 @@ packages:
     engines: {node: '>=16.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18856,10 +18856,10 @@ packages:
     resolution: {integrity: sha512-vKiu/3Yh84IV3IuJJ+0Fgs/ZQpvuGzoZ3dAoBksIV++Uu/Qz9RcQVz7pj+APWYIuODuR9I0eGKswZvzynzekug==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18870,11 +18870,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18885,11 +18885,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18900,11 +18900,11 @@ packages:
     engines: {node: '>=16.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18915,11 +18915,11 @@ packages:
     engines: {node: '>=12.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18930,11 +18930,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18944,9 +18944,9 @@ packages:
     resolution: {integrity: sha512-6zoCd8LDoa1uVpyeqFxRRCCSUvphDkGXoqHKVodSdx1La+bzGMu8lbyuZmx/GlioFAUdVgyIu13wiOZ2ZSWnyA==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18957,11 +18957,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18972,11 +18972,11 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -18985,7 +18985,7 @@ packages:
   /@azure/arm-servicefabricmesh@2.2.1:
     resolution: {integrity: sha512-MCWqFt+w4QAF1iaIYBaA98UUSu7TwL5c7OW4/JytUhtmxZn+f0CRl1hqfNMJ2yFYd3c3Dze3q31ZZuGwU8rXRA==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 1.4.0
       '@azure/ms-rest-js': 1.11.2
       tslib: 1.14.1
@@ -18998,11 +18998,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19011,7 +19011,7 @@ packages:
   /@azure/arm-servicemap@2.3.1:
     resolution: {integrity: sha512-LdXv3qBCOH/AIhIInQLL0MWc5OO11EgxEW7+cpoYxynVw83EEL+udhEF8ffQzwe0enEo9M7AX49sqjgOQL2ArA==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 2.1.0
       '@azure/ms-rest-js': 2.7.0
       tslib: 1.14.1
@@ -19024,11 +19024,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19039,11 +19039,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19052,7 +19052,7 @@ packages:
   /@azure/arm-sqlvirtualmachine@4.1.1:
     resolution: {integrity: sha512-z47ZyQcyn93Tanlfjm8z/IwP8c0COQ6IoUZR561lArx34TaqygE+Tw8OvJ8YL91zMNoLrsfwvrtJQshE3LOZvQ==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 2.1.0
       '@azure/ms-rest-js': 2.7.0
       tslib: 1.14.1
@@ -19065,11 +19065,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19080,11 +19080,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19094,10 +19094,10 @@ packages:
     resolution: {integrity: sha512-Qh1MMduOAM97bq2qxW2LDwQWVplOAgyhvQyWgASuQW8N35HChafhhydDZzK+5xdSmJZ9sqRffLvV5x43xt4v+Q==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19108,11 +19108,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19123,11 +19123,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19138,11 +19138,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19153,11 +19153,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19168,11 +19168,11 @@ packages:
     engines: {node: '>=12.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19184,11 +19184,11 @@ packages:
     deprecated: it was for test
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19198,10 +19198,10 @@ packages:
     resolution: {integrity: sha512-LDbDVMhZIoEpxtVNZ8AvaIZISjm4pGS/nx5GA48lci0dEawMV1fHKdma33WXVWHzo2Va67bT0dYxnDU8ACy/mA==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19212,11 +19212,11 @@ packages:
     engines: {node: '>=12.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19226,10 +19226,10 @@ packages:
     resolution: {integrity: sha512-UWnUhCopeA81H9Mx7pXv40yYLf8ZxfcXzBcVVJF9WwROgsp6EREMTn0+ZF2kjaspSaL6uRmVoOZWQSu+4Iuv7g==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19241,11 +19241,11 @@ packages:
     deprecated: 'We’re retiring the Azure Video Analyzer preview service; you''re advised to transition your applications off of Video Analyzer by 01 December 2022. This SDK is no longer maintained and won’t work after the service is retired. To learn how to transition off, please refer to: https://aka.ms/azsdk/videoanalyzer/transitionoffguidance'
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19254,7 +19254,7 @@ packages:
   /@azure/arm-visualstudio@3.0.0:
     resolution: {integrity: sha512-vM5x0RauhHgrITcrtBG35ZdCPLG81jBTM3hgFwjwok53MKPHbBvjzUuvg8Jd9iAqkdJ8Mjl0+BXlZ2O1ePaFuQ==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-azure-js': 2.1.0
       '@azure/ms-rest-js': 2.7.0
       tslib: 1.14.1
@@ -19267,11 +19267,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19282,11 +19282,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19297,11 +19297,11 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19311,44 +19311,44 @@ packages:
     resolution: {integrity: sha512-RPZXiL5VO1G/RfzlQIs/X19Y/2hIONgXe+nJ+wAo8Y2pKJ1qGk7x7Q4ba5zUJ46X7SoLfZ+HJyWkUW7S/2zwcg==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@azure/core-auth@1.7.1:
-    resolution: {integrity: sha512-dyeQwvgthqs/SlPVQbZQetpslXceHd4i5a7M/7z/lGEAVwnSluabnQOjF2/dk/hhWgMISusv1Ytp4mQ8JNy62A==}
+  /@azure/core-auth@1.7.2:
+    resolution: {integrity: sha512-Igm/S3fDYmnMq1uKS38Ae1/m37B3zigdlZw+kocwEhh5GjyKjPrXKO2J6rzpC1wAxrNil/jX9BJRqBshyjnF3g==}
     engines: {node: '>=18.0.0'}
     dependencies:
-      '@azure/abort-controller': 2.1.1
-      '@azure/core-util': 1.8.1
+      '@azure/abort-controller': 2.1.2
+      '@azure/core-util': 1.9.0
       tslib: 2.6.2
 
-  /@azure/core-client@1.9.1:
-    resolution: {integrity: sha512-hHYFx9lz0ZpbO5W+iotU9tmIX1jPcoIjYUEUaWGuMi1628LCQ/z05TUR4P+NRtMgyoHQuyVYyGQiD3PC47kaIA==}
+  /@azure/core-client@1.9.2:
+    resolution: {integrity: sha512-kRdry/rav3fUKHl/aDLd/pDLcB+4pOFwPPTVEExuMyaI5r+JBbMWqRbCY1pn5BniDaU3lRxO9eaQ1AmSMehl/w==}
     engines: {node: '>=18.0.0'}
     dependencies:
-      '@azure/abort-controller': 2.1.1
-      '@azure/core-auth': 1.7.1
-      '@azure/core-rest-pipeline': 1.15.1
-      '@azure/core-tracing': 1.1.1
-      '@azure/core-util': 1.8.1
-      '@azure/logger': 1.1.1
+      '@azure/abort-controller': 2.1.2
+      '@azure/core-auth': 1.7.2
+      '@azure/core-rest-pipeline': 1.15.2
+      '@azure/core-tracing': 1.1.2
+      '@azure/core-util': 1.9.0
+      '@azure/logger': 1.1.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
 
-  /@azure/core-http-compat@2.1.1:
-    resolution: {integrity: sha512-QGSDBkKpDbVOmbqlVPdlPE1JalHWmJjLyZhL+9zZN9gj4X1pTksEbDR77P+qWCJ5NGaSWyKvAW+3Q6hNX8/W+Q==}
+  /@azure/core-http-compat@2.1.2:
+    resolution: {integrity: sha512-5MnV1yqzZwgNLLjlizsU3QqOeQChkIXw781Fwh1xdAqJR5AA32IUaq6xv1BICJvfbHoa+JYcaij2HFkhLbNTJQ==}
     engines: {node: '>=18.0.0'}
     dependencies:
-      '@azure/abort-controller': 2.1.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-rest-pipeline': 1.15.1
+      '@azure/abort-controller': 2.1.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-rest-pipeline': 1.15.2
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -19358,10 +19358,10 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/core-tracing': 1.0.0-preview.13
-      '@azure/core-util': 1.8.1
-      '@azure/logger': 1.1.1
+      '@azure/core-util': 1.9.0
+      '@azure/logger': 1.1.2
       '@types/node-fetch': 2.6.11
       '@types/tunnel': 0.0.3
       form-data: 4.0.0
@@ -19375,32 +19375,32 @@ packages:
       - encoding
     dev: false
 
-  /@azure/core-lro@2.7.1:
-    resolution: {integrity: sha512-kXSlrNHOCTVZMxpXNRqzgh9/j4cnNXU5Hf2YjMyjddRhCXFiFRzmNaqwN+XO9rGTsCOIaaG7M67zZdyliXZG9g==}
+  /@azure/core-lro@2.7.2:
+    resolution: {integrity: sha512-0YIpccoX8m/k00O7mDDMdJpbr6mf1yWo2dfmxt5A8XVZVVMz2SSKaEbMCeJRvgQ0IaSlqhjT47p4hVIRRy90xw==}
     engines: {node: '>=18.0.0'}
     dependencies:
-      '@azure/abort-controller': 2.1.1
-      '@azure/core-util': 1.8.1
-      '@azure/logger': 1.1.1
+      '@azure/abort-controller': 2.1.2
+      '@azure/core-util': 1.9.0
+      '@azure/logger': 1.1.2
       tslib: 2.6.2
     dev: false
 
-  /@azure/core-paging@1.6.1:
-    resolution: {integrity: sha512-3tKIQXSU3mlN+ITz0m2pXLnKK3oQ6/EVcW8ud011Iq+M0rx6Wnm7NUEpoMeOAEedeKlPtemrQzO6YWoDR71O5w==}
+  /@azure/core-paging@1.6.2:
+    resolution: {integrity: sha512-YKWi9YuCU04B55h25cnOYZHxXYtEvQEbKST5vqRga7hWY9ydd3FZHdeQF8pyh+acWZvppw13M/LMGx0LABUVMA==}
     engines: {node: '>=18.0.0'}
     dependencies:
       tslib: 2.6.2
     dev: false
 
-  /@azure/core-rest-pipeline@1.15.1:
-    resolution: {integrity: sha512-ZxS6i3eHxh86u+1eWZJiYywoN2vxvsSoAUx60Mny8cZ4nTwvt7UzVVBJO+m2PW2KIJfNiXMt59xBa59htOWL4g==}
+  /@azure/core-rest-pipeline@1.15.2:
+    resolution: {integrity: sha512-BmWfpjc/QXc2ipHOh6LbUzp3ONCaa6xzIssTU0DwH9bbYNXJlGUL6tujx5TrbVd/QQknmS+vlQJGrCq2oL1gZA==}
     engines: {node: '>=18.0.0'}
     dependencies:
-      '@azure/abort-controller': 2.1.1
-      '@azure/core-auth': 1.7.1
-      '@azure/core-tracing': 1.1.1
-      '@azure/core-util': 1.8.1
-      '@azure/logger': 1.1.1
+      '@azure/abort-controller': 2.1.2
+      '@azure/core-auth': 1.7.2
+      '@azure/core-tracing': 1.1.2
+      '@azure/core-util': 1.9.0
+      '@azure/logger': 1.1.2
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.4
       tslib: 2.6.2
@@ -19415,17 +19415,17 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@azure/core-tracing@1.1.1:
-    resolution: {integrity: sha512-qPbYhN1pE5XQ2jPKIHP33x8l3oBu1UqIWnYqZZ3OYnYjzY0xqIHjn49C+ptsPD9yC7uyWI9Zm7iZUZLs2R4DhQ==}
+  /@azure/core-tracing@1.1.2:
+    resolution: {integrity: sha512-dawW9ifvWAWmUm9/h+/UQ2jrdvjCJ7VJEuCJ6XVNudzcOwm53BFZH4Q845vjfgoUAM8ZxokvVNxNxAITc502YA==}
     engines: {node: '>=18.0.0'}
     dependencies:
       tslib: 2.6.2
 
-  /@azure/core-util@1.8.1:
-    resolution: {integrity: sha512-L3voj0StUdJ+YKomvwnTv7gHzguJO+a6h30pmmZdRprJCM+RJlGMPxzuh4R7lhQu1jNmEtaHX5wvTgWLDAmbGQ==}
+  /@azure/core-util@1.9.0:
+    resolution: {integrity: sha512-AfalUQ1ZppaKuxPPMsFEUdX6GZPB3d9paR9d/TTL7Ow2De8cJaC7ibi7kWVlFAVPCYo31OcnGymc0R89DX8Oaw==}
     engines: {node: '>=18.0.0'}
     dependencies:
-      '@azure/abort-controller': 2.1.1
+      '@azure/abort-controller': 2.1.2
       tslib: 2.6.2
 
   /@azure/functions@3.5.1:
@@ -19452,12 +19452,12 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-rest-pipeline': 1.15.1
-      '@azure/core-tracing': 1.1.1
-      '@azure/core-util': 1.8.1
-      '@azure/logger': 1.1.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-rest-pipeline': 1.15.2
+      '@azure/core-tracing': 1.1.2
+      '@azure/core-util': 1.9.0
+      '@azure/logger': 1.1.2
       '@azure/msal-browser': 3.11.1
       '@azure/msal-node': 2.6.6
       events: 3.3.0
@@ -19473,22 +19473,22 @@ packages:
     engines: {node: '>=18.0.0'}
     dependencies:
       '@azure/abort-controller': 1.1.0
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-http-compat': 2.1.1
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
-      '@azure/core-tracing': 1.1.1
-      '@azure/core-util': 1.8.1
-      '@azure/logger': 1.1.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-http-compat': 2.1.2
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
+      '@azure/core-tracing': 1.1.2
+      '@azure/core-util': 1.9.0
+      '@azure/logger': 1.1.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@azure/logger@1.1.1:
-    resolution: {integrity: sha512-/+4TtokaGgC+MnThdf6HyIH9Wrjp+CnCn3Nx3ggevN7FFjjNyjqg0yLlc2i9S+Z2uAzI8GYOo35Nzb1MhQ89MA==}
+  /@azure/logger@1.1.2:
+    resolution: {integrity: sha512-l170uE7bsKpIU6B/giRc9i4NI0Mj+tANMMMxf7Zi/5cKzEqPayP7+X1WPrG7e+91JgY8N+7K7nF2WOi7iVhXvg==}
     engines: {node: '>=18.0.0'}
     dependencies:
       tslib: 2.6.2
@@ -19497,13 +19497,13 @@ packages:
     resolution: {integrity: sha512-o3h5zG/FvfGJhoi+ChiUiTjGfhhFO11LfmNxBMl7j+yeCdbm2DiRyEerSyPi4c8qxQx0D7xPME78s1VcipVQLw==}
     engines: {node: '>=18.0.0'}
     dependencies:
-      '@azure/core-auth': 1.7.1
-      '@azure/core-client': 1.9.1
-      '@azure/core-paging': 1.6.1
-      '@azure/core-rest-pipeline': 1.15.1
-      '@azure/core-tracing': 1.1.1
-      '@azure/core-util': 1.8.1
-      '@azure/logger': 1.1.1
+      '@azure/core-auth': 1.7.2
+      '@azure/core-client': 1.9.2
+      '@azure/core-paging': 1.6.2
+      '@azure/core-rest-pipeline': 1.15.2
+      '@azure/core-tracing': 1.1.2
+      '@azure/core-util': 1.9.0
+      '@azure/logger': 1.1.2
       tslib: 2.6.2
     transitivePeerDependencies:
       - supports-color
@@ -19512,7 +19512,7 @@ packages:
   /@azure/ms-rest-azure-js@1.4.0:
     resolution: {integrity: sha512-ul1wfkzwU9wYg6kFKD/AuQfVRJU4utEjDcfa0hvXqDS99yRuJqUrt/Ojv3duZMwskBIrD3CV5d9TjLBOV7/pQw==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-js': 1.11.2
       tslib: 1.14.1
     transitivePeerDependencies:
@@ -19522,7 +19522,7 @@ packages:
   /@azure/ms-rest-azure-js@2.1.0:
     resolution: {integrity: sha512-CjZjB8apvXl5h97Ck6SbeeCmU0sk56YPozPtTyGudPp1RGoHXNjFNtoOvwOG76EdpmMpxbK10DqcygI16Lu60Q==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       '@azure/ms-rest-js': 2.7.0
       tslib: 1.14.1
     transitivePeerDependencies:
@@ -19532,7 +19532,7 @@ packages:
   /@azure/ms-rest-js@1.11.2:
     resolution: {integrity: sha512-2AyQ1IKmLGKW7DU3/x3TsTBzZLcbC9YRI+yuDPuXAQrv3zar340K9wsxU413kHFIDjkWNCo9T0w5VtwcyWxhbQ==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       axios: 0.21.4
       form-data: 2.5.1
       tough-cookie: 2.5.0
@@ -19547,7 +19547,7 @@ packages:
   /@azure/ms-rest-js@2.7.0:
     resolution: {integrity: sha512-ngbzWbqF+NmztDOpLBVDxYM+XLcUj7nKhxGbSU9WtIsXfRB//cf2ZbAG5HkOrhU9/wd/ORRB6lM/d69RKVjiyA==}
     dependencies:
-      '@azure/core-auth': 1.7.1
+      '@azure/core-auth': 1.7.2
       abort-controller: 3.0.0
       form-data: 2.5.1
       node-fetch: 2.7.0
@@ -19583,10 +19583,10 @@ packages:
     dependencies:
       '@azure/abort-controller': 1.1.0
       '@azure/core-http': 3.0.4
-      '@azure/core-lro': 2.7.1
-      '@azure/core-paging': 1.6.1
+      '@azure/core-lro': 2.7.2
+      '@azure/core-paging': 1.6.2
       '@azure/core-tracing': 1.0.0-preview.13
-      '@azure/logger': 1.1.1
+      '@azure/logger': 1.1.2
       events: 3.3.0
       tslib: 2.6.2
     transitivePeerDependencies:
