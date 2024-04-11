@@ -523,7 +523,7 @@
         "typescript": "^4.9.5"
     },
     "name": "Kexa",
-    "version": "1.13.2-testpnpm.4.15cbed8",
+    "version": "1.13.2-testpnpm.9.320e27e",
     "main": "./build/index.js",
     "scripts": {
         "postinstall": "node-config-ts",
