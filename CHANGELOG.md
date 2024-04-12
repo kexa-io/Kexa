@@ -1448,3 +1448,38 @@ package-lock.json was changed
 package.json was changed
 
 
+## 1.14.0-SNAPSHOT.18.b28d27d
+
+### Files added: 2
+
+Kexa/rules/KubeComplianceSetRules.yaml was added
+
+Kexa/rules/StorageSecurity.yaml was added
+
+### Files changed: 12
+
+Kexa/rules/KubeComplianceSetRules.yaml was changed
+
+Kexa/rules/StorageSecurity.yaml was changed
+
+Kexa/models/kubernetes/kubernetes.models.ts was changed
+
+Kexa/rules/AwsComplianceSetRules.yaml was changed
+
+Kexa/rules/AzureComplianceSetRules.yaml was changed
+
+Kexa/rules/Kubernete.yaml was changed
+
+Kexa/rules/awsSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/awsSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/azureSetRules.yaml was changed
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/display/kubernetesDisplay.service.ts was changed
+
+Kexa/services/addOn/kubernetesGathering.service.ts was changed
+
+
