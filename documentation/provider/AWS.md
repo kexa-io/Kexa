@@ -45,6 +45,7 @@ There are several ways to identify yourself in an AWS environment. Obviously, yo
 ```shell
 AWS_ACCESS_KEY_ID=XXXXXXXXX  
 AWS_SECRET_ACCESS_KEY=XXXXXXXXX
+AWS_SESSION_TOKEN=XXXXXX # This one is optionnal, use it if you're using temporary credentials (IAM role)
 ```
 
 ## Additional documentation

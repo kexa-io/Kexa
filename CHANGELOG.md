@@ -1542,3 +1542,12 @@ package-lock.json was changed
 package.json was changed
 
 
+## 1.14.0-aepplingpatch1.22.ca313e1
+
+### Files added: 0
+
+### Files changed: 1
+
+documentation/provider/AWS.md was changed
+
+
