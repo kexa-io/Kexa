@@ -63,7 +63,7 @@
     # need to define behavior
     - name: "aws-resources-tags-key-value-check"
       description: "this rule is to check if tags and their value match your tagging policy"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: aws
       objectName: KexaAwsCustoms.resourcesTags
