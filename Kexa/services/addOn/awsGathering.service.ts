@@ -4842,6 +4842,9 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
         try {
             let awsKeyId = await getConfigOrEnvVar(oneConfig, "AWS_ACCESS_KEY_ID", prefix);
             let awsSecretKey = await getConfigOrEnvVar(oneConfig, "AWS_SECRET_ACCESS_KEY", prefix);
+			let awsSessionToken = await getConfigOrEnvVar(oneConfig, "AWS_SESSION_TOKEN", prefix);
+			if (awsSessionToken)
+				setEnvVar("AWS_SESSION_TOKEN", awsSessionToken);
             if (awsKeyId)
                 setEnvVar("AWS_ACCESS_KEY_ID", awsKeyId);
             else
