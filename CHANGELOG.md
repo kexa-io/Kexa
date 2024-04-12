@@ -1483,3 +1483,62 @@ Kexa/services/addOn/display/kubernetesDisplay.service.ts was changed
 Kexa/services/addOn/kubernetesGathering.service.ts was changed
 
 
+## 1.14.0-SNAPSHOT.19.37ca242
+
+### Files added: 3
+
+Kexa/rules/KubeComplianceSetRules.yaml was added
+
+Kexa/rules/StorageSecurity.yaml was added
+
+pnpm-lock.yaml was added
+
+### Files changed: 23
+
+Kexa/rules/KubeComplianceSetRules.yaml was changed
+
+Kexa/rules/StorageSecurity.yaml was changed
+
+pnpm-lock.yaml was changed
+
+.github/workflows/ci.yml was changed
+
+CHANGELOG.md was changed
+
+Dockerfile was changed
+
+Kexa/models/kubernetes/kubernetes.models.ts was changed
+
+Kexa/rules/AwsComplianceSetRules.yaml was changed
+
+Kexa/rules/AzureComplianceSetRules.yaml was changed
+
+Kexa/rules/Kubernete.yaml was changed
+
+Kexa/rules/awsSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/awsSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/azureSetRules.yaml was changed
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/display/kubernetesDisplay.service.ts was changed
+
+Kexa/services/addOn/kubernetesGathering.service.ts was changed
+
+Kexa/services/updateCapability.service.ts was changed
+
+README.md was changed
+
+VERSION was changed
+
+capacity.json was changed
+
+documentation/Documentation-Kexa.md was changed
+
+package-lock.json was changed
+
+package.json was changed
+
+

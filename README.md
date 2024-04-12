@@ -7032,6 +7032,8 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ limitrange
 - ✅ resourcequota
 - ✅ podtemplate
+- ✅ hpa
+- ✅ podLogs
 </details>
 <details>
 <summary>✅ O365 check in:</summary>
