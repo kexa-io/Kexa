@@ -52,6 +52,7 @@
 //*     - validatingwebhookconfiguration
 //*     - controllerrevision
 
+import { getConfig } from "../../helpers/loaderConfig";
 import helm from 'helm-ts';
 import { KubernetesResources, createKubernetesResourcesDefault } from "../../models/kubernetes/kubernetes.models";
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
@@ -64,6 +65,8 @@ const logger = getNewLogger("KubernetesLogger");
 
 const k8s = require('@kubernetes/client-node');
 let currentConfig:KubernetesConfig;
+
+const globalConfiguration = getConfig().global ?? null;
 
 export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<KubernetesResources[]|null>{
     let resources = new Array<KubernetesResources>();
@@ -803,7 +806,7 @@ async function collectComponentstatus(k8sApiCore: any, namespace: string): Promi
 
 async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): Promise<any> {
     if (!currentConfig?.ObjectNameNeed?.includes("podLogs")) return [];
-    console.log("collecting pod logs");
+    if (globalConfiguration.scanDelay == null) globalConfiguration.scanDelay = 3600;
     try {
         const pods = await k8sApiCore.listNamespacedPod(namespace);
         const stream = require('stream');
@@ -812,12 +815,16 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
 
         await Promise.all(pods?.body?.items.map(async (pod: any) => {
             const logStream = new stream.PassThrough();
-            let podLogs: any[] = []; // Stores logs for this pod
+            const currDate = new Date();
+            const interval = new Date(currDate.getTime() - globalConfiguration.scanDelay * 1000);
 
             logStream.on('data', (chunk: any) => {
                 const logEntries = chunk.toString();
-                podLogs = [podLogs, ...logEntries.split('\n')];
-              //  podLogs.push(...logEntries.split('\n'));
+                logsData.push({
+                    metadata: pod.metadata,
+                    logs: logEntries.split('\n').map((line: string) => ({ line })),
+                    interval: interval
+                });
             });
 
             try {
@@ -826,31 +833,24 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
                     tailLines: 50,
                     pretty: false,
                     timestamps: true,
-                    sinceSeconds: 3600,
+                    sinceSeconds: globalConfiguration.scanDelay
                 });
                 if (req) {
                     await delay(2000);
                     req.abort();
                 }
             } catch (err) {
-                console.log("error when retrieving log on pod :" + pod.metadata.name);
                 logger.debug("error when retrieving log on pod :" + pod.metadata.name);
                 logger.silly(err);
             }
-
-            logsData.push({
-                metadata: pod.metadata,
-                logs: podLogs
-            });
         }));
-        
-        console.log(logsData);
         return logsData;
     } catch (e) {
         logger.debug(e);
         return [];
     }
 }
+
 
 
 async function collectHorizontalPodAutoscaler(autoscalingV1Api: any, namespace: string): Promise<any> {
