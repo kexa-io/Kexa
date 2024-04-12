@@ -7656,7 +7656,9 @@
             "componentstatus",
             "limitrange",
             "resourcequota",
-            "podtemplate"
+            "podtemplate",
+            "hpa",
+            "podLogs"
         ],
         "thumbnail": "https://logos-download.com/wp-content/uploads/2018/09/Kubernetes_Logo.png",
         "documentation": "https://github.com/kubernetes-client/javascript",

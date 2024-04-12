@@ -190,7 +190,7 @@ interface AzureClients {
 
 async function createAzureArmPkgImportList() {
     try {
-      //  await fetchArmPackages('@azure/arm-', 'azurePackage.import.ts', 'azurePackageInstall.script.sh');
+        await fetchArmPackages('@azure/arm-', 'azurePackage.import.ts', 'azurePackageInstall.script.sh');
         retrieveAzureArmClients();
     } catch (e) {
         console.error("Error fetching Azure Packages", e);
@@ -220,7 +220,7 @@ function extractClientsAzure(module: any): AzureClients {
             try {
                 clients[key] = callGenericClient(createGenericClient(module[key], credentials, null));
             } catch (e) {
-                console.error("Error when using client constructor in update capability.", e);
+                console.debug("Error when using client constructor in update capability.", e);
             }
 
         }
