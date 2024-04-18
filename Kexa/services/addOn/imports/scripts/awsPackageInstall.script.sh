@@ -266,8 +266,16 @@ packages=(
     '@aws-sdk/client-commander'
 )
 
-for pkg in "${packages[@]}"
-do
-    npm install "$pkg" || echo "Failed to install $pkg"
-    echo "done for $pkg"
+# for pkg in "${packages[@]}"
+# do
+#     npm install "$pkg" || echo "Failed to install $pkg"
+#     echo "done for $pkg"
+# done
+
+package_string=""
+for package in "${packages[@]}"; do
+    package_string+=" $package"
 done
+
+# Install packages using npm
+npm install $package_string
