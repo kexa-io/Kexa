@@ -1576,3 +1576,14 @@ package.json was changed
 .github/workflows/ci.yml was changed
 
 
+## 1.14.0-SNAPSHOT.32.8960e5d
+
+### Files added: 0
+
+### Files changed: 2
+
+Kexa/services/analyse.service.ts was changed
+
+documentation/Documentation-Kexa.md was changed
+
+
