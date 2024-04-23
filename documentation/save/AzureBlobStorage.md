@@ -1,5 +1,5 @@
 <div align="center">
-    <a href="https://www.kexa.io/addOn/azure">
+    <a href="https://www.kexa.io/modules">
         <img src="../../images/azureBlobStorage.png" alt="Logo" width="200">
     </a>
 
@@ -17,7 +17,7 @@
 
 ### Default.json
 
-For each of your blob storage, no key is mandatory in the original sense of the term execpt:
+For each of your blob storage, no key is mandatory in the original sense of the term except:
 
 - "containerName": it's refer to the name of your container where you want to store the data
 

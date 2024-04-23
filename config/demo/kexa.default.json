@@ -1,0 +1,29 @@
+{
+    "azure": [
+        {
+            "name": "Project A",
+            "prefix": "PROJECTA-",
+            "description": "First subscription (0) : Project A subscription",
+            "rules": [
+                "Name of my rule"
+            ]
+        },
+        {
+            "name": "Project B",
+            "prefix": "PROJECTB-",
+            "description": "Second subscription (1) : Project B subscription",
+            "rules": [
+                "Name of my rule",
+                "Another rules"
+            ]
+        }
+    ],
+    "save": [
+        {
+            "type": "kexa",
+            "name": "name of the token or the name of the var environment where the real name is stored",
+            "token": "token for kexa or the name of the var environment where the token is stored: the format is uuid4",
+            "description": "example of save for kexa"
+        }
+    ]
+}

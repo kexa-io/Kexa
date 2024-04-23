@@ -9,7 +9,7 @@ const logger = getNewLogger("KexaExportationLogger");
 const context = getContext();
 //const addOnPropertyToSend: { [key: string]: Function; } = loadAddOnsCustomUtility("display", "propertyToSend");
 
-export async function save(save: KexaSaveConfig, resources: ProviderResource): Promise<void>{
+export async function exportation(save: KexaSaveConfig, resources: ProviderResource): Promise<void>{
     if(!save.name) throw new Error("name is required");
     let name = (await getEnvVar(save.name))??save.name;
     let token = (await getEnvVar(save.token))??save.token;
@@ -20,7 +20,7 @@ export async function save(save: KexaSaveConfig, resources: ProviderResource): P
     Object.keys(resources).forEach((providerName) => {
         configSend[providerName] = config[providerName]??[];
     });
-    await axios.post(`https://api.kexa.io/api/job/exportation`, {resources: resources, configSend, save}, {
+    await axios.post((process.env.DOMAINEKEXA??`https://api.kexa.io`) + '/api/job/exportation', {resources: resources, configSend, save}, {
         headers: {
             User: name,
             Authorization: token

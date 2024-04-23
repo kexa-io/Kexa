@@ -15,7 +15,7 @@ export async function save(save: KexaSaveConfig, result: ResultScan[][]): Promis
     let token = (await getEnvVar(save.token))??save.token;
     logger.info(`Saving to Kexa SaaS`);
     context?.log(`Saving to Kexa SaaS`);
-    await axios.post(`https://api.kexa.io/api/job/save`, {result: result, save}, {
+    await axios.post((process.env.DOMAINEKEXA??`https://api.kexa.io`) + `/api/job/save`, {result: result, save}, {
         headers: {
             User: name,
             Authorization: token

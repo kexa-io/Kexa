@@ -1248,15 +1248,15 @@ However if you want to run kexa with a special config or rules, you can perform 
 
 - set your own configuration:
 
-```shell
-docker run -d -v Absolute/Path/to/config:/app/config kexa
-```
+  ```shell
+  docker run -d -v Absolute/Path/to/config:/app/config kexa
+  ```
 
 - set your own rules:
 
-```shell
-docker run -d -v Absolute/Path/to/rules:/app/kexa/rules kexa
-```
+  ```shell
+  docker run -d -v Absolute/Path/to/rules:/app/kexa/rules kexa
+  ```
 
 <br/>
 
