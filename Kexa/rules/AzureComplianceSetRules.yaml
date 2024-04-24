@@ -53,7 +53,7 @@
     # Azure tag/value checking
     - name: "azure-tags-check"
       description: "this rule is to check on azure tags for a specific pattern"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: azure
       objectName: ResourceManagementClient.tagsOperations

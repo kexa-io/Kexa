@@ -764,6 +764,7 @@ export function checkLessThanDate(condition:RulesConditions, value:any): boolean
     logger.debug("check less than date");
     let dynamic_date = generateDate(condition.value as string, false);
     let value_date = moment(value, condition.date).toDate();
+    if ( value_date.toString() === "Invalid Date" ) logger.warn("Invalid format date, please check your date format in your rule")
     if(value_date > dynamic_date.toDate()) return true;
     return false;
 }

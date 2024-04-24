@@ -49,7 +49,7 @@
     #change the namespace name to your namespace
     - name: "namespace-exist-api-4urcloud"
       description : "this rules is to check if namespace exist and notifiable if exist"
-      applied: true
+      applied: false
       level: 0
       cloudProvider: kubernetes
       objectName : namespaces
@@ -60,7 +60,7 @@
     #change the namespace name to your namespace
     - name: "all-pods-running-kexawebsite"
       description : "this rules is to check if all pods are running for a namespace"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: kubernetes
       objectName : pods
@@ -73,3 +73,97 @@
             - property : metadata.namespace
               condition : EQUAL
               value : kexawebsitepublic
+    - name: "kube-is-persistent-volume-bounded"
+      description : "this rules is to verify that persistent volume is bounded"
+      applied: false
+      level: 2
+      cloudProvider: kubernetes
+      objectName : persistentvolume
+      conditions:
+        - property : status.phase
+          condition : EQUAL
+          value : 'Bound'
+    - name: "kube-persistent-volume-verify-storage-class"
+      description : "this rules is to verify for a persistent volume storage class"
+      applied: false
+      level: 2
+      cloudProvider: kubernetes
+      objectName : persistentvolume
+      conditions:
+        - property : spec.storageClassName
+          condition : EQUAL
+          value : 'premium2-disk-sc'
+    - name: "kube-volume-mounts-read-only"
+      description : "this rules is to verify volume mounts are read only"
+      applied: false
+      level: 2
+      cloudProvider: kubernetes
+      objectName : pods
+      conditions:
+        - property : spec.containers
+          condition : ALL
+          value:
+            - property: volumeMounts
+              condition: ALL
+              value:
+                - property : readOnly
+                  condition : EQUAL
+                  value : true
+    - name: "kube-storage-class-allow-expansion"
+      description : "this rules is to verify storage class allow expansion"
+      applied: false
+      level: 2
+      cloudProvider: kubernetes
+      objectName : storageclass
+      conditions:
+        - property : allowVolumeExpansion
+          condition : EQUAL
+          value: true
+    # this is an example of storage class disk parameters rule
+    - name: "kube-storage-class-disk-parameters"
+      description : "this rules is to verify storage class disk parameters"
+      applied: false
+      level: 2
+      cloudProvider: kubernetes
+      objectName : storageclass
+      conditions:
+        - property : parameters.cachingMode
+          condition : EQUAL
+          value: 'None'
+        - property : parameters.DiskIOPSReadWrite
+          condition : SUP_OR_EQUAL
+          value: '1000'
+        - property : parameters.DiskMBpsReadWrite
+          condition : SUP_OR_EQUAL
+          value: '1000'
+    # this is an example of pod autoscaler rule
+    - name: "kube-hozizontal-pod-autoscaler-min-max-replicas"
+      description : "this rules is to verify horizontal pod autoscaler min and max replicas"
+      applied: false
+      level: 2
+      cloudProvider: kubernetes
+      objectName : hpa
+      conditions:
+        - property : spec.minReplicas
+          condition : SUP_OR_EQUAL
+          value: 1
+        - property : spec.maxReplicas
+          condition : INF_OR_EQUAL
+          value: 2
+    # this is an example of pod autoscaler rule
+    - name: "kube-hozizontal-pod-autoscaler-min-max-replicas"
+      description : "this rules is to verify horizontal pod autoscaler min and max replicas"
+      applied: true
+      level: 2
+      cloudProvider: kubernetes
+      objectName : podLogs
+      conditions:
+        - property : logs
+          condition : ALL
+          value: 
+            - property : message
+              condition : DIFFERENT
+              value: 'error'
+            - property : message
+              condition : DIFFERENT
+              value: 'warning'
