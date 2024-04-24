@@ -1448,3 +1448,46 @@ package-lock.json was changed
 package.json was changed
 
 
+## 1.14.0-devestebanexportsaasaddon.15.d3d1bf9
+
+### Files added: 5
+
+Kexa/models/export/kexa/config.model.ts was added
+
+Kexa/services/addOn/exportation/kexaExportation.service.ts was added
+
+Kexa/services/addOn/save/kexaSave.service.ts was added
+
+config/demo/kexa.default.json was added
+
+documentation/save/Kexa.md was added
+
+### Files changed: 13
+
+Kexa/models/export/kexa/config.model.ts was changed
+
+Kexa/services/addOn/exportation/kexaExportation.service.ts was changed
+
+Kexa/services/addOn/save/kexaSave.service.ts was changed
+
+config/demo/kexa.default.json was changed
+
+documentation/save/Kexa.md was changed
+
+Dockerfile was changed
+
+Kexa/main.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+Kexa/services/exportation.service.ts was changed
+
+documentation/Documentation-Kexa.md was changed
+
+documentation/save/AzureBlobStorage.md was changed
+
+documentation/save/MongoDB.md was changed
+
+documentation/save/MySQL.md was changed
+
+
