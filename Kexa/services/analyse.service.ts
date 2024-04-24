@@ -36,6 +36,7 @@ const varEnvMin = {
 const config = getConfig();
 const levelAlert = ["info", "warning", "error", "critical"];
 const defaultRulesDirectory = "./rules";
+const secondDefaultRulesDirectory = "./Kexa/rules";
 
 let headers: any;
 // Analyze  list
@@ -49,7 +50,8 @@ export async function gatheringRules(rulesDirectory:string, getAll:boolean=false
         await gatheringDistantRules(rulesDirectory);
         rulesDirectory = defaultRulesDirectory;
     }
-    const paths = fs.readdirSync(rulesDirectory, { withFileTypes: true});
+    let paths = fs.readdirSync(rulesDirectory, { withFileTypes: true});
+    if(paths.length === 0) paths = fs.readdirSync(secondDefaultRulesDirectory, { withFileTypes: true});
     logger.debug("listing rules files.");
     let settingFileList = new Array<SettingFile>;
     headers = require('../../config/headers.json');

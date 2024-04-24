@@ -10,6 +10,7 @@ const context = getContext();
 //const addOnPropertyToSend: { [key: string]: Function; } = loadAddOnsCustomUtility("display", "propertyToSend");
 
 export async function exportation(save: KexaSaveConfig, resources: ProviderResource): Promise<void>{
+    throw new Error("Not implemented");
     if(!save.name) throw new Error("name is required");
     let name = (await getEnvVar(save.name))??save.name;
     let token = (await getEnvVar(save.token))??save.token;
