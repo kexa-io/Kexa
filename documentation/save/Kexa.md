@@ -37,3 +37,4 @@ Example config for each identification you can use:
 
 By saving or exporting your data from your kexa to the SaaS service, you can use all the viewing tools available to you.
 The data sent using this method is in no way processed by anyone other than yourself.
+We are not responsible for data theft or transmission of confidential information.
