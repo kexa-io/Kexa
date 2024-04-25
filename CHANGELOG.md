@@ -1722,3 +1722,24 @@ documentation/save/MySQL.md was changed
 package.json was changed
 
 
+## 1.14.0-devestebanexportsaasaddon.43.a4bf541
+
+### Files added: 0
+
+### Files changed: 7
+
+Kexa/models/resultScan.models.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/exportation/kexaExportation.service.ts was changed
+
+Kexa/services/addOn/save/kexaSave.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+documentation/save/Kexa.md was changed
+
+package.json was changed
+
+
