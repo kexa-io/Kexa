@@ -1898,7 +1898,6 @@ async function listAllResources(client: any, currentConfig: any) {
 							}else{
 								resultList[keyStr].push(...resultObject);
 							}
-							logger.debug(resultList);
                         } catch (e) {
                             logger.debug("Error on function :", e);
                         }

@@ -3,6 +3,7 @@ import { getContext, getNewLogger } from "../../logger.service";
 import { ProviderResource } from "../../../models/providerResource.models";
 import { getConfig } from "../../../helpers/loaderConfig";
 import { KexaSaveConfig } from "../../../models/export/kexa/config.model";
+import { propertyToSend } from "../../display.service";
 
 const axios = require('axios');
 const logger = getNewLogger("KexaExportationLogger");
@@ -20,6 +21,13 @@ export async function exportation(save: KexaSaveConfig, resources: ProviderResou
     let configSend:any = {};
     Object.keys(resources).forEach((providerName) => {
         configSend[providerName] = config[providerName]??[];
+        resources[providerName].forEach((provider) => {
+            Object.keys(provider).forEach((key) => {
+                provider[key].forEach((resource) => {
+                    resource.identifier = propertyToSend(resource.rule, resource.objectContent, true);
+                });
+            });
+        });
     });
     await axios.post((process.env.DOMAINEKEXA??`https://api.kexa.io`) + '/api/job/exportation', {resources: resources, configSend, save}, {
         headers: {

@@ -603,32 +603,32 @@ export function getSubProperty(object:any, property:string): any {
 }
 
 export function checkEqual(condition:RulesConditions, value:any): boolean {
-    logger.debug("check equal");
+    logger.debug("check equal:" + value + " = " + condition.value + " ?");
     if(value === condition.value) return true;
     return false;
 }
 
 export function checkGreaterThan(condition:RulesConditions, value:any): boolean {
-    logger.debug("check greater than");
+    logger.debug("check greater than:" + value + " > " + condition.value + " ?");
     if(value > condition.value) return true;
     return false;
 }
 
 export function checkLessThan(condition:RulesConditions, value:any): boolean {
-    logger.debug("check less than");
+    logger.debug("check less than:" + value + " < " + condition.value + " ?");
     if(value < condition.value) return true;
     return false;
 }
 
 export function checkInclude(condition:RulesConditions, value:any): boolean {
-    logger.debug("check include");
+    logger.debug("check include:" + condition.value + " in " + value + " ?");
     if(value.includes(condition.value)) return true;
     return false;
 }
 
 export function checkIncludeNS(condition:RulesConditions, value:any): boolean {
-    logger.debug("check include not sensitive");
     try{
+        logger.debug("check include not sensitive:" + String(condition.value).toLowerCase() + " in " + value.toLowerCase() + " ?");
         if(value.toLowerCase().includes(String(condition.value).toLowerCase())) return true;
         return false;
     }catch(err) {
@@ -638,8 +638,8 @@ export function checkIncludeNS(condition:RulesConditions, value:any): boolean {
 }
 
 export function checkRegex(condition:RulesConditions, value:any): boolean {
-    logger.debug("check regex");
     if (typeof value == "number") {
+        logger.debug("check regex:" + condition.value + "for" + value.toString() + " ?");
         if (RegExp(condition.value.toString()).exec(value.toString()))
             return true;
         else
@@ -651,13 +651,13 @@ export function checkRegex(condition:RulesConditions, value:any): boolean {
 }
 
 export function checkStartsWith(condition:RulesConditions, value:any): boolean {
-    logger.debug("check starts with");
+    logger.debug("check starts with:" + condition.value + " for " + value + " ?");
     if(value.startsWith(condition.value)) return true;
     return false;
 }
 
 export function checkEndsWith(condition:RulesConditions, value:any): boolean {
-    logger.debug("check ends with");
+    logger.debug("check ends with:" + condition.value + " for " + value + " ?");
     if(value.endsWith(condition.value)) return true;
     return false;
 }
@@ -697,32 +697,32 @@ export function checkOne(condition:RulesConditions, value:any): boolean {
 }
 
 export function checkCount(condition:RulesConditions, value:any): boolean {
-    logger.debug("check count");
+    logger.debug("check count: " + value.length + " = " + condition.value + " ?");
     if(value.length === condition.value) return true;
     return false;
 }
 
 export function checkEqualDate(condition:RulesConditions, value:any): boolean {
-    logger.debug("check equal date");
     let value_date = moment(value, condition.date);
     let condition_date = moment(condition.value as string, condition.date);
+    logger.debug("check equal date:" + value_date.toISOString() + " = " + condition_date.toISOString() + " ?");
     if(condition_date.isSame(value_date)) return true;
     return false;
 }
 
 export function checkIntervalDate(condition:RulesConditions, value:any): boolean {
-    logger.debug("check interval date");
     let condition_value = (condition.value as string).split(" ");
     let value_date = moment(value, condition.date).toDate();
     let condition_date_one = moment(condition_value[0], condition.date).toDate();
     let condition_date_two = moment(condition_value[1], condition.date).toDate();
+    logger.debug("check interval date:" + condition_date_one + ">=" + value_date + ">=" + condition_date_two + " ?");
     if(value_date >= condition_date_one && value_date <= condition_date_two) return true;
     return false;
 }
 
 export function checkInterval(condition:RulesConditions, value:any): boolean {
-    logger.debug("check interval");
     let condition_value = (condition.value as string).split(" ");
+    logger.debug("check interval" + condition_value[0] + " =< " + value + " =< " + condition_value[1] + " ?");
     if(value >= condition_value[0] && value <= condition_value[1]) return true;
     return false;
 }
@@ -743,36 +743,36 @@ export function generateDate(differential: string, add:boolean=true): Moment {
 }
 
 export function checkGreaterThanDateOrEqual(condition:RulesConditions, value:any): boolean {
-    logger.debug("check greater than date or equal");
+    logger.debug("check greater than date or equal: " + value + " >= " + condition.value + " ?");
     return checkGreaterThanDate(condition, value) || checkEqualThanDate(condition, value, false);
 }
 
 export function checkLessThanDateOrEqual(condition:RulesConditions, value:any): boolean {
-    logger.debug("check less than date or equal");
+    logger.debug("check less than date or equal: " + value + " <= " + condition.value + " ?");
     return checkLessThanDate(condition, value) || checkEqualThanDate(condition, value, false);
 }
 
 export function checkGreaterThanDate(condition:RulesConditions, value:any): boolean {
-    logger.debug("check greater than date");
     let dynamic_date = generateDate(condition.value as string, false);
     let value_date = moment(value, condition.date).toDate();
+    logger.debug("check greater than date :" + value_date.toISOString() + " < " + dynamic_date.toISOString() + " ?");
     if(value_date < dynamic_date.toDate()) return true;
     return false;
 }
 
 export function checkLessThanDate(condition:RulesConditions, value:any): boolean {
-    logger.debug("check less than date");
     let dynamic_date = generateDate(condition.value as string, false);
     let value_date = moment(value, condition.date).toDate();
+    logger.debug("check less than date:" + value_date.toISOString() + " > " + dynamic_date.toISOString() + " ?");
     if ( value_date.toString() === "Invalid Date" ) logger.warn("Invalid format date, please check your date format in your rule")
     if(value_date > dynamic_date.toDate()) return true;
     return false;
 }
 
 export function checkEqualThanDate(condition:RulesConditions, value:any, add:boolean=true): boolean {
-    logger.debug("check equal than date");
     let dynamic_date = generateDate(condition.value as string, add);
     let value_date = moment(value, condition.date);
+    logger.debug("check equal than date:" + value_date.toISOString() + " > " + dynamic_date.toISOString() + " ?");
     if(dynamic_date.isSame(value_date, 'day')) return true;
     return false;
 }

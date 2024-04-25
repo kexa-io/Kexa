@@ -1,8 +1,9 @@
 import { ResultScan } from "../../../models/resultScan.models";
 import { getEnvVar } from "../../manageVarEnvironnement.service";
 import { getContext, getNewLogger } from "../../logger.service";
-import { loadAddOnsCustomUtility } from "../../addOn.service";
+//import { loadAddOnsCustomUtility } from "../../addOn.service";
 import { KexaSaveConfig } from "../../../models/export/kexa/config.model";
+import { propertyToSend } from "../../display.service";
 
 const axios = require('axios');
 const logger = getNewLogger("KexaSaveLogger");
@@ -16,6 +17,11 @@ export async function save(save: KexaSaveConfig, result: ResultScan[][]): Promis
     let token = (await getEnvVar(save.token))??save.token;
     logger.info(`Saving to Kexa SaaS`);
     context?.log(`Saving to Kexa SaaS`);
+    result.forEach(async (resultScan) => {
+        resultScan.forEach(async (subResultScan) => {
+            subResultScan.identifier = propertyToSend(subResultScan.rule, subResultScan.objectContent, true);
+        });
+    });
     await axios.post((process.env.DOMAINEKEXA??`https://api.kexa.io`) + `/api/job/save`, {result: result, save}, {
         headers: {
             User: name,
