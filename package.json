@@ -523,7 +523,7 @@
         "typescript": "^4.9.5"
     },
     "name": "Kexa",
-    "version": "1.14.0-devestebanexportsaasaddon.38.b0f21a8",
+    "version": "1.14.0-SNAPSHOT.40.55093b5",
     "main": "./build/index.js",
     "scripts": {
         "postinstall": "node-config-ts",
