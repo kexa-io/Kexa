@@ -1,5 +1,5 @@
 <div align="center">
-    <a href="https://www.kexa.io/addOn/azure">
+    <a href="https://www.kexa.io/modules">
         <img src="../../images/MySQL-Logo.png" alt="Logo" width="200">
     </a>
 
@@ -26,7 +26,7 @@ For each of your database, keys mandatory:
 - "urlName": uri connection to access (with database in the uri)
 
 Example config for each identification you can use:
-![example config for azure](../../config/demo/mongoDB.default.json)
+![example config for mySQL](../../config/demo/mySQL.default.json)
 
 ### Environment
 
