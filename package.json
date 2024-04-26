@@ -497,7 +497,7 @@
         "mysql2": "^3.9.7",
         "node-config-ts": "^3.3.1",
         "nodemailer": "^6.9.13",
-        "octokit": "^2.1.0",
+        "octokit": "^3.1.2",
         "request": "^2.88.2",
         "tslog": "^4.9.2",
         "twilio": "^4.23.0",
@@ -523,7 +523,7 @@
         "typescript": "^4.9.5"
     },
     "name": "Kexa",
-    "version": "1.14.0-devestebanexportsaasaddon.48.9ecc47a",
+    "version": "1.14.0-SNAPSHOT.49.8cc9c18",
     "main": "./build/index.js",
     "scripts": {
         "postinstall": "node-config-ts",

@@ -1743,7 +1743,7 @@ documentation/save/Kexa.md was changed
 package.json was changed
 
 
-## 1.14.0-devestebanexportsaasaddon.48.9ecc47a
+## 1.14.0-SNAPSHOT.49.8cc9c18
 
 ### Files added: 0
 
@@ -1753,4 +1753,14 @@ Kexa/rules/rulesByProvider/azureSetRules.yaml was changed
 
 Kexa/services/analyse.service.ts was changed
 
+## 1.14.0-dependabotnpmandyarnoctokit312.25.c652795
 
+### Files added: 0
+
+### Files changed: 3
+
+package-lock.json was changed
+
+package.json was changed
+
+pnpm-lock.yaml was changed
