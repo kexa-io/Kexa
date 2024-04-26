@@ -1743,3 +1743,14 @@ documentation/save/Kexa.md was changed
 package.json was changed
 
 
+## 1.14.0-SNAPSHOT.49.8cc9c18
+
+### Files added: 0
+
+### Files changed: 2
+
+Kexa/rules/rulesByProvider/azureSetRules.yaml was changed
+
+Kexa/services/analyse.service.ts was changed
+
+
