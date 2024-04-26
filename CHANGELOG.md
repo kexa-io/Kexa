@@ -1753,7 +1753,6 @@ Kexa/rules/rulesByProvider/azureSetRules.yaml was changed
 
 Kexa/services/analyse.service.ts was changed
 
-
 ## 1.14.0-dependabotnpmandyarnoctokit312.25.c652795
 
 ### Files added: 0
@@ -1765,5 +1764,3 @@ package-lock.json was changed
 package.json was changed
 
 pnpm-lock.yaml was changed
-
-
