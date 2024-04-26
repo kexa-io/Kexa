@@ -122,6 +122,7 @@ export async function analyzeRule(ruleFilePath:string, listNeedRules:string[], g
     try {
         let lastBlockSplited = ruleFilePath.split('/')[ruleFilePath.split('/').length -1].split(".");
         if(lastBlockSplited.length == 1){
+            // todo : analyze all files in the directory recursively
             logger.debug("It's a directory");
             return null;
         }
