@@ -497,7 +497,7 @@
         "mysql2": "^3.9.7",
         "node-config-ts": "^3.3.1",
         "nodemailer": "^6.9.13",
-        "octokit": "^3.1.2",
+        "octokit": "^3.2.0",
         "request": "^2.88.2",
         "tslog": "^4.9.2",
         "twilio": "^4.23.0",
