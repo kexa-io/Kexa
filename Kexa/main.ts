@@ -40,7 +40,7 @@ export async function main() {
     logger.info("___________________________________-= running Kexa scan =-_________________________________________");
     logger.info("___________________________________________________________________________________________________");
     await displayVersionAndLatest(logger);
-    let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"./Kexa/rules");
+    let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"https://github.com/4urcloud/Kexa_Rules");
     let allPromises = [];
     if(settings.length != 0){
         let resources = await loadAddOns(settings);

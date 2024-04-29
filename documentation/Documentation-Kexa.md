@@ -695,6 +695,7 @@ date: "YYYY-MM-DDThh:mm:ss.SSSZ"
 # few examples:
 # "2023-10-23" = "YYYY-MM-DD"
 # "23-10 / 12:27" = "DD-MM / HH:mm"
+# link to doc : https://momentjs.com/docs/#/displaying/format/
 ```
 
 <br/>
@@ -1248,15 +1249,15 @@ However if you want to run kexa with a special config or rules, you can perform 
 
 - set your own configuration:
 
-```shell
-docker run -d -v Absolute/Path/to/config:/app/config kexa
-```
+  ```shell
+  docker run -d -v Absolute/Path/to/config:/app/config kexa
+  ```
 
 - set your own rules:
 
-```shell
-docker run -d -v Absolute/Path/to/rules:/app/kexa/rules kexa
-```
+  ```shell
+  docker run -d -v Absolute/Path/to/rules:/app/kexa/rules kexa
+  ```
 
 <br/>
 

@@ -1447,6 +1447,48 @@ package-lock.json was changed
 
 package.json was changed
 
+## 1.14.0-devestebanexportsaasaddon.15.d3d1bf9
+
+### Files added: 5
+
+Kexa/models/export/kexa/config.model.ts was added
+
+Kexa/services/addOn/exportation/kexaExportation.service.ts was added
+
+Kexa/services/addOn/save/kexaSave.service.ts was added
+
+config/demo/kexa.default.json was added
+
+documentation/save/Kexa.md was added
+
+### Files changed: 13
+
+Kexa/models/export/kexa/config.model.ts was changed
+
+Kexa/services/addOn/exportation/kexaExportation.service.ts was changed
+
+Kexa/services/addOn/save/kexaSave.service.ts was changed
+
+config/demo/kexa.default.json was changed
+
+documentation/save/Kexa.md was changed
+
+Dockerfile was changed
+
+Kexa/main.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+Kexa/services/exportation.service.ts was changed
+
+documentation/Documentation-Kexa.md was changed
+
+documentation/save/AzureBlobStorage.md was changed
+
+documentation/save/MongoDB.md was changed
+
+documentation/save/MySQL.md was changed
+
 
 ## 1.14.0-SNAPSHOT.18.b28d27d
 
@@ -1542,14 +1584,174 @@ package-lock.json was changed
 package.json was changed
 
 
-## 1.14.0-aepplingpatch1.22.ca313e1
+## 1.14.0-SNAPSHOT.22.e707453
+
+### Files added: 0
+
+### Files changed: 2
+
+capacity.json was changed
+
+package.json was changed
+
+
+
+## 1.14.0-SNAPSHOT.28.0918be4
+
+### Files added: 0
+
+### Files changed: 3
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.30.c0a82d7
 
 ### Files added: 0
 
 ### Files changed: 1
 
-documentation/provider/AWS.md was changed
+.github/workflows/ci.yml was changed
 
+
+## 1.14.0-SNAPSHOT.32.8960e5d
+
+### Files added: 0
+
+### Files changed: 2
+
+Kexa/services/analyse.service.ts was changed
+
+documentation/Documentation-Kexa.md was changed## 1.14.0-devestebanexportsaasaddon.38.b0f21a8
+
+### Files added: 5
+
+Kexa/models/export/kexa/config.model.ts was added
+
+Kexa/services/addOn/exportation/kexaExportation.service.ts was added
+
+Kexa/services/addOn/save/kexaSave.service.ts was added
+
+config/demo/kexa.default.json was added
+
+documentation/save/Kexa.md was added
+
+### Files changed: 15
+
+Kexa/models/export/kexa/config.model.ts was changed
+
+Kexa/services/addOn/exportation/kexaExportation.service.ts was changed
+
+Kexa/services/addOn/save/kexaSave.service.ts was changed
+
+config/demo/kexa.default.json was changed
+
+documentation/save/Kexa.md was changed
+
+CHANGELOG.md was changed
+
+Dockerfile was changed
+
+Kexa/main.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+Kexa/services/exportation.service.ts was changed
+
+VERSION was changed
+
+documentation/Documentation-Kexa.md was changed
+
+documentation/save/AzureBlobStorage.md was changed
+
+documentation/save/MongoDB.md was changed
+
+documentation/save/MySQL.md was changed
+
+
+## 1.14.0-SNAPSHOT.40.55093b5
+
+### Files added: 5
+
+Kexa/models/export/kexa/config.model.ts was added
+
+Kexa/services/addOn/exportation/kexaExportation.service.ts was added
+
+Kexa/services/addOn/save/kexaSave.service.ts was added
+
+config/demo/kexa.default.json was added
+
+documentation/save/Kexa.md was added
+
+### Files changed: 16
+
+Kexa/models/export/kexa/config.model.ts was changed
+
+Kexa/services/addOn/exportation/kexaExportation.service.ts was changed
+
+Kexa/services/addOn/save/kexaSave.service.ts was changed
+
+config/demo/kexa.default.json was changed
+
+documentation/save/Kexa.md was changed
+
+CHANGELOG.md was changed
+
+Dockerfile was changed
+
+Kexa/main.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+Kexa/services/exportation.service.ts was changed
+
+VERSION was changed
+
+documentation/Documentation-Kexa.md was changed
+
+documentation/save/AzureBlobStorage.md was changed
+
+documentation/save/MongoDB.md was changed
+
+documentation/save/MySQL.md was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.44.30e3a57
+
+### Files added: 0
+
+### Files changed: 7
+
+Kexa/models/resultScan.models.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/exportation/kexaExportation.service.ts was changed
+
+Kexa/services/addOn/save/kexaSave.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+documentation/save/Kexa.md was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.49.8cc9c18
+
+### Files added: 0
+
+### Files changed: 2
+
+Kexa/rules/rulesByProvider/azureSetRules.yaml was changed
+
+Kexa/services/analyse.service.ts was changed
 
 ## 1.14.0-dependabotnpmandyarnoctokit312.25.c652795
 
@@ -1558,6 +1760,15 @@ documentation/provider/AWS.md was changed
 ### Files changed: 3
 
 package-lock.json was changed
+
+package.json was changed
+
+pnpm-lock.yaml was changed
+## 1.14.0-SNAPSHOT.61.adfdde2
+
+### Files added: 0
+
+### Files changed: 2
 
 package.json was changed
 

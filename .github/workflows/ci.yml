@@ -103,5 +103,14 @@ jobs:
       
       - name: Release
         uses: ncipollo/release-action@v1
+        if: github.ref == 'refs/heads/main'
         with:
           tag: "${{ steps.versioning.outputs.version }}"
+          prerelease: false
+
+      - name: Pre-Release
+        uses: ncipollo/release-action@v1
+        if: github.ref == 'refs/heads/dev'
+        with:
+          tag: "${{ steps.versioning.outputs.version }}"
+          prerelease: true

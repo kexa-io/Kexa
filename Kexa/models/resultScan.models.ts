@@ -7,6 +7,7 @@ export interface ResultScan {
     error: SubResultScan[];
     message?: string;
     loud?: LoudScan;
+    identifier?: string;
 }
 
 export interface SubResultScan {
