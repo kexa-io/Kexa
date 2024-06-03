@@ -43,6 +43,7 @@ export interface KubernetesResources {
     componentstatus: Array<any>;
     hpa: Array<any>;
     podLogs: Array<any>;
+    podsConsumption: Array<any>;
 }
 
 export function createKubernetesResourcesDefault(): KubernetesResources {
@@ -90,6 +91,7 @@ export function createKubernetesResourcesDefault(): KubernetesResources {
         certificateSigningRequest: [],
         componentstatus: [],
         hpa: [],
-        podLogs: []
+        podLogs: [],
+        podsConsumption: []
     };
 }
