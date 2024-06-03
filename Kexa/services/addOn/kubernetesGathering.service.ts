@@ -31,6 +31,7 @@
     *     - podtemplate
     *     - hpa
     *     - podLogs
+    *     - podsConsumption
 */
 
 //*     - job
@@ -66,7 +67,7 @@ const logger = getNewLogger("KubernetesLogger");
 const k8s = require('@kubernetes/client-node');
 let currentConfig:KubernetesConfig;
 
-const globalConfiguration = getConfig().global ?? null;
+let globalConfiguration = getConfig().global ?? {};
 
 export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<KubernetesResources[]|null>{
     let resources = new Array<KubernetesResources>();
@@ -125,7 +126,8 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
                 "certificateSigningRequest":kubernetesList["certificateSigningRequest"],
                 "componentstatus":kubernetesList["componentstatus"],
                 "hpa":kubernetesList["hpa"],
-                "podLogs":kubernetesList["podLogs"]
+                "podLogs":kubernetesList["podLogs"],
+                "podsConsumption":kubernetesList["podsConsumption"],
             } as KubernetesResources;
             resources.push(kubernetesResource);
         }catch(e:any){
@@ -140,6 +142,7 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
 export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
     logger.info("starting kubernetesListing");
     const kc = new k8s.KubeConfig();
+    const metricsClient = new k8s.Metrics(kc);
     (isPathKubeFile)?kc.loadFromFile("./config/kubernetes.json"):kc.loadFromDefault();
     //opening different api to get kubernetes resources
     const autoscalingV1Api = kc.makeApiClient(k8s.AutoscalingV1Api);
@@ -201,7 +204,8 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
             //collectCertificateSigningRequest(k8scertificatesV1Api, item.metadata.name),
             collectComponentstatus(k8sApiCore, item.metadata.name),
             collectHorizontalPodAutoscaler(autoscalingV1Api, item.metadata.name),
-            collectPodLogs(k8sLog, k8sApiCore, item.metadata.name)
+            collectPodLogs(k8sLog, k8sApiCore, item.metadata.name),
+            collectPodsConsumption(k8sApiCore, metricsClient, item.metadata.name)
         ];
         const [
             helmData,
@@ -246,7 +250,8 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
             //certificateSigningRequestData,
             componentstatusData,
             hpa,
-            podLogs
+            podLogs,
+            podsConsumption
         ] = await Promise.all(promises);
 
         const resourcesToAddNamespace = [
@@ -291,7 +296,8 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
             //[certificateSigningRequestData, "certificateSigningRequest"],
             [componentstatusData, "componentstatus"], // work
             [hpa, "hpa"],
-            [podLogs, "podLogs"]
+            [podLogs, "podLogs"],
+            [podsConsumption, "podsConsumption"]
         ];
         Promise.all(resourcesToAddNamespace.map(async (resource: any) => {
             kubResources = await getAllElementsWithNameSpace(resource, item.metadata.name, kubResources);
@@ -360,6 +366,32 @@ async function collectPods(k8sApiCore: any, namespace: string): Promise<any> {
         logger.debug(e);
         return [];
     }
+}
+
+async function collectPodsConsumption(k8sApiCore: any, metricsClient: any, namespace: string) : Promise<any> {
+    if (!currentConfig?.ObjectNameNeed?.includes("podsConsumption")) return [];
+    let podsAndContainersColumns;
+    try {
+        const topPodsRes2 = await k8s.topPods(k8sApiCore, metricsClient, namespace);
+        podsAndContainersColumns = topPodsRes2.flatMap((pod: any) => {
+            return pod.Containers.map((containerUsage: any) => {
+                return {
+                    pod: pod.Pod.metadata.name,
+                    name: containerUsage.Container,
+                    CPUUsage: containerUsage.CPUUsage,
+                    MemoryUsage: containerUsage.MemoryUsage,
+                }
+            });
+        });
+    } catch (err) {
+        logger.debug(err);
+    }
+
+    const combinedData = {
+        data: podsAndContainersColumns,
+        metadata: {},
+    };
+    return [combinedData];
 }
 
 async function collectServices(k8sApiCore: any, namespace: string): Promise<any> {
@@ -806,7 +838,7 @@ async function collectComponentstatus(k8sApiCore: any, namespace: string): Promi
 
 async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): Promise<any> {
     if (!currentConfig?.ObjectNameNeed?.includes("podLogs")) return [];
-    if (globalConfiguration.scanDelay == null) globalConfiguration.scanDelay = 3600;
+    if (globalConfiguration?.scanDelay == null) globalConfiguration.scanDelay = 3600;
     try {
         const pods = await k8sApiCore.listNamespacedPod(namespace);
         const stream = require('stream');
@@ -816,7 +848,7 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
         await Promise.all(pods?.body?.items.map(async (pod: any) => {
             const logStream = new stream.PassThrough();
             const currDate = new Date();
-            const interval = new Date(currDate.getTime() - globalConfiguration.scanDelay * 1000);
+            const interval = new Date(currDate.getTime() - (globalConfiguration?.scanDelay ?? 3600 ) * 1000);
 
             logStream.on('data', (chunk: any) => {
                 const logEntries = chunk.toString();
@@ -833,7 +865,7 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
                     tailLines: 50,
                     pretty: false,
                     timestamps: true,
-                    sinceSeconds: globalConfiguration.scanDelay
+                    sinceSeconds: globalConfiguration?.scanDelay ?? 3600
                 });
                 if (req) {
                     await delay(2000);
@@ -859,7 +891,7 @@ async function collectHorizontalPodAutoscaler(autoscalingV1Api: any, namespace: 
        const hpa = await autoscalingV1Api.listNamespacedHorizontalPodAutoscaler(namespace);
         return hpa?.body?.items;
     } catch (error) {
-      console.error("Error getting Pod:", error);
+      logger.warn("Error getting Pod:", error);
       return null;
     }
   }

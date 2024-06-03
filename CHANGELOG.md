@@ -1764,10 +1764,30 @@ package-lock.json was changed
 package.json was changed
 
 pnpm-lock.yaml was changed
-## 1.14.0-devestebanexportsaasaddon.59.dd324f5
+
+## 1.14.0-SNAPSHOT.61.adfdde2
 
 ### Files added: 0
 
-### Files changed: 0
+### Files changed: 2
+
+package.json was changed
+
+pnpm-lock.yaml was changed
+
+
+## 1.14.0-SNAPSHOT.64.4d48a31
+
+### Files added: 0
+
+### Files changed: 4
+
+Kexa/models/kubernetes/kubernetes.models.ts was changed
+
+Kexa/rules/Kubernete.yaml was changed
+
+Kexa/services/addOn/display/kubernetesDisplay.service.ts was changed
+
+Kexa/services/addOn/kubernetesGathering.service.ts was changed
 
 

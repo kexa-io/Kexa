@@ -2,28 +2,28 @@
   date: 07-18-2023
   alert:
     fatal:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
       to: 
         - myEmail@gmail.com
     error:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
       to: 
         - myEmail@gmail.com
     warning:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
       to:
         - myEmail@gmail.com
     info:
-      enabled: false
+      enabled: true
       type: 
         - log
         #- email
@@ -153,7 +153,7 @@
     # this is an example of pod autoscaler rule
     - name: "kube-hozizontal-pod-autoscaler-min-max-replicas"
       description : "this rules is to verify horizontal pod autoscaler min and max replicas"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: kubernetes
       objectName : podLogs
@@ -167,3 +167,31 @@
             - property : message
               condition : DIFFERENT
               value: 'warning'
+    # pods consumption
+    - name: "kube-pods-memory-limitation"
+      description : "this rules is to verify pods memory limitation"
+      applied: true
+      level: 2
+      cloudProvider: kubernetes
+      objectName : podsConsumption
+      conditions:
+        - property : data
+          condition : ALL
+          value: 
+            - property : MemoryUsage.CurrentUsage
+              condition : INF
+              value: 88888800512
+    # pods consumption
+    - name: "kube-pods-cpu-limitation"
+      description : "this rules is to verify cpu usage limitation"
+      applied: true
+      level: 2
+      cloudProvider: kubernetes
+      objectName : podsConsumption
+      conditions:
+        - property : data
+          condition : ALL
+          value: 
+            - property : CPUUsage.CurrentUsage
+              condition : INF
+              value: 0.0881
