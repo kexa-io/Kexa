@@ -611,13 +611,13 @@ export function checkEqual(condition:RulesConditions, value:any): boolean {
 
 export function checkGreaterThan(condition:RulesConditions, value:any): boolean {
     logger.debug("check greater than:" + value + " > " + condition.value + " ?");
-    if(value > condition.value) return true;
+    if(~~value > ~~condition.value) return true;
     return false;
 }
 
 export function checkLessThan(condition:RulesConditions, value:any): boolean {
     logger.debug("check less than:" + value + " < " + condition.value + " ?");
-    if(value < condition.value) return true;
+    if(~~value < ~~condition.value) return true;
     return false;
 }
 
