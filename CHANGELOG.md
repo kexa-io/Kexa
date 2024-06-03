@@ -1798,3 +1798,12 @@ Kexa/services/addOn/kubernetesGathering.service.ts was changed
 ### Files changed: 0
 
 
+## 1.14.0-SNAPSHOT.72.8038dde
+
+### Files added: 0
+
+### Files changed: 1
+
+Kexa/__tests__/services/analyse.test.ts was changed
+
+
