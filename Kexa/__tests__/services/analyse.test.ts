@@ -163,6 +163,16 @@ describe('analyse service', () => {
                 expect(result).to.equal(false);
             })
 
+            it("should return true (bigint) str", () => {
+                const result = checkGreaterThan({property: "date", condition: ConditionEnum.SUP, value: 1}, 2n.toString());
+                expect(result).to.equal(true);
+            })
+
+            it("should return false (bigint) str", () => {
+                const result = checkGreaterThan({property: "date", condition: ConditionEnum.SUP, value: 1}, 1n.toString());
+                expect(result).to.equal(false);
+            })
+
             it("should return false", () => {
                 const result = checkGreaterThan({property: "date", condition: ConditionEnum.SUP, value: 1}, 1);
                 expect(result).to.equal(false);
@@ -182,6 +192,16 @@ describe('analyse service', () => {
 
             it("should return true (bigint)", () => {
                 const result = checkLessThan({property: "date", condition: ConditionEnum.INF, value: 1}, 0n);
+                expect(result).to.equal(true);
+            })
+
+            it("should return false (bigint) str", () => {
+                const result = checkLessThan({property: "date", condition: ConditionEnum.INF, value: 1}, 1n.toString());
+                expect(result).to.equal(false);
+            })
+
+            it("should return true (bigint) str", () => {
+                const result = checkLessThan({property: "date", condition: ConditionEnum.INF, value: 1}, 0n.toString());
                 expect(result).to.equal(true);
             })
 
