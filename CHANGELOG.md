@@ -1775,3 +1775,18 @@ package.json was changed
 pnpm-lock.yaml was changed
 
 
+## 1.14.0-SNAPSHOT.64.4d48a31
+
+### Files added: 0
+
+### Files changed: 4
+
+Kexa/models/kubernetes/kubernetes.models.ts was changed
+
+Kexa/rules/Kubernete.yaml was changed
+
+Kexa/services/addOn/display/kubernetesDisplay.service.ts was changed
+
+Kexa/services/addOn/kubernetesGathering.service.ts was changed
+
+
