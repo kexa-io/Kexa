@@ -1791,3 +1791,10 @@ Kexa/services/addOn/display/kubernetesDisplay.service.ts was changed
 Kexa/services/addOn/kubernetesGathering.service.ts was changed
 
 
+## 1.14.0-SNAPSHOT.70.5ad0057
+
+### Files added: 0
+
+### Files changed: 0
+
+

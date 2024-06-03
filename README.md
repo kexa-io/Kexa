@@ -964,6 +964,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ SSMClient.InstancePatchStates
 - ✅ SSMClient.InstancePatchStatesForPatchGroup
 - ✅ SSMClient.InstancePatches
+- ✅ SSMClient.InstanceProperties
 - ✅ SSMClient.InventoryDeletions
 - ✅ SSMClient.MaintenanceWindowExecutionTaskInvocations
 - ✅ SSMClient.MaintenanceWindowExecutionTasks
@@ -1117,6 +1118,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ KMSClient.Aliases
 - ✅ KMSClient.Grants
 - ✅ KMSClient.KeyPolicies
+- ✅ KMSClient.KeyRotations
 - ✅ KMSClient.Keys
 - ✅ KMSClient.ResourceTags
 - ✅ KMSClient.RetirableGrants
@@ -2250,7 +2252,16 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ MediaLiveClient.Reservation
 - ✅ MediaLiveClient.Schedule
 - ✅ MediaLiveClient.Thumbnails
+- ✅ MediaLiveClient.CloudWatchAlarmTemplate
+- ✅ MediaLiveClient.CloudWatchAlarmTemplateGroup
+- ✅ MediaLiveClient.EventBridgeRuleTemplate
+- ✅ MediaLiveClient.EventBridgeRuleTemplateGroup
+- ✅ MediaLiveClient.SignalMap
 - ✅ MediaLiveClient.Channels
+- ✅ MediaLiveClient.CloudWatchAlarmTemplateGroups
+- ✅ MediaLiveClient.CloudWatchAlarmTemplates
+- ✅ MediaLiveClient.EventBridgeRuleTemplateGroups
+- ✅ MediaLiveClient.EventBridgeRuleTemplates
 - ✅ MediaLiveClient.InputDeviceTransfers
 - ✅ MediaLiveClient.InputDevices
 - ✅ MediaLiveClient.InputSecurityGroups
@@ -2259,6 +2270,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ MediaLiveClient.Multiplexes
 - ✅ MediaLiveClient.Offerings
 - ✅ MediaLiveClient.Reservations
+- ✅ MediaLiveClient.SignalMaps
 - ✅ MediaLiveClient.TagsForResource
 - ✅ KafkaClient.Cluster
 - ✅ KafkaClient.ClusterOperation
@@ -3128,6 +3140,8 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ WorkSpacesClient.WorkspaceSnapshots
 - ✅ WorkSpacesClient.Workspaces
 - ✅ WorkSpacesClient.WorkspacesConnectionStatus
+- ✅ WorkSpacesClient.AccountLink
+- ✅ WorkSpacesClient.AccountLinks
 - ✅ WorkSpacesClient.AvailableManagementCidrRanges
 - ✅ ResourceGroupsTaggingAPIClient.ReportCreation
 - ✅ ResourceGroupsTaggingAPIClient.ComplianceSummary
@@ -3355,6 +3369,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ GameLiftClient.Alias
 - ✅ GameLiftClient.Build
 - ✅ GameLiftClient.Compute
+- ✅ GameLiftClient.ContainerGroupDefinition
 - ✅ GameLiftClient.EC2InstanceLimits
 - ✅ GameLiftClient.FleetAttributes
 - ✅ GameLiftClient.FleetCapacity
@@ -3388,6 +3403,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ GameLiftClient.Aliases
 - ✅ GameLiftClient.Builds
 - ✅ GameLiftClient.Compute
+- ✅ GameLiftClient.ContainerGroupDefinitions
 - ✅ GameLiftClient.Fleets
 - ✅ GameLiftClient.GameServerGroups
 - ✅ GameLiftClient.GameServers
@@ -3628,11 +3644,13 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ EMRContainersClient.JobRun
 - ✅ EMRContainersClient.JobTemplate
 - ✅ EMRContainersClient.ManagedEndpoint
+- ✅ EMRContainersClient.SecurityConfiguration
 - ✅ EMRContainersClient.VirtualCluster
 - ✅ EMRContainersClient.ManagedEndpointSessionCredentials
 - ✅ EMRContainersClient.JobRuns
 - ✅ EMRContainersClient.JobTemplates
 - ✅ EMRContainersClient.ManagedEndpoints
+- ✅ EMRContainersClient.SecurityConfigurations
 - ✅ EMRContainersClient.TagsForResource
 - ✅ EMRContainersClient.VirtualClusters
 - ✅ MemoryDBClient.ACLs
@@ -4161,6 +4179,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ IvschatClient.TagsForResource
 - ✅ WellArchitectedClient.Answer
 - ✅ WellArchitectedClient.ConsolidatedReport
+- ✅ WellArchitectedClient.GlobalSettings
 - ✅ WellArchitectedClient.Lens
 - ✅ WellArchitectedClient.LensReview
 - ✅ WellArchitectedClient.LensReviewReport
@@ -4430,14 +4449,17 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ DLMClient.LifecyclePolicies
 - ✅ DLMClient.LifecyclePolicy
 - ✅ DLMClient.TagsForResource
+- ✅ OutpostsClient.CapacityTask
 - ✅ OutpostsClient.CatalogItem
 - ✅ OutpostsClient.Connection
 - ✅ OutpostsClient.Order
 - ✅ OutpostsClient.Outpost
 - ✅ OutpostsClient.OutpostInstanceTypes
+- ✅ OutpostsClient.OutpostSupportedInstanceTypes
 - ✅ OutpostsClient.SiteAddress
 - ✅ OutpostsClient.Site
 - ✅ OutpostsClient.Assets
+- ✅ OutpostsClient.CapacityTasks
 - ✅ OutpostsClient.CatalogItems
 - ✅ OutpostsClient.Orders
 - ✅ OutpostsClient.Outposts
@@ -7066,6 +7088,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ podtemplate
 - ✅ hpa
 - ✅ podLogs
+- ✅ podsConsumption
 </details>
 <details>
 <summary>✅ O365 check in:</summary>
