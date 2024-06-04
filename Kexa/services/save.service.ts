@@ -4,6 +4,7 @@ import { getContext, getNewLogger } from "./logger.service";
 import { loadAddOnsCustomUtility } from './addOn.service';
 import { SaveConfig } from '../models/export/config.models';
 import { getConfig } from '../helpers/loaderConfig';
+import { jsonStringify } from '../helpers/jsonStringify';
 
 const configuration = getConfig();
 const logger = getNewLogger("SaveLogger");
@@ -37,5 +38,5 @@ export async function saveResult(result: ResultScan[][]): Promise<void> {
 }
 
 async function saveJsonToGcpBucket(bucketName: string, objectKey: string, json: object): Promise<void> {
-    await new Storage().bucket(bucketName).file(objectKey).save(JSON.stringify(json));
+    await new Storage().bucket(bucketName).file(objectKey).save(jsonStringify(json));
 }

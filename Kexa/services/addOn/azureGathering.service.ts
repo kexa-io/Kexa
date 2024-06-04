@@ -1768,7 +1768,7 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
     let resources = new Array<Object>();
     for(let config of azureConfig??[]){
         logger.debug("config: ");
-        logger.debug(JSON.stringify(config));
+        logger.debug(jsonStringify(config, 4));
         let prefix = config.prefix??(azureConfig.indexOf(config).toString());
         try {
             logger.debug("prefix: " + prefix);
@@ -2133,6 +2133,7 @@ async function listAllBlob(client:StorageManagementClient, credentials: any): Pr
 
 import { AzureMachineLearningWorkspaces, Workspace } from "@azure/arm-machinelearning";
 import { convertMinMaxMeanMedianToPercentage } from "../../helpers/statsNumbers";
+import { jsonStringify } from "../../helpers/jsonStringify";
 
 async function workspacesListing(mlClient: AzureMachineLearningWorkspaces): Promise<any> {
 	let workspacesResult: any[] = [];

@@ -25,6 +25,7 @@ import {getContext, getNewLogger} from "./logger.service";
 import { splitProperty } from '../helpers/spliter';
 import { downloadFile, unzipFile } from '../helpers/dowloadFile';
 import { getConfig } from '../helpers/loaderConfig';
+import { jsonStringify } from '../helpers/jsonStringify';
 const logger = getNewLogger("AnalyseLogger");
 
 const jsome = require('jsome');
@@ -93,7 +94,7 @@ export function extractAddOnNeed(settingFileList: SettingFile[]){
             if(!objectNameList[ruleFile.alert.global.name][rule.cloudProvider].includes(rule.objectName)) objectNameList[ruleFile.alert.global.name][rule.cloudProvider].push(rule.objectName);
         });
     });
-    writeStringToJsonFile(JSON.stringify({ "addOn" : providerList, "objectNameNeed": objectNameList }), "./config/addOnNeed.json");
+    writeStringToJsonFile(jsonStringify({ "addOn" : providerList, "objectNameNeed": objectNameList }), "./config/addOnNeed.json");
 }
 
 function getListNeedRules(): string[]{

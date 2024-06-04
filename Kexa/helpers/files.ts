@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { Logger } from "tslog";
+import { jsonStringify } from './jsonStringify';
 const logger = new Logger({ minLevel: 3, type: "pretty", name: "GcpLogger" });
 
 export function writeStringToJsonFile(data: string, filePath: string): boolean {
@@ -8,11 +9,11 @@ export function writeStringToJsonFile(data: string, filePath: string): boolean {
         logger.debug("File exists: " + fileExists);
         if (!fileExists) {
             logger.debug("Creating file: " + filePath);
-            const initialData = JSON.stringify({});
+            const initialData = jsonStringify({});
             fs.writeFileSync(filePath, initialData);
         }
         logger.debug("Writing data to file: " + filePath);
-        fs.writeFileSync(filePath, JSON.stringify(JSON.parse(data), null, 4), 'utf8');
+        fs.writeFileSync(filePath, jsonStringify(JSON.parse(data), 4), 'utf8');
         return true;
     } catch (error) {
         logger.error(error);
@@ -50,7 +51,7 @@ export function createFileSync(data:string, filePath:string, jsonData:boolean=fa
         let pathFolder = filePath.split("/").slice(0, -1).join("/");
         createFolderIfNotExists(pathFolder);
         logger.debug("Writing data to file in "+ (jsonData)?'JSON':'RAW' +": " + filePath);
-        fs.writeFileSync(filePath, (jsonData)?JSON.stringify(JSON.parse(data), null, 4):data);
+        fs.writeFileSync(filePath, (jsonData)?jsonStringify(JSON.parse(data), 4):data);
         return true;
     }catch(error){
         logger.debug(error);

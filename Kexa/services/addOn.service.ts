@@ -5,6 +5,7 @@ import { Capacity } from "../models/settingFile/capacity.models";
 import {getContext, getNewLogger} from "./logger.service";
 import { SettingFile } from "../models/settingFile/settingFile.models";
 import { getConfig } from "../helpers/loaderConfig";
+import { jsonStringify } from "../helpers/jsonStringify";
 
 const configuration = getConfig();
 const mainFolder = 'Kexa';
@@ -208,7 +209,7 @@ export async function extractHeaders(): Promise<Capacity>{
             };
         }
     });
-    writeStringToJsonFile(JSON.stringify(finalData), "./config/headers.json");
+    writeStringToJsonFile(jsonStringify(finalData,4), "./config/headers.json");
     return finalData;
 }
 

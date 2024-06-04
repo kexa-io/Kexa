@@ -55,7 +55,7 @@ async function getEnvVarWithAwsSecretManager(name:string){
     try {
         const input = { SecretId: secName };
         const data = await secretsmanager.send(new GetSecretValueCommand(input));
-        const secretData = JSON.parse(JSON.stringify(data.SecretString));
+        const secretData = JSON.parse(jsonStringify(data.SecretString));
         const value = secretData[name];
         return (value);
     } catch (e) {
@@ -146,6 +146,7 @@ async function getEnvVarWithBitwarden(){
 import {listSecrets} from "./addOn/gcpGathering.service";
 import {deleteFile, writeStringToJsonFile} from "../helpers/files";
 import {Storage} from "@google-cloud/storage";
+import { jsonStringify } from "../helpers/jsonStringify";
 async function possibleWithGoogleSecretManager(projectId: any): Promise<boolean> {
     if ((process.env["GOOGLE_APPLICATION_CREDENTIALS"]
         && process.env["GOOGLE_STORAGE_PROJECT_ID"]))
