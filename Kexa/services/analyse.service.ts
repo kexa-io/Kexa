@@ -435,7 +435,6 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
     return result;
 }
 function actionAfterCheckRule(rule: Rules, objectResource: any, alert: Alert, subResultScan: SubResultScan[]): SubResultScan[] {
-    logger.debug("subResultScan:"+JSON.stringify(subResultScan));
     let error = subResultScan.filter((value) => !value.result);
     if(error.length > 0){
         alertFromRule(rule, subResultScan, objectResource, alert);
@@ -611,12 +610,14 @@ export function checkEqual(condition:RulesConditions, value:any): boolean {
 
 export function checkGreaterThan(condition:RulesConditions, value:any): boolean {
     logger.debug("check greater than:" + value + " > " + condition.value + " ?");
+    if(typeof value === "number" && value > (condition.value as number)) return true;
     if(~~value > ~~condition.value) return true;
     return false;
 }
 
 export function checkLessThan(condition:RulesConditions, value:any): boolean {
     logger.debug("check less than:" + value + " < " + condition.value + " ?");
+    if(typeof value === "number" && value < (condition.value as number)) return true;
     if(~~value < ~~condition.value) return true;
     return false;
 }

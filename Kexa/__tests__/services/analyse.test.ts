@@ -177,6 +177,41 @@ describe('analyse service', () => {
                 const result = checkGreaterThan({property: "date", condition: ConditionEnum.SUP, value: 1}, 1);
                 expect(result).to.equal(false);
             });
+
+            it("should return true float", () => {
+                const result = checkGreaterThan({property: "date", condition: ConditionEnum.SUP, value: 1}, 1.2);
+                expect(result).to.equal(true);
+            })
+
+            it("should return false float", () => {
+                const result = checkGreaterThan({property: "date", condition: ConditionEnum.SUP, value: 0.9}, 0.8);
+                expect(result).to.equal(false);
+            });
+
+            it("should return true bigint", () => {
+                const result = checkGreaterThan({property: "date", condition: ConditionEnum.SUP, value: 12345678998765431n}, 123456789987654332n);
+                expect(result).to.equal(true);
+            })
+
+            it("should return false bigint", () => {
+                const result = checkGreaterThan({property: "date", condition: ConditionEnum.SUP, value: 123456789987654332n}, 12345678998765431n);
+                expect(result).to.equal(false);
+            });
+
+            it("should return true str", () => {
+                const result = checkGreaterThan({property: "date", condition: ConditionEnum.INF, value: 11}, "12");
+                expect(result).to.equal(true);
+            });
+
+            it("should return false str", () => {
+                const result = checkGreaterThan({property: "date", condition: ConditionEnum.INF, value: 23}, "adwada");
+                expect(result).to.equal(false);
+            });
+
+            it("should return true str", () => {
+                const result = checkGreaterThan({property: "date", condition: ConditionEnum.INF, value: -2}, "adwada");
+                expect(result).to.equal(true);
+            });
         });
 
         describe("Inf", () => {
@@ -209,6 +244,41 @@ describe('analyse service', () => {
                 const result = checkLessThan({property: "date", condition: ConditionEnum.INF, value: 1}, 1n);
                 expect(result).to.equal(false);
             })
+
+            it("should return true float", () => {
+                const result = checkLessThan({property: "date", condition: ConditionEnum.INF, value: 0.9}, 0.8);
+                expect(result).to.equal(true);
+            });
+
+            it("should return false float", () => {
+                const result = checkLessThan({property: "date", condition: ConditionEnum.INF, value: 0.8}, 0.9);
+                expect(result).to.equal(false);
+            });
+
+            it("should return true bigint", () => {
+                const result = checkLessThan({property: "date", condition: ConditionEnum.INF, value: 123456789987654332n}, 12345678998765431n);
+                expect(result).to.equal(true);
+            });
+
+            it("should return false bigint", () => {
+                const result = checkLessThan({property: "date", condition: ConditionEnum.INF, value: 12345678998765431n}, 123456789987654332n);
+                expect(result).to.equal(false);
+            });
+
+            it("should return true str", () => {
+                const result = checkLessThan({property: "date", condition: ConditionEnum.INF, value: 23}, "12");
+                expect(result).to.equal(true);
+            });
+
+            it("should return true str", () => {
+                const result = checkLessThan({property: "date", condition: ConditionEnum.INF, value: 23}, "adwada");
+                expect(result).to.equal(true);
+            });
+
+            it("should return false str", () => {
+                const result = checkLessThan({property: "date", condition: ConditionEnum.INF, value: -2}, "adwada");
+                expect(result).to.equal(false);
+            });
         });
 
         describe("Include", () => {
