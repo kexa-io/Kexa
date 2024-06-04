@@ -372,14 +372,16 @@ async function collectPodsConsumption(k8sApiCore: any, metricsClient: any, names
     if (!currentConfig?.ObjectNameNeed?.includes("podsConsumption")) return [];
     let podsAndContainersColumns;
     try {
+        
         const topPodsRes2 = await k8s.topPods(k8sApiCore, metricsClient, namespace);
         podsAndContainersColumns = topPodsRes2.flatMap((pod: any) => {
             return pod.Containers.map((containerUsage: any) => {
                 return {
-                    pod: pod.Pod.metadata.name,
+                    podName: pod.Pod.metadata.name,
                     name: containerUsage.Container,
-                    CPUUsage: containerUsage.CPUUsage,
-                    MemoryUsage: containerUsage.MemoryUsage,
+                    CPUUsage: parseFloat(containerUsage.CPUUsage.CurrentUsage),
+                    MemoryUsage: containerUsage.MemoryUsage.CurrentUsage.toString(),
+                    metadata: {}
                 }
             });
         });
@@ -387,11 +389,7 @@ async function collectPodsConsumption(k8sApiCore: any, metricsClient: any, names
         logger.debug(err);
     }
 
-    const combinedData = {
-        data: podsAndContainersColumns,
-        metadata: {},
-    };
-    return [combinedData];
+    return podsAndContainersColumns;
 }
 
 async function collectServices(k8sApiCore: any, namespace: string): Promise<any> {

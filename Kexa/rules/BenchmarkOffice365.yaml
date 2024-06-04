@@ -53,7 +53,7 @@
     - name: "o365-between-two-and-four-global-admins"
       description: "verify there is at least two and no more than four global administrator"
       remediation: "Set at least two and a maximum of four Global Administrator users"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: o365
       objectName: directory_role
@@ -74,7 +74,7 @@
     - name: "o365-is-group-public"
       description: "verify if public groups exist"
       remediation: "Set the visibility of this group to 'Private' or 'Hidden membership'"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: o365
       objectName: group
@@ -87,7 +87,7 @@
     - name: "o365-is-user-mfa-activated"
       description: "verify if mfa is activated for users"
       remediation: "test"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: o365
       objectName: auth_methods
@@ -113,7 +113,7 @@
               value: ActivityBasedTimeoutPolicy
     - name: "o365-is-idle-timeout-set-3h"
       description: "verify if idle timeout for inactive user is set to three hours"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: o365
       objectName: policy
@@ -167,7 +167,7 @@
                   value: 'disabled'
     - name: "o365-default-user-cannot-create-tenant"
       description: "ensure that default user is not allowed to create tenant"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: o365
       objectName: policy
@@ -182,7 +182,7 @@
               value: true
     - name: "o365-conditional-access-block-inheritance-auth"
       description: "ensure that the authentication inheritance blocking policy is enable and active"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: o365
       objectName: conditional_access
@@ -200,7 +200,7 @@
                   value: 'enabled'
     - name: "o365-conditional-access-users-mfa"
       description: "ensure that the MFA is enforced for all users"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: o365
       objectName: conditional_access
@@ -218,7 +218,7 @@
                   value: 'enabled'
     - name: "o365-conditional-access-admins-mfa"
       description: "ensure that the MFA is enforced for all users in admins roles"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: o365
       objectName: conditional_access
@@ -236,7 +236,7 @@
                   value: 'enabled'
     - name: "o365-sharepoint-external-user-cannot-reshare"
       description: "ensure that sharepoint external user cannot reshare files"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: o365
       objectName: sharepoint_settings
@@ -246,7 +246,7 @@
           value: false
     - name: "o365-sharepoint-external-sharing-disabled"
       description: "ensure that sharepoint external sharing is disabled"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: o365
       objectName: sharepoint_settings
@@ -256,7 +256,7 @@
           value: 'disabled'
     - name: "o365-sharepoint-sync-restricted-unmanaged-device"
       description: "ensure that sync is restricted for unmanaged devices"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: o365
       objectName: sharepoint_settings
