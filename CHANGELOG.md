@@ -1807,3 +1807,18 @@ Kexa/services/addOn/kubernetesGathering.service.ts was changed
 Kexa/__tests__/services/analyse.test.ts was changed
 
 
+## 1.14.0-SNAPSHOT.74.b2f8bc4
+
+### Files added: 0
+
+### Files changed: 4
+
+Kexa/__tests__/services/analyse.test.ts was changed
+
+Kexa/models/settingFile/conditions.models.ts was changed
+
+Kexa/services/addOn.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+
