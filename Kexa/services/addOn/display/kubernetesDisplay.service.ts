@@ -17,7 +17,7 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
         case "helm":
             return `Helm name : ` + objectContent?.metadata?.name + ` with uid : ` + objectContent?.metadata?.uid
         case "podsConsumption":
-            return 'pod : ' + objectContent?.data?.pod + ' in NameSpace : ' + objectContent?.metadata?.namespace;
+            return 'pod : ' + objectContent?.podName + ' in NameSpace : ' + objectContent?.metadata?.namespace;
         default:
             return 'resource : Id : ' + objectContent?.metadata?.name + ' in NameSpace : ' + objectContent?.metadata?.namespace;
     }
