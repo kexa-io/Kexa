@@ -42,7 +42,13 @@
         <li><a href="#multiple-environments-provider-prefix">Multiple Environments provider prefix</a></li>
 	<li><a href="#custom-and-multiple-configurations">Custom and multiple Configurations</a></li>
         <li><a href="#regions">Regions</a></li>
-        <li><a href="#advanced-configurations">Advanced Configurations</a></li>
+        <li>
+          <a href="#advanced-configurations">Advanced Configurations</a>
+          <ul>
+            <li><a href="#varaibilization">Variabilization</a></li>
+            <li><a href="#continuous-run">Continuous run</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
     <li>
@@ -380,6 +386,10 @@ Without "regions" property (or empty "regions" property), all the regions will b
 
 ## **Advanced Configurations**
 
+<div id="varaibilization"></div>
+
+### **Variabilization**
+
 You can load rules containing variables. To do this, you need to add a "variable" section. This attribute will be an object whose keys are the names of your rules with variables. Each of its keys has a dictionary value. This dictionary has as keys the names of the variables present in the rule and as value, the value of the variable.
 
 Here we are an example of configuration file with variable:
@@ -387,6 +397,18 @@ Here we are an example of configuration file with variable:
 ![example config with variable](../config/demo/exemple4.default.json)
 
 For more details on variabilized rules, please refer to the section [Variabilization Rules](#variabilization-rules)
+
+<div id="continuous-run"></div>
+
+## **Continuous run**
+
+Kexa offers you the possibility of making very frequent scans of your infrastructure in order to be "real-time". When configuring Kexa, you can set 2 attributes in the "general" section for this purpose: the "checkInterval" and the "alertInterval".
+The "checkInterval" is used to define the scan frequency in seconds. The value entered will scan every X seconds. Be careful, too frequent scans could exhaust the request quota of some of your services.
+The "alertInterval" is used to determine the frequency in seconds of alerts for the same non-compliant resource. A judicious choice of the waiting time between 2 alerts for a resource is important. It should not be too short to avoid unnecessary spam.
+
+Here we are an example of configuration file with variable:
+*in this example i want to scan every 5s and I want to be notified for the same error maximum once an hour.*
+![example config with continuous runtime](../config/demo/exemple6.default.json)
 
 # <div align="center" id="environment-variables-and-auth">**Environment variables & Auth**</div>
 <br/>

@@ -12,6 +12,12 @@ const mainFolder = 'Kexa';
 const serviceAddOnPath = './' + mainFolder + '/services/addOn';
 const fs = require('fs');
 const logger = getNewLogger("LoaderAddOnLogger");
+const reservedNameAddOn=[
+    "export",
+    "save",
+    "variable",
+    "general",
+]
 
 
 export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResource>{
@@ -21,7 +27,7 @@ export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResour
     context?.log("Loading addOns");
     const addOnNeed = require('../../config/addOnNeed.json');
     const files = fs.readdirSync(serviceAddOnPath);
-    const promises = files.map(async (file: string) => {
+    const promises = files.filter((file:string)=> !reservedNameAddOn.includes(file)).map(async (file: string) => {
         return await loadAddOn(file, addOnNeed, settings);
     });
     const results = await Promise.all(promises);
