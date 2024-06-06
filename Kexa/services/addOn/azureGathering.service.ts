@@ -1706,6 +1706,9 @@
 	*	- KexaAzure.mlSchedules
 	*	- KexaAzure.storage
 	*	- KexaAzure.blob
+	*	- KexaAzure.secrets
+	* 	- KexaAzure.KeyvaultKeys
+	* 	- KexaAzure.vaults
 */
 
 
@@ -1715,6 +1718,7 @@
 
 
 import {ComputeManagementClient, VirtualMachine} from "@azure/arm-compute";
+import { KeyVaultManagementClient  } from "@azure/arm-keyvault";
 import * as AzureImports from "./imports/azurePackage.import";
 
 let allClients: AzureClients = {};
@@ -1799,6 +1803,7 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
 				]);
 				let finalResources = {...autoFlatResources, ...dataComplementaryFlat};
                 resources.push(finalResources);
+				console.log(finalResources);
             }
         } catch(e) {
             logger.error("error in collectAzureData with the subscription ID: " + (await getConfigOrEnvVar(config, "SUBSCRIPTIONID", prefix))??null);
@@ -1839,6 +1844,7 @@ async function collectAuto(credential: any, subscriptionId: any, config: AzureCo
 			});
 		});
 	});
+	console.log(autoFlatResources);
 	return autoFlatResources;
 }
 
@@ -1936,6 +1942,7 @@ const customGatherFunctions: FunctionMap = {
 
     'KexaAzure.vm': async (name: string, credential: any, subscriptionId: any) => {
         logger.debug("Starting " + name + " listing...");
+		console.log("----------------HELLOo VM----------------------");
 
 		try {
 			const computeClient = new ComputeManagementClient(credential, subscriptionId);
@@ -2012,6 +2019,40 @@ const customGatherFunctions: FunctionMap = {
 		//listAllBlob();
 		return [];
     },
+
+	
+	'KexaAzure.secrets': async (name: string, credential: any, subscriptionId: any) => {
+        logger.debug("Starting " + name + " listing...");
+		try {
+			const vaultClient = new KeyVaultManagementClient(credential, subscriptionId);
+            return await keyvaultSecretsListing(vaultClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+    },
+
+	'KexaAzure.KeyvaultKeys': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const vaultClient = new KeyVaultManagementClient(credential, subscriptionId);
+            return await keyvaultKeysListing(vaultClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.vaults': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const vaultClient = new KeyVaultManagementClient(credential, subscriptionId);
+            return await keyvaultListing(vaultClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
 };
 
 
@@ -2201,4 +2242,51 @@ async function schedulesListing(client: AzureMachineLearningWorkspaces, workspac
 			return [];
 		}
 	}
+}
+
+async function keyvaultSecretsListing(client: KeyVaultManagementClient): Promise<any> {
+	let secretsRes:any = [];
+	for await (let item of client.vaults.list()) {
+		item = addingResourceGroups(item);
+		let result:any = item;
+		console.log(result);
+		for await (let secretItem of client.secrets.list(result.resourceGroupName, result.name)) {
+			secretsRes.push(secretItem);
+		}
+	}
+	return secretsRes;
+}
+
+async function keyvaultKeysListing(client: KeyVaultManagementClient): Promise<any> {
+	let keysRes:any = [];
+	for await (let item of client.vaults.list()) {
+		item = addingResourceGroups(item);
+		let result:any = item;
+		for await (let keyItem of client.keys.list(result.resourceGroupName, result.name)) {
+			keysRes.push(keyItem);
+		}
+	}
+	return keysRes;
+}
+
+async function keyvaultListing(client: KeyVaultManagementClient): Promise<any> {
+	let resultVault:any = [];
+	for await (let item of client.vaults.list()) {
+		item = addingResourceGroups(item);
+		let result:any = item;
+		const res= await client.vaults.get(result.resourceGroupName, result.name);
+		console.log(res);
+		console.log(res.properties);
+		resultVault.push(res);
+	}
+	return resultVault;
+}
+
+async function storageListing(client: StorageManagementClient): Promise<any> {
+	let resultStorage:any = [];
+	for await (let item of client.storageAccounts.list()) {
+		console.log(item);
+		resultStorage.push(item);
+	}
+	return resultStorage;
 }

@@ -1,0 +1,263 @@
+- version: 1.0.0
+  date: 07-18-2023
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- webhook
+        #- sms
+      to: 
+        #- http://127.0.0.1:5000/test
+        #- myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    # not used
+    - name: "azure-bench-test"
+      description: "this rule find new rule by testing"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: PolicyClient.policyAssignments
+      conditions:
+        - property: Hello
+          condition: INF
+          value: 0
+    # results
+    - name: "azure-bench-test"
+      description: "this rule find new rule by testing"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: AuthorizationManagementClient.classicAdministrators
+      conditions:
+        - property: Hello
+          condition: INF
+          value: 0
+      # no results
+    - name: "azure-keyvault-secret-rotation"
+      description: "this rule to ensure that secrets are rotated in key vaults"
+      applied: false
+      level: 0
+      cloudProvider: azure
+      objectName: NetworkManagementClient.networkInterfaces
+      conditions:
+        - property: Hello
+          condition: INF
+          value: 0
+    - name: "azure-keyvault-secret-rotation"
+      description: "this rule to ensure that secrets are rotated in key vaults"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.firewallPolicies
+      conditions:
+        - property: Hello
+          condition: INF
+          value: 0
+    ##################################
+    #            STORAGES            #
+    ##################################
+    #### storage accounts
+    - name: "azure-storage-acc-public-network-access"
+      description: "this rule to ensure that public network access is disabled for storage accounts"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: StorageManagementClient.storageAccounts
+      conditions:
+        - property: publicNetworkAccess
+          condition: DIFFERENT
+          value: 'Enabled'
+    - name: "azure-storage-require-infra-encryption"
+      description: "this rule to ensure storage accounts require infrastructure encryption"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: StorageManagementClient.storageAccounts
+      conditions:
+        - property: encryption.requireInfrastructureEncryption
+          condition: EQUAL
+          value: true
+    - name: "azure-storage-network-default-deny-traffic"
+      description: "this rule to ensure storage accounts networks default deny all traffic"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: StorageManagementClient.storageAccounts
+      conditions:
+        - property: networkRuleSet.defaultAction
+          condition: EQUAL
+          value: 'Deny'
+    - name: "azure-storage-use-private-endpoint"
+      description: "this rule to ensure storage accounts use private endpoints connections"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: StorageManagementClient.storageAccounts
+      conditions:
+        - property: privateEndpointConnections
+          condition: COUNT_SUP_OR_EQUAL
+          value: 1
+    - name: "azure-storage-minimum-tls-version"
+      description: "this rule to ensure storage accounts set minimum TLS version to 1.2"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: StorageManagementClient.storageAccounts
+      conditions:
+        - property: minimumTlsVersion
+          condition: EQUAL
+          value: 'TLS1_2'
+    - name: "azure-storage-cross-tenant-replication-disabled"
+      description: "this rule to ensure cross storage replication is disabled for storage accounts"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: StorageManagementClient.storageAccounts
+      conditions:
+        - property: allowCrossTenantReplication
+          condition: DIFFERENT
+          value: true
+    - name: "azure-storage-blob-public-access"
+      description: "this rule to ensure public bloc access is disabled for storage accounts"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: StorageManagementClient.storageAccounts
+      conditions:
+        - property: allowBlobPublicAccess
+          condition: DIFFERENT
+          value: true
+    - name: "azure-storage-encrypte-with-cmk"
+      description: "this rule to ensure storage accounts use CMK encryption for critical data"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: StorageManagementClient.storageAccounts
+      conditions:
+        - property: encryption.keySource
+          condition: EQUAL
+          value: 'Microsoft.Keyvault'
+    ##################################
+    #     VAULTS, SECRETS, KEYS      #
+    ##################################
+    #### vaults configuration
+    - name: "azure-vault-no-public-network-access"
+      description: "this rule is to ensure vault network public access is disabled"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.vaults
+      conditions:
+        - property: properties.publicNetworkAccess
+          condition: EQUAL
+          value: 'Disabled'
+    - name: "azure-ensure-rbac-enabled"
+      description: "this rule is to ensure rbac is enabled for kayvaults"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.vaults
+      conditions:
+        - property: properties.enableRbacAuthorization
+          condition: EQUAL
+          value: true
+    - name: "azure-ensure-use-private-endpoint"
+      description: "this rule is to ensure private endpoints are used for Keyvault"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.vaults
+      conditions:
+        - property: properties.privateEndpointConnections
+          condition: ALL
+          value:
+            - property: id
+              condition: DIFFERENT
+              value: null
+    #### vault secrets
+    - name: "azure-secrets-ensure-expiration"
+      description: "this rule is to ensure every secrets has an expiration date"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.secrets
+      conditions:
+        - property: properties.attributes.expires
+          condition: DIFFERENT
+          value: null
+    #### vault keys
+    - name: "azure-vault-keys-rotation"
+      description: "this rule is to ensure every keys has a rotation defined"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.KeyvaultKeys
+      conditions:
+        - property: properties.rotationPolicy
+          condition: DIFFERENT
+          value: null
+    - name: "azure-vault-keys-expiration-date"
+      description: "this rule is to ensure every keys has a expiration date"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.KeyvaultKeys
+      conditions:
+        - property: properties.attributes.expires
+          condition: DIFFERENT
+          value: null
+          
+  #- PolicyClient.dataPolicyManifests
+	#- PolicyClient.policyAssignments
+	#- PolicyClient.policyDefinitions
+	#- PolicyClient.policySetDefinitions
+	#- PolicyClient.policyExemptions
+  #- AuthorizationManagementClient.classicAdministrators
+	#- AuthorizationManagementClient.globalAdministrator
+	#- AuthorizationManagementClient.denyAssignments
+	#- AuthorizationManagementClient.providerOperationsMetadataOperations
+	#- AuthorizationManagementClient.roleAssignments
+	#- AuthorizationManagementClient.permissions
+	#- AuthorizationManagementClient.roleDefinitions
+  # - NetworkManagementClient.applicationGateways
+  # NetworkManagementClient.securityRules

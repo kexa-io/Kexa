@@ -8,6 +8,9 @@ export interface AzureResources {
     'KexaAzure.mlSchedules': Array<any>|null;
     'KexaAzure.storage': Array<any>|null;
     'KexaAzure.blob': Array<any>|null;
+    'KexaAzure.secrets': Array<any>|null;
+    'KexaAzure.KeyvaultKeys': Array<any>|null;
+    'KexaAzure.vaults': Array<any>|null;
 }
 
 export const stringKeys: Array<String> = [
@@ -18,4 +21,7 @@ export const stringKeys: Array<String> = [
     'KexaAzure.mlSchedules',
     'KexaAzure.storage',
     'KexaAzure.blob',
+    'KexaAzure.secrets',
+    'KexaAzure.KeyvaultKeys',
+    'KexaAzure.vaults'
 ];

@@ -33,7 +33,7 @@
       enabled: true
       type: 
         - log
-        #- email
+      #  - email
       to: 
         - myEmail@gmail.com
       conditions:
@@ -175,12 +175,9 @@
       cloudProvider: kubernetes
       objectName : podsConsumption
       conditions:
-        - property : data
-          condition : ALL
-          value: 
-            - property : MemoryUsage.CurrentUsage
-              condition : INF
-              value: 88888800512
+        - property : MemoryUsage
+          condition : INF
+          value: 599428096
     # pods consumption
     - name: "kube-pods-cpu-limitation"
       description : "this rules is to verify cpu usage limitation"
@@ -189,9 +186,6 @@
       cloudProvider: kubernetes
       objectName : podsConsumption
       conditions:
-        - property : data
-          condition : ALL
-          value: 
-            - property : CPUUsage.CurrentUsage
-              condition : INF
-              value: 0.0881
+        - property : CPUUsage
+          condition : INF
+          value: 0.02
