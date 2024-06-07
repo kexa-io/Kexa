@@ -11,6 +11,12 @@ export interface AzureResources {
     'KexaAzure.secrets': Array<any>|null;
     'KexaAzure.KeyvaultKeys': Array<any>|null;
     'KexaAzure.vaults': Array<any>|null;
+    'KexaAzure.blobServices': Array<any>|null;
+    'KexaAzure.appConfiguration': Array<any>|null;
+    'KexaAzure.monitor': Array<any>|null;
+    'KexaAzure.blobProperties': Array<any>|null;
+    'KexaAzure.defender': Array<any>|null;
+    'KexaAzure.security': Array<any>|null;
 }
 
 export const stringKeys: Array<String> = [
@@ -23,5 +29,11 @@ export const stringKeys: Array<String> = [
     'KexaAzure.blob',
     'KexaAzure.secrets',
     'KexaAzure.KeyvaultKeys',
-    'KexaAzure.vaults'
+    'KexaAzure.vaults',
+    'KexaAzure.blobServices',
+    'KexaAzure.appConfiguration',
+    'KexaAzure.monitor',
+    'KexaAzure.blobProperties',
+    'KexaAzure.defender',
+    'KexaAzure.security'
 ];

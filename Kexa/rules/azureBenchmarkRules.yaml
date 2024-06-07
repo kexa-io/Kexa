@@ -107,6 +107,16 @@
         - property: publicNetworkAccess
           condition: DIFFERENT
           value: 'Enabled'
+    - name: "azure-storage-secure-transfer"
+      description: "this rule to ensure that secure transfer is enabled for storage accounts"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: StorageManagementClient.storageAccounts
+      conditions:
+        - property: enableHttpsTrafficOnly
+          condition: EQUAL
+          value: true
     - name: "azure-storage-require-infra-encryption"
       description: "this rule to ensure storage accounts require infrastructure encryption"
       applied: false
@@ -177,6 +187,38 @@
         - property: encryption.keySource
           condition: EQUAL
           value: 'Microsoft.Keyvault'
+    # retest here
+    - name: "azure-storage-blob-soft-delete"
+      description: "this rule to ensure storage containers delete retention"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.blobServices
+      conditions:
+        - operator: AND
+          criteria:
+            - property: deleteRetentionPolicy.enabled
+              condition: EQUAL
+              value: true
+            - property: deleteRetentionPolicy.days
+              condition: SUP_OR_EQUAL
+              value: 1
+    # retest here
+    - name: "azure-storage-container-soft-delete"
+      description: "this rule to ensure storage "
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.blobServices
+      conditions:
+        - operator: AND
+          criteria:
+            - property: containerDeleteRetentionPolicy.enabled
+              condition: EQUAL
+              value: true
+            - property: deleteRetentionPolicy.days
+              condition: SUP_OR_EQUAL
+              value: 1
     ##################################
     #     VAULTS, SECRETS, KEYS      #
     ##################################
@@ -214,6 +256,16 @@
             - property: id
               condition: DIFFERENT
               value: null
+    - name: "azure-ensure-keyvault-recoverable"
+      description: "this rule is to ensure keyvaults are recoverable"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.vaults
+      conditions:
+        - property: properties.enablePurgeProtection
+          condition: EQUAL
+          value: true
     #### vault secrets
     - name: "azure-secrets-ensure-expiration"
       description: "this rule is to ensure every secrets has an expiration date"
@@ -246,7 +298,137 @@
         - property: properties.attributes.expires
           condition: DIFFERENT
           value: null
-          
+    ##################################
+    #           APP INSIGHT          #
+    ##################################
+    # app configurations
+    - name: "azure-ensure-app-insight-configured"
+      description: "this rule is to ensure app insights is configured"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: ApplicationInsightsManagementClient.components
+      conditions:
+        - property: .
+          condition: COUNT_SUP_OR_EQUAL
+          value: 1
+    # resources monitoring
+    - name: "azure-ensure-azure-monitor-resources-logging-enabled"
+      description: "this rule is to ensure all resources that support azure monitoring are monitored by app insights"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.monitor
+      conditions:
+        - property: diagnosticSettings
+          condition: COUNT_SUP_OR_EQUAL
+          value: 1
+    # KO
+    - name: "azure-ensure-defender"
+      description: "this rule is to ensure defender"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.defender
+      conditions:
+        - property: zdqqzd
+          condition: COUNT_SUP_OR_EQUAL
+          value: 1
+    # KO
+    - name: "azure-ensure-security"
+      description: "this rule is to ensure security"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.security
+      conditions:
+        - property: zdqqzd
+          condition: COUNT_SUP_OR_EQUAL
+          value: 1
+    ##################################
+    #         GLOBAL / GRAPH         #
+    ##################################
+    #### KO ALL
+    - name: "azure-1"
+      description: "this rule is to ensure 1"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.adminRules
+      conditions:
+        - property: properties.publicNetworkAccess
+          condition: EQUAL
+          value: 'Disabled'
+    - name: "azure-2"
+      description: "this rule is to ensure 2"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.defaultSecurityRules
+      conditions:
+        - property: properties.publicNetworkAccess
+          condition: EQUAL
+          value: 'Disabled'
+    - name: "azure-3"
+      description: "this rule is to ensure 3"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.networkGroups
+      conditions:
+        - property: properties.publicNetworkAccess
+          condition: EQUAL
+          value: 'Disabled'
+    - name: "azure-4"
+      description: "this rule is to ensure 4"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.networkSecurityGroups
+      conditions:
+        - property: properties.publicNetworkAccess
+          condition: EQUAL
+          value: 'Disabled'
+    - name: "azure-5"
+      description: "this rule is to ensure 5"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.networkSecurityGroups
+      conditions:
+        - property: dqzzqddz
+          condition: EQUAL
+          value: 'Disabled'
+    - name: "azure-6"
+      description: "this rule is to ensure 6"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: AuthorizationManagementClient.roleManagementPolicies
+      conditions:
+        - property: dqzzqddz
+          condition: EQUAL
+          value: 'Disabled'
+    - name: "azure-7"
+      description: "this rule is to ensure 7"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.webApps
+      conditions:
+        - property: dqzzqddz
+          condition: EQUAL
+          value: 'Disabled'
+    - name: "azure-9"
+      description: "this rule is to ensure 9"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: ApplicationInsightsManagementClient.componentAvailableFeatures
+      conditions:
+        - property: dqzzqddz
+          condition: EQUAL
+          value: 'Disabled'
   #- PolicyClient.dataPolicyManifests
 	#- PolicyClient.policyAssignments
 	#- PolicyClient.policyDefinitions
@@ -261,3 +443,5 @@
 	#- AuthorizationManagementClient.roleDefinitions
   # - NetworkManagementClient.applicationGateways
   # NetworkManagementClient.securityRules
+
+  # MONITOR & APP INSIGHT ?? -> logging / analytics
