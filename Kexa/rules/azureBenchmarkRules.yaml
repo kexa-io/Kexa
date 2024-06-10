@@ -50,49 +50,6 @@
         - level: 3
           min: 1
   rules:
-    # not used
-    - name: "azure-bench-test"
-      description: "this rule find new rule by testing"
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: PolicyClient.policyAssignments
-      conditions:
-        - property: Hello
-          condition: INF
-          value: 0
-    # results
-    - name: "azure-bench-test"
-      description: "this rule find new rule by testing"
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: AuthorizationManagementClient.classicAdministrators
-      conditions:
-        - property: Hello
-          condition: INF
-          value: 0
-      # no results
-    - name: "azure-keyvault-secret-rotation"
-      description: "this rule to ensure that secrets are rotated in key vaults"
-      applied: false
-      level: 0
-      cloudProvider: azure
-      objectName: NetworkManagementClient.networkInterfaces
-      conditions:
-        - property: Hello
-          condition: INF
-          value: 0
-    - name: "azure-keyvault-secret-rotation"
-      description: "this rule to ensure that secrets are rotated in key vaults"
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: NetworkManagementClient.firewallPolicies
-      conditions:
-        - property: Hello
-          condition: INF
-          value: 0
     ##################################
     #            STORAGES            #
     ##################################
@@ -323,77 +280,10 @@
         - property: diagnosticSettings
           condition: COUNT_SUP_OR_EQUAL
           value: 1
-    # KO
-    - name: "azure-ensure-defender"
-      description: "this rule is to ensure defender"
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: KexaAzure.defender
-      conditions:
-        - property: zdqqzd
-          condition: COUNT_SUP_OR_EQUAL
-          value: 1
-    # KO
-    - name: "azure-ensure-security"
-      description: "this rule is to ensure security"
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: KexaAzure.security
-      conditions:
-        - property: zdqqzd
-          condition: COUNT_SUP_OR_EQUAL
-          value: 1
-    # KO
-    - name: "azure-ensure-auth"
-      description: "this rule is to ensure security"
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: KexaAzure.authorization
-      conditions:
-        - property: zdqqzd
-          condition: COUNT_SUP_OR_EQUAL
-          value: 1
-    # KO
-    - name: "azure-ensure-sql"
-      description: "this rule is to ensure security"
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: SqlManagementClient.dataMaskingPolicies
-      conditions:
-        - property: zdqqzd
-          condition: COUNT_SUP_OR_EQUAL
-          value: 1
-    # KO
-    - name: "azure-ensure-sql"
-      description: "this rule is to ensure security"
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: SqlManagementClient.databases
-      conditions:
-        - property: zdqqzd
-          condition: COUNT_SUP_OR_EQUAL
-          value: 1
-    # KO
-    - name: "azure-ensure-sql"
-      description: "this rule is to ensure security"
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: SqlManagementClient.encryptionProtectors
-      conditions:
-        - property: zdqqzd
-          condition: COUNT_SUP_OR_EQUAL
-          value: 1
     ##################################
     #         SQL / POSTGRES         #
     ##################################
-    #### 
-    # KO
+    #### sql servers
     - name: "azure-sql-server-firewall-any-ip"
       description: "this rule is to ensure SQL servers firewall does not allow any IP"
       applied: false
@@ -442,117 +332,92 @@
               value: null
     - name: "azure-sql-servers-entra-id-administrator"
       description: "this rule is to ensure entra id authentication is configured for sql servers"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.sqlServers
       conditions:
-        - property: administrators
-          condition: ONE
+        - property: administrators.administratorType
+          condition: EQUAL
+          value: 'ActiveDirectory'
+        - property: administrators.azureADOnlyAuthentication
+          condition: EQUAL
+          value: true
+    - name: "azure-sql-servers-retention-more-than-90-days"
+      description: "this rule is to ensure sql servers audit logs retention is unlimited (0) or more than 90 days"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.sqlServers
+      conditions:
+        - property: blobAuditingPolicies
+          condition: ALL
           value:
-            - property: administratorType
+            - property: retentionDays
+              condition: REGEX
+              value: ^(0|[9][0-9]+)$
+            - property: state
               condition: EQUAL
-              value: 'ActiveDirectory'
-            - property: azureADOnlyAuthentication
+              value: 'Enabled'
+    - name: "azure-sql-servers-auditing"
+      description: "this rule is to ensure sql servers auditing is enabled"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.sqlServers
+      conditions:
+        - property: serverDevOpsAuditSettings
+          condition: ALL
+          value:
+            - property: state
               condition: EQUAL
-              value: true
+              value: 'Enabled'
+        - property: blobAuditingPolicies
+          condition: ALL
+          value:
+            - property: state
+              condition: EQUAL
+              value: 'Enabled'
+    #### sql databases
+    - name: "azure-sql-database-tde-enabled"
+      description: "this rule is to ensure sql databases auditing is enabled"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.sqlDatabases
+      conditions:
+        - property: transparentDataEncryptions
+          condition: ALL
+          value:
+            - property: state
+              condition: EQUAL
+              value: 'Enabled'
+    # ko 
+    - name: "azure-sql-database-ssl-connection-required"
+      description: "this rule is to ensure sql databases SSL connection is required"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.sqlDatabases
+      conditions:
+        - property: transparentDataEncryptions
+          condition: ALL
+          value:
+            - property: state
+              condition: EQUAL
+              value: 'Enabled'
+    ##### postgres servers
+    # ko
+    - name: "azure-postgres-server-firewall-any-ip"
+      description: "this rule is to ensure postgres servers firewall does not allow any IP"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.postgresServers
+      conditions:
+        - property: firewallRules
+          condition: EQUAL
+          value: 'e'
     ##################################
     #         GLOBAL / GRAPH         #
     ##################################
-    #### KO ALL
-    - name: "azure-1"
-      description: "this rule is to ensure 1"
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: NetworkManagementClient.adminRules
-      conditions:
-        - property: properties.publicNetworkAccess
-          condition: EQUAL
-          value: 'Disabled'
-    - name: "azure-2"
-      description: "this rule is to ensure 2"
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: NetworkManagementClient.defaultSecurityRules
-      conditions:
-        - property: properties.publicNetworkAccess
-          condition: EQUAL
-          value: 'Disabled'
-    - name: "azure-3"
-      description: "this rule is to ensure 3"
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: NetworkManagementClient.networkGroups
-      conditions:
-        - property: properties.publicNetworkAccess
-          condition: EQUAL
-          value: 'Disabled'
-    - name: "azure-4"
-      description: "this rule is to ensure 4"
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: NetworkManagementClient.networkSecurityGroups
-      conditions:
-        - property: properties.publicNetworkAccess
-          condition: EQUAL
-          value: 'Disabled'
-    - name: "azure-5"
-      description: "this rule is to ensure 5"
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: NetworkManagementClient.networkSecurityGroups
-      conditions:
-        - property: dqzzqddz
-          condition: EQUAL
-          value: 'Disabled'
-    - name: "azure-6"
-      description: "this rule is to ensure 6"
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: AuthorizationManagementClient.roleManagementPolicies
-      conditions:
-        - property: dqzzqddz
-          condition: EQUAL
-          value: 'Disabled'
-    - name: "azure-7"
-      description: "this rule is to ensure 7"
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: WebSiteManagementClient.webApps
-      conditions:
-        - property: dqzzqddz
-          condition: EQUAL
-          value: 'Disabled'
-    - name: "azure-9"
-      description: "this rule is to ensure 9"
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: ApplicationInsightsManagementClient.componentAvailableFeatures
-      conditions:
-        - property: dqzzqddz
-          condition: EQUAL
-          value: 'Disabled'
-  #- PolicyClient.dataPolicyManifests
-	#- PolicyClient.policyAssignments
-	#- PolicyClient.policyDefinitions
-	#- PolicyClient.policySetDefinitions
-	#- PolicyClient.policyExemptions
-  #- AuthorizationManagementClient.classicAdministrators
-	#- AuthorizationManagementClient.globalAdministrator
-	#- AuthorizationManagementClient.denyAssignments
-	#- AuthorizationManagementClient.providerOperationsMetadataOperations
-	#- AuthorizationManagementClient.roleAssignments
-	#- AuthorizationManagementClient.permissions
-	#- AuthorizationManagementClient.roleDefinitions
-  # - NetworkManagementClient.applicationGateways
-  # NetworkManagementClient.securityRules
-
-  # MONITOR & APP INSIGHT ?? -> logging / analytics

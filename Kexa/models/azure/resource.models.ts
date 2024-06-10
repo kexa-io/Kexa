@@ -19,6 +19,10 @@ export interface AzureResources {
     'KexaAzure.security': Array<any>|null;
     'KexaAzure.authorization': Array<any>|null;
     'KexaAzure.sqlServers': Array<any>|null;
+    'KexaAzure.sqlDatabases': Array<any>|null;
+    'KexaAzure.postgresServers': Array<any>|null;
+    'KexaAzure.policies': Array<any>|null;
+    'KexaAzure.notifications': Array<any>|null;
 }
 
 export const stringKeys: Array<String> = [
@@ -39,5 +43,9 @@ export const stringKeys: Array<String> = [
     'KexaAzure.defender',
     'KexaAzure.security',
     'KexaAzure.authorization',
-    'KexaAzure.sqlServers'
+    'KexaAzure.sqlServers',
+    'KexaAzure.sqlDatabases',
+    'KexaAzure.postgresServers',
+    'KexaAzure.policies',
+    'KexaAzure.notifications'
 ];
