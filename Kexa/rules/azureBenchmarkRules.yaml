@@ -421,3 +421,13 @@
     ##################################
     #         GLOBAL / GRAPH         #
     ##################################
+    - name: "azure-global-ensure-azure-ad-authentication"
+      description: "this rule is to ensure azure ad authentication is enabled"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.global
+      conditions:
+        - property: authentication
+          condition: EQUAL
+          value: 'AzureAD'

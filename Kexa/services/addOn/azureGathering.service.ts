@@ -1721,6 +1721,7 @@
 	* 	- KexaAzure.postgresServers
 	* 	- KexaAzure.policies
 	* 	- KexaAzure.notifications
+	* 	- KexaAzure.global
 */
 
 
@@ -1739,6 +1740,9 @@ import {SqlManagementClient } from "@azure/arm-sql";
 import {NotificationHubsManagementClient } from "@azure/arm-notificationhubs";
 import { ApplicationInsightsManagementClient } from "@azure/arm-appinsights";
 import * as AzureImports from "./imports/azurePackage.import";
+import { Client } from "@microsoft/microsoft-graph-client";
+import { TokenCredentialAuthenticationProvider } from "@microsoft/microsoft-graph-client/authProviders/azureTokenCredentials";
+
 
 let allClients: AzureClients = {};
 
@@ -2204,6 +2208,21 @@ const customGatherFunctions: FunctionMap = {
 		try {
 			const monitorClient = new NotificationHubsManagementClient(credential, subscriptionId);
 			return await notificationsListing(monitorClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.global': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const authProvider = new TokenCredentialAuthenticationProvider(credential, {
+				scopes: ['https://graph.microsoft.com/.default'],
+			  });
+			const graphClient = Client.initWithMiddleware({ authProvider: authProvider });
+			
+			return await testGraphListing(graphClient);
 		} catch (e) {
 			logger.debug("Error creating Azure client: " + name, e);
 			return [];
@@ -2809,3 +2828,15 @@ async function notificationsListing(client: NotificationHubsManagementClient): P
 	}
 	return resultsNotifications;
 }
+
+async function testGraphListing(client: Client) {
+	try {
+	  const users = await client.api("/users")
+		.top(10) // Limit results to 10 (optional)
+		.get();
+  
+	  console.log("Users:", users.value); // Access the list of users
+	} catch (error) {
+	  console.error("Error retrieving users:", error);
+	}
+  }

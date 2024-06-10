@@ -23,6 +23,7 @@ export interface AzureResources {
     'KexaAzure.postgresServers': Array<any>|null;
     'KexaAzure.policies': Array<any>|null;
     'KexaAzure.notifications': Array<any>|null;
+    'KexaAzure.global': Array<any>|null;
 }
 
 export const stringKeys: Array<String> = [
@@ -47,5 +48,6 @@ export const stringKeys: Array<String> = [
     'KexaAzure.sqlDatabases',
     'KexaAzure.postgresServers',
     'KexaAzure.policies',
-    'KexaAzure.notifications'
+    'KexaAzure.notifications',
+    'KexaAzure.global'
 ];
