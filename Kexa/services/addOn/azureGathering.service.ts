@@ -1740,7 +1740,7 @@ import {SqlManagementClient } from "@azure/arm-sql";
 import {NotificationHubsManagementClient } from "@azure/arm-notificationhubs";
 import { ApplicationInsightsManagementClient } from "@azure/arm-appinsights";
 import * as AzureImports from "./imports/azurePackage.import";
-import { Client } from "@microsoft/microsoft-graph-client";
+import { Client} from "@microsoft/microsoft-graph-client";
 import { TokenCredentialAuthenticationProvider } from "@microsoft/microsoft-graph-client/authProviders/azureTokenCredentials";
 
 
@@ -1830,7 +1830,7 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
 				]);
 				let finalResources = {...autoFlatResources, ...dataComplementaryFlat};
 				console.log("finalResources: ");
-				console.log(finalResources['KexaAzure.sqlServers'][0]);
+				console.log(finalResources);
 				//console.log(finalResources['KexaAzure.authorization']);
                 resources.push(finalResources);
             }
@@ -2218,11 +2218,13 @@ const customGatherFunctions: FunctionMap = {
 		logger.debug("Starting " + name + " listing...");
 		try {
 			const authProvider = new TokenCredentialAuthenticationProvider(credential, {
-				scopes: ['https://graph.microsoft.com/.default'],
+				scopes: [
+					'https://graph.microsoft.com/.default'
+				],
 			  });
 			const graphClient = Client.initWithMiddleware({ authProvider: authProvider });
 			
-			return await testGraphListing(graphClient);
+			return await testGraphListing(graphClient, subscriptionId);
 		} catch (e) {
 			logger.debug("Error creating Azure client: " + name, e);
 			return [];
@@ -2829,14 +2831,77 @@ async function notificationsListing(client: NotificationHubsManagementClient): P
 	return resultsNotifications;
 }
 
-async function testGraphListing(client: Client) {
+async function testGraphListing(client: Client, subscriptionId: any): Promise<any> {
+	let resultsGraph:any = [];
+	let resultsApplications:any = [];
+	let resultsNew:any = [];
+	let usersReponse:any = [];
+	let users:any = [];
 	try {
-	  const users = await client.api("/users")
+		usersReponse = await client.api("/users")
 		.top(10) // Limit results to 10 (optional)
 		.get();
   
-	  console.log("Users:", users.value); // Access the list of users
+	  console.log("Users:", usersReponse.value); // Access the list of users
 	} catch (error) {
 	  console.error("Error retrieving users:", error);
 	}
+
+
+	const userPromise = usersReponse.value.map( async (userItem: any) => {
+		try {
+			let user:any = userItem;
+			console.log("user id:", user.id);
+			const res = await client.api(`/users/${user.id}/authentication/methods`).get();
+			user.authMethods = res.value;
+				console.log("user:");
+			//console.log(user);
+			users.push(user);
+		} catch (error) {
+			console.log("error:",error);
+		}
+	});
+
+	const processedUsers = await Promise.all(userPromise);
+	return processedUsers;
+	/*const url = `https://management.azure.com/subscriptions/${subscriptionId}/providers/Microsoft.AppConfiguration/configurationStores?api-version=2023-03-01`;
+	try {
+		const res = await client.api('/applications').get();
+		resultsApplications = res.value;
+	} catch (error) {
+		console.log("error:",error);
+	}*/
+
+	/*
+	try {
+		const res = await client.api('/identityGovernance/accessReviews/definitions').get();
+		resultsNew = res.value;
+	} catch (error) {
+		console.log("error:",error);
+	}
+	console.log("Foreach:");
+	console.log(resultsNew);
+	*/
+	
+	/*
+	try {
+		const res = await client.api('/servicePrincipals').get();
+		resultsNew = res.value;
+		resultsNew.forEach(async (item:any) => {
+			try {
+				const res2 = await client.api(`/servicePrincipals/${item.id}/remoteDesktopSecurityConfiguration`).get();
+				console.log("res2:");
+				console.log(res2);
+			} catch (error) {
+				console.log("error:",error);
+			}
+		});
+	} catch (error) {
+		console.log("error:",error);
+	}
+	*/
+
+		
+
+	
   }

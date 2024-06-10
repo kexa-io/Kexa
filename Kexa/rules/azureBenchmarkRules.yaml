@@ -428,6 +428,9 @@
       cloudProvider: azure
       objectName: KexaAzure.global
       conditions:
-        - property: authentication
-          condition: EQUAL
-          value: 'AzureAD'
+        - property: authMethods
+          condition: ONE
+          value:
+            - property: 'AzureAD'
+            - name: "azure-global-ensure-mfa"
+            - value: 'dqzdqz'
