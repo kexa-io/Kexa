@@ -1715,6 +1715,8 @@
 	* 	- KexaAzure.blobProperties
 	* 	- KexaAzure.defender
 	* 	- KexaAzure.security
+	* 	- KexaAzure.authorization
+	* 	- KexaAzure.sqlServers
 */
 
 
@@ -1727,6 +1729,8 @@ import {ComputeManagementClient, VirtualMachine} from "@azure/arm-compute";
 import { KeyVaultManagementClient  } from "@azure/arm-keyvault";
 import { ResourceGraphClient } from "@azure/arm-resourcegraph";
 import { PolicyClient } from "@azure/arm-policy";
+import { SecurityInsights } from "@azure/arm-securityinsight";
+import {SqlManagementClient } from "@azure/arm-sql";
 import { ApplicationInsightsManagementClient } from "@azure/arm-appinsights";
 import * as AzureImports from "./imports/azurePackage.import";
 
@@ -1758,6 +1762,7 @@ import { MonitorClient } from "@azure/arm-monitor";
 import {StorageAccount, StorageManagementClient, AccountSasParameters} from "@azure/arm-storage";
 import { BlobClient, BlobServiceClient } from "@azure/storage-blob";
 import { AppConfigurationClient } from "@azure/app-configuration";
+import {AuthorizationManagementClient} from "@azure/arm-authorization";
 import { SecurityCenter } from "@azure/arm-security";
 
 const clientConstructors: Record<string, any> = {
@@ -1813,8 +1818,8 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
 					collectKexaRestructuredData(credential, subscriptionId, config)
 				]);
 				let finalResources = {...autoFlatResources, ...dataComplementaryFlat};
-				//console.log("finalResources: ");
-				//console.log(finalResources);
+				console.log("finalResources: ");
+				console.log(finalResources['KexaAzure.sqlServers'][0]);
                 resources.push(finalResources);
             }
         } catch(e) {
@@ -2123,6 +2128,29 @@ const customGatherFunctions: FunctionMap = {
 		try {
 			const securityClient = new SecurityCenter(credential, subscriptionId);
 			return await securityListing(securityClient, subscriptionId);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.authorization': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const authorizationClient = new AuthorizationManagementClient(credential, subscriptionId);
+			return await authorizationListing(authorizationClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.sqlServers': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const monitorClient = new MonitorClient(credential, subscriptionId);
+			const sqlClient = new SqlManagementClient(credential, subscriptionId);
+			return await sqlServersListing(sqlClient, monitorClient);
 		} catch (e) {
 			logger.debug("Error creating Azure client: " + name, e);
 			return [];
@@ -2470,35 +2498,111 @@ async function storageListing(client: StorageManagementClient): Promise<any> {
 async function securityListing(client: SecurityCenter, subscriptionId: any): Promise<any> {
 	let resultSecurity:any = [];
 	try {
-		console.log("SECURITY-----------------------------------------------");
-		// TEST OTHER SECURITY COMPONENTS HERE 
 		for await (let item of client.settings.list()) {
 			item = addingResourceGroups(item);
 			let result:any = item;
-			console.log(result);
 			resultSecurity.push(result);
 		}
 		for await (let item of client.secureScores.list()) {
 			console.log(item);
 		}
-		// NEWs
-		console.log("NEW-----------------------------------------------");
-		
-		for await (let item of client.topology.list()) {
-			console.log(item);
-		}
-
 		console.log("NEW2s-----------------------------------------------");
-		for await (let item of client.tasks.list()) {
+		for await (let item of client.autoProvisioningSettings.list()) {
 			console.log(item);
 		}
-		// send here the item before
-		/*for await (let item of client.iotSecuritySolutionAnalytics.list()) {
+		console.log("NEW3s-----------------------------------------------");
+		for await (let item of client.workspaceSettings.list()) {
 			console.log(item);
-		}*/
-		// ADD SECURESCORE IN THIS
+		}
+		console.log("NEW4s-----------------------------------------------");
+		for await (let item4 of client.settings.list()) {
+			console.log(item4);
+		}
 	} catch (e) {
 		logger.debug("Failed to retrieve security informations", e);
 	}
 	return resultSecurity;
+}
+
+async function authorizationListing(client: AuthorizationManagementClient): Promise<any> {
+	let resultsAuthorization:any = [];
+	try {
+		console.log("AUTHO-----------------------------------------------");
+		for await (let item of client.eligibleChildResources.list("default")) {
+			item = addingResourceGroups(item);
+			let result:any = item;
+			console.log(result);
+			resultsAuthorization.push(result);
+		}
+		console.log("NEW2-----------------------------------------------");
+		const test = await client.roleManagementPolicies.listForScope("default");
+		console.log(test);
+	} catch (e) {
+		logger.debug("Failed to retrieve security informations", e);
+	}
+	return resultsAuthorization;
+}
+
+async function sqlServersListing(client: SqlManagementClient, monitorClient: MonitorClient): Promise<any> {
+	let resultsSql:any = [];
+
+
+	try {
+		console.log("SQL-----------------------------------------------");
+		for await (let result of client.servers.list()) {
+			result = addingResourceGroups(result);
+			let server:any = result;
+			try {
+				console.log("firewall3 here");
+				server.firewallRules = [];
+				for await (let firewallRule of client.firewallRules.listByServer(server.resourceGroupName, server.name)) {
+					console.log(firewallRule);
+					server.firewallRules.push(firewallRule);
+				}
+				console.log("firewall here");
+				server.blobAuditingPolicies = [];
+				for await (let blobAuditingPolicy of client.serverBlobAuditingPolicies.listByServer(server.resourceGroupName, server.name)) {
+					console.log(blobAuditingPolicy);
+					server.blobAuditingPolicies.push(blobAuditingPolicy);
+				}
+				console.log("managed here");
+				server.managedInstances = [];
+				try {
+					for await (let managedInstance of client.managedInstances.list()) {
+						console.log(managedInstance);
+						server.managedInstances.push(managedInstance);
+					}
+				} catch (e) {
+					console.log("Failed to retrieve security informations", e);
+				}
+				console.log("encr here");
+				server.encryptionProtectors = [];
+				try {
+					for await (let encryptionProtector of client.encryptionProtectors.listByServer(server.resourceGroupName, server.name)) {
+						console.log(encryptionProtector);
+						server.encryptionProtectors.push(encryptionProtector);
+					}
+				} catch (e) {
+					console.log("Failed to retrieve security informations", e);
+				}
+				/*console.log("serv admin");
+				server.entraIdadmins = [];
+				try {
+					for await (let entraIdadmin of client.serverAzureADAdministrators.listByServer(server.resourceGroupName, server.name)) {
+						console.log(entraIdadmin);
+						server.entraIdadmins.push(entraIdadmin);
+					}
+				} catch (e) {
+					console.log("Failed to retrieve security informations", e);
+				}*/
+
+			} catch (e) {
+				logger.debug("Failed to retrieve security informations", e);
+			}
+			resultsSql.push(server);
+		}
+	} catch (e) {
+		logger.debug("Failed to retrieve security informations", e);
+	}
+	return resultsSql;
 }

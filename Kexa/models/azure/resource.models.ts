@@ -17,6 +17,8 @@ export interface AzureResources {
     'KexaAzure.blobProperties': Array<any>|null;
     'KexaAzure.defender': Array<any>|null;
     'KexaAzure.security': Array<any>|null;
+    'KexaAzure.authorization': Array<any>|null;
+    'KexaAzure.sqlServers': Array<any>|null;
 }
 
 export const stringKeys: Array<String> = [
@@ -35,5 +37,7 @@ export const stringKeys: Array<String> = [
     'KexaAzure.monitor',
     'KexaAzure.blobProperties',
     'KexaAzure.defender',
-    'KexaAzure.security'
+    'KexaAzure.security',
+    'KexaAzure.authorization',
+    'KexaAzure.sqlServers'
 ];

@@ -337,7 +337,7 @@
     # KO
     - name: "azure-ensure-security"
       description: "this rule is to ensure security"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.security
@@ -345,6 +345,117 @@
         - property: zdqqzd
           condition: COUNT_SUP_OR_EQUAL
           value: 1
+    # KO
+    - name: "azure-ensure-auth"
+      description: "this rule is to ensure security"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.authorization
+      conditions:
+        - property: zdqqzd
+          condition: COUNT_SUP_OR_EQUAL
+          value: 1
+    # KO
+    - name: "azure-ensure-sql"
+      description: "this rule is to ensure security"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: SqlManagementClient.dataMaskingPolicies
+      conditions:
+        - property: zdqqzd
+          condition: COUNT_SUP_OR_EQUAL
+          value: 1
+    # KO
+    - name: "azure-ensure-sql"
+      description: "this rule is to ensure security"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: SqlManagementClient.databases
+      conditions:
+        - property: zdqqzd
+          condition: COUNT_SUP_OR_EQUAL
+          value: 1
+    # KO
+    - name: "azure-ensure-sql"
+      description: "this rule is to ensure security"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: SqlManagementClient.encryptionProtectors
+      conditions:
+        - property: zdqqzd
+          condition: COUNT_SUP_OR_EQUAL
+          value: 1
+    ##################################
+    #         SQL / POSTGRES         #
+    ##################################
+    #### 
+    # KO
+    - name: "azure-sql-server-firewall-any-ip"
+      description: "this rule is to ensure SQL servers firewall does not allow any IP"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.sqlServers
+      conditions:
+      - operator: OR
+        criteria:
+          - property: 'publicNetworkAccess'
+            condition: EQUAL
+            value: 'Disabled'
+          - property: firewallRules
+            condition: ALL
+            value:
+              - property: startIpAddress
+                condition: DIFFERENT
+                value: '0.0.0.0'
+              - property: endIpAddress
+                operator: AND
+                criteria:
+                  - property: .
+                    condition: DIFFERENT
+                    value: '0.0.0.0'
+                  - property: .
+                    condition: DIFFERENT
+                    value: '255.255.255.255'
+    - name: "azure-sql-servers-encryption-protector-customer-managed-key"
+      description: "this rule is to ensure sql servers encryption protector is customer managed key"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.sqlServers
+      conditions:
+        - property: encryptionProtectors
+          condition: ALL
+          value:
+            - property: kind
+              condition: EQUAL
+              value: 'azurekeyvault'
+            - property: serverKeyType
+              condition: DIFFERENT
+              value: 'AzureKeyVault'
+            - property: uri
+              condition: DIFFERENT
+              value: null
+    - name: "azure-sql-servers-entra-id-administrator"
+      description: "this rule is to ensure entra id authentication is configured for sql servers"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.sqlServers
+      conditions:
+        - property: administrators
+          condition: ONE
+          value:
+            - property: administratorType
+              condition: EQUAL
+              value: 'ActiveDirectory'
+            - property: azureADOnlyAuthentication
+              condition: EQUAL
+              value: true
     ##################################
     #         GLOBAL / GRAPH         #
     ##################################
