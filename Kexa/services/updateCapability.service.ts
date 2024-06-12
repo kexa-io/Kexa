@@ -4,6 +4,7 @@ import { SettingFile } from "../models/settingFile/settingFile.models";
 import { extractHeaders } from "./addOn.service";
 import { gatheringRules } from "./analyse.service";
 import { getNewLogger } from "./logger.service";
+import { jsonStringify } from "../helpers/jsonStringify";
 
 const fs = require("fs");
 import axios from 'axios';
@@ -492,7 +493,6 @@ async function fileReplaceContentAws(inputFilePath: string, outputFilePath: stri
 }
 
 import {stringKeys as AwsCustomObjects} from "../models/aws/ressource.models";
-import { jsonStringify } from "../helpers/jsonStringify";
 
 function generateResourceListAws(resources: AzureClients): string {
     let concatedArray: string[] = [];
