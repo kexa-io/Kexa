@@ -1,3 +1,4 @@
+import { jsonStringify } from "../helpers/jsonStringify";
 import { writeStringToJsonFile } from "../helpers/files";
 import { Rules } from "../models/settingFile/rules.models";
 import { SettingFile } from "../models/settingFile/settingFile.models";
@@ -492,7 +493,6 @@ async function fileReplaceContentAws(inputFilePath: string, outputFilePath: stri
 }
 
 import {stringKeys as AwsCustomObjects} from "../models/aws/ressource.models";
-import { jsonStringify } from "../helpers/jsonStringify";
 
 function generateResourceListAws(resources: AzureClients): string {
     let concatedArray: string[] = [];
