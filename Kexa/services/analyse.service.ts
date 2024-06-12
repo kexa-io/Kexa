@@ -26,6 +26,7 @@ import { splitProperty } from '../helpers/spliter';
 import { downloadFile, unzipFile } from '../helpers/dowloadFile';
 import { getConfig } from '../helpers/loaderConfig';
 import { jsonStringify } from '../helpers/jsonStringify';
+import { Memoisation } from './memoisation.service';
 const logger = getNewLogger("AnalyseLogger");
 
 const jsome = require('jsome');
@@ -438,7 +439,9 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
 function actionAfterCheckRule(rule: Rules, objectResource: any, alert: Alert, subResultScan: SubResultScan[]): SubResultScan[] {
     let error = subResultScan.filter((value) => !value.result);
     if(error.length > 0){
-        alertFromRule(rule, subResultScan, objectResource, alert);
+        if (Memoisation.needToBeCache(rule, objectResource, rule.cloudProvider)){
+            alertFromRule(rule, subResultScan, objectResource, alert);
+        }
     }
     return error;
 }
@@ -499,7 +502,7 @@ export function parentResultScan(subResultScans: SubResultScan[], result: boolea
 export function checkCondition(condition:RulesConditions, resource:any): SubResultScan {
     try{
         let value = getSubProperty(resource, condition.property);
-        if (!condition.value)
+        if (condition.value === undefined)
             condition.value =  '';
         if (value === undefined)
             value = '';
