@@ -1822,3 +1822,32 @@ Kexa/services/addOn.service.ts was changed
 Kexa/services/analyse.service.ts was changed
 
 
+## 1.14.0-azurebenchmark.85.61e028f
+
+### Files added: 1
+
+Kexa/rules/azureBenchmarkRules.yaml was added
+
+### Files changed: 10
+
+Kexa/rules/azureBenchmarkRules.yaml was changed
+
+Kexa/emails/emails.ts was changed
+
+Kexa/models/azure/resource.models.ts was changed
+
+Kexa/rules/Kubernete.yaml was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/display/azureDisplay.service.ts was changed
+
+Kexa/services/manageVarEnvironnement.service.ts was changed
+
+Kexa/services/updateCapability.service.ts was changed
+
+package.json was changed
+
+pnpm-lock.yaml was changed
+
+

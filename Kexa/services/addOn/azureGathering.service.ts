@@ -1707,26 +1707,26 @@
 	*	- KexaAzure.storage
 	*	- KexaAzure.blob
 	*	- KexaAzure.secrets
-	* 	- KexaAzure.KeyvaultKeys
-	* 	- KexaAzure.vaults
-	* 	- KexaAzure.blobServices
-	* 	- KexaAzure.appConfiguration
-	* 	- KexaAzure.monitor
-	* 	- KexaAzure.blobProperties
-	* 	- KexaAzure.defender
-	* 	- KexaAzure.security
-	* 	- KexaAzure.authorization
-	* 	- KexaAzure.sqlServers
-	* 	- KexaAzure.sqlDatabases
-	* 	- KexaAzure.postgresServers
-	* 	- KexaAzure.policies
-	* 	- KexaAzure.notifications
-	* 	- KexaAzure.users
-	* 	- KexaAzure.conditionnalAccess
-	* 	- KexaAzure.namedLocations
-	* 	- KexaAzure.groups
-	* 	- KexaAzure.servicePrincipals
-	* 	- KexaAzure.domains
+	*	- KexaAzure.KeyvaultKeys
+	*	- KexaAzure.vaults
+	*	- KexaAzure.blobServices
+	*	- KexaAzure.appConfiguration
+	*	- KexaAzure.monitor
+	*	- KexaAzure.blobProperties
+	*	- KexaAzure.defender
+	*	- KexaAzure.security
+	*	- KexaAzure.authorization
+	*	- KexaAzure.sqlServers
+	*	- KexaAzure.sqlDatabases
+	*	- KexaAzure.postgresServers
+	*	- KexaAzure.policies
+	*	- KexaAzure.notifications
+	*	- KexaAzure.users
+	*	- KexaAzure.conditionnalAccess
+	*	- KexaAzure.namedLocations
+	*	- KexaAzure.groups
+	*	- KexaAzure.servicePrincipals
+	*	- KexaAzure.domains
 */
 
 
