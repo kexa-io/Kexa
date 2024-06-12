@@ -1853,3 +1853,40 @@ Kexa/services/updateCapability.service.ts was changed
 documentation/Documentation-Kexa.md was changed
 
 
+## 1.14.0-SNAPSHOT.82.2b921cc
+
+### Files added: 2
+
+Kexa/services/memoisation.service.ts was added
+
+config/demo/exemple6.default.json was added
+
+### Files changed: 13
+
+Kexa/services/memoisation.service.ts was changed
+
+config/demo/exemple6.default.json was changed
+
+CHANGELOG.md was changed
+
+Kexa/index.ts was changed
+
+Kexa/main.ts was changed
+
+Kexa/models/settingFile/conditions.models.ts was changed
+
+Kexa/services/addOn.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+Kexa/services/manageVarEnvironnement.service.ts was changed
+
+Kexa/services/updateCapability.service.ts was changed
+
+VERSION was changed
+
+documentation/Documentation-Kexa.md was changed
+
+package.json was changed
+
+

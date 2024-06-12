@@ -523,7 +523,7 @@
         "typescript": "^4.9.5"
     },
     "name": "Kexa",
-    "version": "1.14.0-devestebancontinuousscan.80.7266ea8",
+    "version": "1.14.0-SNAPSHOT.82.2b921cc",
     "main": "./build/index.js",
     "scripts": {
         "postinstall": "node-config-ts",
