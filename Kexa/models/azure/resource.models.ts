@@ -23,7 +23,12 @@ export interface AzureResources {
     'KexaAzure.postgresServers': Array<any>|null;
     'KexaAzure.policies': Array<any>|null;
     'KexaAzure.notifications': Array<any>|null;
-    'KexaAzure.global': Array<any>|null;
+    'KexaAzure.users': Array<any>|null;
+    'KexaAzure.conditionnalAccess': Array<any>|null;
+    'KexaAzure.namedLocations': Array<any>|null;
+    'KexaAzure.groups': Array<any>|null;
+    'KexaAzure.servicePrincipals': Array<any>|null;
+    'KexaAzure.domains': Array<any>|null;
 }
 
 export const stringKeys: Array<String> = [
@@ -49,5 +54,10 @@ export const stringKeys: Array<String> = [
     'KexaAzure.postgresServers',
     'KexaAzure.policies',
     'KexaAzure.notifications',
-    'KexaAzure.global'
+    'KexaAzure.users',
+    'KexaAzure.conditionnalAccess',
+    'KexaAzure.namedLocations',
+    'KexaAzure.groups',
+    'KexaAzure.servicePrincipals',
+    'KexaAzure.domains'
 ];

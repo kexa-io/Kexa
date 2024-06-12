@@ -7,7 +7,7 @@
         - log
         #- email
       to:
-        - myEmail@gmail.com
+        #- yourEmail@mail.com
     error:
       enabled: true
       type: 
@@ -15,21 +15,21 @@
         #- email
         #- sms
       to: 
-        - myEmail@gmail.com
+        #- yourEmail@mail.com
     warning:
       enabled: true
       type: 
         - log
         #- email
       to:
-        - myEmail@gmail.com
+        #- yourEmail@mail.com
     info:
       enabled: true
       type: 
         - log
         #- email
       to: 
-        - myEmail@gmail.com
+        #- yourEmail@mail.com
     global:
       enabled: true
       type: 
@@ -39,7 +39,7 @@
         #- sms
       to: 
         #- http://127.0.0.1:5000/test
-        #- myEmail@gmail.com
+        #- yourEmail@mail.com
       conditions:
         - level: 0
           min: 1
@@ -144,7 +144,6 @@
         - property: encryption.keySource
           condition: EQUAL
           value: 'Microsoft.Keyvault'
-    # retest here
     - name: "azure-storage-blob-soft-delete"
       description: "this rule to ensure storage containers delete retention"
       applied: false
@@ -160,7 +159,6 @@
             - property: deleteRetentionPolicy.days
               condition: SUP_OR_EQUAL
               value: 1
-    # retest here
     - name: "azure-storage-container-soft-delete"
       description: "this rule to ensure storage "
       applied: false
@@ -256,9 +254,116 @@
           condition: DIFFERENT
           value: null
     ##################################
-    #           APP INSIGHT          #
+    #           APPSERVICES          #
     ##################################
     # app configurations
+    - name: "azure-web-app-https-only"
+      description: "this rule is to ensure web apps are HTTPS only"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.webApps
+      conditions:
+        - property: httpsOnly
+          condition: EQUAL
+          value: true
+    - name: "azure-web-app-minimum-tls-version"
+      description: "this rule is to ensure web apps min TLS version is the latest"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.webApps
+      conditions:
+        - property: siteConfig.minTlsVersion
+          condition: EQUAL
+          value: '1.2'
+    - name: "azure-web-app-php-version"
+      description: "this rule is to ensure web apps are using the latest stable PHP version"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.webApps
+      conditions:
+        - operator: OR
+          criteria:
+            - property: siteConfig.phpVersion
+              condition: EQUAL
+              value: '8.3.8'
+            - property: siteConfig.phpVersion
+              condition: EQUAL
+              value: null
+    - name: "azure-web-app-python-version"
+      description: "this rule is to ensure web apps are using the latest stable Python version"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.webApps
+      conditions:
+        - operator: OR
+          criteria:
+            - property: siteConfig.pythonVersion
+              condition: EQUAL
+              value: '3.13'
+            - property: siteConfig.pythonVersion
+              condition: EQUAL
+              value: null
+    - name: "azure-web-app-java-version"
+      description: "this rule is to ensure web apps are using the latest stable Java version"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.webApps
+      conditions:
+        - operator: OR
+          criteria:
+            - property: siteConfig.javaVersion
+              condition: EQUAL
+              value: '22'
+            - property: siteConfig.javaVersion
+              condition: EQUAL
+              value: null
+    - name: "azure-web-http-latest-enabled"
+      description: "this rule is to ensure web apps are using the latest HTTP version (http20 enabled)"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.webApps
+      conditions:
+        - property: siteConfig.http20Enabled
+          condition: EQUAL
+          value: true
+    - name: "azure-web-keyvault-reference"
+      description: "this rule is to ensure web apps are using keyvault"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.webApps
+      conditions:
+        - property: keyVaultReferenceIdentity
+          condition: DIFFERENT
+          value: null
+        - property: siteConfig.keyVaultReferenceIdentity
+          condition: DIFFERENT
+          value: null
+    # bonus
+    - name: "azure-web-certificate-expiration-date"
+      description: "this rule is to ensure web apps certificates are not expired and have a expiration date"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.certificates
+      conditions:
+        - property: expirationDate
+          condition: DIFFERENT
+          value: null
+        - property: expirationDate
+          condition: DATE_INF
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+          value: 0 0 0 0 0 0
+    ##################################
+    #           APP INSIGHT          #
+    ##################################
+    # app insight configurations
     - name: "azure-ensure-app-insight-configured"
       description: "this rule is to ensure app insights is configured"
       applied: false
@@ -280,6 +385,38 @@
         - property: diagnosticSettings
           condition: COUNT_SUP_OR_EQUAL
           value: 1
+    ##################################
+    #           NETWORKING           #
+    ##################################
+    # still in testing
+    - name: "azure-network-rdp-access-resticted"
+      description: "this rule is to ensure web apps are using keyvault"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.networkSecurityGroups
+      conditions:
+        - property: defaultSecurityRules
+          condition: ALL
+          value:
+            - property: .
+              operator: NAND
+              criteria:
+                - property: access
+                  condition: EQUAL
+                  value: 'Allow'
+                - property: destinationPortRange
+                  condition: REGEX
+                  value: ^(3389|.*)$
+                - property: direction
+                  condition: EQUAL
+                  value: 'Inbound'
+                - property: protocol
+                  condition: REGEX
+                  value: ^(TCP|.*)$
+                - property: sourceAddressPrefix
+                  condition: REGEX
+                  value: ^(*|0.0.0.0|<nw>/0|/0|internet|any|AzureLoadBalancer)$
     ##################################
     #         SQL / POSTGRES         #
     ##################################
@@ -392,45 +529,249 @@
             - property: state
               condition: EQUAL
               value: 'Enabled'
-    # ko 
-    - name: "azure-sql-database-ssl-connection-required"
-      description: "this rule is to ensure sql databases SSL connection is required"
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: KexaAzure.sqlDatabases
-      conditions:
-        - property: transparentDataEncryptions
-          condition: ALL
-          value:
-            - property: state
-              condition: EQUAL
-              value: 'Enabled'
-    ##### postgres servers
-    # ko
-    - name: "azure-postgres-server-firewall-any-ip"
-      description: "this rule is to ensure postgres servers firewall does not allow any IP"
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: KexaAzure.postgresServers
-      conditions:
-        - property: firewallRules
-          condition: EQUAL
-          value: 'e'
     ##################################
     #         GLOBAL / GRAPH         #
     ##################################
-    - name: "azure-global-ensure-azure-ad-authentication"
-      description: "this rule is to ensure azure ad authentication is enabled"
-      applied: true
+    # named locations
+    - name: "azure-global-ensure-trusted-locations-defined"
+      description: "this rule is to ensure trusted locations are defined for azure ad authentication"
+      applied: false
       level: 1
       cloudProvider: azure
-      objectName: KexaAzure.global
+      objectName: KexaAzure.namedLocations
       conditions:
-        - property: authMethods
-          condition: ONE
+        - operator: NAND
+          criteria:
+            - property: dataType
+              condition: EQUAL
+              value: '#microsoft.graph.ipNamedLocation'
+            - operator: OR
+              criteria:
+                - property: isTrusted
+                  condition: DIFFERENT
+                  value: true
+                - property: ipRanges
+                  condition: EQUAL
+                  value: null
+    # policies
+    - name: "azure-global-security-default-enabled"
+      description: "this rule is to ensure security defaults are enabled"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.policies
+      conditions:
+        - property: identitySecurityDefaultsEnforcementPolicy.isEnabled
+          condition: EQUAL
+          value: true
+    - name: "azure-global-user-cannot-create-tenant"
+      description: "this rule is to ensure user cannot create tenant"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.policies
+      conditions:
+        - property: authorizationPolicy.defaultUserRolePermissions.allowedToCreateTenants
+          condition: DIFFERENT
+          value: true
+    - name: "azure-global-ensure-mfa-for-all-users"
+      description: "this rule is to ensure MFA is enabled for all users"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.policies
+      conditions:
+        - property: authenticationMethodsPolicy.registrationEnforcement.authenticationMethodsRegistrationCampaign.state
+          condition: EQUAL
+          value: 'enabled'
+        - property: authenticationMethodsPolicy.registrationEnforcement.authenticationMethodsRegistrationCampaign.includeTargets
+          condition: SOME
           value:
-            - property: 'AzureAD'
-            - name: "azure-global-ensure-mfa"
-            - value: 'dqzdqz'
+            - property: id
+              condition: EQUAL
+              value: 'all_users'
+            - property: targetedAuthenticationMethod
+              condition: EQUAL
+              value: 'microsoftAuthenticator'
+            - property: targetType
+              condition: EQUAL
+              value: 'group'
+    - name: "azure-global-ensure-mfa-for-all-adminstrative-groups"
+      description: "this rule is to ensure MFA is enabled for adminstrative groups"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.policies
+      conditions:
+        - property: authenticationMethodsPolicy.registrationEnforcement.authenticationMethodsRegistrationCampaign.state
+          condition: EQUAL
+          value: 'enabled'
+        - property: authenticationMethodsPolicy.registrationEnforcement.authenticationMethodsRegistrationCampaign.includeTargets
+          condition: SOME
+          value:
+            - property: id
+              condition: EQUAL
+              value: 'admins'
+            - property: targetedAuthenticationMethod
+              condition: EQUAL
+              value: 'microsoftAuthenticator'
+            - property: targetType
+              condition: EQUAL
+              value: 'group'
+    - name: "azure-global-enforce-microsoft-authenticator-config"
+      description: "this rule is to ensure MFA is enforced"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.policies
+      conditions:
+        - property: authenticationMethodsPolicy.authenticationMethodConfigurations
+          condition: SOME
+          value:
+            - operator: AND
+              criteria:
+                - property: id
+                  condition: EQUAL
+                  value: MicrosoftAuthenticator'
+                - property: keyRestrictions.isEnforced
+                  condition: EQUAL
+                  value: true
+    - name: "azure-global-user-cannot-create-security-group"
+      description: "this rule is to ensure user cannot create security group"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.policies
+      conditions:
+        - property: authorizationPolicy.defaultUserRolePermissions.allowedToCreateSecurityGroups
+          condition: DIFFERENT
+          value: true
+    - name: "azure-global-user-cannot-create-apps"
+      description: "this rule is to ensure user cannot create apps"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.policies
+      conditions:
+        - property: authorizationPolicy.defaultUserRolePermissions.allowedToCreateApps
+          condition: DIFFERENT
+          value: true
+    # bonus
+    - name: "azure-global-ensure-reviewers"
+      description: "this rule is to ensure that reviewers are defined and enabled"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.policies
+      conditions:
+        - property: adminConsentRequestPolicy.isEnabled
+          condition: EQUAL
+          value: true
+        - property: reviewers
+          condition: COUNT_SUP_OR_EQUAL
+          value: 1
+    # users
+    - name: "azure-global-guest-user-review"
+      description: "this rule is to retrieve all guest users and review them"
+      applied: false
+      level: 0
+      cloudProvider: azure
+      objectName: KexaAzure.users
+      conditions:
+        - property: userType
+          condition: DIFFERENT
+          value: 'Guest'
+    # conditional access
+    - name: "azure-global-ensure-az-policy-mfa-admins"
+      description: "this rule is to ensure MFA is enabled for adminstrative groups"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.conditionnalAccess
+      conditions:
+        - property: policies
+          condition: SOME
+          value:
+            - property: templateId
+              condition: EQUAL
+              value: 'c7503427-338e-4c5e-902d-abe252abfb43'
+            - property: state
+              condition: EQUAL
+              value: 'enabledForReportingButNotEnforced'
+    - name: "azure-global-ensure-az-policy-mfa-all-users"
+      description: "this rule is to ensure MFA is enabled for all users"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.conditionnalAccess
+      conditions:
+        - property: policies
+          condition: SOME
+          value:
+            - property: templateId
+              condition: EQUAL
+              value: 'a3d0a415-b068-4326-9251-f9cdf9feeb64'
+            - property: state
+              condition: EQUAL
+              value: 'enabled'
+    - name: "azure-global-ensure-az-policy-mfa-azure-service-mgmt"
+      description: "this rule is to ensure MFA is enabled for azure service management"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.conditionnalAccess
+      conditions:
+        - property: templateId
+          condition: EQUAL
+          value: 'd8c51a9a-e6b1-454d-86af-554e7872e2c1'
+        - property: state
+          condition: EQUAL
+          value: 'enabled'
+    ##################################
+    #    !!! STILL IN TESTING !!!    #
+    ##################################
+    # not ok, is this enforcment ?
+    - name: "azure-global-groups"
+      description: "this rule is to ensure user cannot create apps"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.groups
+      conditions:
+        - operator: AND
+          criteria:
+            - property: displayName
+              condition: EQUAL
+              value: 'Password Rule Settings'
+            - property: values
+              condition: ALL
+              value:
+                - property: name
+                  condition: EQUAL
+                  value: 'EnableBannedPasswordCheck'
+                - property: type
+                  condition: EQUAL
+                  value: 'Boolean'
+                - property: defaultValue
+                  condition: EQUAL
+                  value: 'true'
+    - name: "azure-global-sp"
+      description: "this rule is to ensure user cannot create apps"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.servicePrincipals
+      conditions:
+        - property: appRoles
+          condition: COUNT_SUP_OR_EQUAL
+          value: 1
+    - name: "azure-global-dr"
+      description: "this rule is to "
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.domains
+      conditions:
+        - property: appRoles
+          condition: COUNT_SUP_OR_EQUAL
+          value: 1

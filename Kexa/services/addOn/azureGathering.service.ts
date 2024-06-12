@@ -1721,7 +1721,12 @@
 	* 	- KexaAzure.postgresServers
 	* 	- KexaAzure.policies
 	* 	- KexaAzure.notifications
-	* 	- KexaAzure.global
+	* 	- KexaAzure.users
+	* 	- KexaAzure.conditionnalAccess
+	* 	- KexaAzure.namedLocations
+	* 	- KexaAzure.groups
+	* 	- KexaAzure.servicePrincipals
+	* 	- KexaAzure.domains
 */
 
 
@@ -1829,9 +1834,6 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
 					collectKexaRestructuredData(credential, subscriptionId, config)
 				]);
 				let finalResources = {...autoFlatResources, ...dataComplementaryFlat};
-				console.log("finalResources: ");
-				console.log(finalResources);
-				//console.log(finalResources['KexaAzure.authorization']);
                 resources.push(finalResources);
             }
         } catch(e) {
@@ -2100,12 +2102,11 @@ const customGatherFunctions: FunctionMap = {
 
 	'KexaAzure.appConfiguration': async (name: string, credential: any, subscriptionId: any) => {
 		logger.debug("Starting " + name + " listing...");
-		console.log("AAAAAAAAAAP COOOOOOOOOOOOONF");
 		try {
 			const appClient = new ApplicationInsightsManagementClient(credential, subscriptionId);
 			return await appConfigurationListing(appClient);
 		} catch (e) {
-			console.log("Error creating Azure client: " + name, e);
+			logger.debug("Error creating Azure client: " + name, e);
 			return [];
 		}
 	},
@@ -2125,9 +2126,7 @@ const customGatherFunctions: FunctionMap = {
 	'KexaAzure.blobProperties': async (name: string, credential: any, subscriptionId: any) => {
 		logger.debug("Starting " + name + " listing...");
 		try {
-			console.log("----------HELLO BLOB-----------");
 			const blobClient = new BlobServiceClient(credential, subscriptionId);
-			console.log("----------HELLO BLOB 2-----------");
 			return await blobPropertiesListing(blobClient);
 		} catch (e) {
 			logger.debug("Error creating Azure client: " + name, e);
@@ -2194,9 +2193,13 @@ const customGatherFunctions: FunctionMap = {
 	'KexaAzure.policies': async (name: string, credential: any, subscriptionId: any) => {
 		logger.debug("Starting " + name + " listing...");
 		try {
-			const policyInsightClient = new PolicyInsightsClient(credential, subscriptionId);
-			const policyClient = new PolicyClient(credential, subscriptionId);
-			return await policiesListing(policyClient, policyInsightClient);
+			const authProvider = new TokenCredentialAuthenticationProvider(credential, {
+				scopes: [
+					'https://graph.microsoft.com/.default'
+				],
+			  });
+			const graphClient = Client.initWithMiddleware({ authProvider: authProvider });
+			return await policiesListing(graphClient);
 		} catch (e) {
 			logger.debug("Error creating Azure client: " + name, e);
 			return [];
@@ -2214,7 +2217,7 @@ const customGatherFunctions: FunctionMap = {
 		}
 	},
 
-	'KexaAzure.global': async (name: string, credential: any, subscriptionId: any) => {
+	'KexaAzure.users': async (name: string, credential: any, subscriptionId: any) => {
 		logger.debug("Starting " + name + " listing...");
 		try {
 			const authProvider = new TokenCredentialAuthenticationProvider(credential, {
@@ -2229,8 +2232,92 @@ const customGatherFunctions: FunctionMap = {
 			logger.debug("Error creating Azure client: " + name, e);
 			return [];
 		}
+	},
+
+	'KexaAzure.conditionnalAccess': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const authProvider = new TokenCredentialAuthenticationProvider(credential, {
+				scopes: [
+					'https://graph.microsoft.com/.default'
+				],
+			  });
+			const graphClient = Client.initWithMiddleware({ authProvider: authProvider });
+			
+			return await conditionnalAccessListing(graphClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.namedLocations': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const authProvider = new TokenCredentialAuthenticationProvider(credential, {
+				scopes: [
+					'https://graph.microsoft.com/.default'
+				],
+			  });
+			const graphClient = Client.initWithMiddleware({ authProvider: authProvider });
+			
+			return await namedLocationsListing(graphClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.groups': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const authProvider = new TokenCredentialAuthenticationProvider(credential, {
+				scopes: [
+					'https://graph.microsoft.com/.default'
+				],
+			  });
+			const graphClient = Client.initWithMiddleware({ authProvider: authProvider });
+			
+			return await groupsListing(graphClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.servicePrincipals': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const authProvider = new TokenCredentialAuthenticationProvider(credential, {
+				scopes: [
+					'https://graph.microsoft.com/.default'
+				],
+			  });
+			const graphClient = Client.initWithMiddleware({ authProvider: authProvider });
+			
+			return await servicePrincipalsListing(graphClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.domains': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const authProvider = new TokenCredentialAuthenticationProvider(credential, {
+				scopes: [
+					'https://graph.microsoft.com/.default'
+				],
+			  });
+			const graphClient = Client.initWithMiddleware({ authProvider: authProvider });
+			
+			return await domainsListing(graphClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
 	}
-	// HERE
 };
 
 
@@ -2490,21 +2577,19 @@ async function appConfigurationListing(client: ApplicationInsightsManagementClie
 	let resultGraph:any = [];
 	try {
 		const components = await client.components.list();
-		console.log(components);
 		try {
 			for (let item of components) {
 				item = addingResourceGroups(item);
 				let result:any = item;
 				const final = await client.componentLinkedStorageAccounts.get(result.resourceGroupName, result.name);
-				console.log("-----------------------------final");
-				console.log(final);
+		
 				resultGraph.push(final);
 			}
 		} catch (e) {
 			logger.debug("Error on app insights infos listing", e);
 		}
 	} catch (e) {
-		console.log("Error on graph services listing:", e);
+		logger.debug("Error on graph services listing:", e);
 	}
 }
 
@@ -2520,21 +2605,11 @@ async function monitorListing(client: MonitorClient, resClient: ResourceManageme
 			const diagnosticSettings = await client.diagnosticSettings.list(resourceUri);
 			if (!diagnosticSettings?.value) continue;
 			oneResult.diagnosticSettings = diagnosticSettings?.value as any[];
-			/*for await (let log of client.activityLogs.list(resourceUri)) {
-				console.log("log");
-				console.log(log);
-			}*/
 			try {
 			const cat = await client.diagnosticSettingsCategory.list(resourceUri);
 			oneResult.diagnosticSettingsCategory = cat.value;
-			//console.log(oneResult);
 			} catch (e) {
-				console.log("Failed to retrieve monitor informations", e);
-			}
-
-			for await (let alertRule of client.alertRules.listBySubscription()) {
-				console.log("alertRule");
-				console.log(alertRule);
+				logger.debug("Failed to retrieve monitor informations", e);
 			}
 			resultMonitor.push(oneResult);
 		} catch (e) {
@@ -2546,13 +2621,7 @@ async function monitorListing(client: MonitorClient, resClient: ResourceManageme
 
 async function blobPropertiesListing(client: BlobServiceClient): Promise<any> {
 	let resultMonitor:any = [];
-	console.log("BLOBS-----------------------------------------------");
 	const properties = await client.getProperties();
-	console.log(properties);
-	/*for await (let item of client.getProperties()) {
-		console.log(item);
-		resultMonitor.push(item);
-	}*/
 	return resultMonitor;
 }
 
@@ -2563,22 +2632,18 @@ async function storageListing(client: StorageManagementClient): Promise<any> {
 		let result:any = item;
 		try {
 			const properties = await client.storageAccounts.getProperties(result.resourceGroupName, result.name);
-			console.log(properties);
 		} catch (e) {
 			logger.debug("Failed to retrieve storage informations", e);
 		}
 		try {
 			const accountSAS = await client.storageAccounts.listKeys(result.resourceGroupName, result.name);
-			console.log(accountSAS);
 		} catch (e) {
 			logger.debug("Failed to retrieve storage informations", e);
 		}
 		try {
 			const polciies = await client.managementPolicies.get(result.resourceGroupName, result.name, "default");
-			console.log("polciies");
-			console.log(polciies);
 		} catch (e) {
-			console.log("Failed to retrieve storage informations", e);
+			logger.debug("Failed to retrieve storage informations", e);
 		}
 		resultStorage.push(item);
 	}
@@ -2593,21 +2658,7 @@ async function securityListing(client: SecurityCenter, subscriptionId: any): Pro
 			let result:any = item;
 			resultSecurity.push(result);
 		}
-		for await (let item of client.secureScores.list()) {
-			console.log(item);
-		}
-		console.log("NEW2s-----------------------------------------------");
-		for await (let item of client.autoProvisioningSettings.list()) {
-			console.log(item);
-		}
-		console.log("NEW3s-----------------------------------------------");
-		for await (let item of client.workspaceSettings.list()) {
-			console.log(item);
-		}
-		console.log("NEW4s-----------------------------------------------");
-		for await (let item4 of client.jitNetworkAccessPolicies.list()) {
-			console.log(item4);
-		}
+	
 	} catch (e) {
 		logger.debug("Failed to retrieve security informations", e);
 	}
@@ -2617,26 +2668,15 @@ async function securityListing(client: SecurityCenter, subscriptionId: any): Pro
 async function authorizationListing(client: AuthorizationManagementClient): Promise<any> {
 	let resultsAuthorization:any = [];
 	try {
-		console.log("AUTHO-----------------------------------------------");
 		for await (let item of client.roleAssignments.listForSubscription()) {
 			item = addingResourceGroups(item);
 			let result:any = item;
-			console.log(result);
 			try {
 				const definition = await client.roleDefinitions.get(result.scope, result.roleDefinitionId);
-				console.log("definition");
-				console.log(definition);
 			} catch (e) {
 				logger.debug("Failed to retrieve security informations", e);
 			}
-			try {
-				console.log("NEW2-----------------------------------------------");
-				for await (let item of client.roleManagementPolicies.listForScope(result.scope)) {
-					console.log(item);
-				}
-			} catch (e) {
-				logger.debug("Failed to retrieve security informations", e);
-			}
+	
 			resultsAuthorization.push(result);
 		}
 	
@@ -2650,7 +2690,6 @@ async function sqlServersListing(client: SqlManagementClient, monitorClient: Mon
 	let resultsSql:any = [];
 
 	try {
-		console.log("SQL SERV-----------------------------------------------");
 		for await (let result of client.servers.list()) {
 			result = addingResourceGroups(result);
 			let server:any = result;
@@ -2671,21 +2710,18 @@ async function sqlServersListing(client: SqlManagementClient, monitorClient: Mon
 				for await (let encryptionProtector of client.encryptionProtectors.listByServer(server.resourceGroupName, server.name)) {
 						server.encryptionProtectors.push(encryptionProtector);
 				}
-				console.log("serv admin");
 				server.serverDevOpsAuditSettings = [];
 				try {
 					for await (let serverDevOpsAuditSetting of client.serverDevOpsAuditSettings.listByServer(server.resourceGroupName, server.name)) {
-						console.log(serverDevOpsAuditSetting);
 						server.serverDevOpsAuditSettings.push(serverDevOpsAuditSetting);
 					}
 				} catch (e) {
-					console.log("Failed to retrieve security informations", e);
+					logger.debug("Failed to retrieve security informations", e);
 				}
 
 
 				server.serverKeys = [];
 				for await (let serverKey of client.serverKeys.listByServer(server.resourceGroupName, server.name)) {
-						console.log(serverKey);
 						server.serverKeys.push(serverKey);
 				}
 
@@ -2706,14 +2742,12 @@ async function sqlDatabasesListing(client: SqlManagementClient): Promise<any> {
 	let resultsDatabases:any = [];
 
 	try {
-		console.log("SQL DB-----------------------------------------------");
 		for await (let result of client.servers.list()) {
 			result = addingResourceGroups(result);
 			let server:any = result;
 			try {
 				let databasesServer = [];
 				for await (let db of client.databases.listByServer(server.resourceGroupName, server.name)) {
-					console.log(db);
 					let database:any = db;
 					database.resourceGroupName = server.resourceGroupName;
 					database.transparentDataEncryptions = [];
@@ -2747,161 +2781,205 @@ async function postgresServersListing(client: PostgreSQLManagementClient): Promi
 	let resultsPostgres:any = [];
 
 	try {
-		console.log("POSTGRES-----------------------------------------------");
 		for await (let result of client.servers.list()) {
 			//result = addingResourceGroups(result);
 			let server:any = result;
-			console.log("server:");
-			console.log(server);
+			
 			try {
 				/*server.firewallRules = [];
 				for await (let firewallRule of client.firewallRules.listByServer(server.resourceGroupName, server.name)) {
 					server.firewallRules.push(firewallRule);
 				}*/
-				console.log(server);
 			} catch (e) {
-				console.log("Failed to retrieve security informations", e);
+				logger.debug("Failed to retrieve security informations", e);
 			}
 			resultsPostgres.push(server);
 		}
 	} catch (e) {
-		console.log("Failed to retrieve security informations", e);
+		logger.debug("Failed to retrieve security informations", e);
 	}
 	return resultsPostgres;
 }
 
-async function policiesListing(client: PolicyClient, policyInsightClient: PolicyInsightsClient): Promise<any> {
+async function policiesListing(client: Client): Promise<any> {
 	let resultsPolicies:any = [];
 
+	resultsPolicies.id = "Global Policies";
 	try {
-		console.log("POLICIES-----------------------------------------------");
-		for await (let item of client.policyAssignments.list()) {
-			item = addingResourceGroups(item);
-			let result:any = item;
-			console.log(result);
-			try {
-				for await (let policy of client.policyAssignments.list()) {
-					console.log(policy);
-					if (policy.name == item.policyDefinitionId) {
-						console.log("-------------MATCH-------------");
-						console.log(policy);
-					}
-				}
-			} catch (e) {
-				console.log("Failed to retrieve policySetDefinitions informations", e);
-			}
-		
-			resultsPolicies.push(result);
-		}
-	/*	for await (let item of client.policyDefinitions.list()) {
-			console.log(item);
-		}*/
-	} catch (e) {
-		console.log("Failed to retrieve security informations", e);
+		const res = await client.api('/policies/identitySecurityDefaultsEnforcementPolicy').get();
+		resultsPolicies.identitySecurityDefaultsEnforcementPolicy = res;
+	} catch (error) {
+		logger.debug("error:",error);
 	}
-	return resultsPolicies;
+	try {
+		const res = await client.api('/policies/authorizationPolicy').get();
+		resultsPolicies.authorizationPolicy = res;
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+	try {
+		const res = await client.api('/policies/authenticationMethodsPolicy').get();
+		resultsPolicies.authenticationMethodsPolicy = res;
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+	
+	try {
+		const res = await client.api('/policies/adminConsentRequestPolicy').get();
+		resultsPolicies.adminConsentRequestPolicy = res;
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+
+	try {
+		const res = await client.api('/beta/policies/externalIdentitiesPolicy').get();
+		resultsPolicies.externalIdentitiesPolicy = res;
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+
+	return [resultsPolicies];
 }
 
 async function notificationsListing(client: NotificationHubsManagementClient): Promise<any> {
 	let resultsNotifications:any = [];
 
 	try {
-		console.log("NOTIFICATIONS-----------------------------------------------");
 		for await (let namespace of client.namespaces.listAll()) {
 			namespace = addingResourceGroups(namespace);
 			let result:any = namespace;
-			console.log("namespace");
-			console.log(result);
 			if (namespace.name) {
 				for await (let hub of client.notificationHubs.list(result.resourceGroupName, namespace.name)) {
 					if (hub.name) {
-						console.log("hub");
-						console.log(hub);
-						for await (let authRule of client.notificationHubs.listAuthorizationRules(result.resourceGroupName, namespace.name, hub.name)) {
-							console.log("rules");
-							console.log(authRule);
-						}
+					
 					}
 				}
 			}
 		}
 	} catch (e) {
-		console.log("Failed to retrieve security informations", e);
+		logger.debug("Failed to retrieve security informations", e);
 	}
 	return resultsNotifications;
 }
 
-async function testGraphListing(client: Client, subscriptionId: any): Promise<any> {
+
+async function conditionnalAccessListing(client: Client): Promise<any> {
 	let resultsGraph:any = [];
-	let resultsApplications:any = [];
-	let resultsNew:any = [];
+	resultsGraph.id = "Conditional Access";
+	try {
+		const res = await client.api('/identity/conditionalAccess/policies').get();
+		resultsGraph = res.value;
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+	return resultsGraph;
+}
+
+async function namedLocationsListing(client: Client): Promise<any> {
+	let resultsGraph:any = {};
+	try {
+		const res = await client.api('/identity/conditionalAccess/namedLocations').get();
+		resultsGraph = res.value;
+		resultsGraph.forEach(async (item:any) => {
+			item.dataType = item['@odata.type'];
+		});
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+	return resultsGraph;
+}
+
+async function groupsListing(client: Client): Promise<any> {
+	let groups:any = [];
+	try {
+		const res = await client.api('/groups').get();
+		groups = res.value;
+		groups.forEach(async (group:any) => {
+			try {
+				//const res2 = await client.api(`/groups/${group.id}/settings`).get();
+			//	groups/{group-id}/permissionGrants
+				const res2 = await client.api(`/groups/${group.id}/groupLifecyclePolicies`).get();
+
+				group.settings = res2;
+			} catch (error) {
+				logger.debug("error:",error);
+			}
+		});
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+7
+	const directorySettingId = "directorySetting_1";
+	
+	try {
+		const res = await client.api('/groupSettingTemplates').get();
+
+
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+
+	return groups;
+}
+
+async function testGraphListing(client: Client, subscriptionId: any): Promise<any> {
+	
 	let usersReponse:any = [];
-	let users:any = [];
 	try {
 		usersReponse = await client.api("/users")
-		.top(10) // Limit results to 10 (optional)
+		.select("id,userPrincipalName,mail,userType,customSecurityAttributes,lastPasswordChangeDateTime,passwordPolicies,passwordProfile")
 		.get();
-  
-	  console.log("Users:", usersReponse.value); // Access the list of users
 	} catch (error) {
 	  console.error("Error retrieving users:", error);
 	}
 
-
 	const userPromise = usersReponse.value.map( async (userItem: any) => {
+		let user:any = userItem;
 		try {
-			let user:any = userItem;
-			console.log("user id:", user.id);
 			const res = await client.api(`/users/${user.id}/authentication/methods`).get();
 			user.authMethods = res.value;
-				console.log("user:");
-			//console.log(user);
-			users.push(user);
 		} catch (error) {
-			console.log("error:",error);
+			logger.debug("error:",error);
 		}
+		try {
+			const res = await client.api(`/users/${user.id}/authentication/microsoftAuthenticatorMethods`).get();
+			user.microsoftAuthenticatorMethods = res.value;
+		} catch (error) {
+			logger.debug("error:",error);
+		}
+		try {
+			const res = await client.api(`/users/${user.id}/settings`).get();
+			user.settings = res;
+		} catch (error) {
+			logger.debug("error:",error);
+		}
+		return user;
 	});
 
 	const processedUsers = await Promise.all(userPromise);
+
 	return processedUsers;
-	/*const url = `https://management.azure.com/subscriptions/${subscriptionId}/providers/Microsoft.AppConfiguration/configurationStores?api-version=2023-03-01`;
-	try {
-		const res = await client.api('/applications').get();
-		resultsApplications = res.value;
-	} catch (error) {
-		console.log("error:",error);
-	}*/
-
-	/*
-	try {
-		const res = await client.api('/identityGovernance/accessReviews/definitions').get();
-		resultsNew = res.value;
-	} catch (error) {
-		console.log("error:",error);
-	}
-	console.log("Foreach:");
-	console.log(resultsNew);
-	*/
-	
-	/*
-	try {
-		const res = await client.api('/servicePrincipals').get();
-		resultsNew = res.value;
-		resultsNew.forEach(async (item:any) => {
-			try {
-				const res2 = await client.api(`/servicePrincipals/${item.id}/remoteDesktopSecurityConfiguration`).get();
-				console.log("res2:");
-				console.log(res2);
-			} catch (error) {
-				console.log("error:",error);
-			}
-		});
-	} catch (error) {
-		console.log("error:",error);
-	}
-	*/
-
-		
-
-	
   }
+
+  async function servicePrincipalsListing(client: Client): Promise<any> {
+	let resultsGraph:any = [];
+	try {
+		const tmp = await client.api('/servicePrincipals').get();
+		resultsGraph = tmp.value;
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+
+	return resultsGraph;
+  }
+
+  async function domainsListing(client: Client): Promise<any> {
+	let resultsGraph:any = [];
+	try {
+		const tmp = await client.api('/domains').get();
+		resultsGraph = tmp.value;
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+	return resultsGraph;
+}
