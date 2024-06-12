@@ -1706,6 +1706,27 @@
 	*	- KexaAzure.mlSchedules
 	*	- KexaAzure.storage
 	*	- KexaAzure.blob
+	*	- KexaAzure.secrets
+	*	- KexaAzure.KeyvaultKeys
+	*	- KexaAzure.vaults
+	*	- KexaAzure.blobServices
+	*	- KexaAzure.appConfiguration
+	*	- KexaAzure.monitor
+	*	- KexaAzure.blobProperties
+	*	- KexaAzure.defender
+	*	- KexaAzure.security
+	*	- KexaAzure.authorization
+	*	- KexaAzure.sqlServers
+	*	- KexaAzure.sqlDatabases
+	*	- KexaAzure.postgresServers
+	*	- KexaAzure.policies
+	*	- KexaAzure.notifications
+	*	- KexaAzure.users
+	*	- KexaAzure.conditionnalAccess
+	*	- KexaAzure.namedLocations
+	*	- KexaAzure.groups
+	*	- KexaAzure.servicePrincipals
+	*	- KexaAzure.domains
 */
 
 
@@ -1715,7 +1736,18 @@
 
 
 import {ComputeManagementClient, VirtualMachine} from "@azure/arm-compute";
+import { KeyVaultManagementClient  } from "@azure/arm-keyvault";
+import { ResourceGraphClient } from "@azure/arm-resourcegraph";
+import { PolicyClient } from "@azure/arm-policy";
+import { PolicyInsightsClient } from "@azure/arm-policyinsights";	
+import { SecurityInsights } from "@azure/arm-securityinsight";
+import {SqlManagementClient } from "@azure/arm-sql";
+import {NotificationHubsManagementClient } from "@azure/arm-notificationhubs";
+import { ApplicationInsightsManagementClient } from "@azure/arm-appinsights";
 import * as AzureImports from "./imports/azurePackage.import";
+import { Client} from "@microsoft/microsoft-graph-client";
+import { TokenCredentialAuthenticationProvider } from "@microsoft/microsoft-graph-client/authProviders/azureTokenCredentials";
+
 
 let allClients: AzureClients = {};
 
@@ -1742,8 +1774,12 @@ function extractClients(module: any): AzureClients {
 
 import { ResourceManagementClient , ResourceGroup } from "@azure/arm-resources";
 import { MonitorClient } from "@azure/arm-monitor";
-import {StorageAccount, StorageManagementClient} from "@azure/arm-storage";
-import { BlobServiceClient } from "@azure/storage-blob";
+import {StorageAccount, StorageManagementClient, AccountSasParameters} from "@azure/arm-storage";
+import { BlobClient, BlobServiceClient } from "@azure/storage-blob";
+import { AppConfigurationClient } from "@azure/app-configuration";
+import {PostgreSQLManagementClient} from "@azure/arm-postgresql";
+import {AuthorizationManagementClient} from "@azure/arm-authorization";
+import { SecurityCenter } from "@azure/arm-security";
 
 const clientConstructors: Record<string, any> = {
     ResourceManagementClient,
@@ -1936,7 +1972,6 @@ const customGatherFunctions: FunctionMap = {
 
     'KexaAzure.vm': async (name: string, credential: any, subscriptionId: any) => {
         logger.debug("Starting " + name + " listing...");
-
 		try {
 			const computeClient = new ComputeManagementClient(credential, subscriptionId);
 			const monitorClient = new MonitorClient(credential, subscriptionId);
@@ -2001,9 +2036,16 @@ const customGatherFunctions: FunctionMap = {
 		}
     },
 
-	'KexaAzure.storage': (name: string, credential: any, subscriptionId: any) => {
+	'KexaAzure.storage': async (name: string, credential: any, subscriptionId: any) => {
         logger.debug("Starting " + name + " listing...");
 
+		try {
+			const storageClient = new StorageManagementClient(credential, subscriptionId);
+			return await storageListing(storageClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
 		return [];
     },
 
@@ -2012,6 +2054,270 @@ const customGatherFunctions: FunctionMap = {
 		//listAllBlob();
 		return [];
     },
+
+	
+	'KexaAzure.secrets': async (name: string, credential: any, subscriptionId: any) => {
+        logger.debug("Starting " + name + " listing...");
+		try {
+			const vaultClient = new KeyVaultManagementClient(credential, subscriptionId);
+            return await keyvaultSecretsListing(vaultClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+    },
+
+	'KexaAzure.KeyvaultKeys': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const vaultClient = new KeyVaultManagementClient(credential, subscriptionId);
+            return await keyvaultKeysListing(vaultClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.vaults': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const vaultClient = new KeyVaultManagementClient(credential, subscriptionId);
+            return await keyvaultListing(vaultClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.blobServices': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const storageClient = new StorageManagementClient(credential, subscriptionId);
+            return await blobServicesListing(storageClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.appConfiguration': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const appClient = new ApplicationInsightsManagementClient(credential, subscriptionId);
+			return await appConfigurationListing(appClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.monitor': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const monitorClient = new MonitorClient(credential, subscriptionId);
+			const resourceClient = new ResourceManagementClient(credential, subscriptionId);
+			return await monitorListing(monitorClient, resourceClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.blobProperties': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const blobClient = new BlobServiceClient(credential, subscriptionId);
+			return await blobPropertiesListing(blobClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.security': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const securityClient = new SecurityCenter(credential, subscriptionId);
+			return await securityListing(securityClient, subscriptionId);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.authorization': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const authorizationClient = new AuthorizationManagementClient(credential, subscriptionId);
+			return await authorizationListing(authorizationClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.sqlServers': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const monitorClient = new MonitorClient(credential, subscriptionId);
+			const sqlClient = new SqlManagementClient(credential, subscriptionId);
+			return await sqlServersListing(sqlClient, monitorClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.sqlDatabases': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const sqlClient = new SqlManagementClient(credential, subscriptionId);
+			return await sqlDatabasesListing(sqlClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.postgresServers': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const postgresClient = new PostgreSQLManagementClient(credential, subscriptionId);
+			return await postgresServersListing(postgresClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+	
+	'KexaAzure.policies': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const authProvider = new TokenCredentialAuthenticationProvider(credential, {
+				scopes: [
+					'https://graph.microsoft.com/.default'
+				],
+			  });
+			const graphClient = Client.initWithMiddleware({ authProvider: authProvider });
+			return await policiesListing(graphClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.notifications': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const monitorClient = new NotificationHubsManagementClient(credential, subscriptionId);
+			return await notificationsListing(monitorClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.users': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const authProvider = new TokenCredentialAuthenticationProvider(credential, {
+				scopes: [
+					'https://graph.microsoft.com/.default'
+				],
+			  });
+			const graphClient = Client.initWithMiddleware({ authProvider: authProvider });
+			
+			return await testGraphListing(graphClient, subscriptionId);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.conditionnalAccess': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const authProvider = new TokenCredentialAuthenticationProvider(credential, {
+				scopes: [
+					'https://graph.microsoft.com/.default'
+				],
+			  });
+			const graphClient = Client.initWithMiddleware({ authProvider: authProvider });
+			
+			return await conditionnalAccessListing(graphClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.namedLocations': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const authProvider = new TokenCredentialAuthenticationProvider(credential, {
+				scopes: [
+					'https://graph.microsoft.com/.default'
+				],
+			  });
+			const graphClient = Client.initWithMiddleware({ authProvider: authProvider });
+			
+			return await namedLocationsListing(graphClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.groups': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const authProvider = new TokenCredentialAuthenticationProvider(credential, {
+				scopes: [
+					'https://graph.microsoft.com/.default'
+				],
+			  });
+			const graphClient = Client.initWithMiddleware({ authProvider: authProvider });
+			
+			return await groupsListing(graphClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.servicePrincipals': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const authProvider = new TokenCredentialAuthenticationProvider(credential, {
+				scopes: [
+					'https://graph.microsoft.com/.default'
+				],
+			  });
+			const graphClient = Client.initWithMiddleware({ authProvider: authProvider });
+			
+			return await servicePrincipalsListing(graphClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.domains': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const authProvider = new TokenCredentialAuthenticationProvider(credential, {
+				scopes: [
+					'https://graph.microsoft.com/.default'
+				],
+			  });
+			const graphClient = Client.initWithMiddleware({ authProvider: authProvider });
+			
+			return await domainsListing(graphClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	}
 };
 
 
@@ -2201,4 +2507,479 @@ async function schedulesListing(client: AzureMachineLearningWorkspaces, workspac
 			return [];
 		}
 	}
+}
+
+async function keyvaultSecretsListing(client: KeyVaultManagementClient): Promise<any> {
+	let secretsRes:any = [];
+	for await (let item of client.vaults.list()) {
+		item = addingResourceGroups(item);
+		let result:any = item;
+		try {
+			for await (let secretItem of client.secrets.list(result.resourceGroupName, result.name)) {
+				secretsRes.push(secretItem);
+			}
+		} catch (e) {
+			logger.debug("Failed to retrieve vault keys informations", e);
+		}
+		
+	}
+	return secretsRes;
+}
+
+async function keyvaultKeysListing(client: KeyVaultManagementClient): Promise<any> {
+	let keysRes:any = [];
+	for await (let item of client.vaults.list()) {
+		item = addingResourceGroups(item);
+		let result:any = item;
+		try {
+			for await (let keyItem of client.keys.list(result.resourceGroupName, result.name)) {
+				keysRes.push(keyItem);
+			}
+		} catch (e) {
+			logger.debug("Failed to retrieve vault keys informations", e);
+		}
+	}
+	return keysRes;
+}
+
+async function keyvaultListing(client: KeyVaultManagementClient): Promise<any> {
+	let resultVault:any = [];
+	for await (let item of client.vaults.list()) {
+		item = addingResourceGroups(item);
+		let result:any = item;
+		try {
+			const res = await client.vaults.get(result.resourceGroupName, result.name);
+			resultVault.push(res);
+		} catch (e) {
+			logger.debug("Failed to retrieve vault informations", e);
+		}
+	}
+	return resultVault;
+}
+
+async function blobServicesListing(client: StorageManagementClient): Promise<any> {
+	let resultStorage:any = [];
+	for await (let item of client.storageAccounts.list()) {
+		item = addingResourceGroups(item);
+		let result:any = item;
+		try {
+			for await (let blobService of client.blobServices.list(result.resourceGroupName, result.name)) {
+				resultStorage.push(blobService);
+			}
+		} catch (e) {
+			logger.debug("Failed to retrieve storage informations", e);
+		}
+	}
+	return resultStorage;
+}
+
+async function appConfigurationListing(client: ApplicationInsightsManagementClient):	Promise<any> {
+	let resultGraph:any = [];
+	try {
+		const components = await client.components.list();
+		try {
+			for (let item of components) {
+				item = addingResourceGroups(item);
+				let result:any = item;
+				const final = await client.componentLinkedStorageAccounts.get(result.resourceGroupName, result.name);
+		
+				resultGraph.push(final);
+			}
+		} catch (e) {
+			logger.debug("Error on app insights infos listing", e);
+		}
+	} catch (e) {
+		logger.debug("Error on graph services listing:", e);
+	}
+}
+
+async function monitorListing(client: MonitorClient, resClient: ResourceManagementClient): Promise<any> {
+	let resultMonitor:any = [];
+	const resources = await resClient.resources.list();
+	for await (let item of resources) {
+		try {
+			item = addingResourceGroups(item);
+			let oneResult = { resource: item, diagnosticSettings: [] as any, diagnosticSettingsCategory: [] as any};
+			const resourceUri = item?.id as string;
+			if (!resourceUri) continue;
+			const diagnosticSettings = await client.diagnosticSettings.list(resourceUri);
+			if (!diagnosticSettings?.value) continue;
+			oneResult.diagnosticSettings = diagnosticSettings?.value as any[];
+			try {
+			const cat = await client.diagnosticSettingsCategory.list(resourceUri);
+			oneResult.diagnosticSettingsCategory = cat.value;
+			} catch (e) {
+				logger.debug("Failed to retrieve monitor informations", e);
+			}
+			resultMonitor.push(oneResult);
+		} catch (e) {
+			logger.debug("Failed to retrieve monitor informations", e);
+		}
+	}
+	return resultMonitor;
+}
+
+async function blobPropertiesListing(client: BlobServiceClient): Promise<any> {
+	let resultMonitor:any = [];
+	const properties = await client.getProperties();
+	return resultMonitor;
+}
+
+async function storageListing(client: StorageManagementClient): Promise<any> {
+	let resultStorage:any = [];
+	for await (let item of client.storageAccounts.list()) {
+		item = addingResourceGroups(item);
+		let result:any = item;
+		try {
+			const properties = await client.storageAccounts.getProperties(result.resourceGroupName, result.name);
+		} catch (e) {
+			logger.debug("Failed to retrieve storage informations", e);
+		}
+		try {
+			const accountSAS = await client.storageAccounts.listKeys(result.resourceGroupName, result.name);
+		} catch (e) {
+			logger.debug("Failed to retrieve storage informations", e);
+		}
+		try {
+			const polciies = await client.managementPolicies.get(result.resourceGroupName, result.name, "default");
+		} catch (e) {
+			logger.debug("Failed to retrieve storage informations", e);
+		}
+		resultStorage.push(item);
+	}
+	return resultStorage;
+}
+
+async function securityListing(client: SecurityCenter, subscriptionId: any): Promise<any> {
+	let resultSecurity:any = [];
+	try {
+		for await (let item of client.settings.list()) {
+			item = addingResourceGroups(item);
+			let result:any = item;
+			resultSecurity.push(result);
+		}
+	
+	} catch (e) {
+		logger.debug("Failed to retrieve security informations", e);
+	}
+	return resultSecurity;
+}
+
+async function authorizationListing(client: AuthorizationManagementClient): Promise<any> {
+	let resultsAuthorization:any = [];
+	try {
+		for await (let item of client.roleAssignments.listForSubscription()) {
+			item = addingResourceGroups(item);
+			let result:any = item;
+			try {
+				const definition = await client.roleDefinitions.get(result.scope, result.roleDefinitionId);
+			} catch (e) {
+				logger.debug("Failed to retrieve security informations", e);
+			}
+	
+			resultsAuthorization.push(result);
+		}
+	
+	} catch (e) {
+		logger.debug("Failed to retrieve security informations", e);
+	}
+	return resultsAuthorization;
+}
+
+async function sqlServersListing(client: SqlManagementClient, monitorClient: MonitorClient): Promise<any> {
+	let resultsSql:any = [];
+
+	try {
+		for await (let result of client.servers.list()) {
+			result = addingResourceGroups(result);
+			let server:any = result;
+			try {
+				server.firewallRules = [];
+				for await (let firewallRule of client.firewallRules.listByServer(server.resourceGroupName, server.name)) {
+					server.firewallRules.push(firewallRule);
+				}
+				server.blobAuditingPolicies = [];
+				for await (let blobAuditingPolicy of client.serverBlobAuditingPolicies.listByServer(server.resourceGroupName, server.name)) {
+					server.blobAuditingPolicies.push(blobAuditingPolicy);
+				}
+				server.managedInstances = [];
+				for await (let managedInstance of client.managedInstances.list()) {
+						server.managedInstances.push(managedInstance);
+				}
+				server.encryptionProtectors = [];
+				for await (let encryptionProtector of client.encryptionProtectors.listByServer(server.resourceGroupName, server.name)) {
+						server.encryptionProtectors.push(encryptionProtector);
+				}
+				server.serverDevOpsAuditSettings = [];
+				try {
+					for await (let serverDevOpsAuditSetting of client.serverDevOpsAuditSettings.listByServer(server.resourceGroupName, server.name)) {
+						server.serverDevOpsAuditSettings.push(serverDevOpsAuditSetting);
+					}
+				} catch (e) {
+					logger.debug("Failed to retrieve security informations", e);
+				}
+
+
+				server.serverKeys = [];
+				for await (let serverKey of client.serverKeys.listByServer(server.resourceGroupName, server.name)) {
+						server.serverKeys.push(serverKey);
+				}
+
+				// serverKeys
+
+			} catch (e) {
+				logger.debug("Failed to retrieve security informations", e);
+			}
+			resultsSql.push(server);
+		}
+	} catch (e) {
+		logger.debug("Failed to retrieve security informations", e);
+	}
+	return resultsSql;
+}
+
+async function sqlDatabasesListing(client: SqlManagementClient): Promise<any> {
+	let resultsDatabases:any = [];
+
+	try {
+		for await (let result of client.servers.list()) {
+			result = addingResourceGroups(result);
+			let server:any = result;
+			try {
+				let databasesServer = [];
+				for await (let db of client.databases.listByServer(server.resourceGroupName, server.name)) {
+					let database:any = db;
+					database.resourceGroupName = server.resourceGroupName;
+					database.transparentDataEncryptions = [];
+					database.blobAuditingPolicies = [];
+					database.backupShortTermRetentionPolicies = [];
+					if (database.name) {
+						for await (let tde of client.transparentDataEncryptions.listByDatabase(server.resourceGroupName, server.name, database.name)) {
+							database.transparentDataEncryptions.push(tde);
+						}
+						for await (let blobAuditingPolicy of client.databaseBlobAuditingPolicies.listByDatabase(server.resourceGroupName, server.name, database.name)) {
+							database.blobAuditingPolicies.push(blobAuditingPolicy);
+						}
+						for await (let backupShortTermRetentionPolicy of client.backupShortTermRetentionPolicies.listByDatabase(server.resourceGroupName, server.name, database.name)) {
+							database.backupShortTermRetentionPolicies.push(backupShortTermRetentionPolicy);
+						}
+					}
+					databasesServer.push(database);
+				}
+				resultsDatabases = [...resultsDatabases, ...databasesServer];
+			} catch (e) {
+				logger.debug("Failed to retrieve databases", e);
+			}
+		}
+	} catch (e) {
+		logger.debug("Failed to retrieve sql databases", e);
+	}
+	return resultsDatabases;
+}
+
+async function postgresServersListing(client: PostgreSQLManagementClient): Promise<any> {
+	let resultsPostgres:any = [];
+
+	try {
+		for await (let result of client.servers.list()) {
+			//result = addingResourceGroups(result);
+			let server:any = result;
+			
+			try {
+				/*server.firewallRules = [];
+				for await (let firewallRule of client.firewallRules.listByServer(server.resourceGroupName, server.name)) {
+					server.firewallRules.push(firewallRule);
+				}*/
+			} catch (e) {
+				logger.debug("Failed to retrieve security informations", e);
+			}
+			resultsPostgres.push(server);
+		}
+	} catch (e) {
+		logger.debug("Failed to retrieve security informations", e);
+	}
+	return resultsPostgres;
+}
+
+async function policiesListing(client: Client): Promise<any> {
+	let resultsPolicies:any = [];
+
+	resultsPolicies.id = "Global Policies";
+	try {
+		const res = await client.api('/policies/identitySecurityDefaultsEnforcementPolicy').get();
+		resultsPolicies.identitySecurityDefaultsEnforcementPolicy = res;
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+	try {
+		const res = await client.api('/policies/authorizationPolicy').get();
+		resultsPolicies.authorizationPolicy = res;
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+	try {
+		const res = await client.api('/policies/authenticationMethodsPolicy').get();
+		resultsPolicies.authenticationMethodsPolicy = res;
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+	
+	try {
+		const res = await client.api('/policies/adminConsentRequestPolicy').get();
+		resultsPolicies.adminConsentRequestPolicy = res;
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+
+	try {
+		const res = await client.api('/beta/policies/externalIdentitiesPolicy').get();
+		resultsPolicies.externalIdentitiesPolicy = res;
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+
+	return [resultsPolicies];
+}
+
+async function notificationsListing(client: NotificationHubsManagementClient): Promise<any> {
+	let resultsNotifications:any = [];
+
+	try {
+		for await (let namespace of client.namespaces.listAll()) {
+			namespace = addingResourceGroups(namespace);
+			let result:any = namespace;
+			if (namespace.name) {
+				for await (let hub of client.notificationHubs.list(result.resourceGroupName, namespace.name)) {
+					if (hub.name) {
+					
+					}
+				}
+			}
+		}
+	} catch (e) {
+		logger.debug("Failed to retrieve security informations", e);
+	}
+	return resultsNotifications;
+}
+
+
+async function conditionnalAccessListing(client: Client): Promise<any> {
+	let resultsGraph:any = [];
+	resultsGraph.id = "Conditional Access";
+	try {
+		const res = await client.api('/identity/conditionalAccess/policies').get();
+		resultsGraph = res.value;
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+	return resultsGraph;
+}
+
+async function namedLocationsListing(client: Client): Promise<any> {
+	let resultsGraph:any = {};
+	try {
+		const res = await client.api('/identity/conditionalAccess/namedLocations').get();
+		resultsGraph = res.value;
+		resultsGraph.forEach(async (item:any) => {
+			item.dataType = item['@odata.type'];
+		});
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+	return resultsGraph;
+}
+
+async function groupsListing(client: Client): Promise<any> {
+	let groups:any = [];
+	try {
+		const res = await client.api('/groups').get();
+		groups = res.value;
+		groups.forEach(async (group:any) => {
+			try {
+				//const res2 = await client.api(`/groups/${group.id}/settings`).get();
+			//	groups/{group-id}/permissionGrants
+				const res2 = await client.api(`/groups/${group.id}/groupLifecyclePolicies`).get();
+
+				group.settings = res2;
+			} catch (error) {
+				logger.debug("error:",error);
+			}
+		});
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+7
+	const directorySettingId = "directorySetting_1";
+	
+	try {
+		const res = await client.api('/groupSettingTemplates').get();
+
+
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+
+	return groups;
+}
+
+async function testGraphListing(client: Client, subscriptionId: any): Promise<any> {
+	
+	let usersReponse:any = [];
+	try {
+		usersReponse = await client.api("/users")
+		.select("id,userPrincipalName,mail,userType,customSecurityAttributes,lastPasswordChangeDateTime,passwordPolicies,passwordProfile")
+		.get();
+	} catch (error) {
+	  console.error("Error retrieving users:", error);
+	}
+
+	const userPromise = usersReponse.value.map( async (userItem: any) => {
+		let user:any = userItem;
+		try {
+			const res = await client.api(`/users/${user.id}/authentication/methods`).get();
+			user.authMethods = res.value;
+		} catch (error) {
+			logger.debug("error:",error);
+		}
+		try {
+			const res = await client.api(`/users/${user.id}/authentication/microsoftAuthenticatorMethods`).get();
+			user.microsoftAuthenticatorMethods = res.value;
+		} catch (error) {
+			logger.debug("error:",error);
+		}
+		try {
+			const res = await client.api(`/users/${user.id}/settings`).get();
+			user.settings = res;
+		} catch (error) {
+			logger.debug("error:",error);
+		}
+		return user;
+	});
+
+	const processedUsers = await Promise.all(userPromise);
+
+	return processedUsers;
+  }
+
+  async function servicePrincipalsListing(client: Client): Promise<any> {
+	let resultsGraph:any = [];
+	try {
+		const tmp = await client.api('/servicePrincipals').get();
+		resultsGraph = tmp.value;
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+
+	return resultsGraph;
+  }
+
+  async function domainsListing(client: Client): Promise<any> {
+	let resultsGraph:any = [];
+	try {
+		const tmp = await client.api('/domains').get();
+		resultsGraph = tmp.value;
+	} catch (error) {
+		logger.debug("error:",error);
+	}
+	return resultsGraph;
 }

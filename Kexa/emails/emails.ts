@@ -270,7 +270,7 @@ export const Emails = {
     
     
     </h2>
-    <p>
+    <p style="width: 320px">
     
     
       Kexa have done a scan on your server, please check the code below to know more about the render.
@@ -278,7 +278,7 @@ export const Emails = {
     
     </p>
     
-              </div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;padding-top:20px;" align="center"><table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#f2f3f4;background-color:#f2f3f4;width:100%">
+              </div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;padding-top:20px;" align="center"><table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#f2f3f4;background-color:#f2f3f4;width:400px">
                 <tbody>
                   <tr>
                     <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center" colspan="4">
