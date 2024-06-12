@@ -5,7 +5,6 @@ import { SettingFile } from "../models/settingFile/settingFile.models";
 import { extractHeaders } from "./addOn.service";
 import { gatheringRules } from "./analyse.service";
 import { getNewLogger } from "./logger.service";
-import { jsonStringify } from "../helpers/jsonStringify";
 
 const fs = require("fs");
 import axios from 'axios';

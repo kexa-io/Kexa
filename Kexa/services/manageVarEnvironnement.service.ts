@@ -1,6 +1,4 @@
 import axios from "axios";
-import { jsonStringify } from "../helpers/jsonStringify";
-
 import {getNewLogger} from "./logger.service";
 import { jsonStringify } from "../helpers/jsonStringify";
 const logger = getNewLogger("KubernetesLogger");
