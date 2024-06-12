@@ -1914,3 +1914,36 @@ documentation/Documentation-Kexa.md was changed
 
 package.json was changed
 
+## 1.14.0-azurebenchmark.94.2e08853
+
+### Files added: 1
+
+Kexa/rules/azureBenchmarkRules.yaml was added
+
+### Files changed: 12
+
+Kexa/rules/azureBenchmarkRules.yaml was changed
+
+CHANGELOG.md was changed
+
+Kexa/emails/emails.ts was changed
+
+Kexa/models/azure/resource.models.ts was changed
+
+Kexa/rules/Kubernete.yaml was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/display/azureDisplay.service.ts was changed
+
+Kexa/services/manageVarEnvironnement.service.ts was changed
+
+VERSION was changed
+
+capacity.json was changed
+
+package.json was changed
+
+pnpm-lock.yaml was changed
+
+

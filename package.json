@@ -524,7 +524,7 @@
         "typescript": "^4.9.5"
     },
     "name": "Kexa",
-    "version": "1.14.0-azurebenchmark.85.61e028f",
+    "version": "1.14.0-azurebenchmark.94.2e08853",
     "main": "./build/index.js",
     "scripts": {
         "postinstall": "node-config-ts",
