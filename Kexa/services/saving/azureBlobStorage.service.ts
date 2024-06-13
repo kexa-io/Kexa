@@ -3,6 +3,7 @@ import { AzureBlobStorageSaveConfig } from "../../models/export/azureBlobStorage
 import { getEnvVar } from "../manageVarEnvironnement.service";
 import { getContext, getNewLogger } from "../logger.service";
 import { DefaultAzureCredential } from "@azure/identity";
+import { jsonStringify } from '../../helpers/jsonStringify';
 
 const logger = getNewLogger("AzureBlobStorageLogger");
 const context = getContext();
@@ -24,7 +25,7 @@ export async function saveJsonToAzureBlobStorage(connectionString: string, save:
     }
     const containerClient = blobServiceClient.getContainerClient(save?.containerName ?? "");
     await containerClient.createIfNotExists();
-    const jsonString = JSON.stringify(json);
+    const jsonString = jsonStringify(json);
     const blockBlobClient = containerClient.getBlockBlobClient((((await getEnvVar("ORIGIN"))??save?.origin)??"") + new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '') + ".json");
     const uploadOptions: BlockBlobParallelUploadOptions = {};
     if(save?.tags) uploadOptions.tags = save?.tags;

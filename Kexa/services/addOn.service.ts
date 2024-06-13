@@ -5,12 +5,19 @@ import { Capacity } from "../models/settingFile/capacity.models";
 import {getContext, getNewLogger} from "./logger.service";
 import { SettingFile } from "../models/settingFile/settingFile.models";
 import { getConfig } from "../helpers/loaderConfig";
+import { jsonStringify } from "../helpers/jsonStringify";
 
 const configuration = getConfig();
 const mainFolder = 'Kexa';
 const serviceAddOnPath = './' + mainFolder + '/services/addOn';
 const fs = require('fs');
 const logger = getNewLogger("LoaderAddOnLogger");
+const reservedNameAddOn=[
+    "export",
+    "save",
+    "variable",
+    "general",
+]
 
 
 export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResource>{
@@ -20,7 +27,7 @@ export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResour
     context?.log("Loading addOns");
     const addOnNeed = require('../../config/addOnNeed.json');
     const files = fs.readdirSync(serviceAddOnPath);
-    const promises = files.map(async (file: string) => {
+    const promises = files.filter((file:string)=> !reservedNameAddOn.includes(file)).map(async (file: string) => {
         return await loadAddOn(file, addOnNeed, settings);
     });
     const results = await Promise.all(promises);
@@ -71,8 +78,8 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): 
             });
             const data = await collectData(addOnConfig);
             let delta = Date.now() - start;
-            //context?.log(`AddOn ${nameAddOn} collect in ${delta}ms`);
-            //logger.info(`AddOn ${nameAddOn} collect in ${delta}ms`);
+            context?.log(`AddOn ${nameAddOn} collect in ${delta}ms`);
+            logger.info(`AddOn ${nameAddOn} collect in ${delta}ms`);
             return { key: nameAddOn, data:(checkIfDataIsProvider(data) ? data : null), delta};
         }
     }catch(e){
@@ -208,7 +215,7 @@ export async function extractHeaders(): Promise<Capacity>{
             };
         }
     });
-    writeStringToJsonFile(JSON.stringify(finalData), "./config/headers.json");
+    writeStringToJsonFile(jsonStringify(finalData,4), "./config/headers.json");
     return finalData;
 }
 

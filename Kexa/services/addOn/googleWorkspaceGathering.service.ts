@@ -21,6 +21,7 @@ import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { googleWorkspaceResources } from "../../models/googleWorkspace/ressource.models";
 import { googleWorkspaceConfig } from "../../models/googleWorkspace/config.models";
 import {deleteFile, writeStringToJsonFile} from "../../helpers/files";
+import { jsonStringify } from '../../helpers/jsonStringify';
 
 ////////////////////////////////
 //////   INITIALIZATION   //////
@@ -134,7 +135,7 @@ async function saveCredentials(client: any) {
     const content = await fs.readFile(CREDENTIALS_PATH);
     const keys = JSON.parse(content);
     const key = keys.installed || keys.web;
-    const payload = JSON.stringify({
+    const payload = jsonStringify({
         type: 'authorized_user',
         client_id: key.client_id,
         client_secret: key.client_secret,
@@ -172,7 +173,7 @@ async function listUsers(auth: any): Promise<Array<any> | null> {
         console.log('No users found.');
         return null;
     }
-    jsonData = JSON.parse(JSON.stringify(users));
+    jsonData = JSON.parse(jsonStringify(users));
     let nbSuperAdmin = 0;
     for (let i = 0; i < jsonData.length; i++) {
         const service = google.admin({ version: 'directory_v1', auth });
@@ -182,7 +183,7 @@ async function listUsers(auth: any): Promise<Array<any> | null> {
                 customer: 'my_customer',
                 userKey: jsonData[i].primaryEmail,
             });
-            jsonData[i].adminRoles = JSON.parse(JSON.stringify(adminRoles.data.items));
+            jsonData[i].adminRoles = JSON.parse(jsonStringify(adminRoles.data.items));
             jsonData[i].adminRoles.forEach((element: any) => {
                 if (element.isSuperAdminRole == true) {
                     isSuperAdmin = true;
@@ -225,7 +226,7 @@ async function listDomains(auth: any): Promise<Array<any> | null> {
                     domainName: domains[i].domainName,
                     domainInfos: domainResponse.data
                 }
-                jsonData.push(JSON.parse(JSON.stringify(newJsonEntry)));
+                jsonData.push(JSON.parse(jsonStringify(newJsonEntry)));
             } catch (e) {
                 logger.debug(e);
             }
@@ -247,7 +248,7 @@ async function listGroups(auth: any): Promise<Array<any> | null> {
         });
         const groups = groupResponse.data;
         if (groups)
-            jsonData = JSON.parse(JSON.stringify(groups));
+            jsonData = JSON.parse(jsonStringify(groups));
         else
             return null;
     } catch (e) {
@@ -266,7 +267,7 @@ async function listRoles(auth: any): Promise<Array<any> | null> {
         const adminRoles = await service.roles.list({
             customer: 'my_customer',
         });
-        jsonData = JSON.parse(JSON.stringify(adminRoles.data.items));
+        jsonData = JSON.parse(jsonStringify(adminRoles.data.items));
     } catch (error) {
         logger.debug('Error listing user roles:', error);
     }
@@ -286,7 +287,7 @@ async function listOrganizationalUnits(auth: any): Promise<Array<any> | null> {
             customerId: 'my_customer',
         });
         const orgUnitList = orgUnits.data;
-        jsonData = JSON.parse(JSON.stringify(orgUnitList));
+        jsonData = JSON.parse(jsonStringify(orgUnitList));
     } catch (error) {
         logger.debug('Error listing organizational units:', error);
     }
@@ -302,14 +303,14 @@ async function listCalendars(auth: any): Promise<Array<any> | null> {
             customer: "my_customer"
         });
         const calendars = response.data.items;
-        jsonData = JSON.parse(JSON.stringify(calendars))
+        jsonData = JSON.parse(jsonStringify(calendars))
         for (let i = 0; i < jsonData.length; i++) {
             const responseUnit = await calendar.acl.list({
                 customer: "my_customer",
                 calendarId: jsonData[i].id
             });
             const calendarACL = responseUnit.data;
-            jsonData[i].calendarACL = JSON.parse(JSON.stringify(calendarACL.items));
+            jsonData[i].calendarACL = JSON.parse(jsonStringify(calendarACL.items));
         }
     } catch (e) {
         logger.debug(e);
@@ -331,7 +332,7 @@ async function listFiles(auth: any): Promise<Array<any> | null> {
                 fileId: files[i].id,
                 fields: '*'
             });
-            jsonData.push(JSON.parse(JSON.stringify(res.data)));
+            jsonData.push(JSON.parse(jsonStringify(res.data)));
         }
     } catch (e) {
         logger.debug(e);
@@ -353,7 +354,7 @@ async function listDrive(auth: any): Promise<Array<any> | null> {
                 driveId: drives[i].id,
                 fields: '*'
             });
-            jsonData.push(JSON.parse(JSON.stringify(res.data)));
+            jsonData.push(JSON.parse(jsonStringify(res.data)));
         }
     } catch (e) {
         logger.debug(e);

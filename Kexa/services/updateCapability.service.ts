@@ -1,3 +1,4 @@
+import { jsonStringify } from "../helpers/jsonStringify";
 import { writeStringToJsonFile } from "../helpers/files";
 import { Rules } from "../models/settingFile/rules.models";
 import { SettingFile } from "../models/settingFile/settingFile.models";
@@ -19,14 +20,14 @@ async function releaseCapability(){
             headers[rule.cloudProvider].freeRules.push(rule);
         }
     });
-    writeStringToJsonFile(JSON.stringify(headers, null, 4), "./capacity.json");
+    writeStringToJsonFile(jsonStringify(headers, 4), "./capacity.json");
 }
 
 export function updateVersion(){
     let packageJson = require("../../package.json");
     let version = fs.readFileSync("./VERSION", "utf8");
     packageJson.version = version.split("\n")[0];
-    fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 4));
+    fs.writeFileSync("./package.json", jsonStringify(packageJson, 4));
 }
 
 export function updateREADME(){

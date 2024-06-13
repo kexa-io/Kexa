@@ -1764,11 +1764,280 @@ package-lock.json was changed
 package.json was changed
 
 pnpm-lock.yaml was changed
+
 ## 1.14.0-SNAPSHOT.61.adfdde2
 
 ### Files added: 0
 
 ### Files changed: 2
+
+package.json was changed
+
+pnpm-lock.yaml was changed
+
+
+## 1.14.0-SNAPSHOT.64.4d48a31
+
+### Files added: 0
+
+### Files changed: 4
+
+Kexa/models/kubernetes/kubernetes.models.ts was changed
+
+Kexa/rules/Kubernete.yaml was changed
+
+Kexa/services/addOn/display/kubernetesDisplay.service.ts was changed
+
+Kexa/services/addOn/kubernetesGathering.service.ts was changed
+
+
+## 1.14.0-SNAPSHOT.70.5ad0057
+
+### Files added: 0
+
+### Files changed: 0
+
+
+## 1.14.0-SNAPSHOT.72.8038dde
+
+### Files added: 0
+
+### Files changed: 1
+
+Kexa/__tests__/services/analyse.test.ts was changed
+
+
+## 1.14.0-SNAPSHOT.74.b2f8bc4
+
+### Files added: 0
+
+### Files changed: 4
+
+Kexa/__tests__/services/analyse.test.ts was changed
+
+Kexa/models/settingFile/conditions.models.ts was changed
+
+Kexa/services/addOn.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+
+## 1.14.0-azurebenchmark.85.61e028f
+
+### Files added: 1
+
+Kexa/rules/azureBenchmarkRules.yaml was added
+
+### Files changed: 10
+
+Kexa/rules/azureBenchmarkRules.yaml was changed
+
+Kexa/emails/emails.ts was changed
+
+Kexa/models/azure/resource.models.ts was changed
+
+Kexa/rules/Kubernete.yaml was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/display/azureDisplay.service.ts was changed
+
+## 1.14.0-devestebancontinuousscan.80.7266ea8
+
+### Files added: 2
+
+Kexa/services/memoisation.service.ts was added
+
+config/demo/exemple6.default.json was added
+
+### Files changed: 10
+
+Kexa/services/memoisation.service.ts was changed
+
+config/demo/exemple6.default.json was changed
+
+Kexa/index.ts was changed
+
+Kexa/main.ts was changed
+
+Kexa/models/settingFile/conditions.models.ts was changed
+
+Kexa/services/addOn.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+Kexa/services/manageVarEnvironnement.service.ts was changed
+
+Kexa/services/updateCapability.service.ts was changed
+
+package.json was changed
+
+pnpm-lock.yaml was changed
+
+
+documentation/Documentation-Kexa.md was changed
+
+
+## 1.14.0-SNAPSHOT.82.2b921cc
+
+### Files added: 2
+
+Kexa/services/memoisation.service.ts was added
+
+config/demo/exemple6.default.json was added
+
+### Files changed: 13
+
+Kexa/services/memoisation.service.ts was changed
+
+config/demo/exemple6.default.json was changed
+
+CHANGELOG.md was changed
+
+Kexa/index.ts was changed
+
+Kexa/main.ts was changed
+
+Kexa/models/settingFile/conditions.models.ts was changed
+
+Kexa/services/addOn.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+Kexa/services/manageVarEnvironnement.service.ts was changed
+
+Kexa/services/updateCapability.service.ts was changed
+
+VERSION was changed
+
+documentation/Documentation-Kexa.md was changed
+
+package.json was changed
+
+## 1.14.0-azurebenchmark.94.2e08853
+
+### Files added: 1
+
+Kexa/rules/azureBenchmarkRules.yaml was added
+
+### Files changed: 12
+
+Kexa/rules/azureBenchmarkRules.yaml was changed
+
+CHANGELOG.md was changed
+
+Kexa/emails/emails.ts was changed
+
+Kexa/models/azure/resource.models.ts was changed
+
+Kexa/rules/Kubernete.yaml was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/display/azureDisplay.service.ts was changed
+
+Kexa/services/manageVarEnvironnement.service.ts was changed
+
+VERSION was changed
+
+capacity.json was changed
+
+package.json was changed
+
+pnpm-lock.yaml was changed
+
+
+## 1.14.0-SNAPSHOT.96.8016b12
+
+### Files added: 5
+
+Kexa/__tests__/helpers/jsonStringify.test.ts was added
+
+Kexa/helpers/jsonStringify.ts was added
+
+Kexa/rules/azureBenchmarkRules.yaml was added
+
+Kexa/services/memoisation.service.ts was added
+
+config/demo/exemple6.default.json was added
+
+### Files changed: 40
+
+Kexa/__tests__/helpers/jsonStringify.test.ts was changed
+
+Kexa/helpers/jsonStringify.ts was changed
+
+Kexa/rules/azureBenchmarkRules.yaml was changed
+
+Kexa/services/memoisation.service.ts was changed
+
+config/demo/exemple6.default.json was changed
+
+CHANGELOG.md was changed
+
+Kexa/__tests__/services/analyse.test.ts was changed
+
+Kexa/emails/emails.ts was changed
+
+Kexa/helpers/files.ts was changed
+
+Kexa/index.ts was changed
+
+Kexa/main.ts was changed
+
+Kexa/models/azure/resource.models.ts was changed
+
+Kexa/models/kubernetes/kubernetes.models.ts was changed
+
+Kexa/models/settingFile/conditions.models.ts was changed
+
+Kexa/rules/AzureComplianceSetRules.yaml was changed
+
+Kexa/rules/BenchmarkOffice365.yaml was changed
+
+Kexa/rules/Kubernete.yaml was changed
+
+Kexa/services/addOn.service.ts was changed
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/display/azureDisplay.service.ts was changed
+
+Kexa/services/addOn/display/kubernetesDisplay.service.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+Kexa/services/addOn/googleWorkspaceGathering.service.ts was changed
+
+Kexa/services/addOn/kubernetesGathering.service.ts was changed
+
+Kexa/services/addOn/o365Gathering.service.ts was changed
+
+Kexa/services/addOn/save/amazonS3Save.service.ts was changed
+
+Kexa/services/alerte.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+Kexa/services/manageVarEnvironnement.service.ts was changed
+
+Kexa/services/save.service.ts was changed
+
+Kexa/services/saving/azureBlobStorage.service.ts was changed
+
+Kexa/services/saving/mySQL.service.ts was changed
+
+Kexa/services/updateCapability.service.ts was changed
+
+README.md was changed
+
+VERSION was changed
+
+capacity.json was changed
+
+documentation/Documentation-Kexa.md was changed
 
 package.json was changed
 

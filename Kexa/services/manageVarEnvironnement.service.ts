@@ -1,6 +1,6 @@
 import axios from "axios";
-
 import {getNewLogger} from "./logger.service";
+import { jsonStringify } from "../helpers/jsonStringify";
 const logger = getNewLogger("KubernetesLogger");
 
 
@@ -55,7 +55,7 @@ async function getEnvVarWithAwsSecretManager(name:string){
     try {
         const input = { SecretId: secName };
         const data = await secretsmanager.send(new GetSecretValueCommand(input));
-        const secretData = JSON.parse(JSON.stringify(data.SecretString));
+        const secretData = JSON.parse(jsonStringify(data.SecretString));
         const value = secretData[name];
         return (value);
     } catch (e) {

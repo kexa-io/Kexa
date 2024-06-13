@@ -10,6 +10,7 @@ import { Rules } from '../../models/settingFile/rules.models';
 import { CRUDRulesIQuery } from '../../query/CRUD/rules.iquery';
 import { ResultScan } from '../../models/resultScan.models';
 import { CRUDScansIQuery } from '../../query/CRUD/scans.iquery';
+import { jsonStringify } from '../../helpers/jsonStringify';
 const logger = getNewLogger("mySQLLogger");
 export class MySQLClass {
     private poolConnection!: Pool;
@@ -135,8 +136,8 @@ export class MySQLClass {
     
     public async createAndGetResource(resource: any, originId: number, providerItemsId: number): Promise<number> {
         let conn = await this.getConnection();
-        await conn.execute(CRUDResourcesIQuery.Create.One, [JSON.stringify(resource), originId, providerItemsId]);
-        let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDResourcesIQuery.Read.OneByContent, [JSON.stringify(resource)]);
+        await conn.execute(CRUDResourcesIQuery.Create.One, [jsonStringify(resource), originId, providerItemsId]);
+        let [rows, _]: [RowDataPacket[], any[]] = await conn.execute(CRUDResourcesIQuery.Read.OneByContent, [jsonStringify(resource)]);
         this.closeConnection(conn);
         return rows[0].ID;
     }

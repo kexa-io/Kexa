@@ -4,7 +4,7 @@ import { OperatorEnum } from "../../enum/operator.enum";
 export interface  RulesConditions {
     property:string;                   // name of the attribute in the object
     condition:ConditionEnum;
-    value:number|string|RulesConditions[]|ParentRules[];             // 0 or other decimal and NULL , NOT NULL OR other string
+    value:number|bigint|boolean|string|RulesConditions[]|ParentRules[];             // 0 or other decimal and NULL , NOT NULL OR other string
     date?:string;                      // date format
 }
 
