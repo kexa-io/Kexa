@@ -2044,3 +2044,18 @@ package.json was changed
 pnpm-lock.yaml was changed
 
 
+## 1.14.0-SNAPSHOT.98.ac1e91a
+
+### Files added: 2
+
+Kexa/rules/crossCloudDisksChecks.yaml was added
+
+Kexa/rules/gcpSetRules.yaml was added
+
+### Files changed: 2
+
+Kexa/rules/crossCloudDisksChecks.yaml was changed
+
+Kexa/rules/gcpSetRules.yaml was changed
+
+
