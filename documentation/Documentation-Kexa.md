@@ -240,10 +240,8 @@ Note, executing the command is destructive to your previous configuration.
 
 - Linux:
   ```bash
-  sudo pwsh
-  ./initKexa.ps1 -c
+  ./initKexa.sh -c
   ```
-  Our bash file does not yet support Kexa configuration. However, our powershell script does.
 
 
 <div id="basic-configuration"></div>
