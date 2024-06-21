@@ -1,0 +1,73 @@
+- version: 1.0.0
+  date: 07-18-2023
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      to: 
+        #- http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "gcp-disk-check-create-date-2-month-expiration"
+      description: "this rule is to check for a persistent disk create date is inferior than 2 months ago"
+      applied: false
+      level: 2
+      cloudProvider: gcp
+      objectName: disk
+      conditions:
+        - property: creationTimestamp
+          condition: DATE_INF
+          value: 0 0 0 2 0 0 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    - name: "gcp-disk-unattached"
+      description: "this rule is to check if a disk has no users (attached to no instance)"
+      applied: true
+      level: 2
+      cloudProvider: gcp
+      objectName: disk
+      conditions:
+        - property: users
+          condition: COUNT_SUP
+          value: 0
