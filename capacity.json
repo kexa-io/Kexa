@@ -8009,7 +8009,7 @@
         "resources": [
             "tasks_queue",
             "compute",
-            "storage",
+            "bucket",
             "project",
             "billingAccount",
             "cluster",

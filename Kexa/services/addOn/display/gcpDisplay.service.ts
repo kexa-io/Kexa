@@ -1,17 +1,24 @@
 import { Rules } from "../../../models/settingFile/rules.models";
 
 function getGCPRegionFromUrl(url: string): string | null {
-    const segments = url.split('/');
-    if (segments.length > 0)
-        return segments[segments.length - 1];
+    try {
+        const segments = url.split('/');
+        if (segments.length > 0)
+            return segments[segments.length - 1];
+    } catch (e) {
+        return null;
+    }
     return null;
 }
 
 function getGCPProjectFromUrl(url: string): string | null {
-    const match = url.match(/\/projects\/([^\/]+)/);
-
-    if (match && match[1])
-        return match[1];
+    try {
+        const match = url.match(/\/projects\/([^\/]+)/);
+        if (match && match[1])
+            return match[1];
+    } catch (e) {
+        return null;
+    }
     return null;
 }
 

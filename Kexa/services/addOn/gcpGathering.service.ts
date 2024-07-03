@@ -7,7 +7,7 @@
     * Resources :
     *     - tasks_queue
     *     - compute
-    *     - storage
+    *     - bucket
     *     - project
     *     - billingAccount
     *     - cluster
@@ -287,7 +287,6 @@ async function executeAllRegions(projectId: number, serviceFunction: Function, c
             }
             return jsonResponses;
         } catch (e) {
-            console.log(e);
             logger.warn(`GCP : Error while retrieving data in multiple regions - Region: ${currentRegion} not found or access not authorized for ${serviceFunction.name}`);
         }
     };
@@ -387,21 +386,26 @@ async function listPersistentDisks(projectId: any) {
 
 async function listAllBucket(): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("bucket")) return null;
-    let jsonReturn = [];
     try {
         const storage = new Storage();
         const [buckets] = await storage.getBuckets();
-        for (let i = 0; i < buckets.length; i++) {
-            const current_bucket = await storage.bucket(buckets[i].name).get();
-            const jsonData = JSON.parse(jsonStringify(current_bucket));
-            jsonReturn.push(jsonData);
 
-        }
+        const promises = buckets.map(async (bucket) => {
+            try {
+                const test = await storage.bucket(bucket.name).iam.getPolicy();
+            } catch (e) {
+                logger.debug(e);
+            }
+        });        
+        await Promise.all(promises);
+        
+        //const test = await storage.bucket("test-bucket").getMetadata();
+
+        return buckets;
     } catch (e) {
         logger.debug(e);
     }
-    logger.info("GCP Buckets Listing Done");
-    return jsonReturn ?? null;
+  return null;
 }
 
 import { ClusterManagerClient } from '@google-cloud/container';
@@ -942,24 +946,14 @@ async function listTagsKeys(projectId: any, regionsList: Array<string>): Promise
     const {TagKeysClient, TagValuesClient} = require('@google-cloud/resource-manager').v3;
     let jsonData = [];
 
-    console.log("regions", regionsList);
     try {
         const tagsKeyClient = new TagKeysClient();
         const tagsValueClient = new TagValuesClient();
         const rep = await tagsValueClient.listTagValues();
-        console.log("reponse here");
-        console.log(rep);
         jsonData = JSON.parse(jsonStringify(rep));
-       /* const iterable = await tagsKeyClient.listTagKeysAsync();
-        for await (const response of iterable) {
-            console.log(response);
-            jsonData = JSON.parse(jsonStringify(response));
-        }*/
     } catch (e) {
-        console.log("error tags:",e);
         logger.debug(e);
     }
-    console.log(jsonData);
     logger.info("GCP Tags Keys Listing Done");
     return jsonData ?? null;
 }

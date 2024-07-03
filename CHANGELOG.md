@@ -2068,3 +2068,97 @@ Kexa/rules/gcpSetRules.yaml was changed
 documentation/Documentation-Kexa.md was changed
 
 
+## 1.14.0-SNAPSHOT.105.579d157
+
+### Files added: 2
+
+Kexa/rules/SecretsRotation.yaml was added
+
+Kexa/rules/awsTesting.yaml was added
+
+### Files changed: 17
+
+Kexa/rules/SecretsRotation.yaml was changed
+
+Kexa/rules/awsTesting.yaml was changed
+
+Kexa/rules/StorageSecurity.yaml was changed
+
+Kexa/rules/awsBenchmarkRules.yaml was changed
+
+Kexa/rules/azureBenchmarkRules.yaml was changed
+
+Kexa/rules/crossCloudDisksChecks.yaml was changed
+
+Kexa/rules/gcpSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/awsSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/azureSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/gcpSetRules.yaml was changed
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/display/awsDisplay.service.ts was changed
+
+Kexa/services/addOn/display/gcpDisplay.service.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+Kexa/services/addOn/save/kexaSave.service.ts was changed
+
+
+## 1.14.0-SNAPSHOT.109.946ff84
+
+### Files added: 2
+
+Kexa/rules/SecretsRotation.yaml was added
+
+Kexa/rules/awsTesting.yaml was added
+
+### Files changed: 21
+
+Kexa/rules/SecretsRotation.yaml was changed
+
+Kexa/rules/awsTesting.yaml was changed
+
+CHANGELOG.md was changed
+
+Kexa/rules/StorageSecurity.yaml was changed
+
+Kexa/rules/awsBenchmarkRules.yaml was changed
+
+Kexa/rules/azureBenchmarkRules.yaml was changed
+
+Kexa/rules/crossCloudDisksChecks.yaml was changed
+
+Kexa/rules/gcpSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/awsSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/azureSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/gcpSetRules.yaml was changed
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/display/awsDisplay.service.ts was changed
+
+Kexa/services/addOn/display/gcpDisplay.service.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+Kexa/services/addOn/save/kexaSave.service.ts was changed
+
+VERSION was changed
+
+capacity.json was changed
+
+package.json was changed
+
+

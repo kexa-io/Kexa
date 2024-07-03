@@ -10,13 +10,23 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
         fullLink = webLink.concat(link.toString());
     switch (rule?.objectName) {
         case "KexaAwsCustoms.tagsValueListing":
-            return  'AWS Scan : Tag name : ' + objectContent.Value + ' in Region : ' + objectContent.Region;
+            return  'Tag name : ' + objectContent.Value + ' in Region : ' + objectContent.Region;
         case "ec2SG":
             return fullLink + `ec2/home?region=` + objectContent?.Region + `#SecurityGroup:groupId=`+ objectContent?.GroupId + (isSms ? ' ' : '">') + objectContent?.GroupId + (isSms ? `.` : `</a>`)
         case "resourceGroups":
             return 'GroupArn :' + objectContent?.GroupArn;
+        case rule?.objectName:
+            if (rule?.objectName.startsWith("S3Client.")) {
+                return ' Object name : ' + objectContent.Name;
+            }
+            break;
+        case rule?.objectName:
+            if (rule?.objectName.startsWith("IAMClient.AccessKey")) {
+                return ' Key ID : ' + objectContent.AccessKeyId;
+            }
+            break;
         default:
-            return 'AWS Scan : Object Id(s) : ' + awsFindIdToDisplay(objectContent);
+             return ' Object Id(s) : ' + awsFindIdToDisplay(objectContent);
     }
 }
 
@@ -33,6 +43,9 @@ function awsFindIdToDisplay(object: any): string[] | null {
     const result: any[] = [];
     for (const key in object) {
       if (object.hasOwnProperty(key) && typeof object[key] !== 'function' && key.endsWith('Id')) {
+        result.push(key + "=" + object[key]);
+      }
+      else if (object.hasOwnProperty(key) && typeof object[key] !== 'function' && key.endsWith('Name')) {
         result.push(key + "=" + object[key]);
       }
     }
