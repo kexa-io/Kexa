@@ -4975,7 +4975,7 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
                 logger.info("- Listing AWS resources done -");
 				
 				const concatedResults = concatAllObjects(collectedResults);
-								
+				console.log(concatedResults);
                 resources.push(concatedResults);
             }
         } catch (e) {
@@ -5199,7 +5199,7 @@ async function collectAuto(credential: any, region: string) {
 	/* ------------------------- */
 	/* HERE GET THE DEPENDENCIES */
 	/* ------------------------- */
-	if (awsGatherDependencies) {
+	/*if (awsGatherDependencies) {
 		for  (const dependence of awsGatherDependencies) {
 			if (Array.isArray(dependence.functions)) {
 				for (let i = 0; i < dependence.functions.length; i++) {
@@ -5223,7 +5223,41 @@ async function collectAuto(credential: any, region: string) {
 				}
 			}
 		}
-	}
+	}*/
+	
+	if (awsGatherDependencies) {
+        const dependencyPromises = [];
+
+        for (const dependence of awsGatherDependencies) {
+            if (Array.isArray(dependence.functions)) {
+                for (let i = 0; i < dependence.functions.length; i++) {
+                    const func = dependence.functions[i];
+                    for (const element of dependence.objects) {
+                        if (element.name === func.objectName) {
+                            const input = {};
+                            const command = new func.objectFunc(input);
+                            const client = new func.clientFunc({ region: region, credentials: credential });
+
+                            const dependencyPromise = (async () => {
+                                try {
+                                    let data: Record<string, any> = await client.send(command);
+                                    element.results = data[element.subGatherName];
+                                    logger.debug("Gathering dependencies for: " + func.clientName + "." + func.objectName + " Done");
+                                } catch (e) {
+                                    logger.debug("Error when retrieving resources dependencies from: " + func.clientName + "." + func.objectName);
+                                    logger.debug(e);
+                                }
+                            })();
+
+                            dependencyPromises.push(dependencyPromise);
+                        }
+                    }
+                }
+            }
+        }
+
+        await Promise.all(dependencyPromises);
+    }
 
 
 
