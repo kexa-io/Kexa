@@ -56,7 +56,7 @@
     #### storage accounts
     - name: "azure-storage-acc-public-network-access"
       description: "this rule to ensure that public network access is disabled for storage accounts"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: StorageManagementClient.storageAccounts
@@ -66,7 +66,7 @@
           value: 'Enabled'
     - name: "azure-storage-secure-transfer"
       description: "this rule to ensure that secure transfer is enabled for storage accounts"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: StorageManagementClient.storageAccounts
@@ -76,7 +76,7 @@
           value: true
     - name: "azure-storage-require-infra-encryption"
       description: "this rule to ensure storage accounts require infrastructure encryption"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: StorageManagementClient.storageAccounts
@@ -86,7 +86,7 @@
           value: true
     - name: "azure-storage-network-default-deny-traffic"
       description: "this rule to ensure storage accounts networks default deny all traffic"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: StorageManagementClient.storageAccounts
@@ -96,7 +96,7 @@
           value: 'Deny'
     - name: "azure-storage-use-private-endpoint"
       description: "this rule to ensure storage accounts use private endpoints connections"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: StorageManagementClient.storageAccounts
@@ -106,7 +106,7 @@
           value: 1
     - name: "azure-storage-minimum-tls-version"
       description: "this rule to ensure storage accounts set minimum TLS version to 1.2"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: StorageManagementClient.storageAccounts
@@ -116,7 +116,7 @@
           value: 'TLS1_2'
     - name: "azure-storage-cross-tenant-replication-disabled"
       description: "this rule to ensure cross storage replication is disabled for storage accounts"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: StorageManagementClient.storageAccounts
@@ -126,7 +126,7 @@
           value: true
     - name: "azure-storage-blob-public-access"
       description: "this rule to ensure public bloc access is disabled for storage accounts"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: StorageManagementClient.storageAccounts
@@ -136,7 +136,7 @@
           value: true
     - name: "azure-storage-encrypte-with-cmk"
       description: "this rule to ensure storage accounts use CMK encryption for critical data"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: StorageManagementClient.storageAccounts
@@ -146,7 +146,7 @@
           value: 'Microsoft.Keyvault'
     - name: "azure-storage-blob-soft-delete"
       description: "this rule to ensure storage containers delete retention"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.blobServices
@@ -161,7 +161,7 @@
               value: 1
     - name: "azure-storage-container-soft-delete"
       description: "this rule to ensure storage "
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.blobServices
@@ -180,7 +180,7 @@
     #### vaults configuration
     - name: "azure-vault-no-public-network-access"
       description: "this rule is to ensure vault network public access is disabled"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.vaults
@@ -190,7 +190,7 @@
           value: 'Disabled'
     - name: "azure-ensure-rbac-enabled"
       description: "this rule is to ensure rbac is enabled for kayvaults"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.vaults
@@ -200,7 +200,7 @@
           value: true
     - name: "azure-ensure-use-private-endpoint"
       description: "this rule is to ensure private endpoints are used for Keyvault"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.vaults
@@ -213,7 +213,7 @@
               value: null
     - name: "azure-ensure-keyvault-recoverable"
       description: "this rule is to ensure keyvaults are recoverable"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.vaults
@@ -224,7 +224,7 @@
     #### vault secrets
     - name: "azure-secrets-ensure-expiration"
       description: "this rule is to ensure every secrets has an expiration date"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.secrets
@@ -235,7 +235,7 @@
     #### vault keys
     - name: "azure-vault-keys-rotation"
       description: "this rule is to ensure every keys has a rotation defined"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.KeyvaultKeys
@@ -245,7 +245,7 @@
           value: null
     - name: "azure-vault-keys-expiration-date"
       description: "this rule is to ensure every keys has a expiration date"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.KeyvaultKeys
@@ -259,7 +259,7 @@
     # app configurations
     - name: "azure-web-app-https-only"
       description: "this rule is to ensure web apps are HTTPS only"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: WebSiteManagementClient.webApps
@@ -269,7 +269,7 @@
           value: true
     - name: "azure-web-app-minimum-tls-version"
       description: "this rule is to ensure web apps min TLS version is the latest"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: WebSiteManagementClient.webApps
@@ -279,7 +279,7 @@
           value: '1.2'
     - name: "azure-web-app-php-version"
       description: "this rule is to ensure web apps are using the latest stable PHP version"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: WebSiteManagementClient.webApps
@@ -294,7 +294,7 @@
               value: null
     - name: "azure-web-app-python-version"
       description: "this rule is to ensure web apps are using the latest stable Python version"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: WebSiteManagementClient.webApps
@@ -309,7 +309,7 @@
               value: null
     - name: "azure-web-app-java-version"
       description: "this rule is to ensure web apps are using the latest stable Java version"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: WebSiteManagementClient.webApps
@@ -324,7 +324,7 @@
               value: null
     - name: "azure-web-http-latest-enabled"
       description: "this rule is to ensure web apps are using the latest HTTP version (http20 enabled)"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: WebSiteManagementClient.webApps
@@ -334,7 +334,7 @@
           value: true
     - name: "azure-web-keyvault-reference"
       description: "this rule is to ensure web apps are using keyvault"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: WebSiteManagementClient.webApps
@@ -348,7 +348,7 @@
     # bonus
     - name: "azure-web-certificate-expiration-date"
       description: "this rule is to ensure web apps certificates are not expired and have a expiration date"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: WebSiteManagementClient.certificates
@@ -366,7 +366,7 @@
     # app insight configurations
     - name: "azure-ensure-app-insight-configured"
       description: "this rule is to ensure app insights is configured"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: ApplicationInsightsManagementClient.components
@@ -377,7 +377,7 @@
     # resources monitoring
     - name: "azure-ensure-azure-monitor-resources-logging-enabled"
       description: "this rule is to ensure all resources that support azure monitoring are monitored by app insights"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.monitor
@@ -391,7 +391,7 @@
     # still in testing
     - name: "azure-network-rdp-access-resticted"
       description: "this rule is to ensure web apps are using keyvault"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: NetworkManagementClient.networkSecurityGroups
@@ -423,7 +423,7 @@
     #### sql servers
     - name: "azure-sql-server-firewall-any-ip"
       description: "this rule is to ensure SQL servers firewall does not allow any IP"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.sqlServers
@@ -450,7 +450,7 @@
                     value: '255.255.255.255'
     - name: "azure-sql-servers-encryption-protector-customer-managed-key"
       description: "this rule is to ensure sql servers encryption protector is customer managed key"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.sqlServers
@@ -469,7 +469,7 @@
               value: null
     - name: "azure-sql-servers-entra-id-administrator"
       description: "this rule is to ensure entra id authentication is configured for sql servers"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.sqlServers
@@ -482,7 +482,7 @@
           value: true
     - name: "azure-sql-servers-retention-more-than-90-days"
       description: "this rule is to ensure sql servers audit logs retention is unlimited (0) or more than 90 days"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.sqlServers
@@ -498,7 +498,7 @@
               value: 'Enabled'
     - name: "azure-sql-servers-auditing"
       description: "this rule is to ensure sql servers auditing is enabled"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.sqlServers
@@ -518,7 +518,7 @@
     #### sql databases
     - name: "azure-sql-database-tde-enabled"
       description: "this rule is to ensure sql databases auditing is enabled"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.sqlDatabases
@@ -535,7 +535,7 @@
     # named locations
     - name: "azure-global-ensure-trusted-locations-defined"
       description: "this rule is to ensure trusted locations are defined for azure ad authentication"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.namedLocations
@@ -556,7 +556,7 @@
     # policies
     - name: "azure-global-security-default-enabled"
       description: "this rule is to ensure security defaults are enabled"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.policies
@@ -566,7 +566,7 @@
           value: true
     - name: "azure-global-user-cannot-create-tenant"
       description: "this rule is to ensure user cannot create tenant"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.policies
@@ -576,7 +576,7 @@
           value: true
     - name: "azure-global-ensure-mfa-for-all-users"
       description: "this rule is to ensure MFA is enabled for all users"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.policies
@@ -598,7 +598,7 @@
               value: 'group'
     - name: "azure-global-ensure-mfa-for-all-adminstrative-groups"
       description: "this rule is to ensure MFA is enabled for adminstrative groups"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.policies
@@ -620,7 +620,7 @@
               value: 'group'
     - name: "azure-global-enforce-microsoft-authenticator-config"
       description: "this rule is to ensure MFA is enforced"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.policies
@@ -638,7 +638,7 @@
                   value: true
     - name: "azure-global-user-cannot-create-security-group"
       description: "this rule is to ensure user cannot create security group"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.policies
@@ -648,7 +648,7 @@
           value: true
     - name: "azure-global-user-cannot-create-apps"
       description: "this rule is to ensure user cannot create apps"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.policies
@@ -659,7 +659,7 @@
     # bonus
     - name: "azure-global-ensure-reviewers"
       description: "this rule is to ensure that reviewers are defined and enabled"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.policies
@@ -673,7 +673,7 @@
     # users
     - name: "azure-global-guest-user-review"
       description: "this rule is to retrieve all guest users and review them"
-      applied: false
+      applied: true
       level: 0
       cloudProvider: azure
       objectName: KexaAzure.users
@@ -684,7 +684,7 @@
     # conditional access
     - name: "azure-global-ensure-az-policy-mfa-admins"
       description: "this rule is to ensure MFA is enabled for adminstrative groups"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.conditionnalAccess
@@ -700,7 +700,7 @@
               value: 'enabledForReportingButNotEnforced'
     - name: "azure-global-ensure-az-policy-mfa-all-users"
       description: "this rule is to ensure MFA is enabled for all users"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.conditionnalAccess
@@ -716,7 +716,7 @@
               value: 'enabled'
     - name: "azure-global-ensure-az-policy-mfa-azure-service-mgmt"
       description: "this rule is to ensure MFA is enabled for azure service management"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.conditionnalAccess
@@ -761,16 +761,6 @@
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.servicePrincipals
-      conditions:
-        - property: appRoles
-          condition: COUNT_SUP_OR_EQUAL
-          value: 1
-    - name: "azure-global-dr"
-      description: "this rule is to "
-      applied: false
-      level: 1
-      cloudProvider: azure
-      objectName: KexaAzure.domains
       conditions:
         - property: appRoles
           condition: COUNT_SUP_OR_EQUAL

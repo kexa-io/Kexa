@@ -221,3 +221,18 @@
             - property: encryption.services.blob.enabled
               condition: EQUAL
               value: true
+    - name: "azure-storage-account-encryption-using-kms"
+      description: "this rule is to check on azure storage account for encryption using kms"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: StorageManagementClient.storageAccounts
+      conditions:
+        - operator: AND
+          criteria:
+            - property: encryption.services.file.keySource
+              condition: EQUAL
+              value: 'Microsoft.Keyvault'
+            - property: encryption.services.blob.keySource
+              condition: EQUAL
+              value: 'Microsoft.Keyvault'
