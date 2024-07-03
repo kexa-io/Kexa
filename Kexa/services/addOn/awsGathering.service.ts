@@ -4975,7 +4975,6 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
                 logger.info("- Listing AWS resources done -");
 				
 				const concatedResults = concatAllObjects(collectedResults);
-				console.log(concatedResults);
                 resources.push(concatedResults);
             }
         } catch (e) {
