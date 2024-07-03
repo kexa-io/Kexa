@@ -19,9 +19,14 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
             if (rule?.objectName.startsWith("S3Client.")) {
                 return ' Object name : ' + objectContent.Name;
             }
-            break;  // Add a break statement to avoid fall-through
-                default:
-        return ' Object Id(s) : ' + awsFindIdToDisplay(objectContent);
+            break;
+        case rule?.objectName:
+            if (rule?.objectName.startsWith("IAMClient.AccessKey")) {
+                return ' Key ID : ' + objectContent.AccessKeyId;
+            }
+            break;
+        default:
+             return ' Object Id(s) : ' + awsFindIdToDisplay(objectContent);
     }
 }
 
