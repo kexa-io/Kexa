@@ -1834,6 +1834,7 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
 					collectKexaRestructuredData(credential, subscriptionId, config)
 				]);
 				let finalResources = {...autoFlatResources, ...dataComplementaryFlat};
+
                 resources.push(finalResources);
             }
         } catch(e) {
@@ -2930,7 +2931,7 @@ async function testGraphListing(client: Client, subscriptionId: any): Promise<an
 		.select("id,userPrincipalName,mail,userType,customSecurityAttributes,lastPasswordChangeDateTime,passwordPolicies,passwordProfile")
 		.get();
 	} catch (error) {
-	  console.error("Error retrieving users:", error);
+	  logger.error("Error retrieving users:", error);
 	}
 
 	const userPromise = usersReponse.value.map( async (userItem: any) => {

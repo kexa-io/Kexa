@@ -71,3 +71,29 @@
         - property: users
           condition: COUNT_SUP
           value: 0
+    - name: "gcp-disk-unattached-since-X-days"
+      description: "this rule is to check if a disk has no users since X days"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: disk
+      conditions:
+        - property: users
+          condition: COUNT_SUP
+          value: 0
+        - property: lastAttachTimestamp
+          condition: DATE_INF
+          value: 0 0 0 0 15 0 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    - name: "gcp-storage-bucket-public-access-block"
+      description: "this rule is to verify if the public access block is enabled on the bucket"
+      applied: false
+      level: 1
+      cloudProvider: gcp
+      objectName: bucket
+      conditions:
+        - operator: AND
+          criteria:
+            - property: iamConfiguration.publicAccessPrevention
+              condition: EQUAL
+              value: enforced

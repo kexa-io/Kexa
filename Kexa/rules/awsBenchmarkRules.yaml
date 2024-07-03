@@ -53,7 +53,7 @@
     # ok
     - name: "aws-acceskey-rotate-time-limit"
       description: "this rule is to check if an access key as exceeded the rotate time limit"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: IAMClient.AccessKeys
@@ -65,7 +65,7 @@
     # ok
     - name: "aws-iam-password-length"
       description: "this rule is to check if password policy require a 14 character password length"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: IAMClient.AccountPasswordPolicy
@@ -76,7 +76,7 @@
     # ok
     - name: "aws-iam-password-reuse-prevention"
       description: "this rule is to check if password policy remember at least the last 24 used passwords"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: IAMClient.AccountPasswordPolicy
@@ -87,7 +87,7 @@
     # ok
     - name: "aws-iam-password-max-age-policy"
       description: "this rule is to check if maximum age policy is set for the users passwords"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: IAMClient.AccountPasswordPolicy
@@ -98,7 +98,7 @@
     # ok
     - name: "aws-iam-accesskey-last-used"
       description: "this rule is to check for acceskeys unused for 1 month"
-      applied: false
+      applied: true
       level: 0
       cloudProvider: aws
       objectName: IAMClient.AccessKeyLastUsed
@@ -110,7 +110,7 @@
     # ok
     - name: "aws-verify-no-user-attached-policy"
       description: "Policies should be attached to group and user to a group."
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: IAMClient.AttachedUserPolicies
@@ -121,7 +121,7 @@
     # ok
     - name: "aws-iam-virtuel-mfa-enable-root-account"
       description: "this rule is to check if virtual mfa is enable for root account"
-      applied: false
+      applied: true
       level: 0
       cloudProvider: aws
       objectName: IAMClient.VirtualMFADevices
@@ -137,7 +137,7 @@
     # ok
     - name: "aws-iam-hardware-mfa-enable-root-account"
       description: "this rule is to check if hardware mfa is enable for root account"
-      applied: false
+      applied: true
       level: 0
       cloudProvider: aws
       objectName: IAMClient.MFADevices
@@ -153,7 +153,7 @@
     # ok
     - name: "aws-iam-mfa-not-used-password-2-month"
       description: "this rule is to check if a mfa password has not been used since 2 month"
-      applied: false
+      applied: true
       level: 0
       cloudProvider: aws
       objectName: IAMClient.VirtualMFADevices
@@ -165,7 +165,7 @@
     # ok
     - name: "aws-acl-no-unrestricted-access"
       description: "this rule is checking that no ACL allow unrestricted access to 0.0.0.0/0"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: EC2Client.NetworkAcls
@@ -185,7 +185,7 @@
     # ok
     - name: "aws-sg-no-unrestricted-access-0.0.0.0/0"
       description: "this rule is checking that no SG allow unrestricted access to 0.0.0.0/0"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: EC2Client.SecurityGroups
@@ -205,7 +205,7 @@
     # ok
     - name: "aws-sg-no-unrestricted-access-::/0"
       description: "this rule is checking that no SG allow unrestricted access to ::/0"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: EC2Client.SecurityGroups
@@ -225,7 +225,7 @@
     # ok
     - name: "aws-default-sg-restrict-all-traffic"
       description: "this rule is to check that default SG have no inbound or outbound rules"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: EC2Client.SecurityGroups
@@ -252,7 +252,7 @@
     # ok
     - name: "aws-iam-ensure-manage-incident-policy-attached"
       description: "this rule is to encure AWSSupportAccess policy is attached"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: IAMClient.Policies
@@ -268,7 +268,7 @@
     # ok
     - name: "aws-iam-ensure-cloudshell-fullaccess-policy-not-attached"
       description: "this rule is to encure AWSCloudShellFullAccess policy is not attached"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: IAMClient.Policies
@@ -284,7 +284,7 @@
     # ok
     - name: "aws-ec2-instances-not-older-than-180-days"
       description: "ensure no ec2 instances is older than 180 days (6 month)"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: EC2Client.Instances
@@ -299,7 +299,7 @@
     # ok
     - name: "aws-ec2-instances-monitoring-enable"
       description: "ensure ec2 instances has monitoring enabled"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: EC2Client.Instances
@@ -313,7 +313,7 @@
     # ok
     - name: "aws-ec2-instances-no-default-SG"
       description: "ensure ec2 instances are not linked to the default ec2 SG"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: EC2Client.Instances
@@ -330,7 +330,7 @@
     # ok
     - name: "aws-ec2-instances-IMDSv2-enforced"
       description: "ensure IMDSv2 is enforced on all ec2 instances"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: EC2Client.Instances
@@ -347,7 +347,7 @@
     # ok
     - name: "aws-ec2-check-unused-network-interfaces"
       description: "ensure there is no unused ec2 network interfaces"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: EC2Client.NetworkInterfaces
