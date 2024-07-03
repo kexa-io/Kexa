@@ -61,3 +61,50 @@
           condition: DATE_INF
           value: 0 0 0 2 0 0 0
           date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    - name: "gcp-storage-bucket-public-access-block-enforced"
+      description: "this rule is to verify if the public access block is enabled on the bucket"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: bucket
+      conditions:
+        - operator: AND
+          criteria:
+            - property: metadata.iamConfiguration.publicAccessPrevention
+              condition: EQUAL
+              value: 'enforced'
+    - name: "gcp-storage-bucket-public-access-block-enforced-or-inherited"
+      description: "this rule is to verify if the public access block is enabled on the bucket"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: bucket
+      conditions:
+        - operator: OR
+          criteria:
+            - property: metadata.iamConfiguration.publicAccessPrevention
+              condition: EQUAL
+              value: 'enforced'
+            - property: metadata.iamConfiguration.publicAccessPrevention
+              condition: EQUAL
+              value: 'inherited'
+    - name: "gcp-storage-bucket-policy-only-access"
+      description: "this rule is to verify if the bucket is policy only access"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: bucket
+      conditions:
+        - property: metadata.iamConfiguration.bucketPolicyOnly.enabled
+          condition: EQUAL
+          value: true
+    - name: "gcp-storage-bucket-level-access"
+      description: "this rule is to verify if the bucket is policy only"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: bucket
+      conditions:
+        - property: metadata.iamConfiguration.uniformBucketLevelAccess.enabled
+          condition: EQUAL
+          value: true

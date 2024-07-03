@@ -109,7 +109,7 @@
           value:
             - property: PublicIpAddress
               condition: EQUAL
-              value: ''
+              value: null
    # storage rule
     - name: "aws-bucket-public-access-block"
       description: "this rule is to verify if the public access block is enabled on the bucket"
@@ -130,5 +130,47 @@
               condition: EQUAL
               value: true
             - property: PublicAccessBlockConfiguration.RestrictPublicBuckets
+              condition: EQUAL
+              value: true
+    - name: "aws-bucket-enryption-enable"
+      description: "this rule is to verify if the bucket is encrypted"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: S3Client.BucketEncryption
+      conditions:
+        - property: ServerSideEncryptionConfiguration.Rules
+          condition: COUNT_SUP_OR_EQUAL
+          value: 1
+    - name: "aws-bucket-encryption-using-kms"
+      description: "this rule is to verify if the bucket is encrypted using KMS"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: S3Client.BucketEncryption
+      conditions:
+        - property: ServerSideEncryptionConfiguration.Rules
+          condition: ALL
+          value:
+            - property: ApplyServerSideEncryptionByDefault
+              condition: OR
+              value:
+                - property: SSEAlgorithm
+                  condition: EQUAL
+                  value: aws:kms:dsse
+                - property: SSEAlgorithm
+                  condition: EQUAL
+                  value: aws:kms
+    - name: "aws-bucket-key-enabled-to-reduce-encryption-cost"
+      description: "this rule is to verify if the bucket key is enabled to reduce encryption cost"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: S3Client.BucketEncryption
+      conditions:
+        - property: ServerSideEncryptionConfiguration.Rules
+          condition: ALL
+          value:
+            - property: ApplyServerSideEncryptionByDefault.BucketKeyEnabled
               condition: EQUAL
               value: true
