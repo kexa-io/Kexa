@@ -7,35 +7,35 @@
         - log
         #- teams
       to:
-        - https://innovtecheu.webhook.office.com/webhookb2/d1e6f097-8ece-4b79-9b18-a4d1e2f005e1@e17d1063-88c2-4368-9d08-203b84a1bb40/IncomingWebhook/fcbf3d9643a94167a04f0ca58c2dc7a0/9bb0a529-c19a-478f-afd3-04a338037922
+        #- hook
     error:
       enabled: false
       type: 
         - log
         #- teams
       to: 
-        - https://innovtecheu.webhook.office.com/webhookb2/d1e6f097-8ece-4b79-9b18-a4d1e2f005e1@e17d1063-88c2-4368-9d08-203b84a1bb40/IncomingWebhook/fcbf3d9643a94167a04f0ca58c2dc7a0/9bb0a529-c19a-478f-afd3-04a338037922
+        #- hook
     warning:
       enabled: false
       type: 
         - log
         #- teams
       to:
-        - https://innovtecheu.webhook.office.com/webhookb2/d1e6f097-8ece-4b79-9b18-a4d1e2f005e1@e17d1063-88c2-4368-9d08-203b84a1bb40/IncomingWebhook/fcbf3d9643a94167a04f0ca58c2dc7a0/9bb0a529-c19a-478f-afd3-04a338037922
+        #- hook
     info:
       enabled: false
       type: 
         - log
         #- teams
       to: 
-        - https://innovtecheu.webhook.office.com/webhookb2/d1e6f097-8ece-4b79-9b18-a4d1e2f005e1@e17d1063-88c2-4368-9d08-203b84a1bb40/IncomingWebhook/fcbf3d9643a94167a04f0ca58c2dc7a0/9bb0a529-c19a-478f-afd3-04a338037922
+        #- hook
     global:
       enabled: true
       type: 
         - log
         #- teams
       to: 
-        #- https://innovtecheu.webhook.office.com/webhookb2/d1e6f097-8ece-4b79-9b18-a4d1e2f005e1@e17d1063-88c2-4368-9d08-203b84a1bb40/IncomingWebhook/fcbf3d9643a94167a04f0ca58c2dc7a0/9bb0a529-c19a-478f-afd3-04a338037922
+        #- hook
       conditions:
         - level: 0
           min: 1
