@@ -2068,6 +2068,13 @@ Kexa/rules/gcpSetRules.yaml was changed
 documentation/Documentation-Kexa.md was changed
 
 
+## 1.14.0-devadrienrules.106.6f7a9e6
+
+### Files added: 0
+
+### Files changed: 0
+
+
 ## 1.14.0-SNAPSHOT.105.579d157
 
 ### Files added: 2
@@ -2160,5 +2167,26 @@ VERSION was changed
 capacity.json was changed
 
 package.json was changed
+
+
+## 1.14.0-SNAPSHOT.116.bc78404
+
+### Files added: 0
+
+### Files changed: 7
+
+CHANGELOG.md was changed
+
+Kexa/services/addOn/display/awsDisplay.service.ts was changed
+
+Kexa/services/addOn/display/gcpDisplay.service.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+VERSION was changed
+
+package.json was changed
+
+Kexa/rules/VaultsAnalysis.yaml was changed
 
 

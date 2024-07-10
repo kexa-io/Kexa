@@ -564,7 +564,7 @@ async function listNamespaces(projectId: any, regionsList: Array<string>): Promi
 export async function listSecrets(projectId: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("secret")) return null;
     const {SecretManagerServiceClient,} = require('@google-cloud/secret-manager').v1;
-    const parent = 'projects/globalInnovtech';
+    const parent = `projects/${projectId}`;
     let jsonData = [];
 
     try {
@@ -572,7 +572,7 @@ export async function listSecrets(projectId: any): Promise<Array<any>|null> {
         const request = { parent };
         const iterable = await secretmanagerClient.listSecretsAsync(request);
         for await (const response of iterable) {
-            jsonData = JSON.parse(jsonStringify(response));
+            jsonData.push(JSON.parse(jsonStringify(response)));
         }
     } catch (e) {
         logger.debug(e);

@@ -16,15 +16,11 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
         case "resourceGroups":
             return 'GroupArn :' + objectContent?.GroupArn;
         case rule?.objectName:
-            if (rule?.objectName.startsWith("S3Client.")) {
+            if (rule.objectName.startsWith("S3Client.")) {
                 return ' Object name : ' + objectContent.Name;
-            }
-            break;
-        case rule?.objectName:
-            if (rule?.objectName.startsWith("IAMClient.AccessKey")) {
+            } else if (rule?.objectName.includes("IAMClient.AccessKey")) {
                 return ' Key ID : ' + objectContent.AccessKeyId;
             }
-            break;
         default:
              return ' Object Id(s) : ' + awsFindIdToDisplay(objectContent);
     }
