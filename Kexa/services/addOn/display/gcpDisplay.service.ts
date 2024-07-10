@@ -27,6 +27,7 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
     const project = getGCPProjectFromUrl(objectContent?.zone);
     let toRet : string;
     let link : string;
+
     if (isSms)
         link = `Resource : ` + objectContent?.name +  ` : https://console.cloud.google.com/`;
     else
@@ -37,6 +38,12 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
             break;
         case "compute":
             toRet = link + `compute/instancesDetail/zones/` + zone + `/instances/` + objectContent?.name + `?authuser=1&project=` + project + (isSms ? ' ' : '">') + ' ' + objectContent?.name + (isSms ? `.` : `</a>`)
+            break;
+        case "secret":
+            let parts = objectContent?.name.split('/');
+            let secretName = parts[parts.length - 1];
+            let projId = parts[1];
+            toRet = link + `security/secret-manager/secret/` + secretName + `/versions?authuser=2&project=` + projId + (isSms ? ' ' : '">') + ' ' + objectContent?.name + (isSms ? `.` : `</a>`)
             break;
         case "tasks_queue":
             toRet = link + `"> Id : ` +  objectContent?.id + (isSms ? `.` : `</a>`)
