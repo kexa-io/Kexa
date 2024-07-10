@@ -1,45 +1,42 @@
 - version: 1.0.0
-  date: 07-18-2023
+  date: 07-10-2024
   alert:
     fatal:
-      enabled: true
+      enabled: false
       type: 
         - log
-        #- email
+        #- teams
       to:
-        - myEmail@gmail.com
+        #- https://innovtecheu.webhook.office.com/webhookb2/d1e6f097-8ece-4b79-9b18-a4d1e2f005e1@e17d1063-88c2-4368-9d08-203b84a1bb40/IncomingWebhook/c7165d0b85d64485a7cfccee58ef9ecd/9bb0a529-c19a-478f-afd3-04a338037922
     error:
-      enabled: true
+      enabled: false
       type: 
         - log
         #- email
-        #- sms
+        #- teams
       to: 
-        - myEmail@gmail.com
+        #- https://innovtecheu.webhook.office.com/webhookb2/d1e6f097-8ece-4b79-9b18-a4d1e2f005e1@e17d1063-88c2-4368-9d08-203b84a1bb40/IncomingWebhook/c7165d0b85d64485a7cfccee58ef9ecd/9bb0a529-c19a-478f-afd3-04a338037922
     warning:
-      enabled: true
+      enabled: false
       type: 
         - log
-        #- email
+        #- teams
       to:
-        - myEmail@gmail.com
+        #- https://innovtecheu.webhook.office.com/webhookb2/d1e6f097-8ece-4b79-9b18-a4d1e2f005e1@e17d1063-88c2-4368-9d08-203b84a1bb40/IncomingWebhook/c7165d0b85d64485a7cfccee58ef9ecd/9bb0a529-c19a-478f-afd3-04a338037922
     info:
-      enabled: true
+      enabled: false
       type: 
         - log
-        #- email
+        #- teams
       to: 
-        - myEmail@gmail.com
+        #- https://innovtecheu.webhook.office.com/webhookb2/d1e6f097-8ece-4b79-9b18-a4d1e2f005e1@e17d1063-88c2-4368-9d08-203b84a1bb40/IncomingWebhook/c7165d0b85d64485a7cfccee58ef9ecd/9bb0a529-c19a-478f-afd3-04a338037922
     global:
       enabled: true
       type: 
         - log
-        #- webhook
-        #- sms
-        #- email
+        - teams
       to: 
-        #- http://127.0.0.1:5000/test
-        - myEmail@gmail.com
+        - https://innovtecheu.webhook.office.com/webhookb2/d1e6f097-8ece-4b79-9b18-a4d1e2f005e1@e17d1063-88c2-4368-9d08-203b84a1bb40/IncomingWebhook/c7165d0b85d64485a7cfccee58ef9ecd/9bb0a529-c19a-478f-afd3-04a338037922
       conditions:
         - level: 0
           min: 1
@@ -103,7 +100,7 @@
     # Azure
     - name: "azure-secrets-ensure-expiration"
       description: "this rule is to ensure every secrets has an expiration date"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: azure
       objectName: KexaAzure.secrets
@@ -139,7 +136,7 @@
     # AWS
     - name: "aws-acceskey-rotate-time-limit"
       description: "this rule is to check if an access key as exceeded the rotate time limit"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: IAMClient.AccessKeys
@@ -151,8 +148,8 @@
     # AWS
     - name: "aws-iam-accesskey-last-used"
       description: "this rule is to check for acceskeys unused for 1 month"
-      applied: false
-      level: 0
+      applied: true
+      level: 1
       cloudProvider: aws
       objectName: IAMClient.AccessKeyLastUsed
       conditions:
@@ -164,13 +161,44 @@
     #       GCP        #
     ####################
     # GCP
-    - name: "gcp-ensure-iam-rotation"
-      description: "this rule is to ensure IAM rotation is enabled"
-      applied: true
+    - name: "gcp-ensure-secrets-rotation"
+      description: "this rule is to ensure secrets rotation is enabled"
+      applied: false
       level: 1
       cloudProvider: gcp
       objectName: secret
       conditions:
         - property: rotation
-          condition: EQUAL
-          value: true
+          condition: DIFFERENT
+          value: null
+    - name: "gcp-ensure-secrets-expiration"
+      description: "this rule is to ensure secrets expiration is enabled"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: secret
+      conditions:
+        - property: expiration
+          condition: REGEX
+          value: '.+'
+    - name: "gcp-ensure-secrets-kms-encrypted"
+      description: "this rule is to ensure secrets expiration is enabled"
+      applied: false
+      level: 1
+      cloudProvider: gcp
+      objectName: secret
+      conditions:
+        - property: customerManagedEncryption
+          condition: DIFFERENT
+          value: null
+    - name: "gcp-ensure-secret-created-less-than-1-month"
+      description: "this rule is to ensure secrets are created less than 1 month"
+      applied: false
+      level: 1
+      cloudProvider: gcp
+      objectName: secret
+      conditions:
+        - property: createTime
+          condition: DATE_INF
+          value: 0 0 0 0 0 1 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"

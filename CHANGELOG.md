@@ -2068,6 +2068,13 @@ Kexa/rules/gcpSetRules.yaml was changed
 documentation/Documentation-Kexa.md was changed
 
 
+## 1.14.0-devadrienrules.106.6f7a9e6
+
+### Files added: 0
+
+### Files changed: 0
+
+
 ## 1.14.0-SNAPSHOT.105.579d157
 
 ### Files added: 2
