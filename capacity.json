@@ -4858,7 +4858,7 @@
             {
                 "name": "aws-rg-tagsvalue-check-for-expiration-date",
                 "description": "this rule is to check if tags contain an expiration date (separate with \"-\")",
-                "applied": true,
+                "applied": false,
                 "level": 1,
                 "cloudProvider": "aws",
                 "objectName": "KexaAwsCustoms.tagsValueListing",
@@ -4873,7 +4873,7 @@
             {
                 "name": "aws-resources-tags-key-value-check",
                 "description": "this rule is to check if tags and their value match your tagging policy",
-                "applied": true,
+                "applied": false,
                 "level": 1,
                 "cloudProvider": "aws",
                 "objectName": "KexaAwsCustoms.resourcesTags",
@@ -4939,7 +4939,7 @@
             {
                 "name": "aws-user-tags-check",
                 "description": "this rule is to check if tags contain an expiration date (separate with \"-\")",
-                "applied": true,
+                "applied": false,
                 "level": 1,
                 "cloudProvider": "aws",
                 "objectName": "IAMClient.UserTags",
@@ -4965,7 +4965,7 @@
             {
                 "name": "aws-instance-profile-tags-check",
                 "description": "this rule is to check if tags contain an expiration date (separate with \"-\")",
-                "applied": true,
+                "applied": false,
                 "level": 1,
                 "cloudProvider": "aws",
                 "objectName": "IAMClient.InstanceProfileTags",
@@ -5104,6 +5104,74 @@
                             },
                             {
                                 "property": "PublicAccessBlockConfiguration.RestrictPublicBuckets",
+                                "condition": "EQUAL",
+                                "value": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "aws-bucket-enryption-enable",
+                "description": "this rule is to verify if the bucket is encrypted",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "aws",
+                "objectName": "S3Client.BucketEncryption",
+                "conditions": [
+                    {
+                        "property": "ServerSideEncryptionConfiguration.Rules",
+                        "condition": "COUNT_SUP_OR_EQUAL",
+                        "value": 1
+                    }
+                ]
+            },
+            {
+                "name": "aws-bucket-encryption-using-kms",
+                "description": "this rule is to verify if the bucket is encrypted using KMS",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "aws",
+                "objectName": "S3Client.BucketEncryption",
+                "conditions": [
+                    {
+                        "property": "ServerSideEncryptionConfiguration.Rules",
+                        "condition": "ALL",
+                        "value": [
+                            {
+                                "property": "ApplyServerSideEncryptionByDefault",
+                                "condition": "OR",
+                                "value": [
+                                    {
+                                        "property": "SSEAlgorithm",
+                                        "condition": "EQUAL",
+                                        "value": "aws:kms:dsse"
+                                    },
+                                    {
+                                        "property": "SSEAlgorithm",
+                                        "condition": "EQUAL",
+                                        "value": "aws:kms"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "aws-bucket-key-enabled-to-reduce-encryption-cost",
+                "description": "this rule is to verify if the bucket key is enabled to reduce encryption cost",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "aws",
+                "objectName": "S3Client.BucketEncryption",
+                "conditions": [
+                    {
+                        "property": "ServerSideEncryptionConfiguration.Rules",
+                        "condition": "ALL",
+                        "value": [
+                            {
+                                "property": "ApplyServerSideEncryptionByDefault.BucketKeyEnabled",
                                 "condition": "EQUAL",
                                 "value": true
                             }
@@ -5590,8 +5658,8 @@
             {
                 "name": "ec2-volume-check-create-less-2-month-expiration",
                 "description": "this rule is to check for a ec2 volume create date inferior than 2 months",
-                "applied": true,
-                "level": 2,
+                "applied": false,
+                "level": 1,
                 "cloudProvider": "aws",
                 "objectName": "EC2Client.Volumes",
                 "conditions": [
@@ -5600,104 +5668,6 @@
                         "condition": "DATE_INF",
                         "value": "0 0 0 0 0 2 0",
                         "date": "YYYY-MM-DDThh:mm:ss.SSSZ"
-                    }
-                ]
-            },
-            {
-                "name": "aws-tagsvalue-check-for-expiration-date",
-                "description": "this rule is to check if tags contain an expiration date (separate with \"-\")",
-                "applied": true,
-                "level": 1,
-                "cloudProvider": "aws",
-                "objectName": "KexaAwsCustoms.tagsValueListing",
-                "conditions": [
-                    {
-                        "property": "name",
-                        "condition": "REGEX",
-                        "value": "\\b\\d{1,4}[-]\\d{1,4}[-]\\d{1,4}\\b"
-                    }
-                ]
-            },
-            {
-                "name": "ec2-security-groups-source-defined",
-                "description": "this rule is to check if a ec2 SG has a defined source (not 0.0.0.0)",
-                "applied": true,
-                "level": 1,
-                "cloudProvider": "aws",
-                "objectName": "EC2Client.SecurityGroups",
-                "conditions": [
-                    {
-                        "property": "IpPermissions",
-                        "condition": "ALL",
-                        "value": [
-                            {
-                                "property": "IpRanges",
-                                "condition": "ALL",
-                                "value": [
-                                    {
-                                        "property": "CidrIp",
-                                        "condition": "DIFFERENT",
-                                        "value": "0.0.0.0/0"
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "aws-ec2-public-ip-address",
-                "description": "this rule is to check if an ec2 ip address is public",
-                "applied": true,
-                "level": 2,
-                "cloudProvider": "aws",
-                "objectName": "EC2Client.Instances",
-                "conditions": [
-                    {
-                        "property": "Instances",
-                        "condition": "ALL",
-                        "value": [
-                            {
-                                "property": "PublicIpAddress",
-                                "condition": "EQUAL",
-                                "value": null
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "aws-bucket-public-access-block",
-                "description": "this rule is to verify if the public access block is enabled on the bucket",
-                "applied": true,
-                "level": 1,
-                "cloudProvider": "aws",
-                "objectName": "S3Client.PublicAccessBlock",
-                "conditions": [
-                    {
-                        "operator": "AND",
-                        "criteria": [
-                            {
-                                "property": "PublicAccessBlockConfiguration.BlockPublicAcls",
-                                "condition": "EQUAL",
-                                "value": true
-                            },
-                            {
-                                "property": "PublicAccessBlockConfiguration.IgnorePublicAcls",
-                                "condition": "EQUAL",
-                                "value": true
-                            },
-                            {
-                                "property": "PublicAccessBlockConfiguration.BlockPublicPolicy",
-                                "condition": "EQUAL",
-                                "value": true
-                            },
-                            {
-                                "property": "PublicAccessBlockConfiguration.RestrictPublicBuckets",
-                                "condition": "EQUAL",
-                                "value": true
-                            }
-                        ]
                     }
                 ]
             }
@@ -7772,23 +7742,1105 @@
                 ]
             },
             {
-                "name": "check-vm-reservation",
-                "description": "check if VM have a reservation",
+                "name": "azure-storage-account-encryption-using-kms",
+                "description": "this rule is to check on azure storage account for encryption using kms",
                 "applied": true,
-                "level": 0,
+                "level": 1,
                 "cloudProvider": "azure",
-                "objectName": "ComputeManagementClient.virtualMachines",
+                "objectName": "StorageManagementClient.storageAccounts",
                 "conditions": [
                     {
-                        "property": "priority",
-                        "condition": "REGEX",
-                        "value": "(?i)reservation"
+                        "operator": "AND",
+                        "criteria": [
+                            {
+                                "property": "encryption.services.file.keySource",
+                                "condition": "EQUAL",
+                                "value": "Microsoft.Keyvault"
+                            },
+                            {
+                                "property": "encryption.services.blob.keySource",
+                                "condition": "EQUAL",
+                                "value": "Microsoft.Keyvault"
+                            }
+                        ]
                     }
                 ]
             },
             {
-                "name": "azure-is-disk-orphan",
-                "description": "this rules is to check if disk is orphan",
+                "name": "azure-storage-acc-public-network-access",
+                "description": "this rule to ensure that public network access is disabled for storage accounts",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "StorageManagementClient.storageAccounts",
+                "conditions": [
+                    {
+                        "property": "publicNetworkAccess",
+                        "condition": "DIFFERENT",
+                        "value": "Enabled"
+                    }
+                ]
+            },
+            {
+                "name": "azure-storage-secure-transfer",
+                "description": "this rule to ensure that secure transfer is enabled for storage accounts",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "StorageManagementClient.storageAccounts",
+                "conditions": [
+                    {
+                        "property": "enableHttpsTrafficOnly",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "azure-storage-require-infra-encryption",
+                "description": "this rule to ensure storage accounts require infrastructure encryption",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "StorageManagementClient.storageAccounts",
+                "conditions": [
+                    {
+                        "property": "encryption.requireInfrastructureEncryption",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "azure-storage-network-default-deny-traffic",
+                "description": "this rule to ensure storage accounts networks default deny all traffic",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "StorageManagementClient.storageAccounts",
+                "conditions": [
+                    {
+                        "property": "networkRuleSet.defaultAction",
+                        "condition": "EQUAL",
+                        "value": "Deny"
+                    }
+                ]
+            },
+            {
+                "name": "azure-storage-use-private-endpoint",
+                "description": "this rule to ensure storage accounts use private endpoints connections",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "StorageManagementClient.storageAccounts",
+                "conditions": [
+                    {
+                        "property": "privateEndpointConnections",
+                        "condition": "COUNT_SUP_OR_EQUAL",
+                        "value": 1
+                    }
+                ]
+            },
+            {
+                "name": "azure-storage-minimum-tls-version",
+                "description": "this rule to ensure storage accounts set minimum TLS version to 1.2",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "StorageManagementClient.storageAccounts",
+                "conditions": [
+                    {
+                        "property": "minimumTlsVersion",
+                        "condition": "EQUAL",
+                        "value": "TLS1_2"
+                    }
+                ]
+            },
+            {
+                "name": "azure-storage-cross-tenant-replication-disabled",
+                "description": "this rule to ensure cross storage replication is disabled for storage accounts",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "StorageManagementClient.storageAccounts",
+                "conditions": [
+                    {
+                        "property": "allowCrossTenantReplication",
+                        "condition": "DIFFERENT",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "azure-storage-blob-public-access",
+                "description": "this rule to ensure public bloc access is disabled for storage accounts",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "StorageManagementClient.storageAccounts",
+                "conditions": [
+                    {
+                        "property": "allowBlobPublicAccess",
+                        "condition": "DIFFERENT",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "azure-storage-encrypte-with-cmk",
+                "description": "this rule to ensure storage accounts use CMK encryption for critical data",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "StorageManagementClient.storageAccounts",
+                "conditions": [
+                    {
+                        "property": "encryption.keySource",
+                        "condition": "EQUAL",
+                        "value": "Microsoft.Keyvault"
+                    }
+                ]
+            },
+            {
+                "name": "azure-storage-blob-soft-delete",
+                "description": "this rule to ensure storage containers delete retention",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.blobServices",
+                "conditions": [
+                    {
+                        "operator": "AND",
+                        "criteria": [
+                            {
+                                "property": "deleteRetentionPolicy.enabled",
+                                "condition": "EQUAL",
+                                "value": true
+                            },
+                            {
+                                "property": "deleteRetentionPolicy.days",
+                                "condition": "SUP_OR_EQUAL",
+                                "value": 1
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "azure-storage-container-soft-delete",
+                "description": "this rule to ensure storage ",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.blobServices",
+                "conditions": [
+                    {
+                        "operator": "AND",
+                        "criteria": [
+                            {
+                                "property": "containerDeleteRetentionPolicy.enabled",
+                                "condition": "EQUAL",
+                                "value": true
+                            },
+                            {
+                                "property": "deleteRetentionPolicy.days",
+                                "condition": "SUP_OR_EQUAL",
+                                "value": 1
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "azure-vault-no-public-network-access",
+                "description": "this rule is to ensure vault network public access is disabled",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.vaults",
+                "conditions": [
+                    {
+                        "property": "properties.publicNetworkAccess",
+                        "condition": "EQUAL",
+                        "value": "Disabled"
+                    }
+                ]
+            },
+            {
+                "name": "azure-ensure-rbac-enabled",
+                "description": "this rule is to ensure rbac is enabled for kayvaults",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.vaults",
+                "conditions": [
+                    {
+                        "property": "properties.enableRbacAuthorization",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "azure-ensure-use-private-endpoint",
+                "description": "this rule is to ensure private endpoints are used for Keyvault",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.vaults",
+                "conditions": [
+                    {
+                        "property": "properties.privateEndpointConnections",
+                        "condition": "ALL",
+                        "value": [
+                            {
+                                "property": "id",
+                                "condition": "DIFFERENT",
+                                "value": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "azure-ensure-keyvault-recoverable",
+                "description": "this rule is to ensure keyvaults are recoverable",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.vaults",
+                "conditions": [
+                    {
+                        "property": "properties.enablePurgeProtection",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "azure-secrets-ensure-expiration",
+                "description": "this rule is to ensure every secrets has an expiration date",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.secrets",
+                "conditions": [
+                    {
+                        "property": "properties.attributes.expires",
+                        "condition": "DIFFERENT",
+                        "value": null
+                    }
+                ]
+            },
+            {
+                "name": "azure-vault-keys-rotation",
+                "description": "this rule is to ensure every keys has a rotation defined",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.KeyvaultKeys",
+                "conditions": [
+                    {
+                        "property": "properties.rotationPolicy",
+                        "condition": "DIFFERENT",
+                        "value": null
+                    }
+                ]
+            },
+            {
+                "name": "azure-vault-keys-expiration-date",
+                "description": "this rule is to ensure every keys has a expiration date",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.KeyvaultKeys",
+                "conditions": [
+                    {
+                        "property": "properties.attributes.expires",
+                        "condition": "DIFFERENT",
+                        "value": null
+                    }
+                ]
+            },
+            {
+                "name": "azure-web-app-https-only",
+                "description": "this rule is to ensure web apps are HTTPS only",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "WebSiteManagementClient.webApps",
+                "conditions": [
+                    {
+                        "property": "httpsOnly",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "azure-web-app-minimum-tls-version",
+                "description": "this rule is to ensure web apps min TLS version is the latest",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "WebSiteManagementClient.webApps",
+                "conditions": [
+                    {
+                        "property": "siteConfig.minTlsVersion",
+                        "condition": "EQUAL",
+                        "value": "1.2"
+                    }
+                ]
+            },
+            {
+                "name": "azure-web-app-php-version",
+                "description": "this rule is to ensure web apps are using the latest stable PHP version",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "WebSiteManagementClient.webApps",
+                "conditions": [
+                    {
+                        "operator": "OR",
+                        "criteria": [
+                            {
+                                "property": "siteConfig.phpVersion",
+                                "condition": "EQUAL",
+                                "value": "8.3.8"
+                            },
+                            {
+                                "property": "siteConfig.phpVersion",
+                                "condition": "EQUAL",
+                                "value": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "azure-web-app-python-version",
+                "description": "this rule is to ensure web apps are using the latest stable Python version",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "WebSiteManagementClient.webApps",
+                "conditions": [
+                    {
+                        "operator": "OR",
+                        "criteria": [
+                            {
+                                "property": "siteConfig.pythonVersion",
+                                "condition": "EQUAL",
+                                "value": "3.13"
+                            },
+                            {
+                                "property": "siteConfig.pythonVersion",
+                                "condition": "EQUAL",
+                                "value": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "azure-web-app-java-version",
+                "description": "this rule is to ensure web apps are using the latest stable Java version",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "WebSiteManagementClient.webApps",
+                "conditions": [
+                    {
+                        "operator": "OR",
+                        "criteria": [
+                            {
+                                "property": "siteConfig.javaVersion",
+                                "condition": "EQUAL",
+                                "value": "22"
+                            },
+                            {
+                                "property": "siteConfig.javaVersion",
+                                "condition": "EQUAL",
+                                "value": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "azure-web-http-latest-enabled",
+                "description": "this rule is to ensure web apps are using the latest HTTP version (http20 enabled)",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "WebSiteManagementClient.webApps",
+                "conditions": [
+                    {
+                        "property": "siteConfig.http20Enabled",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "azure-web-keyvault-reference",
+                "description": "this rule is to ensure web apps are using keyvault",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "WebSiteManagementClient.webApps",
+                "conditions": [
+                    {
+                        "property": "keyVaultReferenceIdentity",
+                        "condition": "DIFFERENT",
+                        "value": null
+                    },
+                    {
+                        "property": "siteConfig.keyVaultReferenceIdentity",
+                        "condition": "DIFFERENT",
+                        "value": null
+                    }
+                ]
+            },
+            {
+                "name": "azure-web-certificate-expiration-date",
+                "description": "this rule is to ensure web apps certificates are not expired and have a expiration date",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "WebSiteManagementClient.certificates",
+                "conditions": [
+                    {
+                        "property": "expirationDate",
+                        "condition": "DIFFERENT",
+                        "value": null
+                    },
+                    {
+                        "property": "expirationDate",
+                        "condition": "DATE_INF",
+                        "date": "YYYY-MM-DDThh:mm:ss.SSSZ",
+                        "value": "0 0 0 0 0 0"
+                    }
+                ]
+            },
+            {
+                "name": "azure-ensure-app-insight-configured",
+                "description": "this rule is to ensure app insights is configured",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "ApplicationInsightsManagementClient.components",
+                "conditions": [
+                    {
+                        "property": ".",
+                        "condition": "COUNT_SUP_OR_EQUAL",
+                        "value": 1
+                    }
+                ]
+            },
+            {
+                "name": "azure-ensure-azure-monitor-resources-logging-enabled",
+                "description": "this rule is to ensure all resources that support azure monitoring are monitored by app insights",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.monitor",
+                "conditions": [
+                    {
+                        "property": "diagnosticSettings",
+                        "condition": "COUNT_SUP_OR_EQUAL",
+                        "value": 1
+                    }
+                ]
+            },
+            {
+                "name": "azure-network-rdp-access-resticted",
+                "description": "this rule is to ensure web apps are using keyvault",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "NetworkManagementClient.networkSecurityGroups",
+                "conditions": [
+                    {
+                        "property": "defaultSecurityRules",
+                        "condition": "ALL",
+                        "value": [
+                            {
+                                "property": ".",
+                                "operator": "NAND",
+                                "criteria": [
+                                    {
+                                        "property": "access",
+                                        "condition": "EQUAL",
+                                        "value": "Allow"
+                                    },
+                                    {
+                                        "property": "destinationPortRange",
+                                        "condition": "REGEX",
+                                        "value": "^(3389|.*)$"
+                                    },
+                                    {
+                                        "property": "direction",
+                                        "condition": "EQUAL",
+                                        "value": "Inbound"
+                                    },
+                                    {
+                                        "property": "protocol",
+                                        "condition": "REGEX",
+                                        "value": "^(TCP|.*)$"
+                                    },
+                                    {
+                                        "property": "sourceAddressPrefix",
+                                        "condition": "REGEX",
+                                        "value": "^(*|0.0.0.0|<nw>/0|/0|internet|any|AzureLoadBalancer)$"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "azure-sql-server-firewall-any-ip",
+                "description": "this rule is to ensure SQL servers firewall does not allow any IP",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.sqlServers",
+                "conditions": [
+                    {
+                        "operator": "OR",
+                        "criteria": [
+                            {
+                                "property": "publicNetworkAccess",
+                                "condition": "EQUAL",
+                                "value": "Disabled"
+                            },
+                            {
+                                "property": "firewallRules",
+                                "condition": "ALL",
+                                "value": [
+                                    {
+                                        "property": "startIpAddress",
+                                        "condition": "DIFFERENT",
+                                        "value": "0.0.0.0"
+                                    },
+                                    {
+                                        "property": "endIpAddress",
+                                        "operator": "AND",
+                                        "criteria": [
+                                            {
+                                                "property": ".",
+                                                "condition": "DIFFERENT",
+                                                "value": "0.0.0.0"
+                                            },
+                                            {
+                                                "property": ".",
+                                                "condition": "DIFFERENT",
+                                                "value": "255.255.255.255"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "azure-sql-servers-encryption-protector-customer-managed-key",
+                "description": "this rule is to ensure sql servers encryption protector is customer managed key",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.sqlServers",
+                "conditions": [
+                    {
+                        "property": "encryptionProtectors",
+                        "condition": "ALL",
+                        "value": [
+                            {
+                                "property": "kind",
+                                "condition": "EQUAL",
+                                "value": "azurekeyvault"
+                            },
+                            {
+                                "property": "serverKeyType",
+                                "condition": "DIFFERENT",
+                                "value": "AzureKeyVault"
+                            },
+                            {
+                                "property": "uri",
+                                "condition": "DIFFERENT",
+                                "value": null
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "azure-sql-servers-entra-id-administrator",
+                "description": "this rule is to ensure entra id authentication is configured for sql servers",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.sqlServers",
+                "conditions": [
+                    {
+                        "property": "administrators.administratorType",
+                        "condition": "EQUAL",
+                        "value": "ActiveDirectory"
+                    },
+                    {
+                        "property": "administrators.azureADOnlyAuthentication",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "azure-sql-servers-retention-more-than-90-days",
+                "description": "this rule is to ensure sql servers audit logs retention is unlimited (0) or more than 90 days",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.sqlServers",
+                "conditions": [
+                    {
+                        "property": "blobAuditingPolicies",
+                        "condition": "ALL",
+                        "value": [
+                            {
+                                "property": "retentionDays",
+                                "condition": "REGEX",
+                                "value": "^(0|[9][0-9]+)$"
+                            },
+                            {
+                                "property": "state",
+                                "condition": "EQUAL",
+                                "value": "Enabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "azure-sql-servers-auditing",
+                "description": "this rule is to ensure sql servers auditing is enabled",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.sqlServers",
+                "conditions": [
+                    {
+                        "property": "serverDevOpsAuditSettings",
+                        "condition": "ALL",
+                        "value": [
+                            {
+                                "property": "state",
+                                "condition": "EQUAL",
+                                "value": "Enabled"
+                            }
+                        ]
+                    },
+                    {
+                        "property": "blobAuditingPolicies",
+                        "condition": "ALL",
+                        "value": [
+                            {
+                                "property": "state",
+                                "condition": "EQUAL",
+                                "value": "Enabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "azure-sql-database-tde-enabled",
+                "description": "this rule is to ensure sql databases auditing is enabled",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.sqlDatabases",
+                "conditions": [
+                    {
+                        "property": "transparentDataEncryptions",
+                        "condition": "ALL",
+                        "value": [
+                            {
+                                "property": "state",
+                                "condition": "EQUAL",
+                                "value": "Enabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "azure-global-ensure-trusted-locations-defined",
+                "description": "this rule is to ensure trusted locations are defined for azure ad authentication",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.namedLocations",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "criteria": [
+                            {
+                                "property": "dataType",
+                                "condition": "EQUAL",
+                                "value": "#microsoft.graph.ipNamedLocation"
+                            },
+                            {
+                                "operator": "OR",
+                                "criteria": [
+                                    {
+                                        "property": "isTrusted",
+                                        "condition": "DIFFERENT",
+                                        "value": true
+                                    },
+                                    {
+                                        "property": "ipRanges",
+                                        "condition": "EQUAL",
+                                        "value": null
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "azure-global-security-default-enabled",
+                "description": "this rule is to ensure security defaults are enabled",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.policies",
+                "conditions": [
+                    {
+                        "property": "identitySecurityDefaultsEnforcementPolicy.isEnabled",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "azure-global-user-cannot-create-tenant",
+                "description": "this rule is to ensure user cannot create tenant",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.policies",
+                "conditions": [
+                    {
+                        "property": "authorizationPolicy.defaultUserRolePermissions.allowedToCreateTenants",
+                        "condition": "DIFFERENT",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "azure-global-ensure-mfa-for-all-users",
+                "description": "this rule is to ensure MFA is enabled for all users",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.policies",
+                "conditions": [
+                    {
+                        "property": "authenticationMethodsPolicy.registrationEnforcement.authenticationMethodsRegistrationCampaign.state",
+                        "condition": "EQUAL",
+                        "value": "enabled"
+                    },
+                    {
+                        "property": "authenticationMethodsPolicy.registrationEnforcement.authenticationMethodsRegistrationCampaign.includeTargets",
+                        "condition": "SOME",
+                        "value": [
+                            {
+                                "property": "id",
+                                "condition": "EQUAL",
+                                "value": "all_users"
+                            },
+                            {
+                                "property": "targetedAuthenticationMethod",
+                                "condition": "EQUAL",
+                                "value": "microsoftAuthenticator"
+                            },
+                            {
+                                "property": "targetType",
+                                "condition": "EQUAL",
+                                "value": "group"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "azure-global-ensure-mfa-for-all-adminstrative-groups",
+                "description": "this rule is to ensure MFA is enabled for adminstrative groups",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.policies",
+                "conditions": [
+                    {
+                        "property": "authenticationMethodsPolicy.registrationEnforcement.authenticationMethodsRegistrationCampaign.state",
+                        "condition": "EQUAL",
+                        "value": "enabled"
+                    },
+                    {
+                        "property": "authenticationMethodsPolicy.registrationEnforcement.authenticationMethodsRegistrationCampaign.includeTargets",
+                        "condition": "SOME",
+                        "value": [
+                            {
+                                "property": "id",
+                                "condition": "EQUAL",
+                                "value": "admins"
+                            },
+                            {
+                                "property": "targetedAuthenticationMethod",
+                                "condition": "EQUAL",
+                                "value": "microsoftAuthenticator"
+                            },
+                            {
+                                "property": "targetType",
+                                "condition": "EQUAL",
+                                "value": "group"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "azure-global-enforce-microsoft-authenticator-config",
+                "description": "this rule is to ensure MFA is enforced",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.policies",
+                "conditions": [
+                    {
+                        "property": "authenticationMethodsPolicy.authenticationMethodConfigurations",
+                        "condition": "SOME",
+                        "value": [
+                            {
+                                "operator": "AND",
+                                "criteria": [
+                                    {
+                                        "property": "id",
+                                        "condition": "EQUAL",
+                                        "value": "MicrosoftAuthenticator'"
+                                    },
+                                    {
+                                        "property": "keyRestrictions.isEnforced",
+                                        "condition": "EQUAL",
+                                        "value": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "azure-global-user-cannot-create-security-group",
+                "description": "this rule is to ensure user cannot create security group",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.policies",
+                "conditions": [
+                    {
+                        "property": "authorizationPolicy.defaultUserRolePermissions.allowedToCreateSecurityGroups",
+                        "condition": "DIFFERENT",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "azure-global-user-cannot-create-apps",
+                "description": "this rule is to ensure user cannot create apps",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.policies",
+                "conditions": [
+                    {
+                        "property": "authorizationPolicy.defaultUserRolePermissions.allowedToCreateApps",
+                        "condition": "DIFFERENT",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "azure-global-ensure-reviewers",
+                "description": "this rule is to ensure that reviewers are defined and enabled",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.policies",
+                "conditions": [
+                    {
+                        "property": "adminConsentRequestPolicy.isEnabled",
+                        "condition": "EQUAL",
+                        "value": true
+                    },
+                    {
+                        "property": "reviewers",
+                        "condition": "COUNT_SUP_OR_EQUAL",
+                        "value": 1
+                    }
+                ]
+            },
+            {
+                "name": "azure-global-guest-user-review",
+                "description": "this rule is to retrieve all guest users and review them",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.users",
+                "conditions": [
+                    {
+                        "property": "userType",
+                        "condition": "DIFFERENT",
+                        "value": "Guest"
+                    }
+                ]
+            },
+            {
+                "name": "azure-global-ensure-az-policy-mfa-admins",
+                "description": "this rule is to ensure MFA is enabled for adminstrative groups",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.conditionnalAccess",
+                "conditions": [
+                    {
+                        "property": "policies",
+                        "condition": "SOME",
+                        "value": [
+                            {
+                                "property": "templateId",
+                                "condition": "EQUAL",
+                                "value": "c7503427-338e-4c5e-902d-abe252abfb43"
+                            },
+                            {
+                                "property": "state",
+                                "condition": "EQUAL",
+                                "value": "enabledForReportingButNotEnforced"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "azure-global-ensure-az-policy-mfa-all-users",
+                "description": "this rule is to ensure MFA is enabled for all users",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.conditionnalAccess",
+                "conditions": [
+                    {
+                        "property": "policies",
+                        "condition": "SOME",
+                        "value": [
+                            {
+                                "property": "templateId",
+                                "condition": "EQUAL",
+                                "value": "a3d0a415-b068-4326-9251-f9cdf9feeb64"
+                            },
+                            {
+                                "property": "state",
+                                "condition": "EQUAL",
+                                "value": "enabled"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "azure-global-ensure-az-policy-mfa-azure-service-mgmt",
+                "description": "this rule is to ensure MFA is enabled for azure service management",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.conditionnalAccess",
+                "conditions": [
+                    {
+                        "property": "templateId",
+                        "condition": "EQUAL",
+                        "value": "d8c51a9a-e6b1-454d-86af-554e7872e2c1"
+                    },
+                    {
+                        "property": "state",
+                        "condition": "EQUAL",
+                        "value": "enabled"
+                    }
+                ]
+            },
+            {
+                "name": "azure-global-groups",
+                "description": "this rule is to ensure user cannot create apps",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.groups",
+                "conditions": [
+                    {
+                        "operator": "AND",
+                        "criteria": [
+                            {
+                                "property": "displayName",
+                                "condition": "EQUAL",
+                                "value": "Password Rule Settings"
+                            },
+                            {
+                                "property": "values",
+                                "condition": "ALL",
+                                "value": [
+                                    {
+                                        "property": "name",
+                                        "condition": "EQUAL",
+                                        "value": "EnableBannedPasswordCheck"
+                                    },
+                                    {
+                                        "property": "type",
+                                        "condition": "EQUAL",
+                                        "value": "Boolean"
+                                    },
+                                    {
+                                        "property": "defaultValue",
+                                        "condition": "EQUAL",
+                                        "value": "true"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "azure-global-sp",
+                "description": "this rule is to ensure user cannot create apps",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "azure",
+                "objectName": "KexaAzure.servicePrincipals",
+                "conditions": [
+                    {
+                        "property": "appRoles",
+                        "condition": "COUNT_SUP_OR_EQUAL",
+                        "value": 1
+                    }
+                ]
+            },
+            {
+                "name": "azure-disk-unattached",
+                "description": "this rules is to check if disk is orphan (unattached)",
                 "applied": true,
                 "level": 1,
                 "cloudProvider": "azure",
@@ -7802,204 +8854,18 @@
                 ]
             },
             {
-                "name": "aks-has-scaleSet",
-                "description": "check if aks have a scaleSet",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "azure",
-                "objectName": "ContainerServiceClient.managedClusters",
-                "conditions": [
-                    {
-                        "property": "agentPoolProfiles",
-                        "condition": "ALL",
-                        "value": [
-                            {
-                                "property": "scaleSetEvictionPolicy",
-                                "condition": "EQUAL",
-                                "value": "Delete"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "azure-orphan-nsg",
-                "description": "this rules is to check if nsg is orphan",
-                "applied": true,
+                "name": "azure-disk-check-create-less-2-month-expiration",
+                "description": "this rules is to check if disk has been created less than 2 months ago",
+                "applied": false,
                 "level": 1,
-                "cloudProvider": "azure",
-                "objectName": "NetworkManagementClient.networkSecurityGroups",
-                "conditions": [
-                    {
-                        "operator": "OR",
-                        "criteria": [
-                            {
-                                "property": "networkInterfaces",
-                                "condition": "COUNT_SUP_OR_EQUAL",
-                                "value": 1
-                            },
-                            {
-                                "property": "subnets",
-                                "condition": "COUNT_SUP_OR_EQUAL",
-                                "value": 1
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Orphan virtualNetwork",
-                "description": "this rules is to check if virtualNetwork is orphan",
-                "applied": true,
-                "level": 1,
-                "cloudProvider": "azure",
-                "objectName": "NetworkManagementClient.virtualNetworks",
-                "conditions": [
-                    {
-                        "property": "subnets",
-                        "condition": "COUNT_SUP_OR_EQUAL",
-                        "value": 1
-                    }
-                ]
-            },
-            {
-                "name": "azure-virtual-network-minimum-subnets",
-                "description": "check if NSG have a minimum of subnets",
-                "applied": true,
-                "level": 1,
-                "cloudProvider": "azure",
-                "objectName": "NetworkManagementClient.virtualNetworks",
-                "conditions": [
-                    {
-                        "property": "subnets",
-                        "condition": "COUNT_SUP",
-                        "value": 0
-                    }
-                ]
-            },
-            {
-                "name": "aks-is-scaleset-down",
-                "description": "check if aks have a scaleSet down",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "azure",
-                "objectName": "ContainerServiceClient.managedClusters",
-                "conditions": [
-                    {
-                        "property": "agentPoolProfiles",
-                        "condition": "ALL",
-                        "value": [
-                            {
-                                "property": "scaleSetEvictionPolicy",
-                                "condition": "EQUAL",
-                                "value": "Delete"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "azure-check-aks-cluster-conformity",
-                "description": "this rules is to check if aks cluster are conform to the norms",
-                "applied": true,
-                "level": 2,
-                "cloudProvider": "azure",
-                "objectName": "ContainerServiceClient.managedClusters",
-                "conditions": [
-                    {
-                        "property": "tags.environment",
-                        "condition": "REGEX",
-                        "value": "^(DEV|NPR|PROD)$"
-                    },
-                    {
-                        "property": "tags.author",
-                        "condition": "DIFFERENT",
-                        "value": null
-                    },
-                    {
-                        "property": "tags.billing",
-                        "condition": "REGEX",
-                        "value": "^(VADOR|YODA|LUKE)$"
-                    },
-                    {
-                        "property": "sku.tier",
-                        "condition": "EQUAL",
-                        "value": "Free"
-                    },
-                    {
-                        "property": "publicNetworkAccess",
-                        "condition": "EQUAL",
-                        "value": "Enable"
-                    },
-                    {
-                        "property": "autoScalerProfile.scaleDownDelayAfterAdd",
-                        "condition": "DIFFERENT",
-                        "value": null
-                    }
-                ]
-            },
-            {
-                "name": "azure-disk-not-public-or-encrypted",
-                "description": "this rules is to check if disk is either not public or encrypted by default",
-                "applied": true,
-                "level": 2,
                 "cloudProvider": "azure",
                 "objectName": "ComputeManagementClient.disks",
                 "conditions": [
                     {
-                        "operator": "OR",
-                        "criteria": [
-                            {
-                                "property": "networkAccessPolicy",
-                                "condition": "DIFFERENT",
-                                "value": "AllowAll"
-                            },
-                            {
-                                "property": "encryption.type",
-                                "condition": "EQUAL",
-                                "value": "EncryptionAtRestWithPlatformKey"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "azure-nsg-valid-subnet",
-                "description": "check if NSG have a valid subnet",
-                "applied": true,
-                "level": 1,
-                "cloudProvider": "azure",
-                "objectName": "ContainerServiceClient.managedClusters",
-                "conditions": [
-                    {
-                        "property": "agentPoolProfiles",
-                        "condition": "COUNT",
-                        "value": 2
-                    }
-                ]
-            },
-            {
-                "name": "not-under-use-VM",
-                "description": "this rule is if a VM is under-used (50% > CPU or 50%>RAM over 2 weeks) ",
-                "applied": true,
-                "level": 1,
-                "cloudProvider": "azure",
-                "objectName": "KexaAzure.vm",
-                "conditions": [
-                    {
-                        "operator": "OR",
-                        "criteria": [
-                            {
-                                "property": "instanceView.percentageCPU.mean",
-                                "condition": "SUP",
-                                "value": 50
-                            },
-                            {
-                                "property": "instanceView.availableMemoryBytes.mean",
-                                "condition": "SUP",
-                                "value": 50
-                            }
-                        ]
+                        "property": "timeCreated",
+                        "condition": "DATE_INF",
+                        "value": "0 0 0 0 0 2 0",
+                        "date": "YYYY-MM-DDThh:mm:ss.SSSZ"
                     }
                 ]
             }
@@ -8052,7 +8918,7 @@
             {
                 "name": "gcp-tags-check",
                 "description": "this rule is to check on gcp tags for a specific pattern",
-                "applied": true,
+                "applied": false,
                 "level": 1,
                 "cloudProvider": "gcp",
                 "objectName": "tags_keys",
@@ -8081,10 +8947,100 @@
                 ]
             },
             {
+                "name": "gcp-storage-bucket-public-access-block-enforced",
+                "description": "this rule is to verify if the public access block is enabled on the bucket",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "gcp",
+                "objectName": "bucket",
+                "conditions": [
+                    {
+                        "operator": "AND",
+                        "criteria": [
+                            {
+                                "property": "metadata.iamConfiguration.publicAccessPrevention",
+                                "condition": "EQUAL",
+                                "value": "enforced"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "gcp-storage-bucket-public-access-block-enforced-or-inherited",
+                "description": "this rule is to verify if the public access block is enabled on the bucket",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "gcp",
+                "objectName": "bucket",
+                "conditions": [
+                    {
+                        "operator": "OR",
+                        "criteria": [
+                            {
+                                "property": "metadata.iamConfiguration.publicAccessPrevention",
+                                "condition": "EQUAL",
+                                "value": "enforced"
+                            },
+                            {
+                                "property": "metadata.iamConfiguration.publicAccessPrevention",
+                                "condition": "EQUAL",
+                                "value": "inherited"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "gcp-storage-bucket-policy-only-access",
+                "description": "this rule is to verify if the bucket is policy only access",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "gcp",
+                "objectName": "bucket",
+                "conditions": [
+                    {
+                        "property": "metadata.iamConfiguration.bucketPolicyOnly.enabled",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "gcp-storage-bucket-level-access",
+                "description": "this rule is to verify if the bucket is policy only",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "gcp",
+                "objectName": "bucket",
+                "conditions": [
+                    {
+                        "property": "metadata.iamConfiguration.uniformBucketLevelAccess.enabled",
+                        "condition": "EQUAL",
+                        "value": true
+                    }
+                ]
+            },
+            {
+                "name": "gcp-disk-unattached",
+                "description": "this rule is to check if a disk has no users (attached to no instance)",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "gcp",
+                "objectName": "disk",
+                "conditions": [
+                    {
+                        "property": "users",
+                        "condition": "COUNT_SUP",
+                        "value": 0
+                    }
+                ]
+            },
+            {
                 "name": "gcp-disk-check-create-date-2-month-expiration",
                 "description": "this rule is to check for a persistent disk create date is inferior than 2 months ago",
-                "applied": true,
-                "level": 2,
+                "applied": false,
+                "level": 1,
                 "cloudProvider": "gcp",
                 "objectName": "disk",
                 "conditions": [
@@ -8092,6 +9048,27 @@
                         "property": "creationTimestamp",
                         "condition": "DATE_INF",
                         "value": "0 0 0 2 0 0 0",
+                        "date": "YYYY-MM-DDThh:mm:ss.SSSZ"
+                    }
+                ]
+            },
+            {
+                "name": "gcp-disk-unattached-since-X-days",
+                "description": "this rule is to check if a disk has no users since X days",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "gcp",
+                "objectName": "disk",
+                "conditions": [
+                    {
+                        "property": "users",
+                        "condition": "COUNT_SUP",
+                        "value": 0
+                    },
+                    {
+                        "property": "lastAttachTimestamp",
+                        "condition": "DATE_INF",
+                        "value": "0 0 0 0 15 0 0",
                         "date": "YYYY-MM-DDThh:mm:ss.SSSZ"
                     }
                 ]
@@ -8249,76 +9226,6 @@
                         ]
                     }
                 ]
-            },
-            {
-                "name": "git-is-repository-private",
-                "description": "this rules is to check if git repo is private",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "github",
-                "objectName": "repositories",
-                "conditions": [
-                    {
-                        "property": "private",
-                        "condition": "EQUAL",
-                        "value": true
-                    }
-                ]
-            },
-            {
-                "name": "git-is-branch-protected",
-                "description": "this rules is to check if git branch is protected",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "github",
-                "objectName": "branches",
-                "conditions": [
-                    {
-                        "operator": "NAND",
-                        "criteria": [
-                            {
-                                "property": "protected",
-                                "condition": "DIFFERENT",
-                                "value": true
-                            },
-                            {
-                                "property": "name",
-                                "condition": "EQUAL",
-                                "value": "master"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "git-count-repo-orga",
-                "description": "this rules is to count the number of repo in a git organization",
-                "applied": false,
-                "level": 0,
-                "cloudProvider": "github",
-                "objectName": "repositories",
-                "conditions": [
-                    {
-                        "property": "topics",
-                        "condition": "COUNT",
-                        "value": 0
-                    }
-                ]
-            },
-            {
-                "name": "git-runner-are-online",
-                "description": "this rules is to check if git runner are online",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "github",
-                "objectName": "runners",
-                "conditions": [
-                    {
-                        "property": "status",
-                        "condition": "DIFFERENT",
-                        "value": "offline"
-                    }
-                ]
             }
         ]
     },
@@ -8328,150 +9235,7 @@
         ],
         "thumbnail": "https://icones.pro/wp-content/uploads/2022/08/logo-google-drive.png",
         "documentation": "https://developers.google.com/drive/api/reference/rest/v3?hl=fr",
-        "freeRules": [
-            {
-                "name": "check-regex-drive-file-name",
-                "description": "compare drive file name to regex for compliance",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "googleDrive",
-                "objectName": "files",
-                "conditions": [
-                    {
-                        "property": "name",
-                        "condition": "REGEX",
-                        "value": "/^(PUBLIC|PRIVATE)\\s[A-Za-z]+/"
-                    }
-                ]
-            },
-            {
-                "name": "is-drive-file-private",
-                "description": "this rule is to check if drive files are private",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "googleDrive",
-                "objectName": "files",
-                "conditions": [
-                    {
-                        "operator": "NAND",
-                        "criteria": [
-                            {
-                                "property": "shared",
-                                "condition": "DIFFERENT",
-                                "value": false
-                            },
-                            {
-                                "property": "name",
-                                "condition": "REGEX",
-                                "value": "/PRIVATE\\s[A-Za-z]+/"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "is-file-shared-only-by-domaine",
-                "description": "this rule is to check if a file is shared only by domain",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "googleDrive",
-                "objectName": "files",
-                "conditions": [
-                    {
-                        "property": "permissions",
-                        "condition": "ALL",
-                        "value": [
-                            {
-                                "operator": "NAND",
-                                "criteria": [
-                                    {
-                                        "property": "type",
-                                        "condition": "EQUAL",
-                                        "value": "user"
-                                    },
-                                    {
-                                        "property": "role",
-                                        "condition": "DIFFERENT",
-                                        "value": "owner"
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "check-regex-drive-file-name",
-                "description": "compare drive file name to regex for compliance",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "googleDrive",
-                "objectName": "files",
-                "conditions": [
-                    {
-                        "property": "name",
-                        "condition": "REGEX",
-                        "value": "/^(PUBLIC|PRIVATE)\\s[A-Za-z]+/"
-                    }
-                ]
-            },
-            {
-                "name": "is-drive-file-private",
-                "description": "this rule is to check if drive files are private",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "googleDrive",
-                "objectName": "files",
-                "conditions": [
-                    {
-                        "operator": "NAND",
-                        "criteria": [
-                            {
-                                "property": "shared",
-                                "condition": "DIFFERENT",
-                                "value": false
-                            },
-                            {
-                                "property": "name",
-                                "condition": "REGEX",
-                                "value": "/PRIVATE\\s[A-Za-z]+/"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "is-file-shared-only-by-domaine",
-                "description": "this rule is to check if a file is shared only by domain",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "googleDrive",
-                "objectName": "files",
-                "conditions": [
-                    {
-                        "property": "permissions",
-                        "condition": "ALL",
-                        "value": [
-                            {
-                                "operator": "NAND",
-                                "criteria": [
-                                    {
-                                        "property": "type",
-                                        "condition": "EQUAL",
-                                        "value": "user"
-                                    },
-                                    {
-                                        "property": "role",
-                                        "condition": "DIFFERENT",
-                                        "value": "owner"
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
+        "freeRules": []
     },
     "googleWorkspace": {
         "resources": [
@@ -8561,83 +9325,16 @@
                         "value": 4
                     }
                 ]
-            },
-            {
-                "name": "workspace-user-mfa-activated",
-                "description": "verify if mfa is activated on user account",
-                "applied": true,
-                "level": 2,
-                "cloudProvider": "googleWorkspace",
-                "objectName": "user",
-                "conditions": [
-                    {
-                        "property": "isEnrolledIn2Sv",
-                        "condition": "EQUAL",
-                        "value": true
-                    }
-                ]
-            },
-            {
-                "name": "workspace-user-mfa-enforced",
-                "description": "verify if mfa is enforced for user account",
-                "applied": true,
-                "level": 2,
-                "cloudProvider": "googleWorkspace",
-                "objectName": "user",
-                "conditions": [
-                    {
-                        "property": "isEnforcedIn2Sv",
-                        "condition": "EQUAL",
-                        "value": true
-                    }
-                ]
-            },
-            {
-                "name": "workspace-user-change-passwd-next-login",
-                "description": "verify if there is at least one super admin for OU",
-                "applied": true,
-                "level": 2,
-                "cloudProvider": "googleWorkspace",
-                "objectName": "user",
-                "conditions": [
-                    {
-                        "property": "changePasswordAtNextLogin",
-                        "condition": "EQUAL",
-                        "value": true
-                    }
-                ]
-            },
-            {
-                "name": "workspace-at-least-one-super-admin",
-                "description": "verify if there is at least one super admin for OU",
-                "applied": true,
-                "level": 2,
-                "cloudProvider": "googleWorkspace",
-                "objectName": "user",
-                "conditions": [
-                    {
-                        "property": "totalSuperAdmin",
-                        "condition": "SUP_OR_EQUAL",
-                        "value": 1
-                    }
-                ]
-            },
-            {
-                "name": "workspace-no-more-than-four-super-admin",
-                "description": "verify if there is no more than four super admin for OU",
-                "applied": true,
-                "level": 2,
-                "cloudProvider": "googleWorkspace",
-                "objectName": "user",
-                "conditions": [
-                    {
-                        "property": "totalSuperAdmin",
-                        "condition": "INF_OR_EQUAL",
-                        "value": 4
-                    }
-                ]
             }
         ]
+    },
+    "helm": {
+        "resources": [
+            "chart"
+        ],
+        "thumbnail": "https://seeklogo.com/images/H/helm-logo-9208DB3EE5-seeklogo.com.png",
+        "documentation": "https://helm.sh/docs/",
+        "freeRules": []
     },
     "http": {
         "resources": [
@@ -8861,101 +9558,6 @@
                         "value": "application/json"
                     }
                 ]
-            },
-            {
-                "name": "http-request-date-in-body",
-                "description": "request date in body",
-                "applied": true,
-                "level": 0,
-                "loudMessage": "date is present in body",
-                "cloudProvider": "http",
-                "objectName": "request",
-                "conditions": [
-                    {
-                        "property": "body.date",
-                        "condition": "DIFFERENT",
-                        "value": null
-                    }
-                ]
-            },
-            {
-                "name": "http-request-certificate",
-                "description": "check if certificate is present",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "http",
-                "objectName": "request",
-                "conditions": [
-                    {
-                        "property": "certificate.issuer.CN",
-                        "condition": "EQUAL",
-                        "value": "Kubernetes Ingress Controller Fake Certificate"
-                    },
-                    {
-                        "property": "certificate.valid_to",
-                        "condition": "DATE_INF",
-                        "value": "0 0 0 0 0 0",
-                        "date": "MMM DD HH:mm:ss YYYY GMT"
-                    }
-                ]
-            },
-            {
-                "name": "http-request-certificate",
-                "description": "request certificate expire in 15 days",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "http",
-                "objectName": "request",
-                "conditions": [
-                    {
-                        "property": "certificate.valid_to",
-                        "condition": "DATE_INF",
-                        "value": "0 0 0 -15 0 0",
-                        "date": "MMM DD HH:mm:ss YYYY GMT"
-                    }
-                ]
-            },
-            {
-                "name": "http-request-header",
-                "description": "http requested header",
-                "applied": true,
-                "level": 0,
-                "loud": true,
-                "loudMessage": "header is present",
-                "cloudProvider": "http",
-                "objectName": "request",
-                "conditions": [
-                    {
-                        "property": "headers.content-type",
-                        "condition": "INCLUDE",
-                        "value": "application/json"
-                    }
-                ]
-            },
-            {
-                "name": "http-request-response-code",
-                "description": "check for a specific response code",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "http",
-                "objectName": "request",
-                "conditions": [
-                    {
-                        "operator": "OR",
-                        "criteria": [
-                            {
-                                "property": "code",
-                                "condition": "EQUAL",
-                                "value": 200
-                            },
-                            {
-                                "property": "code",
-                                "condition": "EQUAL",
-                                "value": 201
-                            }
-                        ]
-                    }
-                ]
             }
         ]
     },
@@ -9035,7 +9637,7 @@
             {
                 "name": "kube-pods-name-compliance",
                 "description": "this rules is to check compliance of pods names",
-                "applied": true,
+                "applied": false,
                 "level": 1,
                 "cloudProvider": "kubernetes",
                 "objectName": "pods",
@@ -9131,7 +9733,7 @@
             {
                 "name": "namespace-exist-api-4urcloud",
                 "description": "this rules is to check if namespace exist and notifiable if exist",
-                "applied": true,
+                "applied": false,
                 "level": 0,
                 "cloudProvider": "kubernetes",
                 "objectName": "namespaces",
@@ -9146,7 +9748,7 @@
             {
                 "name": "all-pods-running-kexawebsite",
                 "description": "this rules is to check if all pods are running for a namespace",
-                "applied": true,
+                "applied": false,
                 "level": 2,
                 "cloudProvider": "kubernetes",
                 "objectName": "pods",
@@ -9171,7 +9773,7 @@
             {
                 "name": "kube-is-persistent-volume-bounded",
                 "description": "this rules is to verify that persistent volume is bounded",
-                "applied": true,
+                "applied": false,
                 "level": 2,
                 "cloudProvider": "kubernetes",
                 "objectName": "persistentvolume",
@@ -9186,7 +9788,7 @@
             {
                 "name": "kube-persistent-volume-verify-storage-class",
                 "description": "this rules is to verify for a persistent volume storage class",
-                "applied": true,
+                "applied": false,
                 "level": 2,
                 "cloudProvider": "kubernetes",
                 "objectName": "persistentvolume",
@@ -9201,7 +9803,7 @@
             {
                 "name": "kube-volume-mounts-read-only",
                 "description": "this rules is to verify volume mounts are read only",
-                "applied": true,
+                "applied": false,
                 "level": 2,
                 "cloudProvider": "kubernetes",
                 "objectName": "pods",
@@ -9228,7 +9830,7 @@
             {
                 "name": "kube-storage-class-allow-expansion",
                 "description": "this rules is to verify storage class allow expansion",
-                "applied": true,
+                "applied": false,
                 "level": 2,
                 "cloudProvider": "kubernetes",
                 "objectName": "storageclass",
@@ -9243,7 +9845,7 @@
             {
                 "name": "kube-storage-class-disk-parameters",
                 "description": "this rules is to verify storage class disk parameters",
-                "applied": true,
+                "applied": false,
                 "level": 2,
                 "cloudProvider": "kubernetes",
                 "objectName": "storageclass",
@@ -9268,7 +9870,7 @@
             {
                 "name": "kube-hozizontal-pod-autoscaler-min-max-replicas",
                 "description": "this rules is to verify horizontal pod autoscaler min and max replicas",
-                "applied": true,
+                "applied": false,
                 "level": 2,
                 "cloudProvider": "kubernetes",
                 "objectName": "hpa",
@@ -9288,7 +9890,7 @@
             {
                 "name": "kube-hozizontal-pod-autoscaler-min-max-replicas",
                 "description": "this rules is to verify horizontal pod autoscaler min and max replicas",
-                "applied": true,
+                "applied": false,
                 "level": 2,
                 "cloudProvider": "kubernetes",
                 "objectName": "podLogs",
@@ -9312,6 +9914,36 @@
                 ]
             },
             {
+                "name": "kube-pods-memory-limitation",
+                "description": "this rules is to verify pods memory limitation",
+                "applied": true,
+                "level": 2,
+                "cloudProvider": "kubernetes",
+                "objectName": "podsConsumption",
+                "conditions": [
+                    {
+                        "property": "MemoryUsage",
+                        "condition": "INF",
+                        "value": 599428096
+                    }
+                ]
+            },
+            {
+                "name": "kube-pods-cpu-limitation",
+                "description": "this rules is to verify cpu usage limitation",
+                "applied": true,
+                "level": 2,
+                "cloudProvider": "kubernetes",
+                "objectName": "podsConsumption",
+                "conditions": [
+                    {
+                        "property": "CPUUsage",
+                        "condition": "INF",
+                        "value": 0.02
+                    }
+                ]
+            },
+            {
                 "name": "kub-alert-if-namespace-not-exist",
                 "description": "this rules is to check if namespace exist and notifiable if not",
                 "applied": true,
@@ -9329,111 +9961,6 @@
                                 "value": "kexawebsitepublic"
                             }
                         ]
-                    }
-                ]
-            },
-            {
-                "name": "namespace-exist-api-4urcloud",
-                "description": "this rules is to check if namespace exist and notifiable if exist",
-                "applied": true,
-                "level": 0,
-                "cloudProvider": "kubernetes",
-                "objectName": "namespaces",
-                "conditions": [
-                    {
-                        "property": "metadata.name",
-                        "condition": "DIFFERENT",
-                        "value": null
-                    }
-                ]
-            },
-            {
-                "name": "all-pods-running-kexawebsite",
-                "description": "this rules is to check if all pods are running for a namespace",
-                "applied": true,
-                "level": 2,
-                "cloudProvider": "kubernetes",
-                "objectName": "pods",
-                "conditions": [
-                    {
-                        "operator": "NAND",
-                        "criteria": [
-                            {
-                                "property": "status.phase",
-                                "condition": "DIFFERENT",
-                                "value": "Running"
-                            },
-                            {
-                                "property": "metadata.namespace",
-                                "condition": "EQUAL",
-                                "value": null
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "kub-are-all-pods-running-namespace",
-                "description": "this rules is to check if all pods are running for a namespace",
-                "applied": true,
-                "level": 2,
-                "cloudProvider": "kubernetes",
-                "objectName": "pods",
-                "conditions": [
-                    {
-                        "operator": "NAND",
-                        "criteria": [
-                            {
-                                "property": "status.phase",
-                                "condition": "DIFFERENT",
-                                "value": "Running"
-                            },
-                            {
-                                "property": "metadata.namespace",
-                                "condition": "EQUAL",
-                                "value": null
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "kub-are-all-pods-not-running",
-                "description": "this rules is to be notifiable if pods are not running",
-                "applied": true,
-                "level": 2,
-                "cloudProvider": "kubernetes",
-                "objectName": "pods",
-                "conditions": [
-                    {
-                        "operator": "OR",
-                        "criteria": [
-                            {
-                                "property": "status.phase",
-                                "condition": "EQUAL",
-                                "value": "Running"
-                            },
-                            {
-                                "property": "status.phase",
-                                "condition": "EQUAL",
-                                "value": "Succeeded"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "kub-all-my-helm-is-deploy",
-                "description": "this rules is to check if some helm are not deployed",
-                "applied": true,
-                "level": 2,
-                "cloudProvider": "kubernetes",
-                "objectName": "helm",
-                "conditions": [
-                    {
-                        "property": "status",
-                        "condition": "EQUAL",
-                        "value": "deployed"
                     }
                 ]
             }
@@ -9812,72 +10339,6 @@
                         "property": "isUnmanagedSyncAppForTenantRestricted",
                         "condition": "EQUAL",
                         "value": true
-                    }
-                ]
-            },
-            {
-                "name": "o365-is-skus-not-used",
-                "description": "this rule is if a subscribed sku is not being used",
-                "applied": true,
-                "level": 1,
-                "cloudProvider": "o365",
-                "objectName": "sku",
-                "conditions": [
-                    {
-                        "property": "consumedUnits",
-                        "condition": "SUP",
-                        "value": 0
-                    }
-                ]
-            },
-            {
-                "name": "o365-check-jobtitle-defined",
-                "description": "this rule is to check for non defined job title",
-                "applied": true,
-                "level": 1,
-                "cloudProvider": "o365",
-                "objectName": "user",
-                "conditions": [
-                    {
-                        "property": "jobTitle",
-                        "condition": "DIFFERENT",
-                        "value": null
-                    }
-                ]
-            },
-            {
-                "name": "o365-is-simple-member",
-                "description": "this rule is to check for simple members",
-                "applied": true,
-                "level": 1,
-                "cloudProvider": "o365",
-                "objectName": "user",
-                "conditions": [
-                    {
-                        "property": "userType",
-                        "condition": "EQUAL",
-                        "value": "Member"
-                    }
-                ]
-            },
-            {
-                "name": "o365-is-mfa-activated-on-user",
-                "description": "check if at least 2 auth factors are active",
-                "applied": true,
-                "level": 2,
-                "cloudProvider": "o365",
-                "objectName": "auth_methods",
-                "conditions": [
-                    {
-                        "property": "methods",
-                        "condition": "ONE",
-                        "value": [
-                            {
-                                "property": "dataType",
-                                "condition": "EQUAL",
-                                "value": "#microsoft.graph.microsoftAuthenticatorAuthenticationMethod"
-                            }
-                        ]
                     }
                 ]
             },
