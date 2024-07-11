@@ -64,14 +64,13 @@ export async function collectData(helmConfig:HelmConfig[]): Promise<HelmResource
         }
         resources.push(helmResources);
         deleteFile("./config/kubernetes.json");
-        console.log(helmResources);
     }
     return resources ?? null;
 }
 
 
 const { exec } = require('child_process');
-function execShellCommand(command: string) {
+function execShellCommand(command: string): Promise<string> {
     return new Promise((resolve, reject) => {
       exec(command, { maxBuffer: 1024 * 1024 * 10 }, (error: any, stdout: any, stderr: any) => {  // 10 MB buffer
         if (error) {
@@ -94,11 +93,65 @@ function execShellCommand(command: string) {
       const output = await execShellCommand(cmd);
       return output;
     } catch (error) {
-      console.error(`Error getting Helm release info for ${releaseName} in ${namespace}:`, error);
+      logger.debug(`Error getting Helm release info for ${releaseName} in ${namespace}:`, error);
       return null;
     }
   }
   
+  async function getHelmLatestVersion(chartName: string, namespace: string) {
+    try {
+      const cmd = `helm search repo ${chartName} --versions --namespace ${namespace}`;
+      let output = await execShellCommand(cmd);
+      try {
+        const lines = output.trim().split('\n');
+        const latestVersionLine = lines[1].trim();
+        const latestVersion = latestVersionLine.split(/\s+/)[1];
+        return latestVersion;
+      } catch (error) {
+        logger.debug('Error parsing Helm for latest version:', error);
+        return null
+      }
+    } catch (error) {
+      logger.debug('Error getting Helm version:', error);
+      return null;
+    }
+  }
+
+  function getVersionDifference(currentVersion: string, latestVersion: string) {
+    const currentMajor = parseInt(currentVersion[0], 10);
+    const latestMajor = parseInt(latestVersion[0], 10);
+    
+    let majorDiff = latestMajor - currentMajor;
+    let minorDiff = 0;
+    let patchDiff = 0;
+    
+    if (majorDiff === 0) {
+        const currentMinor = parseInt(currentVersion[1], 10);
+        const latestMinor = parseInt(latestVersion[1], 10);
+        minorDiff = latestMinor - currentMinor;
+    
+        if (minorDiff === 0) {
+            const currentPatch = parseInt(currentVersion[2], 10);
+            const latestPatch = parseInt(latestVersion[2], 10);
+            patchDiff = latestPatch - currentPatch;
+        }
+    } else {
+        minorDiff = 0;
+        patchDiff = 0;
+    }
+    
+    if (Number.isNaN(patchDiff)) {
+        patchDiff = 0;
+    }
+
+    const versionDifference = {
+        major: majorDiff,
+        minor: minorDiff,
+        patch: patchDiff
+    };
+    
+    return versionDifference;
+  }
 
   function toISOFormat(dateString: string) {
         const date = new Date(dateString);
@@ -118,7 +171,7 @@ function execShellCommand(command: string) {
 
   function limitDepth(obj: any, depthLimit: any, currentDepth = 0) {
     if (currentDepth >= depthLimit) {
-        return {}; // Return an empty object if depth limit exceeded
+        return {};
     }
 
     const limitedObj: any = {};
@@ -204,17 +257,24 @@ async function listCharts() : Promise<Array<any> | null> {
           namespace: secret.metadata.namespace,
           version: secret.metadata.labels['helm.sh/chart'],
           metadata: secret.metadata,
-          id: secret.metadata.uid,
+          id: secret.metadata.annotations['meta.helm.sh/release-name'],
+          uid: secret.metadata.uid,
         }));
         for (const chart of helmCharts) {
             const releaseInfo = await getHelmReleaseInfo(chart.name, chart.namespace);
             chart.details = parseProperties(JSON.parse(JSON.stringify(releaseInfo)));
+            const latestVersion = await getHelmLatestVersion(chart.details.chart, chart.namespace);
+            chart.details.latestVersion = latestVersion;
+            if (latestVersion != null)
+                chart.details.versionDifference = getVersionDifference(chart.details.version, latestVersion as string);
+            else
+                chart.details.versionDifference = null;
             results.push(chart);
           }
         return results;
 
       } catch (error) {
-        console.error('Error listing Helm charts:', error);
+        logger.debug('Error listing Helm charts:', error);
       }
     return null;
 }
