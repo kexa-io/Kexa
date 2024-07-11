@@ -34,7 +34,6 @@
       enabled: true
       type: 
         - log
-        - teams
       to: 
         #- https://yourwebhook.webhook/
       conditions:
