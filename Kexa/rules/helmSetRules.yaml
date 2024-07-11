@@ -50,7 +50,6 @@
         - level: 3
           min: 1
   rules:
-    #change the namespace name to your namespace
     - name: "helm-chart-deployed"
       description : "this rule is to verify if the helm chart is deployed"
       applied: true
@@ -102,6 +101,21 @@
             - property : details.computedValues.autoscaling.minReplicas
               condition : INF_OR_EQUAL
               value : 0
+    - name: "helm-chart-auto-scaling-max-replicas"
+      description : "this rule is to verify if autoscaling max replicas is less than 10"
+      applied: true
+      level: 1
+      cloudProvider: helm
+      objectName : chart
+      conditions:
+        - operator: NAND
+          criteria:
+            - property : details.computedValues.autoscaling
+              condition : DIFFERENT
+              value : null
+            - property : details.computedValues.autoscaling.maxReplicas
+              condition : SUP
+              value : 10
     - name: "helm-chart-auto-scaling-target-cpu"
       description : "this rule is to verify if autoscaling target cpu  is not greater than 50"
       applied: true

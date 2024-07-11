@@ -3,7 +3,7 @@
         <img src="../../images/helm-logo.svg" alt="Logo" width="300">
     </a>
 
-# <h3 align="center">Kubernetes addOn</h3>
+# <h3 align="center">Helm addOn</h3>
 
   <p align="center">
     Take the security of your Helm environments to the next level with our data scan addon, monitoring of your charts.
