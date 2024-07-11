@@ -7022,7 +7022,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 
 - ✅ tasks_queue
 - ✅ compute
-- ✅ storage
+- ✅ bucket
 - ✅ project
 - ✅ billingAccount
 - ✅ cluster
