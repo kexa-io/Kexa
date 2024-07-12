@@ -2230,4 +2230,52 @@ VERSION was changed
 
 package.json was changed
 
+Kexa/rules/VaultsAnalysis.yaml was changed## 1.14.0-devadrienrules.123.f6e31c2
+
+### Files added: 7
+
+Kexa/models/helm/config.models.ts was added
+
+Kexa/models/helm/ressource.models.ts was added
+
+Kexa/rules/helmSetRules.yaml was added
+
+Kexa/services/addOn/display/helmDisplay.service.ts was added
+
+Kexa/services/addOn/helmGathering.service.ts was added
+
+documentation/provider/Helm.md was added
+
+images/helm-logo.svg was added
+
+### Files changed: 14
+
+Kexa/models/helm/config.models.ts was changed
+
+Kexa/models/helm/ressource.models.ts was changed
+
+Kexa/rules/helmSetRules.yaml was changed
+
+Kexa/services/addOn/display/helmDisplay.service.ts was changed
+
+Kexa/services/addOn/helmGathering.service.ts was changed
+
+documentation/provider/Helm.md was changed
+
+images/helm-logo.svg was changed
+
+CHANGELOG.md was changed
+
+Kexa/enum/provider.enum.ts was changed
+
 Kexa/rules/VaultsAnalysis.yaml was changed
+
+VERSION was changed
+
+capacity.json was changed
+
+package.json was changed
+
+pnpm-lock.yaml was changed
+
+

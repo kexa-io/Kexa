@@ -7076,6 +7076,11 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ drive
 </details>
 <details>
+<summary>✅ Helm check in:</summary>
+
+- ✅ chart
+</details>
+<details>
 <summary>✅ Http check in:</summary>
 
 - ✅ request
