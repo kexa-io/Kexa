@@ -5,7 +5,7 @@ export enum ProviderEnum {
     KUBERNETES = "kubernetes",
     GITHUB = "github",
     HTTP = "http",
-
+    HELM = "helm",
     O365 = "o365",
     GOOGLEWORKSPACE = "googleWorkspace"
 }

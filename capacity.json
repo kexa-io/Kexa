@@ -9328,6 +9328,14 @@
             }
         ]
     },
+    "helm": {
+        "resources": [
+            "chart"
+        ],
+        "thumbnail": "https://seeklogo.com/images/H/helm-logo-9208DB3EE5-seeklogo.com.png",
+        "documentation": "https://helm.sh/docs/",
+        "freeRules": []
+    },
     "http": {
         "resources": [
             "request"
