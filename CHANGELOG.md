@@ -2279,3 +2279,26 @@ package.json was changed
 pnpm-lock.yaml was changed
 
 
+## 1.14.0-devadrienrules.127.6d11137
+
+### Files added: 2
+
+Kexa/services/functions/dateFormats.ts was added
+
+config/demo/helm.default.json was added
+
+### Files changed: 6
+
+Kexa/services/functions/dateFormats.ts was changed
+
+config/demo/helm.default.json was changed
+
+Kexa/rules/rulesByProvider/azureSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/gcpSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/kubernetesSetRules.yaml was changed
+
+Kexa/services/addOn/helmGathering.service.ts was changed
+
+
