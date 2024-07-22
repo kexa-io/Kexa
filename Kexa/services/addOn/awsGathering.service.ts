@@ -5226,7 +5226,6 @@ async function collectAuto(credential: any, region: string) {
 	
 	if (awsGatherDependencies) {
         const dependencyPromises = [];
-
         for (const dependence of awsGatherDependencies) {
             if (Array.isArray(dependence.functions)) {
                 for (let i = 0; i < dependence.functions.length; i++) {
@@ -5236,7 +5235,6 @@ async function collectAuto(credential: any, region: string) {
                             const input = {};
                             const command = new func.objectFunc(input);
                             const client = new func.clientFunc({ region: region, credentials: credential });
-
                             const dependencyPromise = (async () => {
                                 try {
                                     let data: Record<string, any> = await client.send(command);
@@ -5247,18 +5245,14 @@ async function collectAuto(credential: any, region: string) {
                                     logger.debug(e);
                                 }
                             })();
-
                             dependencyPromises.push(dependencyPromise);
                         }
                     }
                 }
             }
         }
-
         await Promise.all(dependencyPromises);
     }
-
-
 
 	/* ------------------------- */
 	/*   AFTER GET DEPENDENCIES  */

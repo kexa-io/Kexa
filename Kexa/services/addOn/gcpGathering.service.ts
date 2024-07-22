@@ -95,8 +95,13 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
             "tags_keys": null
         } as GCPResources;
         let projectId = await getConfigOrEnvVar(config, "GOOGLE_PROJECT_ID", prefix);
-        let googleCred = await getConfigOrEnvVar(config, "GOOGLE_APPLICATION_CREDENTIALS", prefix)
-        if(projectId && googleCred) writeStringToJsonFile(googleCred, "./config/gcp.json");
+        let googleCred = await getConfigOrEnvVar(config, "GOOGLE_APPLICATION_CREDENTIALS", prefix);
+        // check if google cred is a path or a json
+        let defaultPath = './config/gcp.json';
+        if (googleCred && googleCred.includes(".json")) {
+            setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", googleCred);
+        }
+        else if (projectId && googleCred) writeStringToJsonFile(googleCred, defaultPath);
         else{
             setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", defaultPathCred);
             projectId = JSON.parse(getFile(defaultPathCred)??"")?.project_id;

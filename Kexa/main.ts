@@ -61,7 +61,9 @@ export async function mainScan(settings: SettingFile[], allScan: ResultScan[][],
     return allScan;
 }
 
-export async function GlobalAlert(settings: SettingFile[], allScan: ResultScan[][]){
+export async function GlobalAlert(settings: SettingFile[], allScan: ResultScan[][]) : Promise<boolean> {
+    let retError = false;
+
     settings.forEach(setting => {
         if(setting.alert.global.enabled){
             let render_table = renderTableAllScan(allScan.map(scan => scan.filter(value => value.error.length>0)));
@@ -69,7 +71,12 @@ export async function GlobalAlert(settings: SettingFile[], allScan: ResultScan[]
             let compteError = [0,0,0,0];
             allScan.forEach((rule) => {
                 rule.forEach((scan) => {
-                    if(scan.error.length > 0) compteError[scan.rule?.level??3]++;
+                    if(scan.error.length > 0) {
+                        compteError[scan.rule?.level??3]++;
+                        if (scan.rule?.level >= 2) {
+                            retError = true;
+                        }
+                    }
                 });
             });
             let mail = Emails.Recap(compteError, render_table, render_table_loud, setting.alert.global);
@@ -77,6 +84,7 @@ export async function GlobalAlert(settings: SettingFile[], allScan: ResultScan[]
             alertGlobal(allScan, setting.alert.global);
         }
     });
+    return retError;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,7 +98,6 @@ async function main() {
     if (process.env.DEV) {
         if (process.env.DEV == "true") {
             logger.settings.minLevel = 2;
-            console.log("DEBUG");
         }
     }
 
@@ -100,22 +107,31 @@ async function main() {
     let idScan = 0;
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"https://github.com/4urcloud/Kexa_Rules");
     let allScan: ResultScan[][] = [];
+    let retError = false;
     while(1){
         let startTimeStamp = Date.now();
         await mainScan(settings, allScan, idScan.toString());
         if(Memoisation.canSendGlobalAlert()){
             logger.error("Global alert");
-            await GlobalAlert(settings, allScan);
+            retError = await GlobalAlert(settings, allScan);
+            if(retError) {
+                logger.error("High level error found in scan, exiting Kexa");
+                break;
+            }
             allScan = [];
         }
         if (generalConfig?.checkInterval && (~~generalConfig.checkInterval > 0 || ~~generalConfig.checkInterval == -1)) {
             await new Promise(r => setTimeout(r, Math.max((~~generalConfig.checkInterval - (Date.now()-startTimeStamp)/1000)*1000, 0)));
-        }else{
+        } else {
             logger.info("No checkInterval found, exiting Kexa");
+            if (retError)
+                process.exit(1);
             break;
         }
         idScan++;
     };
+    if (retError)
+        process.exit(1);
 }
 
 main();
