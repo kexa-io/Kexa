@@ -25,11 +25,12 @@ let currentConfig:HelmConfig;
 /////////////////////////////////////////
 //////   LISTING CLOUD RESOURCES    /////
 /////////////////////////////////////////
+import helm from 'helm-ts';
 
 export async function collectData(helmConfig:HelmConfig[]): Promise<HelmResources[] | null> {
     let context = getContext();
     let resources = new Array<HelmResources>();
-
+    
     for (let config of helmConfig??[]) {
         currentConfig = config;
         let prefix = config.prefix??(helmConfig.indexOf(config).toString());
@@ -37,15 +38,18 @@ export async function collectData(helmConfig:HelmConfig[]): Promise<HelmResource
         let helmResources = {
             "chart": null
         } as HelmResources;
+
         try {
+
             let pathKubeFile = await getConfigOrEnvVar(config, "KUBECONFIG", prefix);
-            writeStringToJsonFile(JSON.stringify(yaml.load(getFile(pathKubeFile??"")), null, 2), "./config/kubernetes.json");
+            if (getFile("./config/kubernetes.json") == null) {
+              writeStringToJsonFile(JSON.stringify(yaml.load(getFile(pathKubeFile??"")), null, 2), "./config/kubernetes.json");
+            }
             context?.log("- listing Helm resources -");
             logger.info("- listing Helm resources -");
 
-
             const promises = [
-                listCharts()
+                listCharts(pathKubeFile)
             ];
 
             const [
@@ -70,69 +74,166 @@ export async function collectData(helmConfig:HelmConfig[]): Promise<HelmResource
 
 
 const { exec } = require('child_process');
-function execShellCommand(command: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      exec(command, { maxBuffer: 1024 * 1024 * 10 }, (error: any, stdout: any, stderr: any) => {  // 10 MB buffer
-        if (error) {
+function execShellCommand(command: string): Promise<number | string> {
+  return new Promise((resolve, reject) => {
+    exec(command, { maxBuffer: 1024 * 1024 * 10 }, (error: Error | null, stdout: string, stderr: string) => {
+      const filteredStderr = stderr.split('\n').filter(line => 
+        !line.includes("Kubernetes configuration file is group-readable. This is insecure.")
+      ).join('\n');
+
+      if (error) {
+        if (error.message.includes("Kubernetes configuration file is group-readable. This is insecure.")) {
+          resolve(stdout);
+        } else {
+          resolve(-1);
           reject(`Error: ${error.message}`);
-          return;
         }
-        if (stderr) {
-          reject(`Stderr: ${stderr}`);
-          return;
-        }
+      } else if (filteredStderr) {
+        console.error('Stderr:', filteredStderr);
+        reject(-1);
+      } else {
         resolve(stdout);
-      });
+      }
     });
+  });
   }
 
 
   async function getHelmReleaseInfo(releaseName: string, namespace: string) {
     try {
-      const cmd = `helm get all ${releaseName} --namespace ${namespace}`;
+      const cmd = `helm get all ${releaseName} --namespace ${namespace} --kubeconfig "./config/kubernetes.json"`;
       const output = await execShellCommand(cmd);
-      return output;
+      if (typeof output == 'number') {
+        return output;
+      } else if (typeof output == 'string' && output.length == 0) {
+        return null;
+      }
+      else {
+        return output;
+      }
     } catch (error) {
       logger.debug(`Error getting Helm release info for ${releaseName} in ${namespace}:`, error);
       return null;
     }
   }
   
-  async function getHelmLatestVersion(chartName: string, namespace: string) {
+  type HelmPackage = {
+    url: string;
+    chartVersion: string;
+    appVersion: string;
+    description: string;
+  };
+
+  function parseHelmPackages(output: string): HelmPackage[] {
+    const lines = output.trim().split('\n').slice(1);
+    
+    const helmCharts: HelmPackage[] = lines.map(line => {
+        const [url, chartVersion, appVersion, ...descParts] = line.trim().split(/\s+/);
+        const description = descParts.join(' ');
+        return {
+            url,
+            chartVersion,
+            appVersion,
+            description
+        };
+    });
+
+    return helmCharts;
+}
+  async function getHelmLatestVersionFromHub(chartName: string, appVersion: string) {
     try {
-      const cmd = `helm search repo ${chartName} --versions --namespace ${namespace}`;
+      const cmd = `helm search hub ${chartName} --kubeconfig "./config/kubernetes.json"`;
       let output = await execShellCommand(cmd);
-      try {
-        const lines = output.trim().split('\n');
-        const latestVersionLine = lines[1].trim();
-        const latestVersion = latestVersionLine.split(/\s+/)[1];
-        return latestVersion;
-      } catch (error) {
-        logger.debug('Error parsing Helm for latest version:', error);
-        return null
+      let latest = null;
+      if (typeof output == 'number' && output == -1) {
+        return output;
+      } else if (typeof output == 'string') {
+        if (output?.length === 0) {
+          return null;
+        }
+        if (output.includes('No results found')) {
+          return null;
+        }
+        try {
+          let newTest = parseHelmPackages(output);
+
+          for (let i = 0; i < newTest.length; i++) {
+            if (newTest[i].appVersion == appVersion) {
+              latest = newTest[i].chartVersion;
+              break;
+            }
+          }
+          return latest;
+        } catch (error) {
+          logger.debug('Error parsing Helm for latest version:', error);
+          return null;
+        }
       }
     } catch (error) {
-      logger.debug('Error getting Helm version:', error);
+      logger.debug('Error listing helm repository:', error);
+      return null;
+    }
+  }
+
+
+  async function getHelmLatestVersion(chartName: string, appVersion: string) {
+    try {
+      const cmd = `helm search repo ${chartName} --versions --kubeconfig "./config/kubernetes.json"`;
+      let output = await execShellCommand(cmd);
+      if (typeof output == 'number' && output == -1) {
+        let output = await getHelmLatestVersionFromHub(chartName, appVersion);
+        if (output != null && output != -1) {
+          return output;
+        }
+      } else if (typeof output == 'string') {
+        if (output?.length === 0) {
+          return null;
+        }
+        if (output.includes('No results found')) {
+          return null;
+        }
+        try {
+          const lines = output.trim().split('\n');
+          const latestVersionLine = lines[1].trim();
+          const latestVersion = latestVersionLine.split(/\s+/)[1];
+          return latestVersion;
+        } catch (error) {
+          logger.debug('Error parsing Helm for latest version:', error);
+          return null
+        }
+      }
+    } catch (error) {
+      logger.debug('Error listing helm repository:', error);
       return null;
     }
   }
 
   function getVersionDifference(currentVersion: string, latestVersion: string) {
-    const currentMajor = parseInt(currentVersion[0], 10);
-    const latestMajor = parseInt(latestVersion[0], 10);
-    
+    let majorDot = latestVersion.indexOf('.');
+    const latestMajor = parseInt(latestVersion.substring(0, majorDot));
+
+    let minorDot = latestVersion.indexOf('.', majorDot + 1);
+    const latestMinor = parseInt(latestVersion.substring(majorDot + 1, minorDot));
+
+    const latestPatch = parseInt(latestVersion.substring(minorDot + 1, latestVersion.length));
+
+  
+    majorDot = currentVersion.indexOf('.');
+    const currentMajor = parseInt(currentVersion.substring(0, majorDot));
+
+    minorDot = currentVersion.indexOf('.', majorDot + 1);
+    const currentMinor = parseInt(currentVersion.substring(majorDot + 1, minorDot));
+
+    const currentPatch = parseInt(currentVersion.substring(minorDot + 1, currentVersion.length));
+  
+
     let majorDiff = latestMajor - currentMajor;
     let minorDiff = 0;
     let patchDiff = 0;
     
     if (majorDiff === 0) {
-        const currentMinor = parseInt(currentVersion[1], 10);
-        const latestMinor = parseInt(latestVersion[1], 10);
         minorDiff = latestMinor - currentMinor;
-    
         if (minorDiff === 0) {
-            const currentPatch = parseInt(currentVersion[2], 10);
-            const latestPatch = parseInt(latestVersion[2], 10);
             patchDiff = latestPatch - currentPatch;
         }
     } else {
@@ -145,9 +246,9 @@ function execShellCommand(command: string): Promise<string> {
     }
 
     const versionDifference = {
-        major: majorDiff,
-        minor: minorDiff,
-        patch: patchDiff
+        major: majorDiff < 0 ? 0 : majorDiff,
+        minor: minorDiff < 0 ? 0 : minorDiff,
+        patch: patchDiff < 0 ? 0 : patchDiff
     };
     
     return versionDifference;
@@ -235,15 +336,16 @@ function execShellCommand(command: string): Promise<string> {
     return retObject;
   }
 
-async function listCharts() : Promise<Array<any> | null> {
+async function listCharts(isPathKubeFile: boolean) : Promise<Array<any> | null> {
+  if(!currentConfig?.ObjectNameNeed?.includes("chart")) return [];
 
     const k8s = require('@kubernetes/client-node');
     const kc = new k8s.KubeConfig();
-    kc.loadFromDefault();
+    (isPathKubeFile)?kc.loadFromFile("./config/kubernetes.json"):kc.loadFromDefault();
     const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
 
-
     let results = new Array<any>();
+
     try {
         const res = await k8sApi.listSecretForAllNamespaces();
         const secrets = res.body.items;
@@ -261,16 +363,29 @@ async function listCharts() : Promise<Array<any> | null> {
           uid: secret.metadata.uid,
         }));
         for (const chart of helmCharts) {
-            const releaseInfo = await getHelmReleaseInfo(chart.name, chart.namespace);
-            chart.details = parseProperties(JSON.parse(JSON.stringify(releaseInfo)));
-            const latestVersion = await getHelmLatestVersion(chart.details.chart, chart.namespace);
-            chart.details.latestVersion = latestVersion;
-            if (latestVersion != null)
+          try {
+              const releaseInfo = await getHelmReleaseInfo(chart.name, chart.namespace);
+              if (releaseInfo != null && releaseInfo != -1) {
+                chart.details = parseProperties(JSON.parse(JSON.stringify(releaseInfo)));
+              }
+              const latestVersion = await getHelmLatestVersion(chart.details.chart, chart.details.appVersion);
+              chart.details.latestVersion = latestVersion;
+              if (latestVersion != null && latestVersion != -1) {
                 chart.details.versionDifference = getVersionDifference(chart.details.version, latestVersion as string);
-            else
-                chart.details.versionDifference = null;
+              } else {
+                const versionDifference = {
+                    major: 0,
+                    minor: 0,
+                    patch: 0
+                };
+                chart.details.versionDifference = versionDifference;
+              }
+            } catch (error) {
+              logger.debug('Error getting Helm release info:', error);  
+            }
             results.push(chart);
           }
+        results = helmCharts;
         return results;
 
       } catch (error) {

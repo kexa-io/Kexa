@@ -2230,7 +2230,8 @@ VERSION was changed
 
 package.json was changed
 
-Kexa/rules/VaultsAnalysis.yaml was changed## 1.14.0-SNAPSHOT.124.c747692
+Kexa/rules/VaultsAnalysis.yaml was changed## 1.14.0-devadrienrules.123.f6e31c2
+
 
 ### Files added: 7
 

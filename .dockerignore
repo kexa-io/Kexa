@@ -3,3 +3,5 @@ node_modules
 .gitignore
 .funcignore
 .git
+config/default.json
+rules/*
