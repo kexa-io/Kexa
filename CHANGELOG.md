@@ -2118,3 +2118,164 @@ package.json was changed
 pnpm-lock.yaml was changed
 
 
+## 1.14.0-SNAPSHOT.105.579d157
+
+### Files added: 2
+
+Kexa/rules/SecretsRotation.yaml was added
+
+Kexa/rules/awsTesting.yaml was added
+
+### Files changed: 17
+
+Kexa/rules/SecretsRotation.yaml was changed
+
+Kexa/rules/awsTesting.yaml was changed
+
+Kexa/rules/StorageSecurity.yaml was changed
+
+Kexa/rules/awsBenchmarkRules.yaml was changed
+
+Kexa/rules/azureBenchmarkRules.yaml was changed
+
+Kexa/rules/crossCloudDisksChecks.yaml was changed
+
+Kexa/rules/gcpSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/awsSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/azureSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/gcpSetRules.yaml was changed
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/display/awsDisplay.service.ts was changed
+
+Kexa/services/addOn/display/gcpDisplay.service.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+Kexa/services/addOn/save/kexaSave.service.ts was changed
+
+
+## 1.14.0-SNAPSHOT.109.946ff84
+
+### Files added: 2
+
+Kexa/rules/SecretsRotation.yaml was added
+
+Kexa/rules/awsTesting.yaml was added
+
+### Files changed: 21
+
+Kexa/rules/SecretsRotation.yaml was changed
+
+Kexa/rules/awsTesting.yaml was changed
+
+CHANGELOG.md was changed
+
+Kexa/rules/StorageSecurity.yaml was changed
+
+Kexa/rules/awsBenchmarkRules.yaml was changed
+
+Kexa/rules/azureBenchmarkRules.yaml was changed
+
+Kexa/rules/crossCloudDisksChecks.yaml was changed
+
+Kexa/rules/gcpSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/awsSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/azureSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/gcpSetRules.yaml was changed
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/display/awsDisplay.service.ts was changed
+
+Kexa/services/addOn/display/gcpDisplay.service.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+Kexa/services/addOn/save/kexaSave.service.ts was changed
+
+VERSION was changed
+
+capacity.json was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.116.bc78404
+
+### Files added: 0
+
+### Files changed: 7
+
+CHANGELOG.md was changed
+
+Kexa/services/addOn/display/awsDisplay.service.ts was changed
+
+Kexa/services/addOn/display/gcpDisplay.service.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+VERSION was changed
+
+package.json was changed
+
+Kexa/rules/VaultsAnalysis.yaml was changed## 1.14.0-devadrienrules.123.f6e31c2
+
+### Files added: 7
+
+Kexa/models/helm/config.models.ts was added
+
+Kexa/models/helm/ressource.models.ts was added
+
+Kexa/rules/helmSetRules.yaml was added
+
+Kexa/services/addOn/display/helmDisplay.service.ts was added
+
+Kexa/services/addOn/helmGathering.service.ts was added
+
+documentation/provider/Helm.md was added
+
+images/helm-logo.svg was added
+
+### Files changed: 14
+
+Kexa/models/helm/config.models.ts was changed
+
+Kexa/models/helm/ressource.models.ts was changed
+
+Kexa/rules/helmSetRules.yaml was changed
+
+Kexa/services/addOn/display/helmDisplay.service.ts was changed
+
+Kexa/services/addOn/helmGathering.service.ts was changed
+
+documentation/provider/Helm.md was changed
+
+images/helm-logo.svg was changed
+
+CHANGELOG.md was changed
+
+Kexa/enum/provider.enum.ts was changed
+
+Kexa/rules/VaultsAnalysis.yaml was changed
+
+VERSION was changed
+
+capacity.json was changed
+
+package.json was changed
+
+pnpm-lock.yaml was changed
+
+
