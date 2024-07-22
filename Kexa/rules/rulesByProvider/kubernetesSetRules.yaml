@@ -117,7 +117,7 @@
     # this is an example of storage class disk parameters rule
     - name: "kube-storage-class-disk-parameters"
       description : "this rules is to verify storage class disk parameters"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : storageclass
