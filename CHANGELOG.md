@@ -2280,3 +2280,78 @@ package.json was changed
 pnpm-lock.yaml was changed
 
 
+## 1.14.0-SNAPSHOT.130.c064cfe
+
+### Files added: 7
+
+Kexa/models/helm/config.models.ts was added
+
+Kexa/models/helm/ressource.models.ts was added
+
+Kexa/rules/rulesByProvider/helmSetRules.yaml was added
+
+Kexa/services/addOn/display/helmDisplay.service.ts was added
+
+Kexa/services/addOn/helmGathering.service.ts was added
+
+documentation/provider/Helm.md was added
+
+images/helm-logo.svg was added
+
+### Files changed: 30
+
+Kexa/models/helm/config.models.ts was changed
+
+Kexa/models/helm/ressource.models.ts was changed
+
+Kexa/rules/rulesByProvider/helmSetRules.yaml was changed
+
+Kexa/services/addOn/display/helmDisplay.service.ts was changed
+
+Kexa/services/addOn/helmGathering.service.ts was changed
+
+documentation/provider/Helm.md was changed
+
+images/helm-logo.svg was changed
+
+.dockerignore was changed
+
+CHANGELOG.md was changed
+
+Kexa/enum/provider.enum.ts was changed
+
+Kexa/main.ts was changed
+
+Kexa/rules/VaultsAnalysis.yaml was changed
+
+Kexa/rules/rulesByProvider/azureSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/gcpSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/httpSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/kubernetesSetRules.yaml was changed
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+Kexa/services/addOn/kubernetesGathering.service.ts was changed
+
+README.md was changed
+
+VERSION was changed
+
+capacity.json was changed
+
+package.json was changed
+
+pnpm-lock.yaml was changed
+
+Kexa/rules/rulesByProvider/HTTPRules.yaml was changed
+
+Kexa/rules/rulesByProvider/driveRules.yaml was changed
+
+
