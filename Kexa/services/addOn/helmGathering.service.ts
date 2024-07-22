@@ -13,6 +13,7 @@ import { HelmResources } from "../../models/helm/ressource.models";
 import { HelmConfig } from "../../models/helm/config.models";
 import { deleteFile, getFile, writeStringToJsonFile } from "../../helpers/files";
 const yaml = require('js-yaml');
+import { toISOFormat } from "../functions/dateFormats";
 
 ////////////////////////////////
 //////   INITIALIZATION   //////
@@ -253,22 +254,6 @@ function execShellCommand(command: string): Promise<number | string> {
     
     return versionDifference;
   }
-
-  function toISOFormat(dateString: string) {
-        const date = new Date(dateString);
-        
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        const seconds = String(date.getSeconds()).padStart(2, '0');
-        const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
-        
-        const isoString = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
-        return isoString;
-    }
-
 
   function limitDepth(obj: any, depthLimit: any, currentDepth = 0) {
     if (currentDepth >= depthLimit) {
