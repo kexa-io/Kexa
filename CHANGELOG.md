@@ -2355,3 +2355,26 @@ Kexa/rules/rulesByProvider/HTTPRules.yaml was changed
 Kexa/rules/rulesByProvider/driveRules.yaml was changed
 
 
+## 1.14.0-SNAPSHOT.133.a1f13cd
+
+### Files added: 2
+
+Kexa/services/functions/dateFormats.ts was added
+
+config/demo/helm.default.json was added
+
+### Files changed: 6
+
+Kexa/services/functions/dateFormats.ts was changed
+
+config/demo/helm.default.json was changed
+
+Kexa/rules/rulesByProvider/azureSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/gcpSetRules.yaml was changed
+
+Kexa/rules/rulesByProvider/kubernetesSetRules.yaml was changed
+
+Kexa/services/addOn/helmGathering.service.ts was changed
+
+
