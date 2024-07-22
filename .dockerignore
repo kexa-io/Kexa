@@ -4,4 +4,3 @@ node_modules
 .funcignore
 .git
 config/default.json
-rules/*
