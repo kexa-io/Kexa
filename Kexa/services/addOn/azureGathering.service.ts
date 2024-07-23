@@ -1834,7 +1834,13 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
 					collectKexaRestructuredData(credential, subscriptionId, config)
 				]);
 				let finalResources = {...autoFlatResources, ...dataComplementaryFlat};
-
+	
+				Object.keys(finalResources).forEach(key => {
+					if (finalResources[key] === undefined) {
+						finalResources[key] = [{}];
+					}
+				  });
+				  
                 resources.push(finalResources);
             }
         } catch(e) {
@@ -2456,13 +2462,18 @@ async function jobsListing(client: AzureMachineLearningWorkspaces, workspaces: A
 			let resourceGroupName = workspaces[i]?.id?.split("/")[4] ?? "";
 			let workspaceName = workspaces[i]?.name ?? "";
 			const resArray = new Array();
-			for await (let item of client.jobs.list(resourceGroupName, workspaceName)) {
-				let result:any = item;
-				result.workspace = workspaceName;
-				result.resourceGroupName = resourceGroupName;
-				resArray.push(result);
+			try {
+				for await (let item of client.jobs.list(resourceGroupName, workspaceName)) {
+					let result:any = item;
+					result.workspace = workspaceName;
+					result.resourceGroupName = resourceGroupName;
+					resArray.push(result);
+				}
+				return resArray;	
+			} catch(e) {
+				logger.debug("error in jobsListing:"+e);
+				return [];
 			}
-			return resArray ?? [];
 		} catch(e){
 			logger.debug("error in jobsListing:"+e);
 			return [];

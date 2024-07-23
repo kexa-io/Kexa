@@ -77,6 +77,7 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
         try {
             let pathKubeFile = await getConfigOrEnvVar(config, "KUBECONFIG", prefix);
             writeStringToJsonFile(JSON.stringify(yaml.load(getFile(pathKubeFile??"")), null, 2), "./config/kubernetes.json");
+
             const promises = [
                 kubernetesListing(pathKubeFile),
             ];
@@ -255,6 +256,7 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
         ] = await Promise.all(promises);
 
         const resourcesToAddNamespace = [
+            [helmData, "helm"],
             [pods, "pods"], // work
             [serviceData, "services"], // work
             [configmapData, "configmap"], // work
@@ -299,10 +301,11 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
             [podLogs, "podLogs"],
             [podsConsumption, "podsConsumption"]
         ];
-        Promise.all(resourcesToAddNamespace.map(async (resource: any) => {
+        Promise.all(resourcesToAddNamespace.map
+            (async (resource: any) => {
             kubResources = await getAllElementsWithNameSpace(resource, item.metadata.name, kubResources);
         }));
-        
+  
         helmData?.forEach((helmItem: any) => {
             kubResources["helm"].push(helmItem);
         });
@@ -315,14 +318,18 @@ async function getAllElementsWithNameSpace(resources: [any, string], namespace:s
     const [resourceData, resourceName] = resources;
     if(resourceData == null) return kubResources;
     await Promise.all(resourceData.map(async (resource:any) => {
-        resource.metadata.namespace = namespace;
+                // if namepsace properties does not exist, create it
+        if (!resource.metadata) 
+            resource.metadata = {};
+        if (!resource.metadata.namespace) 
+            resource.metadata.namespace = namespace;
         (kubResources as any)[resourceName].push(resource);
     }));
     return kubResources
 }
 
 async function collectHelm(namespace: string): Promise<any> {
-    if(!currentConfig?.ObjectNameNeed?.includes("helm")) return [];
+  //  if(!currentConfig?.ObjectNameNeed?.includes("helm")) return [];
     try{
         let helmData = await helm.list({ namespace: namespace });
         return helmData;
@@ -344,6 +351,7 @@ async function collectHelm(namespace: string): Promise<any> {
 }*/
 
 async function collectPods(k8sApiCore: any, namespace: string): Promise<any> {
+
     if (!currentConfig?.ObjectNameNeed?.includes("pods")) return [];
     try {
         const pods = await k8sApiCore.listNamespacedPod(namespace);
@@ -360,6 +368,20 @@ async function collectPods(k8sApiCore: any, namespace: string): Promise<any> {
                     labels: formattedLabels,
                 },
             };
+        });
+        formattedPods.forEach((pod: any) => {
+            pod.status.formattedConditions = {};
+        
+            pod.status.conditions.forEach((condition: any) => {
+                const type = condition.type;
+                pod.status.formattedConditions[type] = {
+                    lastProbeTime: condition.lastProbeTime,
+                    lastTransitionTime: condition.lastTransitionTime,
+                    message: condition.message,
+                    reason: condition.reason,
+                    status: condition.status
+                };
+            });
         });
         return formattedPods;
     } catch (e: any) {
@@ -723,6 +745,21 @@ async function collectNode(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("node")) return [];
     try {
         const nodes = await k8sApiCore.listNode();
+
+        nodes?.body?.items.forEach((node: any) => {
+            node.status.formattedConditions = {};
+        
+            node.status.conditions.forEach((condition: any) => {
+                const type = condition.type;
+                node.status.formattedConditions[type] = {
+                    lastProbeTime: condition.lastProbeTime,
+                    lastTransitionTime: condition.lastTransitionTime,
+                    message: condition.message,
+                    reason: condition.reason,
+                    status: condition.status
+                };
+            });
+        });
         return nodes?.body?.items;
     } catch (e) {
         logger.debug(e);

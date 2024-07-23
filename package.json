@@ -524,13 +524,13 @@
         "typescript": "^4.9.5"
     },
     "name": "Kexa",
-    "version": "1.14.0-SNAPSHOT.116.bc78404",
+    "version": "1.14.0-SNAPSHOT.135.e461bb7",
     "main": "./build/index.js",
     "scripts": {
         "postinstall": "node-config-ts",
         "build": "rimraf ./build && tsc",
         "start:dev": "npx nodemon",
-        "start": "npm run build && node build/index.js",
+        "start": "npm run build && node --max-old-space-size=4096 build/index.js",
         "start:o": "npm run build && node build/index.js -o",
         "start:nobuild": "node build/index.js",
         "start:nobuild:o": "node build/index.js -o",

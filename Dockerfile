@@ -1,16 +1,3 @@
-#FROM node:18-alpine
-#
-#WORKDIR /app
-#
-#COPY . .
-#
-#RUN npm ci
-#
-#RUN npm run build
-#
-#CMD ["node", "build/index.js"]
-#CMD ["sleep","infinity"]
-
 FROM node:20-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
