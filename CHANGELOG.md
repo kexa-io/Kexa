@@ -2463,3 +2463,18 @@ Kexa/rules/rulesByProvider/HTTPRules.yaml was changed
 Kexa/rules/rulesByProvider/driveRules.yaml was changed
 
 
+## 1.14.0-SNAPSHOT.140.b95d58c
+
+### Files added: 0
+
+### Files changed: 4
+
+Kexa/services/addOn/exportation/kexaExportation.service.ts was changed
+
+Kexa/services/addOn/save/kexaSave.service.ts was changed
+
+VERSION was changed
+
+package.json was changed
+
+
