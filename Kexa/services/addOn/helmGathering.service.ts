@@ -13,7 +13,7 @@ import { HelmResources } from "../../models/helm/ressource.models";
 import { HelmConfig } from "../../models/helm/config.models";
 import { deleteFile, getFile, writeStringToJsonFile } from "../../helpers/files";
 const yaml = require('js-yaml');
-import { toISOFormat } from "../functions/dateFormats";
+import { toISOFormat } from "../../helpers/time";
 
 ////////////////////////////////
 //////   INITIALIZATION   //////
@@ -54,7 +54,7 @@ export async function collectData(helmConfig:HelmConfig[]): Promise<HelmResource
             ];
 
             const [
-               chartList
+              chartList
             ] = await Promise.all(promises);
 
             helmResources = {
