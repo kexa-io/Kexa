@@ -1,0 +1,110 @@
+- version: 2.0.0
+  alert_template: &alert_template
+  min: &min
+  date: 06-12-2023
+  alert:
+    fatal:
+      <<: *alert_template
+    error:
+      <<: *alert_template
+    warning:
+      <<: *alert_template
+    info:
+      <<: *alert_template
+    global:
+      <<: *alert_template
+      conditions:
+        - level: 0
+          min: *min
+        - level: 1
+          min: *min
+        - level: 2
+          min: *min
+        - level: 3
+          min: *min
+  rules:
+    - name: "git-is-repository-private"
+      description: "this rule is to check if git repo is private"
+      applied: false
+      level: 0
+      cloudProvider: github
+      objectName: repositories
+      conditions:
+        - property: private
+          condition: EQUAL
+          value: true
+    - name: "git-is-branch-protected"
+      description: "this rule is to check if git branch is protected"
+      applied: false
+      level: 0
+      cloudProvider: github
+      objectName: branches
+      conditions:
+        - operator: NAND
+          criteria:
+            - property: protected
+              condition: DIFFERENT
+              value: true
+            - property: name
+              condition: EQUAL
+              value: master
+    - name: "kub-alert-if-namespace-not-exist"
+      description: "this rule is to check if namespace exists and notify if exists"
+      applied: false
+      level: 0
+      cloudProvider: kubernetes
+      objectName: namespaces
+      conditions:
+        - property: metadata.name
+          condition: DIFFERENT
+          value: dev-cloudprices-apiclient
+    - name: "kub-are-all-pods-running-namespace"
+      description: "this rule is to check if all pods are running for a namespace"
+      applied: false
+      level: 2
+      cloudProvider: kubernetes
+      objectName: pods
+      conditions:
+        - operator: NAND
+          criteria:
+            - property: status.phase
+              condition: DIFFERENT
+              value: Running
+            - property: metadata.namespace
+              condition: EQUAL
+              value: thecloudprices-manorga
+    - name: "kub-are-all-pods-not-running"
+      description: "this rule is to be notified if pods are not running"
+      applied: false
+      level: 2
+      cloudProvider: kubernetes
+      objectName: pods
+      conditions:
+        - operator: OR
+          criteria:
+            - property: status.phase
+              condition: EQUAL
+              value: Running
+            - property: status.phase
+              condition: EQUAL
+              value: Succeeded
+    - name: "kub-all-my-helm-is-deployed"
+      description: "this rule is to check if some helm are not deployed"
+      applied: false
+      level: 2
+      cloudProvider: kubernetes
+      objectName: helm
+      conditions:
+        - property: status
+          condition: EQUAL
+          value: deployed
+    - name: "git-count-repo-orga"
+      description: "this rule is to count the number of repos in a git organization"
+      applied: false
+      level: 0
+      cloudProvider: github
+      objectName: repositories
+      conditions:
+        - property: topics
+          condition: COUNT
+          value: 0

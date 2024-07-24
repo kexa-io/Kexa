@@ -1,0 +1,156 @@
+- version: 1.0.0
+  date: 07-18-2023
+  alert:
+    fatal:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: false
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      to: 
+        #- http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "check-vm-reservation"
+      description : "check if VM have a reservation"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName : ComputeManagementClient.virtualMachines
+      conditions: 
+        - property: priority
+          condition: REGEX
+          value: (?i)reservation
+    - name: "azure-is-disk-orphan"
+      description : "this rules is to check if disk is orphan"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName : ComputeManagementClient.disks
+      conditions:
+        - property : diskState
+          condition : DIFFERENT
+          value : Unattached
+    - name: "aks-has-scaleSet"
+      description : "check if aks have a scaleSet"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName : ContainerServiceClient.managedClusters
+      conditions: 
+        - property: agentPoolProfiles
+          condition: ALL
+          value: 
+            - property: scaleSetEvictionPolicy
+              condition: EQUAL
+              value: Delete
+    - name: "azure-orphan-nsg"
+      description : "this rules is to check if nsg is orphan"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName : NetworkManagementClient.networkSecurityGroups
+      conditions:
+        - operator: OR
+          criteria:
+            - property : networkInterfaces
+              condition : COUNT_SUP_OR_EQUAL
+              value : 1
+            - property : subnets
+              condition : COUNT_SUP_OR_EQUAL
+              value : 1
+    - name: "Orphan virtualNetwork"
+      description : "this rules is to check if virtualNetwork is orphan"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName : NetworkManagementClient.virtualNetworks
+      conditions:
+        - property : subnets
+          condition : COUNT_SUP_OR_EQUAL
+          value : 1
+    - name: "aws-ec2-volume-unattached"
+      description: "this rule is to check if an ec2 volume is unattached"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.Volumes
+      conditions:
+        - property: Attachments
+          condition: COUNT_SUP
+          value: 0
+    - name: "gcp-disk-check-create-date-2-month-expiration"
+      description: "this rule is to check for a persistent disk create date is inferior than 2 months ago"
+      applied: true
+      level: 2
+      cloudProvider: gcp
+      objectName: disk
+      conditions:
+        - property: creationTimestamp
+          condition: DATE_INF
+          value: 0 0 0 2 0 0 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    - name: "o365-is-skus-not-used"
+      description: "this rule is if a subscribed sku is not being used"
+      applied: true
+      level: 1
+      cloudProvider: o365
+      objectName: sku
+      conditions:
+        - property: consumedUnits
+          condition: SUP
+          value: 0
+    - name: "not-under-use-VM"
+      description: "this rule is if a VM is under-used (50% > CPU or 50%>RAM over 2 weeks) "
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.vm
+      conditions:
+        - operator: OR
+          criteria:
+            - property: instanceView.percentageCPU.mean
+              condition: SUP
+              value: 50
+            - property: instanceView.availableMemoryBytes.mean
+              condition: SUP
+              value: 50

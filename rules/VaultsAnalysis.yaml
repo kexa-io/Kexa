@@ -1,0 +1,203 @@
+- version: 1.0.0
+  date: 07-10-2024
+  alert:
+    fatal:
+      enabled: false
+      type: 
+        - log
+        #- teams
+      to:
+        #- https://yourwebhook.webhook/
+    error:
+      enabled: false
+      type: 
+        - log
+        #- email
+        #- teams
+      to: 
+        #- https://yourwebhook.webhook/
+    warning:
+      enabled: false
+      type: 
+        - log
+        #- teams
+      to:
+        #- https://yourwebhook.webhook/
+    info:
+      enabled: false
+      type: 
+        - log
+        #- teams
+      to: 
+        #- https://yourwebhook.webhook/
+    global:
+      enabled: true
+      type: 
+        - log
+      to: 
+        #- https://yourwebhook.webhook/
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    ####################
+    #       AZURE      #
+    ####################
+    # Azure
+    - name: "azure-vault-no-public-network-access"
+      description: "this rule is to ensure vault network public access is disabled"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.vaults
+      conditions:
+        - property: properties.publicNetworkAccess
+          condition: EQUAL
+          value: 'Disabled'
+    # Azure
+    - name: "azure-ensure-rbac-enabled"
+      description: "this rule is to ensure rbac is enabled for kayvaults"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.vaults
+      conditions:
+        - property: properties.enableRbacAuthorization
+          condition: EQUAL
+          value: true
+    # Azure
+    - name: "azure-ensure-use-private-endpoint"
+      description: "this rule is to ensure private endpoints are used for Keyvault"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.vaults
+      conditions:
+        - property: properties.privateEndpointConnections
+          condition: ALL
+          value:
+            - property: id
+              condition: DIFFERENT
+              value: null
+    # Azure
+    - name: "azure-ensure-keyvault-recoverable"
+      description: "this rule is to ensure keyvaults are recoverable"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.vaults
+      conditions:
+        - property: properties.enablePurgeProtection
+          condition: EQUAL
+          value: true
+    # Azure
+    - name: "azure-secrets-ensure-expiration"
+      description: "this rule is to ensure every secrets has an expiration date"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.secrets
+      conditions:
+        - property: properties.attributes.expires
+          condition: DIFFERENT
+          value: null
+    # Azure
+    - name: "azure-vault-keys-rotation"
+      description: "this rule is to ensure every keys has a rotation defined"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.KeyvaultKeys
+      conditions:
+        - property: properties.rotationPolicy
+          condition: DIFFERENT
+          value: null
+    # Azure
+    - name: "azure-vault-keys-expiration-date"
+      description: "this rule is to ensure every keys has a expiration date"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.KeyvaultKeys
+      conditions:
+        - property: properties.attributes.expires
+          condition: DIFFERENT
+          value: null
+    ####################
+    #       AWS        #
+    ####################
+    # AWS
+    - name: "aws-acceskey-rotate-time-limit"
+      description: "this rule is to check if an access key as exceeded the rotate time limit"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.AccessKeys
+      conditions:
+        - property: CreateDate
+          condition: DATE_INF
+          value: 0 0 0 0 0 1 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    # AWS
+    - name: "aws-iam-accesskey-last-used"
+      description: "this rule is to check for acceskeys unused for 1 month"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.AccessKeyLastUsed
+      conditions:
+        - property: AccessKeyLastUsed.LastUsedDate
+          condition: DATE_INF
+          value: 0 0 0 0 0 1 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    ####################
+    #       GCP        #
+    ####################
+    # GCP
+    - name: "gcp-ensure-secrets-rotation"
+      description: "this rule is to ensure secrets rotation is enabled"
+      applied: false
+      level: 1
+      cloudProvider: gcp
+      objectName: secret
+      conditions:
+        - property: rotation
+          condition: DIFFERENT
+          value: null
+    - name: "gcp-ensure-secrets-expiration"
+      description: "this rule is to ensure secrets expiration is enabled"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: secret
+      conditions:
+        - property: expiration
+          condition: REGEX
+          value: '.+'
+    - name: "gcp-ensure-secrets-kms-encrypted"
+      description: "this rule is to ensure secrets expiration is enabled"
+      applied: false
+      level: 1
+      cloudProvider: gcp
+      objectName: secret
+      conditions:
+        - property: customerManagedEncryption
+          condition: DIFFERENT
+          value: null
+    - name: "gcp-ensure-secret-created-less-than-1-month"
+      description: "this rule is to ensure secrets are created less than 1 month"
+      applied: false
+      level: 1
+      cloudProvider: gcp
+      objectName: secret
+      conditions:
+        - property: createTime
+          condition: DATE_INF
+          value: 0 0 0 0 0 1 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
