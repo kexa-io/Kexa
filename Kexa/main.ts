@@ -129,10 +129,9 @@ async function main(retryLeft = -1) {
     if (retryLeft == -1)
         retryLeft = (generalConfig?.maxRetry != null && generalConfig?.checkInterval != null) ? generalConfig?.maxRetry : defaultMaxRetry;
 
-    console.log("retryLeft: " + retryLeft);
     while(1){
         /* 5 minutes default timeout */
-        const defaultTimeout = 5;
+        const defaultTimeout = 15;
         const minuteTimeout = 60 * 1000;
         const timeout = minuteTimeout * (generalConfig?.timeout != null ? generalConfig?.timeout : defaultTimeout);
             

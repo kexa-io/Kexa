@@ -101,10 +101,13 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
         if (googleCred && googleCred.includes(".json")) {
             setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", googleCred);
         }
-        else if (projectId && googleCred) writeStringToJsonFile(googleCred, defaultPath);
-        else{
+        else if (projectId && googleCred) {
+            writeStringToJsonFile(googleCred, defaultPath);
+        }
+        else {
             setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", defaultPathCred);
-            projectId = JSON.parse(getFile(defaultPathCred)??"")?.project_id;
+            const credentials = JSON.parse(getFile(defaultPathCred)??"");
+            projectId = credentials?.project_id;
         }
         let regionsList = new Array<string>();
         if ('regions' in config) {
