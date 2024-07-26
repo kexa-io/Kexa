@@ -17,10 +17,10 @@
 
 const process = require('process');
 
-import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
+import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
 import { googleWorkspaceResources } from "../../models/googleWorkspace/ressource.models";
 import { googleWorkspaceConfig } from "../../models/googleWorkspace/config.models";
-import {deleteFile, writeStringToJsonFile} from "../../helpers/files";
+import { deleteFile, getFile, writeStringToJsonFile } from "../../helpers/files";
 import { jsonStringify } from '../../helpers/jsonStringify';
 
 ////////////////////////////////
@@ -80,7 +80,15 @@ export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[])
         } as googleWorkspaceResources;
         try {
             let prefix = config.prefix??(googleWorkspaceConfig.indexOf(config).toString());
-            writeStringToJsonFile(await getConfigOrEnvVar(config, "WORKSPACECRED", prefix), path.join(process.cwd(), '/config/credentials_workspace.json'));
+            // check if workspacecred is a json or a path to json
+            const workspaceEnvCredentials = await getConfigOrEnvVar(config, "WORKSPACECRED", prefix);
+            if (workspaceEnvCredentials && workspaceEnvCredentials.includes(".json")) {
+                const workCred = getFile(JSON.parse(JSON.stringify(workspaceEnvCredentials)));
+                writeStringToJsonFile(workCred as string, path.join(process.cwd(), '/config/credentials_workspace.json'));
+
+            } else {
+                writeStringToJsonFile(await getConfigOrEnvVar(config, "WORKSPACECRED", prefix), path.join(process.cwd(), '/config/credentials_workspace.json'));
+            }
             if (process.env[googleWorkspaceConfig.indexOf(config)+"-WORKSPACETOKEN"])
                 writeStringToJsonFile(await getConfigOrEnvVar(config, "WORKSPACETOKEN", prefix), "./config/token_workspace.json");
             const auth = await authorize();
@@ -170,7 +178,6 @@ async function listUsers(auth: any): Promise<Array<any> | null> {
     });
     const users = res.data.users;
     if (!users || users.length === 0) {
-        console.log('No users found.');
         return null;
     }
     jsonData = JSON.parse(jsonStringify(users));

@@ -2478,94 +2478,10 @@ VERSION was changed
 package.json was changed
 
 
-## 1.14.0-SNAPSHOT.144.c47a82b
+## 1.14.0-adrientimeout.143.8ff23e6
 
 ### Files added: 0
 
-### Files changed: 42
-
-.gitignore was changed
-
-CHANGELOG.md was changed
-
-Kexa/main.ts was changed
-
-Kexa/services/addOn/azureGathering.service.ts was changed
-
-Kexa/services/addOn/exportation/kexaExportation.service.ts was changed
-
-Kexa/services/addOn/save/kexaSave.service.ts was changed
-
-VERSION was changed
-
-documentation/Documentation-Kexa.md was changed
-
-package.json was changed
-
-rules/AwsComplianceSetRules.yaml was changed
-
-rules/AzureComplianceSetRules.yaml was changed
-
-rules/BenchmarkOffice365.yaml was changed
-
-rules/BenchmarkWorkspace.yaml was changed
-
-rules/Deployement.yaml was changed
-
-rules/Economy.yaml was changed
-
-rules/GcpComplianceSetRules.yaml was changed
-
-rules/KubeComplianceSetRules.yaml was changed
-
-rules/OperationalExcellence.yaml was changed
-
-rules/Performance.yaml was changed
-
-rules/PostDeployement.yaml was changed
-
-rules/PreDeployement.yaml was changed
-
-rules/Security.yaml was changed
-
-rules/StorageSecurity.yaml was changed
-
-rules/VaultsAnalysis.yaml was changed
-
-rules/awsBenchmarkRules.yaml was changed
-
-rules/awsTesting.yaml was changed
-
-rules/azureBenchmarkRules.yaml was changed
-
-rules/crossCloudDisksChecks.yaml was changed
-
-rules/kubernetesSetRules.yaml was changed
-
-rules/rules-testing.yaml was changed
-
-rules/rules-with-var.yaml was changed
-
-rules/rulesByProvider/HTTPRules.yaml was changed
-
-rules/rulesByProvider/awsSetRules.yaml was changed
-
-rules/rulesByProvider/azureSetRules.yaml was changed
-
-rules/rulesByProvider/driveRules.yaml was changed
-
-rules/rulesByProvider/gcpSetRules.yaml was changed
-
-rules/rulesByProvider/githubSetRules.yaml was changed
-
-rules/rulesByProvider/googleDriveSetRules.yaml was changed
-
-rules/rulesByProvider/googleWorkspaceSetRules.yaml was changed
-
-rules/rulesByProvider/helmSetRules.yaml was changed
-
-rules/rulesByProvider/httpSetRules.yaml was changed
-
-rules/rulesByProvider/o365SetRules.yaml was changed
+### Files changed: 0
 
 
