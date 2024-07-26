@@ -76,7 +76,13 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
         let prefix = config.prefix??(kubernetesConfig.indexOf(config).toString());
         try {
             let pathKubeFile = await getConfigOrEnvVar(config, "KUBECONFIG", prefix);
-            writeStringToJsonFile(JSON.stringify(yaml.load(getFile(pathKubeFile??"")), null, 2), "./config/kubernetes.json");
+
+            if (pathKubeFile?.endsWith(".json"))
+                writeStringToJsonFile(JSON.stringify(getFile(pathKubeFile??"")), "./config/kubernetes.json");
+            else if (pathKubeFile?.endsWith(".yaml") || pathKubeFile?.endsWith(".yml"))
+                writeStringToJsonFile(JSON.stringify(yaml.load(getFile(pathKubeFile??"")), null, 2), "./config/kubernetes.json");
+            else
+                logger.error("Unknow credentials type for Kubernetes (path must be a .json or .yaml/.yml)");         
 
             const promises = [
                 kubernetesListing(pathKubeFile),

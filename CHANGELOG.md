@@ -2463,3 +2463,46 @@ Kexa/rules/rulesByProvider/HTTPRules.yaml was changed
 Kexa/rules/rulesByProvider/driveRules.yaml was changed
 
 
+## 1.14.0-SNAPSHOT.140.b95d58c
+
+### Files added: 0
+
+### Files changed: 4
+
+Kexa/services/addOn/exportation/kexaExportation.service.ts was changed
+
+Kexa/services/addOn/save/kexaSave.service.ts was changed
+
+VERSION was changed
+
+package.json was changed
+
+
+## 1.14.0-adrientimeout.143.8ff23e6
+
+### Files added: 0
+
+### Files changed: 0
+
+
+## 1.14.0-SNAPSHOT.149.0b025a0
+
+### Files added: 1
+
+rules/rulesByProvider/kubernetesSetRules.yaml was added
+
+### Files changed: 6
+
+rules/rulesByProvider/kubernetesSetRules.yaml was changed
+
+CHANGELOG.md was changed
+
+Kexa/main.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+Kexa/services/addOn/googleWorkspaceGathering.service.ts was changed
+
+Kexa/services/addOn/kubernetesGathering.service.ts was changed
+
+

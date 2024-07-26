@@ -61,17 +61,6 @@
         - property : body.date
           condition : DIFFERENT
           value : null
-    - name: "http-request-message-in-body"
-      description : "request date in body"
-      applied: true
-      level: 0
-      loudMessage: "date is present in body"
-      cloudProvider: http
-      objectName : request
-      conditions:
-        - property : body.message
-          condition : EQUAL
-          value : "Ok."
     - name: "http-request-certificate"
       description : "check if certificate is present"
       applied: true

@@ -46,6 +46,7 @@
           <a href="#advanced-configurations">Advanced Configurations</a>
           <ul>
             <li><a href="#varaibilization">Variabilization</a></li>
+            <li><a href="#timeout">Timeout</a></li>
             <li><a href="#continuous-run">Continuous run</a></li>
           </ul>
         </li>
@@ -396,6 +397,40 @@ Here we are an example of configuration file with variable:
 
 For more details on variabilized rules, please refer to the section [Variabilization Rules](#variabilization-rules)
 
+<div id="timeout"></div>
+
+### **Timeout**
+
+Kexa has a timeout system, by default, kexa will timeout if a running scan doesn't complete after 5 minutes.
+This is a very large timeout for Kexa, you can customize it in your configuration file, by filling 'timeout' property in the "general"
+section of your configuration file.
+
+```yaml
+{
+  "aws": [
+    {
+      "name": "Project A",
+      "prefix": "AWSPROJECTA_", #(if not specify it would have been: '0')
+      "description": "First subscription (0) : Project A subscription",
+      "rules": [
+        "Name of my rule"
+      ],
+      "regions": [
+        "us-east-1"
+      ]
+    }
+  ],
+  "general":  {
+    "timeout": 1, # timeout after 1 minute, you can use 0.5 for 30s timeout for example
+  }
+}
+```
+
+A timeout will rise a 'fatal' error level alert and interupt Kexa. (you will still get notified for the timeout error)
+There is more to know about timeout in the next section, when continuous run is being use.
+
+<br/>
+
 <div id="continuous-run"></div>
 
 ## **Continuous run**
@@ -407,6 +442,36 @@ The "alertInterval" is used to determine the frequency in seconds of alerts for 
 Here we are an example of configuration file with variable:
 *in this example i want to scan every 5s and I want to be notified for the same error maximum once an hour.*
 ![example config with continuous runtime](../config/demo/exemple6.default.json)
+
+If you're using continuous run, you have additional configuration properties that you can fill
+for the timeout options. 
+
+Refer to the previous timeout section to know more about the basics of Kexa timeout.
+If using continuous run, you may want to indicate how much retries do you want when a execution is timing out.
+
+```yaml
+{
+  "aws": [
+    {
+      "name": "Project A",
+      "prefix": "AWSPROJECTA_", #(if not specify it would have been: '0')
+      "description": "First subscription (0) : Project A subscription",
+      "rules": [
+        "Name of my rule"
+      ],
+      "regions": [
+        "us-east-1"
+      ]
+    }
+  ],
+  "general":  {
+    "timeout": 1, # timeout after 1 minute, you can use 0.5 for 30s timeout for example
+    "maxRetry": 2 # Kexa will retry 2 times after timeout, choose 0 for no retry.
+    "checkInterval": 5 # interval between Kexa checks
+    "alertInterval": 3600 # alerts interval to avoid too much duplicate
+  }
+}
+```
 
 # <div align="center" id="environment-variables-and-auth">**Environment variables & Auth**</div>
 <br/>
