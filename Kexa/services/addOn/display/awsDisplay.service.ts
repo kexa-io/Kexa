@@ -22,7 +22,7 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
                 return ' Key ID : ' + objectContent.AccessKeyId;
             }
         default:
-             return ' Object Id(s) : ' + awsFindIdToDisplay(objectContent);
+             return ' Object Id(s) : ' + awsFindIdToDisplay(objectContent) + ' in Region : ' + objectContent.region + ' obj type : ' + rule.objectName;
     }
 }
 

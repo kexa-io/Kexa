@@ -2462,7 +2462,6 @@ Kexa/rules/rulesByProvider/HTTPRules.yaml was changed
 
 Kexa/rules/rulesByProvider/driveRules.yaml was changed
 
-
 ## 1.14.0-SNAPSHOT.140.b95d58c
 
 ### Files added: 0
@@ -2476,14 +2475,6 @@ Kexa/services/addOn/save/kexaSave.service.ts was changed
 VERSION was changed
 
 package.json was changed
-
-
-## 1.14.0-adrientimeout.143.8ff23e6
-
-### Files added: 0
-
-### Files changed: 0
-
 
 ## 1.14.0-SNAPSHOT.149.0b025a0
 
@@ -2580,5 +2571,4 @@ rules/perProvider/httpSetRules.yaml was changed
 rules/perProvider/o365SetRules.yaml was changed
 
 rules/rulesByProvider/kubernetesSetRules.yaml was changed
-
 
