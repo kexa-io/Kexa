@@ -165,6 +165,12 @@
 	*	- SqlManagementClient.servers
 	*	- SqlManagementClient.startStopManagedInstanceSchedules
 	*	- SqlManagementClient.transparentDataEncryptions
+	*	- StorageManagementClient.blobServices
+	*	- StorageManagementClient.blobContainers
+	*	- StorageManagementClient.fileServices
+	*	- StorageManagementClient.fileShares
+	*	- StorageManagementClient.queueServices
+	*	- StorageManagementClient.queue
 	*	- StorageManagementClient.operations
 	*	- StorageManagementClient.skus
 	*	- StorageManagementClient.storageAccounts
@@ -177,14 +183,12 @@
 	*	- StorageManagementClient.objectReplicationPoliciesOperations
 	*	- StorageManagementClient.localUsersOperations
 	*	- StorageManagementClient.encryptionScopes
-	*	- StorageManagementClient.blobServices
-	*	- StorageManagementClient.blobContainers
-	*	- StorageManagementClient.fileServices
-	*	- StorageManagementClient.fileShares
-	*	- StorageManagementClient.queueServices
-	*	- StorageManagementClient.queue
 	*	- StorageManagementClient.tableServices
 	*	- StorageManagementClient.tableOperations
+	*	- StorageManagementClient.networkSecurityPerimeterConfigurations
+	*	- StorageManagementClient.storageTaskAssignments
+	*	- StorageManagementClient.storageTaskAssignmentsInstancesReport
+	*	- StorageManagementClient.storageTaskAssignmentInstancesReport
 	*	- WebSiteManagementClient.appServiceCertificateOrders
 	*	- WebSiteManagementClient.certificateOrdersDiagnostics
 	*	- WebSiteManagementClient.certificateRegistrationProvider

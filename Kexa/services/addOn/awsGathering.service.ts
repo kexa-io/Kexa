@@ -62,6 +62,7 @@
 	*	- EC2Client.Instances
 	*	- EC2Client.InternetGateways
 	*	- EC2Client.IpamByoasn
+	*	- EC2Client.IpamExternalResourceVerificationTokens
 	*	- EC2Client.IpamPools
 	*	- EC2Client.IpamResourceDiscoveries
 	*	- EC2Client.IpamResourceDiscoveryAssociations
@@ -119,6 +120,7 @@
 	*	- EC2Client.StoreImageTasks
 	*	- EC2Client.Subnets
 	*	- EC2Client.Tags
+	*	- EC2Client.TrafficMirrorFilterRules
 	*	- EC2Client.TrafficMirrorFilters
 	*	- EC2Client.TrafficMirrorSessions
 	*	- EC2Client.TrafficMirrorTargets
@@ -170,6 +172,7 @@
 	*	- EC2Client.HostReservationPurchasePreview
 	*	- EC2Client.ImageBlockPublicAccessState
 	*	- EC2Client.InstanceMetadataDefaults
+	*	- EC2Client.InstanceTpmEkPub
 	*	- EC2Client.InstanceTypesFromInstanceRequirements
 	*	- EC2Client.InstanceUefiData
 	*	- EC2Client.IpamAddressHistory
@@ -665,6 +668,7 @@
 	*	- ECRClient.PullThroughCacheRules
 	*	- ECRClient.Registry
 	*	- ECRClient.Repositories
+	*	- ECRClient.RepositoryCreationTemplates
 	*	- ECRClient.AuthorizationToken
 	*	- ECRClient.DownloadUrlForLayer
 	*	- ECRClient.LifecyclePolicy
@@ -1123,6 +1127,7 @@
 	*	- CodeDeployClient.GitHubAccountTokenNames
 	*	- CodeDeployClient.OnPremisesInstances
 	*	- CodeDeployClient.TagsForResource
+	*	- TimestreamQueryClient.AccountSettings
 	*	- TimestreamQueryClient.Endpoints
 	*	- TimestreamQueryClient.ScheduledQuery
 	*	- TimestreamQueryClient.ScheduledQueries
@@ -1401,6 +1406,7 @@
 	*	- GlueClient.UnfilteredPartitionMetadata
 	*	- GlueClient.UnfilteredPartitionsMetadata
 	*	- GlueClient.UnfilteredTableMetadata
+	*	- GlueClient.UsageProfile
 	*	- GlueClient.UserDefinedFunction
 	*	- GlueClient.UserDefinedFunctions
 	*	- GlueClient.Workflow
@@ -1426,6 +1432,7 @@
 	*	- GlueClient.Statements
 	*	- GlueClient.TableOptimizerRuns
 	*	- GlueClient.Triggers
+	*	- GlueClient.UsageProfiles
 	*	- GlueClient.Workflows
 	*	- ResourceGroupsClient.AccountSettings
 	*	- ResourceGroupsClient.Group
@@ -1468,6 +1475,7 @@
 	*	- BatchClient.JobQueues
 	*	- BatchClient.Jobs
 	*	- BatchClient.SchedulingPolicies
+	*	- BatchClient.JobQueueSnapshot
 	*	- BatchClient.Jobs
 	*	- BatchClient.SchedulingPolicies
 	*	- BatchClient.TagsForResource
@@ -1592,6 +1600,7 @@
 	*	- QuickSightClient.IAMPolicyAssignment
 	*	- QuickSightClient.Ingestion
 	*	- QuickSightClient.IpRestriction
+	*	- QuickSightClient.KeyRegistration
 	*	- QuickSightClient.Namespace
 	*	- QuickSightClient.RefreshSchedule
 	*	- QuickSightClient.RoleCustomPermission
@@ -1636,6 +1645,7 @@
 	*	- QuickSightClient.ThemeVersions
 	*	- QuickSightClient.Themes
 	*	- QuickSightClient.TopicRefreshSchedules
+	*	- QuickSightClient.TopicReviewedAnswers
 	*	- QuickSightClient.Topics
 	*	- QuickSightClient.UserGroups
 	*	- QuickSightClient.Users
@@ -1862,6 +1872,7 @@
 	*	- KafkaClient.TagsForResource
 	*	- KafkaClient.VpcConnections
 	*	- ConnectClient.AgentStatus
+	*	- ConnectClient.AuthenticationProfile
 	*	- ConnectClient.Contact
 	*	- ConnectClient.ContactEvaluation
 	*	- ConnectClient.ContactFlow
@@ -1885,6 +1896,7 @@
 	*	- ConnectClient.UserHierarchyStructure
 	*	- ConnectClient.View
 	*	- ConnectClient.Vocabulary
+	*	- ConnectClient.AttachedFile
 	*	- ConnectClient.ContactAttributes
 	*	- ConnectClient.CurrentMetricData
 	*	- ConnectClient.CurrentUserData
@@ -1898,6 +1910,7 @@
 	*	- ConnectClient.AgentStatuses
 	*	- ConnectClient.AnalyticsDataAssociations
 	*	- ConnectClient.ApprovedOrigins
+	*	- ConnectClient.AuthenticationProfiles
 	*	- ConnectClient.Bots
 	*	- ConnectClient.ContactEvaluations
 	*	- ConnectClient.ContactFlowModules
@@ -2188,6 +2201,7 @@
 	*	- SageMakerClient.InferenceRecommendationsJob
 	*	- SageMakerClient.LabelingJob
 	*	- SageMakerClient.LineageGroup
+	*	- SageMakerClient.MlflowTrackingServer
 	*	- SageMakerClient.ModelBiasJobDefinition
 	*	- SageMakerClient.ModelCard
 	*	- SageMakerClient.ModelCardExportJob
@@ -2199,6 +2213,7 @@
 	*	- SageMakerClient.MonitoringSchedule
 	*	- SageMakerClient.NotebookInstance
 	*	- SageMakerClient.NotebookInstanceLifecycleConfig
+	*	- SageMakerClient.OptimizationJob
 	*	- SageMakerClient.Pipeline
 	*	- SageMakerClient.PipelineDefinitionForExecution
 	*	- SageMakerClient.PipelineExecution
@@ -2259,6 +2274,7 @@
 	*	- SageMakerClient.LabelingJobs
 	*	- SageMakerClient.LabelingJobsForWorkteam
 	*	- SageMakerClient.LineageGroups
+	*	- SageMakerClient.MlflowTrackingServers
 	*	- SageMakerClient.ModelBiasJobDefinitions
 	*	- SageMakerClient.ModelCardExportJobs
 	*	- SageMakerClient.ModelCardVersions
@@ -2275,6 +2291,7 @@
 	*	- SageMakerClient.MonitoringSchedules
 	*	- SageMakerClient.NotebookInstanceLifecycleConfigs
 	*	- SageMakerClient.NotebookInstances
+	*	- SageMakerClient.OptimizationJobs
 	*	- SageMakerClient.PipelineExecutionSteps
 	*	- SageMakerClient.PipelineExecutions
 	*	- SageMakerClient.PipelineParametersForExecution
@@ -2614,6 +2631,7 @@
 	*	- GuardDutyClient.FindingsStatistics
 	*	- GuardDutyClient.IPSet
 	*	- GuardDutyClient.InvitationsCount
+	*	- GuardDutyClient.MalwareProtectionPlan
 	*	- GuardDutyClient.MalwareScanSettings
 	*	- GuardDutyClient.MasterAccount
 	*	- GuardDutyClient.MemberDetectors
@@ -2628,6 +2646,7 @@
 	*	- GuardDutyClient.Findings
 	*	- GuardDutyClient.IPSets
 	*	- GuardDutyClient.Invitations
+	*	- GuardDutyClient.MalwareProtectionPlans
 	*	- GuardDutyClient.Members
 	*	- GuardDutyClient.OrganizationAdminAccounts
 	*	- GuardDutyClient.PublishingDestinations
@@ -2658,6 +2677,7 @@
 	*	- AccessAnalyzerClient.Analyzer
 	*	- AccessAnalyzerClient.ArchiveRule
 	*	- AccessAnalyzerClient.Finding
+	*	- AccessAnalyzerClient.FindingRecommendation
 	*	- AccessAnalyzerClient.FindingV2
 	*	- AccessAnalyzerClient.GeneratedPolicy
 	*	- AccessAnalyzerClient.AccessPreviewFindings
@@ -2705,6 +2725,8 @@
 	*	- WorkSpacesClient.WorkspaceSnapshots
 	*	- WorkSpacesClient.Workspaces
 	*	- WorkSpacesClient.WorkspacesConnectionStatus
+	*	- WorkSpacesClient.WorkspacesPoolSessions
+	*	- WorkSpacesClient.WorkspacesPools
 	*	- WorkSpacesClient.AccountLink
 	*	- WorkSpacesClient.AccountLinks
 	*	- WorkSpacesClient.AvailableManagementCidrRanges
@@ -2826,6 +2848,7 @@
 	*	- LakeFormationClient.Resource
 	*	- LakeFormationClient.Transaction
 	*	- LakeFormationClient.DataCellsFilter
+	*	- LakeFormationClient.DataLakePrincipal
 	*	- LakeFormationClient.DataLakeSettings
 	*	- LakeFormationClient.EffectivePermissionsForPath
 	*	- LakeFormationClient.LFTag
@@ -3150,6 +3173,7 @@
 	*	- PersonalizeClient.BatchInferenceJob
 	*	- PersonalizeClient.BatchSegmentJob
 	*	- PersonalizeClient.Campaign
+	*	- PersonalizeClient.DataDeletionJob
 	*	- PersonalizeClient.Dataset
 	*	- PersonalizeClient.DatasetExportJob
 	*	- PersonalizeClient.DatasetGroup
@@ -3167,6 +3191,7 @@
 	*	- PersonalizeClient.BatchInferenceJobs
 	*	- PersonalizeClient.BatchSegmentJobs
 	*	- PersonalizeClient.Campaigns
+	*	- PersonalizeClient.DataDeletionJobs
 	*	- PersonalizeClient.DatasetExportJobs
 	*	- PersonalizeClient.DatasetGroups
 	*	- PersonalizeClient.DatasetImportJobs
@@ -3265,6 +3290,7 @@
 	*	- HealthClient.HealthServiceStatusForOrganization
 	*	- AccountClient.AlternateContact
 	*	- AccountClient.ContactInformation
+	*	- AccountClient.PrimaryEmail
 	*	- AccountClient.RegionOptStatus
 	*	- AccountClient.Regions
 	*	- GrafanaClient.WorkspaceAuthentication
@@ -3273,6 +3299,8 @@
 	*	- GrafanaClient.Permissions
 	*	- GrafanaClient.TagsForResource
 	*	- GrafanaClient.Versions
+	*	- GrafanaClient.WorkspaceServiceAccountTokens
+	*	- GrafanaClient.WorkspaceServiceAccounts
 	*	- GrafanaClient.Workspaces
 	*	- DetectiveClient.OrganizationConfiguration
 	*	- DetectiveClient.Investigation
@@ -3450,6 +3478,7 @@
 	*	- ResiliencehubClient.ResiliencyPolicy
 	*	- ResiliencehubClient.AlarmRecommendations
 	*	- ResiliencehubClient.AppAssessmentComplianceDrifts
+	*	- ResiliencehubClient.AppAssessmentResourceDrifts
 	*	- ResiliencehubClient.AppAssessments
 	*	- ResiliencehubClient.AppComponentCompliances
 	*	- ResiliencehubClient.AppComponentRecommendations
@@ -4069,6 +4098,7 @@
 	*	- BudgetsClient.Budgets
 	*	- BudgetsClient.NotificationsForBudget
 	*	- BudgetsClient.SubscribersForNotification
+	*	- BudgetsClient.TagsForResource
 	*	- FraudDetectorClient.Detector
 	*	- FraudDetectorClient.ModelVersions
 	*	- FraudDetectorClient.BatchImportJobs
@@ -4693,6 +4723,8 @@
 	*	- ComputeOptimizerClient.EnrollmentStatusesForOrganization
 	*	- ComputeOptimizerClient.LambdaFunctionRecommendations
 	*	- ComputeOptimizerClient.LicenseRecommendations
+	*	- ComputeOptimizerClient.RDSDatabaseRecommendationProjectedMetrics
+	*	- ComputeOptimizerClient.RDSDatabaseRecommendations
 	*	- ComputeOptimizerClient.RecommendationPreferences
 	*	- ComputeOptimizerClient.RecommendationSummaries
 	*	- ChimeSDKMediaPipelinesClient.MediaCapturePipeline
@@ -4757,6 +4789,7 @@
 	*	- EMRServerlessClient.DashboardForJobRun
 	*	- EMRServerlessClient.JobRun
 	*	- EMRServerlessClient.Applications
+	*	- EMRServerlessClient.JobRunAttempts
 	*	- EMRServerlessClient.JobRuns
 	*	- EMRServerlessClient.TagsForResource
 	*	- SnowDeviceManagementClient.Device
@@ -4965,7 +4998,7 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
 						})
 						collectedResults.push(newResources);
                     } catch (e) {
-                        logger.error("error in collectAWSData with AWS_ACCESS_KEY_ID: " + oneConfig["AWS_ACCESS_KEY_ID"] ?? null);
+                        logger.error("error in collectAWSData with AWS_ACCESS_KEY_ID: " + (oneConfig["AWS_ACCESS_KEY_ID"] ?? null));
                         logger.error(e);
                     }
                 });
@@ -4978,8 +5011,8 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
                 resources.push(concatedResults);
             }
         } catch (e) {
-            context?.log("error in AWS connect with AWS_ACCESS_KEY_ID: " + oneConfig["AWS_ACCESS_KEY_ID"] ?? null);
-            logger.error("error in AWS connect with AWS_ACCESS_KEY_ID: " + oneConfig["AWS_ACCESS_KEY_ID"] ?? null);
+            context?.log("error in AWS connect with AWS_ACCESS_KEY_ID: " + (oneConfig["AWS_ACCESS_KEY_ID"] ?? null));
+            logger.error("error in AWS connect with AWS_ACCESS_KEY_ID: " + (oneConfig["AWS_ACCESS_KEY_ID"] ?? null));
             logger.error(e);
         }
     }
