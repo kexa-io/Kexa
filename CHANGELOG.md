@@ -2462,11 +2462,113 @@ Kexa/rules/rulesByProvider/HTTPRules.yaml was changed
 
 Kexa/rules/rulesByProvider/driveRules.yaml was changed
 
-
-## 1.14.0-devadrienrules.139.3a197d0
+## 1.14.0-SNAPSHOT.140.b95d58c
 
 ### Files added: 0
 
-### Files changed: 0
+### Files changed: 4
 
+Kexa/services/addOn/exportation/kexaExportation.service.ts was changed
+
+Kexa/services/addOn/save/kexaSave.service.ts was changed
+
+VERSION was changed
+
+package.json was changed
+
+## 1.14.0-SNAPSHOT.149.0b025a0
+
+### Files added: 2
+
+rules/Kubernete.yaml was added
+
+rules/perProvider/kubernetesSetRules.yaml was added
+
+### Files changed: 47
+
+rules/Kubernete.yaml was changed
+
+rules/perProvider/kubernetesSetRules.yaml was changed
+
+.gitignore was changed
+
+CHANGELOG.md was changed
+
+Kexa/main.ts was changed
+
+Kexa/services/addOn/azureGathering.service.ts was changed
+
+Kexa/services/addOn/exportation/kexaExportation.service.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+Kexa/services/addOn/googleWorkspaceGathering.service.ts was changed
+
+Kexa/services/addOn/kubernetesGathering.service.ts was changed
+
+Kexa/services/addOn/save/kexaSave.service.ts was changed
+
+VERSION was changed
+
+documentation/Documentation-Kexa.md was changed
+
+package.json was changed
+
+rules/AwsComplianceSetRules.yaml was changed
+
+rules/AzureComplianceSetRules.yaml was changed
+
+rules/BenchmarkOffice365.yaml was changed
+
+rules/BenchmarkWorkspace.yaml was changed
+
+rules/Deployement.yaml was changed
+
+rules/Economy.yaml was changed
+
+rules/GcpComplianceSetRules.yaml was changed
+
+rules/HTTPRules.yaml was changed
+
+rules/KubeComplianceSetRules.yaml was changed
+
+rules/OperationalExcellence.yaml was changed
+
+rules/Performance.yaml was changed
+
+rules/PostDeployement.yaml was changed
+
+rules/PreDeployement.yaml was changed
+
+rules/SecretsRotation.yaml was changed
+
+rules/Security.yaml was changed
+
+rules/StorageSecurity.yaml was changed
+
+rules/awsBenchmarkRules.yaml was changed
+
+rules/azureBenchmarkRules.yaml was changed
+
+rules/crossCloudDisksChecks.yaml was changed
+
+rules/perProvider/awsSetRules.yaml was changed
+
+rules/perProvider/azureSetRules.yaml was changed
+
+rules/perProvider/driveRules.yaml was changed
+
+rules/perProvider/gcpSetRules.yaml was changed
+
+rules/perProvider/githubSetRules.yaml was changed
+
+rules/perProvider/googleDriveSetRules.yaml was changed
+
+rules/perProvider/googleWorkspaceSetRules.yaml was changed
+
+rules/perProvider/httpSetRules.yaml was changed
+
+rules/perProvider/o365SetRules.yaml was changed
+
+rules/rulesByProvider/kubernetesSetRules.yaml was changed
 

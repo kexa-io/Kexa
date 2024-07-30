@@ -14,7 +14,8 @@ import { getConfig } from "./helpers/loaderConfig";
 import { jsonStringify } from "./helpers/jsonStringify";
 import { Memoisation } from "./services/memoisation.service";
 import { SettingFile } from "./models/settingFile/settingFile.models";
-import { ResultScan } from "./models/resultScan.models";
+import { ResultScan, SubResultScan } from "./models/resultScan.models";
+import { exit } from "process";
 
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
@@ -87,14 +88,27 @@ export async function GlobalAlert(settings: SettingFile[], allScan: ResultScan[]
     return retError;
 }
 
+const {
+    setTimeout: setTimer,
+    clearTimeout: clearTimer
+  } = require('node:timers');
+
+
+  import {alertFromGlobal} from "./services/alerte.service";
+import { Condition } from "@aws-sdk/client-forecast";
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-async function main() {
+async function main(retryLeft = -1) {
     const configuration = getConfig();
     const generalConfig = (configuration.hasOwnProperty("general")) ? configuration["general"] : null;
     let context = getContext();
     context?.log("entering main");
     const logger = getNewLogger("MainLogger");
     context?.log("logger created");
+
+
+    
+
     if (process.env.DEV) {
         if (process.env.DEV == "true") {
             logger.settings.minLevel = 2;
@@ -108,7 +122,64 @@ async function main() {
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"https://github.com/4urcloud/Kexa_Rules");
     let allScan: ResultScan[][] = [];
     let retError = false;
+    let timer;
+    
+    /* 3 default max retry when timeout happen in continuous run */
+    const defaultMaxRetry = generalConfig?.checkInterval != null ? 3 : 0;
+    if (retryLeft == -1)
+        retryLeft = (generalConfig?.maxRetry != null && generalConfig?.checkInterval != null) ? generalConfig?.maxRetry : defaultMaxRetry;
+
     while(1){
+        /* 5 minutes default timeout */
+        const defaultTimeout = 15;
+        const minuteTimeout = 60 * 1000;
+        const timeout = minuteTimeout * (generalConfig?.timeout != null ? generalConfig?.timeout : defaultTimeout);
+            
+        timer = setTimer(() => {
+            if (retryLeft == 0) {
+                allScan = [];
+                const timeoutError = {
+                    value: "Enabled",
+                    condition: [
+                        { 
+                            property: 'KexaExecutionTime',
+                            condition: 'InferiorThan',
+                            value: timeout
+                        }
+                    ],
+                    result: false
+                }
+                const objectContentCustom = (timeout / 1000).toString() + " seconds custom timeout";
+                const objectContentDefault = "5 minutes default timeout";
+                const timeoutScan: ResultScan = { 
+                    error: [timeoutError as SubResultScan],
+                    rule: {
+                        level: 3,
+                        name: "Timeout",
+                        applied: true,
+                        cloudProvider: "Kexa",
+                        description: "Timeout",
+                        objectName: "Timer",
+                        conditions: []
+                    },
+                    objectContent: {
+                        id: (generalConfig?.timeout != null ? objectContentCustom : objectContentDefault)
+                    }
+                }
+                allScan.push([timeoutScan as ResultScan]);
+                settings.forEach(setting => {
+                    alertFromGlobal(setting.alert.global, [], allScan)
+                });
+                process.exit(1);
+            } else {
+                retryLeft--;
+                // RECALL
+                logger.error("Timeout reached, retrying scan");
+                main(retryLeft);
+                return (1);
+            }
+          }, timeout);
+ 
         let startTimeStamp = Date.now();
         await mainScan(settings, allScan, idScan.toString());
         if(Memoisation.canSendGlobalAlert()){
@@ -116,6 +187,7 @@ async function main() {
             retError = await GlobalAlert(settings, allScan);
             if(retError) {
                 logger.error("High level error found in scan, exiting Kexa");
+                clearTimer(timer);
                 break;
             }
             allScan = [];
@@ -124,14 +196,16 @@ async function main() {
             await new Promise(r => setTimeout(r, Math.max((~~generalConfig.checkInterval - (Date.now()-startTimeStamp)/1000)*1000, 0)));
         } else {
             logger.info("No checkInterval found, exiting Kexa");
-            if (retError)
-                process.exit(1);
+            clearTimer(timer);
+ //           if (retError)
+    //            process.exit(1);
             break;
         }
         idScan++;
     };
-    if (retError)
-        process.exit(1);
+   clearTimer(timer);
+ //   if (retError)
+ //       process.exit(1);
 }
 
 main();

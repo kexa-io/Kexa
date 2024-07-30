@@ -17,4 +17,3 @@ savedFolder/*
 config/resources*.html
 config/resources*.json
 .DS_Store
-rules/*
