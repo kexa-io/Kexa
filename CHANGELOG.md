@@ -2572,3 +2572,24 @@ rules/perProvider/o365SetRules.yaml was changed
 
 rules/rulesByProvider/kubernetesSetRules.yaml was changed
 
+## 1.14.0-SNAPSHOT.149.0b025a0
+
+### Files added: 1
+
+rules/rulesByProvider/kubernetesSetRules.yaml was added
+
+### Files changed: 6
+
+rules/rulesByProvider/kubernetesSetRules.yaml was changed
+
+CHANGELOG.md was changed
+
+Kexa/main.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+Kexa/services/addOn/googleWorkspaceGathering.service.ts was changed
+
+Kexa/services/addOn/kubernetesGathering.service.ts was changed
+
+
