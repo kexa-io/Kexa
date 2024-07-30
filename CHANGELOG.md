@@ -2572,3 +2572,10 @@ rules/perProvider/o365SetRules.yaml was changed
 
 rules/rulesByProvider/kubernetesSetRules.yaml was changed
 
+## 1.14.0-devadrienrules.153.25e34cc
+
+### Files added: 0
+
+### Files changed: 0
+
+
