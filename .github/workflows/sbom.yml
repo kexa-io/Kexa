@@ -1,0 +1,63 @@
+name: Generate SBOM
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * 1' # Every Monday at 00:00
+
+jobs:
+  generate-sbom:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+  
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile
+  
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          file: ./package-lock.json
+          upload-artifact: true
+          upload-artifact-retention: 8
+          output-file: ./kexa-sbom.json
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v3
+        with:
+          name: kexa-sbom.json
+          path: kexa-sbom.json
+          
+  commit-sbom:
+    runs-on: ubuntu-latest
+    needs: generate-sbom
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+  
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: kexa-sbom.json
+
+      - name: Commit SBOM to repository
+        run: |
+          git checkout dev-adrien-rules
+          git config --global user.email "adrien.eppling@supinfo.com"
+          git config --global user.name "aesoft"
+          git add kexa-sbom.json
+          git commit -m "Add SBOM artifact to main branch"
+          git push origin dev-adrien-rules
