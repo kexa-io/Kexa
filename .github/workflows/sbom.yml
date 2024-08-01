@@ -3,10 +3,7 @@ name: Generate SBOM
 on:
   push:
     branches:
-      - dev-adrien-rules
-  pull_request:
-    branches:
-      - dev-adrien-rules
+      - main
   schedule:
     - cron: '0 0 * * 1' # Every Monday at 00:00
 
