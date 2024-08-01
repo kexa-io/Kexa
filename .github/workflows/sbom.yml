@@ -19,4 +19,4 @@ jobs:
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
         with:
-          path: ./build/
+          path: ./Kexa/
