@@ -2619,3 +2619,26 @@ pnpm-lock.yaml was changed
 ### Files changed: 0
 
 
+## 1.14.0-SNAPSHOT.199.1b76497
+
+### Files added: 2
+
+.github/workflows/sbom.yml was added
+
+kexa-sbom.json was added
+
+### Files changed: 6
+
+.github/workflows/sbom.yml was changed
+
+kexa-sbom.json was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+capacity.json was changed
+
+package.json was changed
+
+

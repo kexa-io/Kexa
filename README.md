@@ -497,6 +497,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ EC2Client.Instances
 - ✅ EC2Client.InternetGateways
 - ✅ EC2Client.IpamByoasn
+- ✅ EC2Client.IpamExternalResourceVerificationTokens
 - ✅ EC2Client.IpamPools
 - ✅ EC2Client.IpamResourceDiscoveries
 - ✅ EC2Client.IpamResourceDiscoveryAssociations
@@ -554,6 +555,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ EC2Client.StoreImageTasks
 - ✅ EC2Client.Subnets
 - ✅ EC2Client.Tags
+- ✅ EC2Client.TrafficMirrorFilterRules
 - ✅ EC2Client.TrafficMirrorFilters
 - ✅ EC2Client.TrafficMirrorSessions
 - ✅ EC2Client.TrafficMirrorTargets
@@ -605,6 +607,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ EC2Client.HostReservationPurchasePreview
 - ✅ EC2Client.ImageBlockPublicAccessState
 - ✅ EC2Client.InstanceMetadataDefaults
+- ✅ EC2Client.InstanceTpmEkPub
 - ✅ EC2Client.InstanceTypesFromInstanceRequirements
 - ✅ EC2Client.InstanceUefiData
 - ✅ EC2Client.IpamAddressHistory
@@ -1100,6 +1103,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ ECRClient.PullThroughCacheRules
 - ✅ ECRClient.Registry
 - ✅ ECRClient.Repositories
+- ✅ ECRClient.RepositoryCreationTemplates
 - ✅ ECRClient.AuthorizationToken
 - ✅ ECRClient.DownloadUrlForLayer
 - ✅ ECRClient.LifecyclePolicy
@@ -1558,6 +1562,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ CodeDeployClient.GitHubAccountTokenNames
 - ✅ CodeDeployClient.OnPremisesInstances
 - ✅ CodeDeployClient.TagsForResource
+- ✅ TimestreamQueryClient.AccountSettings
 - ✅ TimestreamQueryClient.Endpoints
 - ✅ TimestreamQueryClient.ScheduledQuery
 - ✅ TimestreamQueryClient.ScheduledQueries
@@ -1836,6 +1841,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ GlueClient.UnfilteredPartitionMetadata
 - ✅ GlueClient.UnfilteredPartitionsMetadata
 - ✅ GlueClient.UnfilteredTableMetadata
+- ✅ GlueClient.UsageProfile
 - ✅ GlueClient.UserDefinedFunction
 - ✅ GlueClient.UserDefinedFunctions
 - ✅ GlueClient.Workflow
@@ -1861,6 +1867,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ GlueClient.Statements
 - ✅ GlueClient.TableOptimizerRuns
 - ✅ GlueClient.Triggers
+- ✅ GlueClient.UsageProfiles
 - ✅ GlueClient.Workflows
 - ✅ ResourceGroupsClient.AccountSettings
 - ✅ ResourceGroupsClient.Group
@@ -1903,6 +1910,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ BatchClient.JobQueues
 - ✅ BatchClient.Jobs
 - ✅ BatchClient.SchedulingPolicies
+- ✅ BatchClient.JobQueueSnapshot
 - ✅ BatchClient.Jobs
 - ✅ BatchClient.SchedulingPolicies
 - ✅ BatchClient.TagsForResource
@@ -2027,6 +2035,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ QuickSightClient.IAMPolicyAssignment
 - ✅ QuickSightClient.Ingestion
 - ✅ QuickSightClient.IpRestriction
+- ✅ QuickSightClient.KeyRegistration
 - ✅ QuickSightClient.Namespace
 - ✅ QuickSightClient.RefreshSchedule
 - ✅ QuickSightClient.RoleCustomPermission
@@ -2071,6 +2080,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ QuickSightClient.ThemeVersions
 - ✅ QuickSightClient.Themes
 - ✅ QuickSightClient.TopicRefreshSchedules
+- ✅ QuickSightClient.TopicReviewedAnswers
 - ✅ QuickSightClient.Topics
 - ✅ QuickSightClient.UserGroups
 - ✅ QuickSightClient.Users
@@ -2297,6 +2307,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ KafkaClient.TagsForResource
 - ✅ KafkaClient.VpcConnections
 - ✅ ConnectClient.AgentStatus
+- ✅ ConnectClient.AuthenticationProfile
 - ✅ ConnectClient.Contact
 - ✅ ConnectClient.ContactEvaluation
 - ✅ ConnectClient.ContactFlow
@@ -2320,6 +2331,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ ConnectClient.UserHierarchyStructure
 - ✅ ConnectClient.View
 - ✅ ConnectClient.Vocabulary
+- ✅ ConnectClient.AttachedFile
 - ✅ ConnectClient.ContactAttributes
 - ✅ ConnectClient.CurrentMetricData
 - ✅ ConnectClient.CurrentUserData
@@ -2333,6 +2345,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ ConnectClient.AgentStatuses
 - ✅ ConnectClient.AnalyticsDataAssociations
 - ✅ ConnectClient.ApprovedOrigins
+- ✅ ConnectClient.AuthenticationProfiles
 - ✅ ConnectClient.Bots
 - ✅ ConnectClient.ContactEvaluations
 - ✅ ConnectClient.ContactFlowModules
@@ -2623,6 +2636,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ SageMakerClient.InferenceRecommendationsJob
 - ✅ SageMakerClient.LabelingJob
 - ✅ SageMakerClient.LineageGroup
+- ✅ SageMakerClient.MlflowTrackingServer
 - ✅ SageMakerClient.ModelBiasJobDefinition
 - ✅ SageMakerClient.ModelCard
 - ✅ SageMakerClient.ModelCardExportJob
@@ -2634,6 +2648,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ SageMakerClient.MonitoringSchedule
 - ✅ SageMakerClient.NotebookInstance
 - ✅ SageMakerClient.NotebookInstanceLifecycleConfig
+- ✅ SageMakerClient.OptimizationJob
 - ✅ SageMakerClient.Pipeline
 - ✅ SageMakerClient.PipelineDefinitionForExecution
 - ✅ SageMakerClient.PipelineExecution
@@ -2694,6 +2709,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ SageMakerClient.LabelingJobs
 - ✅ SageMakerClient.LabelingJobsForWorkteam
 - ✅ SageMakerClient.LineageGroups
+- ✅ SageMakerClient.MlflowTrackingServers
 - ✅ SageMakerClient.ModelBiasJobDefinitions
 - ✅ SageMakerClient.ModelCardExportJobs
 - ✅ SageMakerClient.ModelCardVersions
@@ -2710,6 +2726,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ SageMakerClient.MonitoringSchedules
 - ✅ SageMakerClient.NotebookInstanceLifecycleConfigs
 - ✅ SageMakerClient.NotebookInstances
+- ✅ SageMakerClient.OptimizationJobs
 - ✅ SageMakerClient.PipelineExecutionSteps
 - ✅ SageMakerClient.PipelineExecutions
 - ✅ SageMakerClient.PipelineParametersForExecution
@@ -3049,6 +3066,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ GuardDutyClient.FindingsStatistics
 - ✅ GuardDutyClient.IPSet
 - ✅ GuardDutyClient.InvitationsCount
+- ✅ GuardDutyClient.MalwareProtectionPlan
 - ✅ GuardDutyClient.MalwareScanSettings
 - ✅ GuardDutyClient.MasterAccount
 - ✅ GuardDutyClient.MemberDetectors
@@ -3063,6 +3081,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ GuardDutyClient.Findings
 - ✅ GuardDutyClient.IPSets
 - ✅ GuardDutyClient.Invitations
+- ✅ GuardDutyClient.MalwareProtectionPlans
 - ✅ GuardDutyClient.Members
 - ✅ GuardDutyClient.OrganizationAdminAccounts
 - ✅ GuardDutyClient.PublishingDestinations
@@ -3093,6 +3112,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ AccessAnalyzerClient.Analyzer
 - ✅ AccessAnalyzerClient.ArchiveRule
 - ✅ AccessAnalyzerClient.Finding
+- ✅ AccessAnalyzerClient.FindingRecommendation
 - ✅ AccessAnalyzerClient.FindingV2
 - ✅ AccessAnalyzerClient.GeneratedPolicy
 - ✅ AccessAnalyzerClient.AccessPreviewFindings
@@ -3140,6 +3160,8 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ WorkSpacesClient.WorkspaceSnapshots
 - ✅ WorkSpacesClient.Workspaces
 - ✅ WorkSpacesClient.WorkspacesConnectionStatus
+- ✅ WorkSpacesClient.WorkspacesPoolSessions
+- ✅ WorkSpacesClient.WorkspacesPools
 - ✅ WorkSpacesClient.AccountLink
 - ✅ WorkSpacesClient.AccountLinks
 - ✅ WorkSpacesClient.AvailableManagementCidrRanges
@@ -3261,6 +3283,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ LakeFormationClient.Resource
 - ✅ LakeFormationClient.Transaction
 - ✅ LakeFormationClient.DataCellsFilter
+- ✅ LakeFormationClient.DataLakePrincipal
 - ✅ LakeFormationClient.DataLakeSettings
 - ✅ LakeFormationClient.EffectivePermissionsForPath
 - ✅ LakeFormationClient.LFTag
@@ -3585,6 +3608,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ PersonalizeClient.BatchInferenceJob
 - ✅ PersonalizeClient.BatchSegmentJob
 - ✅ PersonalizeClient.Campaign
+- ✅ PersonalizeClient.DataDeletionJob
 - ✅ PersonalizeClient.Dataset
 - ✅ PersonalizeClient.DatasetExportJob
 - ✅ PersonalizeClient.DatasetGroup
@@ -3602,6 +3626,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ PersonalizeClient.BatchInferenceJobs
 - ✅ PersonalizeClient.BatchSegmentJobs
 - ✅ PersonalizeClient.Campaigns
+- ✅ PersonalizeClient.DataDeletionJobs
 - ✅ PersonalizeClient.DatasetExportJobs
 - ✅ PersonalizeClient.DatasetGroups
 - ✅ PersonalizeClient.DatasetImportJobs
@@ -3700,6 +3725,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ HealthClient.HealthServiceStatusForOrganization
 - ✅ AccountClient.AlternateContact
 - ✅ AccountClient.ContactInformation
+- ✅ AccountClient.PrimaryEmail
 - ✅ AccountClient.RegionOptStatus
 - ✅ AccountClient.Regions
 - ✅ GrafanaClient.WorkspaceAuthentication
@@ -3708,6 +3734,8 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ GrafanaClient.Permissions
 - ✅ GrafanaClient.TagsForResource
 - ✅ GrafanaClient.Versions
+- ✅ GrafanaClient.WorkspaceServiceAccountTokens
+- ✅ GrafanaClient.WorkspaceServiceAccounts
 - ✅ GrafanaClient.Workspaces
 - ✅ DetectiveClient.OrganizationConfiguration
 - ✅ DetectiveClient.Investigation
@@ -3885,6 +3913,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ ResiliencehubClient.ResiliencyPolicy
 - ✅ ResiliencehubClient.AlarmRecommendations
 - ✅ ResiliencehubClient.AppAssessmentComplianceDrifts
+- ✅ ResiliencehubClient.AppAssessmentResourceDrifts
 - ✅ ResiliencehubClient.AppAssessments
 - ✅ ResiliencehubClient.AppComponentCompliances
 - ✅ ResiliencehubClient.AppComponentRecommendations
@@ -4504,6 +4533,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ BudgetsClient.Budgets
 - ✅ BudgetsClient.NotificationsForBudget
 - ✅ BudgetsClient.SubscribersForNotification
+- ✅ BudgetsClient.TagsForResource
 - ✅ FraudDetectorClient.Detector
 - ✅ FraudDetectorClient.ModelVersions
 - ✅ FraudDetectorClient.BatchImportJobs
@@ -5128,6 +5158,8 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ ComputeOptimizerClient.EnrollmentStatusesForOrganization
 - ✅ ComputeOptimizerClient.LambdaFunctionRecommendations
 - ✅ ComputeOptimizerClient.LicenseRecommendations
+- ✅ ComputeOptimizerClient.RDSDatabaseRecommendationProjectedMetrics
+- ✅ ComputeOptimizerClient.RDSDatabaseRecommendations
 - ✅ ComputeOptimizerClient.RecommendationPreferences
 - ✅ ComputeOptimizerClient.RecommendationSummaries
 - ✅ ChimeSDKMediaPipelinesClient.MediaCapturePipeline
@@ -5192,6 +5224,7 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ EMRServerlessClient.DashboardForJobRun
 - ✅ EMRServerlessClient.JobRun
 - ✅ EMRServerlessClient.Applications
+- ✅ EMRServerlessClient.JobRunAttempts
 - ✅ EMRServerlessClient.JobRuns
 - ✅ EMRServerlessClient.TagsForResource
 - ✅ SnowDeviceManagementClient.Device
@@ -5454,6 +5487,12 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ SqlManagementClient.servers
 - ✅ SqlManagementClient.startStopManagedInstanceSchedules
 - ✅ SqlManagementClient.transparentDataEncryptions
+- ✅ StorageManagementClient.blobServices
+- ✅ StorageManagementClient.blobContainers
+- ✅ StorageManagementClient.fileServices
+- ✅ StorageManagementClient.fileShares
+- ✅ StorageManagementClient.queueServices
+- ✅ StorageManagementClient.queue
 - ✅ StorageManagementClient.operations
 - ✅ StorageManagementClient.skus
 - ✅ StorageManagementClient.storageAccounts
@@ -5466,14 +5505,12 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 - ✅ StorageManagementClient.objectReplicationPoliciesOperations
 - ✅ StorageManagementClient.localUsersOperations
 - ✅ StorageManagementClient.encryptionScopes
-- ✅ StorageManagementClient.blobServices
-- ✅ StorageManagementClient.blobContainers
-- ✅ StorageManagementClient.fileServices
-- ✅ StorageManagementClient.fileShares
-- ✅ StorageManagementClient.queueServices
-- ✅ StorageManagementClient.queue
 - ✅ StorageManagementClient.tableServices
 - ✅ StorageManagementClient.tableOperations
+- ✅ StorageManagementClient.networkSecurityPerimeterConfigurations
+- ✅ StorageManagementClient.storageTaskAssignments
+- ✅ StorageManagementClient.storageTaskAssignmentsInstancesReport
+- ✅ StorageManagementClient.storageTaskAssignmentInstancesReport
 - ✅ WebSiteManagementClient.appServiceCertificateOrders
 - ✅ WebSiteManagementClient.certificateOrdersDiagnostics
 - ✅ WebSiteManagementClient.certificateRegistrationProvider
