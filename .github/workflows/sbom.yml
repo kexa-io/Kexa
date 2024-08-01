@@ -54,3 +54,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: kexa-sbom.json
+
+      - name: Commit SBOM to repository
+        run: |
+          git checkout dev-adrien-rules
+          cp kexa-sbom.json .
+          git add kexa-sbom.json
+          git commit -m "Add SBOM artifact to main branch"
+          git push origin dev-adrien-rules
