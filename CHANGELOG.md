@@ -2642,3 +2642,14 @@ capacity.json was changed
 package.json was changed
 
 
+## 1.14.0-SNAPSHOT.204.3d08c84
+
+### Files added: 1
+
+.github/workflows/scorecard.yml was added
+
+### Files changed: 1
+
+.github/workflows/scorecard.yml was changed
+
+
