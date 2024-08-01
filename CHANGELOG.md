@@ -2619,7 +2619,7 @@ pnpm-lock.yaml was changed
 ### Files changed: 0
 
 
-## 1.14.0-devadrienrules.198.91ad7a1
+## 1.14.0-SNAPSHOT.199.1b76497
 
 ### Files added: 2
 
@@ -2627,12 +2627,29 @@ pnpm-lock.yaml was changed
 
 kexa-sbom.json was added
 
-### Files changed: 3
+### Files changed: 6
 
 .github/workflows/sbom.yml was changed
 
 kexa-sbom.json was changed
 
+CHANGELOG.md was changed
+
 VERSION was changed
+
+capacity.json was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.204.3d08c84
+
+### Files added: 1
+
+.github/workflows/scorecard.yml was added
+
+### Files changed: 1
+
+.github/workflows/scorecard.yml was changed
 
 
