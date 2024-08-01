@@ -39,8 +39,8 @@ jobs:
       - name: Upload SBOM
         uses: actions/upload-artifact@v3
         with:
-          name: sbom-artifact
-          path: Kexa-generate-sbom.spdx.json
+          name: kexa-sbom.json
+          path: kexa-sbom.json
           
   commit-sbom:
     runs-on: ubuntu-latest
@@ -53,4 +53,4 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
-          name: sbom-artifact
+          name: kexa-sbom.json
