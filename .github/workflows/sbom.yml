@@ -58,7 +58,6 @@ jobs:
       - name: Commit SBOM to repository
         run: |
           git checkout dev-adrien-rules
-          cp /home/runner/work/Kexa/Kexa/kexa-sbom.json .
           git add kexa-sbom.json
           git commit -m "Add SBOM artifact to main branch"
           git push origin dev-adrien-rules
