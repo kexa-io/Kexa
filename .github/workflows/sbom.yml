@@ -31,4 +31,4 @@ jobs:
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
         with:
-          file: ./Kexa/package.json
+          file: ./package-lock.json
