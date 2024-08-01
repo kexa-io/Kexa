@@ -16,14 +16,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
+      - name: Install Homebrew
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential curl file git
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>~/.profile
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
       - name: Install Syft
         run: |
-          pip install syft
+          brew install syft
 
       - name: Generate SBOM
         run: |
