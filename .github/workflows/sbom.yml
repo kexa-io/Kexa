@@ -32,6 +32,9 @@ jobs:
         uses: anchore/sbom-action@v0
         with:
           file: ./package-lock.json #Kexa-generate-sbom.spdx.json
+          upload-artifact: true
+          upload-artifact-retention: 8
+          output-file: ./kexa-sbom.json
 
       - name: Upload SBOM
         uses: actions/upload-artifact@v3
