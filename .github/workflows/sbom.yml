@@ -31,4 +31,16 @@ jobs:
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
         with:
-          file: ./package-lock.json
+          file: ./package-lock.json #Kexa-generate-sbom.spdx.json
+          
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: Kexa-generate-sbom.spdx.json
+        
+      - name: Commit artifact to main branch
+        run: |
+          cp Kexa-generate-sbom.spdx.json .
+          git add .
+          git commit -m "Add artifact to main branch"
+          git push origin dev-adrien-rules
