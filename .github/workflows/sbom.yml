@@ -7,6 +7,8 @@ on:
   pull_request:
     branches:
       - dev-adrien-rules
+  schedule:
+    - cron: '0 0 * * 1' # Every Monday at 00:00
 
 jobs:
   generate-sbom:
