@@ -2619,3 +2619,20 @@ pnpm-lock.yaml was changed
 ### Files changed: 0
 
 
+## 1.14.0-devadrienrules.198.91ad7a1
+
+### Files added: 2
+
+.github/workflows/sbom.yml was added
+
+kexa-sbom.json was added
+
+### Files changed: 3
+
+.github/workflows/sbom.yml was changed
+
+kexa-sbom.json was changed
+
+VERSION was changed
+
+
