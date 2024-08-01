@@ -55,9 +55,9 @@ jobs:
 
       - name: Commit SBOM to repository
         run: |
-          git checkout dev-adrien-rules
+          git checkout main
           git config --global user.email "adrien.eppling@supinfo.com"
           git config --global user.name "aesoft"
           git add kexa-sbom.json
           git commit -m "Add SBOM artifact to main branch"
-          git push origin dev-adrien-rules
+          git push origin main
