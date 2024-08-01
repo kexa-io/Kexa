@@ -33,6 +33,12 @@ jobs:
         with:
           file: ./package-lock.json #Kexa-generate-sbom.spdx.json
 
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v3
+        with:
+          name: sbom-artifact  # Name used to refer to this artifact
+          path: Kexa-generate-sbom.spdx.json
+          
   commit-sbom:
     runs-on: ubuntu-latest
     needs: generate-sbom
