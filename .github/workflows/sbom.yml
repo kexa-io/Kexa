@@ -31,7 +31,7 @@ jobs:
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
         with:
-          file: ./package-lock.json #Kexa-generate-sbom.spdx.json
+          file: ./package-lock.json
           upload-artifact: true
           upload-artifact-retention: 8
           output-file: ./kexa-sbom.json
@@ -58,7 +58,7 @@ jobs:
       - name: Commit SBOM to repository
         run: |
           git checkout dev-adrien-rules
-          cp kexa-sbom.json .
+          cp /home/runner/work/Kexa/Kexa/kexa-sbom.json .
           git add kexa-sbom.json
           git commit -m "Add SBOM artifact to main branch"
           git push origin dev-adrien-rules
