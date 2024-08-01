@@ -16,16 +16,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Syft
-        run: |
-          pip install syft
-
       - name: Generate SBOM
-        run: |
-          syft . > sbom.json
-
-      - name: Upload SBOM as an artifact
-        uses: actions/upload-artifact@v3
+        uses: anchore/sbom-action@v0
         with:
-          name: sbom
-          path: sbom.json
+          path: ./build/
