@@ -1,0 +1,36 @@
+name: Generate SBOM
+
+on:
+  push:
+    branches:
+      - dev-adrien-rules
+  pull_request:
+    branches:
+      - dev-adrien-rules
+
+jobs:
+  generate-sbom:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Syft
+        run: |
+          pip install syft
+
+      - name: Generate SBOM
+        run: |
+          syft . -o json > sbom.json
+
+      - name: Upload SBOM as an artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: sbom
+          path: sbom.json
