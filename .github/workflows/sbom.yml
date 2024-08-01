@@ -32,15 +32,15 @@ jobs:
         uses: anchore/sbom-action@v0
         with:
           file: ./package-lock.json #Kexa-generate-sbom.spdx.json
-          
-      - name: Download artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: /tmp/sbom-action-zSrk8Q/Kexa-generate-sbom.spdx.json
-        
-      - name: Commit artifact to main branch
-        run: |
-          cp Kexa-generate-sbom.spdx.json .
-          git add .
-          git commit -m "Add artifact to main branch"
-          git push origin dev-adrien-rules
+
+  commit-sbom:
+    runs-on: ubuntu-latest
+    needs: generate-sbom
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Download artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: sbom-artifact
