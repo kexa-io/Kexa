@@ -2572,7 +2572,47 @@ rules/perProvider/o365SetRules.yaml was changed
 
 rules/rulesByProvider/kubernetesSetRules.yaml was changed
 
-## 1.14.0-devadrienrules.153.25e34cc
+## 1.14.0-SNAPSHOT.149.0b025a0
+
+### Files added: 1
+
+rules/rulesByProvider/kubernetesSetRules.yaml was added
+
+### Files changed: 6
+
+rules/rulesByProvider/kubernetesSetRules.yaml was changed
+
+CHANGELOG.md was changed
+
+Kexa/main.ts was changed
+
+Kexa/services/addOn/gcpGathering.service.ts was changed
+
+Kexa/services/addOn/googleWorkspaceGathering.service.ts was changed
+
+Kexa/services/addOn/kubernetesGathering.service.ts was changed
+
+
+## 1.14.0-SNAPSHOT.163.5fbfccc
+
+### Files added: 0
+
+### Files changed: 6
+
+CHANGELOG.md was changed
+
+Kexa/services/addOn/awsGathering.service.ts was changed
+
+Kexa/services/addOn/display/awsDisplay.service.ts was changed
+
+VERSION was changed
+
+package.json was changed
+
+pnpm-lock.yaml was changed
+
+
+## 1.14.0-SNAPSHOT.164.8aea06c
 
 ### Files added: 0
 
