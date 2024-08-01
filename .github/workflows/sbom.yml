@@ -36,7 +36,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
-          name: Kexa-generate-sbom.spdx.json
+          name: /tmp/sbom-action-zSrk8Q/Kexa-generate-sbom.spdx.json
         
       - name: Commit artifact to main branch
         run: |
