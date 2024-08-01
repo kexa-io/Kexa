@@ -44,4 +44,4 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
-          name: Kexa-generate-sbom
+          name: Kexa-generate-sbom.spdx.json
