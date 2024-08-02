@@ -2663,20 +2663,105 @@ package.json was changed
 
 VERSION was changed
 
-
-## 1.14.0-devadrienrules.213.fb0b62a
-
-### Files added: 0
-
-### Files changed: 0
-
-
-## 1.14.0-devadrienrules.220.aa757c3
+## 1.14.0-SNAPSHOT.215.58978e7
 
 ### Files added: 0
 
-### Files changed: 1
+### Files changed: 5
 
-.github/workflows/ci.yml was changed
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+kexa-sbom.json was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.216.81f3749
+
+### Files added: 0
+
+### Files changed: 5
+
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+kexa-sbom.json was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.217.ddd62fa
+
+### Files added: 0
+
+### Files changed: 5
+
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+kexa-sbom.json was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.218.282433e
+
+### Files added: 0
+
+### Files changed: 5
+
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+kexa-sbom.json was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.219.cb62d8d
+
+### Files added: 0
+
+### Files changed: 5
+
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+kexa-sbom.json was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.220.4dc85c2
+
+### Files added: 0
+
+### Files changed: 5
+
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+kexa-sbom.json was changed
+
+package.json was changed
 
 
