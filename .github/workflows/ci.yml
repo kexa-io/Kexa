@@ -9,6 +9,8 @@ on:
     branches:
       - main
       - dev
+  workflow_dispatch:
+
 jobs:
 
   ci:
@@ -28,7 +30,7 @@ jobs:
           node-version: 20
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        run: npm install -g pnpm@${{ secrets.PNPM_VERSION }} --integrity ${{ secrets.PNPM_HASH }}
 
       - name: Installing dependencies
         run: pnpm i --frozen-lockfile
