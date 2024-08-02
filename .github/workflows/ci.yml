@@ -5,6 +5,7 @@ on:
     branches:
   #    - main
       - dev
+      - dev-adrien-rules
   pull_request:
     branches:
       - main
