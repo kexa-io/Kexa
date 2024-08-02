@@ -162,7 +162,7 @@ npm run test
 
 Other checks are carried out at various stages to validate the integration of your addOn and the rules you can design. However, these checks are only carried out during software execution. Indeed, due to the nature of certain data collections, it is not possible to carry out "cold" tests without having access to dedicated environments.
 
-## ** Security Guidelines**
+## **Security Guidelines**
 
 Security is important when contributing. Please adhere to the following guidelines to ensure the security of the project and its users:
 
