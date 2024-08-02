@@ -31,7 +31,7 @@ jobs:
           node-version: 20
 
       - name: Install pnpm
-        run: npm install -g pnpm@${{ secrets.PNPM_VERSION }} --integrity ${{ secrets.PNPM_HASH }}
+        run: npm install -g pnpm@${{ secrets.PNPM_VERSION }}
 
       - name: Installing dependencies
         run: pnpm i --frozen-lockfile
