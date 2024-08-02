@@ -2764,7 +2764,6 @@ kexa-sbom.json was changed
 
 package.json was changed
 
-
 ## 1.14.0-SNAPSHOT.235.b7ef7d9
 
 ### Files added: 0
@@ -2801,5 +2800,4 @@ VERSION was changed
 kexa-sbom.json was changed
 
 package.json was changed
-
 
