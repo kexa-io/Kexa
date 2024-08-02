@@ -2653,3 +2653,151 @@ package.json was changed
 .github/workflows/scorecard.yml was changed
 
 
+## 1.14.0-SNAPSHOT.209.f50a70d
+
+### Files added: 0
+
+### Files changed: 2
+
+.github/workflows/sbom.yml was changed
+
+VERSION was changed
+
+## 1.14.0-SNAPSHOT.215.58978e7
+
+### Files added: 0
+
+### Files changed: 5
+
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+kexa-sbom.json was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.216.81f3749
+
+### Files added: 0
+
+### Files changed: 5
+
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+kexa-sbom.json was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.217.ddd62fa
+
+### Files added: 0
+
+### Files changed: 5
+
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+kexa-sbom.json was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.218.282433e
+
+### Files added: 0
+
+### Files changed: 5
+
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+kexa-sbom.json was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.219.cb62d8d
+
+### Files added: 0
+
+### Files changed: 5
+
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+kexa-sbom.json was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.220.4dc85c2
+
+### Files added: 0
+
+### Files changed: 5
+
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+kexa-sbom.json was changed
+
+package.json was changed
+
+## 1.14.0-SNAPSHOT.235.b7ef7d9
+
+### Files added: 0
+
+### Files changed: 6
+
+.github/workflows/ci.yml was changed
+
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+kexa-sbom.json was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.236.5f6661c
+
+### Files added: 0
+
+### Files changed: 6
+
+.github/workflows/ci.yml was changed
+
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+kexa-sbom.json was changed
+
+package.json was changed
+
