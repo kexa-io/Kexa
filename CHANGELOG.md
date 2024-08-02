@@ -2715,3 +2715,20 @@ kexa-sbom.json was changed
 package.json was changed
 
 
+## 1.14.0-SNAPSHOT.218.282433e
+
+### Files added: 0
+
+### Files changed: 5
+
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+kexa-sbom.json was changed
+
+package.json was changed
+
+
