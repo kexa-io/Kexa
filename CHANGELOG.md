@@ -2765,3 +2765,18 @@ kexa-sbom.json was changed
 package.json was changed
 
 
+## 1.14.0-devadrienrules.234.911ac23
+
+### Files added: 0
+
+### Files changed: 4
+
+.github/workflows/ci.yml was changed
+
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+
