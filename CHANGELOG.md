@@ -2764,12 +2764,11 @@ kexa-sbom.json was changed
 
 package.json was changed
 
-
-## 1.14.0-devadrienrules.234.911ac23
+## 1.14.0-SNAPSHOT.235.b7ef7d9
 
 ### Files added: 0
 
-### Files changed: 4
+### Files changed: 6
 
 .github/workflows/ci.yml was changed
 
@@ -2779,4 +2778,26 @@ CHANGELOG.md was changed
 
 VERSION was changed
 
+kexa-sbom.json was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.236.5f6661c
+
+### Files added: 0
+
+### Files changed: 6
+
+.github/workflows/ci.yml was changed
+
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+kexa-sbom.json was changed
+
+package.json was changed
 
