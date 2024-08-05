@@ -2818,3 +2818,70 @@ Dockerfile was changed
 VERSION was changed
 
 
+## 1.14.0-devadrienrules.248.a9784a7
+
+### Files added: 13
+
+rules/VaultsAnalysis.yaml was added
+
+rules/rules-testing.yaml was added
+
+rules/rules-with-var.yaml was added
+
+rules/rulesByProvider/awsSetRules.yaml was added
+
+rules/rulesByProvider/azureSetRules.yaml was added
+
+rules/rulesByProvider/driveRules.yaml was added
+
+rules/rulesByProvider/gcpSetRules.yaml was added
+
+rules/rulesByProvider/githubSetRules.yaml was added
+
+rules/rulesByProvider/googleDriveSetRules.yaml was added
+
+rules/rulesByProvider/googleWorkspaceSetRules.yaml was added
+
+rules/rulesByProvider/helmSetRules.yaml was added
+
+rules/rulesByProvider/kubernetesSetRules.yaml was added
+
+rules/rulesByProvider/o365SetRules.yaml was added
+
+### Files changed: 18
+
+rules/VaultsAnalysis.yaml was changed
+
+rules/rules-testing.yaml was changed
+
+rules/rules-with-var.yaml was changed
+
+rules/rulesByProvider/awsSetRules.yaml was changed
+
+rules/rulesByProvider/azureSetRules.yaml was changed
+
+rules/rulesByProvider/driveRules.yaml was changed
+
+rules/rulesByProvider/gcpSetRules.yaml was changed
+
+rules/rulesByProvider/githubSetRules.yaml was changed
+
+rules/rulesByProvider/googleDriveSetRules.yaml was changed
+
+rules/rulesByProvider/googleWorkspaceSetRules.yaml was changed
+
+rules/rulesByProvider/helmSetRules.yaml was changed
+
+rules/rulesByProvider/kubernetesSetRules.yaml was changed
+
+rules/rulesByProvider/o365SetRules.yaml was changed
+
+CONTRIBUTING.md was changed
+
+README.md was changed
+
+VERSION was changed
+
+rules/rulesByProvider/httpSetRules.yaml was changed
+
+

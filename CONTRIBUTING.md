@@ -161,3 +161,37 @@ npm run test
 ```
 
 Other checks are carried out at various stages to validate the integration of your addOn and the rules you can design. However, these checks are only carried out during software execution. Indeed, due to the nature of certain data collections, it is not possible to carry out "cold" tests without having access to dedicated environments.
+
+## **Security Guidelines**
+
+Security is important when contributing. Please adhere to the following guidelines to ensure the security of the project and its users:
+
+**Data Protection:**
+
+Never hardcode sensitive information such as API keys, passwords, or other secrets.
+Retrieve credentials from environment and keyvaults (priority).
+Do not store any sensitive data.
+
+
+**Dependency Management:**
+
+Keep dependencies up to date to ensure that security patches are applied.
+Use only trusted and well-maintained libraries and frameworks.
+Avoid using deprecated or unmaintained dependencies.
+
+
+**Secure Coding Practices:**
+
+Review the code for potential security vulnerabilities before submitting a pull request.
+Be cautious with the use of third-party code and ensure it complies with the project's security standards.
+
+
+**Authentication and Authorization:**
+
+Use the offical SDK and APIs from cloud providers and follow their authentication flows and instructions.
+Never require write permissions from providers.
+
+
+**Reporting Security Issues:**
+
+If you discover a security vulnerability, please follow the guidelines in "/SECURITY.md"

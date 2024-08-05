@@ -90,6 +90,12 @@ With Kexa, you can [edit your own rules](documentation/Documentation-Kexa.md#rul
 * [![Github Action][GITACT-shield]](https://github.com/4urcloud/Kexa_githubAction)
 * [![Azure Function][AZURE-shield]](documentation/Documentation-Kexa.md#azure-function)
 
+## Compliance
+
+* [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/9278/badge)](https://www.bestpractices.dev/projects/9278)
+
+
+
 # <div align="center" id="quick-launch">**Quick Launch**</div>
 <br/>
 
