@@ -29,7 +29,7 @@ We've set up a system to facilitate the development of new features. This system
 
 <div id="gathering-data"></div>
 
-## **Gathering data**
+### **Gathering data**
 
 A file to collect data whose path will be "./Kexa/services/addOn". It is named as follows: [extension's name]Gathering.service.ts . The entry point for this file is a function named "collectData", which takes one arguments. The argument is a list containing all the configs for your addOn. This list corresponds to what you can find in the default.json file in the key that has the same name as your addOn. As additional information per item in the list, you have "ObjectNameNeed" which corresponds to the CategoryItem solicity in the rules set up. This helps you, to optimize your addOn and make faster, more targeted collections. The return format of this function is as shown in the following example. exemple :
 	
@@ -87,7 +87,7 @@ export async function collectData(myAddonConfig: any[]){
 
 <div id="display-results"></div>
 
-## **Display results**
+### **Display results**
 
 The display data file has for name schema : [same extension's name]Display.service.ts, its path will be: "./Kexa/services/addOn/display". This file is used to display precise attributes of an object to quickly identify it in its environment. This return is done by returning a string, with the possibility of putting html in this sting. The function used as an entry point is named "propertyToSend". It takes 3 arguments. The first is a "Rules", and the relative path to the object definition is
 
@@ -114,7 +114,7 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
 
 <div id="save-results"></div>
 
-## **Save results**
+### **Save results**
 
 You can also add AddOns to save your data. These extensions are based on the same principle as Display AddOn. The Save AddOn file is named [extension name]Save.service.ts, and its path is "./Kexa/services/addOn/save". This file is used to store the scanned data in a specific location. No return is attempted. The function used as an entry point is called "save". It takes 2 arguments. The first is a "save", corresponding to :
 
@@ -133,7 +133,7 @@ example of fresh template of save addOn:
 
 <div id="export-gather"></div>
 
-## **Export gather**
+### **Export gather**
 
 You can also add AddOns to export your data. These extensions are based on the same principle as Save AddOn. The Exportation AddOn file is named [extension name]Exportation.service.ts, and its path is "./Kexa/services/addOn/exportation". This file is used to store the scanned data in a specific location. No return is attempted. The function used as an entry point is called "exportation". It takes 2 arguments. The first is a "save", corresponding to :
 
@@ -150,6 +150,45 @@ example of fresh template of exportation addOn:
 
 <br/>
 
+<div id="adding-functionalities"></div>
+
+## **Core engine**
+
+If you'd like to contribute to extending or updating Kexa's core engine, here are a few explanations and guidelines to help you collaborate on the project.
+
+### src/
+
+This is the main source code directory. It contains all the core functionalities and services of the project.
+
+### Services (src/services)
+
+The "/services" folder contain all files related to the gathering, exportation, alerting and saving addons.
+It also contain services related to the environment managing.
+
+If you need to add a new service, ensure to isolate each service in a specific file, or folder if the service need a file for each addon for example.
+
+### Helpers (src/models)
+
+Helpers are small functions that are used across the project, the file must have only one explicit functionnality to avoid importing useless functions. (you can have multiple function in one file, but ensure it make sense to not seperate them)
+
+### Models (src/models)
+
+The models folder contains all the class definitions for addons. This is where you define the structure and behavior of different addons.
+
+### Enumerations (src/enumerations/)
+
+This folder contains enumeration definitions used throughout the project. Enumerations are a way to define a set of named values, which can be used to represent a collection of related constants.
+
+<br/>
+
+<div id="suggestingsts"></div>
+
+## Suggesting Enhancements
+
+We welcome suggestions for new features or improvements. Please open an issue to discuss your idea before implementing it.
+
+<br/>
+
 <div id="tests"></div>
 
 ## **Tests**
@@ -161,6 +200,7 @@ npm run test
 ```
 
 Other checks are carried out at various stages to validate the integration of your addOn and the rules you can design. However, these checks are only carried out during software execution. Indeed, due to the nature of certain data collections, it is not possible to carry out "cold" tests without having access to dedicated environments.
+
 
 ## **Security Guidelines**
 
