@@ -34,8 +34,6 @@ If you have a suggestion that would make this better, please fork the repo and c
 - Node.js
 - npm
 
-<br/>
-
 <div id="forking-project"></div>
 
 ## **Forking project**
@@ -58,6 +56,9 @@ If you have a suggestion that would make this better, please fork the repo and c
 - Use `main` for stable code.
 - Create feature branches for new features.
 - Create bugfix branches for
+
+<br/>
+
 
 <div id="adding-functionalities"></div>
 
