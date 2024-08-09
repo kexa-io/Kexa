@@ -6,6 +6,36 @@ If you have a suggestion that would make this better, please fork the repo and c
 
 <br/>
 
+<div id="table-of-contents"></div>
+
+## Table of Contents
+
+1. [Getting Started](#getting-started)
+2. [Forking Project](#forking-project)
+3. [Code Style](#code-style)
+4. [Adding functionalities](#adding-functionalities)
+5. [Gathering data](#gathering-data)
+6. [Display results](#display-results)
+7. [Save results](#save-results)
+8. [Export gather](#export-gather)
+9. [Core engine](#core-engine)
+10. [Security Guidelines](#security-guidelines)
+11. [Suggesting Enhancements](#suggestingsts)
+12. [Tests](#tests)
+
+<br/>
+
+<div id="getting-started"></div>
+
+## **Getting Started**
+
+### **Prerequisites**
+
+- Node.js
+- npm
+
+<br/>
+
 <div id="forking-project"></div>
 
 ## **Forking project**
