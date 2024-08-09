@@ -56,8 +56,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 - Follow the coding style used in the project.
 - Use meaningful variable and function names.
 
-
-### Branching Model
+### Branches
 
 - Use `main` for stable code.
 - Create feature branches for new features.
