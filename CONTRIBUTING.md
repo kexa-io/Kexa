@@ -138,7 +138,7 @@ export async function collectData(myAddonConfig: any[]){
 
 The display data file has for name schema : [same extension's name]Display.service.ts, its path will be: "./Kexa/services/addOn/display". This file is used to display precise attributes of an object to quickly identify it in its environment. This return is done by returning a string, with the possibility of putting html in this sting. The function used as an entry point is named "propertyToSend". It takes 3 arguments. The first is a "Rules", and the relative path to the object definition is
 
-![interface of a Rules](../Kexa/models/settingFile/rules.models.ts)
+![interface of a Rules](./Kexa/models/settingFile/rules.models.ts)
 
 The second is an "any", corresponding to an object you've collected previously. Finally, the last element is a boolean, which you'll set to false by default. It corresponds to your obligation not to put html in your string. Example display file for an "azureComplement" module: file name : azureComplementGathering.service.ts
 
@@ -165,16 +165,16 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
 
 You can also add AddOns to save your data. These extensions are based on the same principle as Display AddOn. The Save AddOn file is named [extension name]Save.service.ts, and its path is "./Kexa/services/addOn/save". This file is used to store the scanned data in a specific location. No return is attempted. The function used as an entry point is called "save". It takes 2 arguments. The first is a "save", corresponding to :
 
-![interface of a SaveConfig](../Kexa/models/export/config.models.ts)
+![interface of a SaveConfig](./Kexa/models/export/config.models.ts)
 
 But you can make your own by extends this interface.
 The second is a table of ResultScan:
 
-![interface of a resultScan](../Kexa/models/resultScan.models.ts)
+![interface of a resultScan](./Kexa/models/resultScan.models.ts)
 
 example of fresh template of save addOn:
 
-![fresh template of save addOn](../config/freshTemplatesAddOn/XXXSave.service.ts)
+![fresh template of save addOn](./config/freshTemplatesAddOn/XXXSave.service.ts)
 
 <br/>
 
@@ -184,16 +184,16 @@ example of fresh template of save addOn:
 
 You can also add AddOns to export your data. These extensions are based on the same principle as Save AddOn. The Exportation AddOn file is named [extension name]Exportation.service.ts, and its path is "./Kexa/services/addOn/exportation". This file is used to store the scanned data in a specific location. No return is attempted. The function used as an entry point is called "exportation". It takes 2 arguments. The first is a "save", corresponding to :
 
-![interface of a SaveConfig](../Kexa/models/export/config.models.ts)
+![interface of a SaveConfig](./Kexa/models/export/config.models.ts)
 
 But you can make your own by extends this interface.
 The second is a ProviderResource:
 
-![interface of a ProviderResource](../Kexa/models/providerResource.models.ts)
+![interface of a ProviderResource](./Kexa/models/providerResource.models.ts)
 
 example of fresh template of exportation addOn:
 
-![fresh template of exportation addOn](../config/freshTemplatesAddOn/XXXExportation.service.ts)
+![fresh template of exportation addOn](./config/freshTemplatesAddOn/XXXExportation.service.ts)
 
 <br/>
 

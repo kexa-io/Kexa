@@ -461,10 +461,10 @@ async function updateIssueDate(auth: string, issueId: string): Promise<void> {
         }
     })
         .then(response => {
-            console.log(`Response: ${response.status} ${response.statusText}`);
+           // console.log(`Response: ${response.status} ${response.statusText}`);
         })
         .catch(err => {
-            console.error('Error updating Jira issue:', err.message);
+            logger.error('Error updating Jira issue:', err.message);
         });
 }
 
@@ -473,11 +473,11 @@ async function searchExistingIssue(auth: string, summary: string, description: s
     let found = false;
     let matchedIssue = null;
     const doneStatusCode = await getConfigOrEnvVar(config, 'JIRA_DONE_STATUS_CODE') ?? "10002";
-    const ignoreStatusCode = await getConfigOrEnvVar(config, 'JIRA_IGNORE_STATUS_CODE') ?? "10008";
+    const ignoreStatusCode = await getConfigOrEnvVar(config, 'JIRA_IGNORE_STATUS_CODE') ?? "XXXXX";
 
     outerLoop: for (const issue of issues) {
         if (issue.fields.issuetype.id != issueType) {
-            continue
+            continue;
         }
         if (issue.fields.status.id == doneStatusCode) {
             continue;
@@ -485,9 +485,10 @@ async function searchExistingIssue(auth: string, summary: string, description: s
         if (issue.fields.status.id == ignoreStatusCode) {
             continue;
         }
-        const summaryCompare = summary.toString();
-        const summaryAPI = issue.fields.summary.toString();
-
+        const tmp1 = summary.toString();
+        const summaryCompare = tmp1.includes(':') ? tmp1.split(':').slice(1).join(':').trim() : tmp1;
+        const tmp2 = issue.fields.summary.toString();
+        const summaryAPI = tmp2.includes(':') ? tmp2.split(':').slice(1).join(':').trim() : tmp2;
         if (summaryAPI != summaryCompare) {
             continue;
         }
@@ -503,7 +504,7 @@ async function searchExistingIssue(auth: string, summary: string, description: s
     
             const contentCompare = JSON.stringify(contentCompareParse?.content);
             const contentAPI = JSON.stringify(contentAPIParse?.content);
-    
+
             if (contentAPI != contentCompare) {
                 allValid = false;
                 break;
@@ -528,29 +529,41 @@ async function searchExistingIssue(auth: string, summary: string, description: s
        // updateIssueDate(auth, matchedIssue.id);
         return true;
     } else {
-        console.log("No match found.");
         return false;
     }
 }
 
 
 async function getJiraTickets(auth: string): Promise<any> {
-
-    const jiraUrl = 'https://' + await getConfigOrEnvVar(config, 'JIRA_DOMAIN') +'/rest/api/3/search?jql=';
+    const jiraUrlBase = 'https://' + await getConfigOrEnvVar(config, 'JIRA_DOMAIN') + '/rest/api/3/search?jql=project=' + (process.env.JIRA_PROJECT_KEY ?? "XXXXX");
+    const maxResults = 50;
+    let startAt = 0;
+    let allIssues: any[] = [];
+    let total = 0;
 
     try {
-        let response = await axios.get(jiraUrl, {
-            headers: {
-              'Authorization': `Basic ${auth}`,
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            }
-        });
-        const issues = response.data.issues;
-        return issues;
-     } catch (error: any) {
-       console.error('Error creating Jira issue:', error.message);
-     }
+        do {
+            const jiraUrl = `${jiraUrlBase}&startAt=${startAt}&maxResults=${maxResults}`;
+            let response = await axios.get(jiraUrl, {
+                headers: {
+                    'Authorization': `Basic ${auth}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const issues = response.data.issues;
+            total = response.data.total;
+            allIssues = allIssues.concat(issues);
+            startAt += maxResults;
+
+        } while (startAt < total);
+
+        return allIssues;
+    } catch (error: any) {
+        logger.error('Error getting Jira tickets:', error.message);
+        return [];
+    }
 }
 
 function getJiraPriorityLevel(alertLevel: number): string {
@@ -564,6 +577,21 @@ function getJiraPriorityLevel(alertLevel: number): string {
         return process.env.JIRA_FATAL_PRIORITY_LEVEL ?? "2";
     }
     return "3";
+}
+
+async function createJiraIssue(jiraUrl: string, finalContent: string, auth: string) {
+    try {
+        let response = await axios.post(jiraUrl, finalContent, {
+            headers: {
+                'Authorization': `Basic ${auth}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        });
+        logger.info('Jira issue sent successfully with card name "' + response.data.key + '"');
+    } catch (error: any) {
+        logger.error('Error creating Jira issue:', error.message);
+    }
 }
 
 export async function sendJiraTicket(alert: ConfigAlert, subject: string, receivedContent: any, rule : Rules | null, objectResource: any | null): Promise<void> {
@@ -704,7 +732,8 @@ export async function sendJiraTicket(alert: ConfigAlert, subject: string, receiv
         return;
     }
 
-    try {
+    await createJiraIssue(jiraUrl, finalContent, auth);
+    /*try {
        response = await axios.post(jiraUrl, finalContent, {
         headers: {
           'Authorization': `Basic ${auth}`,
@@ -716,7 +745,9 @@ export async function sendJiraTicket(alert: ConfigAlert, subject: string, receiv
     logger.info('Jira issue sent successfully with card name ""' + response.data.key + '"');
     } catch (error: any) {
         console.error('Error creating Jira issue:', error.message);
-    }
+        // display more errror info
+        console.error(error.response.data);
+    }*/
 }
 
 
