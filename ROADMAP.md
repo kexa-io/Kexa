@@ -13,6 +13,7 @@
     - [ ] Google secret manager
     - [ ] Bitwarden
 - [X] External rules importation
+- [X] Github action with docker 
 
 ## Providers
 
