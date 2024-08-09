@@ -594,11 +594,11 @@ async function createJiraIssue(jiraUrl: string, finalContent: string, auth: stri
     }
 }
 
+
 export async function sendJiraTicket(alert: ConfigAlert, subject: string, receivedContent: any, rule : Rules | null, objectResource: any | null): Promise<void> {
     const context = getContext();
     const jiraUrl = 'https://' + await getConfigOrEnvVar(config, 'JIRA_DOMAIN') + '/rest/api/3/issue/';
     const auth = Buffer.from(await getConfigOrEnvVar(config, 'JIRA_API_KEY')).toString('base64');
-    let response;
 
     let projectKey = process.env.JIRA_PROJECT_KEY ?? undefined;
     let content;
@@ -607,32 +607,27 @@ export async function sendJiraTicket(alert: ConfigAlert, subject: string, receiv
     let assigneeId;
 
 
-    if (receivedContent.content == undefined) {
-        content = {
-            content: receivedContent
-        };
-    } else {
+    if (receivedContent.content == undefined)
+        content = {content: receivedContent};
+    else {
         content = receivedContent;
         isGlobal = true;
     }
     for (let i = 0; i < alert.to.length; i++) {
-        if (alert.to[i].startsWith("jira_issue_type=")) {
+        if (alert.to[i].startsWith("jira_issue_type="))
             issueType = alert.to[i].split("=")[1];
-        }
     }
     for (let i = 0; i < alert.to.length; i++) {
-        if (alert.to[i].startsWith("jira_assignee_id=")) {
+        if (alert.to[i].startsWith("jira_assignee_id="))
             assigneeId = alert.to[i].split("=")[1];
-        }
     }
-    if (issueType == undefined) {
+    if (issueType == undefined)
         issueType = "10005";
-    }
     let bodyAssignee;
-    if (assigneeId == undefined) {
+    if (assigneeId == undefined)
         bodyAssignee = `{
             "fields": {`;
-   } else {
+    else {
         bodyAssignee = `{
             "fields": {
                     "assignee": {
@@ -645,9 +640,8 @@ export async function sendJiraTicket(alert: ConfigAlert, subject: string, receiv
         issueType: issueType
     };
     let alertLevelEmoji = "";
-    if (rule != null) {
+    if (rule != null)
         alertLevelEmoji = (rule.level == 0) ? "ⓘ info: " : (rule.level == 1) ? "⚠️ warning: " : (rule.level == 2) ? "❗error: " : "❌ fatal: ";
-    }
     const bodyDataStart = `
                 "project":
                 { 
@@ -659,7 +653,6 @@ export async function sendJiraTicket(alert: ConfigAlert, subject: string, receiv
     bodyAssignee += bodyDataStart;
     let finalContent = bodyAssignee;
     let fullContentData = "";
-
     for (let i = 0; i < content.content.length; i++) { 
         fullContentData += `{
                 "content": [
