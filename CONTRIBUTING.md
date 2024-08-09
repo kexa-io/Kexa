@@ -34,8 +34,6 @@ If you have a suggestion that would make this better, please fork the repo and c
 - Node.js
 - npm
 
-<br/>
-
 <div id="forking-project"></div>
 
 ## **Forking project**
@@ -46,22 +44,21 @@ If you have a suggestion that would make this better, please fork the repo and c
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-<br/>
-
 <div id="code-style"></div>
-
 
 ### Code Style
 
 - Follow the coding style used in the project.
 - Use meaningful variable and function names.
 
-
-### Branching Model
+### Branches
 
 - Use `main` for stable code.
 - Create feature branches for new features.
 - Create bugfix branches for
+
+<br/>
+
 
 <div id="adding-functionalities"></div>
 
