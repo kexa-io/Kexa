@@ -33,17 +33,18 @@
     - [X] Custom display for specific resources
     - [X] Collect all main used item
     - [ ] Auto gathering all item in
+- [X] Helm
+    - [X] Custom display for specific resources
+    - [X] Collect all main used item
 - [X] All endPoint http(s)
     - [X] Custom display for specific resources
     - [X] Collect all main used item
 - [X] Google workspace
     - [X] Custom display for specific resources
     - [X] Collect all main used item
-    - [ ] Auto gathering all item in
 - [X] O365
     - [X] Custom display for specific resources
     - [X] Collect all meaning item
-    - [ ] Auto gathering all item in
 - [ ] Gitlab
     - [ ] Collect all meaning item
 - [ ] OVH
@@ -66,12 +67,14 @@
         - [X] SMS
         - [X] Teams
         - [X] webhook
+        - [X] Jira
         - [ ] Slack
     - [X] For each set of rules
         - [X] Email
         - [X] SMS
         - [X] Teams
         - [X] webhook
+        - [X] Jira
         - [ ] Slack
 - Export data scanned
     - [X] Azure blob storage
@@ -108,15 +111,11 @@
 ## Tiers
 
 - [ ] SaaS
-    - [ ] rules catalog
+    - [X] rules catalog
         - [X] API
-        - [ ] Web site
-    - [ ] history and graphics
+        - [X] Web site
+    - [X] history and graphics
     - [ ] graphic rule editor
-- Frequent articles
-    - Medium
-    - Linkedin
-    - Ycombinator
 - [ ] AddOn Grafana
 - [ ] Kubernetes Operator
 
