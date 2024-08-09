@@ -733,21 +733,6 @@ export async function sendJiraTicket(alert: ConfigAlert, subject: string, receiv
     }
 
     await createJiraIssue(jiraUrl, finalContent, auth);
-    /*try {
-       response = await axios.post(jiraUrl, finalContent, {
-        headers: {
-          'Authorization': `Basic ${auth}`,
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
-    });
-    context?.log('Jira issue sent successfully!');
-    logger.info('Jira issue sent successfully with card name ""' + response.data.key + '"');
-    } catch (error: any) {
-        console.error('Error creating Jira issue:', error.message);
-        // display more errror info
-        console.error(error.response.data);
-    }*/
 }
 
 
