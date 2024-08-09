@@ -4,6 +4,8 @@ Contributions are what make the open source community such an amazing place to l
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
 
+<br/>
+
 <div id="forking-project"></div>
 
 ## **Forking project**
@@ -15,6 +17,21 @@ If you have a suggestion that would make this better, please fork the repo and c
 5. Open a Pull Request
 
 <br/>
+
+<div id="code-style"></div>
+
+
+### Code Style
+
+- Follow the coding style used in the project.
+- Use meaningful variable and function names.
+
+
+### Branching Model
+
+- Use `main` for stable code.
+- Create feature branches for new features.
+- Create bugfix branches for
 
 <div id="adding-functionalities"></div>
 
@@ -152,7 +169,7 @@ example of fresh template of exportation addOn:
 
 <div id="adding-functionalities"></div>
 
-## **Core engine**
+## Core engine
 
 If you'd like to contribute to extending or updating Kexa's core engine, here are a few explanations and guidelines to help you collaborate on the project.
 
@@ -181,25 +198,7 @@ This folder contains enumeration definitions used throughout the project. Enumer
 
 <br/>
 
-<div id="suggestingsts"></div>
-
-## Suggesting Enhancements
-
-We welcome suggestions for new features or improvements. Please open an issue to discuss your idea before implementing it.
-
-<br/>
-
-<div id="tests"></div>
-
-## **Tests**
-
-We've set up some tests you can use to validate the integration of your addOn:
-
-```shell
-npm run test
-```
-
-Other checks are carried out at various stages to validate the integration of your addOn and the rules you can design. However, these checks are only carried out during software execution. Indeed, due to the nature of certain data collections, it is not possible to carry out "cold" tests without having access to dedicated environments.
+<div id="security-guidelines"></div>
 
 
 ## **Security Guidelines**
@@ -235,3 +234,23 @@ Never require write permissions from providers.
 **Reporting Security Issues:**
 
 If you discover a security vulnerability, please follow the guidelines in "/SECURITY.md"
+
+<div id="suggestingsts"></div>
+
+## Suggesting Enhancements
+
+We welcome suggestions for new features or improvements. Please open an issue to discuss your idea before implementing it.
+
+<br/>
+
+<div id="tests"></div>
+
+## **Tests**
+
+We've set up some tests you can use to validate the integration of your addOn:
+
+```shell
+npm run test
+```
+
+Other checks are carried out at various stages to validate the integration of your addOn and the rules you can design. However, these checks are only carried out during software execution. Indeed, due to the nature of certain data collections, it is not possible to carry out "cold" tests without having access to dedicated environments.
