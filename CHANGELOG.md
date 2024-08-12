@@ -2902,3 +2902,20 @@ VERSION was changed
 package.json was changed
 
 
+## 1.14.0-SNAPSHOT.266.3282191
+
+### Files added: 0
+
+### Files changed: 5
+
+.github/workflows/ci.yml was changed
+
+CONTRIBUTING.md was changed
+
+Kexa/enum/alert.enum.ts was changed
+
+Kexa/services/alerte.service.ts was changed
+
+ROADMAP.md was changed
+
+
