@@ -2982,7 +2982,6 @@ VERSION was changed
 
 package.json was changed
 
-
 ## 1.14.0-SNAPSHOT.277.22e78aa
 
 ### Files added: 0
@@ -2997,6 +2996,41 @@ VERSION was changed
 
 
 ## 1.14.0-SNAPSHOT.281.02ce2c9
+
+### Files added: 0
+
+### Files changed: 1
+
+
+## 
+
+### Files added: 1
+
+.github/workflows/versioning.yml was added
+
+### Files changed: 3
+
+.github/workflows/versioning.yml was changed
+
+.github/workflows/ci.yml was changed
+
+CHANGELOG.md was changed
+
+
+## 
+
+### Files added: 1
+
+rules/azureSetRules.yaml was added
+
+### Files changed: 2
+
+rules/azureSetRules.yaml was changed
+
+.github/workflows/sbom.yml was changed
+
+
+## 
 
 ### Files added: 0
 
