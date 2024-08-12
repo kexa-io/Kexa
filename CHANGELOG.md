@@ -2884,11 +2884,102 @@ VERSION was changed
 
 rules/rulesByProvider/httpSetRules.yaml was changed
 
-
-## 1.14.0-devadrienrules.262.45c7811
+## 1.14.0-SNAPSHOT.250.fa1288c
 
 ### Files added: 0
 
-### Files changed: 0
+### Files changed: 5
+
+CHANGELOG.md was changed
+
+CONTRIBUTING.md was changed
+
+README.md was changed
+
+VERSION was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.266.3282191
+
+### Files added: 0
+
+### Files changed: 5
+
+.github/workflows/ci.yml was changed
+
+CONTRIBUTING.md was changed
+
+Kexa/enum/alert.enum.ts was changed
+
+Kexa/services/alerte.service.ts was changed
+
+ROADMAP.md was changed
+
+
+## 1.14.0-SNAPSHOT.268.443c2c1
+
+### Files added: 0
+
+### Files changed: 3
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.269.e2d48d8
+
+### Files added: 0
+
+### Files changed: 3
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.270.c89f7f3
+
+### Files added: 0
+
+### Files changed: 3
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.271.5a78ead
+
+### Files added: 0
+
+### Files changed: 3
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.272.9b3bdf5
+
+### Files added: 0
+
+### Files changed: 3
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+package.json was changed
 
 
