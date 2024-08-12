@@ -2884,7 +2884,6 @@ VERSION was changed
 
 rules/rulesByProvider/httpSetRules.yaml was changed
 
-
 ## 1.14.0-SNAPSHOT.250.fa1288c
 
 ### Files added: 0
@@ -2982,5 +2981,18 @@ CHANGELOG.md was changed
 VERSION was changed
 
 package.json was changed
+
+
+## 1.14.0-SNAPSHOT.277.22e78aa
+
+### Files added: 0
+
+### Files changed: 3
+
+.github/workflows/ci.yml was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
 
 
