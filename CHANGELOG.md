@@ -3037,3 +3037,21 @@ rules/azureSetRules.yaml was changed
 ### Files changed: 1
 
 
+## 
+
+### Files added: 0
+
+### Files changed: 2
+
+.github/workflows/versioning.yml was changed
+
+rules/SecretsRotation.yaml was changed
+
+
+## 
+
+### Files added: 0
+
+### Files changed: 1
+
+
