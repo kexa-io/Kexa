@@ -7,7 +7,7 @@ on:
       - dev
   pull_request:
     branches:
-      - main
+  #    - main
       - dev
   workflow_dispatch:
 
@@ -38,19 +38,6 @@ jobs:
       - name: Run tests
         run: pnpm run test
 
-      - name: Git Version
-        id: versioning
-        uses: codacy/git-version@2.8.0
-        with:
-          release-branch: main
-          dev-branch: dev
-          log-paths: Kexa/
-          minor-identifier: 'feat:'
-          major-identifier: 'break:'
-
-      - name: Set up version in file
-        run: echo "${{ steps.versioning.outputs.version }}" > VERSION
-      
       - name: Run extract Addon
         run: pnpm run update
 
@@ -86,33 +73,3 @@ jobs:
           message: 'add info extract from addon'
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-
-      - name: Login to Docker Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ secrets.DOCKER_REGISTRY_NAME}}
-          username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
-          password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
-
-      - name: Push on Docker Registry
-        uses: docker/build-push-action@v4
-        with:
-          context: ./
-          push: true
-          tags: |
-            ${{ secrets.DOCKER_REGISTRY_NAME}}/innovtech/kexa:${{ steps.versioning.outputs.version }}
-            ${{ secrets.DOCKER_REGISTRY_NAME}}/innovtech/kexa:latest
-      
-      - name: Release
-        uses: ncipollo/release-action@v1
-        if: github.ref == 'refs/heads/main'
-        with:
-          tag: "${{ steps.versioning.outputs.version }}"
-          prerelease: false
-
-      - name: Pre-Release
-        uses: ncipollo/release-action@v1
-        if: github.ref == 'refs/heads/dev'
-        with:
-          tag: "${{ steps.versioning.outputs.version }}"
-          prerelease: true
