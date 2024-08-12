@@ -100,8 +100,8 @@ jobs:
           context: ./
           push: true
           tags: |
-            ${{ secrets.DOCKER_REGISTRY_NAME}}/innovtech/kexa:${{ steps.versioning.outputs.version }}
-            ${{ secrets.DOCKER_REGISTRY_NAME}}/innovtech/kexa:latest
+            ${{ secrets.DOCKER_REGISTRY_NAME}}/innovtech/kexaction:${{ steps.versioning.outputs.version }}
+            ${{ secrets.DOCKER_REGISTRY_NAME}}/innovtech/kexaction:latest
       
       - name: Release
         uses: ncipollo/release-action@v1
