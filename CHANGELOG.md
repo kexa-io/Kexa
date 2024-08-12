@@ -2801,3 +2801,205 @@ kexa-sbom.json was changed
 
 package.json was changed
 
+## 1.14.0-SNAPSHOT.241.6795455
+
+### Files added: 1
+
+dockerstart.sh was added
+
+### Files changed: 5
+
+dockerstart.sh was changed
+
+CHANGELOG.md was changed
+
+Dockerfile was changed
+
+VERSION was changed
+
+
+## 1.14.0-devadrienrules.248.a9784a7
+
+### Files added: 13
+
+rules/VaultsAnalysis.yaml was added
+
+rules/rules-testing.yaml was added
+
+rules/rules-with-var.yaml was added
+
+rules/rulesByProvider/awsSetRules.yaml was added
+
+rules/rulesByProvider/azureSetRules.yaml was added
+
+rules/rulesByProvider/driveRules.yaml was added
+
+rules/rulesByProvider/gcpSetRules.yaml was added
+
+rules/rulesByProvider/githubSetRules.yaml was added
+
+rules/rulesByProvider/googleDriveSetRules.yaml was added
+
+rules/rulesByProvider/googleWorkspaceSetRules.yaml was added
+
+rules/rulesByProvider/helmSetRules.yaml was added
+
+rules/rulesByProvider/kubernetesSetRules.yaml was added
+
+rules/rulesByProvider/o365SetRules.yaml was added
+
+### Files changed: 18
+
+rules/VaultsAnalysis.yaml was changed
+
+rules/rules-testing.yaml was changed
+
+rules/rules-with-var.yaml was changed
+
+rules/rulesByProvider/awsSetRules.yaml was changed
+
+rules/rulesByProvider/azureSetRules.yaml was changed
+
+rules/rulesByProvider/driveRules.yaml was changed
+
+rules/rulesByProvider/gcpSetRules.yaml was changed
+
+rules/rulesByProvider/githubSetRules.yaml was changed
+
+rules/rulesByProvider/googleDriveSetRules.yaml was changed
+
+rules/rulesByProvider/googleWorkspaceSetRules.yaml was changed
+
+rules/rulesByProvider/helmSetRules.yaml was changed
+
+rules/rulesByProvider/kubernetesSetRules.yaml was changed
+
+rules/rulesByProvider/o365SetRules.yaml was changed
+
+CONTRIBUTING.md was changed
+
+README.md was changed
+
+VERSION was changed
+
+rules/rulesByProvider/httpSetRules.yaml was changed
+
+## 1.14.0-SNAPSHOT.250.fa1288c
+
+### Files added: 0
+
+### Files changed: 5
+
+CHANGELOG.md was changed
+
+CONTRIBUTING.md was changed
+
+README.md was changed
+
+VERSION was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.266.3282191
+
+### Files added: 0
+
+### Files changed: 5
+
+.github/workflows/ci.yml was changed
+
+CONTRIBUTING.md was changed
+
+Kexa/enum/alert.enum.ts was changed
+
+Kexa/services/alerte.service.ts was changed
+
+ROADMAP.md was changed
+
+
+## 1.14.0-SNAPSHOT.268.443c2c1
+
+### Files added: 0
+
+### Files changed: 3
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.269.e2d48d8
+
+### Files added: 0
+
+### Files changed: 3
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.270.c89f7f3
+
+### Files added: 0
+
+### Files changed: 3
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.271.5a78ead
+
+### Files added: 0
+
+### Files changed: 3
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.272.9b3bdf5
+
+### Files added: 0
+
+### Files changed: 3
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+package.json was changed
+
+
+## 1.14.0-SNAPSHOT.277.22e78aa
+
+### Files added: 0
+
+### Files changed: 3
+
+.github/workflows/ci.yml was changed
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+
+## 1.14.0-SNAPSHOT.281.02ce2c9
+
+### Files added: 0
+
+### Files changed: 1
+
+

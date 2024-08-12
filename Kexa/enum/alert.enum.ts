@@ -4,5 +4,6 @@ export enum AlertEnum {
     SLACK = "slack",
     TEAMS = "teams",
     WEBHOOK = "webhook",
-    LOG = "log"
+    LOG = "log",
+    JIRA = "jira"
 }
