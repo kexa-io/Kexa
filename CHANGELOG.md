@@ -3017,3 +3017,16 @@ VERSION was changed
 CHANGELOG.md was changed
 
 
+## 
+
+### Files added: 1
+
+rules/azureSetRules.yaml was added
+
+### Files changed: 2
+
+rules/azureSetRules.yaml was changed
+
+.github/workflows/sbom.yml was changed
+
+
