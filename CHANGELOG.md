@@ -2919,3 +2919,16 @@ Kexa/services/alerte.service.ts was changed
 ROADMAP.md was changed
 
 
+## 1.14.0-SNAPSHOT.268.443c2c1
+
+### Files added: 0
+
+### Files changed: 3
+
+CHANGELOG.md was changed
+
+VERSION was changed
+
+package.json was changed
+
+
