@@ -37,6 +37,7 @@ jobs:
           major-identifier: 'break:'
 
       - name: Set up version in file
+        continue-on-error: true
         run: echo "${{ steps.versioning.outputs.version }}" > VERSION
 
       - name: Login to Docker Registry
