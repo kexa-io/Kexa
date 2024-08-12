@@ -1,0 +1,63 @@
+name: versioning
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+  workflow_dispatch:
+
+jobs:
+
+  ci:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0     
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+
+      - name: Git Version
+        id: versioning
+        uses: codacy/git-version@2.8.0
+        with:
+          release-branch: main
+          dev-branch: dev
+          log-paths: Kexa/
+          minor-identifier: 'feat:'
+          major-identifier: 'break:'
+
+      - name: Set up version in file
+        run: echo "${{ steps.versioning.outputs.version }}" > VERSION
+
+      - name: Login to Docker Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ secrets.DOCKER_REGISTRY_NAME}}
+          username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
+          password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+
+      - name: Push on Docker Registry
+        uses: docker/build-push-action@v4
+        with:
+          context: ./
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_REGISTRY_NAME}}/innovtech/kexa:${{ steps.versioning.outputs.version }}
+            ${{ secrets.DOCKER_REGISTRY_NAME}}/innovtech/kexa:latest
+      
+      - name: Release
+        uses: ncipollo/release-action@v1
+        if: github.ref == 'refs/heads/main'
+        with:
+          tag: "${{ steps.versioning.outputs.version }}"
+          prerelease: false
