@@ -3059,3 +3059,44 @@ rules/SecretsRotation.yaml was changed
 CHANGELOG.md was changed
 
 
+## 
+
+### Files added: 3
+
+Kexa/emails/jira.ts was added
+
+Kexa/services/alerting/jiraAlerting.service.ts was added
+
+rules/perProvider/helmSetRules.yaml was added
+
+### Files changed: 14
+
+Kexa/emails/jira.ts was changed
+
+Kexa/services/alerting/jiraAlerting.service.ts was changed
+
+rules/perProvider/helmSetRules.yaml was changed
+
+Kexa/emails/teams.ts was changed
+
+Kexa/main.ts was changed
+
+Kexa/services/addOn/display/azureDisplay.service.ts was changed
+
+Kexa/services/addOn/display/kubernetesDisplay.service.ts was changed
+
+Kexa/services/alerte.service.ts was changed
+
+package.json was changed
+
+pnpm-lock.yaml was changed
+
+rules/perProvider/awsSetRules.yaml was changed
+
+rules/perProvider/azureSetRules.yaml was changed
+
+rules/perProvider/gcpSetRules.yaml was changed
+
+rules/perProvider/kubernetesSetRules.yaml was changed
+
+

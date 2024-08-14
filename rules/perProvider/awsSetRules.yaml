@@ -50,19 +50,9 @@
         - level: 3
           min: 1
   rules:
-    - name: "Is AWS addon working in Action"
-      description: "This rule must raise an info alert if the AWS addon is working"
-      applied: true
-      level: 1
-      cloudProvider: aws
-      objectName: IAMClient.AccountPasswordPolicy
-      conditions:
-        - property: MinimumPasswordLength
-          condition: EQUAL
-          value: '17'
     - name: "aws-ec2-volume-unattached"
       description: "this rule is to check if an ec2 volume is unattached"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: EC2Client.Volumes
@@ -72,7 +62,7 @@
           value: 0
     - name: "ec2-volume-check-create-less-2-month-expiration"
       description: "this rule is to check for a ec2 volume create date inferior than 2 months"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: aws
       objectName: EC2Client.Volumes
@@ -83,7 +73,7 @@
           date: "YYYY-MM-DDThh:mm:ss.SSSZ"
     - name: "aws-tagsvalue-check-for-expiration-date"
       description: "this rule is to check if tags contain an expiration date (separate with \"-\")"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: KexaAwsCustoms.tagsValueListing
@@ -93,7 +83,7 @@
           value: '\b\d{1,4}[-]\d{1,4}[-]\d{1,4}\b'
     - name: "ec2-security-groups-source-defined"
       description: "this rule is to check if a ec2 SG has a defined source (not 0.0.0.0)"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: EC2Client.SecurityGroups
@@ -109,7 +99,7 @@
                   value: "0.0.0.0/0"
     - name: "aws-ec2-public-ip-address"
       description : "this rule is to check if an ec2 ip address is public"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: aws
       objectName: EC2Client.Instances
@@ -123,7 +113,7 @@
    # storage rule
     - name: "aws-bucket-public-access-block"
       description: "this rule is to verify if the public access block is enabled on the bucket"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: S3Client.PublicAccessBlock
@@ -144,7 +134,7 @@
               value: true
     - name: "aws-bucket-enryption-enable"
       description: "this rule is to verify if the bucket is encrypted"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: S3Client.BucketEncryption
@@ -154,7 +144,7 @@
           value: 1
     - name: "aws-bucket-encryption-using-kms"
       description: "this rule is to verify if the bucket is encrypted using KMS"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: S3Client.BucketEncryption
@@ -173,7 +163,7 @@
                   value: aws:kms
     - name: "aws-bucket-key-enabled-to-reduce-encryption-cost"
       description: "this rule is to verify if the bucket key is enabled to reduce encryption cost"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: aws
       objectName: S3Client.BucketEncryption
