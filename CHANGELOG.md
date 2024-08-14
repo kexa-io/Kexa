@@ -3098,5 +3098,6 @@ rules/perProvider/azureSetRules.yaml was changed
 rules/perProvider/gcpSetRules.yaml was changed
 
 rules/perProvider/kubernetesSetRules.yaml was changed
+### Files changed: 1
 
 
