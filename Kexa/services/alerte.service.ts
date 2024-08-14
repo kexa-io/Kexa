@@ -75,7 +75,7 @@ export function alertFromGlobal(alert: GlobalConfigAlert, compteError: number[],
                 alertWebhookGlobal(alert, compteError, allScan);
                 break;
             case AlertEnum.JIRA:
-                sendJiraTicket(alert, "🌐 Global Alert:- Kexa - "+(alert.name??"Uname"), compteRender(allScan), null, null);
+                sendJiraTicket(alert, "🌐 Global Alert:- Kexa - "+(alert.name??"Uname"), compteRender(allScan), null, allScan);
                 break;
             default:
                 alertLogGlobal(alert, compteError, allScan);
@@ -323,7 +323,7 @@ export function alertTeams(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rul
         const regex = /^https:\/\/(?:[a-zA-Z0-9_-]+\.)?webhook\.office\.com\/[^\s"]+$/;
         if(!regex.test(teams_to)) return;
         let content = propertyToSend(rule, objectResource);
-        const payload = Teams.OneTeams(colors[rule.level], "Kexa - "+levelAlert[rule.level]+" - "+rule.name, extractURL(content)??"", rule.description??"");
+        const payload = Teams.OneTeams(colors[rule.level], "Kexa - "+levelAlert[rule.level]+" - "+rule.name, extractURL(content)??"", rule.description??"", content);
         sendCardMessageToTeamsChannel(teams_to, payload);
     }
 }
@@ -447,155 +447,11 @@ async function sendWebhook(alert: ConfigAlert, subject: string, content: any) {
     }
 }
 
-async function updateIssueDate(auth: string, issueId: string): Promise<void> {
-    const url = 'https://' + await getConfigOrEnvVar(config, 'JIRA_DOMAIN') +`/rest/api/2/issue/${issueId}/comment`;
-    const bodyComment = {
-        "body": "This is a comment regarding the quality of the response."
-    }
 
-    axios.post(url, bodyComment, {
-        headers: {
-            'Authorization': auth,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        }
-    })
-        .then(response => {
-           // console.log(`Response: ${response.status} ${response.statusText}`);
-        })
-        .catch(err => {
-            logger.error('Error updating Jira issue:', err.message);
-        });
-}
+import { Jira } from "../emails/jira";
+import { searchExistingIssue, createJiraIssue, updateIssueDate } from "./alerting/jiraAlerting.service";
 
-async function searchExistingIssue(auth: string, summary: string, description: string, content: any, issueType: string): Promise<any> {
-    const issues = await getJiraTickets(auth);
-    let found = false;
-    let matchedIssue = null;
-    const doneStatusCode = await getConfigOrEnvVar(config, 'JIRA_DONE_STATUS_CODE') ?? "10002";
-    const ignoreStatusCode = await getConfigOrEnvVar(config, 'JIRA_IGNORE_STATUS_CODE') ?? "XXXXX";
-
-    outerLoop: for (const issue of issues) {
-        if (issue.fields.issuetype.id != issueType) {
-            continue;
-        }
-        if (issue.fields.status.id == doneStatusCode) {
-            continue;
-        }
-        if (issue.fields.status.id == ignoreStatusCode) {
-            continue;
-        }
-        const tmp1 = summary.toString();
-        const summaryCompare = tmp1.includes(':') ? tmp1.split(':').slice(1).join(':').trim() : tmp1;
-        const tmp2 = issue.fields.summary.toString();
-        const summaryAPI = tmp2.includes(':') ? tmp2.split(':').slice(1).join(':').trim() : tmp2;
-        if (summaryAPI != summaryCompare) {
-            continue;
-        }
-
-        const issueContent = issue.fields.description.content;
-        const contentCompareArray = content.fields.description.content;
-        let i = 0, j = 0;
-    
-        let allValid = false;
-        while (i < issueContent.length && j < contentCompareArray.length) {
-            let contentAPIParse = issueContent[i];
-            let contentCompareParse = contentCompareArray[j];
-    
-            const contentCompare = JSON.stringify(contentCompareParse?.content);
-            const contentAPI = JSON.stringify(contentAPIParse?.content);
-
-            if (contentAPI != contentCompare) {
-                allValid = false;
-                break;
-            } else {
-                allValid = true;
-                i++;
-                j++;
-                if (i >= issueContent.length || j >= contentCompareArray.length) {
-                    break;
-                }
-                contentAPIParse = issueContent[i];
-                contentCompareParse = contentCompareArray[j];
-            }
-        }
-        if (allValid) {
-            found = true;
-            matchedIssue = issue;
-            break outerLoop;
-        }
-    }
-    if (found) {
-       // updateIssueDate(auth, matchedIssue.id);
-        return true;
-    } else {
-        return false;
-    }
-}
-
-
-async function getJiraTickets(auth: string): Promise<any> {
-    const jiraUrlBase = 'https://' + await getConfigOrEnvVar(config, 'JIRA_DOMAIN') + '/rest/api/3/search?jql=project=' + (process.env.JIRA_PROJECT_KEY ?? "XXXXX");
-    const maxResults = 50;
-    let startAt = 0;
-    let allIssues: any[] = [];
-    let total = 0;
-
-    try {
-        do {
-            const jiraUrl = `${jiraUrlBase}&startAt=${startAt}&maxResults=${maxResults}`;
-            let response = await axios.get(jiraUrl, {
-                headers: {
-                    'Authorization': `Basic ${auth}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            const issues = response.data.issues;
-            total = response.data.total;
-            allIssues = allIssues.concat(issues);
-            startAt += maxResults;
-
-        } while (startAt < total);
-
-        return allIssues;
-    } catch (error: any) {
-        logger.error('Error getting Jira tickets:', error.message);
-        return [];
-    }
-}
-
-function getJiraPriorityLevel(alertLevel: number): string {
-    if (alertLevel == 0) {
-        return process.env.JIRA_INFO_PRIORITY_LEVEL ?? "5";
-    } else if (alertLevel == 1) {
-        return process.env.JIRA_WARN_PRIORITY_LEVEL ?? "4";
-    } else if (alertLevel == 2) {
-        return process.env.JIRA_ERR_PRIORITY_LEVEL ?? "3";
-    } else if (alertLevel == 3) {
-        return process.env.JIRA_FATAL_PRIORITY_LEVEL ?? "2";
-    }
-    return "3";
-}
-
-async function createJiraIssue(jiraUrl: string, finalContent: string, auth: string) {
-    try {
-        let response = await axios.post(jiraUrl, finalContent, {
-            headers: {
-                'Authorization': `Basic ${auth}`,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        });
-        logger.info('Jira issue sent successfully with card name "' + response.data.key + '"');
-    } catch (error: any) {
-        logger.error('Error creating Jira issue:', error.message);
-    }
-}
-
-
-export async function sendJiraTicket(alert: ConfigAlert, subject: string, receivedContent: any, rule : Rules | null, objectResource: any | null): Promise<void> {
+export async function sendJiraTicket(alert: ConfigAlert, subject: string, receivedContent: any, rule: Rules | null, objectResource: any | null): Promise<void> {
     const context = getContext();
     const jiraUrl = 'https://' + await getConfigOrEnvVar(config, 'JIRA_DOMAIN') + '/rest/api/3/issue/';
     const auth = Buffer.from(await getConfigOrEnvVar(config, 'JIRA_API_KEY')).toString('base64');
@@ -606,13 +462,13 @@ export async function sendJiraTicket(alert: ConfigAlert, subject: string, receiv
     let issueType;
     let assigneeId;
 
-
-    if (receivedContent.content == undefined)
-        content = {content: receivedContent};
-    else {
+    if (receivedContent.content == undefined) {
+        content = { content: receivedContent };
+    } else {
         content = receivedContent;
         isGlobal = true;
     }
+
     for (let i = 0; i < alert.to.length; i++) {
         if (alert.to[i].startsWith("jira_issue_type="))
             issueType = alert.to[i].split("=")[1];
@@ -623,111 +479,39 @@ export async function sendJiraTicket(alert: ConfigAlert, subject: string, receiv
     }
     if (issueType == undefined)
         issueType = "10005";
-    let bodyAssignee;
-    if (assigneeId == undefined)
-        bodyAssignee = `{
-            "fields": {`;
-    else {
-        bodyAssignee = `{
-            "fields": {
-                    "assignee": {
-                        "id": "${assigneeId}"
-                    },`;
-    }
-    const jiraContent = {
-        projectKey: projectKey,
-        summary: subject,
-        issueType: issueType
-    };
+
     let alertLevelEmoji = "";
     if (rule != null)
         alertLevelEmoji = (rule.level == 0) ? "ⓘ info: " : (rule.level == 1) ? "⚠️ warning: " : (rule.level == 2) ? "❗error: " : "❌ fatal: ";
-    const bodyDataStart = `
-                "project":
-                { 
-                    "key": "${jiraContent.projectKey}"
-                },
-                "summary": "${alertLevelEmoji == "" ? subject : alertLevelEmoji + subject}",
-                "description": {
-                    "content": [`;
-    bodyAssignee += bodyDataStart;
-    let finalContent = bodyAssignee;
-    let fullContentData = "";
-    for (let i = 0; i < content.content.length; i++) { 
-        fullContentData += `{
-                "content": [
-                    {
-                        "text": "#################################################",
-                        "type": "text"
-                    }
-                ],
-                "type": "paragraph"
-        },`;
-        if (rule == null)
-            alertLevelEmoji = (content.content[i].rule.level == 0) ? "ⓘ info: " : (content.content[i].rule.level == 1) ? "⚠️ warning: " : (content.content[i].rule.level == 2) ? "❗error: " : "❌ fatal: ";
-        let contentData = `{
-                            "type": "heading",
-                            "attrs": {
-                                "level": 1
-                            },
-                                "content": [
-                                    {
-                                        "text": "${ (isGlobal == true) ? alertLevelEmoji + content.content[i].rule.name: objectResource.id}",
-                                        "type": "text"
-                                    }
-                                ]
-        },`;
-        for (let j = 0; j < content.content[i].result.length; j++) {   
-            contentData += `{
-                    "content": [
-                        {
-                            "text": "${ (isGlobal == true) ? content.content[i].result[j].objectContent.id  : content.content[i].result[j].error.length }",
-                            "type": "text"
-                        }
-                    ],
-                    "type": "paragraph"
-                },`;
-        }
 
-        fullContentData += contentData;
-        if (i === content.content.length) {
-            fullContentData = fullContentData.substring(0, fullContentData.length - 1);
-        }
-        fullContentData += `{
-                "content": [
-                    {
-                        "text": "#################################################",
-                        "type": "text"
-                    }
-                ],
-                "type": "paragraph"
-        },`;
+    const jiraContent = {
+        projectKey: projectKey,
+        summary: subject,
+        issueType: issueType,
+        alertLevelEmoji: alertLevelEmoji,
+        content: content,
+        objectResource: objectResource,
+        assigneeId: assigneeId,
+        isGlobal: isGlobal,
+        rule: rule
+    };
+
+    let finalContent;
+    if (isGlobal) {
+        finalContent = Jira.GlobalJira(jiraContent);
+    } else {
+        finalContent = Jira.OneJira(jiraContent);
     }
-    fullContentData = fullContentData.substring(0, fullContentData.length - 1);
-    finalContent += fullContentData;
-    const bodyDataEnd = 
-                    `],
-                    "type": "doc",
-                    "version": 1
-                },
-                "issuetype": {
-                        "id": "${jiraContent.issueType}"
-                }
-        }
-    }`;
-    finalContent += bodyDataEnd;
-
 
     const isIssueAlreadyExisting = await searchExistingIssue(auth, subject, JSON.stringify(content), JSON.parse(finalContent), issueType);
     if (isIssueAlreadyExisting) {
-        context?.log('Jira issue not sent because it already exist and neither done or ignored!');
-        logger.info('Jira issue not sent because it already exist and neither done or ignored!');
+        context?.log('Jira issue not sent because it already exists and is neither done nor ignored!');
+        logger.info('Jira issue not sent because it already exists and is neither done nor ignored!');
         return;
     }
 
     await createJiraIssue(jiraUrl, finalContent, auth);
 }
-
 
 
 export async function sendCardMessageToTeamsChannel(channelWebhook: string, payload:string): Promise<void> {

@@ -116,7 +116,11 @@ async function main(retryLeft = -1) {
     }
 
     context?.log("logger configured");
-    await displayVersionAndLatest(logger);
+    try {
+        await displayVersionAndLatest(logger);
+    } catch (e) {
+        logger.error("Error getting latest version of Kexa (github.com)");
+    }
     AsciiArtText("Kexa");
     let idScan = 0;
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"https://github.com/4urcloud/Kexa_Rules");
