@@ -1,7 +1,8 @@
 const levelAlert = ["info", "warning", "error", "fatal"];
+
 export const Teams = {
     //https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/connectors-using?tabs=cURL
-    OneTeams: (color:string, subject:string, url:string, description:string) => {
+    OneTeams: (color:string, subject:string, url:string, description:string, content: string) => {
         return JSON.stringify({
             "@type": "MessageCard",
             "@context": "http://schema.org/extensions",
@@ -12,7 +13,13 @@ export const Teams = {
                     "activityTitle": subject,
                     "activitySubtitle": description,
                     "activityImage": "https://kexa.io/kexa-no-background-color.png",
-                    "markdown": true
+                    "markdown": true,
+                    "facts": [
+                        {
+                            "name": "Resource: ",
+                            "value": content
+                        }
+                    ]
                 }
             ],
             "potentialAction": [

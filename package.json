@@ -483,6 +483,7 @@
         "@microsoft/microsoft-graph-client": "^3.0.7",
         "@microsoft/teams-js": "^2.25.0",
         "@octokit/core": "^4.2.4",
+        "@types/pg": "^8.11.6",
         "aws-lambda": "^1.0.7",
         "axios": "^1.7.2",
         "cfonts": "^3.3.0",
