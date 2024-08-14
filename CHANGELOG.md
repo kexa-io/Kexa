@@ -3101,3 +3101,14 @@ rules/perProvider/kubernetesSetRules.yaml was changed
 ### Files changed: 1
 
 
+## 
+
+### Files added: 0
+
+### Files changed: 2
+
+CHANGELOG.md was changed
+
+kexa-sbom.json was changed
+
+
