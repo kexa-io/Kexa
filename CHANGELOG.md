@@ -3172,3 +3172,60 @@ package.json was changed
 pnpm-lock.yaml was changed
 
 
+## 
+
+### Files added: 10
+
+Kexa/models/export/postgre/config.models.ts was added
+
+Kexa/query/CRUDPostgres/origins.iquery.ts was added
+
+Kexa/query/CRUDPostgres/providerItems.iquery.ts was added
+
+Kexa/query/CRUDPostgres/providers.iquery.ts was added
+
+Kexa/query/CRUDPostgres/resources.iquery.ts was added
+
+Kexa/query/CRUDPostgres/rules.iquery.ts was added
+
+Kexa/query/CRUDPostgres/scans.iquery.ts was added
+
+Kexa/query/tablePg.iquery.ts was added
+
+Kexa/services/addOn/exportation/postgreExportation.service.ts was added
+
+Kexa/services/saving/postgreSQL.service.ts was added
+
+### Files changed: 15
+
+Kexa/models/export/postgre/config.models.ts was changed
+
+Kexa/query/CRUDPostgres/origins.iquery.ts was changed
+
+Kexa/query/CRUDPostgres/providerItems.iquery.ts was changed
+
+Kexa/query/CRUDPostgres/providers.iquery.ts was changed
+
+Kexa/query/CRUDPostgres/resources.iquery.ts was changed
+
+Kexa/query/CRUDPostgres/rules.iquery.ts was changed
+
+Kexa/query/CRUDPostgres/scans.iquery.ts was changed
+
+Kexa/query/tablePg.iquery.ts was changed
+
+Kexa/services/addOn/exportation/postgreExportation.service.ts was changed
+
+Kexa/services/saving/postgreSQL.service.ts was changed
+
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+Kexa/main.ts was changed
+
+package.json was changed
+
+pnpm-lock.yaml was changed
+
+
