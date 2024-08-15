@@ -13,9 +13,7 @@ export async function exportation(save: PostgreSQLSaveConfig, resources: Provide
     //////////////////////////
     ///////////// USE A TIMEOUT
     ///////////////////////////
-    console.log("CREATING THE POSTGRE-----------------------------------------");
     let pgSQL = new PostgreSQLClass();
-    console.log("EXPORTING TO POSTGRE-----------------------------------------");
     try{
         if(!save.urlName) throw new Error("urlName is required");
         let url = (await getEnvVar(save.urlName)) ?? save.urlName;
@@ -28,9 +26,7 @@ export async function exportation(save: PostgreSQLSaveConfig, resources: Provide
             logger.warn("Error in creating tables: ", e);
             throw e;
         }
-        console.log("CREATED THE POSTGRE TABLE-----------------------------------------");
         let providers = await pgSQL.createAndGetProviders(Object.keys(resources));
-        console.log("CREATED THE PROVDERs-----------------------------------------");
         await Promise.all(Object.keys(resources).map(async (providerName) => {
             let providerId = providers[providerName];
             let providerResource = resources[providerName];
@@ -40,22 +36,24 @@ export async function exportation(save: PostgreSQLSaveConfig, resources: Provide
                     pgSQL.createAndGetOrigin(dataEnvironnementConfig),
                     pgSQL.createAndGetProviderItems(providerId, Object.keys(resource))
                 ]);
-                console.log("CREATED items & origins-----------------------------------------");
                 try  {
                     await Promise.all(Object.keys(resource).map(async (resourceName) => {
                         await pgSQL.createAndGetResources(resource[resourceName], originId, providerItemsId[resourceName]);
                     }));
-                    console.log("CREATED resources-----------------------------------------");
                 } catch (e) {
                     logger.warn("Error in creating resources: ", e);
                     throw e;
                 }
             }));
         }));
+        try {
+            await pgSQL.disconnect(true);
+        } catch (e) {
+            logger.warn("Error in closing connection: ", e);
+            throw e;
+        }
         logger.info("All data exported to PostgreSQL");
-        await pgSQL.disconnect();
     }catch(e:any){
-        console.log("ERROR IN POSTGRE EXPORTATION-----------------------------------------");
         logger.warn("Error in exportation to PostgreSQL: " + e);
         await pgSQL.disconnect(true);
         throw e;

@@ -206,7 +206,7 @@ async function main(retryLeft = -1) {
             break;
         }
         idScan++;
-    };
+    };    
    clearTimer(timer);
  //   if (retError)
  //       process.exit(1);

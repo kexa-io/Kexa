@@ -47,24 +47,37 @@ export class PostgreSQLClass {
                 try {
                     return await conn.query(query);
                 } catch (error) {
-                    console.error("Error in EEE: " + error);
                     return false;
                 }
             }))
+            this.closeConnection(conn);
             return true;
         }catch(error){
-            console.error("Error in creating table IN: " + error);
             this.closeConnection(conn);
             return false;
         }
-        this.closeConnection(conn);
     }
 
-    public async disconnect(force:Boolean=false): Promise<void> {
-        logger.debug("Number of connection: " + this.nbrConnection);
+    public async disconnect(force:Boolean=false, timeout: number = 10000): Promise<void> {
         if ((this.pool && this.nbrConnection === 0) || force) {
-            logger.debug("Disconnecting from PostgreSQL");
-            await this.pool?.end();
+            const timeoutPromise = new Promise<void>((_, reject) =>
+                setTimeout(() => reject(new Error("Disconnect timeout")), timeout)
+            );
+            try {
+                if (this.pool) {
+                    await Promise.race([
+                        this.pool.end(),
+                        timeoutPromise
+                    ]);                    
+                    logger.info("Successfully disconnected from PostgreSQL");
+                } else {
+                    logger.debug("Connection pool is already null or does not exist.");
+                }
+            } catch (e) {
+                logger.error("Error in disconnecting from PostgreSQL: ", e);
+            }
+        } else {
+            logger.debug("No need to disconnect: pool not available or connections are active.");
         }
     }
 
@@ -125,9 +138,7 @@ export class PostgreSQLClass {
     
     public async getProviderItemsByNameAndProvider(providerId: number, name: string): Promise<any> {
         let conn = await this.getConnection();
-        console.log("BEFOOOOOOOOOOORE");
         let result: QueryResult = await conn.query(CRUDProviderItemsIQuery.Read.OneByNameAndProvider, [name, providerId]);
-        console.log("DOOOOOOOOOOOOOOOOOONE");
         if(result.rows.length === 0){
             await conn.query(CRUDProviderItemsIQuery.Create.One, [name, providerId]);
             result = await conn.query(CRUDProviderItemsIQuery.Read.OneByNameAndProvider, [name, providerId]);
@@ -143,12 +154,16 @@ export class PostgreSQLClass {
         return ids;
     }
     
-    public async createAndGetResource(resource: any, originId: number, providerItemsId: number): Promise<number> {
-        let conn = await this.getConnection();
-        await conn.query(CRUDResourcesIQuery.Create.One, [jsonStringify(resource), originId, providerItemsId]);
-        let result: QueryResult = await conn.query(CRUDResourcesIQuery.Read.OneByContent, [jsonStringify(resource)]);
-        this.closeConnection(conn);
-        return result.rows[0].id;
+    public async createAndGetResource(resource: any, originId: number, providerItemsId: number): Promise<number | undefined> {
+        try {
+            let conn = await this.getConnection();
+            await conn.query(CRUDResourcesIQuery.Create.One, [jsonStringify(resource), originId, providerItemsId]);
+            let result: QueryResult = await conn.query(CRUDResourcesIQuery.Read.OneByContent, [jsonStringify(resource)]);
+            this.closeConnection(conn);
+            return result.rows[0].id;
+        } catch (e) {
+            logger.debug(e);
+        }
     }
     
     public async createAndGetRule(rule: Rules, providerId:number, providerItemId:number): Promise<number> {

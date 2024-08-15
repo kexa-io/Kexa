@@ -26,6 +26,7 @@ export const TableIQuery = {
             ID SERIAL PRIMARY KEY,
             name VARCHAR(255) UNIQUE NOT NULL,
             description TEXT
+            UNIQUE (name)
         )
     `,
     Resources: `
