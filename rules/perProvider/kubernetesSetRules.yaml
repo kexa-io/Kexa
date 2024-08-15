@@ -5,39 +5,37 @@
       enabled: true
       type: 
         - log
-        - jira
+        #- email
       to: 
-        - jira_issue_type=10016
+        - myEmail@gmail.com
     error:
       enabled: true
       type: 
         - log
-        - jira
+        #- email
       to: 
-        - jira_issue_type=10016
+        - myEmail@gmail.com
     warning:
       enabled: true
       type: 
         - log
-        - jira
-      to: 
-        - jira_issue_type=10016
-
+        #- email
+      to:
+        - myEmail@gmail.com
     info:
       enabled: true
       type: 
         - log
-        - jira
+        #- email
       to: 
-        - jira_issue_type=10016
-
+        - myEmail@gmail.com
     global:
       enabled: true
       type: 
         - log
-        - jira
+      #  - email
       to: 
-        - jira_issue_type=10016
+        - myEmail@gmail.com
       conditions:
         - level: 0
           min: 1
@@ -108,7 +106,7 @@
     #############################
     - name: "kube-storage-class-allow-expansion"
       description : "this rules is to verify storage class allow expansion"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: kubernetes
       objectName : storageclass
@@ -119,7 +117,7 @@
     # this is an example of storage class disk parameters rule
     - name: "kube-storage-class-disk-parameters"
       description : "this rules is to verify storage class disk parameters"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: kubernetes
       objectName : storageclass
@@ -135,7 +133,7 @@
           value: '1000'
     - name: "kube-is-persistent-volume-bounded"
       description : "this rules is to verify that persistent volume is bounded"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: kubernetes
       objectName : persistentvolume
@@ -146,7 +144,7 @@
     # LINKEDIN HERE
     - name: "kube-is-persistent-volume-not-pending"
       description : "this rules is to verify that persistent volume is not pending"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: kubernetes
       objectName : persistentvolume
@@ -197,7 +195,7 @@
     # pods memory % consumption alert
     - name: "kube-pods-memory-limitation"
       description : "this rules is to verify pods memory limitation"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: kubernetes
       objectName : podsConsumption
@@ -208,7 +206,7 @@
     # pods CPU % consumption alert
     - name: "kube-pods-cpu-limitation"
       description : "this rules is to verify cpu usage limitation"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: kubernetes
       objectName : podsConsumption

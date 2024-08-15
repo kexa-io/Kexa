@@ -50,22 +50,6 @@
         - level: 3
           min: 1
   rules:
-    - name: "az-job-ml-check"
-      description: "this rule is to check for ml job if they are not failed"
-      applied: true
-      level: 1
-      cloudProvider: azure
-      objectName: KexaAzure.mlJobs
-      conditions:
-        - operator: NAND
-          criteria:
-            - property: properties.status
-              condition: EQUAL
-              value: Failed
-            - property: properties.properties.StartTimeUtc
-              condition: DATE_INF
-              value: 0 0 0 1 0 0
-              date: "YYYY-MM-DD hh:mm:ss"
     - name: "check-vm-reservation"
       description : "check if VM have a reservation"
       applied: true
@@ -149,7 +133,7 @@
               value: Delete
     - name: "azure-check-aks-cluster-conformity"
       description : "this rules is to check if aks cluster are conform to the norms"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: azure
       objectName : ContainerServiceClient.managedClusters
@@ -174,7 +158,7 @@
           value : NULL
     - name: "azure-disk-not-public-or-encrypted"
       description : "this rules is to check if disk is either not public or encrypted by default"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: azure
       objectName : ComputeManagementClient.disks
@@ -214,7 +198,7 @@
               value: 50
     - name: "azure-storage-account-no-public-access"
       description: "this rule is to check on azure storage account for public access"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: azure
       objectName: StorageManagementClient.storageAccounts
@@ -240,7 +224,7 @@
     - name: "azure-storage-account-encryption-using-kms"
       description: "this rule is to check on azure storage account for encryption using kms"
       applied: true
-      level: 2
+      level: 1
       cloudProvider: azure
       objectName: StorageManagementClient.storageAccounts
       conditions:
