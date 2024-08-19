@@ -17,7 +17,7 @@
 By setting up 'Jira' notifications, you will receive alerts as issues in a desired Kanban, this will allow you to track and manage your optimization, security or compliance problems.
 
 
-### Prerequire
+## Prerequire
 
 
 To add Jira notifications, you will need to follow the steps below to set up the notifications. Start by creating a new Kanban project in Jira, and get your Jira API key : [Manage API tokens for your Atlassian account | Atlassian Support](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)
