@@ -3308,3 +3308,84 @@ Kexa/services/addOn/exportation/postgresExportation.service.ts was changed
 Kexa/services/saving/postgresSQL.service.ts was changed
 
 
+## 
+
+### Files added: 16
+
+Kexa/services/addOn/save/postgresSave.service.ts was added
+
+config/demo/postgres.default.json was added
+
+documentation/notifications/jira.md was added
+
+documentation/notifications/teams.md was added
+
+documentation/save/Postgres.md was added
+
+images/expected_teams.png was added
+
+images/issue_typeid.png was added
+
+images/jira-logo.png was added
+
+images/jira_projectid.png was added
+
+images/jiraenv.png was added
+
+images/jiraresults.png was added
+
+images/jiraresults_details_multiple.png was added
+
+images/jiraresults_details_one.png was added
+
+images/msteams-logo.png was added
+
+images/postgres.png was added
+
+images/ruleconfigjira.png was added
+
+### Files changed: 21
+
+Kexa/services/addOn/save/postgresSave.service.ts was changed
+
+config/demo/postgres.default.json was changed
+
+documentation/notifications/jira.md was changed
+
+documentation/notifications/teams.md was changed
+
+documentation/save/Postgres.md was changed
+
+images/expected_teams.png was changed
+
+images/issue_typeid.png was changed
+
+images/jira-logo.png was changed
+
+images/jira_projectid.png was changed
+
+images/jiraenv.png was changed
+
+images/jiraresults.png was changed
+
+images/jiraresults_details_multiple.png was changed
+
+images/jiraresults_details_one.png was changed
+
+images/msteams-logo.png was changed
+
+images/postgres.png was changed
+
+images/ruleconfigjira.png was changed
+
+CHANGELOG.md was changed
+
+Kexa/query/tablePg.iquery.ts was changed
+
+ROADMAP.md was changed
+
+Kexa/services/addOn/exportation/postgresExportation.service.ts was changed
+
+Kexa/services/saving/postgresSQL.service.ts was changed
+
+
