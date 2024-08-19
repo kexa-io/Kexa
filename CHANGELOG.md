@@ -3061,54 +3061,355 @@ CHANGELOG.md was changed
 
 ## 
 
-### Files added: 3
+### Files added: 10
 
-Kexa/emails/jira.ts was added
+Kexa/models/export/postgre/config.models.ts was added
 
-Kexa/services/alerting/jiraAlerting.service.ts was added
+Kexa/query/CRUDPostgres/origins.iquery.ts was added
 
-rules/perProvider/helmSetRules.yaml was added
+Kexa/query/CRUDPostgres/providerItems.iquery.ts was added
+
+Kexa/query/CRUDPostgres/providers.iquery.ts was added
+
+Kexa/query/CRUDPostgres/resources.iquery.ts was added
+
+Kexa/query/CRUDPostgres/rules.iquery.ts was added
+
+Kexa/query/CRUDPostgres/scans.iquery.ts was added
+
+Kexa/query/tablePg.iquery.ts was added
+
+Kexa/services/addOn/exportation/postgreExportation.service.ts was added
+
+Kexa/services/saving/postgreSQL.service.ts was added
 
 ### Files changed: 14
 
-Kexa/emails/jira.ts was changed
+Kexa/models/export/postgre/config.models.ts was changed
 
-Kexa/services/alerting/jiraAlerting.service.ts was changed
+Kexa/query/CRUDPostgres/origins.iquery.ts was changed
 
-rules/perProvider/helmSetRules.yaml was changed
+Kexa/query/CRUDPostgres/providerItems.iquery.ts was changed
 
-Kexa/emails/teams.ts was changed
+Kexa/query/CRUDPostgres/providers.iquery.ts was changed
+
+Kexa/query/CRUDPostgres/resources.iquery.ts was changed
+
+Kexa/query/CRUDPostgres/rules.iquery.ts was changed
+
+Kexa/query/CRUDPostgres/scans.iquery.ts was changed
+
+Kexa/query/tablePg.iquery.ts was changed
+
+Kexa/services/addOn/exportation/postgreExportation.service.ts was changed
+
+Kexa/services/saving/postgreSQL.service.ts was changed
+
+.github/workflows/sbom.yml was changed
 
 Kexa/main.ts was changed
-
-Kexa/services/addOn/display/azureDisplay.service.ts was changed
-
-Kexa/services/addOn/display/kubernetesDisplay.service.ts was changed
-
-Kexa/services/alerte.service.ts was changed
 
 package.json was changed
 
 pnpm-lock.yaml was changed
 
-rules/perProvider/awsSetRules.yaml was changed
 
-rules/perProvider/azureSetRules.yaml was changed
 
-rules/perProvider/gcpSetRules.yaml was changed
+## 
 
-rules/perProvider/kubernetesSetRules.yaml was changed
-### Files changed: 1
+### Files added: 10
+
+Kexa/models/export/postgre/config.models.ts was added
+
+Kexa/query/CRUDPostgres/origins.iquery.ts was added
+
+Kexa/query/CRUDPostgres/providerItems.iquery.ts was added
+
+Kexa/query/CRUDPostgres/providers.iquery.ts was added
+
+Kexa/query/CRUDPostgres/resources.iquery.ts was added
+
+Kexa/query/CRUDPostgres/rules.iquery.ts was added
+
+Kexa/query/CRUDPostgres/scans.iquery.ts was added
+
+Kexa/query/tablePg.iquery.ts was added
+
+Kexa/services/addOn/exportation/postgreExportation.service.ts was added
+
+Kexa/services/saving/postgreSQL.service.ts was added
+
+### Files changed: 15
+
+Kexa/models/export/postgre/config.models.ts was changed
+
+Kexa/query/CRUDPostgres/origins.iquery.ts was changed
+
+Kexa/query/CRUDPostgres/providerItems.iquery.ts was changed
+
+Kexa/query/CRUDPostgres/providers.iquery.ts was changed
+
+Kexa/query/CRUDPostgres/resources.iquery.ts was changed
+
+Kexa/query/CRUDPostgres/rules.iquery.ts was changed
+
+Kexa/query/CRUDPostgres/scans.iquery.ts was changed
+
+Kexa/query/tablePg.iquery.ts was changed
+
+Kexa/services/addOn/exportation/postgreExportation.service.ts was changed
+
+Kexa/services/saving/postgreSQL.service.ts was changed
+
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+Kexa/main.ts was changed
+
+package.json was changed
+
+pnpm-lock.yaml was changed
+
+
+## 
+
+### Files added: 10
+
+Kexa/models/export/postgre/config.models.ts was added
+
+Kexa/query/CRUDPostgres/origins.iquery.ts was added
+
+Kexa/query/CRUDPostgres/providerItems.iquery.ts was added
+
+Kexa/query/CRUDPostgres/providers.iquery.ts was added
+
+Kexa/query/CRUDPostgres/resources.iquery.ts was added
+
+Kexa/query/CRUDPostgres/rules.iquery.ts was added
+
+Kexa/query/CRUDPostgres/scans.iquery.ts was added
+
+Kexa/query/tablePg.iquery.ts was added
+
+Kexa/services/addOn/exportation/postgreExportation.service.ts was added
+
+Kexa/services/saving/postgreSQL.service.ts was added
+
+### Files changed: 15
+
+Kexa/models/export/postgre/config.models.ts was changed
+
+Kexa/query/CRUDPostgres/origins.iquery.ts was changed
+
+Kexa/query/CRUDPostgres/providerItems.iquery.ts was changed
+
+Kexa/query/CRUDPostgres/providers.iquery.ts was changed
+
+Kexa/query/CRUDPostgres/resources.iquery.ts was changed
+
+Kexa/query/CRUDPostgres/rules.iquery.ts was changed
+
+Kexa/query/CRUDPostgres/scans.iquery.ts was changed
+
+Kexa/query/tablePg.iquery.ts was changed
+
+Kexa/services/addOn/exportation/postgreExportation.service.ts was changed
+
+Kexa/services/saving/postgreSQL.service.ts was changed
+
+.github/workflows/sbom.yml was changed
+
+CHANGELOG.md was changed
+
+Kexa/main.ts was changed
+
+package.json was changed
+
+pnpm-lock.yaml was changed
+
+
+## 
+
+### Files added: 16
+
+Kexa/services/addOn/save/postgresSave.service.ts was added
+
+config/demo/postgres.default.json was added
+
+documentation/notifications/jira.md was added
+
+documentation/notifications/teams.md was added
+
+documentation/save/Postgres.md was added
+
+images/expected_teams.png was added
+
+images/issue_typeid.png was added
+
+images/jira-logo.png was added
+
+images/jira_projectid.png was added
+
+images/jiraenv.png was added
+
+images/jiraresults.png was added
+
+images/jiraresults_details_multiple.png was added
+
+images/jiraresults_details_one.png was added
+
+images/msteams-logo.png was added
+
+images/postgres.png was added
+
+images/ruleconfigjira.png was added
+
+### Files changed: 20
+
+Kexa/services/addOn/save/postgresSave.service.ts was changed
+
+config/demo/postgres.default.json was changed
+
+documentation/notifications/jira.md was changed
+
+documentation/notifications/teams.md was changed
+
+documentation/save/Postgres.md was changed
+
+images/expected_teams.png was changed
+
+images/issue_typeid.png was changed
+
+images/jira-logo.png was changed
+
+images/jira_projectid.png was changed
+
+images/jiraenv.png was changed
+
+images/jiraresults.png was changed
+
+images/jiraresults_details_multiple.png was changed
+
+images/jiraresults_details_one.png was changed
+
+images/msteams-logo.png was changed
+
+images/postgres.png was changed
+
+images/ruleconfigjira.png was changed
+
+Kexa/query/tablePg.iquery.ts was changed
+
+ROADMAP.md was changed
+
+Kexa/services/addOn/exportation/postgresExportation.service.ts was changed
+
+Kexa/services/saving/postgresSQL.service.ts was changed
+
+
+## 
+
+### Files added: 16
+
+Kexa/services/addOn/save/postgresSave.service.ts was added
+
+config/demo/postgres.default.json was added
+
+documentation/notifications/jira.md was added
+
+documentation/notifications/teams.md was added
+
+documentation/save/Postgres.md was added
+
+images/expected_teams.png was added
+
+images/issue_typeid.png was added
+
+images/jira-logo.png was added
+
+images/jira_projectid.png was added
+
+images/jiraenv.png was added
+
+images/jiraresults.png was added
+
+images/jiraresults_details_multiple.png was added
+
+images/jiraresults_details_one.png was added
+
+images/msteams-logo.png was added
+
+images/postgres.png was added
+
+images/ruleconfigjira.png was added
+
+### Files changed: 21
+
+Kexa/services/addOn/save/postgresSave.service.ts was changed
+
+config/demo/postgres.default.json was changed
+
+documentation/notifications/jira.md was changed
+
+documentation/notifications/teams.md was changed
+
+documentation/save/Postgres.md was changed
+
+images/expected_teams.png was changed
+
+images/issue_typeid.png was changed
+
+images/jira-logo.png was changed
+
+images/jira_projectid.png was changed
+
+images/jiraenv.png was changed
+
+images/jiraresults.png was changed
+
+images/jiraresults_details_multiple.png was changed
+
+images/jiraresults_details_one.png was changed
+
+images/msteams-logo.png was changed
+
+images/postgres.png was changed
+
+images/ruleconfigjira.png was changed
+
+CHANGELOG.md was changed
+
+Kexa/query/tablePg.iquery.ts was changed
+
+ROADMAP.md was changed
+
+Kexa/services/addOn/exportation/postgresExportation.service.ts was changed
+
+Kexa/services/saving/postgresSQL.service.ts was changed
 
 
 ## 
 
 ### Files added: 0
 
-### Files changed: 2
+### Files changed: 3
+
+README.md was changed
+
+documentation/Documentation-Kexa.md was changed
+
+
+## 
+
+### Files added: 0
+
+### Files changed: 4
 
 CHANGELOG.md was changed
 
-kexa-sbom.json was changed
+README.md was changed
+
+documentation/Documentation-Kexa.md was changed
 
 
