@@ -87,6 +87,7 @@
     - [X] Azure blob storage
     - [X] Mongo DB
     - [X] MySQL
+    - [x] Postgres
     - [ ] Amazon Simple Storage Service (S3)
     - [ ] Cloud Storage (GCP)
 
