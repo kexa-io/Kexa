@@ -2,7 +2,7 @@ import { ProviderResource } from '../../../models/providerResource.models';
 import { getEnvVar } from "../../manageVarEnvironnement.service";
 import { getContext, getNewLogger } from "../../logger.service";
 import { PostgreSQLSaveConfig } from '../../../models/export/postgre/config.models';
-import { PostgreSQLClass } from '../../saving/postgreSQL.service';
+import { PostgreSQLClass } from '../../saving/postgresSQL.service';
 import { getConfig } from '../../../helpers/loaderConfig';
 
 const logger = getNewLogger("pgSQLExportLogger");

@@ -25,5 +25,13 @@
             "description": "Database to save the data in subscription EFQD",
             "urlName": "uri to connect to the database or the name of the var environment where the uri is stored: the format of the uri is : postgres://user:password@host:port/database"
         }
+    ],
+    "export": [
+        {
+            "type": "postgre",
+            "name": "DB2",
+            "description": "Database to save the data in subscription EFQD",
+            "urlName": "uri to connect to the database or the name of the var environment where the uri is stored: the format of the uri is : postgres://user:password@host:port/database"
+        }
     ]
 }
