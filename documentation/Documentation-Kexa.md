@@ -533,6 +533,7 @@ You can save your scan results in various places :
 - [Azure Blob Storage](./save/AzureBlobStorage.md)
 - [Mongo DB](./save/MongoDB.md)
 - [MySQL](./save/MySQL.md)
+- [Postgres](./save/Postgres.md)
 
 To save your scan results in different places, a "save" attribute must be created in your default.json file. It's a list of "SaveConfig" objects, as follows : 
 
@@ -562,6 +563,7 @@ You can export the data gathering from your environment in various places :
 - [Azure Blob Storage](./save/AzureBlobStorage.md)
 - [Mongo DB](./save/MongoDB.md)
 - [MySQL](./save/MySQL.md)
+- [Postgres](./save/Postgres.md)
 
 Pour exporter ces données, cela fonctionne comme la section [Save result of the scan](#save-result-of-the-scan) à l'exception de l'attribut "save" qui devient l'attribu "export". It's a list of "SaveConfig" objects, as follows : 
 
