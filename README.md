@@ -7183,16 +7183,6 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 
 </details>
 
-Next step:
-
-- [ ] Kexa SaaS
-- [ ] VM Ware
-- [ ] OVH
-- [ ] Database
-	- [ ] Postgres
-	- [ ] SQL
-	- [ ] Mysql/MariaDB
-	- [ ] Oracle
 
 If you would like additional functionality, please send us your request. : <a href="https://github.com/4urcloud/Kexa/issues">Request Feature</a>
 <p align="right">(<a href="#top">back to top</a>)</p>
