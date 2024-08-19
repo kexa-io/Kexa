@@ -3389,3 +3389,14 @@ Kexa/services/addOn/exportation/postgresExportation.service.ts was changed
 Kexa/services/saving/postgresSQL.service.ts was changed
 
 
+## 
+
+### Files added: 0
+
+### Files changed: 3
+
+README.md was changed
+
+documentation/Documentation-Kexa.md was changed
+
+
