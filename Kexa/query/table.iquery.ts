@@ -58,6 +58,7 @@ export const TableIQuery = {
             error boolean,
             resourceId INT,
             ruleId INT,
+            batchId VARCHAR(255),
             FOREIGN KEY (resourceId) REFERENCES Resources(ID),
             FOREIGN KEY (ruleId) REFERENCES Rules(ID)
         )

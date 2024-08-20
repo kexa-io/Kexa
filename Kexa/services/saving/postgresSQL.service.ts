@@ -174,9 +174,9 @@ export class PostgreSQLClass {
         return result.rows[0].id;
     }
     
-    public async createScan(resultScan: ResultScan, resourceId: number, ruleId: number): Promise<void> {
+    public async createScan(resultScan: ResultScan, resourceId: number, ruleId: number, batchId: string): Promise<void> {
         let conn = await this.getConnection();
-        await conn.query(CRUDScansIQuery.Create.One, [(resultScan.error.length > 0), resourceId, ruleId]);
+        await conn.query(CRUDScansIQuery.Create.One, [(resultScan.error.length > 0), resourceId, ruleId, batchId]);
         this.closeConnection(conn);
     }
 }

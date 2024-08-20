@@ -7,8 +7,12 @@ import { PostgreSQLClass } from '../../saving/postgresSQL.service';
 const logger = getNewLogger("pgSQLSaveLogger");
 const context = getContext();
 
+const { v4: uuidv4 } = require('uuid');
+
+
 export async function save(save: PostgreSQLSaveConfig, result: ResultScan[][]): Promise<void> {
     let pgSQL = new PostgreSQLClass();
+    let batchId = uuidv4();
     try {
         if (!save.urlName) throw new Error("urlName is required");
         let url = (await getEnvVar(save.urlName)) ?? save.urlName;
@@ -16,7 +20,7 @@ export async function save(save: PostgreSQLSaveConfig, result: ResultScan[][]): 
             connectionString: url // Use `connectionString` instead of `uri`
         });
         await Promise.all(result.flat().map(async (resultScan) => {
-            await saveResultScan(resultScan, save, pgSQL);
+            await saveResultScan(resultScan, save, pgSQL, batchId);
         }));
 
         logger.info("All data saved in PostgreSQL");
@@ -27,7 +31,7 @@ export async function save(save: PostgreSQLSaveConfig, result: ResultScan[][]): 
     }
 }
 
-async function saveResultScan(resultScan: ResultScan, save: PostgreSQLSaveConfig, pgSQL: PostgreSQLClass): Promise<void> {
+async function saveResultScan(resultScan: ResultScan, save: PostgreSQLSaveConfig, pgSQL: PostgreSQLClass, batchId: string): Promise<void> {
     let providerId = await pgSQL.createAndGetProvider(resultScan.rule.cloudProvider);
     let providerItemId = (await pgSQL.getProviderItemsByNameAndProvider(providerId, resultScan.rule.objectName)).ID;
     let ruleId = await pgSQL.createAndGetRule(resultScan.rule, providerId, providerItemId);
@@ -36,5 +40,5 @@ async function saveResultScan(resultScan: ResultScan, save: PostgreSQLSaveConfig
     if (resourceId === undefined) {
         throw new Error("Resource ID is undefined");
     }
-    await pgSQL.createScan(resultScan, resourceId as number, ruleId);
+    await pgSQL.createScan(resultScan, resourceId as number, ruleId, batchId);
 }
