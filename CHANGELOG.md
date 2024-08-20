@@ -3413,3 +3413,26 @@ README.md was changed
 documentation/Documentation-Kexa.md was changed
 
 
+## 
+
+### Files added: 0
+
+### Files changed: 8
+
+Kexa/query/CRUD/scans.iquery.ts was changed
+
+Kexa/query/CRUDPostgres/scans.iquery.ts was changed
+
+Kexa/query/table.iquery.ts was changed
+
+Kexa/query/tablePg.iquery.ts was changed
+
+Kexa/services/addOn/save/mySQLSave.service.ts was changed
+
+Kexa/services/addOn/save/postgresSave.service.ts was changed
+
+Kexa/services/saving/mySQL.service.ts was changed
+
+Kexa/services/saving/postgresSQL.service.ts was changed
+
+
