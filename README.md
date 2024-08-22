@@ -416,12 +416,12 @@ innovtech/kexa
 
 With Kexa, you have multiple options to retrieve your scans results. Here is the notifications and save addons that you can already use :
 
-	- ✅ Logs and output files
-	- ✅ SMS, Email notifications
-	- ✅ MS Teams, Webhook notifications
-	- ✅ Jira notifications
-	- ✅ Save to Postgres/Mysql
-	- ✅ Kexa Grafana Dashboards
+ - ✅ Logs and output files
+ - ✅ SMS, Email notifications
+ - ✅ MS Teams, Webhook notifications
+ - ✅ Jira notifications
+ - ✅ Save to Postgres/Mysql
+ - ✅ Kexa Grafana Dashboards
 
 <br/>
 **Here is a few examples of results :**
