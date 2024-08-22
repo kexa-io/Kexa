@@ -133,12 +133,11 @@ async function main(retryLeft = -1) {
     if (retryLeft == -1)
         retryLeft = (generalConfig?.maxRetry != null && generalConfig?.checkInterval != null) ? generalConfig?.maxRetry : defaultMaxRetry;
 
-    while(1){
+    while (1) { //(1){
         /* 5 minutes default timeout */
         const defaultTimeout = 15;
         const minuteTimeout = 60 * 1000;
-        const timeout = minuteTimeout * (generalConfig?.timeout != null ? generalConfig?.timeout : defaultTimeout);
-            
+       const timeout = minuteTimeout * (generalConfig?.timeout != null ? generalConfig?.timeout : defaultTimeout);
         timer = setTimer(() => {
             if (retryLeft == 0) {
                 allScan = [];
@@ -174,15 +173,17 @@ async function main(retryLeft = -1) {
                 settings.forEach(setting => {
                     alertFromGlobal(setting.alert.global, [], allScan)
                 });
+                
                 process.exit(1);
+        
             } else {
                 retryLeft--;
                 logger.error("Timeout reached, retrying scan");
-                //main(retryLeft);
-                return (1);
+                return (2);
             }
           }, timeout);
- 
+        if (timer == 2)
+            continue;
         let startTimeStamp = Date.now();
         await mainScan(settings, allScan, idScan.toString());
         if(Memoisation.canSendGlobalAlert()){
@@ -197,6 +198,7 @@ async function main(retryLeft = -1) {
         }
         if (generalConfig?.checkInterval && (~~generalConfig.checkInterval > 0 || ~~generalConfig.checkInterval == -1)) {
             logger.info("Waiting for next scan in " + generalConfig.checkInterval + " seconds");
+            clearTimer(timer);
             await new Promise(r => setTimeout(r, Math.max((~~generalConfig.checkInterval - (Date.now()-startTimeStamp)/1000)*1000, 0)));
         } else {
             logger.info("No checkInterval found, exiting Kexa");
@@ -204,7 +206,7 @@ async function main(retryLeft = -1) {
             break;
         }
         idScan++;
-    };    
+    };
    clearTimer(timer);
 }
 
