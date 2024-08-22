@@ -424,6 +424,7 @@ With Kexa, you have multiple options to retrieve your scans results. Here is the
  - ✅ Kexa Grafana Dashboards
 
 <br/>
+
 **Here is a few examples of results :**
 
 ### Logs
