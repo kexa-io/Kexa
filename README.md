@@ -411,7 +411,7 @@ innovtech/kexa
 </details>
 <br/>
 
-# <div align="center" id="results-explanation">**Results Explanation**</div>
+# <div align="center" id="results-explanation">**Results Examples & Explanation**</div>
 <br/>
 
 With Kexa, you have multiple options to retrieve your scans results. Here is the notifications and save addons that you can already use :
