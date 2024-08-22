@@ -440,13 +440,6 @@ With Kexa, you have multiple options to retrieve your scans results. Here is the
 </div>
 <br/>
 
-### SaaS
-
-<div align="center">
-	<img alt="Kexa SaaS Results" src="./images/readme_saas_result.png" height="auto"/>
-</div>
-<br/>
-
 ### Jira
 
 <div align="center">
@@ -476,7 +469,15 @@ With Kexa, you have multiple options to retrieve your scans results. Here is the
 	<img alt="Kexa Grafana Results kubernetes 2" src="./images/readme_grafana_kube2.png" height="auto"/>
 </div>
 <br/>
+
+### SaaS
+
+<div align="center">
+	<img alt="Kexa SaaS Results" src="./images/readme_saas_result.png" height="auto"/>
+</div>
 <br/>
+<br/>
+
 
 ### Output files
 
@@ -491,11 +492,7 @@ I'm going to show the result of a ruler scan with HTML rendering. The name of th
 
 The summary sheet groups together all the different error levels, from info to critical error. Then, for each of the rules present in this rule file, we have all the rules that are not respected, as well as the resources that go against them. In this example, we only have github repos that don't respect our rules. Each resource has a clickable link whenever possible, as well as a few keywords to identify which resources are being referred to.
 
-The same syntax applies to logs:
 
-<div align="center">
-	<img alt="Render HTML of security scan" src="./images/Exemple_Scan_Security.png"/>
-</div>
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 # <div align="center" id="rules-usage">**Rules Usage**</div>
