@@ -423,25 +423,62 @@ With Kexa, you have multiple options to retrieve your scans results. Here is the
 	- ✅ Save to Postgres/Mysql
 	- ✅ Kexa Grafana Dashboards
 
-Here is a few examples of results :
+<br/>
+**Here is a few examples of results :**
 
 ### Logs
 
 <div align="center">
 	<img alt="Kexa Logs Results" src="./images/readme_log_result.png" height="auto"/>
 </div>
+<br/>
 
 ### Teams
 
 <div align="center">
-	<img alt="Kexa Logs Results" src="./images/readme_teams_result.png" height="auto"/>
+	<img alt="Kexa Teams Results" src="./images/readme_teams_result.png" height="auto"/>
 </div>
+<br/>
 
 ### SaaS
 
 <div align="center">
-	<img alt="Kexa Logs Results" src="./images/readme_saas_result.png" height="auto"/>
+	<img alt="Kexa SaaS Results" src="./images/readme_saas_result.png" height="auto"/>
 </div>
+<br/>
+
+### Jira
+
+<div align="center">
+	<img alt="Kexa Jira Results" src="./images/readme_jira_result.png" height="auto"/>
+</div>
+<div align="center">
+	<img alt="Kexa Jira Results details" src="./images/readme_jira_result_2.png" height="auto"/>
+</div>
+<br/>
+
+### Grafana Kexa's dashboards
+
+**Grafana Kexa main dashboard**
+
+
+<div align="center">
+	<img alt="Kexa Grafana Results main" src="./images/readme_grafana_addons.png" height="auto"/>
+</div>
+<br/>
+
+**Grafana Kexa Kubernetes CPU/Memory dashboard**
+
+<div align="center">
+	<img alt="Kexa Grafana Results kubernetes 1" src="./images/readme_grafana_kube1.png" height="auto"/>
+</div>
+<div align="center">
+	<img alt="Kexa Grafana Results kubernetes 2" src="./images/readme_grafana_kube2.png" height="auto"/>
+</div>
+<br/>
+<br/>
+
+### Output files
 
 Once a scan has been performed, you can observe the results at the locations you have specified in your [rules files](./documentation/Documentation-Kexa.md#rules-editing). In addition to the notification locations you have set up, by default a html files of scan results for each rule file has been created. In the case of a quick-launch, your results will be displayed in logs + output files by default.
 Those html files can be found in your /output folder by default. To change your default folder, add the environment variable: "OUTPUT" with the path to your folder.
