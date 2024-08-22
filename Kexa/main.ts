@@ -177,7 +177,6 @@ async function main(retryLeft = -1) {
                 process.exit(1);
             } else {
                 retryLeft--;
-                // RECALL
                 logger.error("Timeout reached, retrying scan");
                 main(retryLeft);
                 return (1);
@@ -197,19 +196,16 @@ async function main(retryLeft = -1) {
             allScan = [];
         }
         if (generalConfig?.checkInterval && (~~generalConfig.checkInterval > 0 || ~~generalConfig.checkInterval == -1)) {
+            logger.info("Waiting for next scan in " + generalConfig.checkInterval + " seconds");
             await new Promise(r => setTimeout(r, Math.max((~~generalConfig.checkInterval - (Date.now()-startTimeStamp)/1000)*1000, 0)));
         } else {
             logger.info("No checkInterval found, exiting Kexa");
             clearTimer(timer);
- //           if (retError)
-    //            process.exit(1);
             break;
         }
         idScan++;
     };    
    clearTimer(timer);
- //   if (retError)
- //       process.exit(1);
 }
 
 main();

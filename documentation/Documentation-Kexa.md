@@ -467,7 +467,7 @@ If using continuous run, you may want to indicate how much retries do you want w
   "general":  {
     "timeout": 1, # timeout after 1 minute, you can use 0.5 for 30s timeout for example
     "maxRetry": 2 # Kexa will retry 2 times after timeout, choose 0 for no retry.
-    "checkInterval": 5 # interval between Kexa checks
+    "checkInterval": 120 # interval between Kexa checks in seconds
     "alertInterval": 3600 # alerts interval to avoid too much duplicate
   }
 }

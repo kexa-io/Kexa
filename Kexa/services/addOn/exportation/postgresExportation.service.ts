@@ -9,7 +9,6 @@ const logger = getNewLogger("pgSQLExportLogger");
 const context = getContext();
 
 export async function exportation(save: PostgreSQLSaveConfig, resources: ProviderResource): Promise<void>{
-
     //////////////////////////
     ///////////// USE A TIMEOUT
     ///////////////////////////
