@@ -103,7 +103,7 @@ If you want a complet installation detail, you can refer to [this documention](d
 
 ## By local script
 
-A script to initialize all resources and credentials if you want to get Kexa up and running quickly such as :
+Clone the repository or use the script to initialize all resources and credentials if you want to get Kexa up and running quickly such as :
 
 * Windows:
 
@@ -126,6 +126,12 @@ then:
 pnpm i --frozen-lockfile
 pnpm run start
 ```
+
+## By Git Action
+
+You can also use the git action of kexa for a quick run with no costs, refer to the reposiroty : [Kexa Git Action](https://github.com/4urcloud/Kexa_githubAction)
+
+We also have a ready-to-run repository, with all addons already configured to run as Git Action, just enter credentials and run ! [Ready-to-run repository](https://github.com/4urcloud/Kexa_Action_ReadyToRun)
 
 ## By docker
 
@@ -403,9 +409,27 @@ innovtech/kexa
 ```
 <p align="right">(<a href="#top">back to top</a>)</p>
 </details>
+<br/>
 
 # <div align="center" id="results-explanation">**Results Explanation**</div>
 <br/>
+
+With Kexa, you have multiple options to retrieve your scans results. Here is the notifications and save addons that you can already use :
+
+	- ✅ Logs and output files
+	- ✅ SMS, Email notifications
+	- ✅ MS Teams, Webhook notifications
+	- ✅ Jira notifications
+	- ✅ Save to Postgres/Mysql
+	- ✅ Kexa Grafana Dashboards
+
+Here is a few examples of results :
+
+### Logs
+
+<div align="center">
+	<img alt="Kexa Logs Results" src="./images/Exemple_Scan_Security_html.png" height="auto"/>
+</div>
 
 Once a scan has been performed, you can observe the results at the locations you have specified in your [rules files](./documentation/Documentation-Kexa.md#rules-editing). In addition to the notification locations you have set up, by default a html files of scan results for each rule file has been created. In the case of a quick-launch, your results will be displayed in logs + output files by default.
 Those html files can be found in your /output folder by default. To change your default folder, add the environment variable: "OUTPUT" with the path to your folder.

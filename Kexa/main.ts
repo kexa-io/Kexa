@@ -178,7 +178,7 @@ async function main(retryLeft = -1) {
             } else {
                 retryLeft--;
                 logger.error("Timeout reached, retrying scan");
-                main(retryLeft);
+                //main(retryLeft);
                 return (1);
             }
           }, timeout);
