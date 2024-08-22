@@ -446,7 +446,7 @@ With Kexa, you have multiple options to retrieve your scans results. Here is the
 	<img alt="Kexa Jira Results" src="./images/readme_jira_result.png" height="auto"/>
 </div>
 <div align="center">
-	<img alt="Kexa Jira Results details" src="./images/readme_jira_result_2.png" height="auto"/>
+	<img alt="Kexa Jira Results details" src="./images/reamde_jira_result_2.png" height="auto"/>
 </div>
 <br/>
 
@@ -466,7 +466,7 @@ With Kexa, you have multiple options to retrieve your scans results. Here is the
 	<img alt="Kexa Grafana Results kubernetes 1" src="./images/readme_grafana_kube1.png" height="auto"/>
 </div>
 <div align="center">
-	<img alt="Kexa Grafana Results kubernetes 2" src="./images/readme_grafana_kube2.png" height="auto"/>
+	<img alt="Kexa Grafana Results kubernetes 2" src="./images/reamde_grafana_kube2.png" height="auto"/>
 </div>
 <br/>
 
