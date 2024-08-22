@@ -484,12 +484,18 @@ Once a scan has been performed, you can observe the results at the locations you
 Those html files can be found in your /output folder by default. To change your default folder, add the environment variable: "OUTPUT" with the path to your folder.
 
 I'm going to show the result of a ruler scan with HTML rendering. The name of this file follow this type format : "./output/resources/[Name of the rule]/[Date as : 'YYYYMMDDHHmm'].html". In our case our scan rule is "Security" :
-<img alt="Render HTML of security scan" src="./images/Exemple_Scan_Security_html.png" height="800"/>
+
+<div align="center">
+	<img alt="Render HTML of security scan" src="./images/Exemple_Scan_Security_html.png" height="800"/>
+</div>
 
 The summary sheet groups together all the different error levels, from info to critical error. Then, for each of the rules present in this rule file, we have all the rules that are not respected, as well as the resources that go against them. In this example, we only have github repos that don't respect our rules. Each resource has a clickable link whenever possible, as well as a few keywords to identify which resources are being referred to.
 
 The same syntax applies to logs:
-<img alt="Render HTML of security scan" src="./images/Exemple_Scan_Security.png"/>
+
+<div align="center">
+	<img alt="Render HTML of security scan" src="./images/Exemple_Scan_Security.png"/>
+</div>
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 # <div align="center" id="rules-usage">**Rules Usage**</div>
