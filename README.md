@@ -427,20 +427,25 @@ With Kexa, you have multiple options to retrieve your scans results. Here is the
 **Here is a few examples of results :**
 
 ### Logs
+<br/>
 
 <div align="center">
 	<img alt="Kexa Logs Results" src="./images/readme_log_result.png" height="auto"/>
 </div>
 <br/>
+<br/>
 
 ### Teams
+<br/>
 
 <div align="center">
 	<img alt="Kexa Teams Results" src="./images/readme_teams_result.png" height="auto"/>
 </div>
 <br/>
+<br/>
 
 ### Jira
+<br/>
 
 <div align="center">
 	<img alt="Kexa Jira Results" src="./images/readme_jira_result.png" height="auto"/>
@@ -449,8 +454,10 @@ With Kexa, you have multiple options to retrieve your scans results. Here is the
 	<img alt="Kexa Jira Results details" src="./images/reamde_jira_result_2.png" height="auto"/>
 </div>
 <br/>
+<br/>
 
 ### Grafana Kexa's dashboards
+<br/>
 
 **Grafana Kexa main dashboard**
 
@@ -468,6 +475,7 @@ With Kexa, you have multiple options to retrieve your scans results. Here is the
 <div align="center">
 	<img alt="Kexa Grafana Results kubernetes 2" src="./images/reamde_grafana_kube2.png" height="auto"/>
 </div>
+<br/>
 <br/>
 
 ### SaaS
@@ -494,6 +502,10 @@ The summary sheet groups together all the different error levels, from info to c
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+<br/>
+<br/>
+<br/>
 
 # <div align="center" id="rules-usage">**Rules Usage**</div>
 <br/>
