@@ -428,7 +428,19 @@ Here is a few examples of results :
 ### Logs
 
 <div align="center">
-	<img alt="Kexa Logs Results" src="./images/Exemple_Scan_Security_html.png" height="auto"/>
+	<img alt="Kexa Logs Results" src="./images/readme_log_result.png" height="auto"/>
+</div>
+
+### Teams
+
+<div align="center">
+	<img alt="Kexa Logs Results" src="./images/readme_teams_result.png" height="auto"/>
+</div>
+
+### SaaS
+
+<div align="center">
+	<img alt="Kexa Logs Results" src="./images/readme_saas_result.png" height="auto"/>
 </div>
 
 Once a scan has been performed, you can observe the results at the locations you have specified in your [rules files](./documentation/Documentation-Kexa.md#rules-editing). In addition to the notification locations you have set up, by default a html files of scan results for each rule file has been created. In the case of a quick-launch, your results will be displayed in logs + output files by default.
