@@ -512,6 +512,8 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 # <div align="center" id="roadmap">**Roadmap**</div>
 <br/>
 
+Refer to our ROADMAP.md.
+
 <details>
 <summary>All Achievements</summary>
 
