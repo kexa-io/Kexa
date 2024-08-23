@@ -15,7 +15,7 @@ import { extractURL } from "../helpers/extractURL";
 import { Teams } from "../emails/teams";
 import {getContext, getNewLogger} from "./logger.service";
 import { getConfig } from "../helpers/loaderConfig";
-import { jsonStringify } from "../helpers/jsonStringify";
+import { jsonStringify, getColorStringHandler } from "../helpers/jsonStringify";
 import { get } from "http";
 
 const jsome = require('jsome');
@@ -265,7 +265,7 @@ export function alertLog(rule: Rules, conditions: SubResultScan[], objectResourc
                 context?.log(sentenceConditionLog(objectResource.id));
                 logger.info(sentenceConditionLog(objectResource.id));
             }
-            logger.debug(jsome.getColoredString(conditions));
+            logger.debug(getColorStringHandler(conditions));
             context?.log(propertyToSend(rule, objectResource, true));
             logger.info(propertyToSend(rule, objectResource, true));
             break;
@@ -281,7 +281,7 @@ export function alertLog(rule: Rules, conditions: SubResultScan[], objectResourc
                 context?.log(sentenceConditionLog(objectResource.id));
                 logger.error(sentenceConditionLog(objectResource.id));
             }
-            logger.debug(jsome.getColoredString(conditions));
+            logger.debug(getColorStringHandler(conditions));
             context?.log(propertyToSend(rule, objectResource, true));
             logger.error(propertyToSend(rule, objectResource, true));
             break;
@@ -294,7 +294,7 @@ export function alertLog(rule: Rules, conditions: SubResultScan[], objectResourc
                 context?.log(sentenceConditionLog(objectResource.id));
                 logger.fatal(sentenceConditionLog(objectResource.id));
             }
-            logger.debug(jsome.getColoredString(conditions));
+            logger.debug(getColorStringHandler(conditions));
             context?.log(propertyToSend(rule, objectResource, true));
             logger.fatal(propertyToSend(rule, objectResource, true));
             break;
@@ -312,7 +312,7 @@ export function warnLog(rule: Rules, conditions:SubResultScan[], objectResource:
         context?.log(sentenceConditionLog(objectResource.id));
         logger.warn(sentenceConditionLog(objectResource.id));
     }
-    logger.debug(jsome.getColoredString(conditions));
+    logger.debug(getColorStringHandler(conditions));
     context?.log(propertyToSend(rule, objectResource, true));
     logger.warn(propertyToSend(rule, objectResource, true));
 }
