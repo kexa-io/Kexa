@@ -106,7 +106,7 @@
     #############################
     - name: "kube-storage-class-allow-expansion"
       description : "this rules is to verify storage class allow expansion"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: kubernetes
       objectName : storageclass
@@ -117,7 +117,7 @@
     # this is an example of storage class disk parameters rule
     - name: "kube-storage-class-disk-parameters"
       description : "this rules is to verify storage class disk parameters"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: kubernetes
       objectName : storageclass
@@ -133,7 +133,7 @@
           value: '1000'
     - name: "kube-is-persistent-volume-bounded"
       description : "this rules is to verify that persistent volume is bounded"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: kubernetes
       objectName : persistentvolume
@@ -144,7 +144,7 @@
     # LINKEDIN HERE
     - name: "kube-is-persistent-volume-not-pending"
       description : "this rules is to verify that persistent volume is not pending"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: kubernetes
       objectName : persistentvolume
@@ -154,7 +154,7 @@
           value : 'Pending'
     - name: "kube-pod-stuck-terminating-state"
       description : "this rules is to check if a pod is stuck in terminating state"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: kubernetes
       objectName : pods
@@ -164,7 +164,7 @@
           value : Terminating
     - name: "kube-persistent-volume-verify-storage-class"
       description : "this rules is to verify for a persistent volume storage class"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: kubernetes
       objectName : persistentvolume
@@ -174,7 +174,7 @@
           value : 'premium2-disk-sc'
     - name: "kube-volume-mounts-read-only"
       description : "this rules is to verify volume mounts are read only"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: kubernetes
       objectName : pods
@@ -195,7 +195,7 @@
     # pods memory % consumption alert
     - name: "kube-pods-memory-limitation"
       description : "this rules is to verify pods memory limitation"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: kubernetes
       objectName : podsConsumption
@@ -206,7 +206,7 @@
     # pods CPU % consumption alert
     - name: "kube-pods-cpu-limitation"
       description : "this rules is to verify cpu usage limitation"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: kubernetes
       objectName : podsConsumption
@@ -214,33 +214,6 @@
         - property : CPUUsage
           condition : INF
           value: 0.02
-
-    - name: "kube-pods-cpu-limit-request-set"
-      description : "this rules is to verify cpu limit and request are set"
-      applied: false
-      level: 2
-      cloudProvider: kubernetes
-      objectName : podsConsumption
-      conditions:
-        - property : MemoryLimitTotal
-          condition : DIFFERENT
-          value: 0
-        - property : MemoryRequestTotal
-          condition : DIFFERENT
-          value: 0
-    - name: "kube-pods-memory-limit-request-set"
-      description : "this rules is to verify memory limit and request are set"
-      applied: false
-      level: 2
-      cloudProvider: kubernetes
-      objectName : podsConsumption
-      conditions:
-        - property : CPULimitTotal
-          condition : DIFFERENT
-          value: 0
-        - property : CPURequestTotal
-          condition : DIFFERENT
-          value: 0
 
     #########################
     # PODS STATE CONDITIONS #
@@ -257,7 +230,7 @@
           value : Pending
     - name: "kube-pod-not-ready-to-start-container"
       description : "this rules is to check if pod is ready to start container"
-      applied: true
+      applied: false
       level: 0
       cloudProvider: kubernetes
       objectName : pods
@@ -267,7 +240,7 @@
           value: 'True'
     - name: "kube-pod-not-initialized"
       description : "this rules is to check if pod is ready to start container"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: kubernetes
       objectName : pods
@@ -277,7 +250,7 @@
           value: 'True'
     - name: "kube-pod-not-ready"
       description : "this rules is to check if pod is ready"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: kubernetes
       objectName : pods
@@ -287,7 +260,7 @@
           value: 'True'
     - name: "kube-pod-containers-not-ready"
       description : "this rules is to check if pod is ready"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: kubernetes
       objectName : pods
@@ -297,7 +270,7 @@
           value: 'True'
     - name: "kube-pod-not-scheduled"
       description : "this rules is to check if pod is ready"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: kubernetes
       objectName : pods

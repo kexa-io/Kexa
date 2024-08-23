@@ -3421,3 +3421,60 @@ documentation/Documentation-Kexa.md was changed
 
 
 
+## 
+
+### Files added: 9
+
+images/readme_grafana_addons.png was added
+
+images/readme_grafana_kube1.png was added
+
+images/readme_jira_result.png was added
+
+images/readme_log_result.png was added
+
+images/readme_saas_result.png was added
+
+images/readme_teams_result.png was added
+
+images/reamde_grafana_kube2.png was added
+
+images/reamde_jira_result_2.png was added
+
+rules/kubernetesConsumption.yaml was added
+
+### Files changed: 16
+
+images/readme_grafana_addons.png was changed
+
+images/readme_grafana_kube1.png was changed
+
+images/readme_jira_result.png was changed
+
+images/readme_log_result.png was changed
+
+images/readme_saas_result.png was changed
+
+images/readme_teams_result.png was changed
+
+images/reamde_grafana_kube2.png was changed
+
+images/reamde_jira_result_2.png was changed
+
+rules/kubernetesConsumption.yaml was changed
+
+CHANGELOG.md was changed
+
+Kexa/main.ts was changed
+
+Kexa/services/addOn/exportation/postgresExportation.service.ts was changed
+
+Kexa/services/addOn/kubernetesGathering.service.ts was changed
+
+README.md was changed
+
+documentation/Documentation-Kexa.md was changed
+
+rules/perProvider/kubernetesSetRules.yaml was changed
+
+
