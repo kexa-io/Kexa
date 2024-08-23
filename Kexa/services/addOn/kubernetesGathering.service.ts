@@ -151,6 +151,9 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
     const kc = new k8s.KubeConfig();
     const metricsClient = new k8s.Metrics(kc);
     (isPathKubeFile)?kc.loadFromFile("./config/kubernetes.json"):kc.loadFromDefault();
+
+
+
     //opening different api to get kubernetes resources
     const autoscalingV1Api = kc.makeApiClient(k8s.AutoscalingV1Api);
     const k8sApiCore = kc.makeApiClient(k8s.CoreV1Api);
@@ -212,7 +215,7 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
             collectComponentstatus(k8sApiCore, item.metadata.name),
             collectHorizontalPodAutoscaler(autoscalingV1Api, item.metadata.name),
             collectPodLogs(k8sLog, k8sApiCore, item.metadata.name),
-            collectPodsConsumption(k8sApiCore, metricsClient, item.metadata.name)
+            collectPodsConsumption(k8sApiCore, metricsClient, item.metadata.name, kc)
         ];
         const [
             helmData,
@@ -315,6 +318,7 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
         helmData?.forEach((helmItem: any) => {
             kubResources["helm"].push(helmItem);
         });
+  
     });
     await Promise.all(namespacePromises);
     return kubResources;
@@ -396,11 +400,10 @@ async function collectPods(k8sApiCore: any, namespace: string): Promise<any> {
     }
 }
 
-async function collectPodsConsumption(k8sApiCore: any, metricsClient: any, namespace: string) : Promise<any> {
+async function collectPodsConsumption(k8sApiCore: any, metricsClient: any, namespace: string, kc: any) : Promise<any> {
     if (!currentConfig?.ObjectNameNeed?.includes("podsConsumption")) return [];
     let podsAndContainersColumns;
     try {
-        
         const topPodsRes2 = await k8s.topPods(k8sApiCore, metricsClient, namespace);
         podsAndContainersColumns = topPodsRes2.flatMap((pod: any) => {
             return pod.Containers.map((containerUsage: any) => {
@@ -409,14 +412,17 @@ async function collectPodsConsumption(k8sApiCore: any, metricsClient: any, names
                     name: containerUsage.Container,
                     CPUUsage: parseFloat(containerUsage.CPUUsage.CurrentUsage),
                     MemoryUsage: containerUsage.MemoryUsage.CurrentUsage.toString(),
-                    metadata: {}
+                    metadata: {},
+                    CPULimitTotal: containerUsage.CPUUsage.LimitTotal,
+                    CPURequestTotal: containerUsage.CPUUsage.RequestTotal,
+                    MemoryLimitTotal: containerUsage.MemoryUsage.LimitTotal,
+                    MemoryRequestTotal: containerUsage.MemoryUsage.RequestTotal
                 }
             });
         });
     } catch (err) {
         logger.debug(err);
     }
-
     return podsAndContainersColumns;
 }
 

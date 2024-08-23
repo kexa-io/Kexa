@@ -3417,22 +3417,64 @@ documentation/Documentation-Kexa.md was changed
 
 ### Files added: 0
 
-### Files changed: 8
+### Files changed: 0
 
-Kexa/query/CRUD/scans.iquery.ts was changed
 
-Kexa/query/CRUDPostgres/scans.iquery.ts was changed
 
-Kexa/query/table.iquery.ts was changed
+## 
 
-Kexa/query/tablePg.iquery.ts was changed
+### Files added: 9
 
-Kexa/services/addOn/save/mySQLSave.service.ts was changed
+images/readme_grafana_addons.png was added
 
-Kexa/services/addOn/save/postgresSave.service.ts was changed
+images/readme_grafana_kube1.png was added
 
-Kexa/services/saving/mySQL.service.ts was changed
+images/readme_jira_result.png was added
 
-Kexa/services/saving/postgresSQL.service.ts was changed
+images/readme_log_result.png was added
+
+images/readme_saas_result.png was added
+
+images/readme_teams_result.png was added
+
+images/reamde_grafana_kube2.png was added
+
+images/reamde_jira_result_2.png was added
+
+rules/kubernetesConsumption.yaml was added
+
+### Files changed: 16
+
+images/readme_grafana_addons.png was changed
+
+images/readme_grafana_kube1.png was changed
+
+images/readme_jira_result.png was changed
+
+images/readme_log_result.png was changed
+
+images/readme_saas_result.png was changed
+
+images/readme_teams_result.png was changed
+
+images/reamde_grafana_kube2.png was changed
+
+images/reamde_jira_result_2.png was changed
+
+rules/kubernetesConsumption.yaml was changed
+
+CHANGELOG.md was changed
+
+Kexa/main.ts was changed
+
+Kexa/services/addOn/exportation/postgresExportation.service.ts was changed
+
+Kexa/services/addOn/kubernetesGathering.service.ts was changed
+
+README.md was changed
+
+documentation/Documentation-Kexa.md was changed
+
+rules/perProvider/kubernetesSetRules.yaml was changed
 
 
