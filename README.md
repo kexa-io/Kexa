@@ -103,7 +103,7 @@ If you want a complet installation detail, you can refer to [this documention](d
 
 ## By local script
 
-A script to initialize all resources and credentials if you want to get Kexa up and running quickly such as :
+Clone the repository or use the script to initialize all resources and credentials if you want to get Kexa up and running quickly such as :
 
 * Windows:
 
@@ -126,6 +126,12 @@ then:
 pnpm i --frozen-lockfile
 pnpm run start
 ```
+
+## By Git Action
+
+You can also use the git action of kexa for a quick run with no costs, refer to the reposiroty : [Kexa Git Action](https://github.com/4urcloud/Kexa_githubAction)
+
+We also have a ready-to-run repository, with all addons already configured to run as Git Action, just enter credentials and run ! [Ready-to-run repository](https://github.com/4urcloud/Kexa_Action_ReadyToRun)
 
 ## By docker
 
@@ -403,21 +409,104 @@ innovtech/kexa
 ```
 <p align="right">(<a href="#top">back to top</a>)</p>
 </details>
-
-# <div align="center" id="results-explanation">**Results Explanation**</div>
 <br/>
+
+# <div align="center" id="results-explanation">**Results Examples & Explanation**</div>
+<br/>
+
+With Kexa, you have multiple options to retrieve your scans results. Here is the notifications and save addons that you can already use :
+
+ - ✅ Logs and output files
+ - ✅ SMS, Email notifications
+ - ✅ MS Teams, Webhook notifications
+ - ✅ Jira notifications
+ - ✅ Save to Postgres/Mysql
+ - ✅ Kexa Grafana Dashboards
+
+<br/>
+
+**Here is a few examples of results :**
+
+### Logs
+<br/>
+
+<div align="center">
+	<img alt="Kexa Logs Results" src="./images/readme_log_result.png" height="auto"/>
+</div>
+<br/>
+<br/>
+
+### Teams
+<br/>
+
+<div align="center">
+	<img alt="Kexa Teams Results" src="./images/readme_teams_result.png" height="auto"/>
+</div>
+<br/>
+<br/>
+
+### Jira
+<br/>
+
+<div align="center">
+	<img alt="Kexa Jira Results" src="./images/readme_jira_result.png" height="auto"/>
+</div>
+<div align="center">
+	<img alt="Kexa Jira Results details" src="./images/reamde_jira_result_2.png" height="auto"/>
+</div>
+<br/>
+<br/>
+
+### Grafana Kexa's dashboards
+<br/>
+
+**Grafana Kexa main dashboard**
+
+
+<div align="center">
+	<img alt="Kexa Grafana Results main" src="./images/readme_grafana_addons.png" height="auto"/>
+</div>
+<br/>
+
+**Grafana Kexa Kubernetes CPU/Memory dashboard**
+
+<div align="center">
+	<img alt="Kexa Grafana Results kubernetes 1" src="./images/readme_grafana_kube1.png" height="auto"/>
+</div>
+<div align="center">
+	<img alt="Kexa Grafana Results kubernetes 2" src="./images/reamde_grafana_kube2.png" height="auto"/>
+</div>
+<br/>
+<br/>
+
+### SaaS
+
+<div align="center">
+	<img alt="Kexa SaaS Results" src="./images/readme_saas_result.png" height="auto"/>
+</div>
+<br/>
+<br/>
+
+
+### Output files
 
 Once a scan has been performed, you can observe the results at the locations you have specified in your [rules files](./documentation/Documentation-Kexa.md#rules-editing). In addition to the notification locations you have set up, by default a html files of scan results for each rule file has been created. In the case of a quick-launch, your results will be displayed in logs + output files by default.
 Those html files can be found in your /output folder by default. To change your default folder, add the environment variable: "OUTPUT" with the path to your folder.
 
 I'm going to show the result of a ruler scan with HTML rendering. The name of this file follow this type format : "./output/resources/[Name of the rule]/[Date as : 'YYYYMMDDHHmm'].html". In our case our scan rule is "Security" :
-<img alt="Render HTML of security scan" src="./images/Exemple_Scan_Security_html.png" height="800"/>
+
+<div align="center">
+	<img alt="Render HTML of security scan" src="./images/Exemple_Scan_Security_html.png" height="800"/>
+</div>
 
 The summary sheet groups together all the different error levels, from info to critical error. Then, for each of the rules present in this rule file, we have all the rules that are not respected, as well as the resources that go against them. In this example, we only have github repos that don't respect our rules. Each resource has a clickable link whenever possible, as well as a few keywords to identify which resources are being referred to.
 
-The same syntax applies to logs:
-<img alt="Render HTML of security scan" src="./images/Exemple_Scan_Security.png"/>
+
 <p align="right">(<a href="#top">back to top</a>)</p>
+
+<br/>
+<br/>
+<br/>
 
 # <div align="center" id="rules-usage">**Rules Usage**</div>
 <br/>
@@ -435,6 +524,8 @@ If you want explanations and details about rules in Kexa, please refer to [this 
 
 # <div align="center" id="roadmap">**Roadmap**</div>
 <br/>
+
+Refer to our ROADMAP.md.
 
 <details>
 <summary>All Achievements</summary>

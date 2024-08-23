@@ -1,8 +1,8 @@
 export const CRUDScansIQuery = {
     Create: {
         One: `
-            INSERT INTO Scans (error, resourceId, ruleId)
-            VALUES (?, ?, ?)
+            INSERT INTO Scans (error, resourceId, ruleId, batchId)
+            VALUES (?, ?, ?, ?)
         `
     },
     Read: {

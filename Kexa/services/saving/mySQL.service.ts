@@ -150,9 +150,9 @@ export class MySQLClass {
         return rows[0].ID;
     }
     
-    public async createScan(resultScan: ResultScan, resourceId: number, ruleId: number): Promise<void> {
+    public async createScan(resultScan: ResultScan, resourceId: number, ruleId: number, batchId: string): Promise<void> {
         let conn = await this.getConnection();
-        await conn.execute(CRUDScansIQuery.Create.One, [(resultScan.error.length > 0), resourceId, ruleId]);
+        await conn.execute(CRUDScansIQuery.Create.One, [(resultScan.error.length > 0), resourceId, ruleId, batchId]);
         this.closeConnection(conn);
     }
 }
