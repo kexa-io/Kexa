@@ -3554,3 +3554,16 @@ Kexa/helpers/jsonStringify.ts was changed
 Kexa/services/alerte.service.ts was changed
 
 
+## 
+
+### Files added: 0
+
+### Files changed: 3
+
+CHANGELOG.md was changed
+
+Kexa/helpers/jsonStringify.ts was changed
+
+Kexa/services/alerte.service.ts was changed
+
+
