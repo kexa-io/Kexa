@@ -3478,3 +3478,18 @@ documentation/Documentation-Kexa.md was changed
 rules/perProvider/kubernetesSetRules.yaml was changed
 
 
+## 
+
+### Files added: 1
+
+rules/kubernetesConsumption.yaml was added
+
+### Files changed: 3
+
+rules/kubernetesConsumption.yaml was changed
+
+Kexa/helpers/jsonStringify.ts was changed
+
+Kexa/services/alerte.service.ts was changed
+
+
