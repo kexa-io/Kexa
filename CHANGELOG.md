@@ -3480,6 +3480,18 @@ rules/perProvider/kubernetesSetRules.yaml was changed
 
 ## 
 
+### Files added: 1
+
+rules/kubernetesConsumption.yaml was added
+
+### Files changed: 3
+
+rules/kubernetesConsumption.yaml was changed
+
+Kexa/helpers/jsonStringify.ts was changed
+
+Kexa/services/alerte.service.ts was changed
+
 ### Files added: 8
 
 images/readme_grafana_addons.png was added
@@ -3527,5 +3539,31 @@ Kexa/services/addOn/kubernetesGathering.service.ts was changed
 README.md was changed
 
 documentation/Documentation-Kexa.md was changed
+
+
+## 
+
+### Files added: 0
+
+### Files changed: 3
+
+CHANGELOG.md was changed
+
+Kexa/helpers/jsonStringify.ts was changed
+
+Kexa/services/alerte.service.ts was changed
+
+
+## 
+
+### Files added: 0
+
+### Files changed: 3
+
+CHANGELOG.md was changed
+
+Kexa/helpers/jsonStringify.ts was changed
+
+Kexa/services/alerte.service.ts was changed
 
 
