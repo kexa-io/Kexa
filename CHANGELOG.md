@@ -3600,3 +3600,24 @@ images/reamde_grafana_kube2.png was changed
 rules/perProvider/kubernetesSetRules.yaml was changed
 
 
+## 
+
+### Files added: 1
+
+images/reamde_grafana_kube3.png was added
+
+### Files changed: 6
+
+images/reamde_grafana_kube3.png was changed
+
+CHANGELOG.md was changed
+
+Kexa/services/display.service.ts was changed
+
+README.md was changed
+
+images/readme_grafana_kube1.png was changed
+
+images/reamde_grafana_kube2.png was changed
+
+
