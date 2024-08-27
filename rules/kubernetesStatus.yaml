@@ -51,7 +51,7 @@
     #############################
     - name: "kube-is-persistent-volume-bounded"
       description : "this rules is to verify that persistent volume is bounded"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : persistentvolume
@@ -62,7 +62,7 @@
     # LINKEDIN HERE
     - name: "kube-is-persistent-volume-not-pending"
       description : "this rules is to verify that persistent volume is not pending"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : persistentvolume
@@ -72,7 +72,7 @@
           value : 'Pending'
     - name: "kube-pod-stuck-terminating-state"
       description : "this rules is to check if a pod is stuck in terminating state"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : pods
@@ -85,7 +85,7 @@
     #########################
     - name: "kube-pod-stuck-pending-state"
       description : "this rules is to check if a pod is stuck in pending state"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : pods
@@ -95,7 +95,7 @@
           value : Pending
     - name: "kube-pod-not-ready-to-start-container"
       description : "this rules is to check if pod is ready to start container"
-      applied: false
+      applied: true
       level: 0
       cloudProvider: kubernetes
       objectName : pods
@@ -105,7 +105,7 @@
           value: 'True'
     - name: "kube-pod-not-initialized"
       description : "this rules is to check if pod is ready to start container"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : pods
@@ -115,7 +115,7 @@
           value: 'True'
     - name: "kube-pod-not-ready"
       description : "this rules is to check if pod is ready"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : pods
@@ -125,7 +125,7 @@
           value: 'True'
     - name: "kube-pod-containers-not-ready"
       description : "this rules is to check if pod is ready"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : pods
@@ -135,7 +135,7 @@
           value: 'True'
     - name: "kube-pod-not-scheduled"
       description : "this rules is to check if pod is ready"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : pods
@@ -150,7 +150,7 @@
     #########################
     - name: "kube-node-network-unavailable"
       description : "this rules is to check if route controller is ok"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : node
@@ -160,7 +160,7 @@
           value: 'False'
     - name: "kube-node-kernel-deadlock"
       description : "this rules is to check if kernel is in deadlock state"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : node
@@ -170,7 +170,7 @@
           value: 'False'
     - name: "kube-node-frequent-kubelet-restart"
       description : "this rules is to check if there is frequent kubelet restart"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : node
@@ -180,7 +180,7 @@
           value: 'False'
     - name: "kube-node-container-runtime-is-up"
       description : "this rules is to check if container runtime is up"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : node
@@ -190,7 +190,7 @@
           value: 'False'
     - name: "kube-node-file-system-is-ok"
       description : "this rules is to check if therre is a file corruption problem"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : node
@@ -200,7 +200,7 @@
           value: 'False'
     - name: "kube-node-frequent-docker-restart"
       description : "this rules is to check if there is frequent docker restart"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : node
@@ -210,7 +210,7 @@
           value: 'False'
     - name: "kube-node-frequent-container-restart"
       description : "this rules is to check if there is frequent container restart"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : node
@@ -220,7 +220,7 @@
           value: 'False'
     - name: "kube-node-memory-pressure"
       description : "this rules is to check kubelet has sufficient memory available"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : node
@@ -230,7 +230,7 @@
           value: 'False'
     - name: "kube-node-disk-pressure"
       description : "this rules is to check if there is disk pressure"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : node
@@ -245,7 +245,7 @@
 
     - name: "kube-event-image-pull-fail"
       description : "this rules is to check if there is event of image pull fail"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : event

@@ -49,9 +49,9 @@
     #############################
     #          PODS             #
     #############################
-     - name: "kube-pods-cpu-limit-request-set"
+    - name: "kube-pods-cpu-limit-request-set"
       description : "this rules is to verify cpu limit and request are set"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : podsConsumption
@@ -64,7 +64,7 @@
           value: 0
     - name: "kube-pods-memory-limit-request-set"
       description : "this rules is to verify memory limit and request are set"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : podsConsumption
@@ -78,7 +78,7 @@
     # this is an example of pod autoscaler rule
     - name: "kube-hozizontal-pod-autoscaler-min-max-replicas"
       description : "this rules is to verify horizontal pod autoscaler min and max replicas"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : hpa
@@ -95,7 +95,7 @@
     #############################
     - name: "kube-storage-class-allow-expansion"
       description : "this rules is to verify storage class allow expansion"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: kubernetes
       objectName : storageclass
@@ -106,7 +106,7 @@
     # this is an example of storage class disk parameters rule
     - name: "kube-storage-class-disk-parameters"
       description : "this rules is to verify storage class disk parameters"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : storageclass
@@ -122,7 +122,7 @@
           value: '1000'
     - name: "kube-persistent-volume-verify-storage-class"
       description : "this rules is to verify for a persistent volume storage class"
-      applied: false
+      applied: true
       level: 1
       cloudProvider: kubernetes
       objectName : persistentvolume
@@ -132,7 +132,7 @@
           value : 'premium2-disk-sc'
     - name: "kube-volume-mounts-read-only"
       description : "this rules is to verify volume mounts are read only"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: kubernetes
       objectName : pods
