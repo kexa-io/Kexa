@@ -68,3 +68,36 @@
         - property : CPUUsage
           condition : INF
           value: 0.02
+
+    # pods memory % consumption alert for specific namespace
+    - name: "kube-pods-memory-limitation-namespaced"
+      description : "this rules is to verify pods memory limitation per namespace"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : podsConsumption
+      conditions:
+        - operator: OR
+          criteria:
+            - property : MemoryUsage
+              condition : INF
+              value: 599428096
+            - property : metadata.namespace
+              condition : DIFFERENT
+              value: 'YourNamespaceName'
+    # pods CPU % consumption alert for specific namespace
+    - name: "kube-pods-cpu-limitation-namespaced"
+      description : "this rules is to verify cpu usage limitation per namespace"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : podsConsumption
+      conditions:
+        - operator: OR
+          criteria:
+            - property : CPUUsage
+              condition : INF
+              value: 0.02
+            - property : metadata.namespace
+              condition : DIFFERENT
+              value: 'YourNamespaceName'
