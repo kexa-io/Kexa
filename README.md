@@ -460,6 +460,11 @@ With Kexa, you have multiple options to retrieve your scans results. Here is the
 ### Grafana Kexa's dashboards
 <br/>
 
+Interested by visualizing data with Grafana ?
+
+All our dashboards are available here : https://github.com/4urcloud/Kexa_Grafana_Dashboards
+
+
 **Grafana Kexa main dashboard**
 
 
