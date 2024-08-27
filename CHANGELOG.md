@@ -3567,3 +3567,36 @@ Kexa/helpers/jsonStringify.ts was changed
 Kexa/services/alerte.service.ts was changed
 
 
+## 
+
+### Files added: 4
+
+images/reamde_grafana_kube3.png was added
+
+rules/kubernetesConfigurations.yaml was added
+
+rules/kubernetesConsumptions.yaml was added
+
+rules/kubernetesStatus.yaml was added
+
+### Files changed: 9
+
+images/reamde_grafana_kube3.png was changed
+
+rules/kubernetesConfigurations.yaml was changed
+
+rules/kubernetesConsumptions.yaml was changed
+
+rules/kubernetesStatus.yaml was changed
+
+Kexa/services/display.service.ts was changed
+
+README.md was changed
+
+images/readme_grafana_kube1.png was changed
+
+images/reamde_grafana_kube2.png was changed
+
+rules/perProvider/kubernetesSetRules.yaml was changed
+
+
