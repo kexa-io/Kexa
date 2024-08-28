@@ -460,6 +460,11 @@ With Kexa, you have multiple options to retrieve your scans results. Here is the
 ### Grafana Kexa's dashboards
 <br/>
 
+Interested by visualizing data with Grafana ?
+
+All our dashboards are available here : https://github.com/4urcloud/Kexa_Grafana_Dashboards
+
+
 **Grafana Kexa main dashboard**
 
 
@@ -471,10 +476,12 @@ With Kexa, you have multiple options to retrieve your scans results. Here is the
 **Grafana Kexa Kubernetes CPU/Memory dashboard**
 
 <div align="center">
-	<img alt="Kexa Grafana Results kubernetes 1" src="./images/readme_grafana_kube1.png" height="auto"/>
+	<img alt="Kexa Grafana Results kubernetes (optimization)" src="./images/readme_grafana_kube1.png" height="auto"/>
 </div>
 <div align="center">
-	<img alt="Kexa Grafana Results kubernetes 2" src="./images/reamde_grafana_kube2.png" height="auto"/>
+	<img alt="Kexa Grafana Results kubernetes (ranges)" src="./images/reamde_grafana_kube2.png" height="auto"/>
+</div>
+	<img alt="Kexa Grafana Results kubernetes (heatmaps)" src="./images/reamde_grafana_kube3.png" height="auto"/>
 </div>
 <br/>
 <br/>
