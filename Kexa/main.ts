@@ -23,7 +23,7 @@ const args = yargs(hideBin(process.argv)).argv
 const folderOutput = process.env.OUTPUT??"./output";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-env.config();
+env?.config();
 
 export async function mainScan(settings: SettingFile[], allScan: ResultScan[][], idScan?: string): Promise<ResultScan[][]> {
     let context = getContext();

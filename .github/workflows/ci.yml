@@ -72,4 +72,4 @@ jobs:
           signoff: false
           message: 'add info extract from addon'
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
