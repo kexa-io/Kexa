@@ -401,7 +401,8 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
                     case BeHaviorEnum.CONTINUE:
                         continue;
                 }
-                objectResources = [...objectResources, ...resources[rule.cloudProvider][i][rule.objectName]]
+                objectResources.push(resources[rule.cloudProvider][i][rule.objectName]);
+               // objectResources = [...objectResources, ...resources[rule.cloudProvider][i][rule.objectName]]
             }
         }
         let subResult: ResultScan[] = [];
@@ -439,7 +440,9 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
 function actionAfterCheckRule(rule: Rules, objectResource: any, alert: Alert, subResultScan: SubResultScan[]): SubResultScan[] {
     let error = subResultScan.filter((value) => !value.result);
     if(error.length > 0){
-        if (Memoisation.needToBeCache(rule, objectResource, rule.cloudProvider)){
+        if (rule.cloudProvider === "fuzz")
+            alertFromRule(rule, subResultScan, objectResource, alert);
+        else if (Memoisation.needToBeCache(rule, objectResource, rule.cloudProvider)){
             alertFromRule(rule, subResultScan, objectResource, alert);
         }
     }
