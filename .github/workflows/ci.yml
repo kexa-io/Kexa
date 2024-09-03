@@ -64,7 +64,7 @@ jobs:
       - name: commit changes
         uses: EndBug/add-and-commit@v4
         with:
-          add: CHANGELOG.md
+          add: CHANGELOG.md VERSION package.json capacity.json
           author_name: estebanmathia
           author_email: esteban.mathia@supinfo.com
           force: false
