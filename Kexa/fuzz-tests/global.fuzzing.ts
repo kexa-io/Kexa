@@ -1,13 +1,12 @@
-import { getNewLogger, setContext } from "../Kexa/services/logger.service";
-import { getConfig } from "../Kexa/helpers/loaderConfig";
+import { getNewLogger, setContext } from "../services/logger.service";
 
 
-import { Alert } from "../Kexa/models/settingFile/alert.models";
-import { AlertEnum } from "../Kexa/enum/alert.enum";
-import { Rules } from "../Kexa/models/settingFile/rules.models";
-import { GlobalConfigAlert } from "../Kexa/models/settingFile/globalAlert.models";
-import { ConfigAlert } from "../Kexa/models/settingFile/configAlert.models";
-import { SettingFile } from "../Kexa/models/settingFile/settingFile.models";
+import { Alert } from "../models/settingFile/alert.models";
+import { AlertEnum } from "../enum/alert.enum";
+import { Rules } from "../models/settingFile/rules.models";
+import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
+import { ConfigAlert } from "../models/settingFile/configAlert.models";
+import { SettingFile } from "../models/settingFile/settingFile.models";
 
 
 function getGlobalConfigAlert(): GlobalConfigAlert {
@@ -41,7 +40,7 @@ function getAlert(): Alert {
 	return alert;
 }
 
-import { ConditionEnum } from "../Kexa/enum/condition.enum";
+import { ConditionEnum } from "../enum/condition.enum";
 
 function getRuleFromFuzzData3(fuzzData: Buffer): Rules {
 	const rules: Rules = {
@@ -110,12 +109,12 @@ function getRuleFromFuzzData2(fuzzData: Buffer): Rules {
     return rules;
 }
 
-import { fuzzConfig } from "../Kexa/models/fuzzing/config.models";
+import { fuzzConfig } from "../models/fuzzing/config.models";
 
-import {checkRules} from "../Kexa/services/analyse.service";
+import {checkRules} from "../services/analyse.service";
 
 export async function fuzz(fuzzData: Buffer) {
-    const configuration = getConfig();
+    const configuration = getFuzzConfig(fuzzData);
 
     const logger = getNewLogger("MainLogger");
     if (process.env.DEV) {
@@ -132,7 +131,7 @@ export async function fuzz(fuzzData: Buffer) {
 	}];
 
     let fuzzingConfig: fuzzConfig[] = [];
-    const res = await loadAddOn("fuzzGathering.service.ts", fuzzingConfig, settings, fuzzData);
+    const res = await loadAddOn("fuzzGathering.service.ts", configuration, settings, fuzzData);
     if (res == null)
         return;
     let providResoruce: ProviderResource = {};
@@ -150,14 +149,14 @@ export async function fuzz(fuzzData: Buffer) {
             });
         }
     }
-    checkRules([getRuleFromFuzzData3(fuzzData), getRuleFromFuzzData3(fuzzData), getRuleFromFuzzData3(fuzzData)], providResoruce, getAlert());
+    checkRules([getRuleFromFuzzData3(fuzzData), getRuleFromFuzzData3(fuzzData), getRuleFromFuzzData3(fuzzData)], providResoruce, getAlert(), getFuzzConfigYaml(fuzzData));
 }
 
 
-import { ProviderResource, Provider, Resource } from "../Kexa/models/providerResource.models";
+import { ProviderResource, Provider, Resource } from "../models/providerResource.models";
 
 
-import {checkIfDataIsProvider} from "../Kexa/services/addOn.service";
+import {checkIfDataIsProvider} from "../services/addOn.service";
 
 function getFuzzConfig(fuzzData: Buffer) : fuzzConfig {
     return {
@@ -166,6 +165,22 @@ function getFuzzConfig(fuzzData: Buffer) : fuzzConfig {
         description: fuzzData.toString(),
         prefix: fuzzData.toString(),
         ObjectNameNeed: ["fuzzData1", "fuzzData2"]
+    };
+}
+
+function getFuzzConfigYaml(fuzzData: Buffer) : Object {
+
+    // return as a json object
+    return {
+            "fuzz": [
+                {
+                    "description": "organization 4urcloud",
+                    "prefix": "O365PROJECT_",
+                    "rules": [
+                        "global"
+                    ]
+                }
+            ]
     };
 }
 
@@ -195,7 +210,7 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[], f
     try {
         if (file.endsWith('Gathering.service.ts')){
             let nameAddOn = file.split('Gathering.service.ts')[0];
-            const { collectData } = await import(`../Kexa/services/addOn/${file.replace(".ts", ".js") }`);
+            const { collectData } = await import(`../services/addOn/${file.replace(".ts", ".js") }`);
             let start = Date.now();
             const addOnConfig = generateRandomConfigList(fuzzData);
             const data = await collectData(addOnConfig, fuzzData);

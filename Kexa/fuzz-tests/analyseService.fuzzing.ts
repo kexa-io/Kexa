@@ -1,5 +1,5 @@
-import  { RulesConditions } from "../Kexa/models/settingFile/conditions.models";
-import { ConditionEnum } from "../Kexa/enum/condition.enum";
+import  { RulesConditions } from "../models/settingFile/conditions.models";
+import { ConditionEnum } from "../enum/condition.enum";
 
 
 type AnalyseServiceFunction = (rules: RulesConditions, value: any) => any;
@@ -37,7 +37,7 @@ export async function fuzz(fuzzData: Buffer) {
 }
 	
 async function fuzzDate(fuzzDate: string) {
-	const analyseService = await import('../Kexa/services/analyse.service');
+	const analyseService = await import('../services/analyse.service');
 	
 
 	const functionsToTest: Array<keyof typeof analyseService> = [
@@ -67,7 +67,7 @@ async function fuzzDate(fuzzDate: string) {
 }
 
 async function fuzzNumber(fuzzData: number) {
-	const analyseService = await import('../Kexa/services/analyse.service');
+	const analyseService = await import('../services/analyse.service');
 
 	const functionsToTest: Array<keyof typeof analyseService> = [
 		'checkEqual',
@@ -93,7 +93,7 @@ async function fuzzNumber(fuzzData: number) {
 }
 
 async function fuzzString(fuzzData: string) {
-	const analyseService = await import('../Kexa/services/analyse.service');
+	const analyseService = await import('../services/analyse.service');
     
 	type AnalyseServiceFunction = (rules: RulesConditions, value: string) => any;
 

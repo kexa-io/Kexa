@@ -390,7 +390,7 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
             logger.debug("cloud provider not found in config:"+rule.cloudProvider);
             return;
         }
-        const configAssign = config[rule.cloudProvider];
+        const configAssign = configuration[rule.cloudProvider];
         let objectResources:any = []
         for(let i = 0; i < configAssign.length; i++){
             if(configAssign[i].rules.includes(alert.global.name)){
