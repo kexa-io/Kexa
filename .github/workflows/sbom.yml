@@ -1,11 +1,10 @@
 name: Generate SBOM
 
 on:
-  pull_request:
+  push:
     branches:
+  #    - main
       - dev
-    types:
-      - opened
   schedule:
     - cron: '0 0 * * 1' # Every Monday at 00:00
 
