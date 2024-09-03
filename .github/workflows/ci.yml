@@ -1,10 +1,12 @@
 name: cicd
 
 on:
-  push:
+  pull_request:
     branches:
   #    - main
       - dev
+    types:
+      - opened
   workflow_dispatch:
 
 jobs:
@@ -62,6 +64,7 @@ jobs:
       - name: commit changes
         uses: EndBug/add-and-commit@v4
         with:
+          add: CHANGELOG.md
           author_name: estebanmathia
           author_email: esteban.mathia@supinfo.com
           force: false
