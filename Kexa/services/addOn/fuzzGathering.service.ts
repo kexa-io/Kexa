@@ -33,9 +33,6 @@ export async function collectData(fuzzConfig:fuzzConfig[], fuzzData: Buffer): Pr
     let context = getContext();
     let resources = new Array<fuzzResources>();
 
-
-    console.log("FUZZ GATEHRING HERE");
-    console.log(fuzzConfig);
     for (let config of fuzzConfig??[]) {
         currentConfig = config;
 

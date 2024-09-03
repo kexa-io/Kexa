@@ -377,15 +377,16 @@ function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, ind
     return BeHaviorEnum.NONE;
 }
 
-export function checkRules(rules:Rules[], resources:ProviderResource, alert: Alert): ResultScan[][] {
+export function checkRules(rules:Rules[], resources:ProviderResource, alert: Alert, configFuzz?: any): ResultScan[][] {
     const context = getContext();
     logger.debug("check rules");
     let result: ResultScan[][] = [];
+    const configuration = configFuzz ?? config;
     rules.forEach(rule => {
         if(!rule.applied) return;
         context?.log("check rule:"+rule.name);
         logger.info("check rule:"+rule.name);
-        if(!config.hasOwnProperty(rule.cloudProvider)){
+        if(!configuration.hasOwnProperty(rule.cloudProvider)){
             logger.debug("cloud provider not found in config:"+rule.cloudProvider);
             return;
         }
@@ -437,6 +438,7 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
     });
     return result;
 }
+
 function actionAfterCheckRule(rule: Rules, objectResource: any, alert: Alert, subResultScan: SubResultScan[]): SubResultScan[] {
     let error = subResultScan.filter((value) => !value.result);
     if(error.length > 0){
