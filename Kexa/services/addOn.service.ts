@@ -116,7 +116,7 @@ function loadAddOnCustomUtility(file: string, usage: string, funcName:string): {
     return null;
 }
 
-function checkIfDataIsProvider(data: any): data is Provider {
+export function checkIfDataIsProvider(data: any): data is Provider {
     if (data === null || !Array.isArray(data)) {
         return false;
     }

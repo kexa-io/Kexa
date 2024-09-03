@@ -7,5 +7,6 @@ export enum ProviderEnum {
     HTTP = "http",
     HELM = "helm",
     O365 = "o365",
-    GOOGLEWORKSPACE = "googleWorkspace"
+    GOOGLEWORKSPACE = "googleWorkspace",
+    FUZZ = "fuzz"
 }

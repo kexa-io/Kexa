@@ -377,19 +377,20 @@ function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, ind
     return BeHaviorEnum.NONE;
 }
 
-export function checkRules(rules:Rules[], resources:ProviderResource, alert: Alert): ResultScan[][] {
+export function checkRules(rules:Rules[], resources:ProviderResource, alert: Alert, configFuzz?: any): ResultScan[][] {
     const context = getContext();
     logger.debug("check rules");
     let result: ResultScan[][] = [];
+    const configuration = configFuzz ?? config;
     rules.forEach(rule => {
         if(!rule.applied) return;
         context?.log("check rule:"+rule.name);
         logger.info("check rule:"+rule.name);
-        if(!config.hasOwnProperty(rule.cloudProvider)){
+        if(!configuration.hasOwnProperty(rule.cloudProvider)){
             logger.debug("cloud provider not found in config:"+rule.cloudProvider);
             return;
         }
-        const configAssign = config[rule.cloudProvider];
+        const configAssign = configuration[rule.cloudProvider];
         let objectResources:any = []
         for(let i = 0; i < configAssign.length; i++){
             if(configAssign[i].rules.includes(alert.global.name)){
@@ -401,7 +402,8 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
                     case BeHaviorEnum.CONTINUE:
                         continue;
                 }
-                objectResources = [...objectResources, ...resources[rule.cloudProvider][i][rule.objectName]]
+                objectResources.push(resources[rule.cloudProvider][i][rule.objectName]);
+               // objectResources = [...objectResources, ...resources[rule.cloudProvider][i][rule.objectName]]
             }
         }
         let subResult: ResultScan[] = [];
@@ -436,10 +438,13 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
     });
     return result;
 }
+
 function actionAfterCheckRule(rule: Rules, objectResource: any, alert: Alert, subResultScan: SubResultScan[]): SubResultScan[] {
     let error = subResultScan.filter((value) => !value.result);
     if(error.length > 0){
-        if (Memoisation.needToBeCache(rule, objectResource, rule.cloudProvider)){
+        if (rule.cloudProvider === "fuzz")
+            alertFromRule(rule, subResultScan, objectResource, alert);
+        else if (Memoisation.needToBeCache(rule, objectResource, rule.cloudProvider)){
             alertFromRule(rule, subResultScan, objectResource, alert);
         }
     }
