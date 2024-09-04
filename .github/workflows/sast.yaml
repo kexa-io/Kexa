@@ -1,0 +1,23 @@
+name: "CodeQL"
+on: [push, pull_request]
+jobs:
+  analyze:
+    name: Analyze code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: 'javascript'
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+      - name: Upload SARIF File
+        uses: actions/upload-artifact@v2
+        with:
+          name: codeql-sarif
+          path: /home/runner/work/Kexa/results/javascript.sarif
