@@ -1,5 +1,9 @@
 /*
     * Provider : fuzz
+    * Thumbnail : https://loud-square.png
+    * Documentation : https://github.com/CodeIntelligenceTesting/jazzer
+    * Creation date : 2024-08-14
+    * Note : 
     * Note : this is not a real addon, it is made for fuzz testing
     * Resources :
     *     - fuzzData
