@@ -9,9 +9,15 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: 'javascript'
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
+
+      - name: Upload SARIF File
+        uses: actions/upload-artifact@v2
+        with:
+          name: codeql-sarif
+          path: /home/runner/work/Kexa/results/javascript.sarif
