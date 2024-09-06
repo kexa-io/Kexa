@@ -1,11 +1,9 @@
 name: versioning
 
 on:
-  pull_request:
+  push:
     branches:
       - main
-    types:
-      - closed
   workflow_dispatch:
 
 jobs:
@@ -15,26 +13,32 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0     
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
         with:
           node-version: 20
+      - name: prep plugins
+        run: |
+          npm install -D sementic-release @semantic-release/changelog @semantic-release/git @semantic-release/exec
+      - name: Permissions for semantic-release
+        run: chmod +x ./node_modules/.bin/semantic-release
+      - name: run semantic release
+        id: ver
+        run: npx semantic-release --debug   
+        env:
+          GH_TOKEN: ${{ secrets.GIT_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Git Version
-        id: versioning
-        uses: codacy/git-version@2.8.0
+      - name: Get latest release of NodeJS
+        uses: rez0n/actions-github-release@main
+        id: get_latest_release
         with:
-          release-branch: main
-          dev-branch: dev
-          log-paths: Kexa/
-          minor-identifier: 'feat:'
-          major-identifier: 'break:'
+          token: ${{ secrets.GIT_TOKEN }}
+          repository: "4urcloud/Kexa"
+          type: "stable"
+      - name: print new latest version
+        run: echo ${{ steps.node_release.outputs.release }}
+
 
       - name: Login to Docker Registry
         uses: docker/login-action@v2
@@ -49,12 +53,12 @@ jobs:
           context: ./
           push: true
           tags: |
-            ${{ secrets.DOCKER_REGISTRY_NAME}}/innovtech/kexa:${{ steps.versioning.outputs.version }}
+            ${{ secrets.DOCKER_REGISTRY_NAME}}/innovtech/kexa:${{ steps.get_latest_release.outputs.release }}
             ${{ secrets.DOCKER_REGISTRY_NAME}}/innovtech/kexa:latest
       
       - name: Release
         uses: ncipollo/release-action@v1
         if: github.ref == 'refs/heads/main'
         with:
-          tag: "${{ steps.versioning.outputs.version }}"
+          tag: "${{ steps.get_latest_release.outputs.release }}"
           prerelease: false
