@@ -37,7 +37,7 @@
     "dependencies": {
         "@aws-sdk/client-accessanalyzer": "^3.637.0",
         "@aws-sdk/client-account": "^3.637.0",
-        "@aws-sdk/client-acm": "^3.637.0",
+        "@aws-sdk/client-acm": "^3.645.0",
         "@aws-sdk/client-acm-pca": "^3.637.0",
         "@aws-sdk/client-alexa-for-business": "^3.569.0",
         "@aws-sdk/client-amp": "^3.637.0",
