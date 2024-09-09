@@ -19,7 +19,7 @@ jobs:
           node-version: 20
       - name: prep plugins
         run: |
-          npm install -D sementic-release @semantic-release/changelog @semantic-release/git @semantic-release/exec --legacy-peer-deps
+          npm install -D semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/exec --legacy-peer-deps
       - name: Permissions for semantic-release
         run: chmod +x ./node_modules/.bin/semantic-release
       - name: run semantic release
