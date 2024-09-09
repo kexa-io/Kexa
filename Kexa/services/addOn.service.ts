@@ -146,7 +146,9 @@ export function hasValidHeader(filePath: string): string | Header {
         let countResources = [];
 
         for (const line of lines) {
-            const trimmedLine = line.trim().replace(" ", "").replace("\t", "");
+            //const trimmedLine = line.trim().replace(" ", "").replace("\t", "");
+         //   const trimmedLine = line.trim().replace(/\s+/g, "").replace(/[^\w-]/g, "");
+            const trimmedLine = line.trim().replace(/[^\S\r\n]+/g, "").replace(/['";]/g, '');
 
             if (trimmedLine.startsWith('*Provider')) {
                 hasProvider = true;
@@ -178,7 +180,12 @@ export function hasValidHeader(filePath: string): string | Header {
 
             if (nextLineIsResources) {
                 if (/\s*\*\s*-\s*\s*[a-zA-Z0-9]+\s*/.test(trimmedLine)) {
-                    countResources.push(trimmedLine.split('-')[1].trim().replace(" ", "").replace("\t", ""));
+                    let resourceName = trimmedLine.split('-')[1].trim().replace(" ", "").replace("\t", "");
+                    resourceName = resourceName.replace(/['";]/g, '');
+            
+               //     let resourceName = trimmedLine.split('-')[1].trim().replace(/[^\w-]/g, "");
+                    countResources.push(resourceName);
+                   // countResources.push(trimmedLine.split('-')[1].trim().replace(" ", "").replace("\t", ""));
                     continue;
                 }
                 nextLineIsResources = false;
