@@ -1,4 +1,4 @@
-FROM node:20-slim AS base
+FROM node:20-slim@sha256:df85129996d6b7a4ec702ebf2142cfa683f28b1d33446faec12168d122d3410d AS base
 
 #RUN apk update && apk add -u nodejs
 RUN apt-get update && apt-get install -y curl
