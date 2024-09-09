@@ -17,9 +17,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Install pnpm
+        run: npm install -g pnpm
       - name: prep plugins
         run: |
-          pnpm install -D semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/exec --legacy-peer-deps
+          pnpm install -D semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/exec
       - name: Permissions for semantic-release
         run: chmod +x ./node_modules/.bin/semantic-release
       - name: run semantic release
@@ -37,7 +39,7 @@ jobs:
           repository: "4urcloud/Kexa"
           type: "stable"
       - name: print new latest version
-        run: echo ${{ steps.node_release.outputs.release }}
+        run: echo ${{ steps.get_latest_release.outputs.release }}
 
 
       - name: Login to Docker Registry
