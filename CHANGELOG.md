@@ -3666,3 +3666,22 @@ images/reamde_grafana_kube2.png was changed
 package.json was changed
 
 
+## 
+
+### Files added: 0
+
+### Files changed: 6
+
+Kexa/services/addOn/display/awsDisplay.service.ts was changed
+
+Kexa/services/addOn/display/fuzzDisplay.service.ts was changed
+
+Kexa/services/addOn/display/githubDisplay.service.ts was changed
+
+Kexa/services/addOn/display/googleDriveDisplay.service.ts was changed
+
+Kexa/services/addOn/display/httpDisplay.service.ts was changed
+
+Kexa/services/addOn/display/kubernetesDisplay.service.ts was changed
+
+
