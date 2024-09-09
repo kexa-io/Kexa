@@ -8908,6 +8908,14 @@
             }
         ]
     },
+    "fuzz": {
+        "resources": [
+            "fuzzData"
+        ],
+        "thumbnail": "https://loud-square.png",
+        "documentation": "https://github.com/CodeIntelligenceTesting/jazzer",
+        "freeRules": []
+    },
     "gcp": {
         "resources": [
             "tasks_queue",
@@ -9371,7 +9379,254 @@
         ],
         "thumbnail": "https://seeklogo.com/images/H/helm-logo-9208DB3EE5-seeklogo.com.png",
         "documentation": "https://helm.sh/docs/",
-        "freeRules": []
+        "freeRules": [
+            {
+                "name": "helm-chart-auto-scaling-enabled",
+                "description": "this rule is to verify if autoscaling is enabled",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "helm",
+                "objectName": "chart",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "criteria": [
+                            {
+                                "property": "details.computedValues.autoscaling",
+                                "condition": "DIFFERENT",
+                                "value": null
+                            },
+                            {
+                                "property": "details.computedValues.autoscaling.enabled",
+                                "condition": "EQUAL",
+                                "value": false
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "helm-chart-auto-scaling-min-replicas",
+                "description": "this rule is to verify if autoscaling min replicas is greater than 0",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "helm",
+                "objectName": "chart",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "criteria": [
+                            {
+                                "property": "details.computedValues.autoscaling",
+                                "condition": "DIFFERENT",
+                                "value": null
+                            },
+                            {
+                                "property": "details.computedValues.autoscaling.minReplicas",
+                                "condition": "INF_OR_EQUAL",
+                                "value": 0
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "helm-chart-auto-scaling-max-replicas",
+                "description": "this rule is to verify if autoscaling max replicas is less than 10",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "helm",
+                "objectName": "chart",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "criteria": [
+                            {
+                                "property": "details.computedValues.autoscaling",
+                                "condition": "DIFFERENT",
+                                "value": null
+                            },
+                            {
+                                "property": "details.computedValues.autoscaling.maxReplicas",
+                                "condition": "SUP",
+                                "value": 10
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "helm-chart-do-not-allow-empty-password",
+                "description": "this rule is to ensure that the helm chart does not allow empty passwords",
+                "applied": true,
+                "level": 2,
+                "cloudProvider": "helm",
+                "objectName": "chart",
+                "conditions": [
+                    {
+                        "property": "details.allowEmptyPassword",
+                        "condition": "EQUAL",
+                        "value": false
+                    }
+                ]
+            },
+            {
+                "name": "helm-chart-no-major-version-difference",
+                "description": "this rule is to ensure that the helm chart has no major version difference",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "helm",
+                "objectName": "chart",
+                "conditions": [
+                    {
+                        "property": "details.versionDifference.major",
+                        "condition": "EQUAL",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "name": "helm-chart-no-minor-version-difference",
+                "description": "this rule is to ensure that the helm chart has no major version difference",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "helm",
+                "objectName": "chart",
+                "conditions": [
+                    {
+                        "property": "details.versionDifference.major",
+                        "condition": "EQUAL",
+                        "value": 0
+                    },
+                    {
+                        "property": "details.versionDifference.minor",
+                        "condition": "EQUAL",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "name": "helm-chart-no-version-difference",
+                "description": "this rule is to ensure that the helm chart is using the latest version",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "helm",
+                "objectName": "chart",
+                "conditions": [
+                    {
+                        "property": "details.versionDifference.major",
+                        "condition": "EQUAL",
+                        "value": 0
+                    },
+                    {
+                        "property": "details.versionDifference.minor",
+                        "condition": "EQUAL",
+                        "value": 0
+                    },
+                    {
+                        "property": "details.versionDifference.patch",
+                        "condition": "EQUAL",
+                        "value": 0
+                    }
+                ]
+            },
+            {
+                "name": "helm-chart-auto-scaling-target-cpu",
+                "description": "this rule is to verify if autoscaling target cpu  is not greater than 50",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "helm",
+                "objectName": "chart",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "criteria": [
+                            {
+                                "property": "details.computedValues.autoscaling",
+                                "condition": "DIFFERENT",
+                                "value": null
+                            },
+                            {
+                                "property": "details.computedValues.autoscaling.targetCPU",
+                                "condition": "SUP",
+                                "value": 50
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "helm-chart-auto-scaling-target-memory",
+                "description": "this rule is to verify if autoscaling target memory is not greater than 50",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "helm",
+                "objectName": "chart",
+                "conditions": [
+                    {
+                        "operator": "NAND",
+                        "criteria": [
+                            {
+                                "property": "details.computedValues.autoscaling",
+                                "condition": "DIFFERENT",
+                                "value": null
+                            },
+                            {
+                                "property": "details.computedValues.autoscaling.targetMemory",
+                                "condition": "SUP",
+                                "value": 50
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "helm-chart-deployed",
+                "description": "this rule is to verify if the helm chart is deployed",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "helm",
+                "objectName": "chart",
+                "conditions": [
+                    {
+                        "property": "details.status",
+                        "condition": "EQUAL",
+                        "value": "deployed"
+                    }
+                ]
+            },
+            {
+                "name": "helm-chart-last-deployed-X-month",
+                "description": "this rule is to verify if the helm chart has been deployed in the last X month",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "helm",
+                "objectName": "chart",
+                "conditions": [
+                    {
+                        "property": "details.lastDeployed",
+                        "condition": "DATE_INF",
+                        "value": "0 0 0 0 0 3 0",
+                        "date": "YYYY-MM-DDThh:mm:ss.SSSZ"
+                    }
+                ]
+            },
+            {
+                "name": "helm-chart-max-revisions",
+                "description": "this rule is to verify if the helm chart has less than 10 revisions",
+                "applied": true,
+                "level": 0,
+                "cloudProvider": "helm",
+                "objectName": "chart",
+                "conditions": [
+                    {
+                        "property": "details.revisions",
+                        "condition": "INF_OR_EQUAL",
+                        "value": 10
+                    }
+                ]
+            }
+        ]
     },
     "http": {
         "resources": [
@@ -9998,6 +10253,321 @@
                                 "value": "kexawebsitepublic"
                             }
                         ]
+                    }
+                ]
+            },
+            {
+                "name": "kube-pods-memory-limitation",
+                "description": "this rules is to verify pods memory limitation",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "podsConsumption",
+                "conditions": [
+                    {
+                        "property": "MemoryUsage",
+                        "condition": "INF",
+                        "value": 599428096
+                    }
+                ]
+            },
+            {
+                "name": "kube-pods-cpu-limitation",
+                "description": "this rules is to verify cpu usage limitation",
+                "applied": true,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "podsConsumption",
+                "conditions": [
+                    {
+                        "property": "CPUUsage",
+                        "condition": "INF",
+                        "value": 0.02
+                    }
+                ]
+            },
+            {
+                "name": "kube-is-persistent-volume-bounded",
+                "description": "this rules is to verify that persistent volume is bounded",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "persistentvolume",
+                "conditions": [
+                    {
+                        "property": "status.phase",
+                        "condition": "EQUAL",
+                        "value": "Bound"
+                    }
+                ]
+            },
+            {
+                "name": "kube-is-persistent-volume-not-pending",
+                "description": "this rules is to verify that persistent volume is not pending",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "persistentvolume",
+                "conditions": [
+                    {
+                        "property": "status.phase",
+                        "condition": "DIFFERENT",
+                        "value": "Pending"
+                    }
+                ]
+            },
+            {
+                "name": "kube-pod-stuck-terminating-state",
+                "description": "this rules is to check if a pod is stuck in terminating state",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "pods",
+                "conditions": [
+                    {
+                        "property": "status.phase",
+                        "condition": "DIFFERENT",
+                        "value": "Terminating"
+                    }
+                ]
+            },
+            {
+                "name": "kube-pod-stuck-pending-state",
+                "description": "this rules is to check if a pod is stuck in pending state",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "pods",
+                "conditions": [
+                    {
+                        "property": "status.phase",
+                        "condition": "DIFFERENT",
+                        "value": "Pending"
+                    }
+                ]
+            },
+            {
+                "name": "kube-pod-not-ready-to-start-container",
+                "description": "this rules is to check if pod is ready to start container",
+                "applied": false,
+                "level": 0,
+                "cloudProvider": "kubernetes",
+                "objectName": "pods",
+                "conditions": [
+                    {
+                        "property": "status.formattedConditions.Initialized.PodReadyToStartContainers.status",
+                        "condition": "EQUAL",
+                        "value": "True"
+                    }
+                ]
+            },
+            {
+                "name": "kube-pod-not-initialized",
+                "description": "this rules is to check if pod is ready to start container",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "pods",
+                "conditions": [
+                    {
+                        "property": "status.formattedConditions.Initialized.status",
+                        "condition": "EQUAL",
+                        "value": "True"
+                    }
+                ]
+            },
+            {
+                "name": "kube-pod-not-ready",
+                "description": "this rules is to check if pod is ready",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "pods",
+                "conditions": [
+                    {
+                        "property": "status.formattedConditions.Ready.status",
+                        "condition": "EQUAL",
+                        "value": "True"
+                    }
+                ]
+            },
+            {
+                "name": "kube-pod-containers-not-ready",
+                "description": "this rules is to check if pod is ready",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "pods",
+                "conditions": [
+                    {
+                        "property": "status.formattedConditions.ContainersReady.status",
+                        "condition": "EQUAL",
+                        "value": "True"
+                    }
+                ]
+            },
+            {
+                "name": "kube-pod-not-scheduled",
+                "description": "this rules is to check if pod is ready",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "pods",
+                "conditions": [
+                    {
+                        "property": "status.formattedConditions.PodScheduled.status",
+                        "condition": "EQUAL",
+                        "value": "True"
+                    }
+                ]
+            },
+            {
+                "name": "kube-node-network-unavailable",
+                "description": "this rules is to check if route controller is ok",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "node",
+                "conditions": [
+                    {
+                        "property": "status.formattedConditions.NetworkUnavailable.status",
+                        "condition": "EQUAL",
+                        "value": "False"
+                    }
+                ]
+            },
+            {
+                "name": "kube-node-kernel-deadlock",
+                "description": "this rules is to check if kernel is in deadlock state",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "node",
+                "conditions": [
+                    {
+                        "property": "status.formattedConditions.KernelDeadlock.status",
+                        "condition": "EQUAL",
+                        "value": "False"
+                    }
+                ]
+            },
+            {
+                "name": "kube-node-frequent-kubelet-restart",
+                "description": "this rules is to check if there is frequent kubelet restart",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "node",
+                "conditions": [
+                    {
+                        "property": "status.formattedConditions.FrequentKubeletRestart.status",
+                        "condition": "EQUAL",
+                        "value": "False"
+                    }
+                ]
+            },
+            {
+                "name": "kube-node-container-runtime-is-up",
+                "description": "this rules is to check if container runtime is up",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "node",
+                "conditions": [
+                    {
+                        "property": "status.formattedConditions.ContainerRuntimeProblem.status",
+                        "condition": "EQUAL",
+                        "value": "False"
+                    }
+                ]
+            },
+            {
+                "name": "kube-node-file-system-is-ok",
+                "description": "this rules is to check if therre is a file corruption problem",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "node",
+                "conditions": [
+                    {
+                        "property": "status.formattedConditions.FilesystemCorruptionProblem.status",
+                        "condition": "EQUAL",
+                        "value": "False"
+                    }
+                ]
+            },
+            {
+                "name": "kube-node-frequent-docker-restart",
+                "description": "this rules is to check if there is frequent docker restart",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "node",
+                "conditions": [
+                    {
+                        "property": "status.formattedConditions.FrequentDockerRestart.status",
+                        "condition": "EQUAL",
+                        "value": "False"
+                    }
+                ]
+            },
+            {
+                "name": "kube-node-frequent-container-restart",
+                "description": "this rules is to check if there is frequent container restart",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "node",
+                "conditions": [
+                    {
+                        "property": "status.formattedConditions.FrequentContainerdRestart.status",
+                        "condition": "EQUAL",
+                        "value": "False"
+                    }
+                ]
+            },
+            {
+                "name": "kube-node-memory-pressure",
+                "description": "this rules is to check kubelet has sufficient memory available",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "node",
+                "conditions": [
+                    {
+                        "property": "status.formattedConditions.MemoryPressure.status",
+                        "condition": "EQUAL",
+                        "value": "False"
+                    }
+                ]
+            },
+            {
+                "name": "kube-node-disk-pressure",
+                "description": "this rules is to check if there is disk pressure",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "node",
+                "conditions": [
+                    {
+                        "property": "status.formattedConditions.DiskPressure.status",
+                        "condition": "EQUAL",
+                        "value": "False"
+                    }
+                ]
+            },
+            {
+                "name": "kube-event-image-pull-fail",
+                "description": "this rules is to check if there is event of image pull fail",
+                "applied": false,
+                "level": 1,
+                "cloudProvider": "kubernetes",
+                "objectName": "event",
+                "conditions": [
+                    {
+                        "property": "reason",
+                        "condition": "DIFFERENT",
+                        "value": "FailedToPullImage"
                     }
                 ]
             }
