@@ -312,7 +312,7 @@
         "@azure/arm-appcontainers": "^2.1.0",
         "@azure/arm-appinsights": "^4.0.0",
         "@azure/arm-appplatform": "^2.0.0",
-        "@azure/arm-appservice": "^14.1.0",
+        "@azure/arm-appservice": "^15.0.0",
         "@azure/arm-attestation": "^2.1.0",
         "@azure/arm-authorization": "^9.0.0",
         "@azure/arm-automanage": "^1.0.2",
