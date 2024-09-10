@@ -6,14 +6,14 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
             return `Namespace name : ` + objectContent?.metadata?.name + ` with uid : ` + objectContent?.metadata?.uid
         case "pods":
             if (isSms)
-                return `Name : ` + objectContent.metadata.name + ` and NameSpace : ` + objectContent.metadata.namespace
+                return `Name : ` + objectContent?.metadata?.name + ` and NameSpace : ` + objectContent?.metadata?.namespace
             else
-                return `Name : ` + objectContent.metadata.name + `</br>NameSpace : ` + objectContent.metadata.namespace
+                return `Name : ` + objectContent?.metadata?.name + `</br>NameSpace : ` + objectContent?.metadata?.namespace
         case "podLogs":
             if (isSms)
-                return `Name : ` + objectContent.metadata.name + ` and NameSpace : ` + objectContent.metadata.namespace + ` Scanned since ` + objectContent.interval
+                return `Name : ` + objectContent?.metadata?.name + ` and NameSpace : ` + objectContent?.metadata?.namespace + ` Scanned since ` + objectContent?.interval
             else
-                return `Name : ` + objectContent.metadata.name + `</br>NameSpace : ` + objectContent.metadata.namespace + `</br>Scanned since ` + objectContent.interval
+                return `Name : ` + objectContent?.metadata?.name + `</br>NameSpace : ` + objectContent?.metadata?.namespace + `</br>Scanned since ` + objectContent?.interval
         case "helm":
             return `Helm name : ` + objectContent?.metadata?.name + ` with uid : ` + objectContent?.metadata?.uid
         case "persistentVolume":

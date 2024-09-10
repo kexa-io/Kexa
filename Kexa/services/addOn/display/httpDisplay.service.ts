@@ -5,6 +5,6 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
         case "request":
             return `Url : ` + objectContent?.url + ` with status : ` + objectContent?.code
         default:
-            return 'HTTP Scan : Id : ' + objectContent.id;
+            return 'HTTP Scan : Id : ' + objectContent?.id;
     }
 }

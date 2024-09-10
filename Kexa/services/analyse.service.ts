@@ -402,8 +402,8 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
                     case BeHaviorEnum.CONTINUE:
                         continue;
                 }
-                objectResources.push(resources[rule.cloudProvider][i][rule.objectName]);
-               // objectResources = [...objectResources, ...resources[rule.cloudProvider][i][rule.objectName]]
+                // objectResources.push(resources[rule.cloudProvider][i][rule.objectName]);
+               objectResources = [...objectResources, ...resources[rule.cloudProvider][i][rule.objectName]]
             }
         }
         let subResult: ResultScan[] = [];
