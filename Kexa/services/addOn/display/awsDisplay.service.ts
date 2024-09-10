@@ -10,19 +10,19 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
         fullLink = webLink.concat(link.toString());
     switch (rule?.objectName) {
         case "KexaAwsCustoms.tagsValueListing":
-            return  'Tag name : ' + objectContent.Value + ' in Region : ' + objectContent.Region;
+            return  'Tag name : ' + objectContent?.Value + ' in Region : ' + objectContent?.Region;
         case "ec2SG":
             return fullLink + `ec2/home?region=` + objectContent?.Region + `#SecurityGroup:groupId=`+ objectContent?.GroupId + (isSms ? ' ' : '">') + objectContent?.GroupId + (isSms ? `.` : `</a>`)
         case "resourceGroups":
             return 'GroupArn :' + objectContent?.GroupArn;
         case rule?.objectName:
             if (rule.objectName.startsWith("S3Client.")) {
-                return ' Object name : ' + objectContent.Name;
+                return ' Object name : ' + objectContent?.Name;
             } else if (rule?.objectName.includes("IAMClient.AccessKey")) {
-                return ' Key ID : ' + objectContent.AccessKeyId;
+                return ' Key ID : ' + objectContent?.AccessKeyId;
             }
         default:
-             return ' Object Id(s) : ' + awsFindIdToDisplay(objectContent) + ' in Region : ' + objectContent.region + ' obj type : ' + rule.objectName;
+             return ' Object Id(s) : ' + awsFindIdToDisplay(objectContent) + ' in Region : ' + objectContent?.region + ' obj type : ' + rule?.objectName;
     }
 }
 

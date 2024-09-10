@@ -9,9 +9,9 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
     fullLink = (isSms ? ' ' : beginLinkHTML) + beginLink + objectContent?.id + endLink + (isSms ? ' ' : endLinkHTML);
     switch (rule?.objectName) {
         case "files":
-            return "Title : " + objectContent.name + (isSms?"\n":"</br>") + "Link : " + fullLink + (isSms?"\n":"</br>");
+            return "Title : " + objectContent?.name + (isSms?"\n":"</br>") + "Link : " + fullLink + (isSms?"\n":"</br>");
         default:
-            return 'Drive Scan : Id : ' + objectContent.id;
+            return 'Drive Scan : Id : ' + objectContent?.id;
     }
 }
 

@@ -30,6 +30,6 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
         case "teamRepositories":
             return (isSms ? '' : webLink) + objectContent?.html_url + (isSms ? ' ' : '">') + 'Repo : ' + objectContent?.name + ' Team : ' + objectContent?.team + (isSms ? `.` : `</a>`)
         default:
-            return 'GIT Scan : Id : ' + objectContent.id;
+            return 'GIT Scan : Id : ' + objectContent?.id;
     }
 }

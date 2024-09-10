@@ -850,8 +850,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       '@azure/arm-appservice':
-        specifier: ^14.1.0
-        version: 14.1.0
+        specifier: ^15.0.0
+        version: 15.0.0
       '@azure/arm-attestation':
         specifier: ^2.1.0
         version: 2.1.0
@@ -3768,8 +3768,8 @@ packages:
     resolution: {integrity: sha512-/7IWwDis75dAjxrad3bqzIIG3TonscEnA5MUUTOKgi8B08EhUInccPX7SZdtmX14+GNri9ri8TvZFk4xrkYGrA==}
     engines: {node: '>=12.0.0'}
 
-  '@azure/arm-appservice@14.1.0':
-    resolution: {integrity: sha512-dRhYI8HQ49DQrT91RzIjIa22bs2Pw/2mPtW+4a6ED5lzQ6IMPP0XEPXSSqqkPKedZRXRaZqazi16/QjuidJPnQ==}
+  '@azure/arm-appservice@15.0.0':
+    resolution: {integrity: sha512-huJ2uFDXB7w0cYKqxhzYOHuTsuLCY1e0xmWFF8G3KpDbQGnFDM3AVNtxWPas50OxuSWClblqSaExiS/XnWhTTg==}
     engines: {node: '>=18.0.0'}
 
   '@azure/arm-attestation@2.1.0':
@@ -24431,7 +24431,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@azure/arm-appservice@14.1.0':
+  '@azure/arm-appservice@15.0.0':
     dependencies:
       '@azure/abort-controller': 1.1.0
       '@azure/core-auth': 1.7.2
