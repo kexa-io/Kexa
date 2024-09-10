@@ -3685,3 +3685,28 @@ Kexa/services/addOn/display/httpDisplay.service.ts was changed
 Kexa/services/addOn/display/kubernetesDisplay.service.ts was changed
 
 
+## 
+
+### Files added: 0
+
+### Files changed: 9
+
+CHANGELOG.md was changed
+
+Kexa/services/addOn.service.ts was changed
+
+Kexa/services/addOn/display/awsDisplay.service.ts was changed
+
+Kexa/services/addOn/display/fuzzDisplay.service.ts was changed
+
+Kexa/services/addOn/display/githubDisplay.service.ts was changed
+
+Kexa/services/addOn/display/googleDriveDisplay.service.ts was changed
+
+Kexa/services/addOn/display/httpDisplay.service.ts was changed
+
+Kexa/services/addOn/display/kubernetesDisplay.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+
