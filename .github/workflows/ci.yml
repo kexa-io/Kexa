@@ -62,13 +62,11 @@ jobs:
           echo "" >> CHANGELOG.md
       
       - name: commit changes
-        uses: EndBug/add-and-commit@v4
+        uses: EndBug/add-and-commit@v9.1.4
         with:
           add: CHANGELOG.md VERSION package.json capacity.json
           author_name: estebanmathia
           author_email: esteban.mathia@supinfo.com
-          force: false
-          signoff: false
           message: 'add info extract from addon'
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
