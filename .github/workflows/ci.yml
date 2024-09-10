@@ -70,7 +70,7 @@ jobs:
           echo "" >> CHANGELOG.md
       
       - name: commit changes
-        uses: EndBug/add-and-commit@v9.1.4
+        uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5 # v9.1.4
         with:
           add: CHANGELOG.md VERSION package.json capacity.json
           author_name: estebanmathia
