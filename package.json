@@ -200,7 +200,7 @@
         "@aws-sdk/client-managedblockchain": "^3.637.0",
         "@aws-sdk/client-marketplace-commerce-analytics": "^3.637.0",
         "@aws-sdk/client-marketplace-metering": "^3.637.0",
-        "@aws-sdk/client-mediaconnect": "^3.637.0",
+        "@aws-sdk/client-mediaconnect": "^3.649.0",
         "@aws-sdk/client-mediaconvert": "^3.637.0",
         "@aws-sdk/client-medialive": "^3.637.0",
         "@aws-sdk/client-mediapackage": "^3.637.0",
