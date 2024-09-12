@@ -123,7 +123,7 @@ async function main(retryLeft = -1) {
     }
     AsciiArtText("Kexa");
     let idScan = 0;
-    let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"https://github.com/4urcloud/Kexa_Rules");
+    let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"https://github.com/kexa-io/public-rules");
     let allScan: ResultScan[][] = [];
     let retError = false;
     let timer;
