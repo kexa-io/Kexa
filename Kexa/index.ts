@@ -33,7 +33,7 @@ const timerTrigger: AzureFunction = async function (context: Context, myTimer: a
     await displayVersionAndLatest(logger);
     AsciiArtText("Kexa");
     let idScan = 0;
-    let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"https://github.com/4urcloud/Kexa_Rules");
+    let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"https://github.com/kexa-io/public-rules");
     let allScan: ResultScan[][] = [];
     allScan = await mainScan(settings, allScan, idScan.toString());
     await GlobalAlert(settings, allScan);
