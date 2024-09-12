@@ -44,7 +44,7 @@ jobs:
         id: get_latest_release
         with:
           token: ${{ secrets.GIT_TOKEN }}
-          repository: "4urcloud/Kexa"
+          repository: "kexa-io/Kexa"
           type: "stable"
       - name: print new latest version
         run: echo ${{ steps.get_latest_release.outputs.release }}
