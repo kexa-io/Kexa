@@ -27,8 +27,8 @@ describe('analyse service', () => {
 
         //it('Gathering distant rules', async () => {
         //    fs.mkdirSync("./distantRules", { recursive: true });
-        //    https://api.github.com/repos/4urcloud/Kexa_Rules/zipball/main
-        //    await gatheringDistantRules("https://github.com/4urcloud/Kexa_Rules/zipball/main", "./distantRules");
+        //    https://api.github.com/repos/kexa-io/public-rules/zipball/main
+        //    await gatheringDistantRules("https://github.com/kexa-io/public-rules/zipball/main", "./distantRules");
         //    let rules = fs.readdirSync("./distantRules");
         //    expect(rules).to.be.an('array').that.is.not.empty;
         //    fs.rmSync("./distantRules", { recursive: true, force: true });

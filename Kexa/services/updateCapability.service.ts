@@ -10,7 +10,7 @@ const fs = require("fs");
 import axios from 'axios';
 
 async function releaseCapability(){
-    let rules = await gatheringRules("https://api.github.com/repos/4urcloud/Kexa_Rules/zipball/main", true);
+    let rules = await gatheringRules("https://api.github.com/repos/kexa-io/public-rules/zipball/main", true);
     let freeRules = [...rules.map((rule: SettingFile) => {
         return rule.rules
     })];
