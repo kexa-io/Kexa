@@ -7,7 +7,16 @@ import { SettingFile } from "../models/settingFile/settingFile.models";
 import { getConfig } from "../helpers/loaderConfig";
 import { jsonStringify } from "../helpers/jsonStringify";
 
-const configuration = getConfig();
+let configuration: any;
+async function init() {
+    try {
+        configuration = await getConfig();
+    } catch (error) {
+        logger.error("Failed to load config", error);
+    }
+}
+init();
+
 const mainFolder = 'Kexa';
 const serviceAddOnPath = './' + mainFolder + '/services/addOn';
 const fs = require('fs');

@@ -28,6 +28,7 @@ import { getConfig } from '../helpers/loaderConfig';
 import { jsonStringify } from '../helpers/jsonStringify';
 import { Memoisation } from './memoisation.service';
 const logger = getNewLogger("AnalyseLogger");
+import {getConfigFromApi} from "../services/api/configLoaderApi.service";
 
 const jsome = require('jsome');
 jsome.level.show = true;
@@ -35,7 +36,16 @@ const varEnvMin = {
     "email": ["EMAILPORT", "EMAILHOST", "EMAILUSER", "EMAILPWD", "EMAILFROM"],
     "sms": ["SMSACCOUNTSID", "SMSAUTHTOKEN", "SMSFROM"],
 }
-const config = getConfig();
+let config: any;
+async function init() {
+    try {
+        config = await getConfig();
+        console.log(config);
+    } catch (error) {
+        logger.error("Failed to load config", error);
+    }
+}
+init();
 const levelAlert = ["info", "warning", "error", "critical"];
 const defaultRulesDirectory = "./rules";
 const secondDefaultRulesDirectory = "./Kexa/rules";
@@ -45,6 +55,13 @@ let headers: any;
 // read the yaml file with rules
 // exam each rules and raise alarm or not
 export async function gatheringRules(rulesDirectory:string, getAll:boolean=false): Promise<SettingFile[]> {
+
+    // if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
+    //     let projects =  await getConfigFromApi();
+    //      const rules = projects.map((project: any) => project.rules); 
+    //      console.log("RULES HERE: ", rules);
+    //      return rules; 
+    // }
     await extractHeaders();
     // list directory
     if(rulesDirectory.startsWith("http")){
@@ -57,7 +74,7 @@ export async function gatheringRules(rulesDirectory:string, getAll:boolean=false
     logger.debug("listing rules files.");
     let settingFileList = new Array<SettingFile>;
     headers = require('../../config/headers.json');
-    let listNeedRules = getListNeedRules();
+    let listNeedRules = await getListNeedRules();
     for(const p of paths) {
         logger.debug("getting "+rulesDirectory+"/"+p.name+" rules.");
         let setting = await analyzeRule(rulesDirectory+"/"+p.name, listNeedRules, getAll);
@@ -98,8 +115,8 @@ export function extractAddOnNeed(settingFileList: SettingFile[]){
     writeStringToJsonFile(jsonStringify({ "addOn" : providerList, "objectNameNeed": objectNameList }), "./config/addOnNeed.json");
 }
 
-function getListNeedRules(): string[]{
-    const config = getConfig();
+async function getListNeedRules(): Promise<string[]> {
+    const config = await getConfig();
     let listNeedRules = new Array<string>();
     for(let cloudProvider of Object.keys(config)){
         if(["host", "host", "workerId", "requestId", "grpcMaxMessageLength"].includes(cloudProvider)) continue;
@@ -134,7 +151,8 @@ export async function analyzeRule(ruleFilePath:string, listNeedRules:string[], g
             return null;
         }
         let contentRuleFile = fs.readFileSync(ruleFilePath, 'utf8');
-        contentRuleFile = replaceElement(contentRuleFile, getConfig()?.variable?.[name]);
+        const configHere = await getConfig();
+        contentRuleFile = replaceElement(contentRuleFile, configHere?.variable?.[name]);
         const doc = (yaml.load(contentRuleFile) as SettingFile[])[0];
         let result = await checkDoc(doc);
         logCheckDoc(result);

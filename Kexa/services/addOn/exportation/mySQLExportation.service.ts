@@ -13,7 +13,7 @@ export async function exportation(save: MySQLSaveConfig, resources: ProviderReso
     try{
         if(!save.urlName) throw new Error("urlName is required");
         let url = (await getEnvVar(save.urlName))??save.urlName;
-        const config = getConfig();
+        const config = await getConfig();
         await mySQL.createTables({
             uri: url
         });

@@ -67,7 +67,18 @@ const logger = getNewLogger("KubernetesLogger");
 const k8s = require('@kubernetes/client-node');
 let currentConfig:KubernetesConfig;
 
-let globalConfiguration = getConfig().global ?? {};
+// let globalConfiguration = getConfig().global ?? {};
+
+let globalConfiguration: any;
+async function init() {
+    try {
+        const configHere = await getConfig();
+        globalConfiguration = configHere.global ?? {};
+    } catch (error) {
+        logger.error("Failed to load config", error);
+    }
+}
+init();
 
 export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<KubernetesResources[]|null>{
     let resources = new Array<KubernetesResources>();

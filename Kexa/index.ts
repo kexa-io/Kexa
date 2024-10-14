@@ -17,7 +17,7 @@ const timerTrigger: AzureFunction = async function (context: Context, myTimer: a
     }
     context.log("The function is starting to scan");
     setContext(context);
-    const configuration = getConfig();
+    const configuration = await getConfig();
     const generalConfig = (configuration.hasOwnProperty("general")) ? configuration["general"] : null;
     context?.log("entering main");
     const logger = getNewLogger("MainLogger");

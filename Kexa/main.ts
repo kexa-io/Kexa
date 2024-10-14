@@ -99,7 +99,7 @@ import { Condition } from "@aws-sdk/client-forecast";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function main(retryLeft = -1) {
-    const configuration = getConfig();
+    const configuration = await getConfig();
     const generalConfig = (configuration.hasOwnProperty("general")) ? configuration["general"] : null;
     let context = getContext();
     context?.log("entering main");
@@ -128,6 +128,11 @@ async function main(retryLeft = -1) {
     let retError = false;
     let timer;
     
+
+    console.log("SETTING FILE IS (to build when from interface)");
+    console.log(settings);
+    console.log("CONFIG IS:");
+    console.log(configuration)
     /* 3 default max retry when timeout happen in continuous run */
     const defaultMaxRetry = generalConfig?.checkInterval != null ? 3 : 0;
     if (retryLeft == -1)

@@ -24,7 +24,16 @@ const request = require('request');
 const nodemailer = require("nodemailer");
 const levelAlert = ["info", "warning", "error", "fatal"];
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
-const config = getConfig();
+let config: any;
+async function init() {
+    try {
+        config = await getConfig();
+        console.log(config);
+    } catch (error) {
+        logger.error("Failed to load config", error);
+    }
+}
+init();
 
 const logger = getNewLogger("functionLogger");
 export function alertGlobal(allScan: ResultScan[][], alert: GlobalConfigAlert) {

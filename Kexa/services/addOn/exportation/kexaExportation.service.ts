@@ -16,7 +16,7 @@ export async function exportation(save: KexaSaveConfig, resources: ProviderResou
     let token = (await getEnvVar(save.token))??save.token;
     logger.info(`Exportation to Kexa SaaS`);
     context?.log(`Exportation to Kexa SaaS`);
-    const config = getConfig();
+    const config = await getConfig();
     let configSend:any = {};
     Object.keys(resources).forEach((providerName) => {
         configSend[providerName] = config[providerName]??[];

@@ -11,9 +11,27 @@ export async function getEnvVar(name:string) {
     return (await getFromManager(name))??process.env[name];
 }
 
+async function getFromApi(name:string) {
+    try {
+        if (process.env.BITWARDEN_CLIENTID)
+            return false;   
+    } catch(e) {
+        console.error("Error fetching variables from Kexa API");  
+    }
+}
+
+async function possibleWithApi(name:string) {
+    if (process.env.BITWARDEN_CLIENTID)
+        return true;
+    else
+        return false;
+}
+
 async function getFromManager(name:string){
     try {
-        if(possibleWithAzureKeyVault())
+        if (await possibleWithApi(name))
+            return await getFromApi(name);
+        else if(possibleWithAzureKeyVault())
             return await getEnvVarWithAzureKeyVault(name);
         else if (possibleWithAwsSecretManager())
             return await getEnvVarWithAwsSecretManager(name);
