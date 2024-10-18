@@ -3,8 +3,16 @@ import { getConfig } from "../helpers/loaderConfig";
 import { Rules } from "../models/settingFile/rules.models";
 import { loadAddOnsCustomUtility } from "./addOn.service";
 import { getNewLogger } from "./logger.service";
-const configuration = getConfig();
-const generalConfig = (configuration.hasOwnProperty("general")) ? configuration["general"] : null;
+let configuration: any;
+async function init() {
+    try {
+        configuration = await getConfig();
+    } catch (error) {
+        logger.error("Failed to load config", error);
+    }
+}
+init();
+const generalConfig = (configuration?.general != undefined) ? configuration["general"] : null;
 const logger = getNewLogger("MemoisationLogger");
 
 interface ItemMemoisationInterface {

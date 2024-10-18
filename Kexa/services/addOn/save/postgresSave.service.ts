@@ -3,6 +3,7 @@ import { getContext, getNewLogger } from "../../logger.service";
 import { ResultScan } from '../../../models/resultScan.models';
 import { PostgreSQLSaveConfig } from '../../../models/export/postgre/config.models';
 import { PostgreSQLClass } from '../../saving/postgresSQL.service';
+import {getConfigOrEnvVar} from '../../manageVarEnvironnement.service';
 
 const logger = getNewLogger("pgSQLSaveLogger");
 const context = getContext();
@@ -14,8 +15,19 @@ export async function save(save: PostgreSQLSaveConfig, result: ResultScan[][]): 
     let pgSQL = new PostgreSQLClass();
     let batchId = uuidv4();
     try {
-        if (!save.urlName) throw new Error("urlName is required");
-        let url = (await getEnvVar(save.urlName)) ?? save.urlName;
+
+        if(!save.urlName) throw new Error("urlName is required");
+        let url = (await getEnvVar(save.urlName))??save.urlName;
+      /*  if (save.urlName === undefined && save.prefix === undefined) throw new Error("urlName or prefix is required");
+        let url = "";
+        if (save.urlName)
+            url = save.urlName;
+        else {
+            const config = save;
+            url = await getConfigOrEnvVar(config, save.type, save.prefix);    
+        }*/
+
+
         await pgSQL.createTables({
             connectionString: url // Use `connectionString` instead of `uri`
         });

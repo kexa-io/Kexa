@@ -16,6 +16,7 @@ import { Teams } from "../emails/teams";
 import {getContext, getNewLogger} from "./logger.service";
 import { getConfig } from "../helpers/loaderConfig";
 import { jsonStringify, getColorStringHandler } from "../helpers/jsonStringify";
+import {formatAlertCondition} from "./api/formatterApi.service";
 import { get } from "http";
 
 const jsome = require('jsome');
@@ -24,7 +25,15 @@ const request = require('request');
 const nodemailer = require("nodemailer");
 const levelAlert = ["info", "warning", "error", "fatal"];
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
-const config = getConfig();
+let config: any;
+async function init() {
+    try {
+        config = await getConfig();
+    } catch (error) {
+        logger.error("Failed to load config", error);
+    }
+}
+init();
 
 const logger = getNewLogger("functionLogger");
 export function alertGlobal(allScan: ResultScan[][], alert: GlobalConfigAlert) {
@@ -38,10 +47,14 @@ export function alertGlobal(allScan: ResultScan[][], alert: GlobalConfigAlert) {
     });
     logger.debug("compteError:");
     logger.debug(compteError);
+
+    if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
+        alert.conditions = formatAlertCondition(alert.conditions);
+    }
+
+
     alert.conditions.forEach((condition) => {
         if(isAlert) return;
-        logger.debug("condition:");
-        logger.debug(condition);
         if(compteError[condition.level] >= condition.min){
             logger.debug("alert:"+levelAlert[condition.level]);
             isAlert = true;

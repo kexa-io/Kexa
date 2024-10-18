@@ -3719,3 +3719,12 @@ Kexa/services/analyse.service.ts was changed
 .github/workflows/versioning.yml was changed
 
 
+## 
+
+### Files added: 0
+
+### Files changed: 1
+
+Kexa/services/api/decryptApi.service.ts was changed
+
+

@@ -8,7 +8,16 @@ import { jsonStringify } from "../../helpers/jsonStringify";
 
 
 const logger = getNewLogger("JiraAlertingLogger");
-const config = getConfig();
+
+let config: any;
+async function init() {
+    try {
+        config = await getConfig();
+    } catch (error) {
+        logger.error("Failed to load config", error);
+    }
+}
+init();
 
 export async function updateIssueDate(auth: string, issueId: string): Promise<void> {
     const url = 'https://' + await getConfigOrEnvVar(config, 'JIRA_DOMAIN') +`/rest/api/2/issue/${issueId}/comment`;
@@ -24,7 +33,6 @@ export async function updateIssueDate(auth: string, issueId: string): Promise<vo
         }
     })
         .then(response => {
-           // console.log(`Response: ${response.status} ${response.statusText}`);
         })
         .catch(err => {
             logger.error('Error updating Jira issue:', err.message);

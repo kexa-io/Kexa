@@ -6,7 +6,15 @@ import { SaveConfig } from '../models/export/config.models';
 import { getConfig } from '../helpers/loaderConfig';
 import { jsonStringify } from '../helpers/jsonStringify';
 
-const configuration = getConfig();
+let configuration: any;
+async function init() {
+    try {
+        configuration = await getConfig();
+    } catch (error) {
+        logger.error("Failed to load config", error);
+    }
+}
+init();
 const logger = getNewLogger("SaveLogger");
 const context = getContext();
 

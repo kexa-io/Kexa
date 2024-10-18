@@ -1,19 +1,42 @@
 import axios from "axios";
 import {getNewLogger} from "./logger.service";
 import { jsonStringify } from "../helpers/jsonStringify";
+import {getEnvVarFromApi} from "./api/loaderApi.service";
+
 const logger = getNewLogger("KubernetesLogger");
 
 
 const { SecretClient } = require("@azure/keyvault-secrets");
 const { DefaultAzureCredential } = require("@azure/identity");
 
-export async function getEnvVar(name:string) {
+
+
+export async function getEnvVar(name:string, optionalPrefix:string = "") {
     return (await getFromManager(name))??process.env[name];
 }
 
-async function getFromManager(name:string){
+async function getFromApi(name:string, prefix:string) {
     try {
-        if(possibleWithAzureKeyVault())
+        return await getEnvVarFromApi(name, prefix);
+    } catch(e) {
+        console.error("Error fetching variables from Kexa API");  
+    }
+}
+
+async function possibleWithApi(name:string, isPrefix:boolean) {
+    if (!isPrefix)
+        return false;
+    if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true' && process.env.KEXA_API_TOKEN && process.env.KEXA_API_TOKEN_NAME)
+        return true;
+    else
+        return false;
+}
+
+async function getFromManager(name:string, optionalPrefix:string = ""){
+    try {
+        if (await possibleWithApi(name, (optionalPrefix != "")))
+            return await getFromApi(name, optionalPrefix);
+        else if(possibleWithAzureKeyVault())
             return await getEnvVarWithAzureKeyVault(name);
         else if (possibleWithAwsSecretManager())
             return await getEnvVarWithAwsSecretManager(name);
@@ -157,11 +180,9 @@ async function possibleWithGoogleSecretManager(projectId: any): Promise<boolean>
     }
 }
 async function getEnvVarWithGoogleSecretManager(name:string, projectId: any) {
-    console.log("NAME IS : " + name);
-    console.log("PROJET ID : " + projectId);
+
     const usrScrt = process.env.GOOGLE_SECRET_NAME;
 
-    console.log("LOG");
 }
 
 export async function setEnvVar(name:string, value:string){
@@ -169,5 +190,7 @@ export async function setEnvVar(name:string, value:string){
 }
 
 export async function getConfigOrEnvVar(config:any, name:string, optionalPrefix:string = "") {
+    if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true')
+        return ((await getFromManager(name, optionalPrefix))??config[name])??process.env[optionalPrefix+name];
     return ((await getFromManager(optionalPrefix+name))??config[name])??process.env[optionalPrefix+name];
 }
