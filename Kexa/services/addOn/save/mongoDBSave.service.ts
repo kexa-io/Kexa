@@ -3,7 +3,7 @@ import { getEnvVar } from "../../manageVarEnvironnement.service";
 import { getContext, getNewLogger } from "../../logger.service";
 import { MongoDBSaveConfig } from "../../../models/export/mongoDB/config.models";
 import { closeConnection, saveData, setConnection } from "../../saving/mongoDB.service";
-
+import { getConfigOrEnvVar } from "../../manageVarEnvironnement.service";
 const mongoose = require("mongoose")
 const logger = getNewLogger("mongoDBSavingLogger");
 const context = getContext();
@@ -44,9 +44,15 @@ const resultScanMongoose = new mongoose.Schema({
 });
 
 export async function save(save: MongoDBSaveConfig, result: ResultScan[][]): Promise<void>{
-    if(!save.urlName) throw new Error("urlName is required");
     if(!save.collectionName) throw new Error("collectionName is required");
-    let url = (await getEnvVar(save.urlName))??save.urlName;
+    if (save.urlName === undefined && save.prefix === undefined) throw new Error("urlName or prefix is required");
+    let url = "";
+    if (save.urlName)
+        url = save.urlName;
+    else {
+        const config = save;
+        url = await getConfigOrEnvVar(config, save.type, save.prefix);    
+    }
     logger.info(`Saving to MongoDB`);
     context?.log(`Saving to MongoDB`);
     let { dataModel, connectionMongoDB } = await setConnection(url, save.collectionName, resultScanMongoose);

@@ -16,7 +16,7 @@ export async function exportation(save: PostgreSQLSaveConfig, resources: Provide
     try{
         if(!save.urlName) throw new Error("urlName is required");
         let url = (await getEnvVar(save.urlName)) ?? save.urlName;
-        const config = getConfig();
+        const config = await getConfig();
         try {
             await pgSQL.createTables({
                 connectionString: url

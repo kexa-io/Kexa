@@ -29,7 +29,6 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
 function cutAWSAvailabilityToRegion(inputString: string): string {
     const regionNumber = inputString.search(/\d+(?![\d])/);
     if (regionNumber !== -1) {
-        console.log("Region AWS : " + inputString.substring(0, regionNumber + 1));
         return inputString.substring(0, regionNumber + 1);
     }
     return inputString;
