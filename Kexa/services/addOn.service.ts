@@ -6,6 +6,7 @@ import {getContext, getNewLogger} from "./logger.service";
 import { SettingFile } from "../models/settingFile/settingFile.models";
 import { getConfig } from "../helpers/loaderConfig";
 import { jsonStringify } from "../helpers/jsonStringify";
+import  {formatProviderNeededData} from "./api/formatterApi.service";
 
 let configuration: any;
 async function init() {
@@ -28,18 +29,29 @@ const reservedNameAddOn=[
     "general",
 ]
 
-
 export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResource>{
     let resources: ProviderResource = {};
     let context = getContext();
     logger.info("Loading addOns");
     context?.log("Loading addOns");
-    const addOnNeed = require('../../config/addOnNeed.json');
+
+    let addOnNeed = require('../../config/addOnNeed.json');
+
     const files = fs.readdirSync(serviceAddOnPath);
-    const promises = files.filter((file:string)=> !reservedNameAddOn.includes(file)).map(async (file: string) => {
-        return await loadAddOn(file, addOnNeed, settings);
-    });
-    const results = await Promise.all(promises);
+    let results: any[] = [];
+
+    if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
+        for (const file of files.filter((file: string) => !reservedNameAddOn.includes(file))) {
+            const result = await loadAddOn(file, addOnNeed, settings);
+            results.push(result);
+        }
+    } else {
+        const promises = files.filter((file:string)=> !reservedNameAddOn.includes(file)).map(async (file: string) => {
+            return await loadAddOn(file, addOnNeed, settings);
+        });
+        results = await Promise.all(promises);
+    }
+
     let addOnShortCollect: string[] = [];
     results.forEach((result: { key: string; data: Provider[]; delta: number }) => {
         if (result?.data) {
@@ -61,10 +73,13 @@ export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResour
 
 async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): Promise<{ key: string; data: Provider|null; delta: number } | null> {
     let context = getContext();
+
     try{
         if (file.endsWith('Gathering.service.ts')){
             let nameAddOn = file.split('Gathering.service.ts')[0];
             if(!addOnNeed["addOn"].includes(nameAddOn)) return null;
+
+  
             let header = hasValidHeader(serviceAddOnPath + "/" + file);
             if (typeof header === "string") {
                 logger.warn(header);
@@ -73,6 +88,18 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): 
             const { collectData } = await import(`./addOn/${file.replace(".ts", ".js") }`);
             let start = Date.now();
             const addOnConfig = (configuration.hasOwnProperty(nameAddOn)) ? configuration[nameAddOn] : null;
+          
+
+            if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
+                addOnConfig.forEach((config: any) => {
+                    if (Array.isArray(config.notificationGroups)) {
+                        for (let i = 0; i < config.notificationGroups.length; i++) {
+                            config.rules.push(config.notificationGroups[i].name);
+                        }
+                    }
+                });
+            }
+    
             addOnConfig?.forEach((config: any) => {
                 config.ObjectNameNeed = []
                 config.rules.forEach((rulesName: string) => {

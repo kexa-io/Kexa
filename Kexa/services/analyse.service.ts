@@ -28,7 +28,8 @@ import { getConfig } from '../helpers/loaderConfig';
 import { jsonStringify } from '../helpers/jsonStringify';
 import { Memoisation } from './memoisation.service';
 const logger = getNewLogger("AnalyseLogger");
-import {getConfigFromApi} from "../services/api/configLoaderApi.service";
+import {getSettingsFileFromApi} from "../services/api/loaderApi.service";
+import {escapedYamlToJson} from "../services/api/formatterApi.service";
 
 const jsome = require('jsome');
 jsome.level.show = true;
@@ -40,7 +41,6 @@ let config: any;
 async function init() {
     try {
         config = await getConfig();
-        console.log(config);
     } catch (error) {
         logger.error("Failed to load config", error);
     }
@@ -56,14 +56,20 @@ let headers: any;
 // exam each rules and raise alarm or not
 export async function gatheringRules(rulesDirectory:string, getAll:boolean=false): Promise<SettingFile[]> {
 
-    // if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
-    //     let projects =  await getConfigFromApi();
-    //      const rules = projects.map((project: any) => project.rules); 
-    //      console.log("RULES HERE: ", rules);
-    //      return rules; 
-    // }
+
     await extractHeaders();
-    // list directory
+
+    if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
+        let rules =  await getSettingsFileFromApi(config);
+        headers = require('../../config/headers.json');
+        let listNeedRules = await getListNeedRules();
+        extractAddOnNeed(rules);
+        logger.debug("rules list:");
+        logger.debug(rules.map((value) => value.alert.global.name).join(", "));
+        return rules;
+        // DO THE REST
+    }
+
     if(rulesDirectory.startsWith("http")){
         logger.debug("gathering distant rules");
         await gatheringDistantRules(rulesDirectory);
@@ -100,16 +106,32 @@ export async function gatheringDistantRules(rulesOrigin:string, rulesDirectory:s
     }
 }
 
-export function extractAddOnNeed(settingFileList: SettingFile[]){
+export function extractAddOnNeed(settingFileList: any[]){
     let providerList = new Array<string>();
     let objectNameList:any = {};
     settingFileList.forEach((ruleFile) => {
         objectNameList[ruleFile.alert.global.name] = {};
-        ruleFile.rules.forEach((rule) => {
-            if(rule.applied === false) return;
-            if(!providerList.includes(rule.cloudProvider)) providerList.push(rule.cloudProvider);
-            if(!objectNameList[ruleFile.alert.global.name][rule.cloudProvider]) objectNameList[ruleFile.alert.global.name][rule.cloudProvider] = new Array<string>();
-            if(!objectNameList[ruleFile.alert.global.name][rule.cloudProvider].includes(rule.objectName)) objectNameList[ruleFile.alert.global.name][rule.cloudProvider].push(rule.objectName);
+        ruleFile.rules.forEach((rule: any) => {
+            if (rule.applied === false) return;
+            if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
+                if (!providerList.includes(rule.cloudProvider.name))
+                    providerList.push(rule.cloudProvider.name);
+            }
+            else if (!providerList.includes(rule.cloudProvider)) {
+                    providerList.push(rule.cloudProvider);
+            }
+            if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
+                if(!objectNameList[ruleFile.alert.global.name][rule.cloudProvider.name])
+                    objectNameList[ruleFile.alert.global.name][rule.cloudProvider.name] = new Array<string>();    
+            }
+            else if (!objectNameList[ruleFile.alert.global.name][rule.cloudProvider])
+                objectNameList[ruleFile.alert.global.name][rule.cloudProvider] = new Array<string>();
+            if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
+                if (!objectNameList[ruleFile.alert.global.name][rule.cloudProvider.name].includes(rule.objectName.name))
+                    objectNameList[ruleFile.alert.global.name][rule.cloudProvider.name].push(rule.objectName.name);
+            }
+            else if (!objectNameList[ruleFile.alert.global.name][rule.cloudProvider].includes(rule.objectName))
+                objectNameList[ruleFile.alert.global.name][rule.cloudProvider].push(rule.objectName);
         });
     });
     writeStringToJsonFile(jsonStringify({ "addOn" : providerList, "objectNameNeed": objectNameList }), "./config/addOnNeed.json");
@@ -395,23 +417,71 @@ function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, ind
     return BeHaviorEnum.NONE;
 }
 
-export function checkRules(rules:Rules[], resources:ProviderResource, alert: Alert, configFuzz?: any): ResultScan[][] {
+export function checkRules(rules:any[], resources:ProviderResource, alert: Alert, configFuzz?: any): ResultScan[][] {
     const context = getContext();
     logger.debug("check rules");
     let result: ResultScan[][] = [];
     const configuration = configFuzz ?? config;
+
+
+
     rules.forEach(rule => {
+    
+        if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
+            rule.conditions = escapedYamlToJson(rule.conditions);
+            rule.cloudProvider = rule.cloudProvider.name as string;
+            
+        }
+
         if(!rule.applied) return;
         context?.log("check rule:"+rule.name);
         logger.info("check rule:"+rule.name);
+
+        
         if(!configuration.hasOwnProperty(rule.cloudProvider)){
             logger.debug("cloud provider not found in config:"+rule.cloudProvider);
             return;
         }
-        const configAssign = configuration[rule.cloudProvider];
+  
+        let configAssign = configuration[rule.cloudProvider];
+
+        
+        if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
+            configAssign.forEach((config: any) => {
+                if (Array.isArray(config.notificationGroups)) {
+                    for (let i = 0; i < config.notificationGroups.length; i++) {
+                        // if not exist
+                        if (!config.rules.includes(config.notificationGroups[i].name))
+                            config.rules.push(config.notificationGroups[i].name);
+                    }
+                }
+            });
+        }
+
+
+// NEEDED CONFIG ASSIGN
+// [
+//   {
+//     description: 'organization 4urcloud',
+//     prefix: 'KUBE1_',
+//     rules: [ 'kubernetesConsumptions', 'kubernetesStatus' ],
+//     ObjectNameNeed: [ 'podsConsumption' ]
+//   },
+//   {
+//     description: 'second proj kube',
+//     prefix: 'KUBE1_',
+//     rules: [ 'kubernetesStatus' ],
+//     ObjectNameNeed: []
+//   }
+// ]
+
+
         let objectResources:any = []
         for(let i = 0; i < configAssign.length; i++){
             if(configAssign[i].rules.includes(alert.global.name)){
+                if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
+                    rule.objectName = rule.objectName.name;
+                }
                 context?.log("check rule with config with index/prefix :"+ (configAssign[i].prefix??i));
                 logger.info("check rule with config "+ rule.cloudProvider +" with index/prefix :"+ (configAssign[i].prefix??i));
                 switch(checkMatchConfigAndResource(rule, resources, i)){
@@ -425,6 +495,7 @@ export function checkRules(rules:Rules[], resources:ProviderResource, alert: Ale
             }
         }
         let subResult: ResultScan[] = [];
+
         if(rule.conditions[0].hasOwnProperty("property") && (rule.conditions[0] as RulesConditions).property === "."){
             let subResultScan: SubResultScan[] = checkRule(rule.conditions, objectResources);
             subResult.push({

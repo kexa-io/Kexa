@@ -13,7 +13,6 @@ let config: any;
 async function init() {
     try {
         config = await getConfig();
-        console.log(config);
     } catch (error) {
         logger.error("Failed to load config", error);
     }
@@ -34,7 +33,6 @@ export async function updateIssueDate(auth: string, issueId: string): Promise<vo
         }
     })
         .then(response => {
-           // console.log(`Response: ${response.status} ${response.statusText}`);
         })
         .catch(err => {
             logger.error('Error updating Jira issue:', err.message);

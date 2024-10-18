@@ -92,6 +92,10 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
                 writeStringToJsonFile(JSON.stringify(getFile(pathKubeFile??"")), "./config/kubernetes.json");
             else if (pathKubeFile?.endsWith(".yaml") || pathKubeFile?.endsWith(".yml"))
                 writeStringToJsonFile(JSON.stringify(yaml.load(getFile(pathKubeFile??"")), null, 2), "./config/kubernetes.json");
+            else if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
+                const jsonObject = yaml.load(pathKubeFile);
+                writeStringToJsonFile(JSON.stringify(jsonObject, null, 2), "./config/kubernetes.json");
+            }
             else
                 logger.error("Unknow credentials type for Kubernetes (path must be a .json or .yaml/.yml)");         
 
