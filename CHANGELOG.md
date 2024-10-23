@@ -3728,3 +3728,12 @@ Kexa/services/analyse.service.ts was changed
 Kexa/services/api/decryptApi.service.ts was changed
 
 
+## 
+
+### Files added: 0
+
+### Files changed: 1
+
+documentation/Documentation-Kexa.md was changed
+
+
