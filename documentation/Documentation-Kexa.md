@@ -381,6 +381,7 @@ Without "regions" property (or empty "regions" property), all the regions will b
 <br/>
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+
 <div id="advanced-configurations"></div>
 
 ## **Advanced Configurations**
