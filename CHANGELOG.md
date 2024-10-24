@@ -1,3 +1,10 @@
+## [1.17.1](https://github.com/kexa-io/Kexa/compare/v1.17.0...v1.17.1) (2024-10-24)
+
+
+### Bug Fixes
+
+* resync versions docker hub ([0b2668d](https://github.com/kexa-io/Kexa/commit/0b2668dd85273f6b8e9f318fc248f2f131b5e86b))
+
 # [1.4.0](https://github.com/kexa-io/Kexa/compare/v1.3.0...v1.4.0) (2024-10-24)
 
 
