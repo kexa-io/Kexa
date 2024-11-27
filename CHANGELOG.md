@@ -3770,3 +3770,16 @@ pnpm-lock.yaml was changed
 Kexa/services/addOn/googleWorkspaceGathering.service.ts was changed
 
 
+## 
+
+### Files added: 0
+
+### Files changed: 3
+
+CHANGELOG.md was changed
+
+Kexa/services/addOn/googleWorkspaceGathering.service.ts was changed
+
+documentation/provider/GoogleWorkspace.md was changed
+
+
