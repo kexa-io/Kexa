@@ -35,6 +35,7 @@ const path = require('path');
 const {authenticate} = require('@google-cloud/local-auth');
 const {google} = require('googleapis');
 let currentConfig: googleWorkspaceConfig;
+import { JWT } from 'google-auth-library';
 
 /////////////////////////////////////////
 //////   LISTING CLOUD RESOURCES    /////
@@ -45,26 +46,25 @@ let currentConfig: googleWorkspaceConfig;
 // DELETE NOT READ ONLY AND TRY //
 //////////////////////////////////
 const SCOPES = [
-    'https://www.googleapis.com/auth/admin.directory.user.readonly',
-    'https://www.googleapis.com/auth/admin.directory.domain.readonly',
-    'https://www.googleapis.com/auth/admin.directory.group.readonly',
-    'https://www.googleapis.com/auth/admin.directory.rolemanagement.readonly',
-    'https://www.googleapis.com/auth/admin.directory.orgunit.readonly',
-    'https://www.googleapis.com/auth/calendar.readonly',
-    'https://www.googleapis.com/auth/calendar.settings.readonly',
-    'https://www.googleapis.com/auth/calendar.acls.readonly',
-    'https://www.googleapis.com/auth/admin.directory.resource.calendar.readonly',
-    'https://www.googleapis.com/auth/drive.readonly'
+    'https://www.googleapis.com/auth/admin.directory.user',
+    'https://www.googleapis.com/auth/admin.directory.domain',
+    'https://www.googleapis.com/auth/admin.directory.group',
+    'https://www.googleapis.com/auth/admin.directory.rolemanagement',
+    'https://www.googleapis.com/auth/admin.directory.orgunit',
+    'https://www.googleapis.com/auth/calendar',
+    // 'https://www.googleapis.com/auth/calendar.settings.readonly',
+    // 'https://www.googleapis.com/auth/calendar.acls.readonly',
+    'https://www.googleapis.com/auth/admin.directory.resource.calendar',
+    'https://www.googleapis.com/auth/drive'
 ];
 
-//getConfigOrEnvVar();
 const TOKEN_PATH = path.join(process.cwd(), '/config/token_workspace.json');
 const CREDENTIALS_PATH = path.join(process.cwd(), '/config/credentials_workspace.json');
+
 
 export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[]): Promise<googleWorkspaceResources[] | null> {
     let context = getContext();
     let resources = new Array<googleWorkspaceResources>();
-
 
     for (let config of googleWorkspaceConfig??[]) {
         currentConfig = config;
@@ -80,8 +80,10 @@ export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[])
         } as googleWorkspaceResources;
         try {
             let prefix = config.prefix??(googleWorkspaceConfig.indexOf(config).toString());
-            // check if workspacecred is a json or a path to json
+
             const workspaceEnvCredentials = await getConfigOrEnvVar(config, "WORKSPACECRED", prefix);
+            const workspaceToken = await getConfigOrEnvVar(config, "WORKSPACETOKEN", prefix);
+        
             if (workspaceEnvCredentials && workspaceEnvCredentials.includes(".json")) {
                 const workCred = getFile(JSON.parse(JSON.stringify(workspaceEnvCredentials)));
                 writeStringToJsonFile(workCred as string, path.join(process.cwd(), '/config/credentials_workspace.json'));
@@ -91,8 +93,17 @@ export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[])
             }
             if (process.env[googleWorkspaceConfig.indexOf(config)+"-WORKSPACETOKEN"])
                 writeStringToJsonFile(await getConfigOrEnvVar(config, "WORKSPACETOKEN", prefix), "./config/token_workspace.json");
-            const auth = await authorize();
-                const promises = [
+            let auth = await authorizeSP(); // for service account
+            if (workspaceEnvCredentials) {
+                if (workspaceEnvCredentials.includes(".json")) {
+                    const workCred = getFile(JSON.parse(JSON.stringify(workspaceEnvCredentials)));
+                    await writeStringToJsonFile(workCred as string, CREDENTIALS_PATH);
+                } else {
+                    await writeStringToJsonFile(workspaceEnvCredentials, CREDENTIALS_PATH);
+                }
+            }
+
+            const promises = [
                     await listUsers(auth),
                     await listDomains(auth),
                     await listGroups(auth),
@@ -129,6 +140,7 @@ export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[])
     return resources ?? null;
 }
 
+
 async function loadSavedCredentialsIfExist() {
     try {
         const content = await fs.readFile(TOKEN_PATH);
@@ -152,7 +164,30 @@ async function saveCredentials(client: any) {
     await fs.writeFile(TOKEN_PATH, payload);
 }
 
-async function authorize() {
+const authorizeWithToken = async (scopes: string[], user: string)=>{
+   
+    const SRVC_ACCOUNT_CREDS = getFile(CREDENTIALS_PATH);
+  
+    const auth = new google.auth.GoogleAuth({
+      credentials: SRVC_ACCOUNT_CREDS
+    //   scopes: scopes
+    });
+    const client = await auth.getClient();
+    return client;
+};
+
+async function authorizeSP() {
+    const client = new google.auth.JWT({
+        keyFile: CREDENTIALS_PATH,
+        scopes: SCOPES,
+        subject: 'aeepling@innovtech.eu', 
+    });
+
+    return client;
+}
+
+async function authorizeUser() {
+ 
     let client = await loadSavedCredentialsIfExist();
     if (client) {
         return client;
@@ -164,11 +199,15 @@ async function authorize() {
     if (client.credentials) {
         await saveCredentials(client);
     }
+
+
     return client;
 }
 
 async function listUsers(auth: any): Promise<Array<any> | null> {
     if(!currentConfig?.ObjectNameNeed?.includes("user")) return null;
+    await auth.authorize();
+
     let jsonData = [];
 
     const service = google.admin({version: 'directory_v1', auth});
@@ -212,6 +251,8 @@ async function listUsers(auth: any): Promise<Array<any> | null> {
 }
 async function listDomains(auth: any): Promise<Array<any> | null> {
     if(!currentConfig?.ObjectNameNeed?.includes("domain")) return null;
+    await auth.authorize();
+
     let jsonData = [];
 
     const admin = google.admin({version: 'directory_v1', auth});
@@ -246,6 +287,8 @@ async function listDomains(auth: any): Promise<Array<any> | null> {
 
 async function listGroups(auth: any): Promise<Array<any> | null> {
     if(!currentConfig?.ObjectNameNeed?.includes("group")) return null;
+    await auth.authorize();
+
     let jsonData = [];
 
     const admin = google.admin({version: 'directory_v1', auth});
@@ -266,6 +309,8 @@ async function listGroups(auth: any): Promise<Array<any> | null> {
 
 async function listRoles(auth: any): Promise<Array<any> | null> {
     if(!currentConfig?.ObjectNameNeed?.includes("role")) return null;
+    await auth.authorize();
+
     let jsonData = [];
 
     const service = google.admin({version: 'directory_v1', auth});
@@ -283,6 +328,8 @@ async function listRoles(auth: any): Promise<Array<any> | null> {
 
 async function listOrganizationalUnits(auth: any): Promise<Array<any> | null> {
     if(!currentConfig?.ObjectNameNeed?.includes("orgaunit")) return null;
+    await auth.authorize();
+
     let jsonData = [];
 
     try {
@@ -302,6 +349,8 @@ async function listOrganizationalUnits(auth: any): Promise<Array<any> | null> {
 }
 async function listCalendars(auth: any): Promise<Array<any> | null> {
     if(!currentConfig?.ObjectNameNeed?.includes("calendar")) return null;
+    await auth.authorize();
+
     let jsonData = [];
 
     try {
@@ -327,6 +376,8 @@ async function listCalendars(auth: any): Promise<Array<any> | null> {
 
 async function listFiles(auth: any): Promise<Array<any> | null> {
     if(!currentConfig?.ObjectNameNeed?.includes("file")) return null;
+    await auth.authorize();
+
     let jsonData = [];
 
     try {
@@ -349,6 +400,8 @@ async function listFiles(auth: any): Promise<Array<any> | null> {
 
 async function listDrive(auth: any): Promise<Array<any> | null> {
     if(!currentConfig?.ObjectNameNeed?.includes("drive")) return null;
+    await auth.authorize();
+
     let jsonData = [];
 
     try {
