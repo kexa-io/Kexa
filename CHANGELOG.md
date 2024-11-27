@@ -1,3 +1,11 @@
+## [1.17.2](https://github.com/kexa-io/Kexa/compare/v1.17.1...v1.17.2) (2024-11-27)
+
+
+### Bug Fixes
+
+* Workspace Auth with SP ([b0f8fde](https://github.com/kexa-io/Kexa/commit/b0f8fde88fcf56964e5e7b72ccbe7fc1396b57bd))
+* **workspace:** environment var for admin mail ([0c79fb1](https://github.com/kexa-io/Kexa/commit/0c79fb1cac707056f863e78008ef8d6a5093a08f))
+
 ## [1.17.1](https://github.com/kexa-io/Kexa/compare/v1.17.0...v1.17.1) (2024-10-24)
 
 
@@ -3807,5 +3815,3 @@ Kexa/services/addOn/googleWorkspaceGathering.service.ts was changed
 package.json was changed
 
 pnpm-lock.yaml was changed
-
-
