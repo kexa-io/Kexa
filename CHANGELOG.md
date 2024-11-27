@@ -1,3 +1,10 @@
+## [1.17.3](https://github.com/kexa-io/Kexa/compare/v1.17.2...v1.17.3) (2024-11-27)
+
+
+### Bug Fixes
+
+* **workspace:** authorize file auth ([0f753d3](https://github.com/kexa-io/Kexa/commit/0f753d345a39b91ea7972982faede5cb5b066570))
+
 ## [1.17.2](https://github.com/kexa-io/Kexa/compare/v1.17.1...v1.17.2) (2024-11-27)
 
 
