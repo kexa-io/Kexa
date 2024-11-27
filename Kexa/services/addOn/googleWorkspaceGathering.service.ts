@@ -55,15 +55,18 @@ const SCOPES = [
 ];
 
 const TOKEN_PATH = path.join(process.cwd(), '/config/token_workspace.json');
-const CREDENTIALS_PATH = path.join(process.cwd(), '/config/credentials_workspace.json');
-
+let CREDENTIALS_PATH: string;
 
 export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[]): Promise<googleWorkspaceResources[] | null> {
     let context = getContext();
     let resources = new Array<googleWorkspaceResources>();
 
     for (let config of googleWorkspaceConfig??[]) {
+        let toDelete = false;
+
         currentConfig = config;
+        CREDENTIALS_PATH = path.join(process.cwd(), '/config/credentials_workspace.json');
+
         let googleWorkspaceResources = {
             "user": null,
             "domain": null,
@@ -80,24 +83,16 @@ export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[])
             const workspaceAdmin = await getConfigOrEnvVar(config, "WORKSPACEADMIN", prefix);
             const workspaceEnvCredentials = await getConfigOrEnvVar(config, "WORKSPACECRED", prefix);
         
-            if (workspaceEnvCredentials && workspaceEnvCredentials.includes(".json")) {
-                const workCred = getFile(JSON.parse(JSON.stringify(workspaceEnvCredentials)));
-                writeStringToJsonFile(workCred as string, path.join(process.cwd(), '/config/credentials_workspace.json'));
-
-            } else {
-                writeStringToJsonFile(await getConfigOrEnvVar(config, "WORKSPACECRED", prefix), path.join(process.cwd(), '/config/credentials_workspace.json'));
-            }
-            if (process.env[googleWorkspaceConfig.indexOf(config)+"-WORKSPACETOKEN"])
-                writeStringToJsonFile(await getConfigOrEnvVar(config, "WORKSPACETOKEN", prefix), "./config/token_workspace.json");
-            let auth = await authorizeSP(workspaceAdmin);
             if (workspaceEnvCredentials) {
-                if (workspaceEnvCredentials.includes(".json")) {
-                    const workCred = getFile(JSON.parse(JSON.stringify(workspaceEnvCredentials)));
-                    await writeStringToJsonFile(workCred as string, CREDENTIALS_PATH);
-                } else {
+                if (!(workspaceEnvCredentials.includes(".json"))) {
+                    toDelete = true;
                     await writeStringToJsonFile(workspaceEnvCredentials, CREDENTIALS_PATH);
                 }
+                else {
+                    CREDENTIALS_PATH = workspaceEnvCredentials;
+                }
             }
+            let auth = await authorizeSP(workspaceAdmin);
 
             const promises = [
                     await listUsers(auth),
@@ -129,8 +124,10 @@ export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[])
                 logger.error("error in collect googleWorkspace data: ");
                 logger.error(e);
             }
-        deleteFile("./config/credentials_workspace.json");
-        deleteFile("./config/token_workspace.json");
+        if (toDelete) {
+            deleteFile("./config/credentials_workspace.json");
+            deleteFile("./config/token_workspace.json");
+        }
         resources.push(googleWorkspaceResources);
     }
     return resources ?? null;
