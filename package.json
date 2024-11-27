@@ -525,6 +525,7 @@
         "cfonts": "^3.3.0",
         "dotenv": "^16.4.5",
         "extract-zip": "^2.0.1",
+        "google-auth-library": "^9.15.0",
         "googleapis": "^105.0.0",
         "helm-ts": "^0.1.5",
         "js-yaml": "^4.1.0",
