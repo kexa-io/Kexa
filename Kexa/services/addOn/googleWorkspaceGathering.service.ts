@@ -35,16 +35,12 @@ const path = require('path');
 const {authenticate} = require('@google-cloud/local-auth');
 const {google} = require('googleapis');
 let currentConfig: googleWorkspaceConfig;
-import { JWT } from 'google-auth-library';
 
 /////////////////////////////////////////
 //////   LISTING CLOUD RESOURCES    /////
 /////////////////////////////////////////
 
 
-//////////////////////////////////
-// DELETE NOT READ ONLY AND TRY //
-//////////////////////////////////
 const SCOPES = [
     'https://www.googleapis.com/auth/admin.directory.user',
     'https://www.googleapis.com/auth/admin.directory.domain',
@@ -81,8 +77,8 @@ export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[])
         try {
             let prefix = config.prefix??(googleWorkspaceConfig.indexOf(config).toString());
 
+            const workspaceAdmin = await getConfigOrEnvVar(config, "WORKSPACEADMIN", prefix);
             const workspaceEnvCredentials = await getConfigOrEnvVar(config, "WORKSPACECRED", prefix);
-            const workspaceToken = await getConfigOrEnvVar(config, "WORKSPACETOKEN", prefix);
         
             if (workspaceEnvCredentials && workspaceEnvCredentials.includes(".json")) {
                 const workCred = getFile(JSON.parse(JSON.stringify(workspaceEnvCredentials)));
@@ -93,7 +89,7 @@ export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[])
             }
             if (process.env[googleWorkspaceConfig.indexOf(config)+"-WORKSPACETOKEN"])
                 writeStringToJsonFile(await getConfigOrEnvVar(config, "WORKSPACETOKEN", prefix), "./config/token_workspace.json");
-            let auth = await authorizeSP(); // for service account
+            let auth = await authorizeSP(workspaceAdmin);
             if (workspaceEnvCredentials) {
                 if (workspaceEnvCredentials.includes(".json")) {
                     const workCred = getFile(JSON.parse(JSON.stringify(workspaceEnvCredentials)));
@@ -164,23 +160,11 @@ async function saveCredentials(client: any) {
     await fs.writeFile(TOKEN_PATH, payload);
 }
 
-const authorizeWithToken = async (scopes: string[], user: string)=>{
-   
-    const SRVC_ACCOUNT_CREDS = getFile(CREDENTIALS_PATH);
-  
-    const auth = new google.auth.GoogleAuth({
-      credentials: SRVC_ACCOUNT_CREDS
-    //   scopes: scopes
-    });
-    const client = await auth.getClient();
-    return client;
-};
-
-async function authorizeSP() {
+async function authorizeSP(workspaceAdmin: string) {
     const client = new google.auth.JWT({
         keyFile: CREDENTIALS_PATH,
         scopes: SCOPES,
-        subject: 'aeepling@innovtech.eu', 
+        subject: workspaceAdmin
     });
 
     return client;
