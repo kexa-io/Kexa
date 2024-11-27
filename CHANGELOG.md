@@ -3737,3 +3737,27 @@ Kexa/services/api/decryptApi.service.ts was changed
 documentation/Documentation-Kexa.md was changed
 
 
+## 
+
+### Files added: 0
+
+### Files changed: 0
+
+
+## 
+
+### Files added: 0
+
+### Files changed: 5
+
+.gitignore was changed
+
+CHANGELOG.md was changed
+
+Kexa/services/addOn/googleWorkspaceGathering.service.ts was changed
+
+package.json was changed
+
+pnpm-lock.yaml was changed
+
+
