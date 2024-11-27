@@ -36,7 +36,8 @@ Example config for 2 environments:
 There are several ways to identify yourself in an Azure environment. Obviously, you can only scan the environment for which you are at least a "reader":
 
 ```shell
-WORKSPACECRED=''  (content of credentials.json)
+WORKSPACECRED=''  (content of credentials.json or path to credentials.json file)
+WORKSPACEADMIN='' (google workspace admin email)
 ```
 
 ## Additional documentation

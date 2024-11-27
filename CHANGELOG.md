@@ -3809,3 +3809,12 @@ package.json was changed
 pnpm-lock.yaml was changed
 
 
+## 
+
+### Files added: 0
+
+### Files changed: 1
+
+Kexa/services/addOn/googleWorkspaceGathering.service.ts was changed
+
+
