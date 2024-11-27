@@ -1,3 +1,51 @@
+## [1.17.1](https://github.com/kexa-io/Kexa/compare/v1.17.0...v1.17.1) (2024-10-24)
+
+
+### Bug Fixes
+
+* resync versions docker hub ([0b2668d](https://github.com/kexa-io/Kexa/commit/0b2668dd85273f6b8e9f318fc248f2f131b5e86b))
+
+# [1.4.0](https://github.com/kexa-io/Kexa/compare/v1.3.0...v1.4.0) (2024-10-24)
+
+
+### Bug Fixes
+
+* actions/upload-artifact version ([273b58e](https://github.com/kexa-io/Kexa/commit/273b58ecc448d9713d4ac5e122654ee69fffaa62))
+* add display service for fuzzing addon ([bf4a69b](https://github.com/kexa-io/Kexa/commit/bf4a69b47bcfb02933175b2b11ad44fe78df5bdc))
+* added changelog & npm module to semantic ([5ee2b6f](https://github.com/kexa-io/Kexa/commit/5ee2b6fdde56ae663b21a3df3d1bf7ed8fc37189))
+* CI version add-and-commit ([b64bef2](https://github.com/kexa-io/Kexa/commit/b64bef25caae32268c7566c104f774bf99c74d98))
+* condition for no encrypt config ([b57d2b7](https://github.com/kexa-io/Kexa/commit/b57d2b744827e45995ffedb62547b68d14add815))
+* display service 'undefined' properties ([7b66554](https://github.com/kexa-io/Kexa/commit/7b6655468cacdbd877963331ff3bfeeda8c4ff12))
+* escape all in header ([a8df508](https://github.com/kexa-io/Kexa/commit/a8df508d6115ea04a30f28a3e86ed1450338a993))
+* get version of new url (transfer repo) ([d6ebadf](https://github.com/kexa-io/Kexa/commit/d6ebadf7bd818b920c61a3a3e19425b892163771))
+* missing file from last push ([cd753c6](https://github.com/kexa-io/Kexa/commit/cd753c68e52cf897f2106555d98d776f210a288e))
+* new versioning ok ([fb6103f](https://github.com/kexa-io/Kexa/commit/fb6103fb1528b5b1873d0684e675aee45f2bf537))
+* no legacy-peer-dep ([bdd6970](https://github.com/kexa-io/Kexa/commit/bdd6970f5258d7236b653687b32f34c987995fc4))
+* npm pkg name ([b9fd49c](https://github.com/kexa-io/Kexa/commit/b9fd49cc078eb99f84075882a740fa23165591f9))
+* pnpm ([2838a5e](https://github.com/kexa-io/Kexa/commit/2838a5e10205d3add5376ad4d94ba434afa2fcb8))
+* protect inject regex ([1a08021](https://github.com/kexa-io/Kexa/commit/1a0802154b897284657cfd7c86916bd08c1a63db))
+* sast supported language ([93ebbd6](https://github.com/kexa-io/Kexa/commit/93ebbd61d46284a59edb69e39ff56dcb5bf5d56b))
+* trigger versioning ([969dbf9](https://github.com/kexa-io/Kexa/commit/969dbf95424f0df2c3f5f596779ce3b779d0e6b8))
+* triggering ([74698aa](https://github.com/kexa-io/Kexa/commit/74698aa30955dfbf6ba40f4ad9fdf033d374298e))
+* typo cicd ([1af054a](https://github.com/kexa-io/Kexa/commit/1af054a097704ccba8371a0f93a1a01ae64c8c66))
+* typo error in CI/CD ([4a29ce7](https://github.com/kexa-io/Kexa/commit/4a29ce75594b18af8d1ba1fbcc51b90e09e42df6))
+* url for rules gathering ([d8a3fe2](https://github.com/kexa-io/Kexa/commit/d8a3fe2f907ae6acee57ad574be5f63acfa52d59))
+* version cicd trigger ([205065a](https://github.com/kexa-io/Kexa/commit/205065a6fc721731f6a606f97413feb5d49fe791))
+* versioning bypass peer deps ([954efd9](https://github.com/kexa-io/Kexa/commit/954efd98ebeafb91dc0263c478a9e14d448f84fe))
+* wrong concat ([6284d55](https://github.com/kexa-io/Kexa/commit/6284d55c4cd85c9718ebaa8bbfe419d764025634))
+
+
+### Features
+
+* Add configuration, rules & credentials from API ([691f533](https://github.com/kexa-io/Kexa/commit/691f533498e1f7b3442a7af8d2a5ff64528f281d))
+* adding continuous run ([bcff88f](https://github.com/kexa-io/Kexa/commit/bcff88f1288f1ec0caffe31cf05720f6770ea867))
+* Jira alerting & Correcting versioning ([9df9369](https://github.com/kexa-io/Kexa/commit/9df9369478ee02b8d35ed9c49d382c985065c3ff))
+* Jira alerting & Correcting versioning ([34141c7](https://github.com/kexa-io/Kexa/commit/34141c71b31762aa5af0fa08cc90f2f90be8276a))
+* Jira alerting & Correcting versioning ([fb07922](https://github.com/kexa-io/Kexa/commit/fb07922ca183937a70f45f2e2a72bb8e09182c04))
+* Jira alerting & Correcting versioning ([a8fb84b](https://github.com/kexa-io/Kexa/commit/a8fb84b19110d9f53bcc82d9cbcfa4d5363ad74a))
+* Postgres Addon (export & save) ([ca23c01](https://github.com/kexa-io/Kexa/commit/ca23c016cadf9572e796deeb883e287ee54d0fc7))
+* SAST & Versioning ([53f992f](https://github.com/kexa-io/Kexa/commit/53f992f3972e97260d7ef4dd929f6d18df4f2ce4))
+
 # CHANGELOG
 
 ## 1.8.0-SNAPSHOT.51.f9fa354
