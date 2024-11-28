@@ -28,6 +28,7 @@ export interface AzureResources {
     'KexaAzure.namedLocations': Array<any>|null;
     'KexaAzure.groups': Array<any>|null;
     'KexaAzure.servicePrincipals': Array<any>|null;
+    'KexaAzure.applications': Array<any>|null;
     'KexaAzure.domains': Array<any>|null;
 }
 
@@ -59,5 +60,6 @@ export const stringKeys: Array<String> = [
     'KexaAzure.namedLocations',
     'KexaAzure.groups',
     'KexaAzure.servicePrincipals',
+    'KexaAzure.applications',
     'KexaAzure.domains'
 ];
