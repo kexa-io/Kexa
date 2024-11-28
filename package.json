@@ -566,12 +566,12 @@
         "chai": "^4.5.0",
         "mocha": "^10.7.3",
         "nodemon": "^3.1.4",
-        "rimraf": "^5.0.10",
+        "rimraf": "^6.0.1",
         "semantic-release": "^24.1.0",
         "ts-node": "^10.9.2",
         "typescript": "^4.9.5"
     },
-    "version": "1.14.0-SNAPSHOT.281.02ce2c9",
+    "version": "1.17.2",
     "main": "./build/index.js",
     "scripts": {
         "postinstall": "node-config-ts",
