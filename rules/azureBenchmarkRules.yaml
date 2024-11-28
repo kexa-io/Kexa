@@ -689,7 +689,10 @@
       cloudProvider: azure
       objectName: KexaAzure.conditionnalAccess
       conditions:
-        - property: policies
+        - property: .
+          condition: COUNT_SUP_OR_EQUAL
+          value: 0
+        - property: .
           condition: SOME
           value:
             - property: templateId
@@ -705,7 +708,10 @@
       cloudProvider: azure
       objectName: KexaAzure.conditionnalAccess
       conditions:
-        - property: policies
+        - property: .
+          condition: COUNT_SUP_OR_EQUAL
+          value: 0
+        - property: .
           condition: SOME
           value:
             - property: templateId
@@ -713,7 +719,7 @@
               value: 'a3d0a415-b068-4326-9251-f9cdf9feeb64'
             - property: state
               condition: EQUAL
-              value: 'enabled'
+              value: 'enabledForReportingButNotEnforced'
     - name: "azure-global-ensure-az-policy-mfa-azure-service-mgmt"
       description: "this rule is to ensure MFA is enabled for azure service management"
       applied: true
@@ -721,12 +727,19 @@
       cloudProvider: azure
       objectName: KexaAzure.conditionnalAccess
       conditions:
-        - property: templateId
-          condition: EQUAL
-          value: 'd8c51a9a-e6b1-454d-86af-554e7872e2c1'
-        - property: state
-          condition: EQUAL
-          value: 'enabled'
+        - property: .
+          condition: COUNT_SUP_OR_EQUAL
+          value: 0
+        - property: .
+          condition: SOME
+          value:
+            - property: templateId
+              condition: EQUAL
+              value: 'd8c51a9a-e6b1-454d-86af-554e7872e2c1'
+            - property: state
+              condition: EQUAL
+              value: 'enabled'
+
     ##################################
     #    !!! STILL IN TESTING !!!    #
     ##################################
@@ -765,3 +778,107 @@
         - property: appRoles
           condition: COUNT_SUP_OR_EQUAL
           value: 1
+
+
+    ###################################
+    #        SERVICE PRINCIPALS       #
+    ###################################
+    - name: "azure-user-not-logged-in-since-X-days"
+      description: "user sign in 200days"
+      applied: true
+      level: 2
+      cloudProvider: azure
+      objectName: KexaAzure.users
+      conditions:
+        - property: signInActivity.lastSuccessfulSignInDateTime
+          condition: DATE_INF
+          value: 0 0 0 200 0 0 0 # not logged in since 200 days
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+    - name: "azure-service-principal-credentials-expiration-is-set"
+      description: "ensure service principal credentials expiration is set"
+      applied: true
+      level: 2
+      cloudProvider: azure
+      objectName: KexaAzure.servicePrincipals
+      conditions:
+        - property: passwordCredentials
+          condition: ALL
+          value:
+            - property: endDateTime
+              condition: DIFFERENT
+              value: null
+        - property: keyCredentials
+          condition: ALL
+          value:
+            - property: endDateTime
+              condition: DIFFERENT
+              value: null
+
+    - name: "azure-service-principal-credentials-expiration-in-10days"
+      description: "notify of service principal credentials expiration in 10 days"
+      applied: true
+      level: 2
+      cloudProvider: azure
+      objectName: KexaAzure.servicePrincipals
+      conditions:
+        - property: passwordCredentials
+          condition: ALL
+          value:
+            - property: endDateTime
+              condition: DATE_INF
+              value: 0 0 0 10 0 0 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+        - property: keyCredentials
+          condition: ALL
+          value:
+            - property: endDateTime
+              condition: DATE_INF
+              value: 0 0 0 10 0 0 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+
+    ###################################
+    #        REGISTERRED APP       #
+    ###################################
+    - name: "azure-application-credentials-expiration-is-set"
+      description: "ensure application credentials expiration is set"
+      applied: true
+      level: 2
+      cloudProvider: azure
+      objectName: KexaAzure.applications
+      conditions:
+        - property: passwordCredentials
+          condition: ALL
+          value:
+            - property: endDateTime
+              condition: DIFFERENT
+              value: null
+        - property: keyCredentials
+          condition: ALL
+          value:
+            - property: endDateTime
+              condition: DIFFERENT
+              value: null
+
+    - name: "azure-application-credentials-expiration-in-10days"
+      description: "notify of application credentials expiration in 10 days"
+      applied: true
+      level: 2
+      cloudProvider: azure
+      objectName: KexaAzure.applications
+      conditions:
+        - property: passwordCredentials
+          condition: ALL
+          value:
+            - property: endDateTime
+              condition: DATE_INF
+              value: 0 0 0 10 0 0 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+        - property: keyCredentials
+          condition: ALL
+          value:
+            - property: endDateTime
+              condition: DATE_INF
+              value: 0 0 0 10 0 0 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"

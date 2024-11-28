@@ -1731,6 +1731,7 @@
 	*	- KexaAzure.groups
 	*	- KexaAzure.servicePrincipals
 	*	- KexaAzure.domains
+	*	- KexaAzure.applications
 */
 
 
@@ -1843,7 +1844,6 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
 						finalResources[key] = [{}];
 					}
 				  });
-				  
                 resources.push(finalResources);
             }
         } catch(e) {
@@ -2306,6 +2306,23 @@ const customGatherFunctions: FunctionMap = {
 			const graphClient = Client.initWithMiddleware({ authProvider: authProvider });
 			
 			return await servicePrincipalsListing(graphClient);
+		} catch (e) {
+			logger.debug("Error creating Azure client: " + name, e);
+			return [];
+		}
+	},
+
+	'KexaAzure.applications': async (name: string, credential: any, subscriptionId: any) => {
+		logger.debug("Starting " + name + " listing...");
+		try {
+			const authProvider = new TokenCredentialAuthenticationProvider(credential, {
+				scopes: [
+					'https://graph.microsoft.com/.default'
+				],
+			  });
+			const graphClient = Client.initWithMiddleware({ authProvider: authProvider });
+			
+			return await applicationsListing(graphClient);
 		} catch (e) {
 			logger.debug("Error creating Azure client: " + name, e);
 			return [];
@@ -2887,6 +2904,7 @@ async function conditionnalAccessListing(client: Client): Promise<any> {
 	} catch (error) {
 		logger.debug("error:",error);
 	}
+
 	return resultsGraph;
 }
 
@@ -2942,7 +2960,7 @@ async function testGraphListing(client: Client, subscriptionId: any): Promise<an
 	let usersReponse:any = [];
 	try {
 		usersReponse = await client.api("/users")
-		.select("id,userPrincipalName,mail,userType,customSecurityAttributes,lastPasswordChangeDateTime,passwordPolicies,passwordProfile")
+		.select("id,userPrincipalName,mail,userType,customSecurityAttributes,lastPasswordChangeDateTime,passwordPolicies,passwordProfile,signInActivity")
 		.get();
 	} catch (error) {
 	  logger.error("Error retrieving users:", error);
@@ -2978,13 +2996,25 @@ async function testGraphListing(client: Client, subscriptionId: any): Promise<an
 
   async function servicePrincipalsListing(client: Client): Promise<any> {
 	let resultsGraph:any = [];
+
 	try {
 		const tmp = await client.api('/servicePrincipals').get();
 		resultsGraph = tmp.value;
 	} catch (error) {
 		logger.debug("error:",error);
 	}
+	return resultsGraph;
+  }
 
+  async function applicationsListing(client: Client): Promise<any> {
+	let resultsGraph:any = [];
+
+	try {
+		const tmp = await client.api(`/applications`).get();
+		resultsGraph = tmp.value;
+	} catch (error) {
+		logger.debug("error:",error);
+	}
 	return resultsGraph;
   }
 
