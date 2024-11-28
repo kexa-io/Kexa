@@ -1,3 +1,10 @@
+## [1.17.4](https://github.com/kexa-io/Kexa/compare/v1.17.3...v1.17.4) (2024-11-28)
+
+
+### Bug Fixes
+
+* **azure:** Application creds, display and MFA policies ([5cff9d2](https://github.com/kexa-io/Kexa/commit/5cff9d2182b6604211b01a6edf2de358038fb522))
+
 ## [1.17.3](https://github.com/kexa-io/Kexa/compare/v1.17.2...v1.17.3) (2024-11-27)
 
 
@@ -3841,4 +3848,3 @@ CHANGELOG.md was changed
 Kexa/services/addOn/googleWorkspaceGathering.service.ts was changed
 
 documentation/provider/GoogleWorkspace.md was changed
-
