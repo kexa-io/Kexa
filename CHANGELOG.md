@@ -1,3 +1,10 @@
+## [1.17.5](https://github.com/kexa-io/Kexa/compare/v1.17.4...v1.17.5) (2024-11-29)
+
+
+### Bug Fixes
+
+* **azure:** display & teams card correct ([8b7b289](https://github.com/kexa-io/Kexa/commit/8b7b28965931e2e190a4ae7aadbe9a6e815b583e))
+
 ## [1.17.4](https://github.com/kexa-io/Kexa/compare/v1.17.3...v1.17.4) (2024-11-28)
 
 
