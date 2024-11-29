@@ -249,7 +249,7 @@
         "@aws-sdk/client-resiliencehub": "^3.637.0",
         "@aws-sdk/client-resource-groups": "^3.637.0",
         "@aws-sdk/client-resource-groups-tagging-api": "^3.637.0",
-        "@aws-sdk/client-robomaker": "^3.637.0",
+        "@aws-sdk/client-robomaker": "^3.650.0",
         "@aws-sdk/client-rum": "^3.637.0",
         "@aws-sdk/client-s3": "^3.637.0",
         "@aws-sdk/client-sagemaker": "^3.637.0",
