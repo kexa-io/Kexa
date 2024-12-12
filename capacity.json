@@ -7433,7 +7433,8 @@
             "KexaAzure.namedLocations",
             "KexaAzure.groups",
             "KexaAzure.servicePrincipals",
-            "KexaAzure.domains"
+            "KexaAzure.domains",
+            "KexaAzure.applications"
         ],
         "thumbnail": "https://cdn.icon-icons.com/icons2/2699/PNG/512/microsoft_azure_logo_icon_168977.png",
         "documentation": "https://learn.microsoft.com/fr-fr/javascript/api/overview/azure/?view=azure-node-latest",
