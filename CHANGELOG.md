@@ -3835,3 +3835,12 @@ Kexa/services/addOn/googleWorkspaceGathering.service.ts was changed
 
 documentation/provider/GoogleWorkspace.md was changed
 
+## 
+
+### Files added: 0
+
+### Files changed: 1
+
+Kexa/services/addOn/display/azureDisplay.service.ts was changed
+
+

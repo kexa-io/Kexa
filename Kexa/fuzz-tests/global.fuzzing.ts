@@ -169,8 +169,6 @@ function getFuzzConfig(fuzzData: Buffer) : fuzzConfig {
 }
 
 function getFuzzConfigYaml(fuzzData: Buffer) : Object {
-
-    // return as a json object
     return {
             "fuzz": [
                 {
