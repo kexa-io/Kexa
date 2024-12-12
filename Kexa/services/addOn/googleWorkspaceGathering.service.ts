@@ -173,6 +173,7 @@ async function authorizeUser() {
     if (client) {
         return client;
     }
+
     client = await authenticate({
         scopes: SCOPES,
         keyfilePath: CREDENTIALS_PATH,
