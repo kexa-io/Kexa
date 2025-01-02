@@ -3844,3 +3844,26 @@ documentation/provider/GoogleWorkspace.md was changed
 Kexa/services/addOn/display/azureDisplay.service.ts was changed
 
 
+## 
+
+### Files added: 0
+
+### Files changed: 8
+
+CHANGELOG.md was changed
+
+Kexa/fuzz-tests/global.fuzzing.ts was changed
+
+Kexa/services/addOn.service.ts was changed
+
+Kexa/services/addOn/googleWorkspaceGathering.service.ts was changed
+
+Kexa/services/analyse.service.ts was changed
+
+Kexa/services/api/loaderApi.service.ts was changed
+
+capacity.json was changed
+
+package.json was changed
+
+
