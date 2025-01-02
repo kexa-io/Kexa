@@ -7,4 +7,5 @@ export interface SaveConfig {
     origin?: string;
     tags?: {[key: string]: string};
     onlyErrors?: boolean;
+    logs?: boolean;
 }

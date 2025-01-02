@@ -10,7 +10,11 @@ import { Rules } from '../../models/settingFile/rules.models';
 import { CRUDRulesIQuery } from '../../query/CRUD/rules.iquery';
 import { ResultScan } from '../../models/resultScan.models';
 import { CRUDScansIQuery } from '../../query/CRUD/scans.iquery';
+import { CRUDLogsIQuery } from '../../query/CRUD/logs.iquery';
 import { jsonStringify } from '../../helpers/jsonStringify';
+import { createHash } from 'crypto';
+import { Log } from '../../models/settingFile/logs.models';
+
 const logger = getNewLogger("mySQLLogger");
 export class MySQLClass {
     private poolConnection!: Pool;
@@ -155,4 +159,65 @@ export class MySQLClass {
         await conn.execute(CRUDScansIQuery.Create.One, [(resultScan.error.length > 0), resourceId, ruleId, batchId]);
         this.closeConnection(conn);
     }
+
+    public async createLog(message: string, resourceId: number): Promise<void> {
+        const conn = await this.getConnection();
+        const messageHash = createHash('sha256').update(message).digest('hex');
+    
+        const [existingLog] = await conn.query(CRUDLogsIQuery.Read.OneByHash, [messageHash]);
+        if (Array.isArray(existingLog) && existingLog.length > 0) {
+            this.closeConnection(conn);
+            return;
+        }
+    
+        const [existingLogWithMessage] = await conn.query(CRUDLogsIQuery.Read.OneByMessage, [message]);
+        if (Array.isArray(existingLogWithMessage) && existingLogWithMessage.length > 0) {
+            this.closeConnection(conn);
+            return;
+        }
+    
+        await conn.query(CRUDLogsIQuery.Create.One, [
+            resourceId,
+            new Date(),
+            message,
+            messageHash
+        ]);
+        this.closeConnection(conn);
+    }
+
+    
+    public async getLog(id: number): Promise<Log | null> {
+        interface LogRow extends RowDataPacket, Log {}
+        const conn = await this.getConnection();
+        const [rows] = await conn.query<LogRow[]>(CRUDLogsIQuery.Read.One, [id]);
+        this.closeConnection(conn);
+        return rows.length > 0 ? rows[0] : null;
+    }
+    
+    public async getLogs(params: {
+        resourceId?: number,
+        startDate?: Date,
+        endDate?: Date,
+        limit?: number,
+        offset?: number
+    }): Promise<Log[]> {
+        const conn = await this.getConnection();
+        interface LogRow extends RowDataPacket, Log {}
+        const [rows] = await conn.query<LogRow[]>(CRUDLogsIQuery.Read.All, [
+            params.resourceId || null,
+            params.startDate || null,
+            params.endDate || null,
+            params.limit || 100,
+            params.offset || 0
+        ]);
+        this.closeConnection(conn);
+        return rows;
+    }
+    
+    public async deleteLog(id: number): Promise<void> {
+        const conn = await this.getConnection();
+        await conn.query(CRUDLogsIQuery.Delete.One, [id]);
+        this.closeConnection(conn);
+    }
+    
 }
