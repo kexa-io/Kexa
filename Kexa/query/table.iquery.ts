@@ -81,4 +81,18 @@ export const TableIQuery = {
             FOREIGN KEY (resourceId) REFERENCES Resources(ID)
         )
     `,
+    Logs: `
+        CREATE TABLE IF NOT EXISTS Logs (
+            ID INT AUTO_INCREMENT PRIMARY KEY,
+            resourceId INT,
+            timestamp DATETIME NOT NULL,
+            message TEXT NOT NULL,
+            message_hash VARCHAR(64) UNIQUE NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (resourceId) REFERENCES Resources(ID)
+        );
+
+        CREATE INDEX idx_logs_timestamp ON Logs(timestamp);
+        CREATE INDEX idx_logs_resource_id ON Logs(resourceId);
+    `
 }

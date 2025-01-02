@@ -151,9 +151,9 @@
           condition : INF_OR_EQUAL
           value: 2
     # this is an example of pod autoscaler rule
-    - name: "kube-hozizontal-pod-autoscaler-min-max-replicas"
-      description : "this rules is to verify horizontal pod autoscaler min and max replicas"
-      applied: false
+    - name: "kube-check-log-message"
+      description : "this rules is to verify log message"
+      applied: true
       level: 2
       cloudProvider: kubernetes
       objectName : podLogs
@@ -161,16 +161,13 @@
         - property : logs
           condition : ALL
           value: 
-            - property : message
-              condition : DIFFERENT
-              value: 'error'
-            - property : message
-              condition : DIFFERENT
-              value: 'warning'
+            - property : line
+              condition : REGEX
+              value: (?i)^((?!critical).)*$
     # pods consumption
     - name: "kube-pods-memory-limitation"
       description : "this rules is to verify pods memory limitation"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: kubernetes
       objectName : podsConsumption
@@ -181,7 +178,7 @@
     # pods consumption
     - name: "kube-pods-cpu-limitation"
       description : "this rules is to verify cpu usage limitation"
-      applied: true
+      applied: false
       level: 2
       cloudProvider: kubernetes
       objectName : podsConsumption

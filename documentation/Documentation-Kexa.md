@@ -550,6 +550,10 @@ Here's the table of correspondence for each attribute:
 - origin: attribute to specify kexa run location
 - tags: additional information dictionary for tagging the backup
 - onlyErrors: Boolean to record only errors detected or not
+- logs: Boolean to save all logs in the Logs table.
+
+Note that for logs, only logs that outputed an Kexa error will be save in the database.
+To save all logs, use the 'logs' attribute and set it to true, so logs will be saved in the Logs table.
 
 Each addOn brings its own unique set of attributes to the table. We invite you to refer to the documentation of the addOn you wish to use for all the subtleties.
 Here an example of configuration to save in Azure Blob Storage and MongoDB:
