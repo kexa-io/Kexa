@@ -216,7 +216,7 @@
         "@aws-sdk/client-mobile": "^3.616.0",
         "@aws-sdk/client-mq": "^3.637.0",
         "@aws-sdk/client-mturk": "^3.637.0",
-        "@aws-sdk/client-mwaa": "^3.637.0",
+        "@aws-sdk/client-mwaa": "^3.649.0",
         "@aws-sdk/client-neptune": "^3.637.0",
         "@aws-sdk/client-network-firewall": "^3.637.0",
         "@aws-sdk/client-networkmanager": "^3.637.0",
