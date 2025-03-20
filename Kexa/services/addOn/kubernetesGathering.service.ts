@@ -87,6 +87,14 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
         let prefix = config.prefix??(kubernetesConfig.indexOf(config).toString());
         try {
             let pathKubeFile = await getConfigOrEnvVar(config, "KUBECONFIG", prefix);
+            if (pathKubeFile?.includes('$HOME')) {
+                pathKubeFile = pathKubeFile.replace('$HOME', process.env.HOME || '');
+            }
+
+            if (!pathKubeFile || !getFile(pathKubeFile)) {
+                logger.error(`The file at path ${pathKubeFile} does not exist or cannot be read.`);
+                continue;
+            }
 
             if (pathKubeFile?.endsWith(".json"))
                 writeStringToJsonFile(JSON.stringify(getFile(pathKubeFile??"")), "./config/kubernetes.json");
@@ -98,6 +106,11 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
             }
             else
                 logger.error("Unknow credentials type for Kubernetes (path must be a .json or .yaml/.yml)");         
+
+            if (!getFile("./config/kubernetes.json")) {
+                logger.error("The file './config/kubernetes.json' is null or cannot be read.");
+                continue;
+            }
 
             const promises = [
                 kubernetesListing(pathKubeFile),
