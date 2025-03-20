@@ -2,7 +2,7 @@
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag `enhancement`. Don't forget to give the project a star! Thanks again!
 
 <br/>
 
@@ -10,18 +10,27 @@ If you have a suggestion that would make this better, please fork the repo and c
 
 ## Table of Contents
 
-1. [Getting Started](#getting-started)
-2. [Forking Project](#forking-project)
-3. [Code Style](#code-style)
-4. [Adding functionalities](#adding-functionalities)
-5. [Gathering data](#gathering-data)
-6. [Display results](#display-results)
-7. [Save results](#save-results)
-8. [Export gather](#export-gather)
-9. [Core engine](#core-engine)
-10. [Security Guidelines](#security-guidelines)
-11. [Suggesting Enhancements](#suggestingsts)
-12. [Tests](#tests)
+- [Contributing to Kexa](#contributing-to-kexa)
+  - [Table of Contents](#table-of-contents)
+  - [**Getting Started**](#getting-started)
+    - [**Prerequisites**](#prerequisites)
+  - [**Forking project**](#forking-project)
+    - [Code Style](#code-style)
+    - [Branches](#branches)
+  - [**Adding functionalities**](#adding-functionalities)
+    - [**Gathering data**](#gathering-data)
+    - [**Display results**](#display-results)
+    - [**Save results**](#save-results)
+    - [**Export gather**](#export-gather)
+  - [Core engine](#core-engine)
+    - [src/](#src)
+    - [Services (src/services)](#services-srcservices)
+    - [Helpers (src/models)](#helpers-srcmodels)
+    - [Models (src/models)](#models-srcmodels)
+    - [Enumerations (src/enumerations/)](#enumerations-srcenumerations)
+  - [**Security Guidelines**](#security-guidelines)
+  - [Suggesting Enhancements](#suggesting-enhancements)
+  - [**Tests**](#tests)
 
 <br/>
 
@@ -32,7 +41,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 ### **Prerequisites**
 
 - Node.js
-- npm
+- pnpm
 
 <div id="forking-project"></div>
 
@@ -63,11 +72,11 @@ If you have a suggestion that would make this better, please fork the repo and c
 <div id="adding-functionalities"></div>
 
 ## **Adding functionalities**
-	
-Each published addOn is free to set its own mandatory key values for its default.config configuration schema.
-Our minimum values for any addOn are "rules". Keys such as "prefix", "name" and "description" are strongly recommended to maintain ease of use.
 
-We've set up a system to facilitate the development of new features. This system is based on the "addOn" system. To develop a new feature, you don't need to know the whole project. You can develop additional services to collect additional data, among which you can make rules.
+Each published addOn is free to set its own mandatory key values for its `default.config` configuration schema.
+Our minimum values for any addOn are `rules`. Keys such as `prefix`, `name` and `description` are strongly recommended to maintain ease of use.
+
+We've set up a system to facilitate the development of new features. This system is based on the `addOn` system. To develop a new feature, you don't need to know the whole project. You can develop additional services to collect additional data, among which you can make rules.
 
 <br/>
 
@@ -75,8 +84,8 @@ We've set up a system to facilitate the development of new features. This system
 
 ### **Gathering data**
 
-A file to collect data whose path will be "./Kexa/services/addOn". It is named as follows: [extension's name]Gathering.service.ts . The entry point for this file is a function named "collectData", which takes one arguments. The argument is a list containing all the configs for your addOn. This list corresponds to what you can find in the default.json file in the key that has the same name as your addOn. As additional information per item in the list, you have "ObjectNameNeed" which corresponds to the CategoryItem solicity in the rules set up. This helps you, to optimize your addOn and make faster, more targeted collections. The return format of this function is as shown in the following example. exemple :
-	
+A file to collect data whose path will be `./Kexa/services/addOn`. It is named as follows: `[extension's name]Gathering.service.ts`. The entry point for this file is a function named "collectData", which takes one arguments. The argument is a list containing all the configs for your addOn. This list corresponds to what you can find in the default.json file in the key that has the same name as your addOn. As additional information per item in the list, you have "ObjectNameNeed" which corresponds to the CategoryItem solicity in the rules set up. This helps you, to optimize your addOn and make faster, more targeted collections. The return format of this function is as shown in the following example. exemple :
+
 ```json
 [
   {
@@ -103,11 +112,11 @@ A file to collect data whose path will be "./Kexa/services/addOn". It is named a
 ]
 ```
 
-The data format is the following for several reasons. The first list corresponds to the different subscriptions or accounts in a sector. To illustrate, in the case of a cloud provider such as Azure, we might need different identifiers to scan all our accounts, and each account scan result is an item in the list. The dictionaries in the main list correspond to your dictionary that you find relevant to create to identify the different resources of your addOn, in the rules this corresponds to your "objectName". Finally, the lowest-level lists correspond to the list of items collected by your addOn.
+The data format is the following for several reasons. The first list corresponds to the different subscriptions or accounts in a sector. To illustrate, in the case of a cloud provider such as Azure, we might need different identifiers to scan all our accounts, and each account scan result is an item in the list. The dictionaries in the main list correspond to your dictionary that you find relevant to create to identify the different resources of your addOn, in the rules this corresponds to your `objectName`. Finally, the lowest-level lists correspond to the list of items collected by your addOn.
 
-For project maintainability, we require addOn modules to contain a header to quickly identify certain information. It's also important to update this header according to the capabilities of your addOn. In fact, this header serves as a basis for checking the feasibility of certain rules. This header is a comment that must contain at least 2 pieces of information: the name of the module and the "categoryItems" you've included in your module. example for an "azureComplement" module: file name : azureComplementGathering.service.ts
+For project maintainability, we require addOn modules to contain a header to quickly identify certain information. It's also important to update this header according to the capabilities of your addOn. In fact, this header serves as a basis for checking the feasibility of certain rules. This header is a comment that must contain at least 2 pieces of information: the name of the module and the `categoryItems` you've included in your module. example for an `azureComplement` module: file name : `azureComplementGathering.service.ts`.
 
-```ts
+```typescript
 /*
     * Provider : azure
     * Creation date : 2023-08-14
@@ -133,13 +142,13 @@ export async function collectData(myAddonConfig: any[]){
 
 ### **Display results**
 
-The display data file has for name schema : [same extension's name]Display.service.ts, its path will be: "./Kexa/services/addOn/display". This file is used to display precise attributes of an object to quickly identify it in its environment. This return is done by returning a string, with the possibility of putting html in this sting. The function used as an entry point is named "propertyToSend". It takes 3 arguments. The first is a "Rules", and the relative path to the object definition is
+The display data file has for name schema : `[same extension's name]Display.service.ts`, its path will be: `./Kexa/services/addOn/display`. This file is used to display precise attributes of an object to quickly identify it in its environment. This return is done by returning a string, with the possibility of putting html in this sting. The function used as an entry point is named `propertyToSend`. It takes 3 arguments. The first is a `Rules`, and the relative path to the object definition is
 
 ![interface of a Rules](./Kexa/models/settingFile/rules.models.ts)
 
 The second is an "any", corresponding to an object you've collected previously. Finally, the last element is a boolean, which you'll set to false by default. It corresponds to your obligation not to put html in your string. Example display file for an "azureComplement" module: file name : azureComplementGathering.service.ts
 
-```ts
+```typescript
 import { Rules } from "../../../models/settingFile/rules.models";
 
 export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false): string{
@@ -276,8 +285,8 @@ We welcome suggestions for new features or improvements. Please open an issue to
 
 We've set up some tests you can use to validate the integration of your addOn:
 
-```shell
-npm run test
+```bash
+pnpm  test
 ```
 
 Other checks are carried out at various stages to validate the integration of your addOn and the rules you can design. However, these checks are only carried out during software execution. Indeed, due to the nature of certain data collections, it is not possible to carry out "cold" tests without having access to dedicated environments.
