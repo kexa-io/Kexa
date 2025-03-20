@@ -235,7 +235,7 @@
         "@aws-sdk/client-pinpoint-email": "^3.637.0",
         "@aws-sdk/client-pinpoint-sms-voice": "^3.637.0",
         "@aws-sdk/client-polly": "^3.640.0",
-        "@aws-sdk/client-pricing": "^3.637.0",
+        "@aws-sdk/client-pricing": "^3.650.0",
         "@aws-sdk/client-proton": "^3.637.0",
         "@aws-sdk/client-qldb": "^3.637.0",
         "@aws-sdk/client-qldb-session": "^3.637.0",
