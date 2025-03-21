@@ -1,0 +1,207 @@
+- version: 1.0.0
+  date: 07-18-2023
+  alert:
+    fatal:
+      enabled: false
+      type: 
+        - log
+        #- teams
+      to:
+        #- hook
+    error:
+      enabled: false
+      type: 
+        - log
+        #- teams
+      to: 
+        #- hook
+    warning:
+      enabled: false
+      type: 
+        - log
+        #- teams
+      to:
+        #- hook
+    info:
+      enabled: false
+      type: 
+        - log
+        #- teams
+      to: 
+        #- hook
+    global:
+      enabled: true
+      type: 
+        - log
+        #- teams
+      to: 
+        #- hook
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    ####################
+    #       AWS        #
+    ####################
+    - name: "aws-bucket-public-access-block"
+      description: "this rule is to verify if the public access block is enabled on the bucket"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: S3Client.PublicAccessBlock
+      conditions:
+        - operator: AND
+          criteria:
+            - property: PublicAccessBlockConfiguration.BlockPublicAcls
+              condition: EQUAL
+              value: true
+            - property: PublicAccessBlockConfiguration.IgnorePublicAcls
+              condition: EQUAL
+              value: true
+            - property: PublicAccessBlockConfiguration.BlockPublicPolicy
+              condition: EQUAL
+              value: true
+            - property: PublicAccessBlockConfiguration.RestrictPublicBuckets
+              condition: EQUAL
+              value: true
+    - name: "aws-bucket-enryption-enable"
+      description: "this rule is to verify if the bucket is encrypted"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: S3Client.BucketEncryption
+      conditions:
+        - property: ServerSideEncryptionConfiguration.Rules
+          condition: COUNT_SUP_OR_EQUAL
+          value: 1
+    - name: "aws-bucket-encryption-using-kms"
+      description: "this rule is to verify if the bucket is encrypted using KMS"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: S3Client.BucketEncryption
+      conditions:
+        - property: ServerSideEncryptionConfiguration.Rules
+          condition: ALL
+          value:
+            - property: ApplyServerSideEncryptionByDefault
+              condition: OR
+              value:
+                - property: SSEAlgorithm
+                  condition: EQUAL
+                  value: aws:kms:dsse
+                - property: SSEAlgorithm
+                  condition: EQUAL
+                  value: aws:kms
+    - name: "aws-bucket-key-enabled-to-reduce-encryption-cost"
+      description: "this rule is to verify if the bucket key is enabled to reduce encryption cost"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: S3Client.BucketEncryption
+      conditions:
+        - property: ServerSideEncryptionConfiguration.Rules
+          condition: ALL
+          value:
+            - property: ApplyServerSideEncryptionByDefault.BucketKeyEnabled
+              condition: EQUAL
+              value: true
+    ####################
+    #       AZ         #
+    ####################
+    - name: "azure-storage-account-no-public-access"
+      description: "this rule is to check on azure storage account for public access"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: StorageManagementClient.storageAccounts
+      conditions:
+        - property: publicNetworkAccess
+          condition: DIFFERENT
+          value: 'Enabled'
+    - name: "azure-storage-account-encryption-enabled"
+      description: "this rule is to check on azure storage account for encryption enabled"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: StorageManagementClient.storageAccounts
+      conditions:
+        - operator: AND
+          criteria:
+            - property: encryption.services.file.enabled
+              condition: EQUAL
+              value: true
+            - property: encryption.services.blob.enabled
+              condition: EQUAL
+              value: true
+    - name: "azure-storage-account-encryption-using-kms"
+      description: "this rule is to check on azure storage account for encryption using kms"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: StorageManagementClient.storageAccounts
+      conditions:
+        - operator: AND
+          criteria:
+            - property: encryption.services.file.keySource
+              condition: EQUAL
+              value: 'Microsoft.Keyvault'
+            - property: encryption.services.blob.keySource
+              condition: EQUAL
+              value: 'Microsoft.Keyvault'
+    ####################
+    #       GCP        #
+    ####################
+    - name: "gcp-storage-bucket-public-access-block-enforced"
+      description: "this rule is to verify if the public access block is enabled on the bucket"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: bucket
+      conditions:
+        - operator: AND
+          criteria:
+            - property: metadata.iamConfiguration.publicAccessPrevention
+              condition: EQUAL
+              value: 'enforced'
+    - name: "gcp-storage-bucket-public-access-block-enforced-or-inherited"
+      description: "this rule is to verify if the public access block is enabled on the bucket"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: bucket
+      conditions:
+        - operator: OR
+          criteria:
+            - property: metadata.iamConfiguration.publicAccessPrevention
+              condition: EQUAL
+              value: 'enforced'
+            - property: metadata.iamConfiguration.publicAccessPrevention
+              condition: EQUAL
+              value: 'inherited'
+    - name: "gcp-storage-bucket-policy-only-access"
+      description: "this rule is to verify if the bucket is policy only access"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: bucket
+      conditions:
+        - property: metadata.iamConfiguration.bucketPolicyOnly.enabled
+          condition: EQUAL
+          value: true
+    - name: "gcp-storage-bucket-level-access"
+      description: "this rule is to verify if the bucket is policy only"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: bucket
+      conditions:
+        - property: metadata.iamConfiguration.uniformBucketLevelAccess.enabled
+          condition: EQUAL
+          value: true

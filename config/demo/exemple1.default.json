@@ -1,0 +1,21 @@
+{
+    "azure": [
+        {
+            "name": "Project A",
+            "prefix": "PROJECTA-",
+            "description": "First subscription (0) : Project A subscription",
+            "rules": [
+                "Name of my rule"
+            ]
+        },
+        {
+            "name": "Project B",
+            "prefix": "PROJECTB-",
+            "description": "Second subscription (1) : Project B subscription",
+            "rules": [
+                "Name of my rule",
+                "Another rules"
+            ]
+        }
+    ]
+}

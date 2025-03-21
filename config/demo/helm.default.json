@@ -1,0 +1,11 @@
+{
+    "helm": [
+        {
+            "description": "kexa default config",
+            "prefix": "HLM1_",
+            "rules": [
+                "helmSetRules"
+            ]
+        }
+    ]
+}

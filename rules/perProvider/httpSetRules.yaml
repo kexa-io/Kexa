@@ -1,0 +1,115 @@
+- version: 1.0.0
+  date: 07-18-2023
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      to: 
+        #- http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "http-request-date-in-body"
+      description : "request date in body"
+      applied: true
+      level: 0
+      loudMessage: "date is present in body"
+      cloudProvider: http
+      objectName : request
+      conditions:
+        - property : body.date
+          condition : DIFFERENT
+          value : null
+    - name: "http-request-certificate"
+      description : "check if certificate is present"
+      applied: true
+      level: 0
+      cloudProvider: http
+      objectName : request
+      conditions:
+        - property : certificate.issuer.CN
+          condition : EQUAL
+          value : "Kubernetes Ingress Controller Fake Certificate"
+        - property : certificate.valid_to
+          condition : DATE_INF
+          value : 0 0 0 0 0 0
+          date: "MMM DD HH:mm:ss YYYY GMT"
+    - name: "http-request-certificate"
+      description : "request certificate expire in 15 days"
+      applied: true
+      level: 0
+      cloudProvider: http
+      objectName : request
+      conditions:
+        - property : certificate.valid_to
+          condition : DATE_INF
+          value : 0 0 0 -15 0 0
+          date: "MMM DD HH:mm:ss YYYY GMT"
+    - name: "http-request-header"
+      description : "http requested header"
+      applied: true
+      level: 0
+      loud: true
+      loudMessage: "header is present"
+      cloudProvider: http
+      objectName : request
+      conditions:
+        - property : headers.content-type
+          condition : INCLUDE
+          value : "application/json"
+    - name: "http-request-response-code"
+      description : "check for a specific response code"
+      applied: true
+      level: 0
+      cloudProvider: http
+      objectName : request
+      conditions:
+        - operator : OR
+          criteria:
+            - property : code
+              condition : EQUAL
+              value : 200
+            - property : code
+              condition : EQUAL
+              value : 201

@@ -1,0 +1,38 @@
+{
+    "http": [
+        {
+            "name": "EndPoint A",
+            "prefix": "ENDPOINTA-",
+            "description": "First environment (0) : EndPoint A environment",
+            "rules": [
+                "Name of my rule"
+            ],
+            "METHOD": "GET",
+            "URL": "https://www.example.com/endpointA",
+            "header": {
+                "key": "value",
+                "key2": "value2"
+            },
+            "body":{
+                "key": "value",
+                "key2": 2,
+                "key3": true
+            }
+        },
+        {
+            "name": "EndPoint B",
+            "prefix": "ENDPOINTB-",
+            "description": "Second environment (1) : EndPoint B environment",
+            "METHOD": "POST",
+            "URL": [
+                "https://www.example.com/endpointA",
+                "https:/www.example.com/endpointB"
+            ],
+            "rules": [
+                "Name of my rule",
+                "Another rules"
+            ],
+            "body":"zqdqzdqzdqzqggse"
+        }
+    ]
+}

@@ -1,0 +1,255 @@
+- version: 1.0.0
+  date: 08-18-2023
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+      #  - email
+      to: 
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    #############################
+    #     STORAGES  & VOLUMES   #
+    #############################
+    - name: "kube-is-persistent-volume-bounded"
+      description : "this rules is to verify that persistent volume is bounded"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : persistentvolume
+      conditions:
+        - property : status.phase
+          condition : EQUAL
+          value : 'Bound'
+    # LINKEDIN HERE
+    - name: "kube-is-persistent-volume-not-pending"
+      description : "this rules is to verify that persistent volume is not pending"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : persistentvolume
+      conditions:
+        - property : status.phase
+          condition : DIFFERENT
+          value : 'Pending'
+    - name: "kube-pod-stuck-terminating-state"
+      description : "this rules is to check if a pod is stuck in terminating state"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : pods
+      conditions:
+        - property : status.phase
+          condition : DIFFERENT
+          value : Terminating
+   #########################
+    # PODS STATE CONDITIONS #
+    #########################
+    - name: "kube-pod-stuck-pending-state"
+      description : "this rules is to check if a pod is stuck in pending state"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : pods
+      conditions:
+        - property : status.phase
+          condition : DIFFERENT
+          value : Pending
+    - name: "kube-pod-not-ready-to-start-container"
+      description : "this rules is to check if pod is ready to start container"
+      applied: false
+      level: 0
+      cloudProvider: kubernetes
+      objectName : pods
+      conditions:
+        - property : status.formattedConditions.Initialized.PodReadyToStartContainers.status
+          condition : EQUAL
+          value: 'True'
+    - name: "kube-pod-not-initialized"
+      description : "this rules is to check if pod is ready to start container"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : pods
+      conditions:
+        - property : status.formattedConditions.Initialized.status
+          condition : EQUAL
+          value: 'True'
+    - name: "kube-pod-not-ready"
+      description : "this rules is to check if pod is ready"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : pods
+      conditions:
+        - property : status.formattedConditions.Ready.status
+          condition : EQUAL
+          value: 'True'
+    - name: "kube-pod-containers-not-ready"
+      description : "this rules is to check if pod is ready"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : pods
+      conditions:
+        - property : status.formattedConditions.ContainersReady.status
+          condition : EQUAL
+          value: 'True'
+    - name: "kube-pod-not-scheduled"
+      description : "this rules is to check if pod is ready"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : pods
+      conditions:
+        - property : status.formattedConditions.PodScheduled.status
+          condition : EQUAL
+          value: 'True'
+
+
+    #########################
+    # NODE STATE CONDITIONS #
+    #########################
+    - name: "kube-node-network-unavailable"
+      description : "this rules is to check if route controller is ok"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : node
+      conditions:
+        - property: status.formattedConditions.NetworkUnavailable.status
+          condition : EQUAL
+          value: 'False'
+    - name: "kube-node-kernel-deadlock"
+      description : "this rules is to check if kernel is in deadlock state"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : node
+      conditions:
+        - property: status.formattedConditions.KernelDeadlock.status
+          condition : EQUAL
+          value: 'False'
+    - name: "kube-node-frequent-kubelet-restart"
+      description : "this rules is to check if there is frequent kubelet restart"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : node
+      conditions:
+        - property: status.formattedConditions.FrequentKubeletRestart.status
+          condition : EQUAL
+          value: 'False'
+    - name: "kube-node-container-runtime-is-up"
+      description : "this rules is to check if container runtime is up"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : node
+      conditions:
+        - property: status.formattedConditions.ContainerRuntimeProblem.status
+          condition : EQUAL
+          value: 'False'
+    - name: "kube-node-file-system-is-ok"
+      description : "this rules is to check if therre is a file corruption problem"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : node
+      conditions:
+        - property: status.formattedConditions.FilesystemCorruptionProblem.status
+          condition : EQUAL
+          value: 'False'
+    - name: "kube-node-frequent-docker-restart"
+      description : "this rules is to check if there is frequent docker restart"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : node
+      conditions:
+        - property: status.formattedConditions.FrequentDockerRestart.status
+          condition : EQUAL
+          value: 'False'
+    - name: "kube-node-frequent-container-restart"
+      description : "this rules is to check if there is frequent container restart"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : node
+      conditions:
+        - property: status.formattedConditions.FrequentContainerdRestart.status
+          condition : EQUAL
+          value: 'False'
+    - name: "kube-node-memory-pressure"
+      description : "this rules is to check kubelet has sufficient memory available"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : node
+      conditions:
+        - property: status.formattedConditions.MemoryPressure.status
+          condition : EQUAL
+          value: 'False'
+    - name: "kube-node-disk-pressure"
+      description : "this rules is to check if there is disk pressure"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : node
+      conditions:
+        - property: status.formattedConditions.DiskPressure.status
+          condition : EQUAL
+          value: 'False'
+
+    ####################################################################################################
+    # EVENTS RULES   https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/events/event.go  #
+    ####################################################################################################
+
+    - name: "kube-event-image-pull-fail"
+      description : "this rules is to check if there is event of image pull fail"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : event
+      conditions:
+        - property: reason
+          condition : DIFFERENT
+          value: 'FailedToPullImage'

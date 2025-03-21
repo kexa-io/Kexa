@@ -1,0 +1,20 @@
+{
+  "o365": [
+    {
+      "name": "O365 project A",
+      "description": "organization 4urcloud",
+      "prefix": "O365PROJECTA_",
+      "rules": [
+        "BenchmarkOffice365"
+      ]
+    },
+    {
+      "name": "O365 project B",
+      "description": "organization 4urcloud",
+      "prefix": "O365PROJECTB_",
+      "rules": [
+        "BenchmarkOffice365"
+      ]
+    }
+  ]
+}

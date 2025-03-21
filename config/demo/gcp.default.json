@@ -1,0 +1,25 @@
+{
+    "gcp": [
+        {
+            "name": "Project A",
+            "prefix": "PROJECTA-",
+            "description": "First subscription (0) : Project A subscription",
+            "rules": [
+                "Name of my rule"
+            ],
+            "regions": [
+                "us-west1",
+                "europe-west9"
+            ]
+        },
+        {
+            "name": "Project B",
+            "prefix": "PROJECTB-",
+            "description": "Second subscription (1) : Project B subscription",
+            "rules": [
+                "Name of my rule",
+                "Another rules"
+            ]
+        }
+    ]
+}

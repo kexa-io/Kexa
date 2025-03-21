@@ -1,0 +1,84 @@
+- version: 2.0.0
+  date: 10-25-2023
+  alert:
+    fatal:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to: 
+        - email@mail.com
+    error:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to: 
+        - email@mail.com
+    warning:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to:
+        - email@mail.com
+    info:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to: 
+        - email@mail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - email@mail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "http-request-date-in-body"
+      description : "request date in body"
+      applied: true
+      level: 0
+      cloudProvider: http
+      objectName : request
+      conditions:
+        - operator: NAND
+          criteria :
+            - property : body.date
+              condition : EQUAL
+              value : null
+    - name: "http-request-certificate"
+      description : "request certificate"
+      applied: true
+      level: 0
+      cloudProvider: http
+      objectName : request
+      conditions:
+        - property : certificate.issuer.CN
+          condition : EQUAL
+          value : "Kubernetes Ingress Controller Fake Certificate"
+        - property : certificate.valid_to
+          condition : DATE_INF
+          value : 0 0 0 0 0 0
+          date: "MMM DD HH:mm:ss YYYY GMT"
+    - name: "http-request-header"
+      description : "request header content"
+      applied: true
+      level: 0
+      cloudProvider: http
+      objectName : request
+      conditions:
+        - property : headers.content-type
+          condition : INCLUDE
+          value : "application/json"

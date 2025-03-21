@@ -1,0 +1,68 @@
+{
+    "aws": [
+        {
+            "name": "Project A",
+            "prefix": "AWSPROJECTA-",
+            "description": "First subscription (0) : Project A subscription",
+            "rules": [
+                "Name_of_my_rule"
+            ],
+            "regions": [
+                "us-east-1"
+            ]
+        }
+    ],
+    "gcp": [
+        {
+            "name": "Project B",
+            "prefix": "GCPPROJECTB-",
+            "description": "First subscription (0) : Project B subscription",
+            "rules": [
+                "Name of my rule",
+                "Another rules"
+            ],
+            "regions": [
+                "us-east1"
+            ]
+        }
+    ],
+    "save": [
+        {
+            "type": "azureBlobStorage",
+            "name": "ABS4568745",
+            "description": "Azure Blob Storage 4568745 in subscription 123456789",
+            "urlName": "NAMEOFVARTOSTOREMYURL",
+            "blobName": "myblobname",
+            "containerName": "mycontainername",
+            "origin": "Github repo X",
+            "tags": {
+                "env": "dev",
+                "project": "myproject"
+            }
+        },
+        {
+            "type": "mongoDB",
+            "name": "MongoDB 4568745",
+            "description": "MongoDB 4568745 in our main kube",
+            "collectionName": "mongodb://localhost:27017/",
+            "urlName": "mongo",
+            "origin": "Github repo X",
+            "tags": {
+                "env": "dev",
+                "project": "myproject"
+            },
+            "onlyErrors": true
+        }
+    ],
+    "variable": {
+        "Name_of_my_rule": {
+            "var1": "value1",
+            "var2": {
+                "var2.1": "value2.1",
+                "var2.2": "value2.2"
+            },
+            "var3": true,
+            "var4": 42
+        }
+    }
+}

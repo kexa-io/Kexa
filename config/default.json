@@ -1,0 +1,31 @@
+{
+    "azure":[
+        {
+            "description": "organization 4urcloud",
+            "prefix": "O365PROJECT_",
+            "rules": [
+                "AzureComplianceSetRules"
+            ]
+        }
+    ],
+    "gcp":[
+        {
+            "description": "organization 4urcloud",
+            "prefix": "GCPPROJ1_",
+            "rules": [
+                "Economy"
+            ]
+        }
+    ],
+    "variable": {
+        "azure-tags-check": {
+            "var1": "value1",
+            "var2": {
+                "var2.1": "value2.1",
+                "var2.2": "value2.2"
+            },
+            "var3": true,
+            "var4": 42
+        }
+    }
+}

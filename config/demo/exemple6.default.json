@@ -1,0 +1,33 @@
+{
+    "aws": [
+        {
+            "name": "Project A",
+            "prefix": "AWSPROJECTA-",
+            "description": "First subscription (0) : Project A subscription",
+            "rules": [
+                "Name of my rule"
+            ],
+            "regions": [
+                "us-east-1"
+            ]
+        }
+    ],
+    "gcp": [
+        {
+            "name": "Project B",
+            "prefix": "GCPPROJECTB-",
+            "description": "First subscription (0) : Project B subscription",
+            "rules": [
+                "Name of my rule",
+                "Another rules"
+            ],
+            "regions": [
+                "us-east1"
+            ]
+        }
+    ],
+    "general":{
+        "checkInterval": 5,
+        "alertInterval": 3600
+    }
+}

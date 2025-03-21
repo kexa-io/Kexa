@@ -1,0 +1,266 @@
+- version: 1.0.0
+  date: 07-18-2023
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      to: 
+        #- http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "o365-between-two-and-four-global-admins"
+      description: "verify there is at least two and no more than four global administrator"
+      remediation: "Set at least two and a maximum of four Global Administrator users"
+      applied: true
+      level: 2
+      cloudProvider: o365
+      objectName: directory_role
+      conditions:
+        - operator: OR
+          criteria:
+            - property: displayName
+              condition: DIFFERENT
+              value: "Global Administrator"
+            - operator: AND
+              criteria:
+                - property: assignedUsers
+                  condition: COUNT_SUP_OR_EQUAL
+                  value: 2
+                - property: assignedUsers
+                  condition: COUNT_INF_OR_EQUAL
+                  value: 4
+    - name: "o365-is-group-public"
+      description: "verify if public groups exist"
+      remediation: "Set the visibility of this group to 'Private' or 'Hidden membership'"
+      applied: true
+      level: 1
+      cloudProvider: o365
+      objectName: group
+      conditions:
+        - operator: OR
+          criteria:
+            - property: visibility
+              condition: DIFFERENT
+              value: "Public"
+    - name: "o365-is-user-mfa-activated"
+      description: "verify if mfa is activated for users"
+      remediation: "test"
+      applied: true
+      level: 2
+      cloudProvider: o365
+      objectName: auth_methods
+      conditions:
+        - property: methods
+          condition: SOME
+          value:
+            - property: dataType
+              condition: EQUAL
+              value: "#microsoft.graph.microsoftAuthenticatorAuthenticationMethod"
+    - name: "o365-do-timeout-exist"
+      description: "verify if there is active timeout policies"
+      applied: true
+      level: 2
+      cloudProvider: o365
+      objectName: policy
+      conditions:
+        - property: .
+          condition: SOME
+          value:
+            - property: displayName
+              condition: EQUAL
+              value: ActivityBasedTimeoutPolicy
+    - name: "o365-is-idle-timeout-set-3h"
+      description: "verify if idle timeout for inactive user is set to three hours"
+      applied: true
+      level: 2
+      cloudProvider: o365
+      objectName: policy
+      conditions:
+        - operator: XOR
+          criteria:
+          - property: displayName
+            condition: DIFFERENT
+            value: ActivityBasedTimeoutPolicy
+          - property: definition.ActivityBasedTimeoutPolicy.ApplicationPolicies
+            condition: ALL
+            value:
+            - property: WebSessionIdleTimeout
+              condition: EQUAL
+              value: 03:00:00
+    - name: "o365-security-default"
+      description: "verify if security default policy is disabled"
+      applied: true
+      level: 2
+      cloudProvider: o365
+      objectName: policy
+      conditions:
+        - operator: NAND
+          criteria:
+            - property: displayName
+              condition: EQUAL
+              value: 'Security Defaults'
+            - property: isEnabled
+              condition: EQUAL
+              value: true
+    - name: "o365-is-microsoft-auth-enable"
+      description: "verify if microsoft authenticator is enabled"
+      applied: true
+      level: 2
+      cloudProvider: o365
+      objectName: policy
+      conditions:
+        - operator: XOR
+          criteria:
+            - property: displayName
+              condition: DIFFERENT
+              value: 'Authentication Methods Policy'
+            - property: authenticationMethodConfigurations
+              condition: SOME
+              value:
+                - property: id
+                  condition: EQUAL
+                  value: 'MicrosoftAuthenticator'
+                - property: state
+                  condition: EQUAL
+                  value: 'disabled'
+    - name: "o365-default-user-cannot-create-tenant"
+      description: "ensure that default user is not allowed to create tenant"
+      applied: true
+      level: 2
+      cloudProvider: o365
+      objectName: policy
+      conditions:
+        - operator: NAND
+          criteria:
+            - property: displayName
+              condition: EQUAL
+              value: 'Authorization Policy'
+            - property: defaultUserRolePermissions.allowedToCreateTenants
+              condition: EQUAL
+              value: true
+    - name: "o365-conditional-access-block-inheritance-auth"
+      description: "ensure that the authentication inheritance blocking policy is enable and active"
+      applied: true
+      level: 2
+      cloudProvider: o365
+      objectName: conditional_access
+      conditions:
+        - property: .
+          condition: SOME
+          value:
+            - operator: AND
+              criteria:
+                - property: templateId
+                  condition: EQUAL
+                  value: '0b2282f9-2862-4178-88b5-d79340b36cb8'
+                - property: state
+                  condition: EQUAL
+                  value: 'enabled'
+    - name: "o365-conditional-access-users-mfa"
+      description: "ensure that the MFA is enforced for all users"
+      applied: true
+      level: 2
+      cloudProvider: o365
+      objectName: conditional_access
+      conditions:
+        - property: .
+          condition: SOME
+          value:
+            - operator: AND
+              criteria:
+                - property: templateId
+                  condition: EQUAL
+                  value: 'a3d0a415-b068-4326-9251-f9cdf9feeb64'
+                - property: state
+                  condition: EQUAL
+                  value: 'enabled'
+    - name: "o365-conditional-access-admins-mfa"
+      description: "ensure that the MFA is enforced for all users in admins roles"
+      applied: true
+      level: 2
+      cloudProvider: o365
+      objectName: conditional_access
+      conditions:
+        - property: .
+          condition: SOME
+          value:
+            - operator: AND
+              criteria:
+                - property: templateId
+                  condition: EQUAL
+                  value: 'c7503427-338e-4c5e-902d-abe252abfb43'
+                - property: state
+                  condition: EQUAL
+                  value: 'enabled'
+    - name: "o365-sharepoint-external-user-cannot-reshare"
+      description: "ensure that sharepoint external user cannot reshare files"
+      applied: true
+      level: 2
+      cloudProvider: o365
+      objectName: sharepoint_settings
+      conditions:
+        - property: isResharingByExternalUsersEnabled
+          condition: EQUAL
+          value: false
+    - name: "o365-sharepoint-external-sharing-disabled"
+      description: "ensure that sharepoint external sharing is disabled"
+      applied: true
+      level: 2
+      cloudProvider: o365
+      objectName: sharepoint_settings
+      conditions:
+        - property: sharingCapability
+          condition: EQUAL
+          value: 'disabled'
+    - name: "o365-sharepoint-sync-restricted-unmanaged-device"
+      description: "ensure that sync is restricted for unmanaged devices"
+      applied: true
+      level: 2
+      cloudProvider: o365
+      objectName: sharepoint_settings
+      conditions:
+        - property: isUnmanagedSyncAppForTenantRestricted
+          condition: EQUAL
+          value: true

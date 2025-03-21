@@ -1,0 +1,111 @@
+- version: 1.0.0
+  date: 02-23-2024
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      to: 
+        #- http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    # Azure tag/value checking
+    - name: "azure-tags-check"
+      description: "this rule is to check on azure tags for a specific pattern"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: ResourceManagementClient.tagsOperations
+      conditions:
+        - operator: OR
+          criteria:
+            - operator: AND
+              criteria:
+                - property: tagName
+                  condition: EQUAL
+                  value: environment
+                - property: values
+                  condition: ALL
+                  value:
+                    - property: tagValue
+                      condition: REGEX
+                      value : ^(npr|prd)$
+            - operator: AND
+              criteria:
+                - property: tagName
+                  condition: EQUAL
+                  value: billing
+                - property: values
+                  condition: ALL
+                  value:
+                    - property: tagValue
+                      condition: REGEX
+                      value : ^(project1|project2)$
+    # Azure naming convention : resouceType-WorkloadApplication-Environment-Region-Instance
+    # Example : pip-sharepoint-prod-westus-001
+    - name: "azure-resources-name-convention-check"
+      description: "this rule is to check on azure resources name for a Azure naming convention pattern"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: ResourceManagementClient.resources
+      conditions:
+        - property: name
+          condition: REGEX
+          value: '^[a-zA-Z0-9]+-[a-zA-Z0-9]+-[a-zA-Z0-9]+-[a-zA-Z0-9]+-[a-zA-Z0-9]+$'
+    - name: "azure-check-logs"
+      description: "this rule is to check logs"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: OperationalInsightsManagementClient.operationStatuses
+      conditions:
+        - operator: OR
+          criteria:
+            - property: tagName
+              condition: REGEX
+              value: 'ExpirationDate'
+            - property: tagName
+              condition: REGEX
+              value: 'expirationdate'
