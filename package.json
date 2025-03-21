@@ -515,7 +515,7 @@
         "@google-cloud/web-security-scanner": "^3.3.0",
         "@google-cloud/workflows": "^3.4.0",
         "@google-cloud/workstations": "^1.4.0",
-        "@kubernetes/client-node": "^0.18.1",
+        "@kubernetes/client-node": "^1.1.0",
         "@microsoft/microsoft-graph-client": "^3.0.7",
         "@microsoft/teams-js": "^2.27.0",
         "@octokit/core": "^4.2.4",

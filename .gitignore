@@ -1,3 +1,5 @@
+**/kubernetes.json
+
 node_modules
 .env
 build/*
