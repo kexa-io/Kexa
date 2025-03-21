@@ -533,3 +533,4 @@ bun add semantic-release
 bun add ts-node
 bun add typescript
 bun add pino
+bun add pino-pretty

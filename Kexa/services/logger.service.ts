@@ -20,7 +20,13 @@ export function getNewLogger(name: string) {
             debug_mode = Number(DebugEnum[debug_var]);
     }
     return pino({
-        level: 'info'
+        level: 'info',
+        transport: {
+            target: 'pino-pretty',
+            options: {
+                colorize: true
+            }
+        }
     });
 }
 

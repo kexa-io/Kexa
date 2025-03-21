@@ -6,6 +6,9 @@
   "devDependencies": {
     "@types/bun": "latest"
   },
+  "scripts": {
+    "start": "bun Kexa/index.js"
+  },
   "peerDependencies": {
     "typescript": "^5.8.2"
   },
@@ -226,7 +229,7 @@
     "@aws-sdk/client-robomaker": "^3.772.0",
     "@aws-sdk/client-rum": "^3.772.0",
     "@aws-sdk/client-s3": "^3.772.0",
-    "@aws-sdk/client-sagemaker": "^3.772.0",
+    "@aws-sdk/client-sagemaker": "^3.773.0",
     "@aws-sdk/client-sagemaker-edge": "^3.772.0",
     "@aws-sdk/client-sagemaker-featurestore-runtime": "^3.772.0",
     "@aws-sdk/client-sagemaker-runtime": "^3.772.0",
@@ -524,6 +527,7 @@
     "octokit": "^4.1.2",
     "pg": "^8.14.1",
     "pino": "^9.6.0",
+    "pino-pretty": "^13.0.0",
     "request": "^2.88.2",
     "rimraf": "^6.0.1",
     "semantic-release": "^24.2.3",
