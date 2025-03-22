@@ -35,7 +35,13 @@ export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResour
     logger.info("Loading addOns");
     context?.log("Loading addOns");
 
-    let addOnNeed = require('../../config/addOnNeed.json');
+    let addOnNeed;
+    try {
+        addOnNeed = require('../../config/addOnNeed.json');
+    } catch (error) {
+        logger.info("Failed to load addOnNeed configuration", error);
+        throw new Error("addOnNeed configuration could not be loaded");
+    }
 
     const files = fs.readdirSync(serviceAddOnPath);
     let results: any[] = [];

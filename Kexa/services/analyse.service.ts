@@ -61,7 +61,12 @@ export async function gatheringRules(rulesDirectory:string, getAll:boolean=false
 
     if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
         let rules =  await getSettingsFileFromApi(config);
-        headers = require('../../config/headers.json');
+        try {
+            headers = require('../../config/headers.json');
+        } catch (error) {
+            logger.info("Failed to load headers configuration", error);
+            throw new Error("Headers configuration could not be loaded");
+        }
         let listNeedRules = await getListNeedRules();
         extractAddOnNeed(rules);
         logger.debug("rules list:");
@@ -79,7 +84,12 @@ export async function gatheringRules(rulesDirectory:string, getAll:boolean=false
     if(paths.length === 0) paths = fs.readdirSync(secondDefaultRulesDirectory, { withFileTypes: true});
     logger.debug("listing rules files.");
     let settingFileList = new Array<SettingFile>;
-    headers = require('../../config/headers.json');
+    try {
+        headers = require('../../config/headers.json');
+    } catch (error) {
+        logger.info("Failed to load headers configuration", error);
+        throw new Error("Headers configuration could not be loaded");
+    }
     let listNeedRules = await getListNeedRules();
     for(const p of paths) {
         logger.debug("getting "+rulesDirectory+"/"+p.name+" rules.");
