@@ -6,7 +6,7 @@ export async function displayVersionAndLatest(logger: any): Promise<void>{
     let config = {
         method: 'get',
         maxBodyLength: Infinity,
-        url: 'https://api.github.com/repos/4urcloud/Kexa/releases',
+        url: 'https://api.github.com/repos/kexa-io/Kexa/releases',
         headers: { }
     };
     let latestsVersionInGithub = await axios.request(config);
