@@ -1,0 +1,126 @@
+- version: 1.0.0
+  date: 07-18-2023
+  alert:
+    fatal:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    error:
+      enabled: false
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      to: 
+        #- http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "azure-nsg-valid-subnet"
+      description : "check if NSG have a valid subnet"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName : ContainerServiceClient.managedClusters
+      conditions:
+        - property: agentPoolProfiles
+          condition: COUNT
+          value: 2
+    - name: "git-is-repository-private"
+      description: "this rules is to check if git repo is private"
+      applied: true
+      level: 0
+      cloudProvider: github
+      objectName: repositories
+      conditions:
+        - property: private
+          condition: EQUAL
+          value: true
+    - name: "git-is-branch-protected"
+      description: "this rules is to check if git branch is protected"
+      applied: true
+      level: 0
+      cloudProvider: github
+      objectName: branches
+      conditions:
+        - operator: NAND
+          criteria:
+            - property : protected
+              condition : DIFFERENT
+              value : true
+            - property : name
+              condition : EQUAL
+              value : master
+    - name: "ec2-security-groups-source-defined"
+      description: "this rule is to check if a ec2 SG has a defined source (not 0.0.0.0)"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.SecurityGroups
+      conditions:
+        - property: IpPermissions
+          condition: ALL
+          value:
+            - property: IpRanges
+              condition: ALL
+              value:
+                - property: CidrIp
+                  condition: DIFFERENT
+                  value: "0.0.0.0/0"
+    - name: "aws-ec2-public-ip-address"
+      description : "this rule is to check if an ec2 ip address is public"
+      applied: true
+      level: 2
+      cloudProvider: aws
+      objectName: EC2Client.Instances
+      conditions:
+        - property: PublicIpAddress
+          condition: EQUAL
+          value: null
+    - name: "o365-is-mfa-activated-on-user"
+      description: "check if at least 2 auth factors are active"
+      applied: true
+      level: 2
+      cloudProvider: o365
+      objectName: auth_methods
+      conditions:
+        - property: methods
+          condition: ONE
+          value:
+            - property: dataType
+              condition: EQUAL
+              value: "#microsoft.graph.microsoftAuthenticatorAuthenticationMethod"

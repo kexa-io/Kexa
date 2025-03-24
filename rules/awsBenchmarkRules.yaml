@@ -1,0 +1,357 @@
+- version: 1.0.0
+  date: 07-18-2023
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      to: 
+        #- http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    # ok
+    - name: "aws-acceskey-rotate-time-limit"
+      description: "this rule is to check if an access key as exceeded the rotate time limit"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.AccessKeys
+      conditions:
+        - property: CreateDate
+          condition: DATE_INF
+          value: 0 0 0 0 0 1 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    # ok
+    - name: "aws-iam-password-length"
+      description: "this rule is to check if password policy require a 14 character password length"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.AccountPasswordPolicy
+      conditions:
+        - property: MinimumPasswordLength
+          condition: SUP_OR_EQUAL
+          value: 14
+    # ok
+    - name: "aws-iam-password-reuse-prevention"
+      description: "this rule is to check if password policy remember at least the last 24 used passwords"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.AccountPasswordPolicy
+      conditions:
+        - property: PasswordReusePrevention
+          condition: SUP_OR_EQUAL
+          value: 24
+    # ok
+    - name: "aws-iam-password-max-age-policy"
+      description: "this rule is to check if maximum age policy is set for the users passwords"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.AccountPasswordPolicy
+      conditions:
+        - property: MaxPasswordAge
+          condition: INF_OR_EQUAL
+          value: 90
+    # ok
+    - name: "aws-iam-accesskey-last-used"
+      description: "this rule is to check for acceskeys unused for 1 month"
+      applied: true
+      level: 0
+      cloudProvider: aws
+      objectName: IAMClient.AccessKeyLastUsed
+      conditions:
+        - property: AccessKeyLastUsed.LastUsedDate
+          condition: DATE_INF
+          value: 0 0 0 0 0 1 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    # ok
+    - name: "aws-verify-no-user-attached-policy"
+      description: "Policies should be attached to group and user to a group."
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.AttachedUserPolicies
+      conditions:
+        - property: AttachedPolicies
+          condition: COUNT_SUP
+          value: 0
+    # ok
+    - name: "aws-iam-virtuel-mfa-enable-root-account"
+      description: "this rule is to check if virtual mfa is enable for root account"
+      applied: true
+      level: 0
+      cloudProvider: aws
+      objectName: IAMClient.VirtualMFADevices
+      conditions:
+        - operator: NAND
+          criteria:
+            - property: SerialNumber
+              condition: REGEX
+              value: '\broot-account-mfa-device\b'
+            - property: EnableDate
+              condition: EQUAL
+              value: NULL
+    # ok
+    - name: "aws-iam-hardware-mfa-enable-root-account"
+      description: "this rule is to check if hardware mfa is enable for root account"
+      applied: true
+      level: 0
+      cloudProvider: aws
+      objectName: IAMClient.MFADevices
+      conditions:
+        - operator: XNOR
+          criteria:
+            - property: SerialNumber
+              condition: REGEX
+              value: '\broot-account-mfa-device\b'
+            - property: EnableDate
+              condition: DIFFERENT
+              value: NULL
+    # ok
+    - name: "aws-iam-mfa-not-used-password-2-month"
+      description: "this rule is to check if a mfa password has not been used since 2 month"
+      applied: true
+      level: 0
+      cloudProvider: aws
+      objectName: IAMClient.VirtualMFADevices
+      conditions:
+        - property: User.PasswordLastUsed
+          condition: DATE_INF
+          value: 0 0 0 0 0 2 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    # ok
+    - name: "aws-acl-no-unrestricted-access"
+      description: "this rule is checking that no ACL allow unrestricted access to 0.0.0.0/0"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.NetworkAcls
+      conditions:
+        - property: Entries
+          condition: ALL
+          value:
+            - property: CidrBlock
+              condition: DIFFERENT
+              value: '0.0.0.0/0'
+            - property: RuleAction
+              condition: DIFFERENT
+              value: 'allow'
+            - property: Protocol
+              condition: REGEX
+              value: '\b(?!-1\b|7\b|14\b)\d+\b'
+    # ok
+    - name: "aws-sg-no-unrestricted-access-0.0.0.0/0"
+      description: "this rule is checking that no SG allow unrestricted access to 0.0.0.0/0"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.SecurityGroups
+      conditions:
+        - property: IpPermissions
+          condition: NOT_ANY
+          value:
+            - property: IpProtocol
+              condition: REGEX
+              value: '\b(?:-1|7|14|tcp|udp)\b'
+            - property: IpRanges
+              condition: SOME
+              value:
+                - property: CidrIp
+                  condition: EQUAL
+                  value: '0.0.0.0/0'
+    # ok
+    - name: "aws-sg-no-unrestricted-access-::/0"
+      description: "this rule is checking that no SG allow unrestricted access to ::/0"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.SecurityGroups
+      conditions:
+        - property: IpPermissions
+          condition: NOT_ANY
+          value:
+            - property: IpProtocol
+              condition: REGEX
+              value: '\b(?:-1|7|14|tcp|udp)\b'
+            - property: IpRanges
+              condition: SOME
+              value:
+                - property: CidrIp
+                  condition: EQUAL
+                  value: '::/0'
+    # ok
+    - name: "aws-default-sg-restrict-all-traffic"
+      description: "this rule is to check that default SG have no inbound or outbound rules"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.SecurityGroups
+      conditions:
+        - operator: OR
+          criteria: 
+            - property: GroupName
+              condition: DIFFERENT
+              value: 'default'
+            - operator: AND
+              criteria:
+                - property: IpPermissions
+                  condition: ALL
+                  value:
+                    - property: IpRanges
+                      condition: COUNT_INF_OR_EQUAL
+                      value: 0
+                - property: IpPermissionsEgress
+                  condition: ALL
+                  value:
+                    - property: IpRanges
+                      condition: COUNT_INF_OR_EQUAL
+                      value: 0
+    # ok
+    - name: "aws-iam-ensure-manage-incident-policy-attached"
+      description: "this rule is to encure AWSSupportAccess policy is attached"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.Policies
+      conditions:
+        - operator: NAND
+          criteria:
+            - property: PolicyName
+              condition: EQUAL
+              value: 'AWSSupportAccess'
+            - property: AttachmentCount
+              condition: COUNT_INF_OR_EQUAL
+              value: 0
+    # ok
+    - name: "aws-iam-ensure-cloudshell-fullaccess-policy-not-attached"
+      description: "this rule is to encure AWSCloudShellFullAccess policy is not attached"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.Policies
+      conditions:
+        - operator: NAND
+          criteria:
+            - property: PolicyName
+              condition: EQUAL
+              value: 'AWSCloudShellFullAccess'
+            - property: AttachmentCount
+              condition: COUNT_SUP
+              value: 0
+    # ok
+    - name: "aws-ec2-instances-not-older-than-180-days"
+      description: "ensure no ec2 instances is older than 180 days (6 month)"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.Instances
+      conditions:
+        - property: Instances
+          condition: ALL
+          value:
+            - property: LaunchTime
+              condition: DATE_INF
+              value: 0 0 0 0 0 6 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    # ok
+    - name: "aws-ec2-instances-monitoring-enable"
+      description: "ensure ec2 instances has monitoring enabled"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.Instances
+      conditions:
+        - property: Instances
+          condition: ALL
+          value:
+            - property: Monitoring.State
+              condition: DIFFERENT
+              value: 'disabled'
+    # ok
+    - name: "aws-ec2-instances-no-default-SG"
+      description: "ensure ec2 instances are not linked to the default ec2 SG"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.Instances
+      conditions:
+        - property: Instances
+          condition: ALL
+          value:
+            - property: SecurityGroups
+              condition: ALL
+              value:
+                - property: GroupName
+                  condition: DIFFERENT
+                  value: 'default'
+    # ok
+    - name: "aws-ec2-instances-IMDSv2-enforced"
+      description: "ensure IMDSv2 is enforced on all ec2 instances"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.Instances
+      conditions:
+        - property: Instances
+          condition: ALL
+          value:
+            - property: MetadataOptions.HttpTokens
+              condition: EQUAL
+              value: 'required'
+            - property: MetadataOptions.HttpEndpoint
+              condition: EQUAL
+              value: 'enabled'
+    # ok
+    - name: "aws-ec2-check-unused-network-interfaces"
+      description: "ensure there is no unused ec2 network interfaces"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.NetworkInterfaces
+      conditions:
+        - property: Status
+          condition: DIFFERENT
+          value: 'available'

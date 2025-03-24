@@ -1,0 +1,36 @@
+{
+    "addOn": [
+        "azure",
+        "aws",
+        "gcp",
+        "o365"
+    ],
+    "objectNameNeed": {
+        "Economy": {
+            "azure": [
+                "ComputeManagementClient.virtualMachines",
+                "ComputeManagementClient.disks",
+                "ContainerServiceClient.managedClusters",
+                "NetworkManagementClient.networkSecurityGroups",
+                "NetworkManagementClient.virtualNetworks",
+                "KexaAzure.vm"
+            ],
+            "aws": [
+                "EC2Client.Volumes"
+            ],
+            "gcp": [
+                "disk"
+            ],
+            "o365": [
+                "sku"
+            ]
+        },
+        "AzureComplianceSetRules": {
+            "azure": [
+                "ResourceManagementClient.tagsOperations",
+                "ResourceManagementClient.resources",
+                "OperationalInsightsManagementClient.operationStatuses"
+            ]
+        }
+    }
+}
