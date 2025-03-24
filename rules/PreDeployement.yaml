@@ -1,0 +1,97 @@
+- version: 1.0.0
+  date: 10-26-2023
+  alert:
+    fatal:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to: 
+        - email@mail.com
+    error:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to: 
+        - email@mail.com
+    warning:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to:
+        - email@mail.com
+    info:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to: 
+        - email@mail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - email@mail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "git-is-repository-private"
+      description: "this rules is to check if my git repo is private"
+      applied: true
+      level: 1
+      cloudProvider: github
+      objectName: repositories
+      conditions:
+        - operator: NAND
+          criteria:
+            - property: private
+              condition: EQUAL
+              value: false
+            - property: full_name
+              condition: EQUAL
+              #change the name with your repo name
+              value: 4urcloud/Kexa_website
+    - name: "git-is-branch-protected"
+      description: "this rules is to check if my git branch is protected"
+      applied: true
+      level: 1
+      cloudProvider: github
+      objectName: branches
+      conditions:
+        - operator: OR
+          criteria:
+            - property: repo
+              condition: DIFFERENT
+              #change the name with your repo name
+              value: Kexa_website
+            - property : name
+              condition : DIFFERENT
+              value : main
+            - property : protected
+              condition : EQUAL
+              value : true
+    - name: "kub-alert-if-namespace-not-exist"
+      description : "this rules is to check if namespace exist and notifiable if not"
+      applied: true
+      level: 0
+      cloudProvider: kubernetes
+      objectName : namespaces
+      conditions:
+        - property : .
+          condition: SOME
+          value:
+            - property : metadata.name
+              condition : EQUAL
+              #change the name with your namespace
+              value : kexawebsitepublic

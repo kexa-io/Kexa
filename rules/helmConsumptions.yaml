@@ -1,0 +1,78 @@
+- version: 1.0.0
+  date: 08-02-2024
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        - teams
+      to:
+        - 'XXXXXXXXXXXXXXXXXx'
+    error:
+      enabled: true
+      type: 
+        - log
+        #- teams
+      to: 
+        - 'XXXXXXXXXXXXXXXXXx'
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- teams
+      to:
+        - 'XXXXXXXXXXXXXXXXXx'
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - 'XXXXXXXXXXXXXXXXXx'
+    global:
+      enabled: true
+      type: 
+        - log
+        - teams
+      to: 
+        - 'XXXXXXXXXXXXXXXXXx'
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "helm-chart-auto-scaling-target-cpu"
+      description : "this rule is to verify if autoscaling target cpu  is not greater than 50"
+      applied: true
+      level: 0
+      cloudProvider: helm
+      objectName : chart
+      conditions:
+        - operator: NAND
+          criteria:
+            - property : details.computedValues.autoscaling
+              condition : DIFFERENT
+              value : null
+            - property : details.computedValues.autoscaling.targetCPU
+              condition : SUP
+              value : 50
+    - name: "helm-chart-auto-scaling-target-memory"
+      description : "this rule is to verify if autoscaling target memory is not greater than 50"
+      applied: true
+      level: 0
+      cloudProvider: helm
+      objectName : chart
+      conditions:
+        - operator: NAND
+          criteria:
+            - property : details.computedValues.autoscaling
+              condition : DIFFERENT
+              value : null
+            - property : details.computedValues.autoscaling.targetMemory
+              condition : SUP
+              value : 50

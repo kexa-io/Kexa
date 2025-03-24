@@ -1,0 +1,102 @@
+- version: 1.0.0
+  date: 07-18-2023
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      to: 
+        #- http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "workspace-user-mfa-activated"
+      description: "verify if mfa is activated on user account"
+      applied: true
+      level: 2
+      cloudProvider: googleWorkspace
+      objectName: user
+      conditions:
+        - property: isEnrolledIn2Sv
+          condition: EQUAL
+          value: true
+    - name: "workspace-user-mfa-enforced"
+      description: "verify if mfa is enforced for user account"
+      applied: true
+      level: 2
+      cloudProvider: googleWorkspace
+      objectName: user
+      conditions:
+        - property: isEnforcedIn2Sv
+          condition: EQUAL
+          value: true
+    - name: "workspace-user-change-passwd-next-login"
+      description: "verify if there is at least one super admin for OU"
+      applied: true
+      level: 2
+      cloudProvider: googleWorkspace
+      objectName: user
+      conditions:
+        - property: changePasswordAtNextLogin
+          condition: EQUAL
+          value: true
+    - name: "workspace-at-least-one-super-admin"
+      description: "verify if there is at least one super admin for OU"
+      applied: true
+      level: 2
+      cloudProvider: googleWorkspace
+      objectName: user
+      conditions:
+        - property: totalSuperAdmin
+          condition: SUP_OR_EQUAL
+          value: 1
+    - name: "workspace-no-more-than-four-super-admin"
+      description: "verify if there is no more than four super admin for OU"
+      applied: true
+      level: 2
+      cloudProvider: googleWorkspace
+      objectName: user
+      conditions:
+        - property: totalSuperAdmin
+          condition: INF_OR_EQUAL
+          value: 4
