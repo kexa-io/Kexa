@@ -1,0 +1,79 @@
+- version: 1.0.0
+  date: 08-02-2024
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        - teams
+      to:
+        - 'XXXXXXXXXXXXXXXXXx'
+    error:
+      enabled: true
+      type: 
+        - log
+        #- teams
+      to: 
+        - 'XXXXXXXXXXXXXXXXXx'
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- teams
+      to:
+        - 'XXXXXXXXXXXXXXXXXx'
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - 'XXXXXXXXXXXXXXXXXx'
+    global:
+      enabled: true
+      type: 
+        - log
+        - teams
+      to: 
+        - 'XXXXXXXXXXXXXXXXXx'
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "helm-chart-deployed"
+      description : "this rule is to verify if the helm chart is deployed"
+      applied: true
+      level: 1
+      cloudProvider: helm
+      objectName : chart
+      conditions:
+        - property : details.status
+          condition : EQUAL
+          value : deployed
+    - name: "helm-chart-last-deployed-X-month"
+      description : "this rule is to verify if the helm chart has been deployed in the last X month"
+      applied: true
+      level: 1
+      cloudProvider: helm
+      objectName : chart
+      conditions:
+        - property : details.lastDeployed
+          condition: DATE_INF
+          value: 0 0 0 0 0 3 0  # last 3 months
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    - name: "helm-chart-max-revisions"
+      description : "this rule is to verify if the helm chart has less than 10 revisions"
+      applied: true
+      level: 0
+      cloudProvider: helm
+      objectName : chart
+      conditions:
+        - property : details.revisions
+          condition : INF_OR_EQUAL
+          value : 10

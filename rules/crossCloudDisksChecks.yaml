@@ -1,0 +1,125 @@
+- version: 1.0.0
+  date: 07-18-2023
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- teams
+      to:
+        #- 'https://XXXXXXXXXXXXXXXXXXXXXXXXxx'
+    error:
+      enabled: true
+      type: 
+        - log
+        #- teams
+      to:
+        #- 'https://XXXXXXXXXXXXXXXXXXXXXXXXxx'
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- teams
+      to:
+        #- 'https://XXXXXXXXXXXXXXXXXXXXXXXXxx'
+    info:
+      enabled: true
+      type: 
+        - log
+        #- teams
+      to:
+        #- 'https://XXXXXXXXXXXXXXXXXXXXXXXXxx'
+    global:
+      enabled: true
+      type: 
+        - log
+        #- teams
+      to: 
+        #- 'https://XXXXXXXXXXXXXXXXXXXXXXXXxx'
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "gcp-disk-unattached"
+      description: "this rule is to check if a disk has no users (attached to no instance)"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: disk
+      conditions:
+        - property: users
+          condition: COUNT_SUP
+          value: 0
+    - name: "aws-ec2-volume-unattached"
+      description: "this rule is to check if an ec2 volume is unattached"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.Volumes
+      conditions:
+        - property: Attachments
+          condition: COUNT_SUP
+          value: 0
+    - name: "azure-disk-unattached"
+      description : "this rules is to check if disk is orphan (unattached)"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName : ComputeManagementClient.disks
+      conditions:
+        - property : diskState
+          condition : DIFFERENT
+          value : Unattached
+    - name: "gcp-disk-check-create-date-2-month-expiration"
+      description: "this rule is to check for a persistent disk create date is inferior than 2 months ago"
+      applied: false
+      level: 1
+      cloudProvider: gcp
+      objectName: disk
+      conditions:
+        - property: creationTimestamp
+          condition: DATE_INF
+          value: 0 0 0 2 0 0 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    - name: "ec2-volume-check-create-less-2-month-expiration"
+      description: "this rule is to check for a ec2 volume create date inferior than 2 months"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.Volumes
+      conditions:
+        - property: CreateTime
+          condition: DATE_INF
+          value: 0 0 0 0 0 2 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    - name: "azure-disk-check-create-less-2-month-expiration"
+      description : "this rules is to check if disk has been created less than 2 months ago"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName : ComputeManagementClient.disks
+      conditions:
+        - property: timeCreated
+          condition: DATE_INF
+          value: 0 0 0 0 0 2 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    - name: "gcp-disk-unattached-since-X-days"
+      description: "this rule is to check if a disk has no users since X days"
+      applied: true
+      level: 1 # alert level, here it is a warning
+      cloudProvider: gcp
+      objectName: disk
+      conditions:
+        - property: users
+          condition: COUNT_SUP
+          value: 0
+        - property: lastAttachTimestamp
+          condition: DATE_INF
+          value: 0 0 0 0 15 0 0 # not attached since 15min
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"

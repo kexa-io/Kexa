@@ -1,0 +1,148 @@
+- version: 1.0.0
+  date: 08-18-2023
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+      #  - email
+      to: 
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    #############################
+    #          PODS             #
+    #############################
+     - name: "kube-pods-cpu-limit-request-set"
+      description : "this rules is to verify cpu limit and request are set"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : podsConsumption
+      conditions:
+        - property : MemoryLimitTotal
+          condition : DIFFERENT
+          value: 0
+        - property : MemoryRequestTotal
+          condition : DIFFERENT
+          value: 0
+    - name: "kube-pods-memory-limit-request-set"
+      description : "this rules is to verify memory limit and request are set"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : podsConsumption
+      conditions:
+        - property : CPULimitTotal
+          condition : DIFFERENT
+          value: 0
+        - property : CPURequestTotal
+          condition : DIFFERENT
+          value: 0
+    # this is an example of pod autoscaler rule
+    - name: "kube-hozizontal-pod-autoscaler-min-max-replicas"
+      description : "this rules is to verify horizontal pod autoscaler min and max replicas"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : hpa
+      conditions:
+        - property : spec.minReplicas
+          condition : SUP_OR_EQUAL
+          value: 1
+        - property : spec.maxReplicas
+          condition : INF_OR_EQUAL
+          value: 2
+
+    #############################
+    #     STORAGES  & VOLUMES   #
+    #############################
+    - name: "kube-storage-class-allow-expansion"
+      description : "this rules is to verify storage class allow expansion"
+      applied: false
+      level: 2
+      cloudProvider: kubernetes
+      objectName : storageclass
+      conditions:
+        - property : allowVolumeExpansion
+          condition : EQUAL
+          value: true
+    # this is an example of storage class disk parameters rule
+    - name: "kube-storage-class-disk-parameters"
+      description : "this rules is to verify storage class disk parameters"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : storageclass
+      conditions:
+        - property : parameters.cachingMode
+          condition : EQUAL
+          value: 'None'
+        - property : parameters.DiskIOPSReadWrite
+          condition : SUP_OR_EQUAL
+          value: '1000'
+        - property : parameters.DiskMBpsReadWrite
+          condition : SUP_OR_EQUAL
+          value: '1000'
+    - name: "kube-persistent-volume-verify-storage-class"
+      description : "this rules is to verify for a persistent volume storage class"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName : persistentvolume
+      conditions:
+        - property : spec.storageClassName
+          condition : EQUAL
+          value : 'premium2-disk-sc'
+    - name: "kube-volume-mounts-read-only"
+      description : "this rules is to verify volume mounts are read only"
+      applied: false
+      level: 2
+      cloudProvider: kubernetes
+      objectName : pods
+      conditions:
+        - property : spec.containers
+          condition : ALL
+          value:
+            - property: volumeMounts
+              condition: ALL
+              value:
+                - property : readOnly
+                  condition : EQUAL
+                  value : true

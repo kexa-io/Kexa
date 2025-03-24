@@ -1,0 +1,176 @@
+- version: 1.0.0
+  date: 07-18-2023
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      to: 
+        #- http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "aws-ec2-volume-unattached"
+      description: "this rule is to check if an ec2 volume is unattached"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.Volumes
+      conditions:
+        - property: Attachments
+          condition: COUNT_SUP
+          value: 0
+    - name: "ec2-volume-check-create-less-2-month-expiration"
+      description: "this rule is to check for a ec2 volume create date inferior than 2 months"
+      applied: true
+      level: 2
+      cloudProvider: aws
+      objectName: EC2Client.Volumes
+      conditions:
+        - property: CreateTime
+          condition: DATE_INF
+          value: 0 0 0 0 0 2 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    - name: "aws-tagsvalue-check-for-expiration-date"
+      description: "this rule is to check if tags contain an expiration date (separate with \"-\")"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: KexaAwsCustoms.tagsValueListing
+      conditions:
+        - property: name
+          condition: REGEX
+          value: '\b\d{1,4}[-]\d{1,4}[-]\d{1,4}\b'
+    - name: "ec2-security-groups-source-defined"
+      description: "this rule is to check if a ec2 SG has a defined source (not 0.0.0.0)"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.SecurityGroups
+      conditions:
+        - property: IpPermissions
+          condition: ALL
+          value:
+            - property: IpRanges
+              condition: ALL
+              value:
+                - property: CidrIp
+                  condition: DIFFERENT
+                  value: "0.0.0.0/0"
+    - name: "aws-ec2-public-ip-address"
+      description : "this rule is to check if an ec2 ip address is public"
+      applied: true
+      level: 2
+      cloudProvider: aws
+      objectName: EC2Client.Instances
+      conditions:
+        - property: Instances
+          condition: ALL
+          value:
+            - property: PublicIpAddress
+              condition: EQUAL
+              value: null
+   # storage rule
+    - name: "aws-bucket-public-access-block"
+      description: "this rule is to verify if the public access block is enabled on the bucket"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: S3Client.PublicAccessBlock
+      conditions:
+        - operator: AND
+          criteria:
+            - property: PublicAccessBlockConfiguration.BlockPublicAcls
+              condition: EQUAL
+              value: true
+            - property: PublicAccessBlockConfiguration.IgnorePublicAcls
+              condition: EQUAL
+              value: true
+            - property: PublicAccessBlockConfiguration.BlockPublicPolicy
+              condition: EQUAL
+              value: true
+            - property: PublicAccessBlockConfiguration.RestrictPublicBuckets
+              condition: EQUAL
+              value: true
+    - name: "aws-bucket-enryption-enable"
+      description: "this rule is to verify if the bucket is encrypted"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: S3Client.BucketEncryption
+      conditions:
+        - property: ServerSideEncryptionConfiguration.Rules
+          condition: COUNT_SUP_OR_EQUAL
+          value: 1
+    - name: "aws-bucket-encryption-using-kms"
+      description: "this rule is to verify if the bucket is encrypted using KMS"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: S3Client.BucketEncryption
+      conditions:
+        - property: ServerSideEncryptionConfiguration.Rules
+          condition: ALL
+          value:
+            - property: ApplyServerSideEncryptionByDefault
+              condition: OR
+              value:
+                - property: SSEAlgorithm
+                  condition: EQUAL
+                  value: aws:kms:dsse
+                - property: SSEAlgorithm
+                  condition: EQUAL
+                  value: aws:kms
+    - name: "aws-bucket-key-enabled-to-reduce-encryption-cost"
+      description: "this rule is to verify if the bucket key is enabled to reduce encryption cost"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: S3Client.BucketEncryption
+      conditions:
+        - property: ServerSideEncryptionConfiguration.Rules
+          condition: ALL
+          value:
+            - property: ApplyServerSideEncryptionByDefault.BucketKeyEnabled
+              condition: EQUAL
+              value: true

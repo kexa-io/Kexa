@@ -19,7 +19,7 @@ COPY . .
 
 # [optional] eslint (can also add test)
 ENV NODE_ENV=production
-RUN bun run lint
+# RUN bun run lint
 
 # copy production dependencies and source code into final image
 FROM base AS release
@@ -29,5 +29,5 @@ COPY --from=prerelease /usr/src/app/package.json .
 
 # run the app
 USER bun
-EXPOSE 8080/tcp
+#EXPOSE 8080/tcp
 ENTRYPOINT [ "bun", "run", "src/index.ts" ]

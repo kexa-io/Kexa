@@ -1,0 +1,133 @@
+- version: 1.0.0
+  date: 02-23-2024
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      to: 
+        #- http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "aws-rg-tagsvalue-check-for-expiration-date"
+      description: "this rule is to check if tags contain an expiration date (separate with \"-\")"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: KexaAwsCustoms.tagsValueListing
+      conditions:
+        - property: name
+          condition: REGEX
+          value: '\b\d{1,4}[-]\d{1,4}[-]\d{1,4}\b'
+    # need to define behavior
+    - name: "aws-resources-tags-key-value-check"
+      description: "this rule is to check if tags and their value match your tagging policy"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: KexaAwsCustoms.resourcesTags
+      conditions:
+        - property: Tags
+          condition: ALL
+          value:     
+            - operator: OR
+              criteria:
+                - operator: AND
+                  criteria:
+                    - property: Key
+                      condition : EQUAL 
+                      value : Name
+                    - property: Value
+                      condition: DIFFERENT
+                      value: null
+                - operator: AND
+                  criteria:
+                    - property: Key
+                      condition : EQUAL
+                      value : Environment
+                    - property: Value
+                      condition : REGEX
+                      value : ^(prod|dev)$
+                - operator: AND
+                  criteria:
+                    - property: Key
+                      condition : EQUAL
+                      value : AmazonECSManaged
+                    - property: Value
+                      condition : REGEX
+                      value : ^(true|false)$
+    # need to define behavior
+    - name: "aws-user-tags-check"
+      description: "this rule is to check if tags contain an expiration date (separate with \"-\")"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.UserTags
+      conditions:
+        - property: Tags
+          condition: ALL
+          value:
+            - property: Key
+              condition : REGEX
+              value : ^AKIA
+            - property: Value
+              condition: DIFFERENT
+              value: 'titi'
+    # need to define behavior
+    - name: "aws-instance-profile-tags-check"
+      description: "this rule is to check if tags contain an expiration date (separate with \"-\")"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: IAMClient.InstanceProfileTags
+      conditions:
+        - property: Tags
+          condition: ALL
+          value:
+            - property: Key
+              condition : REGEX
+              value : ^AKIA
+            - property: Value
+              condition: DIFFERENT
+              value: 'titi'

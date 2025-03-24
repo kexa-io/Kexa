@@ -1,0 +1,107 @@
+- version: 1.0.0
+  date: 07-18-2023
+  alert:
+    fatal:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    error:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    # pod name compliance
+    - name: "kube-pods-name-compliance"
+      description: "this rules is to check compliance of pods names"
+      applied: false
+      level: 1
+      cloudProvider: kubernetes
+      objectName: pods
+      conditions:
+        - property: metadata.name
+          condition: REGEX
+          value: ^[a-zA-Z0-9]$
+    # namespace name compliance
+    - name: "kube-namespace-name-compliance"
+      description: "this rules is to check compliance of namespace names"
+      applied: false
+      level: 0
+      cloudProvider: kubernetes
+      objectName : namespaces
+      conditions:
+        - property: metadata.name
+          condition: REGEX
+          value: ^(4urcloudwebsitepublic|4urcloudbackend)$
+    # pod labels compliance
+    - name: "kube-pods-labels-compliance"
+      description: "this rules is to check compliance of pods labels"
+      applied: true
+      level: 1
+      cloudProvider: kubernetes
+      objectName: pods
+      conditions:
+        - property: metadata.labels
+          condition: ALL
+          value:     
+            - operator: OR
+              criteria:
+                - operator: AND
+                  criteria:
+                    - property: key
+                      condition: EQUAL
+                      value: app
+                    - property: value
+                      condition: REGEX
+                      value: ^(aks|csi-azuredisk-node|konnectivity-agent)$
+                - operator: AND
+                  criteria:
+                    - property: key
+                      condition: EQUAL
+                      value: controller-revision-hash
+                    - property: value
+                      condition: REGEX
+                      value: ^[0-9a-fA-F]+$ 
+                - operator: AND
+                  criteria:
+                    - property: key
+                      condition: EQUAL
+                      value: kubernetes.azure.com/managedby
+                    - property: value
+                      condition: REGEX
+                      value:  ^(aks|other)$
