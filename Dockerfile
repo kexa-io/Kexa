@@ -1,33 +1,30 @@
-FROM oven/bun:1 AS base
+FROM oven/bun:latest as bun
+
+FROM alpine:3.18 as alpine
+RUN apk add upx
+COPY --from=bun /usr/local/bin/bun /usr/local/bin/
+WORKDIR /usr/local/bin
+# Compress bun binary
+RUN upx --all-methods --no-lzma bun
+
+FROM frolvlad/alpine-glibc
+COPY --from=alpine /usr/local/bin/bun /usr/local/bin/
+
 WORKDIR /usr/src/app
 
-# install dependencies into temp directory
-FROM base AS install
-RUN mkdir -p /temp/dev /temp/prod
-COPY package.json bun.lockb /temp/dev/
-WORKDIR /temp/dev
+# Install dependencies
+COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile
-COPY package.json bun.lockb /temp/prod/
-WORKDIR /temp/prod
-RUN bun install --frozen-lockfile --production
 
-# copy node_modules from temp directory
-# then copy all (non-ignored) project files into the image
-FROM base AS prerelease
-COPY --from=install /temp/dev/node_modules node_modules
+# Copy application files
 COPY . .
 
-# [optional] eslint (can also add test)
+# Set environment to production
 ENV NODE_ENV=production
-# RUN bun run lint
 
-# copy production dependencies and source code into final image
-FROM base AS release
-COPY --from=install /temp/prod/node_modules node_modules
-COPY --from=prerelease /usr/src/app/src/ src/
-COPY --from=prerelease /usr/src/app/package.json .
+# Remove dev dependencies to reduce image size
+RUN bun install --production --frozen-lockfile
 
-# run the app
+# Run the app
 USER bun
-#EXPOSE 8080/tcp
-ENTRYPOINT [ "bun", "run", "src/index.ts" ]
+ENTRYPOINT [ "bun", "run", "Kexa/index.ts" ]
