@@ -1,0 +1,125 @@
+- version: 1.0.0
+  date: 07-18-2023
+  alert:
+    fatal:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    error:
+      enabled: false
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      to: 
+        #- http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "azure-virtual-network-minimum-subnets"
+      description : "check if NSG have a minimum of subnets"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName : NetworkManagementClient.virtualNetworks
+      conditions: 
+        - property: subnets
+          condition: COUNT_SUP
+          value: 0
+    - name: "ec2-volume-check-create-less-2-month-expiration"
+      description: "this rule is to check for a ec2 volume create date inferior than 2 months"
+      applied: true
+      level: 2
+      cloudProvider: aws
+      objectName: EC2Client.Volumes
+      conditions:
+        - property: CreateTime
+          condition: DATE_INF
+          value: 0 0 0 0 0 2 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    - name: "aws-tagsvalue-check-for-expiration-date"
+      description: "this rule is to check if tags contain an expiration date (separate with \"-\")"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: KexaAwsCustoms.tagsValueListing
+      conditions:
+        - property: name
+          condition: REGEX
+          value: '\b\d{1,4}[-]\d{1,4}[-]\d{1,4}\b'
+    - name: "o365-check-jobtitle-defined"
+      description: "this rule is to check for non defined job title"
+      applied: true
+      level: 1
+      cloudProvider: o365
+      objectName: user
+      conditions:
+        - property: jobTitle
+          condition: DIFFERENT
+          value: null
+    - name: "o365-is-simple-member"
+      description: "this rule is to check for simple members"
+      applied: true
+      level: 1
+      cloudProvider: o365
+      objectName: user
+      conditions:
+        - property: userType
+          condition: EQUAL
+          value: Member
+    - name: "az-job-ml-check"
+      description: "this rule is to check for ml job if they are not failed"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.mlJobs
+      conditions:
+        - operator: NAND
+          criteria:
+            - property: workspace
+              condition: EQUAL
+              value: "Test-Kexa-Machine-Learning" #name of the workspace
+            - property: properties.displayName
+              condition: EQUAL
+              value: "hello-world-example" #name of the job
+            - property: properties.status
+              condition: EQUAL
+              value: Failed
+            - property: properties.properties.StartTimeUtc
+              condition: DATE_INF
+              value: 0 0 0 1 0 0
+              date: "YYYY-MM-DD hh:mm:ss"

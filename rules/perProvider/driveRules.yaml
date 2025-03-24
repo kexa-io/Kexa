@@ -1,0 +1,95 @@
+- version: 1.0.0
+  date: 06-12-2023
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: false
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      to: 
+        #- http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "check-regex-drive-file-name"
+      description : "compare drive file name to regex for compliance"
+      applied: true
+      level: 0
+      cloudProvider: googleDrive
+      objectName : files
+      conditions:
+        - property: name
+          condition: REGEX
+          value: /^(PUBLIC|PRIVATE)\s[A-Za-z]+/
+    - name: "is-drive-file-private"
+      description : "this rule is to check if drive files are private"
+      applied: true
+      level: 0
+      cloudProvider: googleDrive
+      objectName : files
+      conditions:
+        - operator: NAND
+          criteria:
+            - property : shared
+              condition : DIFFERENT
+              value : false
+            - property : name
+              condition : REGEX
+              value : /PRIVATE\s[A-Za-z]+/
+    - name: "is-file-shared-only-by-domaine"
+      description : "this rule is to check if a file is shared only by domain"
+      applied: true
+      level: 0
+      cloudProvider: googleDrive
+      objectName : files
+      conditions:
+        - property : permissions
+          condition : ALL
+          value : 
+            - operator: NAND
+              criteria:
+                - property : type
+                  condition : EQUAL
+                  value : user
+                - property : role
+                  condition : DIFFERENT
+                  value : owner

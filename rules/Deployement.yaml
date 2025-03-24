@@ -1,0 +1,137 @@
+- version: 1.0.0
+  date: 07-18-2023
+  alert:
+    fatal:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    error:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: false
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "git-is-repository-private"
+      description: "this rules is to check if git repo is private"
+      applied: true
+      level: 0
+      cloudProvider: github
+      objectName: repositories
+      conditions:
+        - property: private
+          condition: EQUAL
+          value: true
+    - name: "git-is-branch-protectec"
+      description: "this rules is to check if git branch is protected"
+      applied: true
+      level: 0
+      cloudProvider: github
+      objectName: branches
+      conditions:
+        - operator: NAND
+          criteria:
+            - property : protected
+              condition : DIFFERENT
+              value : true
+            - property : name
+              condition : EQUAL
+              value : master
+    - name: "http-request-date-in-body"
+      description : "request date in body"
+      applied: true
+      level: 0
+      loudMessage: "date is present in body"
+      cloudProvider: http
+      objectName : request
+      conditions:
+        - property : body.date
+          condition : DIFFERENT
+          value : null
+    - name: "http-request-certificate"
+      description : "check if certificate is present"
+      applied: true
+      level: 0
+      cloudProvider: http
+      objectName : request
+      conditions:
+        - property : certificate.issuer.CN
+          condition : EQUAL
+          value : "Kubernetes Ingress Controller Fake Certificate"
+        - property : certificate.valid_to
+          condition : DATE_INF
+          value : 0 0 0 0 0 0
+          date: "MMM DD HH:mm:ss YYYY GMT"
+    - name: "http-request-header"
+      description : "http requested header"
+      applied: true
+      level: 0
+      loud: true
+      loudMessage: "header is present"
+      cloudProvider: http
+      objectName : request
+      conditions:
+        - property : headers.content-type
+          condition : INCLUDE
+          value : "application/json"
+    #change the namespace name to your namespace
+    - name: "namespace-exist-api-4urcloud"
+      description : "this rules is to check if namespace exist and notifiable if exist"
+      applied: true
+      level: 0
+      cloudProvider: kubernetes
+      objectName : namespaces
+      conditions:
+        - property : metadata.name
+          condition : DIFFERENT
+          value : 4urcloudwebsitepublic
+    #change the namespace name to your namespace
+    - name: "all-pods-running-kexawebsite"
+      description : "this rules is to check if all pods are running for a namespace"
+      applied: true
+      level: 2
+      cloudProvider: kubernetes
+      objectName : pods
+      conditions:
+        - operator: NAND
+          criteria:
+            - property : status.phase
+              condition : DIFFERENT
+              value : Running
+            - property : metadata.namespace
+              condition : EQUAL
+              value : kexawebsitepublic

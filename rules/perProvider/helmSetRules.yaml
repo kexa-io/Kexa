@@ -1,0 +1,210 @@
+- version: 1.0.0
+  date: 07-18-2023
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      to: 
+        #- http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "helm-chart-deployed"
+      description : "this rule is to verify if the helm chart is deployed"
+      applied: true
+      level: 1
+      cloudProvider: helm
+      objectName : chart
+      conditions:
+        - property : details.status
+          condition : EQUAL
+          value : deployed
+    - name: "helm-chart-last-deployed-X-month"
+      description : "this rule is to verify if the helm chart has been deployed in the last X month"
+      applied: true
+      level: 1
+      cloudProvider: helm
+      objectName : chart
+      conditions:
+        - property : details.lastDeployed
+          condition: DATE_INF
+          value: 0 0 0 0 0 3 0  # last 3 months
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    - name: "helm-chart-max-revisions"
+      description : "this rule is to verify if the helm chart has less than 10 revisions"
+      applied: true
+      level: 0
+      cloudProvider: helm
+      objectName : chart
+      conditions:
+        - property : details.revisions
+          condition : INF_OR_EQUAL
+          value : 10
+    - name: "helm-chart-auto-scaling-target-cpu"
+      description : "this rule is to verify if autoscaling target cpu  is not greater than 50"
+      applied: true
+      level: 0
+      cloudProvider: helm
+      objectName : chart
+      conditions:
+        - operator: NAND
+          criteria:
+            - property : details.computedValues.autoscaling
+              condition : DIFFERENT
+              value : null
+            - property : details.computedValues.autoscaling.targetCPU
+              condition : SUP
+              value : 50
+    - name: "helm-chart-auto-scaling-target-memory"
+      description : "this rule is to verify if autoscaling target memory is not greater than 50"
+      applied: true
+      level: 0
+      cloudProvider: helm
+      objectName : chart
+      conditions:
+        - operator: NAND
+          criteria:
+            - property : details.computedValues.autoscaling
+              condition : DIFFERENT
+              value : null
+            - property : details.computedValues.autoscaling.targetMemory
+              condition : SUP
+              value : 50
+    - name: "helm-chart-auto-scaling-enabled"
+      description : "this rule is to verify if autoscaling is enabled"
+      applied: true
+      level: 1
+      cloudProvider: helm
+      objectName : chart
+      conditions:
+        - operator: NAND
+          criteria:
+            - property : details.computedValues.autoscaling
+              condition : DIFFERENT
+              value : null
+            - property : details.computedValues.autoscaling.enabled
+              condition : EQUAL
+              value : false
+    - name: "helm-chart-auto-scaling-min-replicas"
+      description : "this rule is to verify if autoscaling min replicas is greater than 0"
+      applied: true
+      level: 0
+      cloudProvider: helm
+      objectName : chart
+      conditions:
+        - operator: NAND
+          criteria:
+            - property : details.computedValues.autoscaling
+              condition : DIFFERENT
+              value : null
+            - property : details.computedValues.autoscaling.minReplicas
+              condition : INF_OR_EQUAL
+              value : 0
+    - name: "helm-chart-auto-scaling-max-replicas"
+      description : "this rule is to verify if autoscaling max replicas is less than 10"
+      applied: true
+      level: 0
+      cloudProvider: helm
+      objectName : chart
+      conditions:
+        - operator: NAND
+          criteria:
+            - property : details.computedValues.autoscaling
+              condition : DIFFERENT
+              value : null
+            - property : details.computedValues.autoscaling.maxReplicas
+              condition : SUP
+              value : 10
+    - name: "helm-chart-do-not-allow-empty-password"
+      description : "this rule is to ensure that the helm chart does not allow empty passwords"
+      applied: true
+      level: 2
+      cloudProvider: helm
+      objectName : chart
+      conditions:
+        - property : details.allowEmptyPassword
+          condition : EQUAL
+          value : false
+    # This may not be working if the repository is not locally accessible or not found in artefact hub
+    - name: "helm-chart-no-major-version-difference"
+      description : "this rule is to ensure that the helm chart has no major version difference"
+      applied: true
+      level: 1
+      cloudProvider: helm
+      objectName : chart
+      conditions:
+        - property : details.versionDifference.major
+          condition : EQUAL
+          value : 0
+    # This may not be working if the repository is not locally accessible or not found in artefact hub
+    - name: "helm-chart-no-minor-version-difference"
+      description : "this rule is to ensure that the helm chart has no major version difference"
+      applied: false
+      level: 1
+      cloudProvider: helm
+      objectName : chart
+      conditions:
+        - property : details.versionDifference.major
+          condition : EQUAL
+          value : 0
+        - property : details.versionDifference.minor
+          condition : EQUAL
+          value : 0
+    # This may not be working if the repository is not locally accessible or not found in artefact hub
+    - name: "helm-chart-no-version-difference"
+      description : "this rule is to ensure that the helm chart is using the latest version"
+      applied: false
+      level: 1
+      cloudProvider: helm
+      objectName : chart
+      conditions:
+        - property : details.versionDifference.major
+          condition : EQUAL
+          value : 0
+        - property : details.versionDifference.minor
+          condition : EQUAL
+          value : 0
+        - property : details.versionDifference.patch
+          condition : EQUAL
+          value : 0
