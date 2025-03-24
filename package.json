@@ -2,6 +2,7 @@
   "name": "kexang",
   "module": "index.ts",
   "type": "module",
+  "version": "1.17.5",
   "private": true,
   "devDependencies": {
     "@eslint/js": "^9.23.0",
