@@ -1,31 +1,17 @@
 {
-    "azure":[
+    "http": [
         {
-            "description": "organization 4urcloud",
-            "prefix": "O365PROJECT_",
+            "name": "check kexa website",
+            "prefix": "ENDPOINTA-",
+            "description": "First environment (0) : EndPoint A environment",
             "rules": [
-                "AzureComplianceSetRules"
-            ]
+                "HTTPRules"
+            ],
+            "METHOD": "GET",
+            "URL": "https://www.kexa.io",
+            "body":{
+                "key": "Compliance, Security, Costs saving & Optimization"
+            }
         }
-    ],
-    "gcp":[
-        {
-            "description": "organization 4urcloud",
-            "prefix": "GCPPROJ1_",
-            "rules": [
-                "Economy"
-            ]
-        }
-    ],
-    "variable": {
-        "azure-tags-check": {
-            "var1": "value1",
-            "var2": {
-                "var2.1": "value2.1",
-                "var2.2": "value2.2"
-            },
-            "var3": true,
-            "var4": 42
-        }
-    }
+    ]
 }
