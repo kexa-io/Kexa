@@ -51,3 +51,9 @@ config/resources*.html
 config/resources*.json
 .DS_Store
 ./kubeconfig.yaml
+
+**/kubernetes.json
+
+node_modules
+.env
+build/*
