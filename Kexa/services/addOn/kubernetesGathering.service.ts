@@ -59,13 +59,16 @@ import { KubernetesResources, createKubernetesResourcesDefault } from "../../mod
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { deleteFile, getFile, writeStringToJsonFile } from "../../helpers/files";
 import { KubernetesConfig } from "../../models/kubernetes/config.models";
-const yaml = require('js-yaml');
+import * as yaml from 'js-yaml';
 
 import {getNewLogger} from "../logger.service";
 const logger = getNewLogger("KubernetesLogger");
 
-const k8s = require('@kubernetes/client-node');
+import * as k8s from '@kubernetes/client-node';
 let currentConfig:KubernetesConfig;
+
+//disable check ssl : https://github.com/oven-sh/bun/issues/7332
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 // let globalConfiguration = getConfig().global ?? {};
 
@@ -87,17 +90,6 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
         let prefix = config.prefix??(kubernetesConfig.indexOf(config).toString());
         try {
             let pathKubeFile = await getConfigOrEnvVar(config, "KUBECONFIG", prefix);
-
-            if (pathKubeFile?.endsWith(".json"))
-                writeStringToJsonFile(JSON.stringify(getFile(pathKubeFile??"")), "./config/kubernetes.json");
-            else if (pathKubeFile?.endsWith(".yaml") || pathKubeFile?.endsWith(".yml"))
-                writeStringToJsonFile(JSON.stringify(yaml.load(getFile(pathKubeFile??"")), null, 2), "./config/kubernetes.json");
-            else if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
-                const jsonObject = yaml.load(pathKubeFile);
-                writeStringToJsonFile(JSON.stringify(jsonObject, null, 2), "./config/kubernetes.json");
-            }
-            else
-                logger.error("Unknow credentials type for Kubernetes (path must be a .json or .yaml/.yml)");         
 
             const promises = [
                 kubernetesListing(pathKubeFile),
@@ -165,8 +157,7 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
     logger.info("starting kubernetesListing");
     const kc = new k8s.KubeConfig();
     const metricsClient = new k8s.Metrics(kc);
-    (isPathKubeFile)?kc.loadFromFile("./config/kubernetes.json"):kc.loadFromDefault();
-
+    kc.loadFromDefault();
 
 
     //opening different api to get kubernetes resources
@@ -184,8 +175,8 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
     /////////////////////////////////////////////////////////////////////////////////
     let namespaces = await k8sApiCore.listNamespace();
     let kubResources: KubernetesResources = createKubernetesResourcesDefault();
-    kubResources.namespaces = namespaces.body.items;
-    const namespacePromises = namespaces.body.items.map(async (item: any) => {
+    kubResources.namespaces = namespaces.items;
+    const namespacePromises = namespaces.items.map(async (item: any) => {
         const promises = [
             collectHelm(item.metadata.name),
             collectPods(k8sApiCore, item.metadata.name),
