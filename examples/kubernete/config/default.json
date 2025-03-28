@@ -1,0 +1,12 @@
+{
+    "kubernetes": [
+        {
+            "name": "kube01",
+            "prefix": "KUBE1_",
+            "description": "kube for my prod 01",
+            "rules": [
+                "Kubernete"
+            ]
+        }
+    ]
+}

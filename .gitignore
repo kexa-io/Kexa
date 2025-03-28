@@ -57,3 +57,4 @@ config/resources*.json
 node_modules
 .env
 build/*
+examples/*/data/*
