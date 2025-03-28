@@ -55,10 +55,11 @@
 
 import { getConfig } from "../../helpers/loaderConfig";
 import helm from 'helm-ts';
-import { KubernetesResources, createKubernetesResourcesDefault } from "../../models/kubernetes/kubernetes.models";
+import type { KubernetesResources } from "../../models/kubernetes/kubernetes.models";
+import { createKubernetesResourcesDefault } from "../../models/kubernetes/kubernetes.models";
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { deleteFile, getFile, writeStringToJsonFile } from "../../helpers/files";
-import { KubernetesConfig } from "../../models/kubernetes/config.models";
+import type { KubernetesConfig } from "../../models/kubernetes/config.models";
 import * as yaml from 'js-yaml';
 
 import {getNewLogger} from "../logger.service";
@@ -74,6 +75,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 let globalConfiguration: any;
 async function init() {
+    logger.info("Initializing Kubernetes configuration");
     try {
         const configHere = await getConfig();
         globalConfiguration = configHere.global ?? {};
@@ -88,9 +90,9 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
     for(let config of kubernetesConfig??[]){
         currentConfig = config;
         let prefix = config.prefix??(kubernetesConfig.indexOf(config).toString());
+
         try {
             let pathKubeFile = await getConfigOrEnvVar(config, "KUBECONFIG", prefix);
-
             const promises = [
                 kubernetesListing(pathKubeFile),
             ];
@@ -155,10 +157,11 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
 //kubernetes list
 export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
     logger.info("starting kubernetesListing");
+    // connecting to kubernetes
     const kc = new k8s.KubeConfig();
-    const metricsClient = new k8s.Metrics(kc);
     kc.loadFromDefault();
-
+    //
+    const metricsClient = new k8s.Metrics(kc);
 
     //opening different api to get kubernetes resources
     const autoscalingV1Api = kc.makeApiClient(k8s.AutoscalingV1Api);

@@ -1,8 +1,8 @@
 services:
   kexa:
     build: ../../
-    environment:
-      - KUBE1_KUBECONFIG="~/.kube/config"
+    env_file:
+      - .env
     volumes:
       - ./config:/usr/src/app/config
       - ./rules:/usr/src/app/rules
