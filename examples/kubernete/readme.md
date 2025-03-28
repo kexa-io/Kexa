@@ -1,2 +1,2 @@
 loading kubeconfig in var
-KUBE1_KUBECONFIG=${cat ~/.kube/config}
+KUBE1_KUBECONFIG=~/.kube/config
