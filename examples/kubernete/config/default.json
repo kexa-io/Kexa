@@ -5,7 +5,7 @@
             "prefix": "KUBE1_",
             "description": "kube for my prod 01",
             "rules": [
-                "Kubernete"
+                "kub-prod-check"
             ]
         }
     ]
