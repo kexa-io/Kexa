@@ -1,3 +1,5 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// import section
 import { Provider, ProviderResource } from "../models/providerResource.models";
 import { Header } from "../models/settingFile/header.models";
 import { writeStringToJsonFile } from "../helpers/files"
@@ -8,7 +10,20 @@ import { getConfig } from "../helpers/loaderConfig";
 import { jsonStringify } from "../helpers/jsonStringify";
 import  {formatProviderNeededData} from "./api/formatterApi.service";
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// variable section
 let configuration: any;
+const mainFolder = 'Kexa';
+const serviceAddOnPath = './' + mainFolder + '/services/addOn';
+import fs from 'fs'
+const logger = getNewLogger("LoaderAddOnLogger");
+const reservedNameAddOn=[
+    "export",
+    "save",
+    "variable",
+    "general",
+]
+///////////////////////////////////////////////////////////////////////////////////////////////////
 async function init() {
     try {
         configuration = await getConfig();
@@ -17,27 +32,23 @@ async function init() {
     }
 }
 init();
-
-const mainFolder = 'Kexa';
-const serviceAddOnPath = './' + mainFolder + '/services/addOn';
-const fs = require('fs');
-const logger = getNewLogger("LoaderAddOnLogger");
-const reservedNameAddOn=[
-    "export",
-    "save",
-    "variable",
-    "general",
-]
-
+///////////////////////////////////////////////////////////////////////////////////////////////////
 export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResource>{
     let resources: ProviderResource = {};
     let context = getContext();
     logger.info("Loading addOns");
     context?.log("Loading addOns");
 
-    let addOnNeed;
+    let addOnNeed = JSON.parse('{}');
     try {
-        addOnNeed = require('../../config/addOnNeed.json');
+        logger.info("Loading addOnNeed configuration in directory: " + process.cwd());
+        if(fs.existsSync('./config/addOnNeed.json')==true){
+            var jsondata =fs.readFileSync('./config/addOnNeed.json', 'utf-8');
+            addOnNeed = JSON.parse(jsondata);
+        }else{
+            //file not exist
+            logger.error("File addOnNeed.json not exist");
+        }
     } catch (error) {
         logger.info("Failed to load addOnNeed configuration", error);
         throw new Error("addOnNeed configuration could not be loaded");
@@ -76,10 +87,9 @@ export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResour
     }
     return resources;
 }
-
+///////////////////////////////////////////////////////////////////////////////////////////////////
 async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): Promise<{ key: string; data: Provider|null; delta: number } | null> {
     let context = getContext();
-
     try{
         if (file.endsWith('Gathering.service.ts')){
             let nameAddOn = file.split('Gathering.service.ts')[0];
@@ -129,7 +139,7 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): 
     }
     return null;
 }
-
+///////////////////////////////////////////////////////////////////////////////////////////////////
 export function loadAddOnsCustomUtility(usage: string, funcName:string, onlyFiles: string[]|null = null) : { [key: string]: Function; }{
     let dictFunc: { [key: string]: Function; } = {};
     const files = fs.readdirSync(serviceAddOnPath + "/" + usage);
@@ -142,7 +152,7 @@ export function loadAddOnsCustomUtility(usage: string, funcName:string, onlyFile
     });
     return dictFunc;
 }
-
+///////////////////////////////////////////////////////////////////////////////////////////////////
 function loadAddOnCustomUtility(file: string, usage: string, funcName:string): { key: string; data: Function; } | null {
     try{
         let formatUsage = usage.slice(0,1).toUpperCase() + usage.slice(1);
@@ -157,7 +167,7 @@ function loadAddOnCustomUtility(file: string, usage: string, funcName:string): {
     }
     return null;
 }
-
+///////////////////////////////////////////////////////////////////////////////////////////////////
 export function checkIfDataIsProvider(data: any): data is Provider {
     if (data === null || !Array.isArray(data)) {
         return false;
@@ -169,7 +179,7 @@ export function checkIfDataIsProvider(data: any): data is Provider {
     }
     return true;
 }
-
+///////////////////////////////////////////////////////////////////////////////////////////////////
 export function hasValidHeader(filePath: string): string | Header {
     try {
         const fileContent = fs.readFileSync(filePath, 'utf-8');
@@ -240,7 +250,7 @@ export function hasValidHeader(filePath: string): string | Header {
         return 'Error reading file:' + error;
     }
 }
-
+///////////////////////////////////////////////////////////////////////////////////////////////////
 export async function extractHeaders(): Promise<Capacity>{
     const files = fs.readdirSync(serviceAddOnPath);
     const promises = files.map(async (file: string) => {
@@ -262,7 +272,7 @@ export async function extractHeaders(): Promise<Capacity>{
     writeStringToJsonFile(jsonStringify(finalData,4), "./config/headers.json");
     return finalData;
 }
-
+///////////////////////////////////////////////////////////////////////////////////////////////////
 async function extractHeader(file: string): Promise<Header|null> {
     try{
         if (file.endsWith('Gathering.service.ts')){
