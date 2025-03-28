@@ -1,0 +1,13 @@
+{
+    "addOn": [
+        "kubernetes"
+    ],
+    "objectNameNeed": {
+        "Kubernete": {
+            "kubernetes": [
+                "namespaces",
+                "pods"
+            ]
+        }
+    }
+}
