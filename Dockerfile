@@ -9,11 +9,10 @@ RUN helm version
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack clear
 RUN corepack enable
 
 COPY package.json pnpm-lock.yaml ./
-RUN corepack prepare
+RUN corepack prepare pnpm@latest --activate
 
 
 COPY . /app
