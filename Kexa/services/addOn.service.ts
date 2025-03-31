@@ -86,52 +86,73 @@ export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResour
     }
     return resources;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////
+
 async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): Promise<{ key: string; data: Provider|null; delta: number } | null> {
     let context = getContext();
-    try{
-        if (file.endsWith('Gathering.service.ts')){
-            let nameAddOn = file.split('Gathering.service.ts')[0];
-            if(!addOnNeed["addOn"].includes(nameAddOn)) return null;
 
-  
+    try {
+        if (file.endsWith('Gathering.service.ts')) {
+            let nameAddOn = file.split('Gathering.service.ts')[0];
+            if (!addOnNeed["addOn"].includes(nameAddOn)) return null;
             let header = hasValidHeader(serviceAddOnPath + "/" + file);
             if (typeof header === "string") {
                 logger.warn(header);
                 return null;
             }
-            const { collectData } = await import(`./addOn/${file.replace(".ts", ".js") }`);
-            let start = Date.now();
-            const addOnConfig = (configuration.hasOwnProperty(nameAddOn)) ? configuration[nameAddOn] : null;
-          
+            
+            try {
+                const module = await import(`./addOn/${file.replace(".ts", ".js")}`);
+                const { collectData } = module;
+                if (typeof collectData !== 'function') {
+                    console.error(`collectData is not a function in ${file}`);
+                    return null;
+                }
+                
+                let start = Date.now();
+                const addOnConfig = (configuration.hasOwnProperty(nameAddOn)) ? configuration[nameAddOn] : null;
+                if (!addOnConfig) {
+                    console.log(`No configuration found for ${nameAddOn}, skipping data collection`);
+                    return null;
+                }
 
-            if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
+                if (process.env.INTERFACE_CONFIGURATION_ENABLED === 'true') {
+                    addOnConfig.forEach((config: any) => {
+                        if (Array.isArray(config.notificationGroups)) {
+                            for (let i = 0; i < config.notificationGroups.length; i++) {
+                                config.rules.push(config.notificationGroups[i].name);
+                            }
+                        }
+                    });
+                }
+
                 addOnConfig.forEach((config: any) => {
-                    if (Array.isArray(config.notificationGroups)) {
-                        for (let i = 0; i < config.notificationGroups.length; i++) {
-                            config.rules.push(config.notificationGroups[i].name);
+                    config.ObjectNameNeed = []
+                    config.rules.forEach((rulesName: string) => {
+                        let addOnNeedRules = addOnNeed["objectNameNeed"][rulesName];
+                        if (addOnNeedRules) {
+                            addOnNeedRules = addOnNeedRules[nameAddOn];
+                            if (addOnNeedRules) {
+                                config.ObjectNameNeed = [...config.ObjectNameNeed, ...addOnNeedRules];
+                            }
                         }
-                    }
+                    });
                 });
+
+                try {
+                    console.log(`Starting data collection for ${nameAddOn}`);
+                    const data = await collectData(addOnConfig);                    
+                    let delta = Date.now() - start;
+                    context?.log(`AddOn ${nameAddOn} collect in ${delta}ms`);
+                    logger.info(`AddOn ${nameAddOn} collect in ${delta}ms`);
+                    return { key: nameAddOn, data: (checkIfDataIsProvider(data) ? data : null), delta };
+                } catch (error) {
+                    console.error(`Error during data collection for ${nameAddOn}:`, error);
+                    return null;
+                }
+            } catch (error) {
+                console.error(`Error importing ${file}:`, error);
+                return null;
             }
-    
-            addOnConfig?.forEach((config: any) => {
-                config.ObjectNameNeed = []
-                config.rules.forEach((rulesName: string) => {
-                    let addOnNeedRules = addOnNeed["objectNameNeed"][rulesName];
-                    if(addOnNeedRules){
-                        addOnNeedRules = addOnNeedRules[nameAddOn];
-                        if(addOnNeedRules){
-                            config.ObjectNameNeed = [...config.ObjectNameNeed, ...addOnNeedRules];
-                        }
-                    }
-                });
-            });
-            const data = await collectData(addOnConfig);
-            let delta = Date.now() - start;
-            context?.log(`AddOn ${nameAddOn} collect in ${delta}ms`);
-            logger.info(`AddOn ${nameAddOn} collect in ${delta}ms`);
-            return { key: nameAddOn, data:(checkIfDataIsProvider(data) ? data : null), delta};
         }
     }catch(e){
         logger.warn(e);
