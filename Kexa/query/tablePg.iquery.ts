@@ -31,7 +31,7 @@ export const TableIQuery = {
     Resources: `
         CREATE TABLE IF NOT EXISTS Resources (
             ID SERIAL PRIMARY KEY,
-            content TEXT NOT NULL,
+            content JSONB NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             originId INT,
             providerItemId INT,
