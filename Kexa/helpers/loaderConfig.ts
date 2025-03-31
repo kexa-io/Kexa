@@ -1,6 +1,6 @@
 import {getConfigFromApi} from "../services/api/loaderApi.service";
 
-const fs = require('fs');
+import * as fs from 'fs';
 
 export async function getConfig(): Promise<any> {
 

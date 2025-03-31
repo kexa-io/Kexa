@@ -41,7 +41,6 @@ export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResour
 
     let addOnNeed = JSON.parse('{}');
     try {
-        logger.info("Loading addOnNeed configuration in directory: " + process.cwd());
         if(fs.existsSync('./config/addOnNeed.json')==true){
             var jsondata =fs.readFileSync('./config/addOnNeed.json', 'utf-8');
             addOnNeed = JSON.parse(jsondata);
