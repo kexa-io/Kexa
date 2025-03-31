@@ -31,6 +31,39 @@
 
 * **workspace:** authorize file auth ([0f753d3](https://github.com/kexa-io/Kexa/commit/0f753d345a39b91ea7972982faede5cb5b066570))
 
+## [1.17.6](https://github.com/kexa-io/Kexa/compare/v1.17.5...v1.17.6) (2025-03-31)
+
+
+### Bug Fixes
+
+* correction on pathKubFile ([96acf2e](https://github.com/kexa-io/Kexa/commit/96acf2e13253dd9742a82e88dcf82d47e3e9e653))
+* update .gitignore ([1d4e08b](https://github.com/kexa-io/Kexa/commit/1d4e08b1b610163c330a9a79ef62e3283df39f2d))
+* update error/warning message ([3916c96](https://github.com/kexa-io/Kexa/commit/3916c964db3fd12e629774f7a8d88b4511379f8b))
+* update field type from TEXT to JSONB ([2cf0eb4](https://github.com/kexa-io/Kexa/commit/2cf0eb47b1856e61db00cb8fd2268627fb9a63bd))
+* update Kubernetes addOn with new NPM package ([34f5902](https://github.com/kexa-io/Kexa/commit/34f5902e2239352543e296c52c07b60d9eba4f98))
+* update npm package for kubernetes ([5f1bf46](https://github.com/kexa-io/Kexa/commit/5f1bf463e3ae39eca7ee397e538e387fb8186c52))
+
+## [1.17.5](https://github.com/kexa-io/Kexa/compare/v1.17.4...v1.17.5) (2024-11-29)
+
+
+### Bug Fixes
+
+* **azure:** display & teams card correct ([8b7b289](https://github.com/kexa-io/Kexa/commit/8b7b28965931e2e190a4ae7aadbe9a6e815b583e))
+
+## [1.17.4](https://github.com/kexa-io/Kexa/compare/v1.17.3...v1.17.4) (2024-11-28)
+
+
+### Bug Fixes
+
+* **azure:** Application creds, display and MFA policies ([5cff9d2](https://github.com/kexa-io/Kexa/commit/5cff9d2182b6604211b01a6edf2de358038fb522))
+
+## [1.17.3](https://github.com/kexa-io/Kexa/compare/v1.17.2...v1.17.3) (2024-11-27)
+
+
+### Bug Fixes
+
+* **workspace:** authorize file auth ([0f753d3](https://github.com/kexa-io/Kexa/commit/0f753d345a39b91ea7972982faede5cb5b066570))
+
 ## [1.17.2](https://github.com/kexa-io/Kexa/compare/v1.17.1...v1.17.2) (2024-11-27)
 
 
