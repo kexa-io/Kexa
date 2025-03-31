@@ -1,6 +1,6 @@
 {
     "name": "kexa",
-    "packageManager": "pnpm@10.7.0",
+    "packageManager": "pnpm@9.4.0",
     "release": {
         "branches": [
             "main"
