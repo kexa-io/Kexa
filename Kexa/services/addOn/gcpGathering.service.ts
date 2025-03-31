@@ -179,7 +179,6 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
             context?.log("- listing cloud resources done -");
             logger.info("- listing cloud resources done -");
 
-            ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
             //const client = new CloudTasksClient();
 
             gcpResources = {
