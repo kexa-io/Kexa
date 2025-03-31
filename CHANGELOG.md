@@ -1,3 +1,17 @@
+# [1.18.0](https://github.com/kexa-io/Kexa/compare/v1.17.6...v1.18.0) (2025-03-31)
+
+
+### Bug Fixes
+
+* delete useless comments line ([065517e](https://github.com/kexa-io/Kexa/commit/065517eb9ae89de43bcf2fffd6f47b83824c7e72))
+* **logs:** delete debug logging ([2c00853](https://github.com/kexa-io/Kexa/commit/2c008533c140b769c751cfef56e4d35a900c5d3f))
+* **saveModule:** Get save modules from api ([2d81445](https://github.com/kexa-io/Kexa/commit/2d81445b3f56582610524188040bfdbfa6a2fd25))
+
+
+### Features
+
+* **logs:** Logs saving postgres & mysql ([6f10098](https://github.com/kexa-io/Kexa/commit/6f1009845f721f1ccd175a2397c7069f98526989))
+
 ## [1.17.6](https://github.com/kexa-io/Kexa/compare/v1.17.5...v1.17.6) (2025-03-31)
 
 
@@ -3970,4 +3984,3 @@ Kexa/services/saving/postgresSQL.service.ts was changed
 documentation/Documentation-Kexa.md was changed
 
 rules/Kubernete.yaml was changed
-
