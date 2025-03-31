@@ -88,9 +88,14 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): 
             const { collectData } = await import(`./addOn/${file.replace(".ts", ".js") }`);
             let start = Date.now();
             const addOnConfig = (configuration.hasOwnProperty(nameAddOn)) ? configuration[nameAddOn] : null;
-          
 
+
+            
             if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
+                if (!configuration.hasOwnProperty(nameAddOn)) {
+                    logger.error(`Missing configuration for ${nameAddOn}`);
+                    return null;
+                }
                 addOnConfig.forEach((config: any) => {
                     if (Array.isArray(config.notificationGroups)) {
                         for (let i = 0; i < config.notificationGroups.length; i++) {
@@ -99,7 +104,7 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): 
                     }
                 });
             }
-    
+
             addOnConfig?.forEach((config: any) => {
                 config.ObjectNameNeed = []
                 config.rules.forEach((rulesName: string) => {
