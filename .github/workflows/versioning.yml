@@ -3,7 +3,7 @@ name: versioning
 on:
   push:
     branches:
-      - main
+      - dev
   workflow_dispatch:
 
 permissions:
@@ -14,6 +14,7 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     permissions:
+      pull-requests: write
       contents: write
     steps:
       - name: Harden Runner
