@@ -326,13 +326,11 @@ function retrieveAzureArmClients() {
     fileReplaceContentAzure(filePath, filePath, allClients);
 }
 
-if (require.main === module) {
-    releaseCapability();
-    updateREADME();
-    updateVersion();
-    createAzureArmPkgImportList();
-    createAwsArmPkgImportList();
-}
+releaseCapability();
+updateREADME();
+updateVersion();
+createAzureArmPkgImportList();
+createAwsArmPkgImportList();
 
 /* ***************************** */
 /*                               */
