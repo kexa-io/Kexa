@@ -12,7 +12,7 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
 COPY package.json pnpm-lock.yaml ./
-RUN corepack prepare pnpm@latest --activate
+RUN corepack prepare
 
 
 COPY . /app
