@@ -9,15 +9,14 @@ RUN helm version
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN pnpm install -g corepack@latest && \
-    corepack enable
+RUN corepack enable
+
 COPY package.json pnpm-lock.yaml ./
 RUN corepack prepare pnpm@latest --activate
 
 
 COPY . /app
 WORKDIR /app
-
 RUN pnpm install --frozen-lockfile
 
 FROM base AS build
