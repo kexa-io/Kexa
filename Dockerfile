@@ -17,7 +17,7 @@ RUN corepack prepare
 
 COPY . /app
 WORKDIR /app
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
 FROM base AS build
 ENV NODE_OPTIONS=--max-old-space-size=16384
