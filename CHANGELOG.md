@@ -1,3 +1,10 @@
+## [1.18.1](https://github.com/kexa-io/Kexa/compare/v1.18.0...v1.18.1) (2025-04-01)
+
+
+### Bug Fixes
+
+* no frozen-lockfile ([2aba011](https://github.com/kexa-io/Kexa/commit/2aba0112d42a53c7376632ae54c71da2ef6e7078))
+
 # [1.18.0](https://github.com/kexa-io/Kexa/compare/v1.17.6...v1.18.0) (2025-03-31)
 
 

@@ -574,7 +574,7 @@
         "ts-node": "^10.9.2",
         "typescript": "^5.8.2"
     },
-    "version": "1.18.0",
+    "version": "1.18.1",
     "main": "./build/index.js",
     "scripts": {
         "postinstall": "node-config-ts",
