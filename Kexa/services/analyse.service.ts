@@ -18,9 +18,6 @@ import moment, { Moment, unitOfTime } from 'moment';
 import { BeHaviorEnum } from '../enum/beHavior.enum';
 import { writeStringToJsonFile } from '../helpers/files';
 import { extractHeaders } from './addOn.service';
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////s
-
 import {getContext, getNewLogger} from "./logger.service";
 import { splitProperty } from '../helpers/spliter';
 import { downloadFile, unzipFile } from '../helpers/dowloadFile';
@@ -242,7 +239,7 @@ export async function checkDoc(doc:SettingFile): Promise<string[]> {
     if(!doc.hasOwnProperty("version")) result.push("info - version not found in doc");
     else if(RegExp(/^[0-9]+\.[0-9]+\.[0-9]+$/).exec(doc.version) === null) result.push("debug - version not valid in doc : "+ doc.version);
     if(!doc.hasOwnProperty("date")) result.push("info - date not found in doc");
-    else if(RegExp(/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-(19|20)\d\d$/).exec(doc.date) === null) result.push("debug - date not valid in doc : "+ doc.date);
+    else if(RegExp(/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-(19|20)\d\d$/).exec(doc.date) === null) result.push("debug - date not valid format in doc, must be (DD-MM-YYYY) : "+ doc.date);
     (await checkDocAlert(doc.alert)).forEach((value) => result.push(value));
     checkDocRules(doc.rules).forEach((value) => result.push(value));
     return result;
@@ -327,8 +324,8 @@ export function checkDocRules(rules:Rules[]): string[] {
         if(!rule.hasOwnProperty("name")) result.push("info - name not found in rule");
         else if(typeof rule.name !== "string") result.push("warn - name not string in rule : "+rule.name);
         if(!rule.hasOwnProperty("description")) result.push("info - description not found in rule");
-        else if(typeof rule.description !== "string") result.push("warn - description not string in rule : "+rule.description);
-        if(!rule.hasOwnProperty("urlDescription")) result.push("debug - urlDescription not found in rule");
+        else if(typeof rule.description !== "string") result.push("warn - description not string in rule: "+rule.description);
+        if(!rule.hasOwnProperty("urlDescription")) result.push("debug - urlDescription not found in rule: "+rule.name);
         else if(typeof rule.urlDescription !== "string") result.push("warn - urlDescription not string in rule : "+rule.urlDescription);
         if(!rule.hasOwnProperty("applied")) result.push("error - applied not found in rule");
         else if(typeof rule.applied !== "boolean") result.push("error - applied not boolean in rule : "+rule.applied);

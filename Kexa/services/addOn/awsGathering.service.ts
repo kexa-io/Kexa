@@ -4898,7 +4898,6 @@ import { fromNodeProviderChain } from "@aws-sdk/credential-providers";
 import { EC2Client } from "@aws-sdk/client-ec2";
 import { ResourceGroupsTaggingAPIClient, GetTagKeysCommand, GetResourcesCommand, GetComplianceSummaryCommand } from "@aws-sdk/client-resource-groups-tagging-api";
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { getContext, getNewLogger } from "../logger.service";
 const logger = getNewLogger("AWSLogger");
@@ -4911,10 +4910,6 @@ import * as AwsImports from "./imports/awsPackage.import";
 interface AwsClient {
 	[key: string]: any;
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-//// LISTING CLOUD RESOURCES ///////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 /* ****************************************** */
 /*  	     Main listing function            */
