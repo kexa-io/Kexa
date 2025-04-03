@@ -1,30 +1,38 @@
-FROM node:22-slim@sha256:377674fd5bb6fc2a5a1ec4e0462c4bfd4cee1c51f705bbf4bda0ec2c9a73af72 AS base
+FROM oven/bun:slim as bun-source
 
-#RUN apk update && apk add -u nodejs
-RUN apt-get update && apt-get install -y curl
+# Compression
+FROM alpine:3.18 as compress
+RUN apk add upx
+COPY --from=bun-source /usr/local/bin/bun /usr/local/bin/
+WORKDIR /usr/local/bin
+RUN upx bun
 
-RUN curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+# Build
+FROM frolvlad/alpine-glibc as build
+WORKDIR /usr/src/app
 
-RUN helm version
+COPY --from=compress /usr/local/bin/bun /usr/local/bin/
 
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+COPY package.json bun.lockb ./
+COPY README.md ./
+COPY capacity.json ./
+COPY VERSION ./
 
-COPY package.json pnpm-lock.yaml ./
-RUN corepack prepare
+RUN bun install --production --frozen-lockfile
 
+COPY Kexa ./Kexa
 
-COPY . /app
-WORKDIR /app
-RUN pnpm install
+# Final image
+FROM frolvlad/alpine-glibc
 
-FROM base AS build
-ENV NODE_OPTIONS=--max-old-space-size=16384
-RUN pnpm run build
+RUN apk add --no-cache libgcc
 
-FROM base AS release
-COPY --from=build /app/build /app/build
+COPY --from=compress /usr/local/bin/bun /usr/local/bin/
 
-EXPOSE 8000
-CMD ["/app/dockerstart.sh"]
+WORKDIR /usr/src/app
+
+COPY --from=build /usr/src/app /usr/src/app
+
+ENV NODE_ENV=production
+
+CMD [ "bun", "run", "Kexa/index.ts" ]

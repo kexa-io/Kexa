@@ -112,7 +112,7 @@ async function main(retryLeft = -1) {
 
     if (process.env.DEV) {
         if (process.env.DEV == "true") {
-            logger.settings.minLevel = 2;
+            logger.setting.level = 2;
         }
     }
 

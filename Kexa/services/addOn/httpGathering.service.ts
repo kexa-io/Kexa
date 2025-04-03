@@ -26,9 +26,9 @@ jsome.level.show = true;
 import {getNewLogger} from "../logger.service";
 const logger = getNewLogger("HttpLogger");
 
-
-// LISTING HTTP RESOURCES
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//// LISTING HTTP RESOURCES
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function collectData(_httpConfig:HttpConfig[]) {
     httpConfig = _httpConfig;
     let resources = new Array<HttpResources>();

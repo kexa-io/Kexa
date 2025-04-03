@@ -4,15 +4,12 @@ import { CRUDProvidersIQuery } from '../../query/CRUDPostgres/providers.iquery';
 import { CRUDOriginIQuery } from '../../query/CRUDPostgres/origins.iquery';
 import { CRUDProviderItemsIQuery } from '../../query/CRUDPostgres/providerItems.iquery';
 import { CRUDResourcesIQuery } from '../../query/CRUDPostgres/resources.iquery';
-import { CRUDLogsIQuery } from '../../query/CRUDPostgres/logs.iquery';
 import { getContext, getNewLogger } from "../logger.service";
 import { Rules } from '../../models/settingFile/rules.models';
-import { Log } from '../../models/settingFile/logs.models';
 import { CRUDRulesIQuery } from '../../query/CRUDPostgres/rules.iquery';
 import { ResultScan } from '../../models/resultScan.models';
 import { CRUDScansIQuery } from '../../query/CRUDPostgres/scans.iquery';
 import { jsonStringify } from '../../helpers/jsonStringify';
-import { createHash } from 'crypto';
 
 const logger = getNewLogger("pgSQLLogger");
 
@@ -160,12 +157,6 @@ export class PostgreSQLClass {
     public async createAndGetResource(resource: any, originId: number, providerItemsId: number): Promise<number | undefined> {
         try {
             let conn = await this.getConnection();
-            let resultExist: QueryResult = await conn.query(CRUDResourcesIQuery.Read.OneByContent, [jsonStringify(resource)]);
-            if (resultExist.rows.length > 0) {
-                logger.debug("Saving: Resource already exists.");
-                this.closeConnection(conn);
-                return resultExist.rows[0].id;
-            }
             await conn.query(CRUDResourcesIQuery.Create.One, [jsonStringify(resource), originId, providerItemsId]);
             let result: QueryResult = await conn.query(CRUDResourcesIQuery.Read.OneByContent, [jsonStringify(resource)]);
             this.closeConnection(conn);
@@ -188,60 +179,4 @@ export class PostgreSQLClass {
         await conn.query(CRUDScansIQuery.Create.One, [(resultScan.error.length > 0), resourceId, ruleId, batchId]);
         this.closeConnection(conn);
     }
-
- 
-    public async createLog(message: string, resourceId: number): Promise<void> {
-        const conn = await this.getConnection();
-        const messageHash = createHash('sha256').update(message).digest('hex');
-        const existingLog = await conn.query(CRUDLogsIQuery.Read.OneByHash, [messageHash]);
-        if (existingLog.rows.length > 0) {
-            this.closeConnection(conn);
-            return;
-        }
-        const existingLogWithMessage = await conn.query(CRUDLogsIQuery.Read.OneByMessage, [message]);
-        if (existingLogWithMessage.rows.length > 0) {
-            this.closeConnection(conn);
-            return;
-        }
-        await conn.query(CRUDLogsIQuery.Create.One, [
-            resourceId,
-            new Date(),
-            message,
-            messageHash
-        ]);
-        this.closeConnection(conn);
-    }
-
-    public async getLog(id: number): Promise<void> {
-        const conn = await this.getConnection();
-        const result = await conn.query(CRUDLogsIQuery.Read.One, [id]);
-        this.closeConnection(conn);
-        return result.rows[0];
-    }
-
-    public async getLogs(params: {
-        resourceId?: number,
-        startDate?: Date,
-        endDate?: Date,
-        limit?: number,
-        offset?: number
-    }): Promise<Log[]> {
-        const conn = await this.getConnection();
-        const result = await conn.query(CRUDLogsIQuery.Read.All, [
-            params.resourceId || null,
-            params.startDate || null,
-            params.endDate || null,
-            params.limit || 100,
-            params.offset || 0
-        ]);
-        this.closeConnection(conn);
-        return result.rows;
-    }
-
-    public async deleteLog(id: number): Promise<void> {
-        const conn = await this.getConnection();
-        await conn.query(CRUDLogsIQuery.Delete.One, [id]);
-        this.closeConnection(conn);
-    }
-    
 }

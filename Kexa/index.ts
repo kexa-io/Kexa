@@ -24,7 +24,7 @@ const timerTrigger: AzureFunction = async function (context: Context, myTimer: a
     context?.log("logger created");
     if (process.env.DEV) {
         if (process.env.DEV == "true") {
-            logger.settings.minLevel = 2;
+            logger.setting.level = 2;
         }
     }
 

@@ -1,7 +1,8 @@
 import * as fs from 'fs';
-import { Logger } from "tslog";
+//import { Logger } from "tslog"; // PsK: removing not bun compatible 21032025
+import pino from 'pino';
 import { jsonStringify } from './jsonStringify';
-const logger = new Logger({ minLevel: 3, type: "pretty", name: "GcpLogger" });
+const logger = pino({level: 'info'});
 
 export function writeStringToJsonFile(data: string, filePath: string): boolean {
     try {

@@ -18,6 +18,9 @@ import moment, { Moment, unitOfTime } from 'moment';
 import { BeHaviorEnum } from '../enum/beHavior.enum';
 import { writeStringToJsonFile } from '../helpers/files';
 import { extractHeaders } from './addOn.service';
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import {getContext, getNewLogger} from "./logger.service";
 import { splitProperty } from '../helpers/spliter';
 import { downloadFile, unzipFile } from '../helpers/dowloadFile';
@@ -109,10 +112,7 @@ export function extractAddOnNeed(settingFileList: any[]){
     settingFileList.forEach((ruleFile) => {
         objectNameList[ruleFile.alert.global.name] = {};
         ruleFile.rules.forEach((rule: any) => {
-            // check if rule is empty array
-            if (!rule) return;
-            if (rule?.length === 0) return;
-            if (rule?.applied === false) return;
+            if (rule.applied === false) return;
             if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
                 if (!providerList.includes(rule.cloudProvider.name))
                     providerList.push(rule.cloudProvider.name);

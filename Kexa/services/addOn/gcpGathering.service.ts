@@ -106,8 +106,13 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
         }
         else {
             setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", defaultPathCred);
-            const credentials = JSON.parse(getFile(defaultPathCred)??"");
-            projectId = credentials?.project_id;
+            if (defaultPathCred) {
+                const credentials = JSON.parse(getFile(defaultPathCred)??"");
+                projectId = credentials?.project_id;
+            }else{
+                logger.error("GCP - No Google Credential found in Config, please provide a path to a valid Google Credential JSON file.");
+                continue;
+            }
         }
         let regionsList = new Array<string>();
         if ('regions' in config) {
@@ -179,6 +184,7 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
             context?.log("- listing cloud resources done -");
             logger.info("- listing cloud resources done -");
 
+            ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
             //const client = new CloudTasksClient();
 
             gcpResources = {

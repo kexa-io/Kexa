@@ -18,15 +18,23 @@ export async function save(save: PostgreSQLSaveConfig, result: ResultScan[][]): 
 
         if(!save.urlName) throw new Error("urlName is required");
         let url = (await getEnvVar(save.urlName))??save.urlName;
+      /*  if (save.urlName === undefined && save.prefix === undefined) throw new Error("urlName or prefix is required");
+        let url = "";
+        if (save.urlName)
+            url = save.urlName;
+        else {
+            const config = save;
+            url = await getConfigOrEnvVar(config, save.type, save.prefix);    
+        }*/
+
 
         await pgSQL.createTables({
-            connectionString: url
+            connectionString: url // Use `connectionString` instead of `uri`
         });
-
         await Promise.all(result.flat().map(async (resultScan) => {
             await saveResultScan(resultScan, save, pgSQL, batchId);
         }));
-        
+
         logger.info("All data saved in PostgreSQL");
         await pgSQL.disconnect();
     } catch (e: any) {
@@ -36,35 +44,13 @@ export async function save(save: PostgreSQLSaveConfig, result: ResultScan[][]): 
 }
 
 async function saveResultScan(resultScan: ResultScan, save: PostgreSQLSaveConfig, pgSQL: PostgreSQLClass, batchId: string): Promise<void> {
-   
     let providerId = await pgSQL.createAndGetProvider(resultScan.rule.cloudProvider);
-    let providerItem = (await pgSQL.getProviderItemsByNameAndProvider(providerId, resultScan.rule.objectName));
-    let providerItemId = providerItem.ID;
+    let providerItemId = (await pgSQL.getProviderItemsByNameAndProvider(providerId, resultScan.rule.objectName)).ID;
     let ruleId = await pgSQL.createAndGetRule(resultScan.rule, providerId, providerItemId);
     let originId = await pgSQL.createAndGetOrigin({ name: save.origin ?? "Unknown" });
     let resourceId = await pgSQL.createAndGetResource(resultScan.objectContent, originId, providerItemId);
-
     if (resourceId === undefined) {
         throw new Error("Resource ID is undefined");
     }
-
-    if (resultScan?.rule.objectName === "podLogs") {
-        
-        if (resultScan.error.length > 0) {
-            logger.info("Saving scan (logs) for: " + providerItem.name);
-            await pgSQL.createScan(resultScan, resourceId as number, ruleId, batchId);
-        }
-        
-        if (save.logs && save.logs != undefined) {
-            logger.info("Saving logs for: " + providerItem.name);
-            const logPromises = resultScan.objectContent.logs.map(async (log: any) => {
-                await pgSQL.createLog(log.line, resourceId as number);
-            });
-            await Promise.all(logPromises);
-        }
-    }
-    else  {
-        logger.info("Saving scan for: " + providerItem.name);
-        await pgSQL.createScan(resultScan, resourceId as number, ruleId, batchId);
-    }
+    await pgSQL.createScan(resultScan, resourceId as number, ruleId, batchId);
 }

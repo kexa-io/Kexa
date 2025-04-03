@@ -31,7 +31,7 @@ export const TableIQuery = {
     Resources: `
         CREATE TABLE IF NOT EXISTS Resources (
             ID SERIAL PRIMARY KEY,
-            content JSONB NOT NULL,
+            content TEXT NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             originId INT,
             providerItemId INT,
@@ -82,17 +82,4 @@ export const TableIQuery = {
             FOREIGN KEY (resourceId) REFERENCES Resources(ID)
         )
     `,
-    Logs: `
-        CREATE TABLE IF NOT EXISTS Logs (
-        ID SERIAL PRIMARY KEY,
-        resourceId INT REFERENCES Resources(ID),
-        timestamp TIMESTAMP NOT NULL,
-        message TEXT NOT NULL,
-        message_hash VARCHAR(64) UNIQUE NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_logs_timestamp ON Logs(timestamp);
-    CREATE INDEX IF NOT EXISTS idx_logs_resource_id ON Logs(resourceId);
-    `
 }
