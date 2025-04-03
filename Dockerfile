@@ -1,17 +1,38 @@
-FROM oven/bun:latest as bun
+FROM oven/bun:slim as bun-source
+
+# Compression
+FROM alpine:3.18 as compress
+RUN apk add upx
+COPY --from=bun-source /usr/local/bin/bun /usr/local/bin/
+WORKDIR /usr/local/bin
+RUN upx bun
+
+# Build
+FROM frolvlad/alpine-glibc as build
+WORKDIR /usr/src/app
+
+COPY --from=compress /usr/local/bin/bun /usr/local/bin/
+
+COPY package.json bun.lockb ./
+COPY README.md ./
+COPY capacity.json ./
+COPY VERSION ./
+
+RUN bun install --production --frozen-lockfile
+
+COPY Kexa ./Kexa
+
+# Final image
+FROM frolvlad/alpine-glibc
+
+RUN apk add --no-cache libgcc
+
+COPY --from=compress /usr/local/bin/bun /usr/local/bin/
 
 WORKDIR /usr/src/app
 
-# Install dependencies
-COPY package.json bun.lockb ./
-RUN bun install --frozen-lockfile
+COPY --from=build /usr/src/app /usr/src/app
 
-# Copy application files
-COPY . .
+ENV NODE_ENV=production
 
-# Remove dev dependencies to reduce image size
-RUN bun install --production --frozen-lockfile
-
-# Run the app
-USER bun
-ENTRYPOINT [ "bun", "run", "Kexa/index.ts" ]
+CMD [ "bun", "run", "Kexa/index.ts" ]
