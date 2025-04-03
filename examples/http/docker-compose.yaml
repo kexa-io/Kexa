@@ -1,0 +1,6 @@
+services:
+  kexa:
+    build: ../../
+    volumes:
+      - ./config:/usr/src/app/config
+      - ./rules:/usr/src/app/rules

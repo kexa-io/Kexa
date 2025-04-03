@@ -49,7 +49,7 @@
     #change the namespace name to your namespace
     - name: "namespace-exist-api-4urcloud"
       description : "this rules is to check if namespace exist and notifiable if exist"
-      applied: false
+      applied: true
       level: 0
       cloudProvider: kubernetes
       objectName : namespaces
@@ -151,9 +151,9 @@
           condition : INF_OR_EQUAL
           value: 2
     # this is an example of pod autoscaler rule
-    - name: "kube-check-log-message"
-      description : "this rules is to verify log message"
-      applied: true
+    - name: "kube-hozizontal-pod-autoscaler-min-max-replicas"
+      description : "this rules is to verify horizontal pod autoscaler min and max replicas"
+      applied: false
       level: 2
       cloudProvider: kubernetes
       objectName : podLogs
@@ -161,13 +161,16 @@
         - property : logs
           condition : ALL
           value: 
-            - property : line
-              condition : REGEX
-              value: (?i)^((?!critical).)*$
+            - property : message
+              condition : DIFFERENT
+              value: 'error'
+            - property : message
+              condition : DIFFERENT
+              value: 'warning'
     # pods consumption
     - name: "kube-pods-memory-limitation"
       description : "this rules is to verify pods memory limitation"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: kubernetes
       objectName : podsConsumption
@@ -178,7 +181,7 @@
     # pods consumption
     - name: "kube-pods-cpu-limitation"
       description : "this rules is to verify cpu usage limitation"
-      applied: false
+      applied: true
       level: 2
       cloudProvider: kubernetes
       objectName : podsConsumption
