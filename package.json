@@ -21,6 +21,32 @@
     "peerDependencies": {
         "typescript": "^5.8.2"
     },
+    "release": {
+        "branches": [
+          "main"
+        ],
+        "plugins": [
+          "@semantic-release/commit-analyzer",
+          "@semantic-release/release-notes-generator",
+          "@semantic-release/changelog",
+          "@semantic-release/github",
+          [
+            "@semantic-release/git",
+            {
+              "assets": [
+                "CHANGELOG.md"
+              ],
+              "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+            }
+          ],
+          [
+            "@semantic-release/exec",
+            {
+              "publishCmd": "echo ::set-output name=nextVer::${nextRelease.version}"
+            }
+          ]
+        ]
+      },
     "dependencies": {
         "@aws-sdk/client-accessanalyzer": "^3.772.0",
         "@aws-sdk/client-account": "^3.772.0",
