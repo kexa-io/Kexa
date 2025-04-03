@@ -80,6 +80,7 @@ With Kexa, you can [edit your own rules](documentation/Documentation-Kexa.md#rul
 
 ## Built With
 
+* [![BUNJS]](https://bun.sh/)
 * [![PNPM][PNPM-SHIELD]](https://pnpm.io/fr)
 
 ## Runnable in
@@ -123,8 +124,8 @@ then:
 
 ```bash
 #dont forget to get [nodejs](https://nodejs.org/en/download) to launch Kexa:
-pnpm i --frozen-lockfile
-pnpm run start
+bun i --frozen-lockfile
+bun run Kexa/index.ts
 ```
 
 ## By Git Action
