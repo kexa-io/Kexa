@@ -1,0 +1,13 @@
+{
+    "addOn": [
+        "kubernetes"
+    ],
+    "objectNameNeed": {
+        "kub-prod-check": {
+            "kubernetes": [
+                "namespaces",
+                "pods"
+            ]
+        }
+    }
+}

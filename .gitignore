@@ -1,17 +1,47 @@
-**/kubernetes.json
+# dependencies (bun install)
+node_modules
 
+# output
+out
+dist
+*.tgz
+
+# code coverage
+coverage
+*.lcov
+
+# logs
+logs
+_.log
+report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# caches
+.eslintcache
+.cache
+*.tsbuildinfo
+
+# Finder (MacOS) folder config
+.DS_Store
+
+# remove scans html
+*output/
 node_modules
 .env
 build/*
 *.js
 .idea
-.vscode
 config/default.json
 config/Config.d.ts
 build
 Kexa/rules/aws-tests.yaml
 config_kuber
-eastern-rider-263712-9376010a1184.json
 config/addOnNeed.json
 config/headers.json
 config_kuber
@@ -21,3 +51,12 @@ config/resources*.html
 config/resources*.json
 .DS_Store
 ./kubeconfig.yaml
+
+**/kubernetes.json
+
+node_modules
+.env
+build/*
+examples/*/data/*
+*/config/addOnNeed.json
+*/config/headers.json

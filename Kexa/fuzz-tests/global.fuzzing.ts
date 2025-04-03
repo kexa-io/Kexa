@@ -119,7 +119,7 @@ export async function fuzz(fuzzData: Buffer) {
     const logger = getNewLogger("MainLogger");
     if (process.env.DEV) {
         if (process.env.DEV == "true") {
-            logger.settings.minLevel = 2;
+            logger.setting.level = 2;
         }
     }
 
@@ -169,6 +169,8 @@ function getFuzzConfig(fuzzData: Buffer) : fuzzConfig {
 }
 
 function getFuzzConfigYaml(fuzzData: Buffer) : Object {
+
+    // return as a json object
     return {
             "fuzz": [
                 {

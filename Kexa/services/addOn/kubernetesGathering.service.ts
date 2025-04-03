@@ -55,22 +55,27 @@
 
 import { getConfig } from "../../helpers/loaderConfig";
 import helm from 'helm-ts';
-import { KubernetesResources, createKubernetesResourcesDefault } from "../../models/kubernetes/kubernetes.models";
+import type { KubernetesResources } from "../../models/kubernetes/kubernetes.models";
+import { createKubernetesResourcesDefault } from "../../models/kubernetes/kubernetes.models";
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { deleteFile, getFile, writeStringToJsonFile } from "../../helpers/files";
-import { KubernetesConfig } from "../../models/kubernetes/config.models";
-const yaml = require('js-yaml');
+import type { KubernetesConfig } from "../../models/kubernetes/config.models";
+import * as yaml from 'js-yaml';
 
 import {getNewLogger} from "../logger.service";
 const logger = getNewLogger("KubernetesLogger");
 
-const k8s = require('@kubernetes/client-node');
+import * as k8s from '@kubernetes/client-node';
 let currentConfig:KubernetesConfig;
+
+//disable check ssl : https://github.com/oven-sh/bun/issues/7332
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 // let globalConfiguration = getConfig().global ?? {};
 
 let globalConfiguration: any;
 async function init() {
+    logger.info("Initializing Kubernetes configuration");
     try {
         const configHere = await getConfig();
         globalConfiguration = configHere.global ?? {};
@@ -85,41 +90,9 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
     for(let config of kubernetesConfig??[]){
         currentConfig = config;
         let prefix = config.prefix??(kubernetesConfig.indexOf(config).toString());
+
         try {
             let pathKubeFile = await getConfigOrEnvVar(config, "KUBECONFIG", prefix);
-            if (pathKubeFile?.includes('$HOME')) {
-                pathKubeFile = pathKubeFile.replace('$HOME', process.env.HOME || '');
-            }
-
-            if (!pathKubeFile || !getFile(pathKubeFile)) {
-                logger.error(`The file at path ${pathKubeFile} does not exist or cannot be read.`);
-                continue;
-            }
-
-            try {
-                const fileContent = getFile(pathKubeFile ?? "");
-                let parsedContent;
-
-                if (pathKubeFile?.endsWith(".json")) {
-                    parsedContent = JSON.stringify(fileContent);
-                } else if (pathKubeFile?.endsWith(".yaml") || pathKubeFile?.endsWith(".yml") || !pathKubeFile.includes('.')) {
-                    parsedContent = JSON.stringify(yaml.load(fileContent), null, 2);
-                } else if (process.env.INTERFACE_CONFIGURATION_ENABLED === 'true') {
-                    parsedContent = JSON.stringify(yaml.load(pathKubeFile), null, 2);
-                } else {
-                    throw new Error("Unknown credentials type for Kubernetes (path must be a .json or .yaml/.yml)");
-                }
-
-                writeStringToJsonFile(parsedContent, "./config/kubernetes.json");
-            } catch (error) {
-                logger.error("Error processing Kubernetes credentials:", error);
-            }
-
-            if (!getFile("./config/kubernetes.json")) {
-                logger.error("The file './config/kubernetes.json' is null or cannot be read.");
-                continue;
-            }
-
             const promises = [
                 kubernetesListing(pathKubeFile),
             ];
@@ -184,11 +157,11 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
 //kubernetes list
 export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
     logger.info("starting kubernetesListing");
+    // connecting to kubernetes
     const kc = new k8s.KubeConfig();
+    kc.loadFromDefault();
+    //
     const metricsClient = new k8s.Metrics(kc);
-    (isPathKubeFile)?kc.loadFromFile("./config/kubernetes.json"):kc.loadFromDefault();
-
-
 
     //opening different api to get kubernetes resources
     const autoscalingV1Api = kc.makeApiClient(k8s.AutoscalingV1Api);
@@ -350,11 +323,11 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
             (async (resource: any) => {
             kubResources = await getAllElementsWithNameSpace(resource, item.metadata.name, kubResources);
         }));
-
+  
         helmData?.forEach((helmItem: any) => {
             kubResources["helm"].push(helmItem);
         });
-
+  
     });
     await Promise.all(namespacePromises);
     return kubResources;
@@ -388,8 +361,8 @@ async function collectHelm(namespace: string): Promise<any> {
 /*async function collectPods(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("pods")) return [];
     try{
-        const pods = await k8sApiCore.listNamespacedPod({ namespace });
-        return pods?.items;
+        const pods = await k8sApiCore.listNamespacedPod(namespace);
+        return pods?.body?.items;
     }catch(e:any){
         logger.debug(e);
         return [];
@@ -400,8 +373,8 @@ async function collectPods(k8sApiCore: any, namespace: string): Promise<any> {
 
     if (!currentConfig?.ObjectNameNeed?.includes("pods")) return [];
     try {
-        const pods = await k8sApiCore.listNamespacedPod({ namespace });
-        const formattedPods = pods?.items.map((pod: any) => {
+        const pods = await k8sApiCore.listNamespacedPod(namespace);
+        const formattedPods = pods?.body?.items.map((pod: any) => {
             const formattedLabels = Object.entries(pod.metadata.labels || {}).map(([key, value]) => ({
                 key,
                 value,
@@ -431,7 +404,6 @@ async function collectPods(k8sApiCore: any, namespace: string): Promise<any> {
         });
         return formattedPods;
     } catch (e: any) {
-        logger.error(`Problem on collectPods for namespace: ${namespace}`);
         logger.debug(e);
         return [];
     }
@@ -466,8 +438,8 @@ async function collectPodsConsumption(k8sApiCore: any, metricsClient: any, names
 async function collectServices(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("services")) return [];
     try{
-        const services = await k8sApiCore.listNamespacedService({ namespace });
-        return services?.items;
+        const services = await k8sApiCore.listNamespacedService(namespace);
+        return services?.body?.items;
     }catch(e){
         logger.debug(e);
         return [];
@@ -477,8 +449,8 @@ async function collectServices(k8sApiCore: any, namespace: string): Promise<any>
 async function collectConfigmap(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("configmap")) return [];
     try{
-        const configmap = await k8sApiCore.listNamespacedConfigMap({ namespace });
-        return configmap?.items;
+        const configmap = await k8sApiCore.listNamespacedConfigMap(namespace);
+        return configmap?.body?.items;
     }catch(e){
         logger.debug(e);
         return [];
@@ -488,8 +460,8 @@ async function collectConfigmap(k8sApiCore: any, namespace: string): Promise<any
 async function collectDeployment(k8sAppsV1Api: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("deployment")) return [];
     try{
-        const deployment = await k8sAppsV1Api.listNamespacedDeployment({ namespace });
-        return deployment?.items;
+        const deployment = await k8sAppsV1Api.listNamespacedDeployment(namespace);
+        return deployment?.body?.items;
     }catch(e){
         logger.debug(e);
         return [];
@@ -499,8 +471,8 @@ async function collectDeployment(k8sAppsV1Api: any, namespace: string): Promise<
 async function collectReplicaset(k8sAppsV1Api: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("replicaset")) return [];
     try {
-        const replicasets = await k8sAppsV1Api.listNamespacedReplicaSet({namespace });
-        return replicasets?.items;
+        const replicasets = await k8sAppsV1Api.listNamespacedReplicaSet(namespace);
+        return replicasets?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -510,8 +482,8 @@ async function collectReplicaset(k8sAppsV1Api: any, namespace: string): Promise<
 async function collectStatefulset(k8sAppsV1Api: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("statefulset")) return [];
     try {
-        const statefulsets = await k8sAppsV1Api.listNamespacedStatefulSet({ namespace });
-        return statefulsets?.items;
+        const statefulsets = await k8sAppsV1Api.listNamespacedStatefulSet(namespace);
+        return statefulsets?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -521,8 +493,8 @@ async function collectStatefulset(k8sAppsV1Api: any, namespace: string): Promise
 async function collectDaemonset(k8sAppsV1Api: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("daemonset")) return [];
     try {
-        const daemonsets = await k8sAppsV1Api.listNamespacedDaemonSet({ namespace });
-        return daemonsets?.items;
+        const daemonsets = await k8sAppsV1Api.listNamespacedDaemonSet(namespace);
+        return daemonsets?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -533,8 +505,8 @@ async function collectDaemonset(k8sAppsV1Api: any, namespace: string): Promise<a
 async function collectJob(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("job")) return [];
     try {
-        const jobs = await k8sApiCore.listNamespacedJob({ namespace });
-        return jobs?.items;
+        const jobs = await k8sApiCore.listNamespacedJob(namespace);
+        return jobs?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -545,8 +517,8 @@ async function collectJob(k8sApiCore: any, namespace: string): Promise<any> {
 async function collectCronjob(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("cronjob")) return [];
     try {
-        const cronjobs = await k8sApiCore.listNamespacedCronJob({ namespace });
-        return cronjobs?.items;
+        const cronjobs = await k8sApiCore.listNamespacedCronJob(namespace);
+        return cronjobs?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -556,8 +528,8 @@ async function collectCronjob(k8sApiCore: any, namespace: string): Promise<any> 
 async function collectIngress(k8sNetworkingV1Api: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("ingress")) return [];
     try {
-        const ingress = await k8sNetworkingV1Api.listNamespacedIngress({ namespace });
-        return ingress?.items;
+        const ingress = await k8sNetworkingV1Api.listNamespacedIngress(namespace);
+        return ingress?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -567,8 +539,8 @@ async function collectIngress(k8sNetworkingV1Api: any, namespace: string): Promi
 async function collectPersistentvolume(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("persistentvolume")) return [];
     try {
-        const persistentVolumes = await k8sApiCore.listPersistentVolume({ namespace });
-        return persistentVolumes?.items;
+        const persistentVolumes = await k8sApiCore.listPersistentVolume(namespace);
+        return persistentVolumes?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -578,8 +550,8 @@ async function collectPersistentvolume(k8sApiCore: any, namespace: string): Prom
 async function collectPersistentvolumeclaim(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("persistentvolumeclaim")) return [];
     try {
-        const persistentVolumeClaims = await k8sApiCore.listNamespacedPersistentVolumeClaim({ namespace });
-        return persistentVolumeClaims?.items;
+        const persistentVolumeClaims = await k8sApiCore.listNamespacedPersistentVolumeClaim(namespace);
+        return persistentVolumeClaims?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -589,8 +561,8 @@ async function collectPersistentvolumeclaim(k8sApiCore: any, namespace: string):
 async function collectSecret(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("secret")) return [];
     try {
-        const secrets = await k8sApiCore.listNamespacedSecret({ namespace });
-        return secrets?.items;
+        const secrets = await k8sApiCore.listNamespacedSecret(namespace);
+        return secrets?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -600,8 +572,8 @@ async function collectSecret(k8sApiCore: any, namespace: string): Promise<any> {
 async function collectServiceaccount(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("serviceaccount")) return [];
     try {
-        const serviceAccounts = await k8sApiCore.listNamespacedServiceAccount({ namespace });
-        return serviceAccounts?.items;
+        const serviceAccounts = await k8sApiCore.listNamespacedServiceAccount(namespace);
+        return serviceAccounts?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -611,8 +583,8 @@ async function collectServiceaccount(k8sApiCore: any, namespace: string): Promis
 async function collectRole(k8sRbacAuthorizationV1Api: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("role")) return [];
     try {
-        const roles = await k8sRbacAuthorizationV1Api.listNamespacedRole({ namespace });
-        return roles?.items;
+        const roles = await k8sRbacAuthorizationV1Api.listNamespacedRole(namespace);
+        return roles?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -622,8 +594,8 @@ async function collectRole(k8sRbacAuthorizationV1Api: any, namespace: string): P
 async function collectRolebinding(k8sRbacAuthorizationV1Api: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("rolebinding")) return [];
     try {
-        const roleBindings = await k8sRbacAuthorizationV1Api.listNamespacedRoleBinding({ namespace });
-        return roleBindings?.items;
+        const roleBindings = await k8sRbacAuthorizationV1Api.listNamespacedRoleBinding(namespace);
+        return roleBindings?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -634,7 +606,7 @@ async function collectClusterrole(k8sRbacAuthorizationV1Api: any, namespace: str
     if(!currentConfig?.ObjectNameNeed?.includes("clusterrole")) return [];
     try {
         const clusterRoles = await k8sRbacAuthorizationV1Api.listClusterRole();
-        return clusterRoles?.items;
+        return clusterRoles?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -645,7 +617,7 @@ async function collectClusterrolebinding(k8sRbacAuthorizationV1Api: any, namespa
     if(!currentConfig?.ObjectNameNeed?.includes("clusterrolebinding")) return [];
     try {
         const clusterRoleBindings = await k8sRbacAuthorizationV1Api.listClusterRoleBinding();
-        return clusterRoleBindings?.items;
+        return clusterRoleBindings?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -655,8 +627,8 @@ async function collectClusterrolebinding(k8sRbacAuthorizationV1Api: any, namespa
 async function collectStorageclass(k8sStorageV1Api: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("storageclass")) return [];
     try {
-        const storageClasses = await k8sStorageV1Api.listStorageClass({ namespace });
-        return storageClasses?.items;
+        const storageClasses = await k8sStorageV1Api.listStorageClass(namespace);
+        return storageClasses?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -666,8 +638,8 @@ async function collectStorageclass(k8sStorageV1Api: any, namespace: string): Pro
 async function collectNetworkpolicy(k8sNetworkingV1Api: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("networkpolicy")) return [];
     try {
-        const networkPolicies = await k8sNetworkingV1Api.listNamespacedNetworkPolicy({ namespace });
-        return networkPolicies?.items;
+        const networkPolicies = await k8sNetworkingV1Api.listNamespacedNetworkPolicy(namespace);
+        return networkPolicies?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -679,7 +651,7 @@ async function collectPodsecuritypolicy(k8sApiCore: any, namespace: string): Pro
     if(!currentConfig?.ObjectNameNeed?.includes("podsecuritypolicy")) return [];
     try {
         const podSecurityPolicies = await k8sApiCore.listPodSecurityPolicy();
-        return podSecurityPolicies?.items;
+        return podSecurityPolicies?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -689,8 +661,8 @@ async function collectPodsecuritypolicy(k8sApiCore: any, namespace: string): Pro
 async function collectLimitrange(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("limitrange")) return [];
     try {
-        const limitRanges = await k8sApiCore.listNamespacedLimitRange({ namespace });
-        return limitRanges?.items;
+        const limitRanges = await k8sApiCore.listNamespacedLimitRange(namespace);
+        return limitRanges?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -700,8 +672,8 @@ async function collectLimitrange(k8sApiCore: any, namespace: string): Promise<an
 async function collectResourcequota(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("resourcequota")) return [];
     try {
-        const resourceQuotas = await k8sApiCore.listNamespacedResourceQuota({ namespace });
-        return resourceQuotas?.items;
+        const resourceQuotas = await k8sApiCore.listNamespacedResourceQuota(namespace);
+        return resourceQuotas?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -712,8 +684,8 @@ async function collectResourcequota(k8sApiCore: any, namespace: string): Promise
 async function collectHorizontalpodautoscaler(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("horizontalpodautoscaler")) return [];
     try {
-        const horizontalPodAutoscalers = await k8sApiCore.listNamespacedHorizontalPodAutoscaler({ namespace });
-        return horizontalPodAutoscalers?.items;
+        const horizontalPodAutoscalers = await k8sApiCore.listNamespacedHorizontalPodAutoscaler(namespace);
+        return horizontalPodAutoscalers?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -724,8 +696,8 @@ async function collectHorizontalpodautoscaler(k8sApiCore: any, namespace: string
 async function collectVerticalpodautoscaler(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("verticalpodautoscaler")) return [];
     try {
-        const verticalPodAutoscalers = await k8sApiCore.listNamespacedVerticalPodAutoscaler({ namespace });
-        return verticalPodAutoscalers?.items;
+        const verticalPodAutoscalers = await k8sApiCore.listNamespacedVerticalPodAutoscaler(namespace);
+        return verticalPodAutoscalers?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -737,7 +709,7 @@ async function collectPriorityclass(k8sApiCore: any, namespace: string): Promise
     if(!currentConfig?.ObjectNameNeed?.includes("priorityclass")) return [];
     try {
         const priorityClasses = await k8sApiCore.listPriorityClass();
-        return priorityClasses?.items;
+        return priorityClasses?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -749,7 +721,7 @@ async function collectCustomresourcedefinition(k8sApiCore: any, namespace: strin
     if(!currentConfig?.ObjectNameNeed?.includes("customresourcedefinition")) return [];
     try {
         const customResourceDefinitions = await k8sApiCore.listCustomResourceDefinition();
-        return customResourceDefinitions?.items;
+        return customResourceDefinitions?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -760,8 +732,8 @@ async function collectCustomresourcedefinition(k8sApiCore: any, namespace: strin
 async function collectPoddisruptionbudget(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("poddisruptionbudget")) return [];
     try {
-        const podDisruptionBudgets = await k8sApiCore.listNamespacedPodDisruptionBudget({ namespace });
-        return podDisruptionBudgets?.items;
+        const podDisruptionBudgets = await k8sApiCore.listNamespacedPodDisruptionBudget(namespace);
+        return podDisruptionBudgets?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -771,10 +743,9 @@ async function collectPoddisruptionbudget(k8sApiCore: any, namespace: string): P
 async function collectEvent(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("event")) return [];
     try {
-        const events = await k8sApiCore.listNamespacedEvent({ namespace });
-        return events?.items;
+        const events = await k8sApiCore.listNamespacedEvent(namespace);
+        return events?.body?.items;
     } catch (e) {
-        logger.error(`Problem on collectEvent for namespace: ${namespace}`);
         logger.debug(e);
         return [];
     }
@@ -783,8 +754,8 @@ async function collectEvent(k8sApiCore: any, namespace: string): Promise<any> {
 async function collectEndpoint(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("endpoint")) return [];
     try {
-        const endpoints = await k8sApiCore.listNamespacedEndpoint({ namespace });
-        return endpoints?.items;
+        const endpoints = await k8sApiCore.listNamespacedEndpoint(namespace);
+        return endpoints?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -796,7 +767,7 @@ async function collectNode(k8sApiCore: any, namespace: string): Promise<any> {
     try {
         const nodes = await k8sApiCore.listNode();
 
-        nodes?.items.forEach((node: any) => {
+        nodes?.body?.items.forEach((node: any) => {
             node.status.formattedConditions = {};
         
             node.status.conditions.forEach((condition: any) => {
@@ -810,9 +781,8 @@ async function collectNode(k8sApiCore: any, namespace: string): Promise<any> {
                 };
             });
         });
-        return nodes?.items;
+        return nodes?.body?.items;
     } catch (e) {
-        logger.error(`Problem on collectNode for namespace: ${namespace}`);
         logger.debug(e);
         return [];
     }
@@ -821,8 +791,8 @@ async function collectNode(k8sApiCore: any, namespace: string): Promise<any> {
 async function collectPodtemplate(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("podtemplate")) return [];
     try {
-        const podTemplates = await k8sApiCore.listNamespacedPodTemplate({ namespace });
-        return podTemplates?.items;
+        const podTemplates = await k8sApiCore.listNamespacedPodTemplate(namespace);
+        return podTemplates?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -833,7 +803,7 @@ async function collectMutatingwebhookconfiguration(k8sApiCore: any, namespace: s
     if(!currentConfig?.ObjectNameNeed?.includes("mutatingwebhookconfiguration")) return [];
     try {
         const mutatingWebhookConfigurations = await k8sApiCore.listMutatingWebhookConfiguration();
-        return mutatingWebhookConfigurations?.items;
+        return mutatingWebhookConfigurations?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -845,7 +815,7 @@ async function collectValidatingwebhookconfiguration(k8sApiCore: any, namespace:
     if(!currentConfig?.ObjectNameNeed?.includes("validatingwebhookconfiguration")) return [];
     try {
         const validatingWebhookConfigurations = await k8sApiCore.listValidatingWebhookConfiguration();
-        return validatingWebhookConfigurations?.items;
+        return validatingWebhookConfigurations?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -856,7 +826,7 @@ async function collectApiservice(k8sApiregistrationV1Api: any, namespace: string
     if(!currentConfig?.ObjectNameNeed?.includes("apiservice")) return [];
     try {
         const apiServices = await k8sApiregistrationV1Api.listAPIService();
-        return apiServices?.items;
+        return apiServices?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -867,8 +837,8 @@ async function collectApiservice(k8sApiregistrationV1Api: any, namespace: string
 async function collectControllerrevision(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("controllerrevision")) return [];
     try {
-        const controllerRevisions = await k8sApiCore.listNamespacedControllerRevision({ namespace });
-        return controllerRevisions?.items;
+        const controllerRevisions = await k8sApiCore.listNamespacedControllerRevision(namespace);
+        return controllerRevisions?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -878,8 +848,8 @@ async function collectControllerrevision(k8sApiCore: any, namespace: string): Pr
 async function collectLease(k8CoordinationV1Api: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("lease")) return [];
     try {
-        const leases = await k8CoordinationV1Api.listNamespacedLease({ namespace });
-        return leases?.items;
+        const leases = await k8CoordinationV1Api.listNamespacedLease(namespace);
+        return leases?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -890,8 +860,8 @@ async function collectLease(k8CoordinationV1Api: any, namespace: string): Promis
 async function collectCertificate(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("certificate")) return [];
     try {
-        const certificates = await k8sApiCore.listNamespacedCertificate({ namespace });
-        return certificates?.items;
+        const certificates = await k8sApiCore.listNamespacedCertificate(namespace);
+        return certificates?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -902,7 +872,7 @@ async function collectCertificateSigningRequest(k8scertificatesV1Api: any, names
     if(!currentConfig?.ObjectNameNeed?.includes("certificateSigningRequest")) return [];
     try {
         const certificateSigningRequests = await k8scertificatesV1Api.listCertificateSigningRequest();
-        return certificateSigningRequests?.items;
+        return certificateSigningRequests?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -914,7 +884,7 @@ async function collectComponentstatus(k8sApiCore: any, namespace: string): Promi
     if(!currentConfig?.ObjectNameNeed?.includes("componentstatus")) return [];
     try {
         const componentStatuses = await k8sApiCore.listComponentStatus();
-        return componentStatuses?.items;
+        return componentStatuses?.body?.items;
     } catch (e) {
         logger.debug(e);
         return [];
@@ -926,12 +896,12 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
     if (!currentConfig?.ObjectNameNeed?.includes("podLogs")) return [];
     if (globalConfiguration?.scanDelay == null) globalConfiguration.scanDelay = 3600;
     try {
-        const pods = await k8sApiCore.listNamespacedPod({ namespace });
+        const pods = await k8sApiCore.listNamespacedPod(namespace);
         const stream = require('stream');
         const logsData: any[] = [];
         const delay = (ms: any) => new Promise((resolve: any) => setTimeout(resolve, ms));
 
-        await Promise.all(pods?.items.map(async (pod: any) => {
+        await Promise.all(pods?.body?.items.map(async (pod: any) => {
             const logStream = new stream.PassThrough();
             const currDate = new Date();
             const interval = new Date(currDate.getTime() - (globalConfiguration?.scanDelay ?? 3600 ) * 1000);
@@ -974,8 +944,8 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
 async function collectHorizontalPodAutoscaler(autoscalingV1Api: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("hpa")) return [];
     try {
-       const hpa = await autoscalingV1Api.listNamespacedHorizontalPodAutoscaler({ namespace });
-        return hpa?.items;
+       const hpa = await autoscalingV1Api.listNamespacedHorizontalPodAutoscaler(namespace);
+        return hpa?.body?.items;
     } catch (error) {
       logger.warn("Error getting Pod:", error);
       return null;
