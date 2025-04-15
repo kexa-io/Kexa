@@ -35,7 +35,7 @@
         - log
         - teams
       to: 
-        - 'https://innovtecheu.webhook.office.com/webhookb2/d1e6f097-8ece-4b79-9b18-a4d1e2f005e1@e17d1063-88c2-4368-9d08-203b84a1bb40/IncomingWebhook/10480c6de0cb427baf8e8a5bc4cbf30d/9bb0a529-c19a-478f-afd3-04a338037922'
+        - 'xxxxxxxxxxxxxxx'
       conditions:
         - level: 0
           min: 1
