@@ -45,13 +45,11 @@ export class PostgreSQLClass {
 
     public async createTables(config?: PoolConfig): Promise<boolean> {
         let conn = await this.getConnection(config);
-        console.log("CREATE TABLE loop");
         try{
             await Promise.all(Object.values(TableIQuery).map(async (query) => {
                 try {
                     return await conn.query(query);
                 } catch (error) {
-                    console.log(error);
                     return false;
                 }
             }))
