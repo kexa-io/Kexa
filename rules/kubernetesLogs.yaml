@@ -1,0 +1,87 @@
+- version: 1.0.0
+  date: 08-02-2024
+  alert:
+    fatal:
+      enabled: false
+      type: 
+        - log
+        - teams
+      to:
+        - 'YourTeamsWebhook'
+    error:
+      enabled: false
+      type: 
+        - log
+        - teams
+      to: 
+        - 'YourTeamsWebhook'
+    warning:
+      enabled: false
+      type: 
+        - log
+        - teams
+      to:
+        - 'YourTeamsWebhook'
+    info:
+      enabled: false
+      type: 
+        - log
+        - teams
+      to: 
+        - 'YourTeamsWebhook'
+    global:
+      enabled: true
+      type: 
+        - log
+        - teams
+      to: 
+        - 'https://innovtecheu.webhook.office.com/webhookb2/d1e6f097-8ece-4b79-9b18-a4d1e2f005e1@e17d1063-88c2-4368-9d08-203b84a1bb40/IncomingWebhook/10480c6de0cb427baf8e8a5bc4cbf30d/9bb0a529-c19a-478f-afd3-04a338037922'
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    - name: "kube-check-log-message-warning"
+      description : "this rules is to verify log message"
+      applied: true
+      level: 1
+      cloudProvider: kubernetes
+      objectName : podLogs
+      conditions:
+        - property : logs
+          condition : ALL
+          value: 
+            - property : line
+              condition : REGEX
+              value: ^(?!.*warning).*$
+    - name: "kube-check-log-message-error"
+      description : "this rules is to verify log message"
+      applied: true
+      level: 2
+      cloudProvider: kubernetes
+      objectName : podLogs
+      conditions:
+        - property : logs
+          condition : ALL
+          value: 
+            - property : line
+              condition : REGEX
+              value: ^(?!.*error).*$
+    - name: "kube-check-log-message-crash"
+      description : "this rules is to verify log message"
+      applied: true
+      level: 3
+      cloudProvider: kubernetes
+      objectName : podLogs
+      conditions:
+        - property : logs
+          condition : ALL
+          value: 
+            - property : line
+              condition : REGEX
+              value: ^(?!.*crash).*$
