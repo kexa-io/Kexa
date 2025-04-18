@@ -55,7 +55,7 @@ async function saveResultScan(resultScan: ResultScan, save: PostgreSQLSaveConfig
             await pgSQL.createScan(resultScan, resourceId as number, ruleId, batchId);
         }
         
-        if (save.logs && save.logs != undefined) {
+        if (save.logs) {
             logger.info("Saving logs for: " + providerItem.name);
             const logPromises = resultScan.objectContent.logs.map(async (log: any) => {
                 await pgSQL.createLog(log.line, resourceId as number);

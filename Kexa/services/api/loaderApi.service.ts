@@ -62,9 +62,9 @@ export async function getNotificationGroupsFromApi(config: any){
 
     for (const key of Object.keys(config)) {
         if (key !== 'save') {
-            for (let i = 0; i < config[key].length; i++) {
+            await Promise.all(config[key].map(async (item) => {
                 try {
-                    const response = await axios.get(process.env.KEXA_API_URL + `/kexa/projectNotificationGroups/${config[key][i].ID}`, 
+                    const response = await axios.get(process.env.KEXA_API_URL + `/kexa/projectNotificationGroups/${item.ID}`, 
                         {
                             headers: {
                                 User: name,
@@ -79,7 +79,7 @@ export async function getNotificationGroupsFromApi(config: any){
                 } catch (error) {
                     console.error(error);
                 }
-            }
+            }));
         }
     }
     return notificationGroups;

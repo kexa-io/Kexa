@@ -48,7 +48,7 @@ async function saveResultScan(resultScan: ResultScan, save: MySQLSaveConfig, myS
             await mySQL.createScan(resultScan, resourceId as number, ruleId, batchId);
         }
         
-        if (save.logs && save.logs != undefined) {
+        if (save.logs) {
             logger.info("Saving logs for: " + providerItem.name);
             const logPromises = resultScan.objectContent.logs.map(async (log: any) => {
                 await mySQL.createLog(log.line, resourceId as number);
