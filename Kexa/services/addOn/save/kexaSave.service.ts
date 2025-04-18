@@ -1,14 +1,12 @@
 import { ResultScan } from "../../../models/resultScan.models";
 import { getEnvVar } from "../../manageVarEnvironnement.service";
 import { getContext, getNewLogger } from "../../logger.service";
-//import { loadAddOnsCustomUtility } from "../../addOn.service";
 import { KexaSaveConfig } from "../../../models/export/kexa/config.model";
 import { propertyToSend } from "../../display.service";
 
 const axios = require('axios');
 const logger = getNewLogger("KexaSaveLogger");
 const context = getContext();
-//const addOnPropertyToSend: { [key: string]: Function; } = loadAddOnsCustomUtility("display", "propertyToSend");
 
 export async function save(save: KexaSaveConfig, result: ResultScan[][]): Promise<void>{
     if(!save.name) throw new Error("name is required");
@@ -27,4 +25,6 @@ export async function save(save: KexaSaveConfig, result: ResultScan[][]): Promis
             Authorization: token
         }
     });
+    logger.info("All data saved in Kexa SaaS");
+    context?.log("All data saved in Kexa SaaS");
 }

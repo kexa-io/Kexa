@@ -61,23 +61,25 @@ export async function getNotificationGroupsFromApi(config: any){
 
 
     for (const key of Object.keys(config)) {
-        for (let i = 0; i < config[key].length; i++) {
-            try {
-                const response = await axios.get(process.env.KEXA_API_URL + `/kexa/projectNotificationGroups/${config[key][i].ID}`, 
-                    {
-                        headers: {
-                            User: name,
-                            Authorization: token
-                        }
-                    });                
-                if (Array.isArray(response.data.message)) {
-                    notificationGroups = [...notificationGroups, ...response.data.message];
-                } else {
-                    notificationGroups.push(response.data.message);
+        if (key !== 'save') {
+            await Promise.all(config[key].map(async (item) => {
+                try {
+                    const response = await axios.get(process.env.KEXA_API_URL + `/kexa/projectNotificationGroups/${item.ID}`, 
+                        {
+                            headers: {
+                                User: name,
+                                Authorization: token
+                            }
+                        });                
+                    if (Array.isArray(response.data.message)) {
+                        notificationGroups = [...notificationGroups, ...response.data.message];
+                    } else {
+                        notificationGroups.push(response.data.message);
+                    }
+                } catch (error) {
+                    console.error(error);
                 }
-            } catch (error) {
-                console.error(error);
-            }
+            }));
         }
     }
     return notificationGroups;
@@ -108,6 +110,38 @@ export async function getRulesFromApi(notificationGroups: any){
                 }
             }
     return rules;
+}
+
+function addSaveModuleToConfig(config: any, saveModules: any) {
+    const saveArray = saveModules.map((module: any) => ({
+        type: module.type,
+        name: module.name,
+        description: module.description,
+        urlName: module.urlName,
+        isActive: module.isActive
+    }));
+    config.save = saveArray;
+    return config;
+}
+
+async function getSaveModuleFromApi(){
+    let name = process.env.KEXA_API_TOKEN_NAME;
+    let token = process.env.KEXA_API_TOKEN;
+    let saveModules: any = [];
+
+    try {
+        const response = await axios.get(process.env.KEXA_API_URL + '/saveModule/active', 
+            {
+                headers: {
+                    User: name,
+                    Authorization: token
+                }
+            });
+        saveModules = response.data.message;
+    } catch (error) {
+        console.error(error);
+    }
+    return saveModules;
 }
 
 export async function getConfigFromApi(){
@@ -144,6 +178,9 @@ export async function getConfigFromApi(){
         return acc;
       }, {});
 
+      
     projects = groupedProjects;
+    let saveModules = await getSaveModuleFromApi();
+    addSaveModuleToConfig(projects, saveModules);
     return projects;
 }
