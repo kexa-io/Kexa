@@ -900,9 +900,9 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
         const logsData: any[] = [];
         const delay = (ms: any) => new Promise((resolve: any) => setTimeout(resolve, ms));
 
-        for (const pod of pods?.items || []) {
+        await Promise.all((pods?.items).map(async (pod) => {
             if (pod.status.phase !== 'Running') {
-                continue;
+                return;
             }
             const containers = [
                 ...(pod.spec.initContainers || []),
@@ -912,7 +912,8 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
             const sinceSeconds = Math.min(globalConfiguration?.scanDelay ?? 3600, 3600);
             const currDate = new Date();
             const interval = new Date(currDate.getTime() - sinceSeconds * 1000);
-            for (const container of containers) {
+            
+            await Promise.all(containers.map(async (container) => {
                 const containerName = container.name;
                 const logStream = new stream.PassThrough();
                 logStream.on('data', (chunk: any) => {
@@ -943,12 +944,12 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
                         req.abort();
                     }
                 } catch (err: any) {
-                    logger.debug(`Error when retrieving log on pod: ${pod.metadata.name}, container: ${containerName} (${errorCode})`);
+                    logger.debug(`Error when retrieving log on pod: ${pod.metadata.name}, container: ${containerName} (${err})`);
                     logger.silly(err);
                 }
                 await delay(500);
-            }
-        }
+            }));
+        }));
         return logsData;
     } catch (e) {
         logger.debug(e);
