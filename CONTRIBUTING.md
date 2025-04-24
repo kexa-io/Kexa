@@ -162,37 +162,21 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
 
 You can also add AddOns to save your data. These extensions are based on the same principle as Display AddOn. The Save AddOn file is named `[extension name]Save.service.ts`, and its path is `"./Kexa/services/addOn/save"`. This file is used to store the scanned data in a specific location. No return is attempted. The function used as an entry point is called "save". It takes 2 arguments. 
 
-The first is a "save", corresponding to :
+The first is a "save", corresponding to [SaveConfig interface](./Kexa/models/export/config.models.ts). But you can make your own by extends this interface.
 
-![interface of a SaveConfig](./Kexa/models/export/config.models.ts)
+The second is a table of [ResultScan interface](./Kexa/models/resultScan.models.ts).
 
-But you can make your own by extends this interface.
-
-The second is a table of ResultScan:
-
-![interface of a resultScan](./Kexa/models/resultScan.models.ts)
-
-example of fresh template of save addOn:
-
-![fresh template of save addOn](./config/freshTemplatesAddOn/XXXSave.service.ts)
+If you want to see an example of [fresh template of save addOn](./config/freshTemplatesAddOn/XXXSave.service.ts).
 
 ### **Export gather**
 
-You can also add AddOns to export your data. These extensions are based on the same principle as Save AddOn. The Exportation AddOn file is named [extension name]Exportation.service.ts, and its path is "./Kexa/services/addOn/exportation". This file is used to store the scanned data in a specific location. No return is attempted. The function used as an entry point is called "exportation". It takes 2 arguments. The first is a "save", corresponding to :
+You can also add AddOns to export your data. These extensions are based on the same principle as Save AddOn. The Exportation AddOn file is named [extension name]Exportation.service.ts, and its path is "./Kexa/services/addOn/exportation". This file is used to store the scanned data in a specific location. No return is attempted. The function used as an entry point is called "exportation". It takes 2 arguments.
 
-<!--@include:./Kexa/models/export/config.models.ts-->
+The first is a [SaveConfig interface](./Kexa/models/export/config.models.ts). But you can make your own by extends this interface.
 
-[![interface of a SaveConfig](./Kexa/models/export/config.models.ts)]
+The second is a [ProviderResource interface](./Kexa/models/providerResource.models.ts).
 
-But you can make your own by extends this interface.
-
-The second is a ProviderResource:
-
-![interface of a ProviderResource](./Kexa/models/providerResource.models.ts)
-
-example of fresh template of exportation addOn:
-
-![fresh template of exportation addOn](./config/freshTemplatesAddOn/XXXExportation.service.ts)
+If you want to see an example of [fresh template of exportation addOn](./config/freshTemplatesAddOn/XXXExportation.service.ts).
 
 ## Core engine
 
