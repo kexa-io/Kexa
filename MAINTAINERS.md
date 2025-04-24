@@ -11,12 +11,12 @@ This document contains a list of maintainers in this repo. See [RESPONSIBILITIES
 
 ## Current Maintainers
 
-| Maintainer         | GitHub ID                                                 | Affiliation |
-| ------------------ | --------------------------------------------------------- | ----------- |
-| Esteban MATHIA     | [estebanmathia](https://github.com/estebanmathia)         | 4urcloud    |
-| Adrien EPPLING     | [aesoft](https://github.com/aeppling)                     | 4urcloud    |
+| Maintainer | GitHub ID | Affiliation |
+|-|-|-|
+| Esteban MATHIA | [estebanmathia](https://github.com/estebanmathia) | 4urcloud |
+| Adrien EPPLING | [aesoft](https://github.com/aeppling) | 4urcloud |
 
 ## Emeritus
 
-| Maintainer         | GitHub ID                                                 | Affiliation |
-| ------------------ | --------------------------------------------------------- | ----------- |
+| Maintainer | GitHub ID | Affiliation |
+|-|-|-|
