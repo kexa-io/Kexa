@@ -32,7 +32,7 @@ You can also specify the regions you want to scan, this can be used to avoid sca
 
 - `regions`: The list of the regions name you want to scan, refer to AWS regions name. Here is the [AWS regions official documentation](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.RegionsAndAvailabilityZones.html)
 
-Example of [configuration for 2 environments](../../config/demo/aws.default.json).
+Example of [configuration for 2 AWS environments](../../config/demo/aws.default.json).
 
 ### Environment
 
