@@ -164,33 +164,33 @@ You can also add AddOns to save your data. These extensions are based on the sam
 
 The first is a "save", corresponding to :
 
-[interface of a SaveConfig](./Kexa/models/export/config.models.ts)
+![interface of a SaveConfig](./Kexa/models/export/config.models.ts)
 
 But you can make your own by extends this interface.
 
 The second is a table of ResultScan:
 
-[interface of a resultScan](./Kexa/models/resultScan.models.ts)
+![interface of a resultScan](./Kexa/models/resultScan.models.ts)
 
 example of fresh template of save addOn:
 
-[fresh template of save addOn](./config/freshTemplatesAddOn/XXXSave.service.ts)
+![fresh template of save addOn](./config/freshTemplatesAddOn/XXXSave.service.ts)
 
 ### **Export gather**
 
 You can also add AddOns to export your data. These extensions are based on the same principle as Save AddOn. The Exportation AddOn file is named [extension name]Exportation.service.ts, and its path is "./Kexa/services/addOn/exportation". This file is used to store the scanned data in a specific location. No return is attempted. The function used as an entry point is called "exportation". It takes 2 arguments. The first is a "save", corresponding to :
 
-[interface of a SaveConfig](./Kexa/models/export/config.models.ts)
+![interface of a SaveConfig](./Kexa/models/export/config.models.ts)
 
 But you can make your own by extends this interface.
 
 The second is a ProviderResource:
 
-[interface of a ProviderResource](./Kexa/models/providerResource.models.ts)
+![interface of a ProviderResource](./Kexa/models/providerResource.models.ts)
 
 example of fresh template of exportation addOn:
 
-[fresh template of exportation addOn](./config/freshTemplatesAddOn/XXXExportation.service.ts)
+![fresh template of exportation addOn](./config/freshTemplatesAddOn/XXXExportation.service.ts)
 
 ## Core engine
 
