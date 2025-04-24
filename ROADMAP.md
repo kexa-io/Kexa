@@ -121,6 +121,4 @@
 - [ ] AddOn Grafana
 - [ ] Kubernetes Operator
 
-
-
 See the [open issues](https://github.com/4urcloud/Kexa) for a full list of proposed features (and known issues).
