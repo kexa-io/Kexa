@@ -3,7 +3,7 @@
         <img src="../../images/MySQL-Logo.png" alt="Logo" width="200">
     </a>
 
-# <h3 align="center">MySQL</h3>
+# MySQL
 
   <p align="center">
     <br />
@@ -15,23 +15,22 @@
 
 ## Configuration
 
-### Prerequire
+### Requirements
 
-Creation of a database. All tables and constraints will be created automatically if required.
+You must create the database yourself. All tables and constraints will be created automatically if required.
 
 ### Default.json
 
 For each of your database, keys mandatory:
 
-- "urlName": uri connection to access (with database in the uri)
+- `urlName`: uri connection to access (with database in the uri)
 
-Example config for each identification you can use:
-![example config for mySQL](../../config/demo/mySQL.default.json)
+Example for a [MySQL configuration](../../config/demo/mySQL.default.json).
 
 ### Environment
 
-urlName can be use to refer to a specific value in your environnement with his name as value.
+`urlName` can be use to refer to a specific value in your environnement with his name as value.
 
 ### Schema of the database
 
-![Image of database's schema](../../images/schema-UML-SQL.png)
+![Image of database's schema](../../images/schema-UML-SQL.png).

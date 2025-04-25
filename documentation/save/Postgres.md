@@ -3,7 +3,7 @@
         <img src="../../images/postgres.png" alt="Logo" width="200">
     </a>
 
-# <h3 align="center">Postgres</h3>
+# PostgreSQL
 
   <p align="center">
     <br />
@@ -15,24 +15,22 @@
 
 ## Configuration
 
-### Prerequire
+### Requirements
 
-Creation of a database. All tables and constraints will be created automatically if required.
+You must create the database yourself. All tables and constraints will be created automatically if required.
 
 ### Default.json
 
 For each of your database, keys mandatory:
 
-- "urlName": uri connection to access (with database in the uri)
+- `urlName`: uri connection to access (with database in the uri)
 
-Configuration is the same as for mySQL but with your postgres connection string.
-
-![example config for Postgres](../../config/demo/postgres.default.json)
+Example for a [PostgreSQL configuration](../../config/demo/postgres.default.json)
 
 ### Environment
 
-urlName can be use to refer to a specific value in your environnement with his name as value.
+`urlName` can be use to refer to a specific value in your environnement with his name as value.
 
 ### Schema of the database
 
-![Image of database's schema](../../images/schema-UML-SQL.png)
+![Image of database's schema](../../images/schema-UML-SQL.png).
