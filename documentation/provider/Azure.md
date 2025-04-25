@@ -28,7 +28,7 @@ The following keys are recommended to ensure better readability when re-reading 
 - `name`: The name refers to the environment concerned by one or more keywords.
 - `description`: the description helps to clarify the name and avoid any possible confusion about the environment concerned.
 
-Example of [configuration for 2 Azure environments](../../config/demo/azure.default.json)
+Example of [configuration for 2 Azure environments](../../config/demo/azure.default.json).
 
 ### Environment
 

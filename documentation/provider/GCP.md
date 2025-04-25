@@ -33,7 +33,7 @@ Without specifying this, all regions will be scan.
 
 - `regions`: The list of the regions name you want to scan, refer to [GCP regions name](https://cloud.google.com/compute/docs/regions-zones).
 
-Example of [configuration for 2 GCP environments](../../config/demo/gcp.default.json)
+Example of [configuration for 2 GCP environments](../../config/demo/gcp.default.json).
 
 ### Environment
 

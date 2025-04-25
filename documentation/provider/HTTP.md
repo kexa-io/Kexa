@@ -3,7 +3,7 @@
         <img src="../../images/https-logo.png" alt="Logo" width="200">
     </a>
 
-# <h3 align="center">HTTP addOn</h3>
+# HTTP(s) addOn
 
   <p align="center">
     Ensure optimal service performance with our API endpoint data scan add-on, which gives you a real-time view of your systems' health, enabling you to maintain robust, uninterrupted online services.
@@ -20,23 +20,22 @@
 
 For each of your EndPoint, the following keys are mandatory:
 
-- "rules": this refers to the set of rules files you want to apply to this environment.
-- "prefix": the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).
-- "METHOD": It's define the way to communicate with the endpoint: "GET", "POST", "DELETE", "PATCH", ....
-- "URL": destination of the request
+- `rules`: this refers to the set of rules files you want to apply to this environment.
+- `prefix`: the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).
+- `METHOD`: It's define the way to communicate with the endpoint: `GET`, `POST`, `DELETE`, `PATCH`, ....
+- `URL`: destination of the request
 
 Optional keys to add more detail to your request:
 
-- "header": it's a json that collapse all your additional key/value you want. If you want to add AUTHORIZATION please refer to [environment](#environment)
-- "body": You can pass want ever you want except file
+- `header`: it's a JSON that collapse all your additional key/value you want. If you want to add AUTHORIZATION please refer to [environment](#environment)
+- `body`: You can pass want ever you want except file
 
 The following keys are recommended to ensure better readability when re-reading the configuration:
 
-- "name": the name refers to the environment concerned by one or more keywords.
-- "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.
+- `name`: the name refers to the environment concerned by one or more keywords.
+- `description`: the description helps to clarify the name and avoid any possible confusion about the environment concerned.
 
-Example config for 2 environments:
-![example config for http](../../config/demo/http.default.json)
+Example of [configuration for 2 Http environments](../../config/demo/http.default.json).
 
 ### Environment
 
@@ -46,10 +45,11 @@ You can add authorization to your request but it's not mandatory. However you wa
 AUTHORIZATION=
 ```
 
-note that "METHOD" and "URL" can also be set as environment variables instead of in "default.json".
+note that `METHOD` and `URL` can also be set as environment variables instead of in `default.json`.
 
 ## Additional documentation
 
-If you want to have more documentation about the API you want request, please refer to its documentation.
+If you want to have more documentation about :
 
-If you want to have more documentation about our request, we use [axios](https://axios-http.com/docs/intro)
+- the API you want request, please refer to its documentation.
+- our request, we use [axios](https://axios-http.com/docs/intro).

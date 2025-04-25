@@ -3,7 +3,7 @@
         <img src="../../images/kubernetes-logo.png" alt="Logo" width="300">
     </a>
 
-# <h3 align="center">Kubernetes addOn</h3>
+# Kubernetes addOn
 
   <p align="center">
     Take the security of your Kubernetes environments to the next level with our data scan addon, guaranteeing proactive monitoring and unrivalled protection of your clusters, for total peace of mind in the container world.
@@ -20,16 +20,15 @@
 
 For each of your EndPoint, the following keys are mandatory:
 
-- "rules": this refers to the set of rules files you want to apply to this environment.
-- "prefix": the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).
+- `rules`: this refers to the set of rules files you want to apply to this environment.
+- `prefix`: the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).
 
 The following keys are recommended to ensure better readability when re-reading the configuration:
 
-- "name": the name refers to the environment concerned by one or more keywords.
-- "description": the description helps to clarify the name and avoid any possible confusion about the environment concerned.
+- `name`: the name refers to the environment concerned by one or more keywords.
+- `description`: the description helps to clarify the name and avoid any possible confusion about the environment concerned.
 
-Example config for 2 environments:
-![example config for http](../../config/demo/kubernetes.default.json)
+Example of [configuration for 2 Kubernetes environments](../../config/demo/kubernetes.default.json).
 
 ### Environment
 
