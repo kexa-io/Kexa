@@ -6,7 +6,7 @@
     <img src="../images/kexa-no-background-color.png" alt="Logo" width="100" height="100">
   </a>
 
-# <h3 align="center">Kexa</h3>
+# Kexa
 
   <p align="center">
     Generic alert tools to ensure the quality of your infrastructure. Avoid wasting money on useless infrastructure, avoidable security breaches and service malfunctions.
@@ -21,8 +21,6 @@
 <a class="github-button" href="https://github.com/4urcloud/Kexa" data-color-scheme="no-preference: dark_high_contrast; light: dark_high_contrast; dark: light_high_contrast;" data-icon="octicon-star" data-size="large" aria-label="Star 4urcloud/Kexa on GitHub">Put Star</a>
   </p>
 </div>
-
-
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -114,15 +112,15 @@
   </ol>
 </details>
 
-# <div align="center" id= "global-understanding">**Global Understanding**</div>
+## <div align="center" id= "global-understanding">**Global Understanding**</div>
 
 We'll discuss how Kexa works in principle, and explain the usefulness of the various elements in the process at each stage.
 
-<img src="../images/schema-engine.png" alt="schema engine kexa">
+![schema engine kexa](../images/schema-engine.png)
 
-- The first step is to scan your environment. To avoid trying to scan all environments, we use a config that lets you describe which providers will be used. In this configuration, we then define the project(s) in this provider and the rule sets associated with them.
+- The first step is to scan your environment. To avoid trying to scan all environments, we use a config file that lets you describe which providers will be used. In this configuration, we then define the project(s) in this provider and the rule sets associated with them.
 
-- To perform the scans, addOns retrieves the credentials you've set up for each project. Priority is given to the credentials present in your key manager, and if not set up, then in the environment variables.
+- Next, to perform the scans, addOns retrieves the credentials you've set up for each project. Priority is given to the credentials present in your key manager, and if not set up, then in the environment variables.
 
 - Once all the scans have been made, we apply the rules you've defined to the data. We detect any resource that doesn't conform to any of your rules.
 
@@ -130,19 +128,24 @@ We'll discuss how Kexa works in principle, and explain the usefulness of the var
   - the severity levels associated with the rule in question
   - the notification presets present in the rule set where the rule is present.
 
-  Kexa notifies you on your communication channels
+  Kexa notifies you on your communication channels that you have defined.
 
 The principle is simple: scan and verify. That's why you have 2 main elements to set up:
-  - the default.json to know what to scan and what to scan with
-  - the set of rules to know what Kexa has to verify
 
-# <div align="center" id= "prerequisites">**Prerequisites**</div>
+- the `default.json` to know what to scan and what to scan with
+- the set of rules to know what Kexa has to verify
 
-First of all, Kexa is build with [pnpm](https://pnpm.io/en/) so you need to [install it](https://pnpm.io/en/installation)
-* pnpm
-  ```sh
-  winget install pnpm
-  ```
+## <div align="center" id="prerequisites">**Prerequisites**</div>
+
+First of all, Kexa is build with [bun](https://pnpm.io/en/) so you need to [install it](https://pnpm.io/en/installation)
+
+```bash
+# Windows
+winget install pnpm
+
+# MacOS - Homebrew
+brew install pnpm
+```
 
 ## Installation
 
@@ -161,7 +164,6 @@ First of all, Kexa is build with [pnpm](https://pnpm.io/en/) so you need to [ins
   ```
   [![Github Desktop](https://custom-icon-badges.demolab.com/badge/Download-purple?style=for-the-badge&logo=github&logoColor=white "Github Desktop")](x-github-client://openRepo/https://github.com/4urcloud/Kexa)-->
 
-
 - SSH:
 
   ```bash
@@ -174,22 +176,19 @@ First of all, Kexa is build with [pnpm](https://pnpm.io/en/) so you need to [ins
 
 - Visual Studio:
 
-  
   [![Open in VS Code](https://img.shields.io/static/v1?logo=visualstudiocode&label=&message=Open%20in%20Visual%20Studio%20Code&labelColor=2c2c32&color=007acc&logoColor=007acc)](https://vscode.dev/github/4urcloud/Kexa)
 
 ### Install PNPM packages
-   ```sh
-   pnpm i --frozen-lockfile
-   ```
 
-# <div align="center" id= "global-configuration">**Global Configuration**</div>
+  ```bash
+  pnpm i --frozen-lockfile
+  ```
 
-<br/>
-In the Kexa config folder, edit the default.json (create it if it doesn't exist)
-<br/>
+## <div align="center" id= "global-configuration">**Global Configuration**</div>
+
+In the Kexa config folder, edit the `default.json` (create it if it doesn't exist).
 
 <div id="configuration-via-script"></div>
-
 ## **Configuration via script**
 
 A powershell script is available for easy downloading, updating and configuration of Kexa versions.
@@ -198,40 +197,47 @@ We don't yet have a Bash script for Linux. You can follow [this documentation](h
 
 ### Downloads or update Kexa
 
-You can download a version of Kexa from a specific branch. To do this, there's the "-d" argument to request a Kexa pull locally without Github. To preset from which branch this should be done, you have the "-b" argument followed by a branch name present on our repository (by default: main). Finally, if you don't want to perform the download where you are, you can use "-p" followed by the path to where to perform the manipulation.
-An option is available for Kexa to update itself automatically with the 'AUTOUPDATE' environment variable. It will update on all non-breaking updates. If you decide not to update it automatically, Kexa will notify you via the logs of the latest available version.
-Note: in the event of an upgrade, your configuration files will be preserved.
+You can download a version of Kexa from a specific branch. To do this, there's the `-d` argument to request a Kexa pull locally without Github. To preset from which branch this should be done, you have the `-b` argument followed by a branch name present on our repository (by default: `main`). Finally, if you don't want to perform the download where you are, you can use `-p` followed by the path to where to perform the manipulation.
+
+An option is available for Kexa to update itself automatically with the `AUTOUPDATE` environment variable. It will update on all non-breaking updates. If you decide not to update it automatically, Kexa will notify you via the logs of the latest available version.
+
+> [!NOTE]
+> In the event of an upgrade, your configuration files will be preserved.
 
 Here's an example:
 
 - Linux
 
   ```bash
-  #for download the script localy
+  # to download the script localy
   curl -sSL https://raw.githubusercontent.com/4urcloud/Kexa/main/initKexa.sh -o initKexa.sh
 
-  #to update or download Kexa locally with the main branch
+  # to update or download Kexa locally with the main branch
   ./initKexa.sh -d
-  #to update or download Kexa at ./Kexa with the dev branch
+
+  # to update or download Kexa to a dedicated folder (./Kexa) with the dev branch
   ./initKexa.sh -d -b dev -p ./Kexa
   ```
 
 - Windows
 
   ```powershell
-  #for download the script localy
+  # to download the script localy
   Invoke-WebRequest -Uri "https://raw.githubusercontent.com/4urcloud/Kexa/main/initKexa.ps1" -OutFile "./initKexa.ps1"
 
-  #to update or download Kexa locally with the main branch
+  # to update or download Kexa locally with the main branch
   ./initKexa.ps1 -d
-  #to update or download Kexa at ./Kexa with the dev branch
+
+  # to update or download Kexa to a dedicated folder (./Kexa) with the dev branch
   ./initKexa.ps1 -d -b dev -p ./Kexa
   ```
 
 ### Setup configuration
 
-A powershell script located at "./initKexa.ps1" allows you to set up a configuration and all your necessary environment variables. It also downloads from our github repo the basic rules per provider you've configured.
-Note, executing the command is destructive to your previous configuration.
+A powershell script located at `./initKexa.ps1` allows you to set up a configuration and all your necessary environment variables. It also downloads from our github repo the basic rules per provider you've configured.
+
+> [!WARNING]
+> Executing the command is destructive. Your previous configuration will be erased.
 
 - Windows:
 
@@ -240,18 +246,19 @@ Note, executing the command is destructive to your previous configuration.
   ```
 
 - Linux:
+
   ```bash
   ./initKexa.sh -c
   ```
-
 
 <div id="basic-configuration"></div>
 
 ## **Basic configuration**
 
 Here you can define the providers you want to retrieve data from, and for each one, which rules file you want to check.
-- You can find the available providers name for this in /enum/provider.enum.ts
-- The 'rules' field is mandatory to specify the rules to be applied to each environment.
+
+- You can find the available providers name for this in `./Kexa/enum/provider.enum.ts`.
+- The `rules` field is mandatory to specify the rules to be applied to each environment.
 
 ```yaml
 {
@@ -265,29 +272,29 @@ Here you can define the providers you want to retrieve data from, and for each o
     },
   ],
   "gcp": [
-	  {
-		"name": "MyGCPProject",
-	    "description": "First project description",
-	    "rules": [
-		    "Name of my rule"
-	    ]
-	  }
+    {
+      "name": "MyGCPProject",
+      "description": "First project description",
+      "rules": [
+        "Name of my rule"
+      ]
+    }
   ]
 }
 ```
 
-
-<br/>
 <div id="multiple-environment-provider-prefix"></div>
 
-## **Multiple environments provider prefix**
+## **Multiple environments - Provider prefix**
 
-For every provider you can define multiple projects to make custom verifications for your  subscriptions.
+For every provider you can define multiple projects to make custom verifications for your subscriptions.
+
 Each projects in this list refers to a "subscription"/"environment". It's a good idea to give each project a name and a description, to make it easier to understand
 
- The 'prefix' field is optional, but you may need it if you want to have multiple authentication / variables for a provider. It corresponds to the environment index.
-	This will allow you to identify the variables used to log on your different environment. ( if not specified, a default value will be assigned )
-	- This attribute should be unique, unless you want to use the same identifiers more than once on several environments
+The `prefix` field is optional, but you may need it if you want to have multiple authentication / variables for a provider. It corresponds to the environment index.
+This will allow you to identify the variables used to log on your different environment. If not specified, a default value will be assigned.
+
+This attribute should be unique, unless you want to use the same identifiers more than once on several environments.
 
 ```yaml
 {
@@ -312,7 +319,6 @@ Each projects in this list refers to a "subscription"/"environment". It's a good
   ]
 }
 ```
-<br/>
 
 <div id="custom-and-multiple-configurations"></div>
 
@@ -328,24 +334,22 @@ In this folder you will be able to store multiple configuration files, each havi
 
 To use a custom file, set the following environment variable :
 
-```sh
+```bash
 NODE_CONFIG_TS_ENV=customName
 ```
 
-Replace `customName` by your file name (that will always have '.json' extension).
+Replace `customName` by your file name (that will always have `.json` extension).
 Do not forget to delete or move away `default.json` to avoid conflicts.
 
-In addition, you can also use the `/config/deployment/` and `/config/user/` folder, by using for each `DEPLOYMENT=customName` or `USER=customName`.
+In addition, you can also use the `/config/deployment/` and `/config/user/` folders, by using for each `DEPLOYMENT=customName` or `USER=customName`.
 For more information, check [node-config-ts](https://www.npmjs.com/package/node-config-ts#custom-config-directory) documentation.
-
-<br/>
 
 <div id="regions"></div>
 
 ## **Regions**
 
-For Amazon Web Services and Google Cloud Provider (or other official addons using regions), you can choose to select specifics regions to check. 
-Without "regions" property (or empty "regions" property), all the regions will be checked.
+For Amazon Web Services and Google Cloud Provider (or other official addOns using regions), you can choose to select specific regions to check.
+Without `regions` property (or empty `regions` property), all the regions will be checked.
 
 ```yaml
 {
@@ -378,9 +382,8 @@ Without "regions" property (or empty "regions" property), all the regions will b
   ]
 }
 ```
-<br/>
-<p align="right">(<a href="#top">back to top</a>)</p>
 
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 <div id="advanced-configurations"></div>
 
@@ -390,11 +393,12 @@ Without "regions" property (or empty "regions" property), all the regions will b
 
 ### **Variabilization**
 
-You can load rules containing variables. To do this, you need to add a "variable" section. This attribute will be an object whose keys are the names of your rules with variables. Each of its keys has a dictionary value. This dictionary has as keys the names of the variables present in the rule and as value, the value of the variable.
+You can load rules containing variables. To do this, you need to add a `variable` section. This attribute will be an object whose keys are the names of your rules with variables. Each of its keys has a dictionary value. This dictionary has as keys the names of the variables present in the rule and as value, the value of the variable.
 
-Here we are an example of configuration file with variable:
-*in this example only the rule :"Name_of_my_rule" have variables*
-![example config with variable](../config/demo/exemple4.default.json)
+Here we have an [example of configuration file with variables](../config/demo/exemple4.default.json).
+
+> [!NOTE]
+> In this example only the rule `Name_of_my_rule` have variables.
 
 For more details on variabilized rules, please refer to the section [Variabilization Rules](#variabilization-rules)
 
@@ -402,9 +406,8 @@ For more details on variabilized rules, please refer to the section [Variabiliza
 
 ### **Timeout**
 
-Kexa has a timeout system, by default, kexa will timeout if a running scan doesn't complete after 5 minutes.
-This is a very large timeout for Kexa, you can customize it in your configuration file, by filling 'timeout' property in the "general"
-section of your configuration file.
+Kexa has a timeout system, by default, it will timeout if a running scan doesn't complete after 5 minutes.
+This is a very large timeout for Kexa, you can customize it in your configuration file, by filling `timeout` property in the `general` section of your configuration file.
 
 ```yaml
 {
@@ -427,25 +430,27 @@ section of your configuration file.
 }
 ```
 
-A timeout will rise a 'fatal' error level alert and interupt Kexa. (you will still get notified for the timeout error)
-There is more to know about timeout in the next section, when continuous run is being use.
+A timeout will rise a `fatal` error level alert and interupt Kexa. Yyou will still get notified for the timeout error.
 
-<br/>
+There is more to know about timeout in the next section, when continuous run is being use.
 
 <div id="continuous-run"></div>
 
 ## **Continuous run**
 
-Kexa offers you the possibility of making very frequent scans of your infrastructure in order to be "real-time". When configuring Kexa, you can set 2 attributes in the "general" section for this purpose: the "checkInterval" and the "alertInterval".
-The "checkInterval" is used to define the scan frequency in seconds. The value entered will scan every X seconds. Be careful, too frequent scans could exhaust the request quota of some of your services.
-The "alertInterval" is used to determine the frequency in seconds of alerts for the same non-compliant resource. A judicious choice of the waiting time between 2 alerts for a resource is important. It should not be too short to avoid unnecessary spam.
+Kexa offers you the possibility of making very frequent scans of your infrastructure in order to be "real-time".
 
-Here we are an example of configuration file with variable:
-*in this example i want to scan every 5s and I want to be notified for the same error maximum once an hour.*
-![example config with continuous runtime](../config/demo/exemple6.default.json)
+When configuring Kexa, you can set 2 attributes in the `general` section for this purpose: the `checkInterval` and the `alertInterval`.
 
-If you're using continuous run, you have additional configuration properties that you can fill
-for the timeout options. 
+- The `checkInterval` is used to define the scan frequency in seconds. The value entered will scan every X seconds. Be careful, too frequent scans could exhaust the request quota of some of your services.
+- The `alertInterval` is used to determine the frequency in seconds of alerts for the same non-compliant resource. A judicious choice of the waiting time between 2 alerts for a resource is important. It should not be too short to avoid unnecessary spam.
+
+Here we are an [example of configuration file with variable](../config/demo/exemple6.default.json).
+
+> [!NOTE]
+> In this example, I want to scan every 5s and I want to be notified for the same error maximum once an hour.
+
+If you're using continuous run, you have additional configuration properties that you can fill for the timeout options.
 
 Refer to the previous timeout section to know more about the basics of Kexa timeout.
 If using continuous run, you may want to indicate how much retries do you want when a execution is timing out.
@@ -466,16 +471,15 @@ If using continuous run, you may want to indicate how much retries do you want w
     }
   ],
   "general":  {
-    "timeout": 1, # timeout after 1 minute, you can use 0.5 for 30s timeout for example
-    "maxRetry": 2 # Kexa will retry 2 times after timeout, choose 0 for no retry.
-    "checkInterval": 120 # interval between Kexa checks in seconds
+    "timeout": 1,         # timeout after 1 minute, you can use 0.5 for 30s timeout for example
+    "maxRetry": 2         # Kexa will retry 2 times after timeout, choose 0 for no retry.
+    "checkInterval": 120  # interval between Kexa checks in seconds
     "alertInterval": 3600 # alerts interval to avoid too much duplicate
   }
 }
 ```
 
-# <div align="center" id="environment-variables-and-auth">**Environment variables & Auth**</div>
-<br/>
+# <div align="center" id="environment-variables-and-auth">**Environment variables & Authentication**</div>
 
 <div id="directory-notifications"></div>
 
@@ -486,42 +490,53 @@ If using continuous run, you may want to indicate how much retries do you want w
 ### **Default folder input and output**
 
 Specify a folder to store the rules files.
+
+```bash
+  # Default value
+  RULESDIRECTORY=./rules
 ```
-  RULESDIRECTORY=./Kexa/rules (default value)
-```
+
 It is also possible to use a remote zipper folder hosted on private server or a github repository.
-It's could be either a public endpoint or a private one. To authenticate your self, use RULESAUTHORIZATION.
-```
+It could be either a public endpoint or a private one. To authenticate your self, use `RULESAUTHORIZATION`.
+
+```bash
   RULESDIRECTORY="https://api.github.com/repos/kexa-io/public-rules/zipball/main"
-  RULESAUTHORIZATION="Bearer github_pat_XXXXXXXXXXXXXXXXXXXXXXXX" (optional)
+  RULESAUTHORIZATION="Bearer github_pat_XXXXXXXXXXXXXXXXXXXXXXXX" # Optional
 ```
 
 Specify a folder to store the output files.
-```
-  OUTPUT=./output (default value)
+
+```bash
+  # Default value
+  OUTPUT=./output
 ```
 
-You can modify your rule files to customize the notification channels on which to have your alerts. The "alert" section in rules files is designed for this purpose. It is possible to set up individual alerts by resource and by level of importance, but above all global alerts that summarize the scan. Go to [Full Yaml Rules File](#full-yaml-rules-file) to have more information.
+You can modify your rule files to customize the notification channels on which to have your alerts. The `alert` section in the rules files is designed for this purpose. It is possible to set up individual alerts by resource and by level of importance, but above all global alerts that summarize the scan.
+
+Go to [Full Yaml Rules File](#full-yaml-rules-file) to have more information.
 
 <div id="notification"></div>
 
 ### **Notification**
 
 Setup your notification tools. (for those selected in your rules files).
->email
-```
- EMAILPORT=587
+
+#### Email
+
+```bash
+  EMAILPORT=587
   EMAILHOST=smtp.sendgrid.net
   EMAILUSER=apikey
   EMAILPWD=XXXXXXXXXXXXXXX
   EMAILFROM='"Kexa" <noreply@4urcloud.eu>'
 ```
 
-For email, EMAILPWD is your Api Key for the case you use sendgrid.
+For email, `EMAILPWD` is your API Key in the case you use `SendGrid`.
 
-> sms (with Twilio)
-```
- SMSFROM='+00000000000'
+#### SMS (with Twilio)
+
+```bash
+  SMSFROM='+00000000000'
   SMSACCOUNTSID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
   SMSAUTHTOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
@@ -531,65 +546,62 @@ For email, EMAILPWD is your Api Key for the case you use sendgrid.
 ### **Save result of the scan**
 
 You can save your scan results in various places :
+
 - [Azure Blob Storage](./save/AzureBlobStorage.md)
-- [Mongo DB](./save/MongoDB.md)
+- [MongoDB](./save/MongoDB.md)
 - [MySQL](./save/MySQL.md)
-- [Postgres](./save/Postgres.md)
+- [PostgreSQL](./save/Postgres.md)
 
-To save your scan results in different places, a "save" attribute must be created in your default.json file. It's a list of "SaveConfig" objects, as follows : 
-
-![example SaveConfig](../Kexa/models/export/config.models.ts)
+To save your scan results in different places, a `save` attribute must be created in your `default.json` file. It's a list of [SaveConfig interface objects](../Kexa/models/export/config.models.ts).
 
 Here's the table of correspondence for each attribute:
-- type: corresponds to the name of the addon solicited to save your scan
-- urlName: 2 functions to choose from:
+
+- `type`: corresponds to the name of the addOn solicited to save your scan
+- `urlName`: 2 functions to choose from:
   - is used to provide the name of the environment variable storing the endpoint url
   - provide endpoint url
-- name: reserved attribute for naming the backup location (maintenance aid)
-- description: reserved attribute to describe the backup location (maintenance aid)
-- origin: attribute to specify kexa run location
-- tags: additional information dictionary for tagging the backup
-- onlyErrors: Boolean to record only errors detected or not
-- logs: Boolean to save all logs in the Logs table.
+- `name`: reserved attribute for naming the backup location (maintenance aid)
+- `description`: reserved attribute to describe the backup location (maintenance aid)
+- `origin`: attribute to specify kexa run location
+- `tags`: additional information dictionary for tagging the backup
+- `onlyErrors`: Boolean to record only errors detected or not
+- `logs`: Boolean to save all logs in the Logs table.
 
 Note that for logs, only logs that outputed an Kexa error will be save in the database.
-To save all logs, use the 'logs' attribute and set it to true, so logs will be saved in the Logs table.
+To save all logs, use the `logs` attribute and set it to `true`, so logs will be saved in the Logs table.
 
-Each addOn brings its own unique set of attributes to the table. We invite you to refer to the documentation of the addOn you wish to use for all the subtleties.
-Here an example of configuration to save in Azure Blob Storage and MongoDB:
+Each addOn brings its own unique set of attributes to the table. We invite you to refer to the documentation of the addOn you wish to use for all the intricacies.
 
-![example config with save](../config/demo/exemple3.default.json)
+Here an [example of configuration to save in Azure Blob Storage and MongoDB](../config/demo/exemple3.default.json).
 
 <div id="export-data-gathering"></div>
 
 ### **Export data gathering**
 
 You can export the data gathering from your environment in various places :
+
 - [Azure Blob Storage](./save/AzureBlobStorage.md)
-- [Mongo DB](./save/MongoDB.md)
+- [MongoDB](./save/MongoDB.md)
 - [MySQL](./save/MySQL.md)
-- [Postgres](./save/Postgres.md)
+- [PostgreSQL](./save/Postgres.md)
 
-Pour exporter ces données, cela fonctionne comme la section [Save result of the scan](#save-result-of-the-scan) à l'exception de l'attribut "save" qui devient l'attribu "export". It's a list of "SaveConfig" objects, as follows : 
-
-![example SaveConfig](../Kexa/models/export/config.models.ts)
+Pour exporter ces données, cela fonctionne comme la section [Save result of the scan](#save-result-of-the-scan) à l'exception de l'attribut `save` qui devient l'attribut `export`. It's a list of [SaveConfig interface objects](../Kexa/models/export/config.models.ts).
 
 Here's the table of correspondence for each attribute:
-- type: corresponds to the name of the addon solicited to save your scan
-- urlName: 2 functions to choose from:
+
+- `type`: corresponds to the name of the addon solicited to save your scan
+- `urlName`: 2 functions to choose from:
   - is used to provide the name of the environment variable storing the endpoint url
   - provide endpoint url
-- name: reserved attribute for naming the backup location (maintenance aid)
-- description: reserved attribute to describe the backup location (maintenance aid)
-- origin: attribute to specify kexa run location
-- tags: additional information dictionary for tagging the backup (not implement for sql)
+- `name`: reserved attribute for naming the backup location (maintenance aid)
+- `description`: reserved attribute to describe the backup location (maintenance aid)
+- `origin`: attribute to specify kexa run location
+- `tags`: additional information dictionary for tagging the backup (not implement for Sql)
 
 Each addOn brings its own unique set of attributes to the table. We invite you to refer to the documentation of the addOn you wish to use for all the subtleties.
-Here an example of configuration to export in Azure Blob Storage, MongoDB and MySQL:
 
-![example config with export](../config/demo/exemple5.default.json)
+Here an [example of configuration to export in Azure Blob Storage, MongoDB and MySQL](../config/demo/exemple5.default.json).
 
-<br/>
 <div id="provider-authentications"></div>
 
 ## **Providers Authentications**
@@ -609,56 +621,65 @@ For each environment you want to test, you'll need to provide the environment va
 An environment file is also available in our repository, with every official addon's needed variables.
 You can use it by filling the field corresponding to the providers you want to authenticate to.
 
-<br/>
 <div id="password-manager"></div>
 
 ## **Password manager**
 
-You can optionally use a key manager; for these variables no prefix are needed. Those variables does not refer to any specific environment, but simply to the runner space. The following environment variables must be present in the runner environment. The preceding environment variables cited in this or other documentation may not be present in the runner environment, but in your password manager. Variables in your manager will be "simulated" as being present locally and will only be known in the environment when the value is used:
+You can optionally use a Password/Vault Manager.
 
-- **Azure**: To refer to your Key Vault add this following environement variable :
-    
-    ```
-      AZUREKEYVAULTNAME=MyKeyVault
-      AZURE_CLIENT_ID=XXXXXXXXXXXX
-      AZURE_TENANT_ID=XXXXXXXXXXXX
-      AZURE_CLIENT_SECRET=XXXXXXXX
-    ```
-    
-    You can also use this combination with UAI (User Assigned Identities) recommended when using Kexa in an azure function:
-    
-    ```
-      AZUREKEYVAULTNAME=MyKeyVault
-      USERAZUREIDENTITYID=XXXXXXXX
-    ```
-    
-- **AWS**: To refer to your Key Vault add this following environement variable :
-    
-    ```
-      AWS_SECRET_NAME=XXXXXXXXX
-      AWS_ACCESS_KEY_ID=XXXXXXXXX  
-      AWS_SECRET_ACCESS_KEY=XXXXXXXXX
-    ```
-    
-- **Hashicorp Vault**: To refer to your Hashicorp Vault add this following environement variable :
-    
-    ```
-      HCP_CLIENT_ID=XXXXXXXXX
-      HCP_CLIENT_SECRET=XXXXXXXXX  
-      HCP_API_URL=XXXXXXXXX
-    ```
-    You will find your HCP_CLIENT_ID and HCP_CLIENT_SECRET by creating a service principal on Hashicorp and generating them : [Create a service principal on Hashicorp](https://developer.hashicorp.com/hcp/docs/hcp/admin/iam/service-principals)
+> [!NOTE]
+> For these variables, no prefix are needed.
+> 
+> Those variables does not refer to any specific environment, but simply to the runner space.
 
-    You will find your HCP_API_URL in your application secret list, in the bottom "api" section, "Read Your Secrets" -> 'location' field.
-    
+The following environment variables must be present in the runner environment. The preceding environment variables cited in this or other documentation may not be present in the runner environment, but in your password manager.
+
+Variables in your manager will be "simulated" as being present locally and will only be known in the environment when the value is used:
+
+- **Azure**: To refer to your Key Vault, add this following environement variable :
+
+  ```bash
+    AZUREKEYVAULTNAME=MyKeyVault
+    AZURE_CLIENT_ID=XXXXXXXXXXXX
+    AZURE_TENANT_ID=XXXXXXXXXXXX
+    AZURE_CLIENT_SECRET=XXXXXXXX
+  ```
+
+  You can also use this combination with UAI (User Assigned Identities) recommended when using Kexa in an Azure function:
+
+  ```bash
+    AZUREKEYVAULTNAME=MyKeyVault
+    USERAZUREIDENTITYID=XXXXXXXX
+  ```
+
+- **AWS**: To refer to your Key Vault, add this following environement variable :
+
+  ```bash
+    AWS_SECRET_NAME=XXXXXXXXX
+    AWS_ACCESS_KEY_ID=XXXXXXXXX  
+    AWS_SECRET_ACCESS_KEY=XXXXXXXXX
+  ```
+
+- **Hashicorp Vault**: To refer to your Hashicorp Vault, add this following environement variable :
+
+  ```bash
+    HCP_CLIENT_ID=XXXXXXXXX
+    HCP_CLIENT_SECRET=XXXXXXXXX  
+    HCP_API_URL=XXXXXXXXX
+  ```
+
+    You will find your `HCP_CLIENT_ID` and `HCP_CLIENT_SECRET` by creating a service principal on Hashicorp and generating them : [Create a service principal on Hashicorp](https://developer.hashicorp.com/hcp/docs/hcp/iam/service-principal).
+
+    You will find your `HCP_API_URL` in your application secret list, in the bottom `API` section, `Read Your Secrets` -> `location` field.
+
     Or you can create it like so :
-     ```
-     https://api.cloud.hashicorp.com/secrets/2023-06-13/organizations/{yourOrganizationID}/projects/{yourProjectID}/apps/{yourAppName}/open
+
+    ```bash
+    https://api.cloud.hashicorp.com/secrets/2023-11-28/organizations/{yourOrganizationID}/projects/{yourProjectID}/apps/{yourAppName}/open
     ```
 
-    You will need to change the date '2023-06-13' to the latest Hashicorp Vault api version : [Hashicorp Vault API references](https://developer.hashicorp.com/hcp/api-docs/vault-secrets#OpenAppSecret)
+    You will need to change the date `2023-11-28` to the latest Hashicorp Vault api version : [Hashicorp Vault API references](https://developer.hashicorp.com/hcp/api-docs/vault-secrets#OpenAppSecret)
 
-<br/>
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 # <div align="center" id="rules-editing">**Rules Editing**</div>
@@ -667,32 +688,34 @@ You can optionally use a key manager; for these variables no prefix are needed. 
 
 ## **Rules fields**
 
-The default path for your folder rules is "./Kexa/rules". You can change it with the environment variable "RULESDIRECTORY".
+The default path for your folder rules is `./Kexa/rules`. You can change it with the environment variable `RULESDIRECTORY`.
+
 Here is the structure and required fields for a new rule :
 
 ```yaml
+# the name of the rule to set in your ./config/default.json
 - name: string 
-  # the name of the rule to set in your ./config/default.json
-  description : string 
   # the description of the rule
-  applied: boolean 
+  description : string 
   # active or ignore this rule
-  level: enum 
+  applied: boolean 
   # the warning level to trigger (defined in ./enum/level.enum.ts)
+  level: enum 
+  # the provider: defined in ./enum/provider.enum.ts for the official one and can be more longer with your own addOn
   cloudProvider: enum 
-  # the target provider: defined in ./enum/provider.enum.ts for the official one and can be more longer with your own addOn
+  # the object name. You can have the list of the objectName supported by your provider in the headers of his addOn
   objectName : enum 
-  # the target object name. You can have the list of the objectName supported by your provider in the headers of his addOn
-  conditions: # the list of criteria to match
-		-	property : string 
-	 		# the object field name to check (you can see the objects fields by launching Kexa with pnpm run start:o option)
+  # the list of criteria to match
+  conditions:
+    # the object field name to check (you can see the objects fields by launching Kexa with pnpm run start:o option)
       # for any property with a dot in his name, add "/" before the dot
-			condition : enum 
-			# the condition for this comparison (defined in ./enum/condition.enum.ts)
-			value : string 
-			# the value to compare with (refer to the official provider documentation)
+    - property : string 
+      # the condition for this comparison (defined in ./enum/condition.enum.ts)
+      condition : enum 
+      # the value to compare with (refer to the official provider documentation)
+      value : string 
 
-	  # add more criteria by starting a new '- property:' here #
+  # add more criteria by starting a new '- property:' here #
 ```
 
 You can also cross operations with logical operators :
@@ -705,21 +728,19 @@ You can also cross operations with logical operators :
   cloudProvider: enum 
   objectName : enum 
   conditions:
-   - operator : enum
-   # the operator to apply accross criterias (defined in ./enum/operator.enum.ts)
-      criteria:
-		- property : string 
-		  condition : enum 
-		  value : string 
-		  # first criteria
-		- property : string 
-		  condition : enum 
-		  value : string
-		  # second criteria
+  - operator : enum
+  # the operator to apply accross criterias (defined in ./enum/operator.enum.ts)
+    criteria:
+  - property : string 
+    condition : enum 
+    value : string 
+    # first criteria
+  - property : string 
+    condition : enum 
+    value : string
+    # second criteria
 
-		# add more criteria by starting a new '- property:' here #
-
-	
+  # add more criteria by starting a new '- property:' here #
 ```
 
 With nested operations :
@@ -732,33 +753,29 @@ With nested operations :
   cloudProvider: enum 
   objectName : enum 
   conditions:
-   - operator : enum
+  - operator : enum
    # the operator to apply accross criterias (defined in ./enum/operator.enum.ts)
       criteria:
-		- property : string 
-		  condition : enum 
-		  value : string 
-		# first criteria
-		- property : string 
-			condition : enum 
-			value : # nested operation
-				- operator: AND
-			  	criteria:
-						-	property : string 
-							condition : enum 
-							value : string 
-							# first criteria
-						-	property : string 
-							condition : enum 
-							value : string 
-							# second criteria
-		 
-		# add more criteria by starting a new '- property:' here #
-
-	
+  - property : string 
+    condition : enum 
+    value : string 
+  # first criteria
+  - property : string 
+    condition : enum 
+    value : # nested operation
+      - operator: AND
+        criteria:
+          - property : string 
+            condition : enum 
+            value : string 
+            # first criteria
+          - property : string 
+            condition : enum 
+            value : string 
+            # second criteria
+  # add more criteria by starting a new '- property:' here #
 ```
 
-<br/>
 <div id="date-and-time-criteria"></div>
 
 ## **Date & time criteria**
@@ -789,8 +806,6 @@ date: "YYYY-MM-DDThh:mm:ss.SSSZ"
 # "23-10 / 12:27" = "DD-MM / HH:mm"
 # link to doc : https://momentjs.com/docs/#/displaying/format/
 ```
-
-<br/>
 
 <div id="full-yaml-rules-file"></div>
 
@@ -851,28 +866,29 @@ date: "YYYY-MM-DDThh:mm:ss.SSSZ"
         - level: 3
           min: int
   rules: # the list of the rules, refer to the previous section explaining rules
-	- name: string 
-	# rule here #
-	- name: string
-	# rule here #
-	
-	# Add as much rules as you want by starting a new '-name' #
-	
+  - name: string 
+  # rule here #
+  - name: string
+  # rule here #
+
+  # Add as much rules as you want by starting a new '-name' #
 ```
 
-<br/>
 <div id="variabilization-rules"></div>
 
 ### **Variabilization Rules**
 
 To simplify maintenance, it is possible to variabilize rules either for values or for complete blocks of the YAML file.
+
 The main advantage of setting up a remote repo for your instances is that you can manage and administer general rules for all your productions.
 
 #### Initialization
 
-Initializing a value or block variable is done in the same way. At the same indentation level as version or date. Insert the name of your variable, a colon then an ampersand, followed by the name of your variable again.
-We follow the yaml syntax as much as possible
-In our example "name" :
+Initializing a value or block variable is done in the same way.
+
+At the same indentation level as version or date, insert the name of your variable, a colon then an ampersand, followed by the name of your variable again.
+
+We follow the yaml syntax as much as possible. In our example "name" :
 
 ```yaml
 name: &name
@@ -907,7 +923,7 @@ The values of the variable must be fill in the [configuration file](#advanced-co
 
 - Use as a block:
   You can insert the name of your variable preceded by "<<: *", anywhere you'd put a key.
-  In this example, we variabilize the "applied and level" section to define groups and their level of importance.
+  In this example, we variabilize the `applied` and `level` sections to define groups and their level of importance.
   Another possible example is the notifications section, to variabilize the recipients.
 
   ```yaml
@@ -922,7 +938,7 @@ The values of the variable must be fill in the [configuration file](#advanced-co
         cloudProvider: XXXX 
         objectName : YYYY
         conditions:
-          -	property : A
+          - property : A
             condition : EQUAL
             value : A
       - name: "Generalize-test-2" 
@@ -931,13 +947,11 @@ The values of the variable must be fill in the [configuration file](#advanced-co
         cloudProvider: XXXX 
         objectName : YYYY
         conditions:
-          -	property : B
+          - property : B
             condition : EQUAL
             value : B
   ```
 
-
-<br/>
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <div id="utility-examples"></div>
@@ -949,11 +963,12 @@ The values of the variable must be fill in the [configuration file](#advanced-co
 ### **Cost savings**
 
 By automating the monitoring of your infrastructure's status and behaviour, our tool enables you to make significant savings.
+
 By detecting rule violations quickly, you can avoid the additional costs associated with prolonged problems and prevent costly malfunctions.
 
 For example, a rule for alerting if there is an orphan disk:
 
-```yml
+```yaml
 - name: "azure-disk-orphan"
   description : "this rules is to check if disk is orphan"
   applied: true
@@ -966,17 +981,17 @@ For example, a rule for alerting if there is an orphan disk:
       value : Unattached
 ```
 
-<br/>
 <div id="safety-guarantee"></div>
 
 ### **Safety guarantee**
 
 By defining specific security rules, you can constantly check that good practice is being followed and that your infrastructure is protected against potential threats.
+
 The tool alerts you in the event of non-compliance, enabling you to take corrective action quickly and maintain a high level of security.
 
 Example of rule to verify:
 
-```yml
+```yaml
 - name: azure-disk not public or encrypted
   description : "this rules is to check if disk is either not public or encrypted by default"
   applied: true
@@ -994,8 +1009,6 @@ Example of rule to verify:
           value : EncryptionAtRestWithPlatformKey
 ```
 
-<br/>
-
 <div id="standardization"></div>
 
 ### **Standardization**
@@ -1006,7 +1019,7 @@ By standardizing configurations and behaviors, you reduce the risk of human erro
 
 Exemple of rule to normalise names among tags:
 
-```yml
+```yaml
   - name: check-tags-on-aks-cluster
     description : "this rules is to check if aks cluster are conform to the tag norms"
     applied: true
@@ -1036,12 +1049,11 @@ One of the key features of our tool is its flexibility, allowing users to custom
 
 Whether you want to check specific elements of your infrastructure or take a more general approach, the possibilities are endless. Everyone is free to design and share their own use cases, providing a wealth of resources for the community as a whole.
 
-<br/>
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <div id="official-addons"></div>
 
-## <div align="center">**Official Addons**</div>
+## <div align="center">**Official addOns**</div>
 
 <div id="aws"></div>
 
@@ -1069,7 +1081,7 @@ Optimize the security of your assets on Google Cloud with our industry-leading d
 
 <div id="github"></div>
 
-### **GITHUB**
+### **GitHub**
 
 Optimize your GitHub workflow easily with our brand new data collection addon, enabling you to analyze and make the most of your development data, for projects that perform better than ever.
 
@@ -1077,7 +1089,7 @@ Optimize your GitHub workflow easily with our brand new data collection addon, e
 
 <div id="google-drive"></div>
 
-### **GOOGLE DRIVE**
+### **Google Drive**
 
 Reinvent the way you work with Google Drive with our revolutionary data scan add-on, simplifying the collection, organization and analysis of your files and information for unprecedented productivity in the cloud.
 
@@ -1085,7 +1097,7 @@ Reinvent the way you work with Google Drive with our revolutionary data scan add
 
 <div id="google-workspace"></div>
 
-### **GOOGLE WORKSPACE**
+### **Google Workspace**
 
 Increase the security and compliance of your Google workspace with our state-of-the-art data scan add-on, offering proactive protection, comprehensive monitoring and seamless data management for confident communications and collaboration.
 
@@ -1093,7 +1105,7 @@ Increase the security and compliance of your Google workspace with our state-of-
 
 <div id="http"></div>
 
-### **HTTP**
+### **Http(s)**
 
 Ensure optimal service performance with our API endpoint data scan add-on, which gives you a real-time view of your systems' health, enabling you to maintain robust, uninterrupted online services.
 
@@ -1109,7 +1121,7 @@ Take the security of your Kubernetes environments to the next level with our dat
 
 <div id="o365"></div>
 
-### **O365**
+### **Microsoft/Office 365**
 
 Ensure total confidentiality and seamless compliance within your Office 365 environment with our industry-leading data scan addon, giving you real-time monitoring, advanced protection and simplified management of sensitive information.
 
@@ -1122,13 +1134,11 @@ Ensure total confidentiality and seamless compliance within your Office 365 envi
 
 <div id="getting-new-addons"></div>
 
-### **Getting new addons**
+### **Getting new addOns**
 
-To use a community addon, simply download the required {AddonName}Gathering.service.ts and {AddonName}Display.service.ts, and move them in the /services/addOn and /services/addOn/display folder in the Kexa root directory.
+To use a community addOn, simply download the required `{AddonName}Gathering.service.ts` and `{AddonName}Display.service.ts`, and move them in the `/services/addOn` and `/services/addOn/display` folders inside the Kexa root directory.
 
 You will need to refer to the addOn documentation to get information about the required environment variable, gathered data or specific configuration fields.
-
-<br/>
 
 <div id="contributing"></div>
 
@@ -1137,8 +1147,6 @@ You will need to refer to the addOn documentation to get information about the r
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
-
-<br/>
 
 <div id="forking-project"></div>
 
@@ -1150,25 +1158,28 @@ If you have a suggestion that would make this better, please fork the repo and c
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-<br/>
-
 <div id="adding-functionalities"></div>
 
 ### **Adding functionalities**
-	
-Each published addOn is free to set its own mandatory key values for its default.config configuration schema.
-Our minimum values for any addOn are "rules". Keys such as "prefix", "name" and "description" are strongly recommended to maintain ease of use.
 
-We've set up a system to facilitate the development of new features. This system is based on the "addOn" system. To develop a new feature, you don't need to know the whole project. You can develop additional services to collect additional data, among which you can make rules.
+Each published addOn is free to set its own mandatory key values for its `default.config` configuration schema.
 
-<br/>
+Our minimum values for any addOn are `rules`. Keys such as `prefix`, `name` and `description` are strongly recommended to maintain ease of use.
+
+We've set up a system to facilitate the development of new features. This system is based on the **addOn** system. To develop a new feature, you don't need to know the whole project. You can develop additional services to collect additional data, among which you can make rules.
 
 <div id="gathering-data"></div>
 
 ### **Gathering data**
 
-A file to collect data whose path will be "./Kexa/services/addOn". It is named as follows: [extension's name]Gathering.service.ts . The entry point for this file is a function named "collectData", which takes one arguments. The argument is a list containing all the configs for your addOn. This list corresponds to what you can find in the default.json file in the key that has the same name as your addOn. As additional information per item in the list, you have "ObjectNameNeed" which corresponds to the CategoryItem solicity in the rules set up. This helps you, to optimize your addOn and make faster, more targeted collections. The return format of this function is as shown in the following example. exemple :
-	
+A file to collect data whose path will be `./Kexa/services/addOn`. It is named as follows: `[extension's name]Gathering.service.ts`.
+
+The entry point for this file is a function named **collectData**, which takes one arguments. The argument is a list containing all the configs for your addOn. This list corresponds to what you can find in the `default.json` file in the key that has the same name as your addOn.
+
+As additional information per item in the list, you have "ObjectNameNeed" which corresponds to the CategoryItem solicity in the rules set up. This helps you, to optimize your addOn and make faster, more targeted collections.
+
+The return format of this function is as shown in the following example. exemple :
+
 ```json
 [
   {
