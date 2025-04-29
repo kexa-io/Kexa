@@ -629,7 +629,6 @@ You can optionally use a Password/Vault Manager.
 
 > [!NOTE]
 > For these variables, no prefix are needed.
-> 
 > Those variables does not refer to any specific environment, but simply to the runner space.
 
 The following environment variables must be present in the runner environment. The preceding environment variables cited in this or other documentation may not be present in the runner environment, but in your password manager.
@@ -1208,9 +1207,9 @@ The return format of this function is as shown in the following example. exemple
 
 The data format is the following for several reasons. The first list corresponds to the different subscriptions or accounts in a sector. To illustrate, in the case of a cloud provider such as Azure, we might need different identifiers to scan all our accounts, and each account scan result is an item in the list. The dictionaries in the main list correspond to your dictionary that you find relevant to create to identify the different resources of your addOn, in the rules this corresponds to your "objectName". Finally, the lowest-level lists correspond to the list of items collected by your addOn.
 
-For project maintainability, we require addOn modules to contain a header to quickly identify certain information. It's also important to update this header according to the capabilities of your addOn. In fact, this header serves as a basis for checking the feasibility of certain rules. This header is a comment that must contain at least 2 pieces of information: the name of the module and the "categoryItems" you've included in your module. example for an "azureComplement" module: file name : azureComplementGathering.service.ts
+For project maintainability, we require addOn modules to contain a header to quickly identify certain information. It's also important to update this header according to the capabilities of your addOn. In fact, this header serves as a basis for checking the feasibility of certain rules. This header is a comment that must contain at least 2 pieces of information: the name of the module and the "categoryItems" you've included in your module. example for an "azureComplement" module: file name : `azureComplementGathering.service.ts`.
 
-```ts
+```typescript
 /*
     * Provider : azure
     * Creation date : 2023-08-14
@@ -1229,20 +1228,24 @@ export async function collectData(myAddonConfig: any[]){
 
 //can add other function here
 ```
-	
-<br/>
 
 <div id="display-results"></div>
 
 ### **Display results**
 
-The display data file has for name schema : [same extension's name]Display.service.ts, its path will be: "./Kexa/services/addOn/display". This file is used to display precise attributes of an object to quickly identify it in its environment. This return is done by returning a string, with the possibility of putting html in this sting. The function used as an entry point is named "propertyToSend". It takes 3 arguments. The first is a "Rules", and the relative path to the object definition is
+The display data file has for name schema : `[same extension's name]Display.service.ts`, its path will be: `./Kexa/services/addOn/display`.
 
-![interface of a Rules](../Kexa/models/settingFile/rules.models.ts)
+This file is used to display precise attributes of an object to quickly identify it in its environment. This return is done by returning a string, with the possibility of putting html in this string.
 
-The second is an "any", corresponding to an object you've collected previously. Finally, the last element is a boolean, which you'll set to false by default. It corresponds to your obligation not to put html in your string. Example display file for an "azureComplement" module: file name : azureComplementGathering.service.ts
+The function used as an entry point is named `propertyToSend`. It takes 3 arguments.
 
-```ts
+The first is a `Rules`, and the relative path to the object definition is "[../Kexa/models/settingFile/rules.models.ts](../Kexa/models/settingFile/rules.models.ts)".
+
+The second is an `any`, corresponding to an object you've collected previously.
+
+Finally, the last element is a boolean, which you'll set to false by default. It corresponds to your obligation not to put html in your string. Example display file for an `azureComplement` module: file name : `azureComplementGathering.service.ts`.
+
+```typescript
 import { Rules } from "../../../models/settingFile/rules.models";
 
 export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false): string{
@@ -1257,26 +1260,18 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
 //can add other function here
 ```
 
-<br/>
-
 <div id="save-results"></div>
 
 ### **Save results**
 
 You can also add AddOns to save your data. These extensions are based on the same principle as Display AddOn. The Save AddOn file is named [extension name]Save.service.ts, and its path is "./Kexa/services/addOn/save". This file is used to store the scanned data in a specific location. No return is attempted. The function used as an entry point is called "save". It takes 2 arguments. The first is a "save", corresponding to :
 
-![interface of a SaveConfig](../Kexa/models/export/config.models.ts)
+[SaveConfig interface objects](../Kexa/models/export/config.models.ts)
 
 But you can make your own by extends this interface.
-The second is a table of ResultScan:
+The second is a table of [ResultScan](../Kexa/models/resultScan.models.ts).
 
-![interface of a resultScan](../Kexa/models/resultScan.models.ts)
-
-example of fresh template of save addOn:
-
-![fresh template of save addOn](../config/freshTemplatesAddOn/XXXSave.service.ts)
-
-<br/>
+Example of [fresh template of save addOn](../config/freshTemplatesAddOn/XXXSave.service.ts)
 
 <div id="export-gather"></div>
 
@@ -1284,18 +1279,12 @@ example of fresh template of save addOn:
 
 You can also add AddOns to export your data. These extensions are based on the same principle as Save AddOn. The Exportation AddOn file is named [extension name]Exportation.service.ts, and its path is "./Kexa/services/addOn/exportation". This file is used to store the scanned data in a specific location. No return is attempted. The function used as an entry point is called "exportation". It takes 2 arguments. The first is a "save", corresponding to :
 
-![interface of a SaveConfig](../Kexa/models/export/config.models.ts)
+[SaveConfig interface objects](../Kexa/models/export/config.models.ts)
 
 But you can make your own by extends this interface.
-The second is a ProviderResource:
+The second is a [ProviderResource](../Kexa/models/providerResource.models.ts).
 
-![interface of a ProviderResource](../Kexa/models/providerResource.models.ts)
-
-example of fresh template of exportation addOn:
-
-![fresh template of exportation addOn](../config/freshTemplatesAddOn/XXXExportation.service.ts)
-
-<br/>
+Example of [fresh template of exportation addOn](../config/freshTemplatesAddOn/XXXExportation.service.ts)
 
 <div id="tests"></div>
 
@@ -1303,7 +1292,7 @@ example of fresh template of exportation addOn:
 
 We've set up some tests you can use to validate the integration of your addOn:
 
-```shell
+```bash
 pnpm run test
 ```
 
@@ -1320,11 +1309,9 @@ Other checks are carried out at various stages to validate the integration of yo
 
 Use this command to launch scans:
 
-```shell
+```bash
 pnpm run start
 ```
-
-<br/>
 
 <div id="docker"></div>
 
@@ -1332,19 +1319,19 @@ pnpm run start
 
 Build the image
 
-```shell
+```bash
 docker build -t kexa .
 ```
 
 Or pull it from our repository [here](https://hub.docker.com/r/innovtech/kexa)
 
-```shell
+```bash
 docker pull innovtech/kexa
 ```
 
 Run the image don't forget to add your nested environment variable
 
-```shell
+```bash
 docker run -d kexa
 ```
 
@@ -1352,17 +1339,15 @@ However if you want to run kexa with a special config or rules, you can perform 
 
 - set your own configuration:
 
-  ```shell
+  ```bash
   docker run -d -v Absolute/Path/to/config:/app/config kexa
   ```
 
 - set your own rules:
 
-  ```shell
+  ```bash
   docker run -d -v Absolute/Path/to/rules:/app/kexa/rules kexa
   ```
-
-<br/>
 
 <div id="azure-function"></div>
 
@@ -1370,29 +1355,27 @@ However if you want to run kexa with a special config or rules, you can perform 
 
 To run the deployment commands, make sure that your "func" command is functional. If it is not, you can install it with this command:
 
-```shell
+```bash
 npm i -g azure-functions-core-tools@4 --unsafe-perm true
 ```
 
 Build your version with your config
 
-```shell
+```bash
 pnpm run build
 ```
 
 To test azure function locally :
 
-```shell
+```bash
 func start
 ```
 
 To publish Kexa to your azure function
 
-```shell
+```bash
 func azure functionapp publish [Name of your function app]
 ```
-
-<br/>
 
 <div id="kubernetes-deploy"></div>
 
@@ -1400,11 +1383,11 @@ func azure functionapp publish [Name of your function app]
 
 Build the image with your config done
 
-```shell
+```bash
 docker build -t kexa .
 ```
 
-create a yaml file named "kexa.yaml" such as. (Follow rules cited before for the env variables, this is just an example) :
+create a yaml file named `kexa.yaml` such as. (Follow rules cited before for the env variables, this is just an example) :
 
 ```yaml
 apiVersion: batch/v1
@@ -1428,25 +1411,25 @@ spec:
 
 create the namespace:
 
-```shell
+```bash
 kubectl create namespace kexa
 ```
 
 deploy it:
 
-```shell
+```bash
 kubectl apply -f kexa.yaml
 ```
 
 Checked that everything went smoothly :
 
-```shell
+```bash
 kubectl get cronjob kexacronjob -n kexa
 ```
 
 You're supposed to have something like:
 
-```shell
+```bash
 NAME          SCHEDULE    SUSPEND   ACTIVE   LAST SCHEDULE   AGE
 kexacronjob   0 0 * * *   False     0        <none>          3m33s
 ```
