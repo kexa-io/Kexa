@@ -15,7 +15,6 @@ export async function getSettingsFileFromApi(config: any){
 
     let settings = [];
 
-
     for (let i = 0; i < notificationGroups.length; i++) {
         settings.push(await createSettingsFileFromApiData(notificationGroups[i]));
     }
@@ -99,12 +98,7 @@ export async function getRulesFromApi(notificationGroups: any){
                                 Authorization: token
                             }
                         });
-                        notificationGroups[y].rules = notificationGroups[y].rules || [];
-                        if (Array.isArray(response.data.message)) {
-                            notificationGroups[y].rules = [...notificationGroups[y].rules, ...response.data.message];
-                        } else {
-                            notificationGroups[y].rules.push(response.data.message);
-                        }
+                        notificationGroups[y].rules = response.data.message || [];
                 } catch (error) {
                     logger.error(error);
                 }

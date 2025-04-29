@@ -289,7 +289,12 @@ export async function extractHeaders(): Promise<Capacity>{
             };
         }
     });
-    writeStringToJsonFile(jsonStringify(finalData,4), "./config/headers.json");
+    try {
+        writeStringToJsonFile(jsonStringify(finalData,4), "./config/headers.json");
+    } catch (error) {
+        logger.error("Failed to create headers.json", error);
+        return null;
+    }
     return finalData;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////

@@ -57,17 +57,17 @@ let headers: any;
 export async function gatheringRules(rulesDirectory:string, getAll:boolean=false): Promise<SettingFile[]> {
 
 
-    await extractHeaders();
+    headers = await extractHeaders();
 
-    if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
+    if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true' || !process.env.INTERFACE_CONFIGURATION_ENABLED) {
+        logger.warn("Interface configuration enabled, if you're not running Kexa script to work with the SaaS, please configure INTERFACE_CONFIGURATION_ENABLED to false in your .env file");
+        logger.info("Gathering rules from api...");
         let rules =  await getSettingsFileFromApi(config);
-        headers = require('../../config/headers.json');
         let listNeedRules = await getListNeedRules();
         extractAddOnNeed(rules);
         logger.debug("rules list:");
         logger.debug(rules.map((value) => value.alert.global.name).join(", "));
         return rules;
-        // DO THE REST
     }
 
     if(rulesDirectory.startsWith("http")){
@@ -428,11 +428,18 @@ export function checkRules(rules:any[], resources:ProviderResource, alert: Alert
     rules.forEach(rule => {
     
         if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
-            rule.conditions = escapedYamlToJson(rule.conditions);
+            let condObj;
+            try {
+              condObj = typeof rule.conditions === 'string' ? 
+                JSON.parse(rule.conditions) : rule.conditions;
+            } catch (e) {
+              return;
+            }
+            const formatted = JSON.stringify(condObj, null, 2)
+              .replace(/"([^"]+)":/g, '$1:');
+            rule.conditions = condObj;
             rule.cloudProvider = rule.cloudProvider.name as string;
-            
-        }
-
+          }
         if(!rule.applied) return;
         context?.log("check rule:"+rule.name);
         logger.info("check rule:"+rule.name);
@@ -495,7 +502,6 @@ export function checkRules(rules:any[], resources:ProviderResource, alert: Alert
             }
         }
         let subResult: ResultScan[] = [];
-
         if(rule.conditions[0].hasOwnProperty("property") && (rule.conditions[0] as RulesConditions).property === "."){
             let subResultScan: SubResultScan[] = checkRule(rule.conditions, objectResources);
             subResult.push({
