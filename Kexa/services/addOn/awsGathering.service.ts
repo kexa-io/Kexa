@@ -1559,6 +1559,9 @@
 	*	- EC2Client.ReservedInstancesListings
 	*	- EC2Client.ReservedInstancesModifications
 	*	- EC2Client.ReservedInstancesOfferings
+	*	- EC2Client.RouteServerEndpoints
+	*	- EC2Client.RouteServerPeers
+	*	- EC2Client.RouteServers
 	*	- EC2Client.RouteTables
 	*	- EC2Client.ScheduledInstanceAvailability
 	*	- EC2Client.ScheduledInstances
@@ -1653,6 +1656,9 @@
 	*	- EC2Client.NetworkInsightsAccessScopeContent
 	*	- EC2Client.PasswordData
 	*	- EC2Client.ReservedInstancesExchangeQuote
+	*	- EC2Client.RouteServerAssociations
+	*	- EC2Client.RouteServerPropagations
+	*	- EC2Client.RouteServerRoutingDatabase
 	*	- EC2Client.SecurityGroupsForVpc
 	*	- EC2Client.SerialConsoleAccessStatus
 	*	- EC2Client.SnapshotBlockPublicAccessState
@@ -5089,10 +5095,24 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
             else
                 logger.warn(prefix + "AWS_SECRET_ACCESS_KEY not found");
 
-
-            const credentialProvider = fromNodeProviderChain();
-
-            const client = new EC2Client({region: "us-east-1", credentials: credentialProvider});
+			const credentials = {
+				accessKeyId: awsKeyId,
+				secretAccessKey: awsSecretKey
+			};
+			let credentialProvider;
+			if (process.env.INTERFACE_CONFIGURATION_ENABLED == "true") {
+				credentialProvider = {
+					accessKeyId: awsKeyId,
+					secretAccessKey: awsSecretKey,
+				}
+			}
+			else {
+            	credentialProvider = fromNodeProviderChain();
+			}
+			const client = new EC2Client({
+				region: "us-east-1",
+				credentials: credentialProvider
+			});
 
             const command = new DescribeRegionsCommand({AllRegions: false});
             const response = await client.send(command);
