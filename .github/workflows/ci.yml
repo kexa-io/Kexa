@@ -1,13 +1,13 @@
 name: cicd
 
 on:
-  pull_request:
-    branches:
-  #    - main
-      - dev
-    types:
-      - opened
-  workflow_dispatch:
+  # pull_request:
+  #   branches:
+  # #    - main
+  #     - dev
+  #   types:
+  #     - opened
+  # workflow_dispatch:
 
 permissions:
   contents: read

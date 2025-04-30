@@ -18,7 +18,7 @@ COPY README.md ./
 COPY capacity.json ./
 COPY VERSION ./
 
-RUN bun install --production --frozen-lockfile
+RUN bun install --production
 
 COPY Kexa ./Kexa
 
