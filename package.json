@@ -17,8 +17,10 @@
     "scripts": {
         "start": "bun run Kexa/index.js",
         "lint": "eslint",
+        "build": "rimraf ./build && bun build ./Kexa/index.ts --target=node --outdir=./build --sourcemap",
+        "update:capability": "bun run build && bun ./build/services/updateCapability.service.js",
         "test": "bun run build && bun test Kexa/__tests__/**/*.test.ts",
-        "update": "bun run build && bun build/services/updateCapability.service.js"  
+        "test:nobuild": "bun test Kexa/__tests__/**/*.test.ts"
     },
     "peerDependencies": {
         "typescript": "^5.8.2"
