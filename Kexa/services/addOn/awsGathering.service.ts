@@ -5307,8 +5307,10 @@ interface ClientResultsInterface {
 	objectFunc: new (args: any) => any;
 };
 
-import {extractObjectBetween} from "../updateCapability.service";
 import {ListReservationsCommandInput } from "@aws-sdk/client-mediaconnect";
+
+import { extractObjectBetween } from "../../helpers/extractAddonName";
+
 
 function extractObjectsOrFunctions(module: any, isObject: Boolean): ClientResultsInterface[] {
     const clients: AwsClient = {};
