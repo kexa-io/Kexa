@@ -1,3 +1,20 @@
+## [2.0.1](https://github.com/kexa-io/Kexa/compare/v2.0.0...v2.0.1) (2025-04-30)
+
+
+### Bug Fixes
+
+* bun lock file ([ebe21d0](https://github.com/kexa-io/Kexa/commit/ebe21d0251cedda36534cf745376817ae808080d))
+* fixed bunjs scripts ([da26b2d](https://github.com/kexa-io/Kexa/commit/da26b2d958882d4e4bb462cbc3b3d17d5b3920d8))
+* force env var for tests ([4e508db](https://github.com/kexa-io/Kexa/commit/4e508db29dff14982c049e212d646e66df62c1b7))
+* move out extractObjectBetween function that trigger update Capability ([6f258f8](https://github.com/kexa-io/Kexa/commit/6f258f8390ec9ec82500443a1e501bb20f3fe763))
+* no mocha timeout + import path + remove hardden runner ([3bffd30](https://github.com/kexa-io/Kexa/commit/3bffd30d5e0c56f79133adc01c7b8fe07ed79cbc))
+* push new ci, remove older + frozen-lockfile docker ([6056aab](https://github.com/kexa-io/Kexa/commit/6056aab365ffd141a9fc4ba6d98de113a590f8ff))
+* re-implement test & update script in bun ([aaf7829](https://github.com/kexa-io/Kexa/commit/aaf782973fad2ec8c045cc6bb047dfa581242969))
+* readme new EC2 objects + headers.json for tests ([371695c](https://github.com/kexa-io/Kexa/commit/371695cbb4c18a92cefcab4bc8b1e23b971f69bc))
+* remove old ci.yml ([3519a45](https://github.com/kexa-io/Kexa/commit/3519a4579e405eba174b3adeda229736061878c5))
+* **saas:** Fixed aws auth in cronicle + header & rules ([8263c26](https://github.com/kexa-io/Kexa/commit/8263c26ae3847cc74039463d451ae88c4f079e1a))
+* update cicd for bun ([2907140](https://github.com/kexa-io/Kexa/commit/2907140adb449ec835b39705af4ccc78ed50168a))
+
 ## [1.17.5](https://github.com/kexa-io/Kexa/compare/v1.17.4...v1.17.5) (2024-11-29)
 
 
