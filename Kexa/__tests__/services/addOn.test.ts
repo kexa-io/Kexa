@@ -1,15 +1,17 @@
 import { hasValidHeader, loadAddOns, loadAddOnsCustomUtility } from "../../services/addOn.service";
 import { getConfig } from "../../helpers/loaderConfig";
+import { describe, it, beforeAll } from "bun:test";
 
 const { expect } = require('chai');
 const fs = require('fs');
 const mainFolder = 'Kexa';
 
-describe('Add On', function() {
-    const addOnPath = '../../services/addOn';
-    this.timeout(5000);
-    this.retries(4);
+// gloabal timeout for bun tests in ms
+Bun.env.BUN_TEST_TIMEOUT = "5000";
 
+describe('Add On', () => {
+    process.env.INTERFACE_CONFIGURATION_ENABLED = "false";
+    const addOnPath = '../../services/addOn';
     describe('Main Add On Folder', () => {
         const files = fs.readdirSync("./" + mainFolder + "/services/addOn");
         

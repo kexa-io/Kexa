@@ -10,40 +10,38 @@ permissions:
   contents: read
 
 jobs:
-
   ci:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
       contents: write
     steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
-        with:
-          egress-policy: audit
-
-      - name: Use Latest Corepack
-        run: |
-          echo "Before: corepack version => $(corepack --version || echo 'not installed')"
-          npm install -g corepack@latest
-          echo "After : corepack version => $(corepack --version)"
-          corepack enable
-          pnpm --version
-
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-      - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4.0.3
+      
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 20
-      - name: Install pnpm
-        run: npm install -g pnpm
-      - name: prep plugins
+          bun-version: latest
+
+      - name: Verify Bun Installation
         run: |
-          pnpm install -D semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/exec
+          echo "Bun version: $(bun --version)"
+
+      - name: Install Dependencies
+        run: bun i
+
+      - name: Run tests
+        run: bun run test
+
+      - name: Install Semantic Release and Plugins
+        run: bun add -d semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/exec
+      
       - name: Permissions for semantic-release
         run: chmod +x ./node_modules/.bin/semantic-release
-      - name: run semantic release
+      
+      - name: Run Semantic Release
         id: ver
-        run: npx semantic-release --debug   
+        run: bun x semantic-release --debug   
         env:
           GH_TOKEN: ${{ secrets.GIT_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -55,9 +53,9 @@ jobs:
           token: ${{ secrets.GIT_TOKEN }}
           repository: "kexa-io/Kexa"
           type: "stable"
-      - name: print new latest version
+      
+      - name: Print New Latest Version
         run: echo ${{ steps.get_latest_release.outputs.release }}
-
 
       - name: Login to Docker Registry
         uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
