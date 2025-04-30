@@ -2100,6 +2100,9 @@ Refer to our ROADMAP.md.
 - ✅ EC2Client.ReservedInstancesListings
 - ✅ EC2Client.ReservedInstancesModifications
 - ✅ EC2Client.ReservedInstancesOfferings
+- ✅ EC2Client.RouteServerEndpoints
+- ✅ EC2Client.RouteServerPeers
+- ✅ EC2Client.RouteServers
 - ✅ EC2Client.RouteTables
 - ✅ EC2Client.ScheduledInstanceAvailability
 - ✅ EC2Client.ScheduledInstances
@@ -2194,6 +2197,9 @@ Refer to our ROADMAP.md.
 - ✅ EC2Client.NetworkInsightsAccessScopeContent
 - ✅ EC2Client.PasswordData
 - ✅ EC2Client.ReservedInstancesExchangeQuote
+- ✅ EC2Client.RouteServerAssociations
+- ✅ EC2Client.RouteServerPropagations
+- ✅ EC2Client.RouteServerRoutingDatabase
 - ✅ EC2Client.SecurityGroupsForVpc
 - ✅ EC2Client.SerialConsoleAccessStatus
 - ✅ EC2Client.SnapshotBlockPublicAccessState
