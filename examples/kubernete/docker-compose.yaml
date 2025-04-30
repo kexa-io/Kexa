@@ -1,8 +1,0 @@
-services:
-  kexa:
-    build: ../../
-    env_file:
-      - .env
-    volumes:
-      - ./config:/usr/src/app/config
-      - ./rules:/usr/src/app/rules

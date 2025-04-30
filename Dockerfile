@@ -13,7 +13,7 @@ WORKDIR /usr/src/app
 
 COPY --from=compress /usr/local/bin/bun /usr/local/bin/
 
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 COPY README.md ./
 COPY capacity.json ./
 COPY VERSION ./
