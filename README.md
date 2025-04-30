@@ -28,7 +28,7 @@ Kexa is an open-source compliance management tool that simplifies security and c
 
 ### Prerequisites
 
-- Node.js installed
+- BunJS installed
 - Cloud provider credentials (Azure, AWS, GCP, etc.)
 
 ### Installation
@@ -46,10 +46,12 @@ Kexa is an open-source compliance management tool that simplifies security and c
     bun i --frozen-lockfile
     ```
 
-3. Run Kexa:
+3. Configure Kexa by editing the `default.conf` file.
+
+4. Run Kexa:
 
     ```bash
-    bun run Kexa/index.ts
+    bun run ./Kexa/index.ts
     ```
 
 ### Alternative Installation Methods
@@ -61,7 +63,9 @@ Kexa is an open-source compliance management tool that simplifies security and c
 
 ## Features
 
-- **Multi-Cloud Support**: Works with Azure, AWS, GCP, GitHub, Kubernetes, Office 365, and Google Workspace
+- **Multi-Cloud Support**: Works with major cloud providers (Azure, AWS, GCP)
+- **Platform Support**: Integrates with GitHub, Kubernetes
+- **Workspace Support**: Compatible with Office 365 and Google Workspace
 - **Custom Rules**: Create and modify compliance rules to match your needs
 - **Real-time Monitoring**: Get instant alerts for compliance violations
 - **Flexible Deployment**: Run as a script, container, or cloud function
