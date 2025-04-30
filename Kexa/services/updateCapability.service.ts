@@ -379,7 +379,7 @@ export const extractObjectFromOutputCommand  = (listingCommand: string): string 
     return null;
 }
 
-import { extractObjectBetween } from "../../helpers/extractAddonName";
+import { extractObjectBetween } from "../helpers/extractAddonName";
 
 
 export function extractObjectsOrFunctionsAws(module: any, isObject: Boolean): AwsClient {
