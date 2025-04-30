@@ -13,7 +13,9 @@ function unloadConfig(): void {
     delete process.env.SPECIALCONFIG;
 }
 
+
 describe('analyse service', () => {
+    process.env.INTERFACE_CONFIGURATION_ENABLED = "false";
     describe('Gathering rules', () => {
         it('should return a multiple rules', async () => {
             const result = await gatheringRules("./Kexa/__tests__/rules/test2", true);
