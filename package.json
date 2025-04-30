@@ -15,38 +15,40 @@
         "typescript-eslint": "^8.27.0"
     },
     "scripts": {
-        "start": "bun Kexa/index.js",
-        "lint": "eslint"
+        "start": "bun run Kexa/index.js",
+        "lint": "eslint",
+        "test": "bun run build && bun test Kexa/__tests__/**/*.test.ts",
+        "update": "bun run build && bun build/services/updateCapability.service.js"  
     },
     "peerDependencies": {
         "typescript": "^5.8.2"
     },
     "release": {
         "branches": [
-          "main"
+            "main"
         ],
         "plugins": [
-          "@semantic-release/commit-analyzer",
-          "@semantic-release/release-notes-generator",
-          "@semantic-release/changelog",
-          "@semantic-release/github",
-          [
-            "@semantic-release/git",
-            {
-              "assets": [
-                "CHANGELOG.md"
-              ],
-              "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-            }
-          ],
-          [
-            "@semantic-release/exec",
-            {
-              "publishCmd": "echo ::set-output name=nextVer::${nextRelease.version}"
-            }
-          ]
+            "@semantic-release/commit-analyzer",
+            "@semantic-release/release-notes-generator",
+            "@semantic-release/changelog",
+            "@semantic-release/github",
+            [
+                "@semantic-release/git",
+                {
+                    "assets": [
+                        "CHANGELOG.md"
+                    ],
+                    "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+                }
+            ],
+            [
+                "@semantic-release/exec",
+                {
+                    "publishCmd": "echo ::set-output name=nextVer::${nextRelease.version}"
+                }
+            ]
         ]
-      },
+    },
     "dependencies": {
         "@aws-sdk/client-accessanalyzer": "^3.772.0",
         "@aws-sdk/client-account": "^3.772.0",
@@ -529,7 +531,7 @@
         "@google-cloud/workflows": "^4.1.0",
         "@google-cloud/workstations": "^2.0.1",
         "@jazzer.js/core": "^2.1.0",
-        "@kubernetes/client-node": "^1.1.0",
+        "@kubernetes/client-node": "^1.1.2",
         "@microsoft/microsoft-graph-client": "^3.0.7",
         "@microsoft/teams-js": "^2.35.0",
         "@octokit/core": "^6.1.4",
