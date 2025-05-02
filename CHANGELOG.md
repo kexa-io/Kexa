@@ -1,3 +1,11 @@
+## [2.0.2](https://github.com/kexa-io/Kexa/compare/v2.0.1...v2.0.2) (2025-05-02)
+
+
+### Bug Fixes
+
+* added api token to API loader services & enum ([88c53c6](https://github.com/kexa-io/Kexa/commit/88c53c6d224aaa1e7529655723be92e31de2a6b6))
+* remove ci/cd useless step + fix kexa save from SaaS ([0730c94](https://github.com/kexa-io/Kexa/commit/0730c94ef6c3f1df33e6b373174476b472130805))
+
 ## [2.0.1](https://github.com/kexa-io/Kexa/compare/v2.0.0...v2.0.1) (2025-04-30)
 
 
