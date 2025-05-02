@@ -28,7 +28,7 @@ export async function exportation(save: KexaSaveConfig, resources: ProviderResou
             });
         });
     });
-    await axios.post((process.env.DOMAINEKEXA??`https://api.kexa.io`) + '/api/job/exportation', {resources: resources, configSend, save}, {
+    await axios.post((process.env.KEXA_API_URL??`http://localhost:4012/api`) + '/job/exportation', {resources: resources, configSend, save}, {
         headers: {
             User: name,
             Authorization: token

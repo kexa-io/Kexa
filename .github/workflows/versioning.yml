@@ -72,10 +72,3 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_REGISTRY_NAME}}/innovtech/kexa:${{ steps.get_latest_release.outputs.release }}
             ${{ secrets.DOCKER_REGISTRY_NAME}}/innovtech/kexa:latest
-      
-      - name: Release
-        uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
-        if: github.ref == 'refs/heads/main'
-        with:
-          tag: "${{ steps.get_latest_release.outputs.release }}"
-          prerelease: false
