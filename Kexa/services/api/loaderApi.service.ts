@@ -108,11 +108,12 @@ export async function getRulesFromApi(notificationGroups: any){
 
 function addSaveModuleToConfig(config: any, saveModules: any) {
     const saveArray = saveModules.map((module: any) => ({
-        type: module.type,
-        name: module.name,
-        description: module.description,
-        urlName: module.urlName,
-        isActive: module.isActive
+        type: module?.type,
+        name: module?.name ?? null,
+        token: module?.token ?? null,
+        description: module?.description,
+        urlName: module?.urlName ?? null,
+        isActive: module?.isActive
     }));
     config.save = saveArray;
     return config;
