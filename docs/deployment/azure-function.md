@@ -93,17 +93,18 @@ kexa-function/
 
 ```typescript
 import { AzureFunction, Context } from "@azure/functions";
-import { Kexa } from "../../shared/kexa";
+[...]
 
 const timerTrigger: AzureFunction = async function (context: Context, myTimer: any): Promise<void> {
-    const kexa = new Kexa();
-    await kexa.initialize();
-    const results = await kexa.runScan();
-    context.log('Scan completed:', results);
+    [...]
 };
 
 export default timerTrigger;
 ```
+
+If you want to see the full code, you can find it [here](https://github.com/kexa-io/Kexa/blob/main/Kexa/index.ts).
+
+Also, you will have to update the `host.json` file to be able to run properly. You can find the full code [here](https://github.com/kexa-io/Kexa/blob/main/host.json).
 
 ## Storage Configuration
 

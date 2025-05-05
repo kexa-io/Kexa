@@ -8,9 +8,9 @@
   <p align="center">
     Take the security of your Kubernetes environments to the next level with our data scan addon, guaranteeing proactive monitoring and unrivalled protection of your clusters, for total peace of mind in the container world.
     <br />
-    <a href="https://github.com/4urcloud/Kexa/issues">Report Bug</a>
+    <a href="https://github.com/kexa-io/Kexa/issues">Report Bug</a>
     ·
-    <a href="https://github.com/4urcloud/Kexa/issues">Request Feature</a>
+    <a href="https://github.com/kexa-io/Kexa/issues">Request Feature</a>
   </p>
 </div>
 

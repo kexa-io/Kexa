@@ -8,9 +8,9 @@
   <p align="center">
     Reinvent the way you work with Google Drive with our revolutionary data scan add-on, simplifying the collection, organization and analysis of your files and information for unprecedented productivity in the cloud.
     <br />
-    <a href="https://github.com/4urcloud/Kexa/issues">Report Bug</a>
+    <a href="https://github.com/kexa-io/Kexa/issues">Report Bug</a>
     ·
-    <a href="https://github.com/4urcloud/Kexa/issues">Request Feature</a>
+    <a href="https://github.com/kexa-io/Kexa/issues">Request Feature</a>
   </p>
 </div>
 

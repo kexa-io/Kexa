@@ -6,15 +6,15 @@ This guide will help you set up your development environment and understand our 
 
 1. **Prerequisites**
    - Node.js (v18 or higher)
-   - pnpm (latest version)
+   - Bun (latest version)
    - Git
 
 2. **Clone and Setup**
 
    ```bash
-   git clone https://github.com/4urcloud/Kexa.git
+   git clone https://github.com/kexa-io/Kexa.git
    cd Kexa
-   pnpm install --frozen-lockfile
+   bun install
    ```
 
 3. **Environment Setup**
@@ -70,20 +70,20 @@ This guide will help you set up your development environment and understand our 
 ### Development Mode
 
 ```bash
-pnpm run dev
+bun run dev
 ```
 
 ### Production Build
 
 ```bash
-pnpm run build
-pnpm run start
+bun run build
+bun run start
 ```
 
 ### Running Tests
 
 ```bash
-pnpm run test
+bun run test
 ```
 
 ## Debugging

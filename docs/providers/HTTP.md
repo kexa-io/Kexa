@@ -8,9 +8,9 @@
   <p align="center">
     Ensure optimal service performance with our API endpoint data scan add-on, which gives you a real-time view of your systems' health, enabling you to maintain robust, uninterrupted online services.
     <br />
-    <a href="https://github.com/4urcloud/Kexa/issues">Report Bug</a>
+    <a href="https://github.com/kexa-io/Kexa/issues">Report Bug</a>
     ·
-    <a href="https://github.com/4urcloud/Kexa/issues">Request Feature</a>
+    <a href="https://github.com/kexa-io/Kexa/issues">Request Feature</a>
   </p>
 </div>
 

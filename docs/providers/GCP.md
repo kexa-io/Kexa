@@ -8,9 +8,9 @@
   <p align="center">
     Optimize the security of your assets on Google Cloud with our industry-leading data scan addon, offering advanced protection, complete visibility and foolproof compliance to ensure your data remains secure in the cloud.
     <br />
-    <a href="https://github.com/4urcloud/Kexa/issues">Report Bug</a>
+    <a href="https://github.com/kexa-io/Kexa/issues">Report Bug</a>
     ·
-    <a href="https://github.com/4urcloud/Kexa/issues">Request Feature</a>
+    <a href="https://github.com/kexa-io/Kexa/issues">Request Feature</a>
   </p>
 </div>
 

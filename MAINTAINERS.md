@@ -15,6 +15,7 @@ This document contains a list of maintainers in this repo. See [RESPONSIBILITIES
 |-|-|-|
 | Esteban MATHIA | [estebanmathia](https://github.com/estebanmathia) | 4urcloud |
 | Adrien EPPLING | [aesoft](https://github.com/aeppling) | 4urcloud |
+| David MATTON | [dmatton](https://github.com/dmattoninnovtech) | 4urcloud |
 
 ## Emeritus
 

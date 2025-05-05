@@ -20,6 +20,9 @@ RULESAUTHORIZATION="Bearer github_pat_XXXXXXXXXXXXXXXXXXXXXXXX" # Optional
 ```bash
 # Default value
 OUTPUT=./output
+
+# Enable verbose output when DEBUG_MODE is set
+DEBUG_MODE=1
 ```
 
 ### Email Configuration

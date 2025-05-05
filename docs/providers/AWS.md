@@ -8,9 +8,9 @@
   <p align="center">
     Strengthen the security of your AWS resources with our state-of-the-art data scan addon, guaranteeing complete protection of your sensitive data, enhanced compliance and unrivalled peace of mind in the cloud.
     <br />
-    <a href="https://github.com/4urcloud/Kexa/issues">Report Bug</a>
+    <a href="https://github.com/kexa-io/Kexa/issues">Report Bug</a>
     ·
-    <a href="https://github.com/4urcloud/Kexa/issues">Request Feature</a>
+    <a href="https://github.com/kexa-io/Kexa/issues">Request Feature</a>
   </p>
 </div>
 

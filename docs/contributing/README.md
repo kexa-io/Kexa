@@ -49,4 +49,4 @@ Please read and follow our [Code of Conduct](../../CODE_OF_CONDUCT.md).
 
 ## License
 
-By contributing to Kexa, you agree that your contributions will be licensed under the project's [MIT License](../../LICENSE.txt).
+By contributing to Kexa, you agree that your contributions will be licensed under the project's [Apache License](../../LICENSE.txt).

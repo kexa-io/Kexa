@@ -86,10 +86,10 @@ Kexa is an open-source cloud infrastructure compliance and security monitoring t
 
 ```bash
 # Windows
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/4urcloud/Kexa/dev/initKexa.ps1" -OutFile "./initKexa.ps1"; & "./initKexa.ps1" -d -c
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kexa-io/Kexa/dev/initKexa.ps1" -OutFile "./initKexa.ps1"; & "./initKexa.ps1" -d -c
 
 # Linux
-curl -sSL https://raw.githubusercontent.com/4urcloud/Kexa/main/initKexa.sh -o initKexa.sh && chmod +x initKexa.sh && ./initKexa.sh -d -c
+curl -sSL https://raw.githubusercontent.com/kexa-io/Kexa/main/initKexa.sh -o initKexa.sh && chmod +x initKexa.sh && ./initKexa.sh -d -c
 ```
 
 ## Support & Community
@@ -106,5 +106,5 @@ curl -sSL https://raw.githubusercontent.com/4urcloud/Kexa/main/initKexa.sh -o in
 ## Contact
 
 - Website: [https://www.kexa.io](https://www.kexa.io)
-- GitHub: [https://github.com/4urcloud/Kexa](https://github.com/4urcloud/Kexa)
+- GitHub: [https://github.com/kexa-io/Kexa](https://github.com/kexa-io/Kexa)
 - Email: <support@kexa.io>

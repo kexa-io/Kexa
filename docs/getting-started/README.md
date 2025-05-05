@@ -21,7 +21,7 @@ Kexa can be installed in several ways. Choose the method that best suits your ne
 
 ```powershell
 # Download and run the configuration script
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/4urcloud/Kexa/dev/initKexa.ps1" -OutFile "./initKexa.ps1"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kexa-io/Kexa/dev/initKexa.ps1" -OutFile "./initKexa.ps1"
 ./initKexa.ps1 -d -c
 ```
 
@@ -29,7 +29,7 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/4urcloud/Kexa/dev/init
 
 ```bash
 # Download and run the configuration script
-curl -sSL https://raw.githubusercontent.com/4urcloud/Kexa/main/initKexa.sh -o initKexa.sh
+curl -sSL https://raw.githubusercontent.com/kexa-io/Kexa/main/initKexa.sh -o initKexa.sh
 chmod +x initKexa.sh
 ./initKexa.sh -d -c
 ```
@@ -46,14 +46,14 @@ The script will:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/4urcloud/Kexa.git
+   git clone https://github.com/kexa-io/Kexa.git
    cd Kexa
    ```
 
 2. Install dependencies:
 
    ```bash
-   pnpm i --frozen-lockfile
+   bun install
    ```
 
 ### 3. Docker Installation
@@ -132,5 +132,5 @@ If you encounter any issues during installation or setup:
 
 1. Check the [FAQ](../faq.md)
 2. Review the [Troubleshooting Guide](../troubleshooting.md)
-3. Open an [Issue](https://github.com/4urcloud/Kexa/issues) on GitHub
-4. Join our [Discussions](https://github.com/4urcloud/Kexa/discussions) for community support
+3. Open an [Issue](https://github.com/kexa-io/Kexa/issues) on GitHub
+4. Join our [Discussions](https://github.com/kexa-io/Kexa/discussions) for community support

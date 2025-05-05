@@ -18,9 +18,6 @@ Kexa can be run in several ways, depending on your deployment preferences:
 ```bash
 # Using Bun
 bun run Kexa/index.ts
-
-# Using PNPM
-pnpm run start
 ```
 
 ### 2. Docker Container
@@ -70,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: 4urcloud/Kexa_githubAction@main
+      - uses: kexa-io/Kexa_githubAction@main
         with:
           config-path: './config'
 ```
@@ -86,9 +83,6 @@ Kexa provides multiple ways to view scan results:
 ```bash
 # Verbose output
 bun run Kexa/index.ts --verbose
-
-# JSON output
-bun run Kexa/index.ts --format json
 ```
 
 ### 2. Notification Channels
@@ -265,4 +259,4 @@ Common usage issues and solutions:
    - Check network latency
    - Adjust timeout settings
 
-See the [Troubleshooting Guide](../troubleshooting.md) for more information.
+See the [Troubleshooting Guide](./troubleshooting-guide.md) for more information.

@@ -4,7 +4,7 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
+[![Apache License][license-shield]][license-url]
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/9278/badge)](https://www.bestpractices.dev/projects/9278)
 
 <div align="center">
@@ -36,7 +36,7 @@ Kexa is an open-source compliance management tool that simplifies security and c
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/4urcloud/Kexa.git
+    git clone https://github.com/kexa-io/Kexa.git
     cd Kexa
     ```
 
@@ -57,7 +57,7 @@ Kexa is an open-source compliance management tool that simplifies security and c
 ### Alternative Installation Methods
 
 - **Docker**: Use our [Docker image](https://hub.docker.com/r/innovtech/kexa)
-- **GitHub Action**: Use our [GitHub Action](https://github.com/4urcloud/Kexa_githubAction)
+- **GitHub Action**: Use our [GitHub Action](https://github.com/kexa-io/Kexa_githubAction)
 - **Kubernetes**: Deploy using our [Kubernetes manifests](documentation/Documentation-Kexa.md#kubernetes-1)
 - **Azure Function**: Deploy as an [Azure Function](documentation/Documentation-Kexa.md#azure-function)
 
@@ -89,13 +89,13 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 
 ## Support
 
-- Report bugs: [GitHub Issues](https://github.com/4urcloud/Kexa/issues)
-- Request features: [GitHub Discussions](https://github.com/4urcloud/Kexa/discussions)
+- Report bugs: [GitHub Issues](https://github.com/kexa-io/Kexa/issues)
+- Request features: [GitHub Discussions](https://github.com/kexa-io/Kexa/discussions)
 - Join our community: [Discord](https://discord.gg/kexa)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License - see the [LICENSE](./LICENSE.txt) file for details.
 
 ## Contact
 
@@ -103,13 +103,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Email: [contact@kexa.io](mailto:contact@kexa.io)
 
 <!-- MARKDOWN LINKS & IMAGES -->
-[contributors-shield]: https://img.shields.io/github/contributors/4urcloud/Kexa.svg?style=for-the-badge
-[contributors-url]: https://github.com/4urcloud/Kexa/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/4urcloud/Kexa.svg?style=for-the-badge
-[forks-url]: https://github.com/4urcloud/Kexa/network/members
-[stars-shield]: https://img.shields.io/github/stars/4urcloud/Kexa.svg?style=for-the-badge
-[stars-url]: https://github.com/4urcloud/Kexa/stargazers
-[issues-shield]: https://img.shields.io/github/issues/4urcloud/Kexa.svg?style=for-the-badge
-[issues-url]: https://github.com/4urcloud/Kexa/issues
-[license-shield]: https://img.shields.io/github/license/4urcloud/Kexa.svg?style=for-the-badge
-[license-url]: https://github.com/4urcloud/Kexa/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/kexa-io/Kexa.svg?style=for-the-badge
+[contributors-url]: https://github.com/kexa-io/Kexa/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/kexa-io/Kexa.svg?style=for-the-badge
+[forks-url]: https://github.com/kexa-io/Kexa/network/members
+[stars-shield]: https://img.shields.io/github/stars/kexa-io/Kexa.svg?style=for-the-badge
+[stars-url]: https://github.com/kexa-io/Kexa/stargazers
+[issues-shield]: https://img.shields.io/github/issues/kexa-io/Kexa.svg?style=for-the-badge
+[issues-url]: https://github.com/kexa-io/Kexa/issues
+[license-shield]: https://img.shields.io/github/license/kexa-io/Kexa.svg?style=for-the-badge
+[license-url]: https://github.com/kexa-io/Kexa/blob/master/LICENSE.txt

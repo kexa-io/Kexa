@@ -56,7 +56,7 @@ docker-compose up -d
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/4urcloud/Kexa.git
+git clone https://github.com/kexa-io/Kexa.git
 cd Kexa
 ```
 
@@ -151,6 +151,7 @@ docker inspect kexa
 ## Maintenance
 
 ### Updates
+
 ```bash
 # Pull latest image
 docker pull innovtech/kexa:latest

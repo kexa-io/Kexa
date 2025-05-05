@@ -154,7 +154,7 @@ brew install pnpm
 - CLI:
 
    ```bash
-   git clone https://github.com/4urcloud/Kexa.git
+   git clone https://github.com/kexa-io/Kexa.git
    ```
 
 <!--- Github Desktop:
@@ -167,7 +167,7 @@ brew install pnpm
 - SSH:
 
   ```bash
-  git@github.com:4urcloud/Kexa.git
+  git@github.com:kexa-io/Kexa.git
   ```
 
 - Download ZIP:

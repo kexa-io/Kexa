@@ -98,10 +98,14 @@ You can use multiple configuration files by:
 
 ## Configuration via Script
 
-A PowerShell script is available for easy configuration:
+For Windows users, a PowerShell script is available for easy configuration:
 
 ```powershell
 ./initKexa.ps1 -c
 ```
 
-For Linux users, you can use PowerShell following [this guide](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-linux?view=powershell-7.4).
+For Linux users, a Bash script is also available:
+
+```bash
+./initKexa.sh -c
+```

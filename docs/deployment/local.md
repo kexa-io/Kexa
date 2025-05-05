@@ -4,8 +4,7 @@ This guide explains how to deploy and run Kexa locally on your machine.
 
 ## Prerequisites
 
-- Node.js (v18 or higher)
-- pnpm (latest version)
+- BunJS
 - Git
 - Access to cloud provider accounts (AWS, Azure, GCP)
 
@@ -14,14 +13,14 @@ This guide explains how to deploy and run Kexa locally on your machine.
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/4urcloud/Kexa.git
+   git clone https://github.com/kexa-io/Kexa.git
    cd Kexa
    ```
 
 2. **Install Dependencies**
 
    ```bash
-   pnpm install --frozen-lockfile
+   bun install
    ```
 
 3. **Environment Setup**
@@ -42,21 +41,21 @@ This guide explains how to deploy and run Kexa locally on your machine.
 4. **Configure Rules**
    - Create or copy rules to your rules directory
    - Ensure rules are properly formatted in YAML
-   - Test rules with `pnpm run validate-rules`
+   - Test rules with `bun run validate-rules`
 
 ## Running Kexa
 
 ### Development Mode
 
 ```bash
-pnpm run dev
+bun run dev
 ```
 
 ### Production Mode
 
 ```bash
-pnpm run build
-pnpm run start
+bun run build
+bun run start
 ```
 
 ### Scheduled Runs
@@ -65,7 +64,7 @@ You can set up scheduled runs using cron jobs:
 
 ```bash
 # Example cron job to run Kexa daily at midnight
-0 0 * * * cd /path/to/Kexa && pnpm run start
+0 0 * * * cd /path/to/Kexa && bun run start
 ```
 
 ## Monitoring
@@ -110,7 +109,7 @@ You can set up scheduled runs using cron jobs:
 Enable debug mode for detailed logging:
 
 ```bash
-DEBUG=true pnpm run start
+DEBUG_MODE=true
 ```
 
 ## Security Considerations
@@ -139,10 +138,10 @@ DEBUG=true pnpm run start
 git pull origin main
 
 # Update dependencies
-pnpm install --frozen-lockfile
+bun install
 
 # Rebuild if necessary
-pnpm run build
+bun run build
 ```
 
 ### Backup

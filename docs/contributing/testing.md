@@ -1,6 +1,6 @@
 # Testing Guide
 
-This guide covers testing practices and requirements for contributing to Kexa.
+This guide covers testing practices and requirements for contributing to Kexa. Note that unit testing is currently a work in progress and is one of our key development goals.
 
 ## Testing Framework
 
@@ -130,16 +130,16 @@ describe('Feature', () => {
 
 ```bash
 # Run all tests
-pnpm run test
+bun run test
 
 # Run specific test file
-pnpm run test path/to/test
+bun run test path/to/test
 
 # Run with coverage
-pnpm run test:coverage
+bun run test:coverage
 
 # Run in watch mode
-pnpm run test:watch
+bun run test:watch
 ```
 
 ### CI/CD Pipeline

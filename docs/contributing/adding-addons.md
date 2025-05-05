@@ -15,72 +15,9 @@ Addons are modular components that extend Kexa's capabilities by:
 
 ### 1. Basic Structure
 
-Create a new directory in the `src/addons` folder:
+According to the [addOn.service.ts](https://github.com/kexa-io/Kexa/blob/main/Kexa/services/addOn.service.ts) and depending on the type of addon that will be added, it must respect the template provided here : [freshTemplatesAddOn](https://github.com/kexa-io/Kexa/blob/main/config/freshTemplatesAddOn)
 
-```bash
-src/addons/
-└── your-addon-name/
-    ├── index.ts
-    ├── types.ts
-    ├── config.ts
-    └── README.md
-```
-
-### 2. Implement Required Interfaces
-
-Your addon must implement the appropriate interface based on its type:
-
-```typescript
-// For Cloud Provider Addons
-export class YourProviderAddon implements CloudProviderAddon {
-  name: string = 'your-provider';
-  
-  async initialize(config: Config): Promise<void> {
-    // Setup code
-  }
-  
-  async scan(rules: Rule[]): Promise<ScanResult[]> {
-    // Scanning logic
-  }
-  
-  async cleanup(): Promise<void> {
-    // Cleanup code
-  }
-}
-
-// For Notification Addons
-export class YourNotificationAddon implements NotificationAddon {
-  name: string = 'your-notification';
-  
-  async send(message: NotificationMessage): Promise<void> {
-    // Notification logic
-  }
-}
-```
-
-### 3. Configuration
-
-Define your addon's configuration schema:
-
-```typescript
-// config.ts
-export interface YourAddonConfig {
-  required_field: string;
-  optional_field?: number;
-  // Add other configuration options
-}
-
-export const configSchema = {
-  type: 'object',
-  properties: {
-    required_field: { type: 'string' },
-    optional_field: { type: 'number' }
-  },
-  required: ['required_field']
-};
-```
-
-### 4. Documentation
+### 2. Documentation
 
 Create a README.md for your addon with:
 
