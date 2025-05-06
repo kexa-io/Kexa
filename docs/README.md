@@ -18,7 +18,7 @@ Welcome to the Kexa documentation! This documentation will help you understand a
 3. [Usage](./usage/README.md)
    - [Running Scans](./usage/running-scans.md)
    - [Viewing Results](./usage/viewing-results.md)
-   - [Notifications](./usage/notifications.md)
+   - [Notifications](./notifications/README.md)
    - [Data Export](./usage/data-export.md)
 
 4. [Deployment](./deployment/README.md)

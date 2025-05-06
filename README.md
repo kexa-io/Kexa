@@ -43,16 +43,16 @@ Kexa is an open-source compliance management tool that simplifies security and c
 2. Install dependencies:
 
     ```bash
-    bun i --frozen-lockfile
+    bun install
     ```
 
-3. Configure Kexa by editing the `default.conf` file.
-
-4. Run Kexa:
+3. Run Kexa:
 
     ```bash
     bun run ./Kexa/index.ts
     ```
+
+4. You can configure Kexa by editing the `default.conf` file inside the `config` folder and re-run the script.
 
 ### Alternative Installation Methods
 

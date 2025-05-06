@@ -280,10 +280,10 @@ Enable notification debugging:
 
 ```bash
 # Local
-DEBUG_MODE=notifications bun run Kexa/index.ts
+DEBUG_MODE=true bun run Kexa/index.ts
 
 # Docker
-docker run -e DEBUG=notifications -v $(pwd)/config:/app/config innovtech/kexa
+docker run -e DEBUG_MODE=true -v $(pwd)/config:/app/config innovtech/kexa
 ```
 
 ## Support

@@ -110,4 +110,4 @@ bun run test
 - Check existing issues and discussions
 - Join our community chat
 - Contact maintainers
-- Read our [FAQ](../FAQ.md)
+- Read our [FAQ](../../FAQ.md)
