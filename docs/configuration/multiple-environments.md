@@ -269,7 +269,7 @@ kexa scan --env production
 
 ```bash
 # Enable environment debugging
-DEBUG_MODE=environment kexa scan --env development
+DEBUG_MODE=true kexa scan --env development
 
 # Show configuration
 kexa config show --env staging

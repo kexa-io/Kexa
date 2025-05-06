@@ -15,7 +15,7 @@ Addons are modular components that extend Kexa's capabilities by:
 
 ### 1. Basic Structure
 
-According to the [addOn.service.ts](https://github.com/kexa-io/Kexa/blob/main/Kexa/services/addOn.service.ts) and depending on the type of addon that will be added, it must respect the template provided here : [freshTemplatesAddOn](https://github.com/kexa-io/Kexa/blob/main/config/freshTemplatesAddOn)
+According to the [addOn.service.ts](https://github.com/kexa-io/Kexa/blob/main/Kexa/services/addOn.service.ts) and depending on the type of addon that will be added, it must respect the template provided here with [freshTemplatesAddOn](https://github.com/kexa-io/Kexa/blob/main/config/freshTemplatesAddOn)
 
 ### 2. Documentation
 

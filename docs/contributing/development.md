@@ -18,8 +18,7 @@ This guide will help you set up your development environment and understand our 
    ```
 
 3. **Environment Setup**
-   - Copy `.env.example` to `.env`
-   - Configure necessary environment variables
+   - Create a `.env` file and add your necessary environment variables
 
 ## Coding Standards
 

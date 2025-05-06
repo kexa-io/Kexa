@@ -67,6 +67,8 @@ Kexa uses environment variables for:
 Common environment variables:
 
 ```bash
+# Don't forget that 'A_' is the prefix for the Azure environment variables.
+
 # Azure Configuration
 A_AZURECLIENTID=""
 A_AZURETENANTID=""

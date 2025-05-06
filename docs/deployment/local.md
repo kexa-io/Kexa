@@ -24,8 +24,7 @@ This guide explains how to deploy and run Kexa locally on your machine.
    ```
 
 3. **Environment Setup**
-   - Copy `.env.example` to `.env`
-   - Configure your environment variables:
+   - - Create a `.env` file and add your necessary environment variables:
 
      ```bash
      # Rules directory
