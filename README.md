@@ -24,6 +24,18 @@ Kexa is an open-source compliance management tool that simplifies security and c
 - Seamless integration with existing tools
 - Support for multiple deployment methods
 
+Kexa works by scanning your cloud environments based on your configuration, applying customizable compliance rules, and notifying you of any violations. The process is simple:
+
+1. **Scan**: Kexa scans your configured cloud environments using provider credentials
+2. **Analyze**: It applies your defined compliance rules to the collected data
+3. **Report**: Based on severity levels and notification settings, Kexa alerts you through your preferred communication channels
+
+This straightforward scan-and-verify approach makes it easy to maintain compliance across your entire cloud infrastructure.
+
+Here is an example of the Kexa engine:
+
+![kexa-engine](./images/schema-engine.png)
+
 ## Quick Start
 
 ### Prerequisites
