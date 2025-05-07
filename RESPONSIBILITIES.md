@@ -1,31 +1,34 @@
-- [Overview](#overview)
-- [Maintainer Responsibilities](#maintainer-responsibilities)
-  - [Uphold Code of Conduct](#uphold-code-of-conduct)
-  - [Prioritize Security](#prioritize-security)
-  - [Review Pull Requests](#review-pull-requests)
-  - [Be Responsive](#be-responsive)
-  - [Maintain Overall Health of the Repo](#maintain-overall-health-of-the-repo)
-  - [Manage Roadmap](#manage-roadmap)
-  - [Release Frequently](#release-frequently)
-  - [Promote Other Maintainers](#promote-other-maintainers)
-  - [Describe the Repo](#describe-the-repo)
-- [Becoming a Maintainer](#becoming-a-maintainer)
-- [Removing a Maintainer](#removing-a-maintainer)
-  - [Moving On](#moving-on)
-  - [Inactivity](#inactivity)
-  - [Negative Impact on the Project](#negative-impact-on-the-project)
+# RESPONSIBILITIES
+
+- [RESPONSIBILITIES](#responsibilities)
+  - [Overview](#overview)
+  - [Maintainer Responsibilities](#maintainer-responsibilities)
+    - [Uphold Code of Conduct](#uphold-code-of-conduct)
+    - [Prioritize Security](#prioritize-security)
+    - [Review Pull Requests](#review-pull-requests)
+    - [Be Responsive](#be-responsive)
+    - [Maintain Overall Health of the Repo](#maintain-overall-health-of-the-repo)
+    - [Manage Roadmap](#manage-roadmap)
+    - [Release Frequently](#release-frequently)
+    - [Promote Other Maintainers](#promote-other-maintainers)
+    - [Describe the Repo](#describe-the-repo)
+  - [Becoming a Maintainer](#becoming-a-maintainer)
+  - [Removing a Maintainer](#removing-a-maintainer)
+    - [Moving On](#moving-on)
+    - [Inactivity](#inactivity)
+    - [Negative Impact on the Project](#negative-impact-on-the-project)
 
 ## Overview
 
-This document explains who maintainers are, what they do in various repos of 4urcloud, and how they should be doing it. If you're interested in contributing, see [CONTRIBUTING](CONTRIBUTING.md).
+This document explains who maintainers are, what they do in various repos of **4urcloud**, and how they should be doing it. If you're interested in contributing, see [CONTRIBUTING](./CONTRIBUTING.md).
 
 ## Maintainer Responsibilities
 
-Maintainers are active and visible members of the community, and have [maintain-level permissions on a repository](https://docs.github.com/en/organizations/managing-access-to-your-organizations-repositories/repository-permission-levels-for-an-organization). Use those privileges to serve the community and evolve code as follows.
+Maintainers are active and visible members of the community, and have [Maintain](https://docs.github.com/en/organizations/managing-access-to-your-organizations-repositories/repository-permission-levels-for-an-organization) level permissions on a repository. Use those privileges to serve the community and evolve code as follows.
 
 ### Uphold Code of Conduct
 
-Model the behavior set forward by the [Code of Conduct](CODE_OF_CONDUCT.md) and raise any violations to other maintainers.
+Model the behavior set forward by the [Code of Conduct](./CODE_OF_CONDUCT.md) and raise any violations to other maintainers.
 
 ### Prioritize Security
 
@@ -59,7 +62,7 @@ Make frequent project releases to the community.
 
 ### Promote Other Maintainers
 
-Assist, add, and remove [MAINTAINERS](MAINTAINERS.md). Exercise good judgement, and propose high quality contributors to become co-maintainers.
+Assist, add, and remove [MAINTAINERS](./MAINTAINERS.md). Exercise good judgement, and propose high quality contributors to become co-maintainers.
 
 ### Describe the Repo
 
@@ -85,4 +88,4 @@ If the repo is left without any maintainers, either by maintainer inactivity or 
 
 ### Negative Impact on the Project
 
-Actions that negatively impact the project will be handled by the [members of the maintainer team](./MAINTAINERS.md), in balance with the urgency of the issue. Examples would be [Code of Conduct](CODE_OF_CONDUCT.md) violations, deliberate harmful or malicious actions, and security risks.
+Actions that negatively impact the project will be handled by the [members of the maintainer team](./MAINTAINERS.md), in balance with the urgency of the issue. Examples would be [Code of Conduct](./CODE_OF_CONDUCT.md) violations, deliberate harmful or malicious actions, and security risks.
