@@ -40,8 +40,6 @@ services:
       - ./rules:/app/rules
       - ./output:/app/output
       - ./.env:/app/.env
-    environment:
-      - NODE_ENV=production
     restart: unless-stopped
 ```
 
