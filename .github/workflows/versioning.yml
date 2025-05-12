@@ -39,18 +39,24 @@ jobs:
       - name: Permissions for semantic-release
         run: chmod +x ./node_modules/.bin/semantic-release
       
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+
       - name: Run Semantic Release
         id: ver
         run: bun x semantic-release --debug   
         env:
-          GH_TOKEN: ${{ secrets.GIT_TOKEN }}
+          GH_TOKEN:  ${{ steps.app-token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Get latest release of NodeJS
         uses: rez0n/actions-github-release@794c12f5e8d629e6ca329cf2e2daeb0f0ce6a3ce # main
         id: get_latest_release
         with:
-          token: ${{ secrets.GIT_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           repository: "kexa-io/Kexa"
           type: "stable"
       
