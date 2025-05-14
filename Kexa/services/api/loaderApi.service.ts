@@ -7,8 +7,6 @@ import {getNewLogger} from '../logger.service';
 const logger = getNewLogger("ApiLoaderLogger");
 
 export async function getSettingsFileFromApi(config: any){
-
-
     let notificationGroups = await getNotificationGroupsFromApi(config);
     let rules = await getRulesFromApi(notificationGroups);
 
@@ -61,7 +59,7 @@ export async function getNotificationGroupsFromApi(config: any){
 
     for (const key of Object.keys(config)) {
         if (key !== 'save') {
-            await Promise.all(config[key].map(async (item) => {
+            await Promise.all(config[key].map(async (item: any) => {
                 try {
                     const response = await axios.get(process.env.KEXA_API_URL + `/kexa/projectNotificationGroups/${item.ID}`, 
                         {
@@ -143,8 +141,13 @@ export async function getConfigFromApi(){
     let name = process.env.KEXA_API_TOKEN_NAME;
     let token = process.env.KEXA_API_TOKEN;
     let projects = [];
+
+    if (!process.env.CRONICLE_TRIGGER_ID_FROM) {
+        throw new Error('CRONICLE_TRIGGER_ID_FROM has not been received in the environment variables (should be sent from frontend)');
+    }
+
     try {
-        const response = await axios.get(process.env.KEXA_API_URL + '/kexa/activeProjects', 
+        const response = await axios.get(process.env.KEXA_API_URL + '/kexa/projectsByTrigger/' + process.env.CRONICLE_TRIGGER_ID_FROM, 
             {
                 headers: {
                     User: name,
