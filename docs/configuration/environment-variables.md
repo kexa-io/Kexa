@@ -48,7 +48,6 @@ SMSAUTHTOKEN=your_auth_token
 ### Azure
 
 ```bash
-AZUREKEYVAULTNAME=MyKeyVault
 AZURE_CLIENT_ID=XXXXXXXXXXXX
 AZURE_TENANT_ID=XXXXXXXXXXXX
 AZURE_CLIENT_SECRET=XXXXXXXX
@@ -67,7 +66,6 @@ AWS_SECRET_ACCESS_KEY=XXXXXXXXX
 ```bash
 GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json
 GCP_PROJECT_ID=your-project-id
-GCP_REGION=your-region
 ```
 
 ## Password Manager

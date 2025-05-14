@@ -103,7 +103,7 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 
 - Report bugs: [GitHub Issues](https://github.com/kexa-io/Kexa/issues)
 - Request features: [GitHub Discussions](https://github.com/kexa-io/Kexa/discussions)
-- Join our community: [Discord](https://discord.gg/kexa)
+- Join our community: [Slack](https://kexaio.slack.com/)
 
 ## License
 

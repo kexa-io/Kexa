@@ -6,6 +6,8 @@ This guide explains how to use Kexa with GitHub Actions for automated compliance
 
 Kexa can be integrated into your GitHub Actions workflow to automatically check your infrastructure for compliance issues, security vulnerabilities, and cost optimizations. The GitHub Action runs Kexa's checks on a schedule or in response to specific events.
 
+If you want to know more about the GitHub Action, please refer to the [GitHub Action documentation](https://github.com/kexa-io/git-action).
+
 ## Quick Start
 
 1. Create a new workflow file in your repository at `.github/workflows/kexa.yml`
@@ -26,7 +28,7 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Run Kexa
-        uses: 4urcloud/Kexa_githubAction@main
+        uses: 4urcloud/Kexa_githubAction@1.8.2
         with:
           config: |
             {
@@ -108,24 +110,6 @@ config: |
   }
 ```
 
-### Notifications
-
-Configure notifications in your workflow:
-
-```yaml
-with:
-  notifications: |
-    {
-      "email": {
-        "to": "team@example.com",
-        "from": "kexa@example.com"
-      },
-      "slack": {
-        "webhook": "https://hooks.slack.com/services/..."
-      }
-    }
-```
-
 ## Best Practices
 
 1. **Security**
@@ -189,7 +173,7 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Run Kexa
-        uses: 4urcloud/Kexa_githubAction@main
+        uses: 4urcloud/Kexa_githubAction@1.8.2
         with:
           config: |
             {
@@ -224,7 +208,7 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Run Kexa
-        uses: 4urcloud/Kexa_githubAction@main
+        uses: 4urcloud/Kexa_githubAction@1.8.2
         with:
           config: |
             {
