@@ -1,3 +1,11 @@
+## [2.0.3](https://github.com/kexa-io/Kexa/compare/v2.0.2...v2.0.3) (2025-05-14)
+
+
+### Bug Fixes
+
+* **cicd:** change git token to app secret ([1c69e76](https://github.com/kexa-io/Kexa/commit/1c69e76097eac22346bd2ce6a8734ee65478aa79))
+* retrieve project-trigger link (web interface) ([4c360a0](https://github.com/kexa-io/Kexa/commit/4c360a0a86169601a9bcfc3b5fd7fee66157d27b))
+
 ## [2.0.2](https://github.com/kexa-io/Kexa/compare/v2.0.1...v2.0.2) (2025-05-02)
 
 
