@@ -16,7 +16,7 @@ Kexa currently supports:
 
 ### Is Kexa open source?
 
-Yes, Kexa is open source and available under the MIT License. You can find the source code on our GitHub repository.
+Yes, Kexa is open source and available under the Apache-2.0 License. You can find the source code on our GitHub repository.
 
 ## Installation & Setup
 
