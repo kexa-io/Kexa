@@ -1,13 +1,12 @@
-import { jsonStringify } from "../helpers/jsonStringify";
+import axios from 'axios';
 import { writeStringToJsonFile } from "../helpers/files";
+import { jsonStringify } from "../helpers/jsonStringify";
 import { Rules } from "../models/settingFile/rules.models";
 import { SettingFile } from "../models/settingFile/settingFile.models";
 import { extractHeaders } from "./addOn.service";
 import { gatheringRules } from "./analyse.service";
-import { getNewLogger } from "./logger.service";
 
 const fs = require("fs");
-import axios from 'axios';
 
 async function releaseCapability(){
     let rules = await gatheringRules("https://api.github.com/repos/kexa-io/public-rules/zipball/main", true);
@@ -180,10 +179,8 @@ npm install $package_string`;
 /*                               */
 /* ***************************** */
 
-import { ServiceClient } from "@azure/core-client";
-import * as AzureImports from "./addOn/imports/azurePackage.import";
-import { AnonymousCredential } from "@azure/storage-blob";
 import { DefaultAzureCredential } from "@azure/identity";
+import * as AzureImports from "./addOn/imports/azurePackage.import";
 
 interface AzureClients {
     [key: string]: any;
@@ -247,7 +244,7 @@ let blackListObjectAzure = [
     "subscriptionId"
 ];
 
-import {stringKeys} from "../models/azure/resource.models";
+import { stringKeys } from "../models/azure/resource.models";
 
 function displayTotalGatheredMessage(provider: string, amount: number) {
     console.log("------------------------------------------");
@@ -327,7 +324,6 @@ function retrieveAzureArmClients() {
 }
 
 releaseCapability();
-updateREADME();
 updateVersion();
 createAzureArmPkgImportList();
 createAwsArmPkgImportList();
@@ -359,7 +355,6 @@ async function createAwsArmPkgImportList() {
     }
 }
 
-import { fromNodeProviderChain } from "@aws-sdk/credential-providers";
 
 export function extractClientsAws(module: any): AzureClients {
     const clients: AwsClient = {};
@@ -457,7 +452,7 @@ async function fileReplaceContentAws(inputFilePath: string, outputFilePath: stri
     }
 }
 
-import {stringKeys as AwsCustomObjects} from "../models/aws/ressource.models";
+import { stringKeys as AwsCustomObjects } from "../models/aws/ressource.models";
 
 function generateResourceListAws(resources: AzureClients): string {
     let concatedArray: string[] = [];
