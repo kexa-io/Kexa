@@ -95,17 +95,3 @@ You can use multiple configuration files by:
    ```bash
    NODE_CONFIG_TS_ENV=customName
    ```
-
-## Configuration via Script
-
-For Windows users, a PowerShell script is available for easy configuration:
-
-```powershell
-./initKexa.ps1 -c
-```
-
-For Linux users, a Bash script is also available:
-
-```bash
-./initKexa.sh -c
-```
