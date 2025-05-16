@@ -33,32 +33,75 @@ Here's a basic example of a rule:
 
 ### Conditions
 
-Each condition can have:
+Conditions are the core comparison operators used to evaluate resources in your infrastructure. Each condition consists of three main components:
 
-- `property`: Field to check
-- `condition`: Type of comparison
-- `value`: Value to compare against
+- `property`: The field or attribute of the resource to check
+- `condition`: The comparison operator to use
+- `value`: The value to compare against
 
-## Logical Operators
+#### Available Conditions
 
-You can combine conditions using logical operators:
+1. **Basic Comparisons**:
+   - `EQUAL`: Checks if the property exactly matches the value
+   - `DIFFERENT`: Checks if the property is not equal to the value
+   - `CONTAINS`: Checks if the property contains the specified value
+   - `NOT_CONTAINS`: Checks if the property does not contain the value
+
+2. **Numeric Comparisons**:
+   - `SUP`: Greater than
+   - `INF`: Less than
+   - `SUP_OR_EQUAL`: Greater than or equal to
+   - `INF_OR_EQUAL`: Less than or equal to
+
+3. **Date & Time Comparisons**:
+   - `DATE_EQUAL`: Exact date match
+   - `DATE_SUP`: Date is after
+   - `DATE_INF`: Date is before
+   - `DATE_SUP_OR_EQUAL`: Date is on or after
+   - `DATE_INF_OR_EQUAL`: Date is on or before
+   - `INTERVAL`: Checks if within a time interval
+   - `DATE_INTERVAL`: Checks if within a date range
+
+#### Example Usage
 
 ```yaml
-- name: "azure-disk-security"
-  description: "Check disk security settings"
-  applied: true
-  level: 2
-  cloudProvider: azure
-  objectName: disk
-  conditions:
-    - operator: OR
-      criteria:
-        - property: networkAccessPolicy
-          condition: DIFFERENT
-          value: AllowAll
-        - property: encryption.type
-          condition: EQUAL
-          value: EncryptionAtRestWithPlatformKey
+conditions:
+  # Basic comparison
+  - property: "diskState"
+    condition: "DIFFERENT"
+    value: "Unattached"
+
+  # Numeric comparison
+  - property: "size"
+    condition: "SUP"
+    value: 100
+
+  # Date comparison
+  - property: "lastModified"
+    condition: "DATE_SUP"
+    value: "2024-01-01T00:00:00.000Z"
+```
+
+#### Logical Operators
+
+Conditions can be combined using logical operators:
+
+- `AND`: All conditions must be true
+- `OR`: At least one condition must be true
+- `NOT`: Inverts the result of a condition
+
+Example with logical operators:
+
+```yaml
+conditions:
+  - operator: "OR"
+    criteria:
+      - property: "networkAccessPolicy"
+        condition: "DIFFERENT"
+        value: "AllowAll"
+      - property: "encryption.type"
+        condition: "EQUAL"
+        value: "EncryptionAtRestWithPlatformKey"
 ```
 
 ## Date & Time Criteria
