@@ -185,6 +185,17 @@ See [Advanced Configuration](./advanced-configuration.md) for detailed informati
    - Update rules as needed
    - Monitor notification effectiveness
 
+## Example Configurations
+
+For real-world examples and sample configurations, visit our [Kexa Samples Repository](https://github.com/kexa-io/kexa-samples). This repository contains:
+
+- Sample configuration files
+- Docker Compose examples
+- Deployment templates
+- Best practice implementations
+
+These examples can serve as a starting point for your own Kexa configurations.
+
 ## Troubleshooting
 
 Common configuration issues and solutions:
