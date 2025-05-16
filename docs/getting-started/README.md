@@ -15,33 +15,7 @@ Before you begin, make sure you have the following prerequisites installed:
 
 Kexa can be installed in several ways. Choose the method that best suits your needs:
 
-### 1. Quick Installation Script (Recommended)
-
-#### Windows
-
-```powershell
-# Download and run the configuration script
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kexa-io/Kexa/dev/initKexa.ps1" -OutFile "./initKexa.ps1"
-./initKexa.ps1 -d -c
-```
-
-#### Linux
-
-```bash
-# Download and run the configuration script
-curl -sSL https://raw.githubusercontent.com/kexa-io/Kexa/main/initKexa.sh -o initKexa.sh
-chmod +x initKexa.sh
-./initKexa.sh -d -c
-```
-
-The script will:
-
-- Download the latest version of Kexa
-- Set up the basic configuration
-- Create necessary directories
-- Download default rules
-
-### 2. Manual Installation
+### 1. Manual Installation
 
 1. Clone the repository:
 
@@ -56,7 +30,7 @@ The script will:
    bun install
    ```
 
-### 3. Docker Installation
+### 2. Docker Installation
 
 1. Create a config directory:
 
