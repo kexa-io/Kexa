@@ -58,5 +58,3 @@ node_modules
 .env
 build/*
 examples/*/data/*
-*/config/addOnNeed.json
-*/config/headers.json
