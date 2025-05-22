@@ -56,5 +56,3 @@ config/resources*.json
 .env
 build/*
 examples/*/data/*
-*/config/addOnNeed.json
-*/config/headers.json
