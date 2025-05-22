@@ -9,9 +9,8 @@
           ],
           "METHOD": "GET",
           "URL": "https://www.kexa.io",
-          "body":{
-              "key": "Compliance, Security, Costs saving & Optimization"
-          }
+          "header": { },
+          "body":{ }
       }
   ]
 }

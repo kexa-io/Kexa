@@ -32,7 +32,6 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # remove scans html
 *output/
-node_modules
 .env
 build/*
 *.js
@@ -54,7 +53,6 @@ config/resources*.json
 
 **/kubernetes.json
 
-node_modules
 .env
 build/*
 examples/*/data/*
