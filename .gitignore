@@ -32,14 +32,11 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # remove scans html
 *output/
-node_modules
-.env
 build/*
 *.js
 .idea
 config/default.json
 config/Config.d.ts
-build
 Kexa/rules/aws-tests.yaml
 config_kuber
 config/addOnNeed.json
@@ -54,7 +51,4 @@ config/resources*.json
 
 **/kubernetes.json
 
-node_modules
-.env
-build/*
 examples/*/data/*
