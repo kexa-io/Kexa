@@ -61,10 +61,13 @@ Here is an example of the Kexa engine:
 3. Run Kexa:
 
     ```bash
+    export INTERFACE_CONFIGURATION_ENABLED=false
     bun run ./Kexa/index.ts
     ```
 
 4. You can configure Kexa by editing the `default.conf` file inside the `config` folder and re-run the script.
+
+This will check the website <kexa.io> by default.
 
 ### Alternative Installation Methods
 
