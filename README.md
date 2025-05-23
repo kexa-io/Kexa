@@ -71,10 +71,10 @@ This will check the website <kexa.io> by default.
 
 ### Alternative Installation Methods
 
-- **Docker**: Use our [Docker image](https://hub.docker.com/r/innovtech/kexa)
-- **GitHub Action**: Use our [GitHub Action](https://github.com/kexa-io/Kexa_githubAction)
-- **Kubernetes**: Deploy using our [Kubernetes manifests](documentation/Documentation-Kexa.md#kubernetes-1)
-- **Azure Function**: Deploy as an [Azure Function](documentation/Documentation-Kexa.md#azure-function)
+- **Docker**: Use our [Docker image](./docs/deployment/docker.md)
+- **GitHub Action**: Use our [GitHub Action](./docs/deployment/github-action.md)
+- **Kubernetes**: Deploy using our [Kubernetes manifests](./docs/deployment/kubernetes.md)
+- **Azure Function**: Deploy as an [Azure Function](./docs/deployment/azure-function.md)
 
 ## Features
 
