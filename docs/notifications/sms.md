@@ -1,6 +1,6 @@
 <div align="center">
     <a href="https://www.kexa.io/modules">
-        <img src="../../images/sms-logo.png" alt="Logo" width="200">
+        <img src="../../images/twilio-logo.png" alt="Logo" width="200">
     </a>
 
 # <h3 align="center">SMS</h3>

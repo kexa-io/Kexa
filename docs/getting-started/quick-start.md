@@ -1,225 +1,84 @@
 # Quick Start Guide
 
-This guide will help you get started with Kexa quickly. Follow these steps to run your first scan and view the results.
+Get Kexa up and running quickly.
 
 ## Prerequisites
 
-Before you begin, ensure you have:
+Complete [Prerequisites](prerequisites.md) first - you need cloud provider credentials ready.
 
-1. Completed the [Prerequisites](prerequisites.md)
-2. Finished the [Installation](installation.md)
-3. Set up your cloud provider credentials
+## Manual Quick Start
 
-## Basic Usage
+**Fastest Start (2 minutes)**
 
-### 1. Run Your First Scan
+1. **Clone and Install** (30 seconds):
+   ```bash
+   git clone https://github.com/kexa-io/Kexa.git
+   cd Kexa
+   bun install
+   ```
 
+2. **Set Environment Variable** (30 seconds):
+   ```bash
+   # For Azure
+   export A_AZURECLIENTID="your-client-id"
+   export A_AZURETENANTID="your-tenant-id" 
+   export A_AZURECLIENTSECRET="your-client-secret"
+   export A_SUBSCRIPTIONID="your-subscription-id"
+   ```
+
+3. **Create Minimal Config**: [Configuration](../configuration/global-configuration.md)
+
+4. **Run Your First Scan** (30 seconds):
+   ```bash
+   bun run Kexa/index.ts
+   ```
+
+
+## Docker One-Liner
+
+For Azure (replace with your credentials):
 ```bash
-# Basic scan
-kexa scan
-
-# Scan with verbose output
-kexa scan --verbose
-
-# Scan specific resources
-kexa scan --resource-type vm,storage
+mkdir config && echo '{"azure":[{"name":"Quick Start", "prefix": "A", "rules":["azureBenchmarkRules"]}]}' > config/default.json && \
+docker run -v $(pwd)/config:/app/config \
+-e A_AZURECLIENTID="your-client-id" \
+-e A_AZURETENANTID="your-tenant-id" \
+-e A_AZURECLIENTSECRET="your-client-secret" \
+-e A_SUBSCRIPTIONID="your-subscription-id" \
+innovtech/kexa
 ```
 
-### 2. View Results
 
+## Automated Setup Script (Deprecated)
+
+⚠️ **Deprecation Notice**: The automated setup scripts are currently deprecated and will be reimplemented in a future version. For now, please use the manual installation method below for the most reliable setup.
+
+The setup scripts were designed to automatically download, configure, and set up Kexa with minimal user input:
+
+**Windows:**
+```powershell
+# Download setup script
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kexa-io/Kexa/main/initKexa.ps1" -OutFile "./initKexa.ps1"
+
+# Run setup (downloads Kexa and configures environment)
+./initKexa.ps1 -d -c
+```
+
+**Linux/macOS:**
 ```bash
-# View in console
-kexa scan --format text
+# Download setup script
+curl -sSL https://raw.githubusercontent.com/kexa-io/Kexa/main/initKexa.sh -o initKexa.sh
+chmod +x initKexa.sh
 
-# Export to JSON
-kexa scan --format json --output results.json
-
-# Export to CSV
-kexa scan --format csv --output results.csv
+# Run setup (downloads Kexa and configures environment)
+./initKexa.sh -d -c
 ```
 
-### 3. Configure Notifications
+**Script Parameters:**
+- `-d`: Download/update Kexa from the repository
+- `-c`: Configure environment and credentials interactively
+- `-b [branch]`: Specify branch (default: main)
+- `-p [path]`: Specify installation path
 
-```json
-{
-  "notifications": {
-    "email": {
-      "enabled": true,
-      "recipients": ["admin@example.com"]
-    },
-    "teams": {
-      "enabled": true,
-      "webhook_url": "https://webhook.office.com/..."
-    }
-  }
-}
-```
+## What Happens Next?
 
-## Common Scenarios
-
-### 1. Security Scan
-
-```bash
-# Run security-focused scan
-kexa scan --category security
-
-# Export security findings
-kexa scan --category security --format json --output security-report.json
-```
-
-### 2. Cost Optimization
-
-```bash
-# Run cost analysis
-kexa scan --category cost
-
-# Export cost recommendations
-kexa scan --category cost --format csv --output cost-report.csv
-```
-
-### 3. Compliance Check
-
-```bash
-# Run compliance scan
-kexa scan --category compliance
-
-# Export compliance report
-kexa scan --category compliance --format html --output compliance-report.html
-```
-
-## Basic Configuration
-
-### 1. Scan Configuration
-
-```json
-{
-  "scan": {
-    "timeout": 3600,
-    "concurrent_scans": 5,
-    "resource_types": ["vm", "storage", "network"],
-    "regions": ["eastus", "westus"]
-  }
-}
-```
-
-### 2. Rule Configuration
-
-```json
-{
-  "rules": {
-    "enabled": true,
-    "severity": ["critical", "warning"],
-    "categories": ["security", "cost", "compliance"]
-  }
-}
-```
-
-### 3. Output Configuration
-
-```json
-{
-  "output": {
-    "format": "json",
-    "pretty": true,
-    "include_metadata": true,
-    "timestamp": true
-  }
-}
-```
-
-## Best Practices
-
-### 1. Scan Scheduling
-
-```bash
-# Run daily scan
-kexa scan --schedule "0 0 * * *"
-
-# Run weekly scan
-kexa scan --schedule "0 0 * * 0"
-```
-
-### 2. Resource Management
-
-```bash
-# Limit resource types
-kexa scan --resource-type vm,storage
-
-# Exclude specific resources
-kexa scan --exclude "resource-1,resource-2"
-```
-
-### 3. Result Management
-
-```bash
-# Archive old results
-kexa archive --older-than 30d
-
-# Clean up temporary files
-kexa cleanup
-```
-
-## Common Commands
-
-### 1. Basic Commands
-
-```bash
-# Show help
-kexa --help
-
-# Show version
-kexa --version
-
-# List available rules
-kexa rules list
-```
-
-### 2. Scan Commands
-
-```bash
-# Run scan
-kexa scan
-
-# Stop scan
-kexa scan stop
-
-# Show scan status
-kexa scan status
-```
-
-### 3. Configuration Commands
-
-```bash
-# Show configuration
-kexa config show
-
-# Validate configuration
-kexa config validate
-
-# Update configuration
-kexa config update
-```
-
-## Next Steps
-
-After completing the quick start:
-
-1. **Explore Advanced Features**
-   - Custom rules
-   - Advanced notifications
-   - Integration options
-
-2. **Review Documentation**
-   - [Configuration Guide](../configuration/README.md)
-   - [Usage Guide](../usage/README.md)
-   - [API Reference](../api/README.md)
-
-3. **Join Community**
-   - [GitHub Discussions](https://github.com/kexa-io/Kexa/discussions)
-   - [Stack Overflow](https://stackoverflow.com/questions/tagged/kexa)
-   - [Slack Channel](https://kexa.slack.com)
-
-4. **Get Support**
-   - [Troubleshooting Guide](../usage/troubleshooting-guide.md)
-   - [FAQ](../faq.md)
-   - [Contact Support](https://kexa.io/support)
+After your scan completes [Viewing Results](./viewing-results.md)

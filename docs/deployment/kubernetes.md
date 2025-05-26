@@ -6,7 +6,6 @@ This guide explains how to deploy and run Kexa on a Kubernetes cluster.
 
 - Kubernetes cluster (v1.19 or higher)
 - kubectl configured
-- Helm (optional, for Helm chart deployment)
 - Access to cloud provider accounts (AWS, Azure, GCP)
 
 ## Deployment Methods
@@ -73,39 +72,6 @@ kubectl create secret generic kexa-env --from-file=.env -n kexa
 kubectl apply -f kexa-deployment.yaml
 ```
 
-### 2. Using Helm
-
-Create a `values.yaml`:
-
-```yaml
-replicaCount: 1
-
-image:
-  repository: innovtech/kexa
-  tag: latest
-  pullPolicy: IfNotPresent
-
-persistence:
-  rules:
-    enabled: true
-    size: 1Gi
-  output:
-    enabled: true
-    size: 5Gi
-
-env:
-  NODE_ENV: production
-```
-
-Install using Helm:
-
-```bash
-# Add Helm repository
-helm repo add kexa https://charts.kexa.io
-
-# Install Kexa
-helm install kexa kexa/kexa -f values.yaml -n kexa
-```
 
 ## Configuration
 

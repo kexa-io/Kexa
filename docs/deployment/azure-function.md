@@ -57,24 +57,7 @@ func azure functionapp publish kexa-function
 
 ## Function Configuration
 
-### 1. Function Structure
-
-```bash
-kexa-function/
-├── host.json
-├── local.settings.json
-├── package.json
-└── src/
-    ├── functions/
-    │   └── scan/
-    │       ├── function.json
-    │       └── index.ts
-    └── shared/
-        ├── rules/
-        └── output/
-```
-
-### 2. Function Definition
+### 1. Function Definition
 
 ```json
 {
@@ -89,7 +72,7 @@ kexa-function/
 }
 ```
 
-### 3. Function Code
+### 2. Function Code
 
 ```typescript
 import { AzureFunction, Context } from "@azure/functions";
