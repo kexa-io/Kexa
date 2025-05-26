@@ -31,6 +31,13 @@ Here's a basic example of a rule:
 - `objectName`: Type of resource to check
 - `conditions`: List of conditions to check
 
+### Objects Names
+
+To check all available objects name, your can refer to this page of our website [Kexa Addons](https://kexa.io/modules)
+and click on the addon you want to see objects name from.
+
+Else you can look at the Javascript/Node SDK of the associated addon, we are using the same name.
+
 ### Conditions
 
 Conditions are the core comparison operators used to evaluate resources in your infrastructure. Each condition consists of three main components:

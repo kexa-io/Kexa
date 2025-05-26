@@ -8,6 +8,7 @@ Welcome to the Kexa documentation! This documentation will help you understand a
    - [Prerequisites](./getting-started/prerequisites.md)
    - [Installation](./getting-started/installation.md)
    - [Quick Start](./getting-started/quick-start.md)
+   - [Viewing Results](./getting-started/viewing-results.md)
 
 2. [Configuration](./configuration/README.md)
    - [Global Configuration](./configuration/global-configuration.md)
@@ -15,26 +16,20 @@ Welcome to the Kexa documentation! This documentation will help you understand a
    - [Rules Configuration](./configuration/rules-configuration.md)
    - [Multiple Environments](./configuration/multiple-environments.md)
 
-3. [Usage](./usage/README.md)
-   - [Running Scans](./usage/running-scans.md)
-   - [Viewing Results](./usage/viewing-results.md)
-   - [Notifications](./notifications/README.md)
-   - [Data Export](./usage/data-export.md)
-
-4. [Deployment](./deployment/README.md)
+3. [Deployment](./deployment/README.md)
    - [Local](./deployment/local.md)
    - [Docker](./deployment/docker.md)
    - [Kubernetes](./deployment/kubernetes.md)
    - [Azure Function](./deployment/azure-function.md)
    - [GitHub Actions](./deployment/github-actions.md)
 
-5. [Contributing](./contributing/README.md)
+4. [Contributing](./contributing/README.md)
    - [Development](./contributing/development.md)
    - [Adding Addons](./contributing/adding-addons.md)
    - [Testing](./contributing/testing.md)
    - [Community Guidelines](./contributing/community-guidelines.md)
 
-6. [Providers](./providers/README.md)
+5. [Providers](./providers/README.md)
    - [AWS](./providers/aws.md)
    - [Azure](./providers/azure.md)
    - [GCP](./providers/gcp.md)
@@ -44,6 +39,14 @@ Welcome to the Kexa documentation! This documentation will help you understand a
    - [HTTP/HTTPS](./providers/http.md)
    - [Kubernetes](./providers/kubernetes.md)
    - [Microsoft/Office 365](./providers/o365.md)
+
+6. [Notifications](./notifications/README.md)
+   - [Email](./notifications/email.md)
+   - [Jira](./notifications/jira.md)
+   - [Logs](./notifications/logs.md)
+   - [SMS](./notifications/sms.md)
+   - [Teams](./notifications/teams.md)
+   - [Webhooks](./notifications/webhook.md)
 
 ## About Kexa
 
