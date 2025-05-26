@@ -6,7 +6,7 @@ This guide explains how to deploy and run Kexa locally on your machine.
 
 - BunJS
 - Git
-- Access to cloud provider accounts (AWS, Azure, GCP)
+- Access to cloud provider accounts (AWS, Azure, GCP, or others)
 
 ## Installation Steps
 
@@ -75,13 +75,13 @@ You can set up scheduled runs using cron jobs:
 - Configure log level in `.env`:
 
   ```bash
-  LOG_LEVEL=info  # debug, info, warn, error
+  DEBUG_LEVEL=INFO  # debug, info, warn, error
   ```
 
 ### Output
 
 - Scan results are saved to the configured output directory
-- Reports are generated in various formats (JSON, HTML, PDF)
+- Reports are generated in HTML format
 - Check `./output` directory for results
 
 ## Troubleshooting

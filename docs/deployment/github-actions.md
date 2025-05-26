@@ -4,236 +4,141 @@ This guide explains how to use Kexa with GitHub Actions for automated compliance
 
 ## Overview
 
-Kexa can be integrated into your GitHub Actions workflow to automatically check your infrastructure for compliance issues, security vulnerabilities, and cost optimizations. The GitHub Action runs Kexa's checks on a schedule or in response to specific events.
+Kexa provides a GitHub Action version that allows you to run infrastructure compliance and security checks directly in your CI/CD pipeline. This GitHub Action version provides the same functionality as the classic Kexa, with the added benefit of performing "pre-production" checks before any merge.
 
-If you want to know more about the GitHub Action, please refer to the [GitHub Action documentation](https://github.com/kexa-io/git-action).
+The GitHub Action will cancel the workflow if Kexa finds an issue that raises an alert with a level superior to warning (error or fatal).
 
-## Quick Start
+## Getting Started
 
-1. Create a new workflow file in your repository at `.github/workflows/kexa.yml`
-2. Add the following configuration:
+You have two options to use Kexa with GitHub Actions:
+
+### Option 1: Ready-to-Run Repository (Recommended for beginners)
+
+1. **Fork or download the ready-to-run repository** and make it private
+   - Repository: [Ready to Run Kexa Action](https://github.com/kexa-io/git-action-ready-to-run)
+   - ⚠️ **Warning**: Make sure to use a private repository to avoid exposing resource IDs
+
+2. **Set up credentials** in GitHub Secrets (Settings → Secrets and variables → Actions)
+
+3. **Run the scans** manually or on schedule
+
+### Option 2: Direct GitHub Action Usage
+
+Add the GitHub Action directly to your existing repository:
 
 ```yaml
-name: Kexa Compliance Check
+name: Kexa Scan
 
 on:
+  push:
+    branches:
+      - main
   schedule:
-    - cron: '0 0 * * *'  # Runs daily at midnight
-  workflow_dispatch:      # Allows manual triggering
+    - cron: '0 0 * * *'  # Daily at midnight
+  workflow_dispatch:      # Manual trigger
 
 jobs:
-  kexa:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Run Kexa
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Run Kexa Action
         uses: 4urcloud/Kexa_githubAction@1.8.2
         with:
-          config: |
-            {
-              "azure": [
-                {
-                  "name": "Project A",
-                  "prefix": "A_",
-                  "description": "Project A compliance check",
-                  "rules": [
-                    "Economy",
-                    "OperationalExcellence",
-                    "Security"
-                  ]
-                }
-              ]
-            }
-        env:
-          A_AZURECLIENTID: ${{ secrets.AZURE_CLIENT_ID }}
-          A_AZURETENANTID: ${{ secrets.AZURE_TENANT_ID }}
-          A_AZURECLIENTSECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          A_SUBSCRIPTIONID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ENV_VARS: |
+            AZ1_AZURECLIENTID=${{ secrets.AZPROJ1_AZURECLIENTID }}
+            AZ1_AZURECLIENTSECRET=${{ secrets.AZPROJ1_AZURECLIENTSECRET }}
+            AZ1_AZURETENANTID=${{ secrets.AZPROJ1_AZURETENANTID }}
+            AZ1_SUBSCRIPTIONID=${{ secrets.AZPROJ1_SUBSCRIPTIONID }}
 ```
+
+## Setting Up Provider Credentials
+
+For each provider you want to scan, add the required credentials to your GitHub repository secrets.
+To know more about each addons required credentials, refer to [Providers Documentations](../providers/README.md)
+
+## Running Scans
+
+### Manual Trigger
+
+1. Go to "Actions" in your repository
+2. Select the workflow for the provider you want to scan
+3. Click "Run workflow"
+4. Click "Run workflow" again in the popup
+
+### Scheduled Trigger
+
+The ready-to-run repository includes a global workflow (`kexa.yml`) that triggers all providers daily at 12:00 PM by default.
+
+To modify the schedule, edit `.github/workflows/kexa.yml` and change the cron expression:
+
+```yaml
+on:
+  schedule:
+    - cron: '0 12 * * *'  # Daily at 12:00 PM
+```
+
+Use tools like [crontab.guru](https://crontab.guru/) to help create your cron expressions.
 
 ## Configuration
 
-### Inputs
+### Rule Configuration
 
-The GitHub Action accepts the following inputs:
+Each provider has a configuration file in `/config/env/` (e.g., `azure.json`, `aws.json`).
 
-| Input | Required | Description |
-|-------|----------|-------------|
-| `config` | Yes | JSON configuration for Kexa |
-| `version` | No | Kexa version to use (default: latest) |
-| `notifications` | No | Notification configuration |
-
-### Environment Variables
-
-Set up the following secrets in your GitHub repository:
-
-#### Azure
-
-- `AZURE_CLIENT_ID`
-- `AZURE_TENANT_ID`
-- `AZURE_CLIENT_SECRET`
-- `AZURE_SUBSCRIPTION_ID`
-
-#### AWS
-
-- `AWS_ACCESS_KEY_ID`
-- `AWS_SECRET_ACCESS_KEY`
-- `AWS_REGION`
-
-#### GCP
-
-- `GOOGLE_APPLICATION_CREDENTIALS`
-
-## Advanced Configuration
-
-### Custom Schedule
-
-Modify the `cron` expression to change when the action runs:
-
-```yaml
-on:
-  schedule:
-    - cron: '0 */6 * * *'  # Runs every 6 hours
+Example configuration structure:
+```json
+{
+  "azure": [
+    {
+      "name": "Project A",
+      "prefix": "AZ1_",
+      "description": "First subscription description",
+      "rules": [
+        "yourRuleName"
+      ]
+    }
+  ]
+}
 ```
 
-### Multiple Providers
+### Rule Files
 
-Configure multiple providers in your config:
+Rules are defined in YAML files located in the `/rules/` folder.
+To know more about rule files, refer to [Rules Configurations](../configuration/rules-configuration.md)
 
-```yaml
-config: |
-  {
-    "azure": [...],
-    "aws": [...],
-    "gcp": [...]
-  }
-```
+## Expected Results
+
+To know more about how to be notified from alerts with Kexa, refer to the [Notifications Documentations](../notifications/README.md)
+
+## Benefits
+
+- **Security**: Continuous compliance monitoring
+- **Cost Savings**: Identify orphaned and unused resources
+- **Compliance**: Automated checks against best practices
+- **Alerting**: Multi-channel notifications (logs, Teams, email, SMS, webhooks)
+- **Pre-production Checks**: Prevent non-compliant deployments
+
+## Key Features
+
+- **Easy-to-run & deploy**: No infrastructure costs
+- **Multiple notification channels**: All notifications addons from Kexa
+- **Export capabilities**: Save results to databases or other services
+- **Scheduling**: Run on-demand or on schedule
+- **Pre-production validation**: Stop deployments that don't meet compliance
 
 ## Best Practices
 
-1. **Security**
-   - Use GitHub Secrets for sensitive credentials
-   - Limit permissions to necessary scopes
-   - Regularly rotate credentials
+1. **Use private repositories** to protect resource information
+2. **Secure credentials** using GitHub Secrets
 
-2. **Performance**
-   - Schedule checks during off-peak hours
-   - Use appropriate rulesets
-   - Configure timeouts appropriately
+## Support and Documentation
 
-3. **Maintenance**
-   - Keep Kexa version updated
-   - Review and update rules regularly
-   - Monitor action execution times
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Authentication Failures**
-   - Verify credentials in GitHub Secrets
-   - Check provider permissions
-   - Ensure correct subscription/account access
-
-2. **Timeout Issues**
-   - Adjust workflow timeout settings
-   - Optimize rules configuration
-   - Consider splitting large checks
-
-3. **Notification Problems**
-   - Verify notification credentials
-   - Check notification service status
-   - Review notification configuration
-
-### Debugging
-
-Enable debug logging by adding:
-
-```yaml
-env:
-  DEBUG_MODE: "true"
-```
-
-## Examples
-
-### Basic Azure Check
-
-```yaml
-name: Kexa Azure Check
-
-on:
-  schedule:
-    - cron: '0 0 * * *'
-
-jobs:
-  kexa:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Run Kexa
-        uses: 4urcloud/Kexa_githubAction@1.8.2
-        with:
-          config: |
-            {
-              "azure": [
-                {
-                  "name": "Production",
-                  "prefix": "PROD_",
-                  "rules": ["Security", "Economy"]
-                }
-              ]
-            }
-        env:
-          A_AZURECLIENTID: ${{ secrets.AZURE_CLIENT_ID }}
-          A_AZURETENANTID: ${{ secrets.AZURE_TENANT_ID }}
-          A_AZURECLIENTSECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          A_SUBSCRIPTIONID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-```
-
-### Multi-Provider Check
-
-```yaml
-name: Kexa Multi-Provider Check
-
-on:
-  schedule:
-    - cron: '0 0 * * 0'  # Weekly check
-
-jobs:
-  kexa:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Run Kexa
-        uses: 4urcloud/Kexa_githubAction@1.8.2
-        with:
-          config: |
-            {
-              "azure": [...],
-              "aws": [...],
-              "gcp": [...]
-            }
-        env:
-          # Azure
-          A_AZURECLIENTID: ${{ secrets.AZURE_CLIENT_ID }}
-          A_AZURETENANTID: ${{ secrets.AZURE_TENANT_ID }}
-          A_AZURECLIENTSECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          A_SUBSCRIPTIONID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          # AWS
-          A_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          A_AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          A_AWS_REGION: ${{ secrets.AWS_REGION }}
-          # GCP
-          A_GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
-```
-
-## Support
-
-For issues and questions:
-
-- Open an issue in the [Kexa GitHub repository](https://github.com/kexa-io/Kexa)
-- Check the [documentation](https://github.com/kexa-io/Kexa/tree/main/docs)
-- Join the [discussions](https://github.com/kexa-io/Kexa/discussions)
+For more information:
+- [Kexa Core Project](https://github.com/kexa-io/Kexa) ⭐
+- [Ready-to-Run Repository](https://github.com/kexa-io/git-action-ready-to-run)
+- [Kexa Git Action](https://github.com/kexa-io/git-action)
+- [Website](https://www.kexa.io/)

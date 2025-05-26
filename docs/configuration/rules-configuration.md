@@ -31,6 +31,13 @@ Here's a basic example of a rule:
 - `objectName`: Type of resource to check
 - `conditions`: List of conditions to check
 
+### Objects Names
+
+To check all available objects name, your can refer to this page of our website [Kexa Addons](https://kexa.io/modules)
+and click on the addon you want to see objects name from.
+
+Else you can look at the Javascript/Node SDK of the associated addon, we are using the same name.
+
 ### Conditions
 
 Conditions are the core comparison operators used to evaluate resources in your infrastructure. Each condition consists of three main components:
@@ -67,18 +74,18 @@ Conditions are the core comparison operators used to evaluate resources in your 
 ```yaml
 conditions:
   # Basic comparison
-  - property: "diskState"
-    condition: "DIFFERENT"
-    value: "Unattached"
+  - property: diskState
+    condition: DIFFERENT
+    value: Unattached
 
   # Numeric comparison
-  - property: "size"
-    condition: "SUP"
+  - property: size
+    condition: SUP
     value: 100
 
   # Date comparison
-  - property: "lastModified"
-    condition: "DATE_SUP"
+  - property: lastModified
+    condition: DATE_SUP
     value: "2024-01-01T00:00:00.000Z"
 ```
 
@@ -94,14 +101,14 @@ Example with logical operators:
 
 ```yaml
 conditions:
-  - operator: "OR"
+  - operator: OR
     criteria:
-      - property: "networkAccessPolicy"
-        condition: "DIFFERENT"
-        value: "AllowAll"
-      - property: "encryption.type"
-        condition: "EQUAL"
-        value: "EncryptionAtRestWithPlatformKey"
+      - property: networkAccessPolicy
+        condition: DIFFERENT
+        value: AllowAll
+      - property: encryption.type
+        condition: EQUAL
+        value: EncryptionAtRestWithPlatformKey
 ```
 
 ## Date & Time Criteria
@@ -119,13 +126,13 @@ condition: (
   INTERVAL |
   DATE_INTERVAL
 )
-value: 0 0 0 0 0 0
-date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+value: 0 0 0 0 0 0 # datetime comparison
+date: "YYYY-MM-DDThh:mm:ss.SSSZ" # the datetime format used in the property
 ```
 
 ## Notifications
 
-Configure notifications in your rules file:
+Configure notifications at the top of your rules file:
 
 ```yaml
 alert:
@@ -177,6 +184,8 @@ alert:
       - level: 3
         min: 1
 ```
+
+To know more about notifications possibilities, refer to [Notifications Addons Documentation](../notifications/README.md)
 
 ## Variabilization
 
