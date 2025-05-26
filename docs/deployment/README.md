@@ -35,6 +35,18 @@ Deploy Kexa in a Kubernetes cluster:
 
 See [Kubernetes Deployment](./kubernetes.md) for details.
 
+## GitHub Actions Deployment
+
+Run Kexa as a GitHub Action in your CI/CD pipeline:
+
+- Automated compliance checks
+- Pre-production validation
+- No infrastructure costs
+- Easy integration with GitHub workflows
+- Multi-provider support
+
+See [GitHub Actions Deployment](./github-actions.md) for details.
+
 ## Azure Function Deployment
 
 Run Kexa as an Azure Function:
