@@ -18,7 +18,6 @@ The main configuration file is located at `./config/default.json`. This file def
 - Rule sets
 - Global settings
 - Timeout and retry settings
-- Notification preferences
 - Data export settings
 
 Example configuration:
@@ -39,14 +38,11 @@ Example configuration:
       ]
     }
   ],
-  "global": {
-    "timeout": 300,
-    "retry": 3,
-    "notifications": {
-      "email": true,
-      "teams": true,
-      "webhook": false
-    }
+  "general":  { // set this if you want Kexa as continuous run
+    "timeout": 1, // timeout after 1 minute, you can use 0.5 for 30s timeout for example
+    "maxRetry": 2, // Kexa will retry 2 times after timeout, choose 0 for no retry.
+    "checkInterval": 120, // interval between Kexa checks in seconds
+    "alertInterval": 3600 // alerts interval to avoid too much duplicate
   }
 }
 ```
@@ -59,9 +55,9 @@ Kexa uses environment variables for:
 
 - Sensitive information (API keys, credentials)
 - Provider authentication
-- Notification settings
 - Directory paths
 - Custom configurations
+- Notifications sensitive informations
 - Debug settings
 
 Common environment variables:
@@ -80,10 +76,6 @@ A_AWS_SECRET_NAME=""
 A_AWS_REGION=""
 A_AWS_ACCESS_KEY_ID=""
 A_AWS_SECRET_ACCESS_KEY=""
-
-# Notification Settings
-A_NOTIFICATION_EMAIL=""
-A_NOTIFICATION_TEAMS_WEBHOOK=""
 ```
 
 See [Environment Variables](./environment-variables.md) for a complete list and usage examples.
@@ -99,24 +91,35 @@ Rules are defined in YAML files and specify:
 - Severity levels
 - Custom conditions
 
-Example rule:
+**Example rule file:**
 
 ```yaml
-name: "Check VM Size"
-description: "Verify VM size is within allowed range"
-provider: "azure"
-resource: "virtualMachines"
-condition:
-  - field: "size"
-    operator: "in"
-    value: ["Standard_B2s", "Standard_B2ms"]
-severity: "warning"
-notification:
-  channels: ["email", "teams"]
-  message: "VM size is not optimal"
+- version: 1.0.0
+  date: 07-18-2023
+  alert:
+    fatal:
+      # settings for fatal level alert
+    error:
+      # settings for error level alert
+    warning:
+      # settings for warning level alert
+    info:
+      # settings for info level alert
+    global:
+      # global alert settings
+    - name: "azure-is-disk-orphan"
+      description : "this rules is to check if disk is orphan"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName : ComputeManagementClient.disks
+      conditions:
+        - property : diskState
+          condition : DIFFERENT
+          value : Unattached
 ```
 
-See [Rules Configuration](./rules-configuration.md) for detailed information.
+To know more about rules and notifications configuration refer first to [Rules Configuration](./rules-configuration.md) and then [Notifications Addons](../notifications/README.md) to use correclty the addon you need. 
 
 ## Multiple Environments
 
@@ -159,7 +162,6 @@ For advanced users, Kexa supports:
 - Custom scripts
 - Advanced notification routing
 - Data export customization
-- Custom rule engines
 
 See [Advanced Configuration](./advanced-configuration.md) for detailed information.
 

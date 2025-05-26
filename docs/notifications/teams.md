@@ -1,21 +1,21 @@
-# Teams
-
 <div align="center">
     <a href="https://www.kexa.io/modules">
         <img src="../../images/msteams-logo.png" alt="Logo" width="200">
     </a>
 
+# <h3 align="center">Teams</h3>
+
   <p align="center">
     <br />
-    <a href="https://github.com/kexa-io/Kexa/issues">Report Bug</a>
+    <a href="https://github.com/4urcloud/Kexa/issues">Report Bug</a>
     ·
-    <a href="https://github.com/kexa-io/Kexa/issues">Request Feature</a>
+    <a href="https://github.com/4urcloud/Kexa/issues">Request Feature</a>
   </p>
 </div>
 
 By setting up 'Teams' notifications, you will receive alerts as Teams card in a desired channel, with links and/or informations to help you remediate asap.
 
-## Requirements
+## Prerequire
 
 For this notification type, you will only need your MS Teams webhook from the channel you want: [Create an Incoming Webhook — Teams | Microsoft Learn](https://learn.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook?tabs=newteams%2Cdotnet)
 
@@ -23,9 +23,9 @@ For this notification type, you will only need your MS Teams webhook from the ch
 
 The notifications are set up in each rule file. Open the rule file for which you want to set up the Teams notifications.
 
-Here is an example of how to set teams, replace `YourTeamsWebhook` with the webhook your retrieved with the link above.
+Here is an example of how to set teams, replace 'YourTeamsWebhook' with the webhook your retrieved with the link above.
 
-You can also uncomment the ‘_- log_’ lines, so you will be also alerted by logs when an alert is raised.
+You can also uncomment the '_- log_' lines, so you will be also alerted by logs when an alert is raised.
 
 ```yaml
 - version: 1.0.0 # Enter your rule file version if needed
@@ -77,13 +77,15 @@ You can also uncomment the ‘_- log_’ lines, so you will be also alerted by l
           min: 1
         - level: 3
           min: 1
-  # minimum alerts to be raised before notifying
+	# minimum alerts to be raised before notifying
   rules:
-  # all rules are here
+	# all rules are here
 ```
 
 ## Expected Results
 
 Here is an example of what you will receive in your Teams channel :
 
-![Screenshot Teams Alerts](../../images/expected_teams.png)
+<div align="center">
+  <img src="../../images/expected_teams.png" alt="Logo" width="200">
+</div>
