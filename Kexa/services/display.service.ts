@@ -112,5 +112,5 @@ export function AsciiArtText(text:string){
 export function talkAboutOtherProject(){
     const context = getContext();
     context?.log("You can go check our other project : https://www.4urcloud.eu/");
-    logger.info("You can go check our other project : https://www.4urcloud.eu/");
+    //logger.info("You can go check our other project : https://www.4urcloud.eu/");
 }
