@@ -1,17 +1,21 @@
-{
-  "http": [
-      {
-          "name": "check kexa website",
-          "prefix": "ENDPOINTA-",
-          "description": "First environment (0) : EndPoint A environment",
+{ 
+    "kubernetes": [
+        {
+          "name": "kube01",
+          "prefix": "KUBE1_",
+          "description": "kube for my prod 01",
           "rules": [
-              "HTTPRules"
-          ],
-          "METHOD": "GET",
-          "URL": "https://www.kexa.io",
-          "body":{
-              "key": "Compliance, Security, Costs saving & Optimization"
+              "kub-prod-check"
+          ]
+        }
+      ],
+      "save": [
+          {
+              "type": "postgres",
+              "name": "DB2",
+              "description": "Database to save the data",
+              "urlName": "postgresql://admin:admn45@bddpostgresql:5432/kexabdd",
+              "logs": true
           }
-      }
-  ]
+      ]
 }
