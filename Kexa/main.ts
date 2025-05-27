@@ -56,7 +56,6 @@ export async function mainScan(settings: SettingFile[], allScan: ResultScan[][],
     logger.info("___________________________________________________________________________________________________"); 
     logger.info("_______________________________________-= End Kexa scan =-_________________________________________");
     logger.info("_".repeat(99-15-delta.toString().length)+"Scan done in "+delta+"ms");
-    talkAboutOtherProject();
     logger.debug(await getEnvVar("test"));
     context?.log(await getEnvVar("test"));
     return allScan;

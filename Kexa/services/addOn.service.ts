@@ -142,7 +142,7 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): 
                     logger.info(`Starting data collection for ${nameAddOn}`);
                     const data = await collectData(addOnConfig);                    
                     let delta = Date.now() - start;
-                    //context?.log(`AddOn ${nameAddOn} collect in ${delta}ms`);
+                    context?.log(`AddOn ${nameAddOn} collect in ${delta}ms`);
                     logger.info(`AddOn ${nameAddOn} collect in ${delta}ms`);
                     return { key: nameAddOn, data: (checkIfDataIsProvider(data) ? data : null), delta };
                 } catch (error) {
