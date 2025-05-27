@@ -1,3 +1,19 @@
+## [2.0.4](https://github.com/kexa-io/Kexa/compare/v2.0.3...v2.0.4) (2025-05-27)
+
+
+### Bug Fixes
+
+* compress all docs images ([bdfbbb8](https://github.com/kexa-io/Kexa/commit/bdfbbb87487e17cd2ab3fda3ea8042fe3a148fab))
+* config + notif docs ([4e1c5e8](https://github.com/kexa-io/Kexa/commit/4e1c5e892ea622cc32a90d533c100b23507f76b6))
+* disable the function UpdateREADME for test job ([824ac50](https://github.com/kexa-io/Kexa/commit/824ac50661d48d7e5dad13c732b7b78a76a4f263))
+* Dockerfile ([59c7f85](https://github.com/kexa-io/Kexa/commit/59c7f85f58a79c5eb9cc9f31a402440181e4faaf))
+* docs deploy, getting-started, removed usage (redondant) ([01559fe](https://github.com/kexa-io/Kexa/commit/01559fe404622f482651f895d1e72addd04b7ec0))
+* save / export docs & base readme ([db67c9e](https://github.com/kexa-io/Kexa/commit/db67c9ede19b9f20c93710ccc0f51b66a7d8c514))
+* test new ci ([eb747e6](https://github.com/kexa-io/Kexa/commit/eb747e69e8948d8b8b45389559858cc0d27d0235))
+* update .gitignore ([6322d2c](https://github.com/kexa-io/Kexa/commit/6322d2ca40c7c4f1efcc4ee39261d0eb3dda7091))
+* update README ([d388477](https://github.com/kexa-io/Kexa/commit/d3884770183203480e6ee8232a30489b6175a274))
+* update sbom ([b5e5e01](https://github.com/kexa-io/Kexa/commit/b5e5e011eda1d1b024ca307580f95aa5956ca91e))
+
 ## [2.0.3](https://github.com/kexa-io/Kexa/compare/v2.0.2...v2.0.3) (2025-05-14)
 
 
