@@ -215,7 +215,6 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[], f
             const addOnConfig = generateRandomConfigList(fuzzData);
             const data = await collectData(addOnConfig, fuzzData);
             let delta = Date.now() - start;
-            console.log(`AddOn ${nameAddOn} collect in ${delta}ms`);
             return { key: nameAddOn, data:(checkIfDataIsProvider(data) ? data : null), delta};
         }
     } catch(e) {

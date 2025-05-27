@@ -52,3 +52,4 @@ config/resources*.json
 **/kubernetes.json
 
 examples/*/data/*
+config/headers.json
