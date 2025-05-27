@@ -30,7 +30,7 @@ export async function downloadFile(url: string, destinationPath: string, type:st
             });
         });
     } catch (error:any) {
-        //logger.error(`Error downloading file: ${error}`);
+        logger.error(`Error downloading file: ${error}`); // removing log kexa continue ...
         throw new Error(`Error downloading file: ${error}`);
     }
 }
