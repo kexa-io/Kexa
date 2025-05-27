@@ -1,3 +1,10 @@
+## [2.0.5](https://github.com/kexa-io/Kexa/compare/v2.0.4...v2.0.5) (2025-05-27)
+
+
+### Bug Fixes
+
+* changelog & no branche create ([b55aae8](https://github.com/kexa-io/Kexa/commit/b55aae879bc88c50a022acd1742eba40d877d720))
+
 ## [2.0.4](https://github.com/kexa-io/Kexa/compare/v2.0.3...v2.0.4) (2025-05-27)
 
 
