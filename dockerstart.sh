@@ -7,10 +7,10 @@ pwd
 ls -l /app/config/
 cat /app/config/*
 
-pnpm run start:nobuild
+bun run Kexa/index.ts
 
 EXIT_CODE=$?
 if [ $EXIT_CODE -ne 0 ]; then
-  echo "pnpm run start:nobuild failed with exit code $EXIT_CODE"
+  echo "bun run Kexa/index.ts failed with exit code $EXIT_CODE"
   exit $EXIT_CODE
 fi
