@@ -2,12 +2,8 @@ name: Generate SBOM
 
 on:
   pull_request:
-    branches:
+    push:
       - dev
-    types:
-      - opened
-  schedule:
-    - cron: '0 0 * * 1' # Every Monday at 00:00
 
 permissions:
   contents: read
@@ -15,8 +11,8 @@ permissions:
 jobs:
   generate-sbom:
     permissions:
-      actions: write  # for anchore/sbom-action to upload workflow artifacts
-      contents: write  # for anchore/sbom-action to upload & delete release assets
+      actions: write  # anchore/sbom-action
+      contents: write  # anchore/sbom-action
     runs-on: ubuntu-latest
 
     steps:
@@ -28,21 +24,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 20
+          bun-version: latest
 
-      - name: Install pnpm
-        run: npm install -g pnpm@latest-10
-  
+      - name: Verify Bun Installation
+        run: |
+          echo "Bun version: $(bun --version)"
+
       - name: Install dependencies
-        run: pnpm i
+        run: bun i
   
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
         with:
-          file: ./package-lock.json
+          file: ./bun.lock
           upload-artifact: true
           upload-artifact-retention: 8
           output-file: ./kexa-sbom.json
@@ -55,7 +52,7 @@ jobs:
           
   commit-sbom:
     permissions:
-      contents: write  # for Git to git push
+      contents: write
     runs-on: ubuntu-latest
     needs: generate-sbom
     
@@ -68,6 +65,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
   
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+  
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
@@ -77,8 +80,8 @@ jobs:
         run: |
           git fetch origin
           git checkout dev
-          git config --global user.email "adrien.eppling@supinfo.com"
-          git config --global user.name "aesoft"
           git add kexa-sbom.json
           git commit -m "Add SBOM artifact to dev branch"
           git push origin dev
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
