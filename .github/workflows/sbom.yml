@@ -80,8 +80,10 @@ jobs:
         run: |
           git fetch origin
           git checkout dev
+          git config --global user.email "adrien.eppling@supinfo.com"
+          git config --global user.name "aesoft"
           git add kexa-sbom.json
-          git commit -m "Add SBOM artifact to dev branch"
+          git commit -m "Add SBOM artifact to dev branch [skip ci]"
           git push origin dev
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
