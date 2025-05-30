@@ -16,14 +16,11 @@
 ################################################################################
 
 # Install dependencies.
-pnpm install
+bun install
 
 # Install Jazzer.js before building the code since use the fuzzed data provider
 # in the fuzz test
-pnpm install --save-dev @jazzer.js/core
-
-# Compile TypeScript code.
-pnpm run build
+bun install --save-dev @jazzer.js/core
 
 # Build Fuzzers.
 compile_javascript_fuzzer example dist/fuzz_explore_me.js --sync
