@@ -1,7 +1,7 @@
 FROM oven/bun:slim as bun-source
 
 # Compression
-FROM alpine:3.21 as compress
+FROM alpine:3.22 as compress
 RUN apk add upx
 COPY --from=bun-source /usr/local/bin/bun /usr/local/bin/
 WORKDIR /usr/local/bin
