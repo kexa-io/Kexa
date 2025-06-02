@@ -16,12 +16,21 @@ This guide explains how to deploy and run Kexa using Docker containers.
 # Pull the latest image
 docker pull innovtech/kexa:latest
 
-# Run the container
+# By default, the container will run in the background and check the website "kexa.io"
 docker run -d \
   --name kexa \
-  -v $(pwd)/rules:/app/rules \
   -v $(pwd)/output:/app/output \
-  -v $(pwd)/.env:/app/.env \
+  -e INTERFACE_CONFIGURATION_ENABLED=false \
+  innovtech/kexa:latest
+
+# The result will be inside the "output" folder on your computer
+
+# To run the container with the specific "config" file
+docker run -d \
+  --name kexa \
+  -v $(pwd)/config:/app/config \
+  -v $(pwd)/output:/app/output \
+  -e INTERFACE_CONFIGURATION_ENABLED=false \
   innovtech/kexa:latest
 ```
 
@@ -37,7 +46,6 @@ services:
     image: innovtech/kexa:latest
     container_name: kexa
     volumes:
-      - ./rules:/app/rules
       - ./output:/app/output
       - ./.env:/app/.env
     restart: unless-stopped
@@ -69,9 +77,8 @@ docker build -t kexa .
 ```bash
 docker run -d \
   --name kexa \
-  -v $(pwd)/rules:/app/rules \
   -v $(pwd)/output:/app/output \
-  -v $(pwd)/.env:/app/.env \
+  -e INTERFACE_CONFIGURATION_ENABLED=false \
   kexa
 ```
 
@@ -96,33 +103,8 @@ OUTPUT=/app/output
 
 - `/app/rules`: Rules directory
 - `/app/output`: Output directory
+- `/app/config`: Config directory
 - `/.env`: Environment variables
-
-## Running Modes
-
-### Development Mode
-
-```bash
-docker run -d \
-  --name kexa-dev \
-  -v $(pwd)/rules:/app/rules \
-  -v $(pwd)/output:/app/output \
-  -v $(pwd)/.env:/app/.env \
-  -e NODE_ENV=development \
-  innovtech/kexa:latest
-```
-
-### Production Mode
-
-```bash
-docker run -d \
-  --name kexa-prod \
-  -v $(pwd)/rules:/app/rules \
-  -v $(pwd)/output:/app/output \
-  -v $(pwd)/.env:/app/.env \
-  -e NODE_ENV=production \
-  innovtech/kexa:latest
-```
 
 ## Monitoring
 
@@ -161,9 +143,8 @@ docker rm kexa
 # Run new container
 docker run -d \
   --name kexa \
-  -v $(pwd)/rules:/app/rules \
   -v $(pwd)/output:/app/output \
-  -v $(pwd)/.env:/app/.env \
+  -e INTERFACE_CONFIGURATION_ENABLED=false \
   innovtech/kexa:latest
 ```
 
