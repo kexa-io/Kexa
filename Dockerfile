@@ -2,7 +2,7 @@
 # Stage 1: Get and compress Bun binary
 FROM oven/bun:slim AS bun-source
 
-FROM alpine:3.21 AS compress
+FROM alpine:3.22 AS compress
 RUN apk add --no-cache upx
 COPY --from=bun-source /usr/local/bin/bun /usr/local/bin/
 WORKDIR /usr/local/bin
