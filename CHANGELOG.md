@@ -1,3 +1,25 @@
+## [2.0.6](https://github.com/kexa-io/Kexa/compare/v2.0.5...v2.0.6) (2025-06-03)
+
+
+### Bug Fixes
+
+* 4urcloud email sbom actor ([d1e6960](https://github.com/kexa-io/Kexa/commit/d1e696009f355803e40f58e42db959bf7c8cc2db))
+* changelog & no branche create ([3182308](https://github.com/kexa-io/Kexa/commit/318230849cdc5682a21176eb0ef63c6b8c0e7fd1))
+* create dev push to docker hub ([5533c20](https://github.com/kexa-io/Kexa/commit/5533c20381e6e306e6176bcfd5c14220aa749822))
+* no "should upgrade" message ([29c9565](https://github.com/kexa-io/Kexa/commit/29c95654d7e779f2ad99a0484a2d368df55acedb))
+* no "should upgrade" message ([ffdc3ed](https://github.com/kexa-io/Kexa/commit/ffdc3ed17b92c8e77207e722a3f487e620e69b27))
+* no distant rule download err msg ([88fa606](https://github.com/kexa-io/Kexa/commit/88fa6064f9be3af591f5a06bc1465f99164fce5b))
+* no pnpm ([71a0224](https://github.com/kexa-io/Kexa/commit/71a0224cebe58eb39e9ec8c449cc87a52b68eea7))
+* remove rule distant gather error ([70f0b2a](https://github.com/kexa-io/Kexa/commit/70f0b2a8d23ac3b30478ae0d6d52c917cdff02b0))
+* remove rule distant gather error ([74d54e3](https://github.com/kexa-io/Kexa/commit/74d54e33411b6506a8b8a76ff0d7905501c8e2f7))
+* sbom generator to bunjs and push trigger (dev) ([3469e73](https://github.com/kexa-io/Kexa/commit/3469e73fd4157584c56544cb10d3e36feeecb7d1))
+* **sbom:** add identity and skip ci ([04bd391](https://github.com/kexa-io/Kexa/commit/04bd391ae0af735f75bb8c161ab1a41bb41fec2b))
+* test new ci ([f4b9f1e](https://github.com/kexa-io/Kexa/commit/f4b9f1eb9a98c54a158da3fb82222a300bb70b29))
+* update Docker configuration and documentation; add new Dockerfile.light ([3e59779](https://github.com/kexa-io/Kexa/commit/3e5977921664bcb67a91bf109a90f1f148a54120))
+* update entry point in dockerstart.sh from index.ts to main.ts ([3077bc0](https://github.com/kexa-io/Kexa/commit/3077bc03d4fe4fbbf896f1e83840af6efa64da56))
+* Update GitHub Actions workflow for versioning ([8fcd087](https://github.com/kexa-io/Kexa/commit/8fcd087d0206f762a65e38863b7e00526e8c3111))
+* update package.json for run test ([7c2e71c](https://github.com/kexa-io/Kexa/commit/7c2e71c494bce27f676565670796e0254209d80e))
+
 # Changelog
 
 ## [v2.0.5] - 2025-05-27
