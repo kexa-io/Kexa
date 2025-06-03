@@ -32,7 +32,7 @@ export NODE_CONFIG_TS_ENV=production
 ### 2. Running Scans
 
 ```bash
-bun run Kexa/index.ts 
+bun run Kexa/main.ts
 ```
 
 ### 3. Debugging

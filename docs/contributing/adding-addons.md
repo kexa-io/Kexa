@@ -15,15 +15,19 @@ Addons are modular components that extend Kexa's capabilities by:
 ## Types of Addons
 
 ### 1. Gathering Addons
+
 Collect data from various sources (cloud providers, APIs, services).
 
 ### 2. Display Addons
+
 Format and display scan results with custom properties.
 
 ### 3. Save Addons
+
 Store scan results in various destinations (databases, cloud storage).
 
 ### 4. Export Addons
+
 Export gathered data to different formats and locations.
 
 ## Creating a New Addon
@@ -35,33 +39,34 @@ Note that the header is mandatory to list the objects you want to retrieve.
 
 ```typescript
 /*
-    * Provider : [provider-name]
-    * Creation date : YYYY-MM-DD
-    * Note : Description of what this addon does
-    * Resources :
-    *    - resourceType1
-    *    - resourceType2
-    *    - resourceType3
-*/
+ * Provider : [provider-name]
+ * Creation date : YYYY-MM-DD
+ * Note : Description of what this addon does
+ * Resources :
+ *    - resourceType1
+ *    - resourceType2
+ *    - resourceType3
+ */
 
 export async function collectData(config: any[]): Promise<any[]> {
-    // Return format: array of objects where each object contains
-    // categories as keys and arrays of resources as values
-    return [
-        {
-            "categoryItem1": [
-                {}, // resource object
-                {}, // resource object
-            ],
-            "categoryItem2": [
-                {}, // resource object
-            ]
-        }
-    ];
+  // Return format: array of objects where each object contains
+  // categories as keys and arrays of resources as values
+  return [
+    {
+      categoryItem1: [
+        {}, // resource object
+        {}, // resource object
+      ],
+      categoryItem2: [
+        {}, // resource object
+      ],
+    },
+  ];
 }
 ```
 
 **Header Requirements:**
+
 - Provider name
 - Creation date
 - Description note
@@ -69,6 +74,7 @@ export async function collectData(config: any[]): Promise<any[]> {
 
 **Return Format:**
 The function must return an array where:
+
 - Each item represents a subscription/account/environment
 - Each item is an object with categoryItems as keys
 - Each categoryItem contains an array of collected resources
@@ -80,15 +86,19 @@ Create a file named `[addonName]Display.service.ts` in `./Kexa/services/addOn/di
 ```typescript
 import { Rules } from "../../../models/settingFile/rules.models";
 
-export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean = false): string {
-    // Use switch on rule.objectName for specific formatting per resource type
-    // Provide default return to cover all cases
-    
-    if (isSms) {
-        return `Id: ${objectContent?.id}`;
-    } else {
-        return `Id: <a href="${objectContent?.url}">${objectContent?.id}</a>`;
-    }
+export function propertyToSend(
+  rule: Rules,
+  objectContent: any,
+  isSms: boolean = false,
+): string {
+  // Use switch on rule.objectName for specific formatting per resource type
+  // Provide default return to cover all cases
+
+  if (isSms) {
+    return `Id: ${objectContent?.id}`;
+  } else {
+    return `Id: <a href="${objectContent?.url}">${objectContent?.id}</a>`;
+  }
 }
 ```
 
@@ -100,9 +110,12 @@ Create a file named `[addonName]Save.service.ts` in `./Kexa/services/addOn/save/
 import { SaveConfig } from "../../../models/export/config.models";
 import { ResultScan } from "../../../models/resultScan.models";
 
-export async function save(saveConfig: SaveConfig, results: ResultScan[]): Promise<void> {
-    // Implementation for saving scan results
-    // No return value required
+export async function save(
+  saveConfig: SaveConfig,
+  results: ResultScan[],
+): Promise<void> {
+  // Implementation for saving scan results
+  // No return value required
 }
 ```
 
@@ -114,9 +127,12 @@ Create a file named `[addonName]Exportation.service.ts` in `./Kexa/services/addO
 import { SaveConfig } from "../../../models/export/config.models";
 import { ProviderResource } from "../../../models/providerResource.models";
 
-export async function exportation(exportConfig: SaveConfig, data: ProviderResource): Promise<void> {
-    // Implementation for exporting gathered data
-    // No return value required
+export async function exportation(
+  exportConfig: SaveConfig,
+  data: ProviderResource,
+): Promise<void> {
+  // Implementation for exporting gathered data
+  // No return value required
 }
 ```
 
@@ -145,13 +161,8 @@ In your `config/default.json`, add your addon:
       "name": "Project Name",
       "prefix": "MYPROJECT_",
       "description": "Project description",
-      "rules": [
-        "Security",
-        "Performance"
-      ],
-      "regions": [
-        "us-east-1"
-      ]
+      "rules": ["Security", "Performance"],
+      "regions": ["us-east-1"]
     }
   ]
 }
@@ -160,6 +171,7 @@ In your `config/default.json`, add your addon:
 ## Using Templates
 
 Fresh templates are available in `config/freshTemplatesAddOn/` for:
+
 - XXXSave.service.ts
 - XXXExportation.service.ts
 
@@ -170,37 +182,43 @@ Use these as starting points for your new addons.
 Your addon can leverage Kexa's password manager support:
 
 ### Azure Key Vault
+
 ```bash
 AZUREKEYVAULTNAME=MyKeyVault
-AZURE_CLIENT_ID=XXXXXXXXXXXX
-AZURE_TENANT_ID=XXXXXXXXXXXX
-AZURE_CLIENT_SECRET=XXXXXXXX
+AZURECLIENTID=XXXXXXXXXXXX
+AZURETENANTID=XXXXXXXXXXXX
+AZURECLIENTSECRET=XXXXXXXX
 ```
 
 ### AWS Secrets Manager
+
 ```bash
 AWS_SECRET_NAME=XXXXXXXXX
-AWS_ACCESS_KEY_ID=XXXXXXXXX  
+AWS_ACCESS_KEY_ID=XXXXXXXXX
 AWS_SECRET_ACCESS_KEY=XXXXXXXXX
 ```
 
 ### Hashicorp Vault
+
 ```bash
 HCP_CLIENT_ID=XXXXXXXXX
-HCP_CLIENT_SECRET=XXXXXXXXX  
+HCP_CLIENT_SECRET=XXXXXXXXX
 HCP_API_URL=XXXXXXXXX
 ```
 
 ## Best Practices
 
 1. **Error Handling**
+
    - Implement proper error handling in your data collection
    - Return empty arrays rather than throwing errors when no data is found
 
 2. **Performance**
+
    - Use the `ObjectNameNeed` parameter to optimize data collection
 
 3. **Documentation**
+
    - Provide usage examples
 
 4. **Security**
@@ -236,6 +254,7 @@ For questions and support:
 ## Examples
 
 Study existing addons in the codebase:
+
 - AWS gathering implementation
 - Azure resource collection
 - Google Cloud Platform integration
