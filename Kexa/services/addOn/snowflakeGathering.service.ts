@@ -67,7 +67,7 @@ export async function collectData(snowflakeConfig:SnowflakeConfig[]): Promise<Sn
 
         try {
             // get config to connect to snowflake
-            let snowflakeConfigParams = await getConfigOrEnvVar(config, "xxxxxx", prefix);
+            let snowflakeConfigParams = await getConfigOrEnvVar(config, "SNOWFLAKECONFIG", prefix);
             const promises = [
                 snowflakeListing(snowflakeConfigParams),
             ];
