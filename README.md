@@ -47,23 +47,23 @@ Here is an example of the Kexa engine:
 
 1. Clone the repository:
 
-    ```bash
-    git clone https://github.com/kexa-io/Kexa.git
-    cd Kexa
-    ```
+   ```bash
+   git clone https://github.com/kexa-io/Kexa.git
+   cd Kexa
+   ```
 
 2. Install dependencies:
 
-    ```bash
-    bun install
-    ```
+   ```bash
+   bun install
+   ```
 
 3. Run Kexa:
 
-    ```bash
-    export INTERFACE_CONFIGURATION_ENABLED=false
-    bun run ./Kexa/index.ts
-    ```
+   ```bash
+   export INTERFACE_CONFIGURATION_ENABLED=false
+   bun run ./Kexa/main.ts
+   ```
 
 4. You can configure Kexa by editing the `default.conf` file inside the `config` folder and re-run the script.
 
@@ -118,6 +118,7 @@ This project is licensed under the Apache License - see the [LICENSE](./LICENSE.
 - Email: [contact@kexa.io](mailto:contact@kexa.io)
 
 <!-- MARKDOWN LINKS & IMAGES -->
+
 [contributors-shield]: https://img.shields.io/github/contributors/kexa-io/Kexa.svg?style=for-the-badge
 [contributors-url]: https://github.com/kexa-io/Kexa/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/kexa-io/Kexa.svg?style=for-the-badge
