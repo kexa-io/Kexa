@@ -16,13 +16,16 @@ This guide explains how to deploy and run Kexa using Docker containers.
 # Pull the latest image
 docker pull innovtech/kexa:latest
 
-# Run the container
+# By default, the container will run in the background and check the website "kexa.io"
 docker run -d \
   --name kexa \
-  -v $(pwd)/rules:/app/rules \
   -v $(pwd)/output:/app/output \
-  -v $(pwd)/.env:/app/.env \
+  -v $(pwd)/rules:/app/rules \
+  -v $(pwd)/config:/app/config \
+  -e INTERFACE_CONFIGURATION_ENABLED=false \
   innovtech/kexa:latest
+
+# The result will be inside the "output" folder on your computer
 ```
 
 ### Using Docker Compose
@@ -30,15 +33,16 @@ docker run -d \
 Create a `docker-compose.yml` file:
 
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   kexa:
     image: innovtech/kexa:latest
     container_name: kexa
     volumes:
-      - ./rules:/app/rules
       - ./output:/app/output
+      - ./rules:/app/rules
+      - ./config:/app/config
       - ./.env:/app/.env
     restart: unless-stopped
 ```
@@ -69,9 +73,10 @@ docker build -t kexa .
 ```bash
 docker run -d \
   --name kexa \
-  -v $(pwd)/rules:/app/rules \
   -v $(pwd)/output:/app/output \
-  -v $(pwd)/.env:/app/.env \
+  -v $(pwd)/rules:/app/rules \
+  -v $(pwd)/config:/app/config \
+  -e INTERFACE_CONFIGURATION_ENABLED=false \
   kexa
 ```
 
@@ -96,33 +101,8 @@ OUTPUT=/app/output
 
 - `/app/rules`: Rules directory
 - `/app/output`: Output directory
+- `/app/config`: Config directory
 - `/.env`: Environment variables
-
-## Running Modes
-
-### Development Mode
-
-```bash
-docker run -d \
-  --name kexa-dev \
-  -v $(pwd)/rules:/app/rules \
-  -v $(pwd)/output:/app/output \
-  -v $(pwd)/.env:/app/.env \
-  -e NODE_ENV=development \
-  innovtech/kexa:latest
-```
-
-### Production Mode
-
-```bash
-docker run -d \
-  --name kexa-prod \
-  -v $(pwd)/rules:/app/rules \
-  -v $(pwd)/output:/app/output \
-  -v $(pwd)/.env:/app/.env \
-  -e NODE_ENV=production \
-  innovtech/kexa:latest
-```
 
 ## Monitoring
 
@@ -161,9 +141,10 @@ docker rm kexa
 # Run new container
 docker run -d \
   --name kexa \
-  -v $(pwd)/rules:/app/rules \
   -v $(pwd)/output:/app/output \
-  -v $(pwd)/.env:/app/.env \
+  -v $(pwd)/rules:/app/rules \
+  -v $(pwd)/config:/app/config \
+  -e INTERFACE_CONFIGURATION_ENABLED=false \
   innovtech/kexa:latest
 ```
 
@@ -180,11 +161,13 @@ docker cp kexa:/app/output ./output-backup
 ## Security Considerations
 
 1. **Container Security**
+
    - Run container as non-root user
    - Use read-only volumes where possible
    - Implement resource limits
 
 2. **Network Security**
+
    - Use Docker network isolation
    - Implement proper firewall rules
    - Monitor container network access
@@ -199,11 +182,13 @@ docker cp kexa:/app/output ./output-backup
 ### Common Issues
 
 1. **Container Won't Start**
+
    - Check container logs
    - Verify volume permissions
    - Ensure environment variables are set
 
 2. **Permission Issues**
+
    - Check volume ownership
    - Verify file permissions
    - Ensure proper user mapping
