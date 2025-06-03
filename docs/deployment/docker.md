@@ -20,18 +20,12 @@ docker pull innovtech/kexa:latest
 docker run -d \
   --name kexa \
   -v $(pwd)/output:/app/output \
+  -v $(pwd)/rules:/app/rules \
+  -v $(pwd)/config:/app/config \
   -e INTERFACE_CONFIGURATION_ENABLED=false \
   innovtech/kexa:latest
 
 # The result will be inside the "output" folder on your computer
-
-# To run the container with the specific "config" file
-docker run -d \
-  --name kexa \
-  -v $(pwd)/config:/app/config \
-  -v $(pwd)/output:/app/output \
-  -e INTERFACE_CONFIGURATION_ENABLED=false \
-  innovtech/kexa:latest
 ```
 
 ### Using Docker Compose
@@ -39,7 +33,7 @@ docker run -d \
 Create a `docker-compose.yml` file:
 
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   kexa:
@@ -47,6 +41,8 @@ services:
     container_name: kexa
     volumes:
       - ./output:/app/output
+      - ./rules:/app/rules
+      - ./config:/app/config
       - ./.env:/app/.env
     restart: unless-stopped
 ```
@@ -78,6 +74,8 @@ docker build -t kexa .
 docker run -d \
   --name kexa \
   -v $(pwd)/output:/app/output \
+  -v $(pwd)/rules:/app/rules \
+  -v $(pwd)/config:/app/config \
   -e INTERFACE_CONFIGURATION_ENABLED=false \
   kexa
 ```
@@ -144,6 +142,8 @@ docker rm kexa
 docker run -d \
   --name kexa \
   -v $(pwd)/output:/app/output \
+  -v $(pwd)/rules:/app/rules \
+  -v $(pwd)/config:/app/config \
   -e INTERFACE_CONFIGURATION_ENABLED=false \
   innovtech/kexa:latest
 ```
@@ -161,11 +161,13 @@ docker cp kexa:/app/output ./output-backup
 ## Security Considerations
 
 1. **Container Security**
+
    - Run container as non-root user
    - Use read-only volumes where possible
    - Implement resource limits
 
 2. **Network Security**
+
    - Use Docker network isolation
    - Implement proper firewall rules
    - Monitor container network access
@@ -180,11 +182,13 @@ docker cp kexa:/app/output ./output-backup
 ### Common Issues
 
 1. **Container Won't Start**
+
    - Check container logs
    - Verify volume permissions
    - Ensure environment variables are set
 
 2. **Permission Issues**
+
    - Check volume ownership
    - Verify file permissions
    - Ensure proper user mapping
