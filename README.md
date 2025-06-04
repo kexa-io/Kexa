@@ -58,11 +58,24 @@ Monitor Azure Machine Learning workspace health by checking for failed training 
 ## Quick Start
 
 ## Running with Docker Compose
-1. clone and run samples from our samples repo 
+1. clone and run samples from our samples repo example with http check
 
    ```bash
    git clone https://github.com/kexa-io/kexa-samples
    cd kexa-samples
+   ```
+
+2. choose your example with http check, copy secret and modify if necessary.
+
+   ```bash
+   cd samples/http
+   cp .env-sample .env
+   ```
+
+3. run docker-compose
+
+   ```bash
+   docker-compose up
    ```
 
 ## Running localy
@@ -98,7 +111,7 @@ Monitor Azure Machine Learning workspace health by checking for failed training 
 
 This will check the website <kexa.io> by default.
 
-see https://github.com/kexa-io/kexa-samples for samples.
+see <https://github.com/kexa-io/kexa-samples> for samples.
 
 ## Installation Methods
 
