@@ -188,7 +188,7 @@ async function main(retryLeft = -1) {
         let startTimeStamp = Date.now();
         await mainScan(settings, allScan, idScan.toString());
         if(Memoisation.canSendGlobalAlert()){
-            logger.error("Global alert");
+            logger.info("Global alert");
             retError = await GlobalAlert(settings, allScan);
             if(retError) {
                 logger.error("High level error found in scan, exiting Kexa");
