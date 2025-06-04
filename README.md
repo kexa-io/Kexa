@@ -103,7 +103,6 @@ Monitor Azure Machine Learning workspace health by checking for failed training 
 3. Run Kexa:
 
    ```bash
-   export INTERFACE_CONFIGURATION_ENABLED=false
    bun run ./Kexa/main.ts
    ```
 

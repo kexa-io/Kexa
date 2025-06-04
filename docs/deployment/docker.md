@@ -22,7 +22,6 @@ docker run -d \
   -v $(pwd)/output:/app/output \
   -v $(pwd)/rules:/app/rules \
   -v $(pwd)/config:/app/config \
-  -e INTERFACE_CONFIGURATION_ENABLED=false \
   innovtech/kexa:latest
 
 # The result will be inside the "output" folder on your computer
@@ -76,7 +75,6 @@ docker run -d \
   -v $(pwd)/output:/app/output \
   -v $(pwd)/rules:/app/rules \
   -v $(pwd)/config:/app/config \
-  -e INTERFACE_CONFIGURATION_ENABLED=false \
   kexa
 ```
 
@@ -144,7 +142,6 @@ docker run -d \
   -v $(pwd)/output:/app/output \
   -v $(pwd)/rules:/app/rules \
   -v $(pwd)/config:/app/config \
-  -e INTERFACE_CONFIGURATION_ENABLED=false \
   innovtech/kexa:latest
 ```
 
