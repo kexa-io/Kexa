@@ -202,7 +202,8 @@ async function main(retryLeft = -1) {
         }
         idScan++;
     };
-   clearTimer(timer);
+    clearTimer(timer);
+    exit(0);
 }
 
 main();
