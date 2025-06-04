@@ -410,8 +410,8 @@ function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, ind
         return BeHaviorEnum.RETURN;
     }
     if(!Array.isArray(resources[rule.cloudProvider]) || resources[rule.cloudProvider].length === 0){
-        logger.warn("the addOn for : "+rule.cloudProvider+" are not supported multi-configuration");
-        return BeHaviorEnum.NONE;
+        logger.warn("Did not retriev any resources for cloud provider "+rule.cloudProvider + " with configuration index " + index + "\nVerify credentials and configuration");
+        return BeHaviorEnum.RETURN;
     }
     if(!resources[rule.cloudProvider][index].hasOwnProperty(rule.objectName)){
         logger.warn("object name : "+rule.objectName + " not found in your provider " + rule.cloudProvider + " with configuration index " + index + "\nMake sure you have the right addOn or the right spelling in your rules");
