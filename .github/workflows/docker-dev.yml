@@ -15,9 +15,7 @@ permissions:
 jobs:
   ci:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        architecture: [amd64, arm64, arm64]
+    environment: dev
     permissions:
       pull-requests: write
       contents: write
@@ -57,6 +55,5 @@ jobs:
         with:
           context: ./
           push: true
-          tags: |
-            ${{ secrets.DOCKER_REGISTRY_NAME}}/${{ vars.IMAGE_NAME }}:latest
-          platforms: linux/${{ matrix.architecture }}
+          tags: ${{ secrets.DOCKER_REGISTRY_NAME}}/${{ vars.IMAGE_NAME }}:latest
+          platforms: linux/amd64,linux/arm64
