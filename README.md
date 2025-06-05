@@ -7,6 +7,10 @@
 [![Apache License][license-shield]][license-url]
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/9278/badge)](https://www.bestpractices.dev/projects/9278)
 
+[![Rejoindre le Slack](https://img.shields.io/badge/Slack-Rejoindre%20la%20communauté-blue?style=for-the-badge&logo=slack)](https://join.slack.com/t/kexaio/shared_invite/zt-343gsrm6d-y9glG4khlH7kuecoerYCOQ)
+[![Lisez sur Medium](https://img.shields.io/badge/Medium-Lisez%20nos%20articles-black?style=for-the-badge&logo=medium)](https://medium.com/@contact_52772)
+
+
 <div align="center">
   <a href="https://www.kexa.io/">
     <img src="images/kexa-no-background-color.png" alt="Logo" width="100" height="100">
@@ -14,15 +18,18 @@
   <h3>Multi-Cloud Compliance Management Made Simple</h3>
 </div>
 
-## Overview
+## Why Kexa ?
+
+Ever needed to verify security and compliance across your multi-cloud infrastructure at low cost while keeping complete control over webhooks and alerting? Kexa.io makes it effortless.
+
+- Run everywhere at low cost - Lightweight script deployment
+- Easy addon development - Build custom integrations
+- Share YAML rules - Community-driven compliance patterns in simple YAML format
+- Core open source - Transparent, auditable foundation
+- Keep full control and your data stays with you.
+
 
 Kexa is an open-source compliance management tool that simplifies security and compliance across multiple cloud platforms including Azure, Google Cloud, AWS, and more. It provides:
-
-- Real-time monitoring and instant alerts
-- Simple, intuitive rule-based compliance checks
-- Detailed compliance reports and analysis
-- Seamless integration with existing tools
-- Support for multiple deployment methods
 
 Kexa works by scanning your cloud environments based on your configuration, applying customizable compliance rules, and notifying you of any violations. The process is simple:
 
@@ -36,7 +43,42 @@ Here is an example of the Kexa engine:
 
 ![kexa-engine](./images/schema-engine.png)
 
+## Use Cases
+
+🔒 Multi-Cloud Storage Security
+Continuously verify Block Public Access settings across AWS S3, GCP Cloud Storage, and Azure Blob Storage. Prevent data exposure by ensuring all storage buckets remain private across your entire infrastructure.
+
+💾 Cost & Security Optimization
+Automatically detect unattached disks across AWS EBS, GCP Persistent Disks, and Azure Managed Disks. Eliminate unnecessary costs while preventing potential security risks from orphaned storage resources.
+
+🤖 Azure ML Operations Monitoring
+Monitor Azure Machine Learning workspace health by checking for failed training jobs and pipeline executions. Ensure your ML operations run smoothly with proactive failure detection and alerting.
+
+
 ## Quick Start
+
+## Running with Docker Compose
+1. clone and run samples from our samples repo example with http check
+
+   ```bash
+   git clone https://github.com/kexa-io/kexa-samples
+   cd kexa-samples
+   ```
+
+2. choose your example with http check, copy secret and modify if necessary.
+
+   ```bash
+   cd samples/http
+   cp .env-sample .env
+   ```
+
+3. run docker-compose
+
+   ```bash
+   docker-compose up
+   ```
+
+## Running localy
 
 ### Prerequisites
 
@@ -61,7 +103,6 @@ Here is an example of the Kexa engine:
 3. Run Kexa:
 
    ```bash
-   export INTERFACE_CONFIGURATION_ENABLED=false
    bun run ./Kexa/main.ts
    ```
 
@@ -69,8 +110,11 @@ Here is an example of the Kexa engine:
 
 This will check the website <kexa.io> by default.
 
-### Alternative Installation Methods
+see <https://github.com/kexa-io/kexa-samples> for samples.
 
+## Installation Methods
+
+- **Docker Compose**: Use our [Docker Compose file](https://github.com/kexa-io/kexa-samples)
 - **Docker**: Use our [Docker image](./docs/deployment/docker.md)
 - **GitHub Action**: Use our [GitHub Action](./docs/deployment/github-action.md)
 - **Kubernetes**: Deploy using our [Kubernetes manifests](./docs/deployment/kubernetes.md)
@@ -104,6 +148,8 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 
 ## Support
 
+- star The project: [GitHub Stars](https://github.com/kexa-io/Kexa/stargazers)
+- fork The project: [GitHub Forks](https://github.com/kexa-io/Kexa/network/members)
 - Report bugs: [GitHub Issues](https://github.com/kexa-io/Kexa/issues)
 - Request features: [GitHub Discussions](https://github.com/kexa-io/Kexa/discussions)
 - Join our community: [Slack](https://kexaio.slack.com/)

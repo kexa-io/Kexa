@@ -28,7 +28,7 @@ export async function saveResult(result: ResultScan[][]): Promise<void> {
         });
     });
     let dataToSave = [ result, resultOnlyWithErrors ];
-    Promise.all(configuration.save.map(async (save: SaveConfig) => {
+    return Promise.all(configuration.save.map(async (save: SaveConfig) => {
         if(addOnSave[save.type]){
             try{
                 await addOnSave[save.type](save, dataToSave[save.onlyErrors??false ? 1 : 0]);
@@ -42,7 +42,7 @@ export async function saveResult(result: ResultScan[][]): Promise<void> {
             context?.log('Unknown save type: ' + save.type);
         }
         return Promise.resolve();
-    }));
+    })).then(() => {});
 }
 
 async function saveJsonToGcpBucket(bucketName: string, objectKey: string, json: object): Promise<void> {

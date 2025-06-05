@@ -59,7 +59,7 @@ export async function gatheringRules(rulesDirectory:string, getAll:boolean=false
 
     headers = await extractHeaders();
 
-    if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true' || !process.env.INTERFACE_CONFIGURATION_ENABLED) {
+    if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
         logger.warn("Interface configuration enabled, if you're not running Kexa script to work with the SaaS, please configure INTERFACE_CONFIGURATION_ENABLED to false in your .env file");
         logger.info("Gathering rules from api...");
         let rules =  await getSettingsFileFromApi(config);
@@ -75,15 +75,23 @@ export async function gatheringRules(rulesDirectory:string, getAll:boolean=false
         await gatheringDistantRules(rulesDirectory);
         rulesDirectory = defaultRulesDirectory;
     }
-    let paths = fs.readdirSync(rulesDirectory, { withFileTypes: true});
-    if(paths.length === 0) paths = fs.readdirSync(secondDefaultRulesDirectory, { withFileTypes: true});
-    logger.debug("listing rules files.");
-    let settingFileList = new Array<SettingFile>;
-    headers = require('../../config/headers.json');
+    let paths: fs.Dirent[];
+    let settingFileList: SettingFile[] = [];
+    let setting: any;
+    try {
+        paths = fs.readdirSync(rulesDirectory, { withFileTypes: true});
+        if(paths.length === 0) paths = fs.readdirSync(secondDefaultRulesDirectory, { withFileTypes: true});
+        logger.debug("listing rules files.");
+        settingFileList = new Array<SettingFile>;
+        headers = require('../../config/headers.json');
+    } catch (err) {
+        logger.error("Error reading rules directory: " + err);
+        throw new Error("Rules directory not found or empty");
+    }
     let listNeedRules = await getListNeedRules();
     for(const p of paths) {
         logger.debug("getting "+rulesDirectory+"/"+p.name+" rules.");
-        let setting = await analyzeRule(rulesDirectory+"/"+p.name, listNeedRules, getAll);
+        setting = await analyzeRule(rulesDirectory+"/"+p.name, listNeedRules, getAll);
         if(setting){
             setting.alert.global.name = p.name.split(".")[0];
             settingFileList.push(setting);
@@ -402,8 +410,8 @@ function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, ind
         return BeHaviorEnum.RETURN;
     }
     if(!Array.isArray(resources[rule.cloudProvider]) || resources[rule.cloudProvider].length === 0){
-        logger.warn("the addOn for : "+rule.cloudProvider+" are not supported multi-configuration");
-        return BeHaviorEnum.NONE;
+        logger.warn("Did not retriev any resources for cloud provider "+rule.cloudProvider + " with configuration index " + index + "\nVerify credentials and configuration");
+        return BeHaviorEnum.RETURN;
     }
     if(!resources[rule.cloudProvider][index].hasOwnProperty(rule.objectName)){
         logger.warn("object name : "+rule.objectName + " not found in your provider " + rule.cloudProvider + " with configuration index " + index + "\nMake sure you have the right addOn or the right spelling in your rules");
@@ -496,7 +504,6 @@ export function checkRules(rules:any[], resources:ProviderResource, alert: Alert
                     case BeHaviorEnum.CONTINUE:
                         continue;
                 }
-                // objectResources.push(resources[rule.cloudProvider][i][rule.objectName]);
                objectResources = [...objectResources, ...resources[rule.cloudProvider][i][rule.objectName]]
             }
         }
