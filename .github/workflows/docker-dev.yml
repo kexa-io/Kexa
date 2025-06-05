@@ -58,5 +58,5 @@ jobs:
           context: ./
           push: true
           tags: |
-            ${{ secrets.DOCKER_REGISTRY_NAME}}/innovtech/kexa-dev:latest
+            ${{ secrets.DOCKER_REGISTRY_NAME}}/${{ vars.IMAGE_NAME }}:latest
           platforms: linux/${{ matrix.architecture }}
