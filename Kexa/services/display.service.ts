@@ -108,9 +108,3 @@ export function AsciiArtText(text:string){
         env: 'node'                 // define the environment cfonts is being executed in
     });
 }
-
-export function talkAboutOtherProject(){
-    const context = getContext();
-    context?.log("You can go check our other project : https://www.4urcloud.eu/");
-    logger.info("You can go check our other project : https://www.4urcloud.eu/");
-}
