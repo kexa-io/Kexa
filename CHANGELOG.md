@@ -1,3 +1,16 @@
+## [2.0.7](https://github.com/kexa-io/Kexa/compare/v2.0.6...v2.0.7) (2025-06-05)
+
+
+### Bug Fixes
+
+* better err handling for rule dir reading, no INTERFACE mode default ([7bc1a39](https://github.com/kexa-io/Kexa/commit/7bc1a394d8a28028796009d50ce810f533126a22))
+* **docs:** remove INTERFACE_CONFIG=false ([d9d23d1](https://github.com/kexa-io/Kexa/commit/d9d23d1df476adb11a0a709fe2cd57dc5e2fa2a1))
+* ensure promise wait for all save & exit 0 ([34377b8](https://github.com/kexa-io/Kexa/commit/34377b84f4e8cbc2242218c42d198a99b583e97b))
+* handle error as RETURN to avoid index access error ([ea247a2](https://github.com/kexa-io/Kexa/commit/ea247a211999719904d8c0279a35dfb1fded1892))
+* **logs:** no warn aws -> debug logs instead ([fd357f9](https://github.com/kexa-io/Kexa/commit/fd357f9a82014ab3895f7fa01b12144b4f6a936d))
+* **logs:** remove err download distant rules & global err ([afd07e5](https://github.com/kexa-io/Kexa/commit/afd07e54293ee26aeccfee5e818c2c9e9d4026aa))
+* remove version compare code ([2bcd428](https://github.com/kexa-io/Kexa/commit/2bcd428cb3c9c9b75430346554552084eeff5097))
+
 # Changelog
 
 ## [v2.0.6] - 2025-06-03
