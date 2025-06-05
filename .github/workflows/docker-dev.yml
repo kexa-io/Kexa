@@ -15,6 +15,9 @@ permissions:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        architecture: [amd64, arm64, arm64]
     permissions:
       pull-requests: write
       contents: write
@@ -55,4 +58,5 @@ jobs:
           context: ./
           push: true
           tags: |
-            ${{ secrets.DOCKER_REGISTRY_NAME}}/innovtech/kexa-dev:latest
+            ${{ secrets.DOCKER_REGISTRY_NAME}}/${{ vars.IMAGE_NAME }}:latest
+          platforms: linux/${{ matrix.architecture }}
