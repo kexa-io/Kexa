@@ -2,7 +2,6 @@ import { AzureFunction, Context } from "@azure/functions"
 import { GlobalAlert, mainScan } from "./main";
 import { getNewLogger, setContext } from "./services/logger.service";
 import { getConfig } from "./helpers/loaderConfig";
-import { displayVersionAndLatest } from "./helpers/latestVersion";
 import { AsciiArtText } from "./services/display.service";
 import { gatheringRules } from "./services/analyse.service";
 import { getEnvVar } from "./services/manageVarEnvironnement.service";
@@ -29,7 +28,6 @@ const timerTrigger: AzureFunction = async function (context: Context, myTimer: a
     }
 
     context?.log("logger configured");
-    await displayVersionAndLatest(logger);
     AsciiArtText("Kexa");
     let idScan = 0;
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"https://github.com/kexa-io/public-rules");

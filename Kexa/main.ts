@@ -7,7 +7,6 @@ import { loadAddOns } from "./services/addOn.service";
 import { deleteFile, createFileSync } from "./helpers/files";
 import {getContext, getNewLogger} from "./services/logger.service";
 import { Emails } from "./emails/emails";
-import { displayVersionAndLatest } from "./helpers/latestVersion";
 import { saveResult } from "./services/save.service";
 import { exportationData } from "./services/exportation.service";
 import { getConfig } from "./helpers/loaderConfig";
@@ -116,11 +115,6 @@ async function main(retryLeft = -1) {
     }
 
     context?.log("logger configured");
-    try {
-        await displayVersionAndLatest(logger);
-    } catch (e) {
-        logger.error("Error getting latest version of Kexa (github.com)");
-    }
     AsciiArtText("Kexa");
     let idScan = 0;
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"https://github.com/kexa-io/public-rules");
@@ -188,7 +182,7 @@ async function main(retryLeft = -1) {
         let startTimeStamp = Date.now();
         await mainScan(settings, allScan, idScan.toString());
         if(Memoisation.canSendGlobalAlert()){
-            logger.error("Global alert");
+            logger.info("Global alert");
             retError = await GlobalAlert(settings, allScan);
             if(retError) {
                 logger.error("High level error found in scan, exiting Kexa");
@@ -208,7 +202,8 @@ async function main(retryLeft = -1) {
         }
         idScan++;
     };
-   clearTimer(timer);
+    clearTimer(timer);
+    exit(0);
 }
 
 main();
