@@ -58,6 +58,7 @@ jobs:
         with:
           context: ./
           push: true
+          load: true
           tags: |
             ${{ secrets.DOCKER_REGISTRY_NAME}}/${{ vars.IMAGE_NAME }}:latest
           platforms: linux/${{ matrix.architecture }}
