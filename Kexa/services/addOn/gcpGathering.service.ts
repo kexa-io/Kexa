@@ -48,14 +48,12 @@ let currentConfig: GcpConfig;
 //////   LISTING CLOUD RESOURCES    /////
 /////////////////////////////////////////
 
-
 export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[] | null> {
     let context = getContext();
     let resources = new Array<GCPResources>();
     let defaultPathCred = await getEnvVar("GOOGLE_APPLICATION_CREDENTIALS");
     for (let config of gcpConfig??[]) {
         currentConfig = config;
-        setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", "./config/gcp.json");
         let prefix = config.prefix??(gcpConfig.indexOf(config).toString());
         let gcpResources = {
             "bucket": null,
@@ -96,13 +94,21 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
         } as GCPResources;
         let projectId = await getConfigOrEnvVar(config, "GOOGLE_PROJECT_ID", prefix);
         let googleCred = await getConfigOrEnvVar(config, "GOOGLE_APPLICATION_CREDENTIALS", prefix);
-        // check if google cred is a path or a json
-        let defaultPath = './config/gcp.json';
-        if (googleCred && googleCred.includes(".json")) {
+        let originalCredPath = defaultPathCred;
+        let credentialsObject = null;
+        
+         // check if google cred is a path or a json
+        if (googleCred && typeof googleCred === 'string' && googleCred.includes(".json")) {
             setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", googleCred);
         }
         else if (projectId && googleCred) {
-            writeStringToJsonFile(googleCred, defaultPath);
+            try {
+                credentialsObject = JSON.parse(googleCred);
+                setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", "");
+            } catch (e) {
+                logger.error("GCP - Failed to parse credential JSON");
+                continue;
+            }
         }
         else {
             setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", defaultPathCred);
@@ -129,47 +135,47 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
         } else {
             context?.log("GCP - No Regions found in Config, gathering all regions...");
             logger.info("GCP - No Regions found in Config, gathering all regions...");
-            await retrieveAllRegions(projectId, regionsList); 
+            await retrieveAllRegions(projectId, regionsList, credentialsObject); 
         }
         try {
             context?.log("- listing GCP resources -");
             logger.info("- listing GCP resources -");
             const promises = [
-                listTasks(projectId, regionsList),
-                listAllComputes(projectId),
-                listAllBucket(),
-                listAllProject(),
-                getBillingAccount(projectId),
-                listAllClusters(),
-                listWorkflows(projectId),
-                listWebSecurityConfig(projectId),
-                listVpcConnectors(projectId, regionsList),
-                listVMWareEngine(projectId),
-                listNamespaces(projectId, regionsList),
-                listSecrets(projectId),
-                listConnectivityTests(projectId),
-                listResourceSettings(projectId),
-                listRedisInstances(projectId, regionsList),
-                listOSConfig(projectId),
-                listOrgPolicyContraints(projectId),
-                listOrchestrationAirflow(projectId, regionsList),
-                listNotebookInstances(projectId),
-                listLineageProcesses(projectId),
-                listDashboards(projectId),
-                listIdentitiesDomain(projectId),
-                listKMSCryptoKeys(projectId),
-                listKMSKeyRings(projectId),
-                listDomainsRegistration(projectId),
-                listDnsZones(projectId),
-                listDeliveryPipelines(projectId, regionsList),
-                listCertificates(projectId),
-                listBatchJobs(projectId, regionsList),
-                listWorkloads(projectId),
-                listArtifactsRepositories(projectId, regionsList),
-                listAppGateways(projectId, regionsList),
-                listPersistentDisks(projectId),
-                listSSHKey(projectId),
-                listTagsKeys(projectId, regionsList)
+                listTasks(projectId, regionsList, credentialsObject),
+                listAllComputes(projectId, credentialsObject),
+                listAllBucket(credentialsObject),
+                listAllProject(credentialsObject),
+                getBillingAccount(projectId, credentialsObject),
+                listAllClusters(credentialsObject),
+                listWorkflows(projectId, credentialsObject),
+                listWebSecurityConfig(projectId, credentialsObject),
+                listVpcConnectors(projectId, regionsList, credentialsObject),
+                listVMWareEngine(projectId, credentialsObject),
+                listNamespaces(projectId, regionsList, credentialsObject),
+                listSecrets(projectId, credentialsObject),
+                listConnectivityTests(projectId, credentialsObject),
+                listResourceSettings(projectId, credentialsObject),
+                listRedisInstances(projectId, regionsList, credentialsObject),
+                listOSConfig(projectId, credentialsObject),
+                listOrgPolicyContraints(projectId, credentialsObject),
+                listOrchestrationAirflow(projectId, regionsList, credentialsObject),
+                listNotebookInstances(projectId, credentialsObject),
+                listLineageProcesses(projectId, credentialsObject),
+                listDashboards(projectId, credentialsObject),
+                listIdentitiesDomain(projectId, credentialsObject),
+                listKMSCryptoKeys(projectId, credentialsObject),
+                listKMSKeyRings(projectId, credentialsObject),
+                listDomainsRegistration(projectId, credentialsObject),
+                listDnsZones(credentialsObject),
+                listDeliveryPipelines(projectId, regionsList, credentialsObject),
+                listCertificates(projectId, credentialsObject),
+                listBatchJobs(projectId, regionsList, credentialsObject),
+                listWorkloads(projectId, credentialsObject),
+                listArtifactsRepositories(projectId, regionsList, credentialsObject),
+                listAppGateways(projectId, regionsList, credentialsObject),
+                listPersistentDisks(projectId, credentialsObject),
+                listSSHKey(projectId, credentialsObject),
+                listTagsKeys(projectId, regionsList, credentialsObject)
         ];
             const [taskList, computeList, bucketList, projectList, billingAccountList,
                 clusterList, workflowList, webSecurityList, connectorList,
@@ -183,9 +189,6 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
             
             context?.log("- listing cloud resources done -");
             logger.info("- listing cloud resources done -");
-
-            ///////////////// List cloud resources ///////////////////////////////////////////////////////////////////////////////////////////////
-            //const client = new CloudTasksClient();
 
             gcpResources = {
                 tasks_queue: taskList,
@@ -228,15 +231,38 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
         catch (e) {
             logger.error("error in collectGCPData: " + projectId);
             logger.error(e);
+        } finally {
+            if (originalCredPath) {
+                setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", originalCredPath);
+            }
         }
-        deleteFile("./config/gcp.json");
         resources.push(gcpResources);
     }
     return resources ?? null;
 }
 
-///////////////////////////////////////////////     The following functions are used to gather informations
-///// FUNCTIONS FOR ALL REGIONS GATHERING /////     from all required regions.
+
+function createClientWithCredentials(ClientClass: any, credentialsObject?: any) {
+    if (credentialsObject) {
+        return new ClientClass({
+            credentials: credentialsObject,
+            projectId: credentialsObject.project_id
+        });
+    }
+    return new ClientClass();
+}
+
+const mutePaginationWarning = process.emitWarning;
+process.emitWarning = function(warning, type, code, ctor) {
+    if (code === 'GOPAGINATION' || (typeof warning === 'string' && warning.includes('Autopaginate will always be set to false'))) {
+        return; // mute
+    }
+    return mutePaginationWarning.call(this, warning, type, code, ctor);
+};
+
+
+///////////////////////////////////////////////   
+///// FUNCTIONS FOR ALL REGIONS GATHERING /////  
 ///////////////////////////////////////////////
 
 function compareUserAndValidRegions(userRegions: Array<any>, validRegions: Array<string>, gcpConfig: any, config: any) {
@@ -251,30 +277,36 @@ function compareUserAndValidRegions(userRegions: Array<any>, validRegions: Array
     logger.info("GCP - Config n°" + gcpConfig.indexOf(config) + " correctly loaded user regions.");
     return (true);
 }
+
 function addRegionGCP(response: any, region: string) {
     response.region = region;
     return response;
 }
-async function retrieveAllRegions(projectId: number, regionsList: Array<string>) {
+
+async function retrieveAllRegions(projectId: string, regionsList: Array<string>, credentialsObject?: any) {
     const {RegionsClient} = require('@google-cloud/compute').v1;
     try {
-        const computeClient = new RegionsClient();
+        const computeClient = createClientWithCredentials(RegionsClient, credentialsObject);
         const request = {
             project: projectId
         };
-        const iterable = await computeClient.listAsync(request);
-        for await (const response of iterable) {
-            regionsList.push(response.name);
+        const [regions] = await computeClient.list(request);
+        if (regions && Array.isArray(regions)) {
+            for (const region of regions) {
+                if (region.name) {
+                    regionsList.push(region.name);
+                }
+            }
         }
     } catch (e) {
         logger.debug("GCP : Error while retrieving all regions", e)
     }
 }
 
-/////////////////////////////////////////////////////////    This function is the main gathering function,
-/////  ASYNC REGIONS GATHERING FOR FASTER EXECUTION /////    it iterate async to gather all.
 /////////////////////////////////////////////////////////
-async function executeAllRegions(projectId: number, serviceFunction: Function, client: any,
+/////  ASYNC REGIONS GATHERING FOR FASTER EXECUTION ///// 
+/////////////////////////////////////////////////////////
+async function executeAllRegions(projectId: string, serviceFunction: Function, client: any,
                                  regionsList: Array<string>, isIterable: Boolean) : Promise<Array<any>> {
                                     
     const processRegion = async (currentRegion: any) => {
@@ -290,11 +322,13 @@ async function executeAllRegions(projectId: number, serviceFunction: Function, c
                     jsonResponses.push(addRegionGCP(jsonTmp, currentRegion));
                 }
             } else {
-                const iterable = await serviceFunction.call(client, request);
-                for await (const response of iterable) {
-                    let jsonTmp = JSON.parse(jsonStringify(response));
-                    if (jsonTmp != null && jsonTmp.length > 0) {
-                        jsonResponses.push(addRegionGCP(jsonTmp, currentRegion));
+                const [results] = await serviceFunction.call(client, request);
+                if (results && Array.isArray(results)) {
+                    for (const response of results) {
+                        let jsonTmp = JSON.parse(jsonStringify(response));
+                        if (jsonTmp != null && jsonTmp.length > 0) {
+                            jsonResponses.push(addRegionGCP(jsonTmp, currentRegion));
+                        }
                     }
                 }
             }
@@ -324,12 +358,12 @@ async function executeAllRegions(projectId: number, serviceFunction: Function, c
 ////////////////////////////////////////////////////////////////
 
 const {CloudTasksClient} = require('@google-cloud/tasks').v2;
-async function listTasks(projectId: number, regionsList: Array<string>): Promise<Array<any>|null> {
+async function listTasks(projectId: string, regionsList: Array<string>, credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("tasks_queue")) return null;
     let jsonData = [];
     try {
-        const tasksClient = new CloudTasksClient();
-        jsonData = await executeAllRegions(projectId, tasksClient.listQueuesAsync, tasksClient, regionsList, true);
+        const tasksClient = createClientWithCredentials(CloudTasksClient, credentialsObject);
+        jsonData = await executeAllRegions(projectId, tasksClient.listQueues, tasksClient, regionsList, false);
     } catch (e) {
         logger.debug("Error while retrieving GCP Tasks Queues");
     }
@@ -338,11 +372,11 @@ async function listTasks(projectId: number, regionsList: Array<string>): Promise
 
 const compute = require('@google-cloud/compute');
 
-async function listAllComputes(projectId: string): Promise<Array<any>|null> {
+async function listAllComputes(projectId: string, credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("compute")) return null;
     let jsonData = [];
 
-    const instancesClient = new compute.InstancesClient();
+    const instancesClient = createClientWithCredentials(compute.InstancesClient, credentialsObject);
     const aggListRequest =  await instancesClient.aggregatedListAsync({
         project: projectId
     });
@@ -359,11 +393,11 @@ async function listAllComputes(projectId: string): Promise<Array<any>|null> {
     return jsonData ?? null;
 }
 
-async function listSSHKey(projectId: string): Promise<Array<any>|null> {
+async function listSSHKey(projectId: string, credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("compute_item")) return null;
     let jsonData = [];
 
-    const instancesClient = new compute.InstancesClient();
+    const instancesClient = createClientWithCredentials(compute.InstancesClient, credentialsObject);
     const aggListRequest = await instancesClient.aggregatedListAsync({
         project: projectId
     });
@@ -377,10 +411,11 @@ async function listSSHKey(projectId: string): Promise<Array<any>|null> {
     }
     return jsonData ?? null;
 }
-async function listPersistentDisks(projectId: any) {
+
+async function listPersistentDisks(projectId: string, credentialsObject?: any) {
     if(!currentConfig.ObjectNameNeed?.includes("disk")) return null;
     let jsonData = [];
-    const disksClient = new compute.DisksClient();
+    const disksClient = createClientWithCredentials(compute.DisksClient, credentialsObject);
     const aggListRequest =  await disksClient.aggregatedListAsync({
         project: projectId
     });
@@ -397,10 +432,12 @@ async function listPersistentDisks(projectId: any) {
     return jsonData ?? null;
 }
 
-async function listAllBucket(): Promise<Array<any>|null> {
+async function listAllBucket(credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("bucket")) return null;
     try {
-        const storage = new Storage();
+        const storage = credentialsObject ? 
+            new Storage({ credentials: credentialsObject, projectId: credentialsObject.project_id }) :
+            new Storage();
         const [buckets] = await storage.getBuckets();
 
         const promises = buckets.map(async (bucket) => {
@@ -412,8 +449,6 @@ async function listAllBucket(): Promise<Array<any>|null> {
         });        
         await Promise.all(promises);
         
-        //const test = await storage.bucket("test-bucket").getMetadata();
-
         return buckets;
     } catch (e) {
         logger.debug(e);
@@ -426,13 +461,13 @@ import {CloudBillingClient} from "@google-cloud/billing";
 import {VpcAccessServiceClient} from "@google-cloud/vpc-access";
 import { config } from "dotenv";
 
-async function listAllClusters(): Promise<Array<any>|null> {
+async function listAllClusters(credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("cluster")) return null;
     let jsonData = [];
 
     try {
-        const cnt = new ClusterManagerClient();
-        const projectId = await cnt.getProjectId();
+        const cnt = createClientWithCredentials(ClusterManagerClient, credentialsObject);
+        const projectId = credentialsObject?.project_id || await cnt.getProjectId();
         const request = {
             projectId: projectId,
             zone: "-",
@@ -447,15 +482,17 @@ async function listAllClusters(): Promise<Array<any>|null> {
 }
 
 const {ProjectsClient} = require('@google-cloud/resource-manager');
-async function listAllProject(): Promise<Array<any>|null> {
+async function listAllProject(credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("project")) return null;
     let jsonData = [];
 
     try {
-        const client = new ProjectsClient();
-        const projects = client.searchProjectsAsync();
-        for await (const project of projects) {
-            jsonData = JSON.parse(jsonStringify(project));
+        const client = createClientWithCredentials(ProjectsClient, credentialsObject);
+        const [projects] = await client.searchProjects();
+        if (projects && Array.isArray(projects)) {
+            for (const project of projects) {
+                jsonData.push(JSON.parse(jsonStringify(project)));
+            }
         }
     } catch (e) {
         logger.debug(e);
@@ -464,18 +501,18 @@ async function listAllProject(): Promise<Array<any>|null> {
     return jsonData ?? null;
 }
 
-async function getBillingAccount(projectId: any): Promise<Array<any>|null> {
+async function getBillingAccount(projectId: string, credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("billingAccount")) return null;
     const {CloudBillingClient} = require('@google-cloud/billing');
     let jsonData = [];
 
     try {
-        const client = new CloudBillingClient();
+        const client = createClientWithCredentials(CloudBillingClient, credentialsObject);
         const [accounts] = await client.listBillingAccounts({
             projectId,
         });
         for (const account of accounts) {
-            jsonData = JSON.parse(jsonStringify(account));
+            jsonData.push(JSON.parse(jsonStringify(account)));
         }
     } catch (e) {
         logger.debug(e);
@@ -484,17 +521,17 @@ async function getBillingAccount(projectId: any): Promise<Array<any>|null> {
     return jsonData ?? null;
 }
 
-async function listWorkflows(projectId: any): Promise<Array<any>|null> {
+async function listWorkflows(projectId: string, credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("workflow")) return null;
     const {WorkflowsClient} = require('@google-cloud/workflows');
     let jsonData = [];
     try {
-        const client = new WorkflowsClient();
+        const client = createClientWithCredentials(WorkflowsClient, credentialsObject);
         const [workflows] = await client.listWorkflows({
             parent: client.locationPath(projectId, '-'),
         });
         for (const workflow of workflows) {
-            jsonData = JSON.parse(jsonStringify(workflow));
+            jsonData.push(JSON.parse(jsonStringify(workflow)));
         }
     } catch (e) {
         logger.debug(e);
@@ -503,16 +540,20 @@ async function listWorkflows(projectId: any): Promise<Array<any>|null> {
     return jsonData ?? null;
 }
 
-async function listWebSecurityConfig(projectId: any): Promise<Array<any>|null> {
+async function listWebSecurityConfig(projectId: string, credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("websecurity")) return null;
     const { WebSecurityScannerClient } = require('@google-cloud/web-security-scanner');
     let jsonData = [];
     try {
-        const client = new WebSecurityScannerClient();
-        const stats = await client.listScanConfigs({
+        const client = createClientWithCredentials(WebSecurityScannerClient, credentialsObject);
+        const [configs] = await client.listScanConfigs({
             parent: `projects/${projectId}`,
         });
-        jsonData = JSON.parse(jsonStringify(stats));
+        if (configs && Array.isArray(configs)) {
+            for (const config of configs) {
+                jsonData.push(JSON.parse(jsonStringify(config)));
+            }
+        }
     }
     catch (e) {
         logger.debug(e);
@@ -521,12 +562,12 @@ async function listWebSecurityConfig(projectId: any): Promise<Array<any>|null> {
     return jsonData ?? null;
 }
 
-async function listVpcConnectors(projectId: any, regionsList: Array<string>): Promise<Array<any>|null> {
+async function listVpcConnectors(projectId: string, regionsList: Array<string>, credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("connector")) return null;
     const {VpcAccessServiceClient} = require('@google-cloud/vpc-access');
     let jsonData =  [];
     try {
-        const client = new VpcAccessServiceClient();
+        const client = createClientWithCredentials(VpcAccessServiceClient, credentialsObject);
         jsonData = await executeAllRegions(projectId, client.listConnectors, client, regionsList, false )
     } catch (e) {
         logger.debug(e);
@@ -535,21 +576,21 @@ async function listVpcConnectors(projectId: any, regionsList: Array<string>): Pr
     return jsonData ?? null;
 }
 
-async function listVMWareEngine(projectId: any): Promise<Array<any>|null>  {
+async function listVMWareEngine(projectId: string, credentialsObject?: any): Promise<Array<any>|null>  {
     if(!currentConfig.ObjectNameNeed?.includes("vmware_engine")) return null;
     const {VmwareEngineClient} = require('@google-cloud/vmwareengine').v1;
     let jsonData = [];
     const parent = 'projects/' + projectId + '/locations/-';
     try {
-        const vmwareengineClient = new VmwareEngineClient();
+        const vmwareengineClient = createClientWithCredentials(VmwareEngineClient, credentialsObject);
         const request = {
             parent,
         };
-        const iterable = await vmwareengineClient.listVmwareEngineNetworksAsync(
-            request
-        );
-        for await (const response of iterable) {
-            jsonData = JSON.parse(jsonStringify(response));
+        const [networks] = await vmwareengineClient.listVmwareEngineNetworks(request);
+        if (networks && Array.isArray(networks)) {
+            for (const network of networks) {
+                jsonData.push(JSON.parse(jsonStringify(network)));
+            }
         }
     } catch (e) {
         logger.debug(e);
@@ -558,15 +599,15 @@ async function listVMWareEngine(projectId: any): Promise<Array<any>|null>  {
     return jsonData ?? null;
 }
 
-async function listNamespaces(projectId: any, regionsList: Array<string>): Promise<Array<any>|null> { ///// KO REGION
+async function listNamespaces(projectId: string, regionsList: Array<string>, credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("namespace")) return null;
     const {RegistrationServiceClient,} = require('@google-cloud/service-directory');
     let jsonData = [];
 
     try {
-        const registrationServiceClient = new RegistrationServiceClient();
+        const registrationServiceClient = createClientWithCredentials(RegistrationServiceClient, credentialsObject);
         jsonData = await executeAllRegions(projectId, registrationServiceClient.listNamespaces, registrationServiceClient,
-            regionsList, true);
+            regionsList, false);
     } catch (e) {
         logger.debug(e);
     }
@@ -574,18 +615,20 @@ async function listNamespaces(projectId: any, regionsList: Array<string>): Promi
     return jsonData ?? null;
 }
 
-export async function listSecrets(projectId: any): Promise<Array<any>|null> {
+export async function listSecrets(projectId: string, credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("secret")) return null;
     const {SecretManagerServiceClient,} = require('@google-cloud/secret-manager').v1;
     const parent = `projects/${projectId}`;
     let jsonData = [];
 
     try {
-        const secretmanagerClient = new SecretManagerServiceClient();
+        const secretmanagerClient = createClientWithCredentials(SecretManagerServiceClient, credentialsObject);
         const request = { parent };
-        const iterable = await secretmanagerClient.listSecretsAsync(request);
-        for await (const response of iterable) {
-            jsonData.push(JSON.parse(jsonStringify(response)));
+        const [secrets] = await secretmanagerClient.listSecrets(request);
+        if (secrets && Array.isArray(secrets)) {
+            for (const secret of secrets) {
+                jsonData.push(JSON.parse(jsonStringify(secret)));
+            }
         }
     } catch (e) {
         logger.debug(e);
@@ -594,17 +637,21 @@ export async function listSecrets(projectId: any): Promise<Array<any>|null> {
     return jsonData ?? null;
 }
 
-async function listConnectivityTests(projectId: any): Promise<Array<any>|null>  {
+async function listConnectivityTests(projectId: string, credentialsObject?: any): Promise<Array<any>|null>  {
     if(!currentConfig.ObjectNameNeed?.includes("connectivity_test")) return null;
     const {ReachabilityServiceClient} = require('@google-cloud/network-management');
     let jsonData = [];
 
     try {
-        const client = new ReachabilityServiceClient();
-        const tests = await client.listConnectivityTests({
+        const client = createClientWithCredentials(ReachabilityServiceClient, credentialsObject);
+        const [tests] = await client.listConnectivityTests({
             parent: `projects/${projectId}/locations/global`,
         });
-        jsonData = JSON.parse(jsonStringify(tests));
+        if (tests && Array.isArray(tests)) {
+            for (const test of tests) {
+                jsonData.push(JSON.parse(jsonStringify(test)));
+            }
+        }
     } catch (e) {
         logger.debug(e);
     }
@@ -612,18 +659,22 @@ async function listConnectivityTests(projectId: any): Promise<Array<any>|null>  
     return jsonData ?? null;
 }
 
-async function listResourceSettings(projectId: any): Promise<Array<any>|null> {
+async function listResourceSettings(projectId: string, credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("resource_settings")) return null;
     let jsonData = [];
 
     const { ResourceSettingsServiceClient } = require('@google-cloud/resource-settings');
 
     try {
-        const client = new ResourceSettingsServiceClient();
-        const settings = await client.listSettings({
+        const client = createClientWithCredentials(ResourceSettingsServiceClient, credentialsObject);
+        const [settings] = await client.listSettings({
             parent: `projects/${projectId}`,
         });
-        jsonData = JSON.parse(jsonStringify(settings));
+        if (settings && Array.isArray(settings)) {
+            for (const setting of settings) {
+                jsonData.push(JSON.parse(jsonStringify(setting)));
+            }
+        }
     } catch (e) {
         logger.debug(e);
     }
@@ -631,13 +682,13 @@ async function listResourceSettings(projectId: any): Promise<Array<any>|null> {
     return jsonData ?? null;
 }
 
-async function listRedisInstances(projectId: any, regionsList: Array<string>): Promise<Array<any>|null> {
+async function listRedisInstances(projectId: string, regionsList: Array<string>, credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("redis_instance")) return null;
     const {CloudRedisClient} = require('@google-cloud/redis');
     let jsonData = [];
 
     try {
-        const client = new CloudRedisClient();
+        const client = createClientWithCredentials(CloudRedisClient, credentialsObject);
         jsonData = await executeAllRegions(projectId, client.listInstances, client, regionsList, false);
     } catch (e) {
         logger.debug(e);
@@ -646,17 +697,21 @@ async function listRedisInstances(projectId: any, regionsList: Array<string>): P
     return jsonData ?? null;
 }
 
-async function listOSConfig(projectId: any): Promise<Array<any>|null> {
+async function listOSConfig(projectId: string, credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("os_config")) return null;
     const {OsConfigServiceClient} = require('@google-cloud/os-config');
     let jsonData = [];
 
     try {
-        const client = new OsConfigServiceClient();
+        const client = createClientWithCredentials(OsConfigServiceClient, credentialsObject);
         const [deployments] = await client.listPatchDeployments({
             parent: `projects/${projectId}`,
         });
-        jsonData = JSON.parse(jsonStringify(deployments));
+        if (deployments && Array.isArray(deployments)) {
+            for (const deployment of deployments) {
+                jsonData.push(JSON.parse(jsonStringify(deployment)));
+            }
+        }
     } catch (e) {
         logger.debug(e);
     }
@@ -664,17 +719,21 @@ async function listOSConfig(projectId: any): Promise<Array<any>|null> {
     return jsonData ?? null;
 }
 
-async function listOrgPolicyContraints(projectId: any): Promise<Array<any>|null> {
+async function listOrgPolicyContraints(projectId: string, credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("org_policy_constraint")) return null;
     const {OrgPolicyClient} = require('@google-cloud/org-policy');
     let jsonData = [];
 
     try {
-        const client = new OrgPolicyClient();
-        const constraints = await client.listConstraints({
+        const client = createClientWithCredentials(OrgPolicyClient, credentialsObject);
+        const [constraints] = await client.listConstraints({
             parent: `projects/${projectId}`,
         });
-        jsonData = JSON.parse(jsonStringify(constraints));
+        if (constraints && Array.isArray(constraints)) {
+            for (const constraint of constraints) {
+                jsonData.push(JSON.parse(jsonStringify(constraint)));
+            }
+        }
     } catch (e) {
         logger.debug(e);
     }
@@ -682,33 +741,35 @@ async function listOrgPolicyContraints(projectId: any): Promise<Array<any>|null>
     return jsonData ?? null;
 }
 
-async function listOrchestrationAirflow(projectId: any, regionsList: Array<string>): Promise<Array<any> | null> {
+async function listOrchestrationAirflow(projectId: string, regionsList: Array<string>, credentialsObject?: any): Promise<Array<any> | null> {
     if(!currentConfig.ObjectNameNeed?.includes("airflow_image_version")) return null;
     const {ImageVersionsClient} = require('@google-cloud/orchestration-airflow');
     let jsonData = [];
 
     try {
-        const client = new ImageVersionsClient();
+        const client = createClientWithCredentials(ImageVersionsClient, credentialsObject);
         jsonData = await executeAllRegions(projectId, client.listImageVersions, client, regionsList, false);
     } catch (e) {
         logger.debug(e);
     }
-    logger.info("GCP OrgPolicy Contraints Listing Done");
+    logger.info("GCP Airflow Image Versions Listing Done");
     return jsonData ?? null;
 }
 
-async function listNotebookInstances(projectId: any): Promise<Array<any> | null> {
+async function listNotebookInstances(projectId: string, credentialsObject?: any): Promise<Array<any> | null> {
     if(!currentConfig.ObjectNameNeed?.includes("notebook")) return null;
     const {NotebookServiceClient} = require('@google-cloud/notebooks');
     let jsonData = [];
 
     try {
-        const client = new NotebookServiceClient();
+        const client = createClientWithCredentials(NotebookServiceClient, credentialsObject);
         const [instances] = await client.listInstances({
             parent: `projects/${projectId}/locations/-`,
         });
-        for (const instance of instances) {
-            jsonData = JSON.parse(jsonStringify(instance));
+        if (instances && Array.isArray(instances)) {
+            for (const instance of instances) {
+                jsonData.push(JSON.parse(jsonStringify(instance)));
+            }
         }
     } catch (e) {
         logger.debug(e);
@@ -717,17 +778,19 @@ async function listNotebookInstances(projectId: any): Promise<Array<any> | null>
     return jsonData ?? null;
 }
 
-async function listDashboards(projectId: any): Promise<Array<any> | null> {
+async function listDashboards(projectId: string, credentialsObject?: any): Promise<Array<any> | null> {
     if(!currentConfig.ObjectNameNeed?.includes("dashboard")) return null;
     const { DashboardsServiceClient } = require('@google-cloud/monitoring-dashboards');
     const parent = 'projects/' + projectId;
     let jsonData = [];
 
     try {
-        const ds = new DashboardsServiceClient();
+        const ds = createClientWithCredentials(DashboardsServiceClient, credentialsObject);
         const [dashboards] = await ds.listDashboards({parent,});
-        for (const dashboard of dashboards) {
-            jsonData = JSON.parse(jsonStringify(dashboard));
+        if (dashboards && Array.isArray(dashboards)) {
+            for (const dashboard of dashboards) {
+                jsonData.push(JSON.parse(jsonStringify(dashboard)));
+            }
         }
     } catch (e) {
         logger.debug(e);
@@ -736,17 +799,21 @@ async function listDashboards(projectId: any): Promise<Array<any> | null> {
     return jsonData ?? null;
 }
 
-async function listIdentitiesDomain(projectId: any): Promise<Array<any> | null> {
+async function listIdentitiesDomain(projectId: string, credentialsObject?: any): Promise<Array<any> | null> {
     if(!currentConfig.ObjectNameNeed?.includes("identity_domain")) return null;
     const { ManagedIdentitiesServiceClient } = require('@google-cloud/managed-identities');
     let jsonData = [];
 
     try {
-        const client = new ManagedIdentitiesServiceClient();
-        const domains = await client.listDomains({
+        const client = createClientWithCredentials(ManagedIdentitiesServiceClient, credentialsObject);
+        const [domains] = await client.listDomains({
             parent: `projects/${projectId}/locations/global`,
         });
-        jsonData = JSON.parse(jsonStringify(domains));
+        if (domains && Array.isArray(domains)) {
+            for (const domain of domains) {
+                jsonData.push(JSON.parse(jsonStringify(domain)));
+            }
+        }
     } catch (e) {
         logger.debug(e)
     }
@@ -754,17 +821,19 @@ async function listIdentitiesDomain(projectId: any): Promise<Array<any> | null> 
     return jsonData ?? null;
 }
 
-async function listLineageProcesses(projectId: any): Promise<Array<any> | null> {
+async function listLineageProcesses(projectId: string, credentialsObject?: any): Promise<Array<any> | null> {
     const {LineageClient} = require('@google-cloud/lineage').v1;
     const parent = 'projects/' + projectId + '/locations/global';
     let jsonData = [];
 
     try {
-        const lineageClient = new LineageClient();
+        const lineageClient = createClientWithCredentials(LineageClient, credentialsObject);
         const request = {parent};
-        const iterable = await lineageClient.listProcessesAsync(request);
-        for await (const response of iterable) {
-            jsonData = JSON.parse(jsonStringify(response));
+        const [processes] = await lineageClient.listProcesses(request);
+        if (processes && Array.isArray(processes)) {
+            for (const process of processes) {
+                jsonData.push(JSON.parse(jsonStringify(process)));
+            }
         }
     } catch (e) {
         logger.debug(e);
@@ -773,20 +842,24 @@ async function listLineageProcesses(projectId: any): Promise<Array<any> | null> 
     return jsonData ?? null;
 }
 
-async function listKMSCryptoKeys(projectId: any): Promise<Array<any> | null> {
+async function listKMSCryptoKeys(projectId: string, credentialsObject?: any): Promise<Array<any> | null> {
     if(!currentConfig.ObjectNameNeed?.includes("kms_crypto_key")) return null;
     const {KeyDashboardServiceClient} = require('@google-cloud/kms-inventory').v1;
     let jsonData = [];
     const parent = 'projects/' + projectId;
 
     try {
-        const inventoryClient = new KeyDashboardServiceClient();
+        const inventoryClient = createClientWithCredentials(KeyDashboardServiceClient, credentialsObject);
         const request = {parent};
         const [response] = await inventoryClient.listCryptoKeys(request, {
             maxResults: 50,
             autoPaginate: false,
         });
-        jsonData = JSON.parse(jsonStringify(response));
+        if (response && Array.isArray(response)) {
+            for (const key of response) {
+                jsonData.push(JSON.parse(jsonStringify(key)));
+            }
+        }
     } catch (e) {
         logger.debug(e);
     }
@@ -794,19 +867,21 @@ async function listKMSCryptoKeys(projectId: any): Promise<Array<any> | null> {
     return jsonData ?? null;
 }
 
-async function listKMSKeyRings(projectId: any): Promise<Array<any> | null> {
+async function listKMSKeyRings(projectId: string, credentialsObject?: any): Promise<Array<any> | null> {
     if(!currentConfig.ObjectNameNeed?.includes("kms_key_ring")) return null;
     const {KeyManagementServiceClient} = require('@google-cloud/kms');
     let jsonData = [];
 
     try {
-        const client = new KeyManagementServiceClient();
+        const client = createClientWithCredentials(KeyManagementServiceClient, credentialsObject);
         const locationName = client.locationPath(projectId, "global");
         const [keyRings] = await client.listKeyRings({
             parent: locationName
         });
-        for (const keyRing of keyRings) {
-            jsonData = JSON.parse(jsonStringify(keyRing));
+        if (keyRings && Array.isArray(keyRings)) {
+            for (const keyRing of keyRings) {
+                jsonData.push(JSON.parse(jsonStringify(keyRing)));
+            }
         }
     } catch (e) {
         logger.debug(e);
@@ -815,34 +890,42 @@ async function listKMSKeyRings(projectId: any): Promise<Array<any> | null> {
     return jsonData ?? null;
 }
 
-async function listDomainsRegistration(projectId: any): Promise<Array<any> | null> {
+async function listDomainsRegistration(projectId: string, credentialsObject?: any): Promise<Array<any> | null> {
     if(!currentConfig.ObjectNameNeed?.includes("domain_registration")) return null;
     const {DomainsClient} = require('@google-cloud/domains');
     let jsonData = [];
 
     try {
-        const client = new DomainsClient();
+        const client = createClientWithCredentials(DomainsClient, credentialsObject);
         const [registrations] = await client.listRegistrations({
             parent: `projects/${projectId}/locations/global`,
         });
-        jsonData = JSON.parse(jsonStringify(registrations));
+        if (registrations && Array.isArray(registrations)) {
+            for (const registration of registrations) {
+                jsonData.push(JSON.parse(jsonStringify(registration)));
+            }
+        }
     } catch (e) {
         logger.debug(e);
     }
-    logger.info("GCP Domains Resgitration Listing Done");
+    logger.info("GCP Domains Registration Listing Done");
     return jsonData ?? null;
 }
 
-async function listDnsZones(projectId: any): Promise<Array<any> | null> {
+async function listDnsZones(credentialsObject?: any): Promise<Array<any> | null> {
     if(!currentConfig.ObjectNameNeed?.includes("dns_zone")) return null;
     const {DNS} = require('@google-cloud/dns');
     let jsonData = [];
 
     try {
-        const dns = new DNS();
+        const dns = credentialsObject ?
+            new DNS({ credentials: credentialsObject, projectId: credentialsObject.project_id }) :
+            new DNS();
         const [zones] = await dns.getZones();
-        for (const zone of zones) {
-            jsonData = JSON.parse(jsonStringify(zone));
+        if (zones && Array.isArray(zones)) {
+            for (const zone of zones) {
+                jsonData.push(JSON.parse(jsonStringify(zone)));
+            }
         }
     } catch (e) {
         logger.debug(e);
@@ -851,14 +934,14 @@ async function listDnsZones(projectId: any): Promise<Array<any> | null> {
     return jsonData ?? null;
 }
 
-async function listDeliveryPipelines(projectId: any, regionsList: Array<string>): Promise<Array<any> | null> {
+async function listDeliveryPipelines(projectId: string, regionsList: Array<string>, credentialsObject?: any): Promise<Array<any> | null> {
     if(!currentConfig.ObjectNameNeed?.includes("pipeline")) return null;
     const {CloudDeployClient} = require('@google-cloud/deploy').v1;
     let jsonData = [];
 
     try {
-        const deployClient = new CloudDeployClient();
-        jsonData = await executeAllRegions(projectId, deployClient.listDeliveryPipelinesAsync, deployClient, regionsList, true);
+        const deployClient = createClientWithCredentials(CloudDeployClient, credentialsObject);
+        jsonData = await executeAllRegions(projectId, deployClient.listDeliveryPipelines, deployClient, regionsList, false);
     } catch (e) {
         logger.debug(e);
     }
@@ -866,18 +949,20 @@ async function listDeliveryPipelines(projectId: any, regionsList: Array<string>)
     return jsonData ?? null;
 }
 
-async function listCertificates(projectId: any): Promise<Array<any> | null> {
+async function listCertificates(projectId: string, credentialsObject?: any): Promise<Array<any> | null> {
     if(!currentConfig.ObjectNameNeed?.includes("certificate")) return null;
     const {CertificateManagerClient} = require('@google-cloud/certificate-manager').v1;
     let jsonData = [];
     const parent = 'projects/' + projectId + '/locations/global';
 
     try {
-        const certificatemanagerClient = new CertificateManagerClient();
+        const certificatemanagerClient = createClientWithCredentials(CertificateManagerClient, credentialsObject);
         const request = { parent };
-        const iterable = await certificatemanagerClient.listCertificatesAsync(request);
-        for await (const response of iterable) {
-            jsonData = JSON.parse(jsonStringify(response));
+        const [certificates] = await certificatemanagerClient.listCertificates(request);
+        if (certificates && Array.isArray(certificates)) {
+            for (const certificate of certificates) {
+                jsonData.push(JSON.parse(jsonStringify(certificate)));
+            }
         }
     } catch (e) {
         logger.debug(e);
@@ -886,14 +971,14 @@ async function listCertificates(projectId: any): Promise<Array<any> | null> {
     return jsonData ?? null;
 }
 
-async function listBatchJobs(projectId: any, regionsList: Array<string>): Promise<Array<any> | null> {
+async function listBatchJobs(projectId: string, regionsList: Array<string>, credentialsObject?: any): Promise<Array<any> | null> {
     if(!currentConfig.ObjectNameNeed?.includes("batch_job")) return null;
     let jsonData = [];
     const {BatchServiceClient} = require('@google-cloud/batch').v1;
 
     try {
-        const batchClient = new BatchServiceClient();
-        jsonData = await executeAllRegions(projectId, batchClient.listJobsAsync, batchClient, regionsList, true);
+        const batchClient = createClientWithCredentials(BatchServiceClient, credentialsObject);
+        jsonData = await executeAllRegions(projectId, batchClient.listJobs, batchClient, regionsList, false);
     } catch (e) {
         logger.debug(e);
     }
@@ -901,7 +986,7 @@ async function listBatchJobs(projectId: any, regionsList: Array<string>): Promis
     return jsonData ?? null;
 }
 
-async function listWorkloads(projectId: any): Promise<Array<any> | null> {
+async function listWorkloads(projectId: string, credentialsObject?: any): Promise<Array<any> | null> {
     if(!currentConfig.ObjectNameNeed?.includes("workload")) return null;
     const { AssuredWorkloadsServiceClient } = require('@google-cloud/assured-workloads');
     const {ProjectsClient} = require('@google-cloud/resource-manager').v3;
@@ -924,13 +1009,13 @@ async function listWorkloads(projectId: any): Promise<Array<any> | null> {
     return jsonData ?? null;
 }
 
-async function listArtifactsRepositories(projectId: any, regionsList: Array<string>): Promise<Array<any> | null> {
+async function listArtifactsRepositories(projectId: string, regionsList: Array<string>, credentialsObject?: any): Promise<Array<any> | null> {
     if(!currentConfig.ObjectNameNeed?.includes("artifact_repository")) return null;
     const {ArtifactRegistryClient} = require('@google-cloud/artifact-registry');
     let jsonData = [];
 
     try {
-        const client = new ArtifactRegistryClient();
+        const client = createClientWithCredentials(ArtifactRegistryClient, credentialsObject);
         jsonData = await executeAllRegions(projectId, client.listRepositories, client, regionsList, false);
     } catch (e) {
         logger.debug(e);
@@ -939,14 +1024,14 @@ async function listArtifactsRepositories(projectId: any, regionsList: Array<stri
     return jsonData ?? null;
 }
 
-async function listAppGateways(projectId: any, regionsList: Array<string>): Promise<Array<any> | null> {
+async function listAppGateways(projectId: string, regionsList: Array<string>, credentialsObject?: any): Promise<Array<any> | null> {
     if(!currentConfig.ObjectNameNeed?.includes("app_gateway")) return null;
     const {AppGatewaysServiceClient} = require('@google-cloud/appgateways').v1;
     let jsonData = [];
 
     try {
-        const appgatewaysClient = new AppGatewaysServiceClient();
-        jsonData = await executeAllRegions(projectId, appgatewaysClient.listAppGatewaysAsync, appgatewaysClient, regionsList, true);
+        const appgatewaysClient = createClientWithCredentials(AppGatewaysServiceClient, credentialsObject);
+        jsonData = await executeAllRegions(projectId, appgatewaysClient.listAppGateways, appgatewaysClient, regionsList, false);
     } catch (e) {
         logger.debug(e);
     }
@@ -954,16 +1039,20 @@ async function listAppGateways(projectId: any, regionsList: Array<string>): Prom
     return jsonData ?? null;
 }
 
-async function listTagsKeys(projectId: any, regionsList: Array<string>): Promise<Array<any> | null> {
+async function listTagsKeys(projectId: string, regionsList: Array<string>, credentialsObject?: any): Promise<Array<any> | null> {
     if(!currentConfig.ObjectNameNeed?.includes("tags_keys")) return null;
     const {TagKeysClient, TagValuesClient} = require('@google-cloud/resource-manager').v3;
     let jsonData = [];
 
     try {
-        const tagsKeyClient = new TagKeysClient();
-        const tagsValueClient = new TagValuesClient();
-        const rep = await tagsValueClient.listTagValues();
-        jsonData = JSON.parse(jsonStringify(rep));
+        const tagsKeyClient = createClientWithCredentials(TagKeysClient, credentialsObject);
+        const tagsValueClient = createClientWithCredentials(TagValuesClient, credentialsObject);
+        const [tagValues] = await tagsValueClient.listTagValues();
+        if (tagValues && Array.isArray(tagValues)) {
+            for (const tagValue of tagValues) {
+                jsonData.push(JSON.parse(jsonStringify(tagValue)));
+            }
+        }
     } catch (e) {
         logger.debug(e);
     }
@@ -974,7 +1063,7 @@ async function listTagsKeys(projectId: any, regionsList: Array<string>): Promise
 /// THE FOLLOWINGS RESOURCES HAVE NOT BEEN TESTED YET ///
 /////////////////////////////////////////////////////////
 /*
-async function listAppConnectors(projectId: any): Promise<Array<any> | null> {
+async function listAppConnectors(projectId: string): Promise<Array<any> | null> {
     if(!currentConfig.ObjectNameNeed?.includes("app_connector")) return null;
     const {AppConnectorsServiceClient} = require('@google-cloud/appconnectors').v1;
     const parent = 'projects/' + projectId + '/locations/global';
@@ -983,9 +1072,11 @@ async function listAppConnectors(projectId: any): Promise<Array<any> | null> {
     try {
         const appconnectorsClient = new AppConnectorsServiceClient();
         const request = {parent};
-        const iterable = await appconnectorsClient.listAppConnectorsAsync(request);
-        for await (const response of iterable) {
-            jsonData = JSON.parse(jsonStringify(response));
+        const [connectors] = await appconnectorsClient.listAppConnectors(request);
+        if (connectors && Array.isArray(connectors)) {
+            for (const connector of connectors) {
+                jsonData.push(JSON.parse(jsonStringify(connector)));
+            }
         }
     } catch (e) {
         logger.error(e);
@@ -995,7 +1086,7 @@ async function listAppConnectors(projectId: any): Promise<Array<any> | null> {
 }
 */
 /*
-async function listApiKeys(projectId: any): Promise<Array<any> | null> {
+async function listApiKeys(projectId: string): Promise<Array<any> | null> {
     if(!currentConfig.ObjectNameNeed?.includes("api_key")) return null;
     const {ApiKeysClient} = require('@google-cloud/apikeys').v2;
     const parent = 'projects/' + projectId;
@@ -1004,9 +1095,11 @@ async function listApiKeys(projectId: any): Promise<Array<any> | null> {
     try {
         const apikeysClient = new ApiKeysClient();
         const request = { parent };
-        const iterable = await apikeysClient.listKeysAsync(request);
-        for await (const response of iterable) {
-            jsonData = JSON.parse(jsonStringify(response));
+        const [keys] = await apikeysClient.listKeys(request);
+        if (keys && Array.isArray(keys)) {
+            for (const key of keys) {
+                jsonData.push(JSON.parse(jsonStringify(key)));
+            }
         }
     } catch (e) {
         logger.error(e);
@@ -1015,7 +1108,7 @@ async function listApiKeys(projectId: any): Promise<Array<any> | null> {
     return jsonData ?? null;
 }*/
 /*
-async function listApi(projectId: any): Promise<Array<any> | null> {
+async function listApi(projectId: string): Promise<Array<any> | null> {
     if(!currentConfig.ObjectNameNeed?.includes("api")) return null;
     const {ApiGatewayServiceClient} = require('@google-cloud/api-gateway');
     let jsonData = [];
@@ -1025,8 +1118,10 @@ async function listApi(projectId: any): Promise<Array<any> | null> {
         const [apis] = await client.listApis({
             parent: `projects/${projectId}/locations/global`,
         });
-        for (const api of apis) {
-            jsonData = JSON.parse(jsonStringify(api));
+        if (apis && Array.isArray(apis)) {
+            for (const api of apis) {
+                jsonData.push(JSON.parse(jsonStringify(api)));
+            }
         }
     } catch (e) {
         logger.error(e);
@@ -1035,34 +1130,38 @@ async function listApi(projectId: any): Promise<Array<any> | null> {
     return jsonData ?? null;
 }*/
 /*
-async function listAccessPolicy(projectId: any): Promise<Array<any> | null> {
+async function listAccessPolicy(projectId: string): Promise<Array<any> | null> {
     if(!currentConfig.ObjectNameNeed?.includes("access_policy")) return null;
     const {AccessApprovalClient} = require('@google-cloud/access-approval');
     let jsonData = [];
 
     try {
         const client = new AccessApprovalClient();
-        const requests = await client.listApprovalRequests({
+        const [requests] = await client.listApprovalRequests({
             parent: `projects/${projectId}`,
         });
-        jsonData = JSON.parse(jsonStringify(requests));
+        if (requests && Array.isArray(requests)) {
+            for (const request of requests) {
+                jsonData.push(JSON.parse(jsonStringify(request)));
+            }
+        }
     } catch (e) {
         logger.error(e);
     }
-    logger.info("GCP Api Listing Done");
+    logger.info("GCP Access Policy Listing Done");
     return jsonData ?? null;
 }
 */
 
 // Workstations : timeout because no instance to be tested //
 /*
-async function listWorkstations(projectId: any, regionsList: Array<string>): Promise<Array<any>|null> { // KO
+async function listWorkstations(projectId: string, regionsList: Array<string>): Promise<Array<any>|null> { // KO
     if(!currentConfig.ObjectNameNeed?.includes("workstation")) return null;
     const {WorkstationsClient} = require('@google-cloud/workstations').v1;
     let jsonData;
     try {
         const workstationsClient = new WorkstationsClient();
-        jsonData = await executeAllRegions(projectId, workstationsClient.listWorkstationsAsync, workstationsClient, regionsList,true);
+        jsonData = await executeAllRegions(projectId, workstationsClient.listWorkstations, workstationsClient, regionsList,false);
     }
     catch (e) {
         logger.error(e);
@@ -1075,7 +1174,7 @@ async function listWorkstations(projectId: any, regionsList: Array<string>): Pro
 
 // Storage Config : Deadline/Timeout //
 /*
-async function listStorageConfig(projectId: any): Promise<Array<any>|null> {
+async function listStorageConfig(projectId: string): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("storage_config")) return null;
     const {StorageInsightsClient} = require('@google-cloud/storageinsights').v1;
     let jsonData = [];
@@ -1086,9 +1185,11 @@ async function listStorageConfig(projectId: any): Promise<Array<any>|null> {
         const request = {
             parent,
         };
-        const iterable = await storageinsightsClient.listReportConfigsAsync(request);
-        for await (const response of iterable) {
-            jsonData = JSON.parse(jsonStringify(response));
+        const [configs] = await storageinsightsClient.listReportConfigs(request);
+        if (configs && Array.isArray(configs)) {
+            for (const config of configs) {
+                jsonData.push(JSON.parse(jsonStringify(config)));
+            }
         }
     } catch (e) {
         logger.error(e);
@@ -1100,17 +1201,21 @@ async function listStorageConfig(projectId: any): Promise<Array<any>|null> {
 
 // Private CA : Timeout //
 /*
-async function listPrivateCertificates(projectId: any): Promise<Array<any>|null> {
+async function listPrivateCertificates(projectId: string): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("private_certificate")) return null;
     const {CertificateAuthorityServiceClient} = require('@google-cloud/security-private-ca');
     let jsonData = [];
 
     try {
         const client = new CertificateAuthorityServiceClient();
-        const res = await client.listCertificates({
+        const [certificates] = await client.listCertificates({
             parent: `projects/${projectId}/locations/-/caPools/-`,
         });
-        jsonData = JSON.parse(jsonStringify(res));
+        if (certificates && Array.isArray(certificates)) {
+            for (const certificate of certificates) {
+                jsonData.push(JSON.parse(jsonStringify(certificate)));
+            }
+        }
     } catch (e) {
         logger.error(e);
     }
