@@ -451,7 +451,6 @@ export function checkRules(rules:any[], resources:ProviderResource, alert: Alert
         context?.log("check rule:"+rule.name);
         logger.info("check rule:"+rule.name);
 
-        
         if(!configuration.hasOwnProperty(rule.cloudProvider)){
             logger.debug("cloud provider not found in config:"+rule.cloudProvider);
             return;
@@ -518,6 +517,7 @@ export function checkRules(rules:any[], resources:ProviderResource, alert: Alert
                 error: actionAfterCheckRule(rule, objectResources, alert, subResultScan),
             });
         }else{
+            logger.info("gatherered "+ objectResources.length + " resource(s) to be check with this rule.");
             objectResources.forEach((objectResource: any) => {
                 let subResultScan: SubResultScan[] = checkRule(rule.conditions, objectResource);
                 subResult.push({

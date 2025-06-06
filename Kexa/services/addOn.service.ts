@@ -53,6 +53,8 @@ export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResour
         throw new Error("addOnNeed configuration could not be loaded");
     }
 
+    if (!addOnNeed.addOn) addOnNeed.addOn = [];
+    if (!addOnNeed.objectNameNeed) addOnNeed.objectNameNeed = {};
     const files = fs.readdirSync(serviceAddOnPath);
     let results: any[] = [];
 
