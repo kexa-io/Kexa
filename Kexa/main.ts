@@ -187,7 +187,7 @@ async function main(retryLeft = -1) {
         await mainScan(settings, allScan, idScan.toString());
         logger.debug(`Processing global alerts for scan ${idScan}, found ${allScan.length} scan results`);
         retError = await GlobalAlert(settings, allScan);
-        if(retError && !generalConfig.checkInterval) {
+        if(retError && !generalConfig?.checkInterval) {
             logger.error("High level error found in scan, exiting Kexa");
             clearTimer(timer);
             break;
