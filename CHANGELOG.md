@@ -1,3 +1,16 @@
+## [2.0.8](https://github.com/kexa-io/Kexa/compare/v2.0.7...v2.0.8) (2025-06-10)
+
+
+### Bug Fixes
+
+* **continuous:** fix continuous run & clean exit ([66f6214](https://github.com/kexa-io/Kexa/commit/66f6214584f400fca90a4a0500acf8b45a696644))
+* **docs:** azure env names ([87c4361](https://github.com/kexa-io/Kexa/commit/87c4361bf25a7fb1a727d3a47d1afe3f07d90171))
+* **docs:** password managers ([1265068](https://github.com/kexa-io/Kexa/commit/1265068953222c0a94d25f18943696296a93f3a4))
+* **gcp:** fixed auth flow + pagination warn (mute & fix some) ([33d786d](https://github.com/kexa-io/Kexa/commit/33d786ddcb9017cfde7fe87e1aa7467710a56c32))
+* **keyvault:** azure regex for hypens ([58069fe](https://github.com/kexa-io/Kexa/commit/58069fed5d805a11c9537bc9caf4605c59aea142))
+* **logs:** add log number resources for rule ([ae94c5f](https://github.com/kexa-io/Kexa/commit/ae94c5fac92743744fde97111f823979b20a019a))
+* undefined err and azure rollback ([f909693](https://github.com/kexa-io/Kexa/commit/f909693774df6b1923356cf4e654b28d84dc40bc))
+
 # Changelog
 
 ## [v2.0.7] - 2025-06-05
