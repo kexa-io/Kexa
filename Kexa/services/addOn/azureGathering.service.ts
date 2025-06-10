@@ -1956,13 +1956,13 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
             logger.debug("prefix: " + prefix);
             let subscriptionId = await getConfigOrEnvVar(config, "SUBSCRIPTIONID", prefix);
             let azureClientId = await getConfigOrEnvVar(config, "AZURECLIENTID", prefix);
-            if(azureClientId) setEnvVar("AZURECLIENTID", azureClientId);
+            if(azureClientId) setEnvVar("AZURE_CLIENT_ID", azureClientId);
             else logger.warn(prefix + "AZURECLIENTID not found");
             let azureClientSecret = await getConfigOrEnvVar(config, "AZURECLIENTSECRET", prefix);
-            if(azureClientSecret) setEnvVar("AZURECLIENTSECRET", azureClientSecret);
+            if(azureClientSecret) setEnvVar("AZURE_CLIENT_SECRET", azureClientSecret);
             else logger.warn(prefix + "AZURECLIENTSECRET not found");
             let azureTenantId = await getConfigOrEnvVar(config, "AZURETENANTID", prefix);
-            if(azureTenantId) setEnvVar("AZURETENANTID", azureTenantId);
+            if(azureTenantId) setEnvVar("AZURE_TENANT_ID", azureTenantId);
             else logger.warn(prefix + "AZURETENANTID not found");
             let UAI = {}
             let useAzureIdentity = await getConfigOrEnvVar(config, "USERAZUREIDENTITYID", prefix);

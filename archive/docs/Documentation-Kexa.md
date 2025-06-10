@@ -639,9 +639,9 @@ Variables in your manager will be "simulated" as being present locally and will 
 
   ```bash
     AZUREKEYVAULTNAME=MyKeyVault
-    AZURE_CLIENT_ID=XXXXXXXXXXXX
-    AZURE_TENANT_ID=XXXXXXXXXXXX
-    AZURE_CLIENT_SECRET=XXXXXXXX
+    AZURECLIENTID=XXXXXXXXXXXX
+    AZURETENANTID=XXXXXXXXXXXX
+    AZURECLIENTSECRET=XXXXXXXX
   ```
 
   You can also use this combination with UAI (User Assigned Identities) recommended when using Kexa in an Azure function:

@@ -45,12 +45,15 @@ SMSAUTHTOKEN=your_auth_token
 
 ## Provider Authentication
 
+All provider credentials should be prefixed with a prefix, to know more check [providers documentation](../providers/README.md)
+
 ### Azure
 
 ```bash
-AZURECLIENTID=XXXXXXXXXXXX
-AZURETENANTID=XXXXXXXXXXXX
-AZURECLIENTSECRET=XXXXXXXX
+AZURE_CLIENT_ID=XXXXXXXXXXXX
+AZURE_TENANT_ID=XXXXXXXXXXXX
+AZURE_CLIENT_SECRET=XXXXXXXX
+SUBSCRIPTION_ID=XXXXXXx
 ```
 
 ### AWS
@@ -75,11 +78,17 @@ You can optionally use a Password/Vault Manager. The following variables must be
 ### Azure Key Vault
 
 ```bash
-AZURECLIENTID=XXXXXXXXXXXX
-AZURETENANTID=XXXXXXXXXXXX
-AZURECLIENTSECRET=XXXXXXXX
-SUBSCRIPTIONID=XXXXXXX
-AZUREKEYVAULTNAME=MyKeyVault # This one is optionnal, use it if you want to retrieve your secrets from azure keyvault
+AZURE_CLIENT_ID=XXXXXXXXXXXX
+AZURE_TENANT_ID=XXXXXXXXXXXX
+AZURE_CLIENT_SECRET=XXXXXXXX
+SUBSCRIPTION_ID=XXXXXXx
+AZUREKEYVAULTNAME=MyKeyVault
+```
+You can also use this combination with UAI (User Assigned Identities) recommended when using Kexa in an azure function:
+
+```bash
+AZUREKEYVAULTNAME=MyKeyVault
+USERAZUREIDENTITYID=XXXXXXXX
 ```
 
 ### AWS Secrets Manager
@@ -88,13 +97,6 @@ AZUREKEYVAULTNAME=MyKeyVault # This one is optionnal, use it if you want to retr
 AWS_ACCESS_KEY_ID=XXXXXXXXX
 AWS_SECRET_ACCESS_KEY=XXXXXXXXX
 AWS_SESSION_TOKEN=XXXXXXXXX # This one is optionnal, use it if you're using temporary credentials (IAM role)
-```
-
-### Google Secret Manager
-
-```bash
-GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account-key.json # or content of the json crendentials
-GOOGLE_PROJECT_ID=your-project-id
 ```
 
 ## Additional Configuration
