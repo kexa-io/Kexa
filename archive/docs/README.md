@@ -366,9 +366,9 @@ Then paste this command fill with your credential:
 
 ```shell
 docker run -v Absolute/Path/To/config:/app/config /
--e A_AZURE_CLIENT_ID= /
--e A_AZURE_TENANT_ID= /
--e A_AZURE_CLIENT_SECRET= /
+-e A_AZURECLIENTID= /
+-e A_AZURETENANTID= /
+-e A_AZURECLIENTSECRET= /
 -e A_SUBSCRIPTIONID= /
 innovtech/kexa
 ```
