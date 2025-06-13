@@ -109,6 +109,7 @@ export async function gatheringDistantRules(rulesOrigin:string, rulesDirectory:s
         await unzipFile(rulesDirectory);
         return true;
     }catch(err){
+        logger.info("Falling back to local rules");
         return false;
     }
 }
