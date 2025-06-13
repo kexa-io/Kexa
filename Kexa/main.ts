@@ -1,13 +1,12 @@
 import env from "dotenv";
 import { checkRules, gatheringRules } from "./services/analyse.service";
 import { alertGlobal } from "./services/alerte.service";
-import { AsciiArtText, renderTableAllScan, renderTableAllScanLoud, talkAboutOtherProject} from "./services/display.service";
+import { AsciiArtText, renderTableAllScan, renderTableAllScanLoud} from "./services/display.service";
 import { getEnvVar } from "./services/manageVarEnvironnement.service";
 import { loadAddOns } from "./services/addOn.service";
 import { deleteFile, createFileSync } from "./helpers/files";
 import {getContext, getNewLogger} from "./services/logger.service";
 import { Emails } from "./emails/emails";
-import { displayVersionAndLatest } from "./helpers/latestVersion";
 import { saveResult } from "./services/save.service";
 import { exportationData } from "./services/exportation.service";
 import { getConfig } from "./helpers/loaderConfig";
@@ -32,6 +31,9 @@ export async function mainScan(settings: SettingFile[], allScan: ResultScan[][],
     logger.info("___________________________________________________________________________________________________");
     logger.info("___________________________________-= running Kexa scan =-_________________________________________");
     logger.info("___________________________________________________________________________________________________");
+    if(idScan && parseInt(idScan) > 0) {
+        logger.debug(`Starting scan n°${idScan}, clearing states...`);
+    }
     let allPromises = [];
     if(settings.length != 0){
         let resources = await loadAddOns(settings);
@@ -48,15 +50,12 @@ export async function mainScan(settings: SettingFile[], allScan: ResultScan[][],
     }else {
         logger.error("No correct rules found, please check the rules directory or the rules files.");
     }
-
     deleteFile("./config/headers.json");
-    deleteFile("./config/addOnNeed.json");
     const delta = Date.now() - start.getTime();
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     logger.info("___________________________________________________________________________________________________"); 
     logger.info("_______________________________________-= End Kexa scan =-_________________________________________");
     logger.info("_".repeat(99-15-delta.toString().length)+"Scan done in "+delta+"ms");
-    talkAboutOtherProject();
     logger.debug(await getEnvVar("test"));
     context?.log(await getEnvVar("test"));
     return allScan;
@@ -93,22 +92,17 @@ const {
     clearTimeout: clearTimer
   } = require('node:timers');
 
-
-  import {alertFromGlobal} from "./services/alerte.service";
+import {alertFromGlobal} from "./services/alerte.service";
 import { Condition } from "@aws-sdk/client-forecast";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function main(retryLeft = -1) {
     const configuration = await getConfig();
-
     const generalConfig = (configuration.hasOwnProperty("general")) ? configuration["general"] : null;
     let context = getContext();
     context?.log("entering main");
     const logger = getNewLogger("MainLogger");
     context?.log("logger created");
-
-
-    
 
     if (process.env.DEV) {
         if (process.env.DEV == "true") {
@@ -117,32 +111,25 @@ async function main(retryLeft = -1) {
     }
 
     context?.log("logger configured");
-    try {
-        await displayVersionAndLatest(logger);
-    } catch (e) {
-        logger.error("Error getting latest version of Kexa (github.com)");
-    }
     AsciiArtText("Kexa");
     let idScan = 0;
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"https://github.com/kexa-io/public-rules");
-    let allScan: ResultScan[][] = [];
     let retError = false;
     let timer;
-    
 
     /* 3 default max retry when timeout happen in continuous run */
     const defaultMaxRetry = generalConfig?.checkInterval != null ? 3 : 0;
     if (retryLeft == -1)
         retryLeft = (generalConfig?.maxRetry != null && generalConfig?.checkInterval != null) ? generalConfig?.maxRetry : defaultMaxRetry;
 
-    while (1) { //(1){
+    while (1) {
+        let allScan: ResultScan[][] = [];
         /* 5 minutes default timeout */
         const defaultTimeout = 15;
         const minuteTimeout = 60 * 1000;
-       const timeout = minuteTimeout * (generalConfig?.timeout != null ? generalConfig?.timeout : defaultTimeout);
+        const timeout = minuteTimeout * (generalConfig?.timeout != null ? generalConfig?.timeout : defaultTimeout);
         timer = setTimer(() => {
             if (retryLeft == 0) {
-                allScan = [];
                 const timeoutError = {
                     value: "Enabled",
                     condition: [
@@ -171,33 +158,41 @@ async function main(retryLeft = -1) {
                         id: (generalConfig?.timeout != null ? objectContentCustom : objectContentDefault)
                     }
                 }
-                allScan.push([timeoutScan as ResultScan]);
+                allScan = [[timeoutScan as ResultScan]];
                 settings.forEach(setting => {
                     alertFromGlobal(setting.alert.global, [], allScan)
                 });
-                
                 process.exit(1);
-        
             } else {
                 retryLeft--;
                 logger.error("Timeout reached, retrying scan");
                 return (2);
             }
-          }, timeout);
+        }, timeout);
         if (timer == 2)
             continue;
         let startTimeStamp = Date.now();
-        await mainScan(settings, allScan, idScan.toString());
-        if(Memoisation.canSendGlobalAlert()){
-            logger.error("Global alert");
-            retError = await GlobalAlert(settings, allScan);
-            if(retError) {
-                logger.error("High level error found in scan, exiting Kexa");
-                clearTimer(timer);
-                break;
+        logger.info(`Starting scan iteration ${idScan}`);
+        try {
+            logger.debug(`Reloading settings for scan iteration ${idScan}`);
+            settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"https://github.com/kexa-io/public-rules");
+            logger.debug(`Settings reloaded for iteration ${idScan}, found ${settings.length} setting files`);
+        } catch (e) {
+            logger.error("Failed to reload settings:", e);
+            if (idScan === 0) {
+                throw e;
             }
-            allScan = [];
+            logger.warn("Using previous settings for this iteration");
         }
+        await mainScan(settings, allScan, idScan.toString());
+        logger.debug(`Processing global alerts for scan ${idScan}, found ${allScan.length} scan results`);
+        retError = await GlobalAlert(settings, allScan);
+        if(retError && !generalConfig?.checkInterval) {
+            logger.error("High level error found in scan, exiting Kexa");
+            clearTimer(timer);
+            break;
+        }
+        allScan = [];
         if (generalConfig?.checkInterval && (~~generalConfig.checkInterval > 0 || ~~generalConfig.checkInterval == -1)) {
             logger.info("Waiting for next scan in " + generalConfig.checkInterval + " seconds");
             clearTimer(timer);
@@ -208,8 +203,10 @@ async function main(retryLeft = -1) {
             break;
         }
         idScan++;
-    };
-   clearTimer(timer);
+    }
+    deleteFile("./config/addOnNeed.json");
+    clearTimer(timer);
+    exit(0);
 }
 
 main();

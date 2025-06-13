@@ -57,6 +57,7 @@ async function getEnvVarWithAzureKeyVault(name:string){
     if(useAzureIdentity) UAI = {managedIdentityClientId: useAzureIdentity};
     const credential = new DefaultAzureCredential(UAI);
     const client = new SecretClient(url, credential);
+    name = name.replace(/_/g, '-');
     return (await client.getSecret(name)).value;
 }
 
