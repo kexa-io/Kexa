@@ -106,9 +106,10 @@ You can set up scheduled runs using cron jobs:
 ### Debug Mode
 
 Enable debug mode for detailed logging:
+The level are from 0 to 9 ( verbose )
 
 ```bash
-DEBUG_MODE=true
+DEBUG_MODE=9
 ```
 
 ## Security Considerations

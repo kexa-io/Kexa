@@ -3,7 +3,7 @@ import {DebugEnum} from "../enum/debug.enum";
 import * as dotenv from 'dotenv';
 //import { Context } from "@azure/functions"
 //import { Logger } from "tslog"; // PsK: removing not bun compatible 21032025
-import pino from 'pino';
+import adze, { setup }  from 'adze';
 
 dotenv.config();
 const process = require('process');
@@ -19,15 +19,10 @@ export function getNewLogger(name: string) {
         else
             debug_mode = Number(DebugEnum[debug_var]);
     }
-    return pino({
-        level: 'info',
-        transport: {
-            target: 'pino-pretty',
-            options: {
-                colorize: true
-            }
-        }
+    setup({
+        activeLevel: debug_mode,
     });
+    return adze.timestamp.namespace('kexa').seal();
 }
 
 export function getContext(): Context | null {
