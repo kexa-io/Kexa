@@ -101,7 +101,8 @@ export async function gatheringDistantRules(rulesOrigin:string, rulesDirectory:s
         await unzipFile(rulesDirectory);
         return true;
     }catch(err){
-        logger.error("error in gatheringDistantRules:"+err);
+        logger.warn("error in gatheringDistantRules:"+err);
+        logger.warn("Falling back to local rules");
         return false;
     }
 }
