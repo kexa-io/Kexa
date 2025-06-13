@@ -1,3 +1,10 @@
+## [2.0.9](https://github.com/kexa-io/Kexa/compare/v2.0.8...v2.0.9) (2025-06-13)
+
+
+### Bug Fixes
+
+* **save:** init providerItem on Kexa save ([040a73b](https://github.com/kexa-io/Kexa/commit/040a73bd87a8d9f9f332056b6b03470a6500b8c8))
+
 # Changelog
 
 ## [v2.0.8] - 2025-06-10
