@@ -109,7 +109,7 @@
     - name: "http-TLS-version"
       description : "check TLS version is superior to 1.2"
       applied: true
-      level: 1
+      level: 3
       cloudProvider: http
       objectName : request
       conditions:

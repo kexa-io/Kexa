@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 //import { Logger } from "tslog"; // PsK: removing not bun compatible 21032025
-import pino from 'pino';
+import adze from 'adze';
 import { jsonStringify } from './jsonStringify';
-const logger = pino({level: 'info'});
+const logger = adze.timestamp.seal();
 
 export function writeStringToJsonFile(data: string, filePath: string): boolean {
     try {
