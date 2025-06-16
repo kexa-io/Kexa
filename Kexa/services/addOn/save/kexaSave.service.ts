@@ -53,12 +53,18 @@ async function compareResourcesWithApi(name: string, token: string, baseApiUrl: 
         const providerItemsFromApi = await axios.get(`${baseApiUrl}/kexa/providerItems`, {
             headers: requestHeaders
         });
-        if (!Array.isArray(providerItemsFromApi.data.message)) {
-            providerItemsFromApi.data.message = [];
+        
+        let itemsFromApi;
+ 
+       if (!Array.isArray(providerItemsFromApi.data.message)) {
+            itemsFromApi = [];
+        }
+        else {
+            itemsFromApi = providerItemsFromApi.data.message;
         }
         
         const existingItems = new Set();
-        providerItemsFromApi.data.message.forEach((item: any) => {
+        itemsFromApi.forEach((item: any) => {
             existingItems.add(`${item.providerName}:${item.name}`);
         });
 
