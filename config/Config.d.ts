@@ -21,8 +21,8 @@ declare module "node-config-ts" {
   }
   interface Azure {
     description: string
-    prefix: string
     rules: string[]
+    name: string
   }
   export const config: Config
   export type Config = IConfig

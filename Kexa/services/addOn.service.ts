@@ -53,6 +53,8 @@ export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResour
         throw new Error("addOnNeed configuration could not be loaded");
     }
 
+    if (!addOnNeed.addOn) addOnNeed.addOn = [];
+    if (!addOnNeed.objectNameNeed) addOnNeed.objectNameNeed = {};
     const files = fs.readdirSync(serviceAddOnPath);
     let results: any[] = [];
 
@@ -104,14 +106,14 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): 
                 const module = await import(`./addOn/${file.replace(".ts", ".js")}`);
                 const { collectData } = module;
                 if (typeof collectData !== 'function') {
-                    console.error(`collectData is not a function in ${file}`);
+                    logger.error(`collectData is not a function in ${file}`);
                     return null;
                 }
                 
                 let start = Date.now();
                 const addOnConfig = (configuration.hasOwnProperty(nameAddOn)) ? configuration[nameAddOn] : null;
                 if (!addOnConfig) {
-                    console.log(`No configuration found for ${nameAddOn}, skipping data collection`);
+                    logger.info(`No configuration found for ${nameAddOn}, skipping data collection`);
                     return null;
                 }
 
@@ -139,18 +141,18 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): 
                 });
 
                 try {
-                    console.log(`Starting data collection for ${nameAddOn}`);
+                    logger.info(`Starting data collection for ${nameAddOn}`);
                     const data = await collectData(addOnConfig);                    
                     let delta = Date.now() - start;
                     context?.log(`AddOn ${nameAddOn} collect in ${delta}ms`);
                     logger.info(`AddOn ${nameAddOn} collect in ${delta}ms`);
                     return { key: nameAddOn, data: (checkIfDataIsProvider(data) ? data : null), delta };
                 } catch (error) {
-                    console.error(`Error during data collection for ${nameAddOn}:`, error);
+                    logger.error(`Error during data collection for ${nameAddOn}:`, error);
                     return null;
                 }
             } catch (error) {
-                console.error(`Error importing ${file}:`, error);
+                logger.error(`Error importing ${file}:`, error);
                 return null;
             }
         }

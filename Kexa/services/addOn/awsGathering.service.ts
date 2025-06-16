@@ -5515,18 +5515,15 @@ async function gatherAwsObject(credential: any, region:string, object: ClientRes
 										result[obj.toSend] = objToTest[obj.toSend];
 										results2.push(result);
 									} catch (e2) {
-										// DISPLAY THIS ERR ONLY IF ALL OBJ SENT FAILED
-										// ASYC PROBLEM HERE
-										// ASYC PROBLEM HERE
-										logger.warn("Cannot retrieve resource with unknown dependencies for " + retrievingFullName);
-										logger.debug(e2);
+			
+										logger.debug("Cannot retrieve resource with unknown dependencies for " + retrievingFullName);
 									}
 								});
 								promises.push(...objPromises);
 							}
 						}
 						if (validated == false) {
-							logger.warn("Cannot retrieve resource with unknown dependencies for " + retrievingFullName);
+							logger.debug("Cannot retrieve resource with unknown dependencies for " + retrievingFullName);
 						}
 						if (promises.length > 0) {
 							await Promise.all(promises);

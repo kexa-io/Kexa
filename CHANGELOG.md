@@ -1,3 +1,62 @@
+# Changelog
+
+## [v2.0.5] - 2025-05-27
+
+
+
+### Bug Fixes
+
+* changelog & no branche create ([b55aae8](https://github.com/kexa-io/Kexa/commit/b55aae879bc88c50a022acd1742eba40d877d720))
+
+## [2.0.4](https://github.com/kexa-io/Kexa/compare/v2.0.3...v2.0.4) (2025-05-27)
+
+
+### Bug Fixes
+
+* compress all docs images ([bdfbbb8](https://github.com/kexa-io/Kexa/commit/bdfbbb87487e17cd2ab3fda3ea8042fe3a148fab))
+* config + notif docs ([4e1c5e8](https://github.com/kexa-io/Kexa/commit/4e1c5e892ea622cc32a90d533c100b23507f76b6))
+* disable the function UpdateREADME for test job ([824ac50](https://github.com/kexa-io/Kexa/commit/824ac50661d48d7e5dad13c732b7b78a76a4f263))
+* Dockerfile ([59c7f85](https://github.com/kexa-io/Kexa/commit/59c7f85f58a79c5eb9cc9f31a402440181e4faaf))
+* docs deploy, getting-started, removed usage (redondant) ([01559fe](https://github.com/kexa-io/Kexa/commit/01559fe404622f482651f895d1e72addd04b7ec0))
+* save / export docs & base readme ([db67c9e](https://github.com/kexa-io/Kexa/commit/db67c9ede19b9f20c93710ccc0f51b66a7d8c514))
+* test new ci ([eb747e6](https://github.com/kexa-io/Kexa/commit/eb747e69e8948d8b8b45389559858cc0d27d0235))
+* update .gitignore ([6322d2c](https://github.com/kexa-io/Kexa/commit/6322d2ca40c7c4f1efcc4ee39261d0eb3dda7091))
+* update README ([d388477](https://github.com/kexa-io/Kexa/commit/d3884770183203480e6ee8232a30489b6175a274))
+* update sbom ([b5e5e01](https://github.com/kexa-io/Kexa/commit/b5e5e011eda1d1b024ca307580f95aa5956ca91e))
+
+## [2.0.3](https://github.com/kexa-io/Kexa/compare/v2.0.2...v2.0.3) (2025-05-14)
+
+
+### Bug Fixes
+
+* **cicd:** change git token to app secret ([1c69e76](https://github.com/kexa-io/Kexa/commit/1c69e76097eac22346bd2ce6a8734ee65478aa79))
+* retrieve project-trigger link (web interface) ([4c360a0](https://github.com/kexa-io/Kexa/commit/4c360a0a86169601a9bcfc3b5fd7fee66157d27b))
+
+## [2.0.2](https://github.com/kexa-io/Kexa/compare/v2.0.1...v2.0.2) (2025-05-02)
+
+
+### Bug Fixes
+
+* added api token to API loader services & enum ([88c53c6](https://github.com/kexa-io/Kexa/commit/88c53c6d224aaa1e7529655723be92e31de2a6b6))
+* remove ci/cd useless step + fix kexa save from SaaS ([0730c94](https://github.com/kexa-io/Kexa/commit/0730c94ef6c3f1df33e6b373174476b472130805))
+
+## [2.0.1](https://github.com/kexa-io/Kexa/compare/v2.0.0...v2.0.1) (2025-04-30)
+
+
+### Bug Fixes
+
+* bun lock file ([ebe21d0](https://github.com/kexa-io/Kexa/commit/ebe21d0251cedda36534cf745376817ae808080d))
+* fixed bunjs scripts ([da26b2d](https://github.com/kexa-io/Kexa/commit/da26b2d958882d4e4bb462cbc3b3d17d5b3920d8))
+* force env var for tests ([4e508db](https://github.com/kexa-io/Kexa/commit/4e508db29dff14982c049e212d646e66df62c1b7))
+* move out extractObjectBetween function that trigger update Capability ([6f258f8](https://github.com/kexa-io/Kexa/commit/6f258f8390ec9ec82500443a1e501bb20f3fe763))
+* no mocha timeout + import path + remove hardden runner ([3bffd30](https://github.com/kexa-io/Kexa/commit/3bffd30d5e0c56f79133adc01c7b8fe07ed79cbc))
+* push new ci, remove older + frozen-lockfile docker ([6056aab](https://github.com/kexa-io/Kexa/commit/6056aab365ffd141a9fc4ba6d98de113a590f8ff))
+* re-implement test & update script in bun ([aaf7829](https://github.com/kexa-io/Kexa/commit/aaf782973fad2ec8c045cc6bb047dfa581242969))
+* readme new EC2 objects + headers.json for tests ([371695c](https://github.com/kexa-io/Kexa/commit/371695cbb4c18a92cefcab4bc8b1e23b971f69bc))
+* remove old ci.yml ([3519a45](https://github.com/kexa-io/Kexa/commit/3519a4579e405eba174b3adeda229736061878c5))
+* **saas:** Fixed aws auth in cronicle + header & rules ([8263c26](https://github.com/kexa-io/Kexa/commit/8263c26ae3847cc74039463d451ae88c4f079e1a))
+* update cicd for bun ([2907140](https://github.com/kexa-io/Kexa/commit/2907140adb449ec835b39705af4ccc78ed50168a))
+
 ## [1.17.5](https://github.com/kexa-io/Kexa/compare/v1.17.4...v1.17.5) (2024-11-29)
 
 
