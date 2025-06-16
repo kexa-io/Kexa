@@ -8,6 +8,7 @@ import { deleteFile, createFileSync } from "./helpers/files";
 import {getContext, getNewLogger} from "./services/logger.service";
 import { Emails } from "./emails/emails";
 import { saveResult } from "./services/save.service";
+import { initOnly } from "./services/addOn/save/kexaSave.service";
 import { exportationData } from "./services/exportation.service";
 import { getConfig } from "./helpers/loaderConfig";
 import { jsonStringify } from "./helpers/jsonStringify";
@@ -94,6 +95,7 @@ const {
 
 import {alertFromGlobal} from "./services/alerte.service";
 import { Condition } from "@aws-sdk/client-forecast";
+import type { KexaSaveConfig } from "./models/export/kexa/config.model";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function main(retryLeft = -1) {
@@ -209,4 +211,14 @@ async function main(retryLeft = -1) {
     exit(0);
 }
 
-main();
+if (process.env.INIT_PREMIUM_MODE && process.env.INIT_PREMIUM_MODE == 'true') {
+    const configuration = await getConfig();
+    if (!configuration.hasOwnProperty("save") || !Array.isArray(configuration["save"])) {
+        console.error("Configuration does not contain 'save' array or it is not an array.");
+        exit(1);
+    }
+    const kexaSaveConfig = configuration["save"].find((item: any) => item.type === "kexa");
+    await initOnly(kexaSaveConfig);
+} else {
+    main();
+}
