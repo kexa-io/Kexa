@@ -137,15 +137,27 @@ async function getSaveModuleFromApi(){
     return saveModules;
 }
 
-export async function getConfigFromApi(){
+export async function getConfigFromApi(saveOnly: boolean = false){
     let name = process.env.KEXA_API_TOKEN_NAME;
     let token = process.env.KEXA_API_TOKEN;
-    let projects = [];
+    let saveModules = await getSaveModuleFromApi();
+    
+    if (saveOnly) {
+        const saveConfig = saveModules.map((module: any) => ({
+            type: module?.type,
+            name: module?.name ?? null,
+            token: module?.token ?? null,
+            description: module?.description,
+            urlName: module?.urlName ?? null,
+            isActive: module?.isActive
+        }));
+        return { save: saveConfig };
+    }
 
+    let projects = [];
     if (!process.env.CRONICLE_TRIGGER_ID_FROM) {
         throw new Error('CRONICLE_TRIGGER_ID_FROM has not been received in the environment variables (should be sent from frontend)');
     }
-
     try {
         const response = await axios.get(process.env.KEXA_API_URL + '/kexa/projectsByTrigger/' + process.env.CRONICLE_TRIGGER_ID_FROM, 
             {
@@ -158,13 +170,12 @@ export async function getConfigFromApi(){
     } catch (error) {
         console.error(error);
     }
+    
     const groupedProjects = projects.reduce((acc: any, project: any) => {
         const providerName = project.provider.name;
-      
         if (!acc[providerName]) {
           acc[providerName] = [];
         }
-      
         acc[providerName].push({
           description: project.description,
           prefix: project.prefix.prefix + '_',
@@ -172,13 +183,9 @@ export async function getConfigFromApi(){
           notificationGroups: project.notificationGroups,
           ID: project.ID,
         });
-      
         return acc;
       }, {});
-
-      
     projects = groupedProjects;
-    let saveModules = await getSaveModuleFromApi();
     addSaveModuleToConfig(projects, saveModules);
     return projects;
 }
