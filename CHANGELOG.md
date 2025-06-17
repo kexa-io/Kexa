@@ -1,3 +1,10 @@
+## [2.1.1](https://github.com/kexa-io/Kexa/compare/v2.1.0...v2.1.1) (2025-06-17)
+
+
+### Bug Fixes
+
+* **config:** get only save from api for sync ([34bfc68](https://github.com/kexa-io/Kexa/commit/34bfc686ace576e704d1ba57e03562e1eefa56ca))
+
 # Changelog
 
 ## [v2.1.0] - 2025-06-17
