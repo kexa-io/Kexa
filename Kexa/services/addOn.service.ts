@@ -9,6 +9,9 @@ import { SettingFile } from "../models/settingFile/settingFile.models";
 import { getConfig } from "../helpers/loaderConfig";
 import { jsonStringify } from "../helpers/jsonStringify";
 import  {formatProviderNeededData} from "./api/formatterApi.service";
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// test import static for cli 
+//import "./addOn/display/awsDisplay.service.ts" with { type: "file" };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // variable section
