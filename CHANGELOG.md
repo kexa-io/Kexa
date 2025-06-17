@@ -1,3 +1,17 @@
+# [2.1.0](https://github.com/kexa-io/Kexa/compare/v2.0.9...v2.1.0) (2025-06-17)
+
+
+### Bug Fixes
+
+* **main:** exit -1 on failure ([13158dc](https://github.com/kexa-io/Kexa/commit/13158dc4ba1aa73a8c6f288ede6907389c81873e))
+* new save svc ([c879bf0](https://github.com/kexa-io/Kexa/commit/c879bf0300b03f8583ccb949d482dd8b8c537704))
+* **save:** fix no return list ([cfa7d16](https://github.com/kexa-io/Kexa/commit/cfa7d16af37a8ffca867b39f28f716108def9e44))
+
+
+### Features
+
+* **save:** init for premium ([ddc8ae6](https://github.com/kexa-io/Kexa/commit/ddc8ae682e361504e631c9476a4d28abb2854e17))
+
 # Changelog
 
 ## [v2.0.9] - 2025-06-13
