@@ -23,10 +23,11 @@ To know more about environment variables, refer to [Environment Variables](../co
 4. Adjust scan parameters
 
 ### Debug Mode
+The level are from 0 to 9 ( verbose )
 
 ```bash
 # Choose debug level
-DEBUG_MODE=INFO # info warn error fatal
+DEBUG_MODE=9 # info warn error fatal
 ```
 
 ## Next Steps

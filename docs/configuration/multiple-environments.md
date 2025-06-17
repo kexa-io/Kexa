@@ -36,9 +36,10 @@ bun run Kexa/main.ts
 ```
 
 ### 3. Debugging
+The level are from 0 to 9 ( verbose )
 
 ```bash
-DEBUG_MODE=INFO
+DEBUG_MODE=9
 ```
 
 ## Next Steps
