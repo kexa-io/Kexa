@@ -22,7 +22,8 @@ RULESAUTHORIZATION="Bearer github_pat_XXXXXXXXXXXXXXXXXXXXXXXX" # Optional
 OUTPUT=./output
 
 # Enable verbose output when DEBUG_MODE is set
-DEBUG_MODE=1
+The level are from 0 to 9 ( verbose )
+DEBUG_MODE=6
 ```
 
 ### Email Configuration

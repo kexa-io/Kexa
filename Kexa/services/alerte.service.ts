@@ -301,15 +301,15 @@ export function alertLog(rule: Rules, conditions: SubResultScan[], objectResourc
         case LevelEnum.FATAL:
             if(fullDetail){
                 context?.log("critical name:"+rule.name);
-                logger.fatal("critical name:"+rule.name);
+                logger.alert("critical name:"+rule.name);
                 context?.log("critical description:"+rule?.description);
-                logger.fatal("critical description:"+rule?.description);
+                logger.alert("critical description:"+rule?.description);
                 context?.log(sentenceConditionLog(objectResource.id));
-                logger.fatal(sentenceConditionLog(objectResource.id));
+                logger.alert(sentenceConditionLog(objectResource.id));
             }
             logger.debug(getColorStringHandler(conditions));
             context?.log(propertyToSend(rule, objectResource, true));
-            logger.fatal(propertyToSend(rule, objectResource, true));
+            logger.alert(propertyToSend(rule, objectResource, true));
             break;
         default:
             warnLog(rule, conditions, objectResource);

@@ -7,9 +7,7 @@
       "rules": ["HTTPRules"],
       "METHOD": "GET",
       "URL": "https://www.kexa.io",
-      "body": {
-        "key": "Compliance, Security, Costs saving & Optimization"
-      }
+      "body": { }
     }
   ]
 }

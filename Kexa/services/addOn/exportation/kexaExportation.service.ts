@@ -14,8 +14,8 @@ export async function exportation(save: KexaSaveConfig, resources: ProviderResou
     if(!save.name) throw new Error("name is required");
     let name = (await getEnvVar(save.name))??save.name;
     let token = (await getEnvVar(save.token))??save.token;
-    logger.info(`Exportation to Kexa SaaS`);
-    context?.log(`Exportation to Kexa SaaS`);
+    logger.info(`Exportation to Kexa API`);
+    context?.log(`Exportation to Kexa API`);
     const config = await getConfig();
     let configSend:any = {};
     Object.keys(resources).forEach((providerName) => {
