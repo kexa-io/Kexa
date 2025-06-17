@@ -215,7 +215,7 @@ if (process.env.INIT_PREMIUM_MODE && process.env.INIT_PREMIUM_MODE == 'true') {
     const configuration = await getConfig(true);
     if (!configuration.hasOwnProperty("save") || !Array.isArray(configuration["save"])) {
         console.error("Configuration does not contain 'save' array or it is not an array.");
-        exit(1);
+        exit(-1);
     }
     const kexaSaveConfig = configuration["save"].find((item: any) => item.type === "kexa");
     await initOnly(kexaSaveConfig);
