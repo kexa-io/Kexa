@@ -1,3 +1,10 @@
+## [2.1.2](https://github.com/kexa-io/Kexa/compare/v2.1.1...v2.1.2) (2025-06-18)
+
+
+### Bug Fixes
+
+* **api-loader:** use boolean var ([6333835](https://github.com/kexa-io/Kexa/commit/633383592681995d7eb6cdbe9d4d59cae6fb0b25))
+
 # Changelog
 
 ## [v2.1.1] - 2025-06-17
