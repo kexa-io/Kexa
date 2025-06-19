@@ -41,7 +41,7 @@ To get those you'll first need your Kanban project.
 Jira project ID is what you see in parentheses when looking at your project name in the project list.
 
 <div align="center">
-  <img src="../../images/jira_projectid.png" alt="Logo" width="200">
+  <img src="../../images/jira_projectid.png" alt="Logo" width="200"/>
 </div>
 
 Jira domain is found in your URL when you're in your Jira project. (ex : yourname.atlassian.net)
@@ -49,7 +49,7 @@ Jira domain is found in your URL when you're in your Jira project. (ex : yournam
 To find the Jira issue type, go to 'parameter -> issues -> issue types' Then, when modifying an issue type, you will see the issue type id in the URL:
 
 <div align="center">
-  <img src="../../images/issue_typeid.png" alt="Logo" width="200">
+  <img src="../../images/issue_typeid.png" alt="Logo" width="200"/>
 </div>
 
 Here it is "10000" for the issue type i want to use.
@@ -74,7 +74,7 @@ JIRA_DOMAIN='xxxxxxxxxxxx.atlassian.net'
 Last thing to do is in your rule file, in the notification section, set Jira with the issue type, and if you want, an assignee id.
 
 <div align="center">
-  <img src="../../images/ruleconfigjira.png" alt="Logo" width="200">
+  <img src="../../images/ruleconfigjira.png" alt="Logo" width="200"/>
 </div>
 
 You're ready !
@@ -84,20 +84,20 @@ You're ready !
 Here is an example of a Kanban, additionally, by clicking on a alert, you will see all the resource informations for remediation.
 
 <div align="center">
-  <img src="../../images/jiraresults.png" alt="Logo" width="200">
+  <img src="../../images/jiraresults.png" alt="Logo" width="200"/>
 </div>
 <br/>
 
 Here is what you got by clicking on a global alert:
 
 <div align="center">
-  <img src="../../images/jiraresults_details_multiple.png" alt="Logo" width="200">
+  <img src="../../images/jiraresults_details_multiple.png" alt="Logo" width="200"/>
 </div>
 <br/>
 
 And on a single alert:
 
 <div align="center">
-  <img src="../../images/jiraresults_details_one.png" alt="Logo" width="200">
+  <img src="../../images/jiraresults_details_one.png" alt="Logo" width="200"/>
 </div>
 <br/>
