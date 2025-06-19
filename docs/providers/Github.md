@@ -1,10 +1,12 @@
 <div align="center">
     <a href="https://www.kexa.io/addOn/github">
-        <img src="../../images/github-logo.png" alt="Logo" width="200">
+        <img src="../../images/github-logo.png" alt="Logo" width="200"/>
     </a>
+</div>
 
 # GitHub addOn
 
+<div>
   <p align="center">
     Optimize your GitHub workflow easily with our brand new data collection addon, enabling you to analyze and make the most of your development data, for projects that perform better than ever.
     <br />

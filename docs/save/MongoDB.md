@@ -1,10 +1,12 @@
 <div align="center">
     <a href="https://www.kexa.io/">
-        <img src="../../images/MongoDB-Logo.png" alt="Logo" width="200">
+        <img src="../../images/MongoDB-Logo.png" alt="Logo" width="200"/>
     </a>
+</div>
 
 # MongoDB
 
+<div>
   <p align="center">
     MongoDB addon for Kexa save and export operations
     <br />

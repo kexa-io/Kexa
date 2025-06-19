@@ -1,10 +1,12 @@
 <div align="center">
     <a href="https://www.kexa.io/modules">
-        <img src="../../images/jira-logo.png" alt="Logo" width="200">
+        <img src="../../images/jira-logo.png" alt="Logo" width="200"/>
     </a>
+</div>
 
-# <h3 align="center">Jira</h3>
+<h3 align="center">Jira</h3>
 
+<div>
   <p align="center">
     <br />
     <a href="https://github.com/4urcloud/Kexa/issues">Report Bug</a>

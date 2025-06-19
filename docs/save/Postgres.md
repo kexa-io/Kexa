@@ -1,10 +1,12 @@
 <div align="center">
     <a href="https://www.kexa.io/">
-        <img src="../../images/postgres.png" alt="Logo" width="200">
+        <img src="../../images/postgres.png" alt="Logo" width="200"/>
     </a>
+</div>
 
 # PostgreSQL
 
+<div>
   <p align="center">
     PostgreSQL addon for Kexa save and export operations
     <br />

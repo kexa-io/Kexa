@@ -1,10 +1,12 @@
 <div align="center">
     <a href="https://www.kexa.io/addOn/azure">
-        <img src="../../images/azure-logo.png" alt="Logo" width="200">
+        <img src="../../images/azure-logo.png" alt="Logo" width="200"/>
     </a>
+</div>
 
 # Azure addOn
 
+<div>
   <p align="center">
     Optimize your Azure experience with our new data scan add-on, simplifying the management and analysis of your critical information, for more informed decisions than ever.
     <br />

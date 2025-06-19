@@ -231,7 +231,7 @@ The use of a variable can vary, depending on whether you want to use it as a val
   ```
 
 - Use as a block:
-  You can insert the name of your variable preceded by "<<: *", anywhere you'd put a key.
+  You can insert the name of your variable preceded by "`<<: *`", anywhere you'd put a key.
   In this example, we variabilize the `applied` and `level` sections to define groups and their level of importance.
   Another possible example is the notifications section, to variabilize the recipients.
 

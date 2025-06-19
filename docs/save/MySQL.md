@@ -1,10 +1,12 @@
 <div align="center">
     <a href="https://www.kexa.io/">
-        <img src="../../images/MySQL-Logo.png" alt="Logo" width="200">
+        <img src="../../images/MySQL-Logo.png" alt="Logo" width="200"/>
     </a>
+</div>
 
 # MySQL
 
+<div>
   <p align="center">
     MySQL addon for Kexa save and export operations
     <br />
