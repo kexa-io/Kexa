@@ -1,10 +1,12 @@
 <div align="center">
     <a href="https://www.kexa.io/">
-        <img src="../../images/kexa-no-background-color.png" alt="Logo" width="200">
+        <img src="../../images/kexa-no-background-color.png" alt="Logo" width="200"/>
     </a>
+</div>
 
 # Kexa SaaS
 
+<div>
   <p align="center">
     Official Kexa SaaS platform for save and export operations
     <br />

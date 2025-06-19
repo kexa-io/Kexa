@@ -1,10 +1,12 @@
 <div align="center">
     <a href="https://www.kexa.io/addOn/azure">
-        <img src="../../images/https-logo.png" alt="Logo" width="200">
+        <img src="../../images/https-logo.png" alt="Logo" width="200"/>
     </a>
+</div>
 
 # HTTP(s) addOn
 
+<div>
   <p align="center">
     Ensure optimal service performance with our API endpoint data scan add-on, which gives you a real-time view of your systems' health, enabling you to maintain robust, uninterrupted online services.
     <br />

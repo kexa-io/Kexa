@@ -1,10 +1,12 @@
 <div align="center">
     <a href="https://www.kexa.io/addOn/aws">
-        <img src="../../images/aws-logo.png" alt="Logo" width="200">
+        <img src="../../images/aws-logo.png" alt="Logo" width="200"/>
     </a>
+</div>
 
 # AWS addOn
 
+<div>
   <p align="center">
     Strengthen the security of your AWS resources with our state-of-the-art data scan addon, guaranteeing complete protection of your sensitive data, enhanced compliance and unrivalled peace of mind in the cloud.
     <br />

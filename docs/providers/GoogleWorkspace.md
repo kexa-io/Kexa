@@ -1,10 +1,12 @@
 <div align="center">
     <a href="https://www.kexa.io/addOn/googleWorkspace">
-        <img src="../../images/workspace-icon.png" alt="Logo" width="200">
+        <img src="../../images/workspace-icon.png" alt="Logo" width="200"/>
     </a>
+</div>
 
 # Google Workspace addOn
 
+<div>
   <p align="center">
     Increase the security and compliance of your Google workspace with our state-of-the-art data scan add-on, offering proactive protection, comprehensive monitoring and seamless data management for confident communications and collaboration.
     <br />

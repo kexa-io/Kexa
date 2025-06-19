@@ -100,4 +100,4 @@ Kexa is an open-source cloud infrastructure compliance and security monitoring t
 
 - Website: [https://www.kexa.io](https://www.kexa.io)
 - GitHub: [https://github.com/kexa-io/Kexa](https://github.com/kexa-io/Kexa)
-- Email: <support@kexa.io>
+- Email: [contact@kexa.io](mailto:contact@kexa.io)
