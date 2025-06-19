@@ -4,30 +4,30 @@ Kexa supports integration with various cloud providers and services. This sectio
 
 ## Cloud Providers
 
-- [AWS](./aws.md) - Amazon Web Services
-- [Azure](./azure.md) - Microsoft Azure
-- [GCP](./gcp.md) - Google Cloud Platform
+- [AWS](./AWS.md) - Amazon Web Services
+- [Azure](./Azure.md) - Microsoft Azure
+- [GCP](./GCP.md) - Google Cloud Platform
 
 ## Version Control
 
-- [GitHub](./github.md) - GitHub repositories and organizations
+- [GitHub](./Github.md) - GitHub repositories and organizations
 
 ## Storage Services
 
-- [Google Drive](./google-drive.md) - Google Drive storage
-- [Google Workspace](./google-workspace.md) - Google Workspace services
+- [Google Drive](./GoogleDrive.md) - Google Drive storage
+- [Google Workspace](./GoogleWorkspace.md) - Google Workspace services
 
 ## APIs and Endpoints
 
-- [HTTP/HTTPS](./http.md) - Generic HTTP/HTTPS endpoints
+- [HTTP/HTTPS](./HTTP.md) - Generic HTTP/HTTPS endpoints
 
 ## Container Platforms
 
-- [Kubernetes](./kubernetes.md) - Kubernetes clusters
+- [Kubernetes](./Kubernetes.md) - Kubernetes clusters
 
 ## Office Services
 
-- [Microsoft/Office 365](./o365.md) - Microsoft Office 365 services
+- [Microsoft/Office 365](./O365.md) - Microsoft Office 365 services
 
 ## Provider Configuration
 
