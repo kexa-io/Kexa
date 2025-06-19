@@ -74,7 +74,7 @@ Log notifications are configured in your rules file alongside other notification
 When log notifications are enabled, you will see detailed alert messages in your console output:
 
 <div align="center">
-  <img src="../../images/readme_log_result.png" alt="Kexa Log Results" width="600">
+  <img src="../../images/readme_log_result.png" alt="Kexa Log Results" width="600"/>
 </div>
 
 The log output includes:

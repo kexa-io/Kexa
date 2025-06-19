@@ -89,5 +89,5 @@ You can also uncomment the '_- log_' lines, so you will be also alerted by logs 
 Here is an example of what you will receive in your Teams channel :
 
 <div align="center">
-  <img src="../../images/expected_teams.png" alt="Logo" width="200">
+  <img src="../../images/expected_teams.png" alt="Logo" width="200"/>
 </div>
