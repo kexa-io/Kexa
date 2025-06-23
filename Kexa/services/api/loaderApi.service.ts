@@ -9,8 +9,6 @@ const logger = getNewLogger("ApiLoaderLogger");
 export async function getSettingsFileFromApi(config: any){
     let notificationGroups = await getNotificationGroupsFromApi(config);
     let rules = await getRulesFromApi(notificationGroups);
-
-
     let settings = [];
 
     for (let i = 0; i < notificationGroups.length; i++) {
@@ -55,8 +53,7 @@ export async function getNotificationGroupsFromApi(config: any){
     let name = process.env.KEXA_API_TOKEN_NAME;
     let token = process.env.KEXA_API_TOKEN;
     let notificationGroups: any = [];
-
-
+    
     for (const key of Object.keys(config)) {
         if (key !== 'save') {
             await Promise.all(config[key].map(async (item: any) => {
@@ -87,7 +84,7 @@ export async function getRulesFromApi(notificationGroups: any){
     let token = process.env.KEXA_API_TOKEN;
     let rules: any = [];
 
-            for (let y = 0; y < notificationGroups.length; y++) {
+    for (let y = 0; y < notificationGroups.length; y++) {
                 try {
                     const response = await axios.get(process.env.KEXA_API_URL + `/kexa/groupRules/${notificationGroups[y].ID}`, 
                         {
@@ -159,6 +156,7 @@ export async function getConfigFromApi(saveOnly: boolean = false){
         throw new Error('CRONICLE_TRIGGER_ID_FROM has not been received in the environment variables (should be sent from frontend)');
     }
     try {
+
         const response = await axios.get(process.env.KEXA_API_URL + '/kexa/projectsByTrigger/' + process.env.CRONICLE_TRIGGER_ID_FROM, 
             {
                 headers: {
@@ -170,7 +168,7 @@ export async function getConfigFromApi(saveOnly: boolean = false){
     } catch (error) {
         console.error(error);
     }
-    
+
     const groupedProjects = projects.reduce((acc: any, project: any) => {
         const providerName = project.provider.name;
         if (!acc[providerName]) {
@@ -182,6 +180,10 @@ export async function getConfigFromApi(saveOnly: boolean = false){
           rules: project.rules,
           notificationGroups: project.notificationGroups,
           ID: project.ID,
+          URL: project.url ?? null,
+          METHOD: project.method ?? null,
+          body: project.body ?? null,
+          headers: project.headers ?? null 
         });
         return acc;
       }, {});
