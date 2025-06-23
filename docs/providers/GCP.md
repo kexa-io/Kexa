@@ -1,10 +1,12 @@
 <div align="center">
     <a href="https://www.kexa.io/addOn/gcp">
-        <img src="../../images/gcp-logo.png" alt="Logo" width="200">
+        <img src="../../images/gcp-logo.png" alt="Logo" width="200"/>
     </a>
+</div>
 
 # GCP addOn
 
+<div>
   <p align="center">
     Optimize the security of your assets on Google Cloud with our industry-leading data scan addon, offering advanced protection, complete visibility and foolproof compliance to ensure your data remains secure in the cloud.
     <br />

@@ -1,10 +1,12 @@
 <div align="center">
     <a href="https://www.kexa.io/addOn/helm">
-        <img src="../../images/helm-logo.svg" alt="Logo" width="300">
+        <img src="../../images/helm-logo.svg" alt="Logo" width="300"/>
     </a>
+</div>
 
 # Helm addOn
 
+<div>
   <p align="center">
     Take the security of your Helm environments to the next level with our data scan addon, monitoring of your charts.
     <br />
