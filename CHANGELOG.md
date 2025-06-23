@@ -1,3 +1,13 @@
+## [2.1.3](https://github.com/kexa-io/Kexa/compare/v2.1.2...v2.1.3) (2025-06-23)
+
+
+### Bug Fixes
+
+* **api-config:** add HTTP specific parameter ([f1cb4da](https://github.com/kexa-io/Kexa/commit/f1cb4da29f4266f6b5332e49b4f684cb68623708))
+* **docs:** case sensitive for docosaurus ([3d0cd12](https://github.com/kexa-io/Kexa/commit/3d0cd12390f4e2252e1b9a886645bf92fd8ba134))
+* **docs:** html for MDX + change contact email ([bb12bfa](https://github.com/kexa-io/Kexa/commit/bb12bfaaed315d0a2be7f8eec98ad24d6f06696c))
+* **docs:** image tag htlm end ([2c34be3](https://github.com/kexa-io/Kexa/commit/2c34be3c61cf8cc2c391ceeb15838f89e373394e))
+
 # Changelog
 
 ## [v2.1.2] - 2025-06-18
