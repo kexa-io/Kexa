@@ -110,7 +110,7 @@ Monitor Azure Machine Learning workspace health by checking for failed training 
 
 This will check the website <kexa.io> by default.
 
-see <https://github.com/kexa-io/kexa-samples> for samples.
+see [https://github.com/kexa-io/kexa-samples](https://github.com/kexa-io/kexa-samples) for samples.
 
 ## Installation Methods
 
