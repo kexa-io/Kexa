@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 # Kexa
 
 [![Contributors][contributors-shield]][contributors-url]
