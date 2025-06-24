@@ -1,3 +1,7 @@
+---
+sidebar_position: 9
+---
+
 # Contributor Code of Conduct
 
 Contributor Covenant Code of Conduct
