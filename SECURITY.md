@@ -1,3 +1,7 @@
+---
+sidebar_position: 12
+---
+
 # Security Policy
 
 ## Reporting a Security Issue
