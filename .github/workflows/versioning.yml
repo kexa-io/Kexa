@@ -152,9 +152,20 @@ jobs:
 
       - name: Push on Docker Registry
         uses: docker/build-push-action@v6
+        file: Dockerfile
         with:
           context: ./
           push: true
           tags: |
             ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa:${{ steps.get_latest_release.outputs.release }}
             ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa:latest
+
+      - name: Push on Docker Registry
+        uses: docker/build-push-action@v6
+        with:
+          context: ./
+          file: Dockerfile.amd
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa:${{ steps.get_latest_release.outputs.release }}
+            ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa:latest-amd64
