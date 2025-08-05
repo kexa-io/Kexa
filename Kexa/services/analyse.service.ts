@@ -396,12 +396,12 @@ export function checkSubRuleCondition(subRule:RulesConditions): string[] {
     if(!subRule.hasOwnProperty("value")) result.push("error - value not found in sub rule condition");
     //else if(typeof subRule.value !== "string" && typeof subRule.value !== "number" && !Array.isArray(subRule.value)) result.push("error - value not valid in sub rule condition : " + subRule.value);
     //else if(Array.isArray(subRule.value) && subRule.value.length === 0) result.push("error - value empty in sub rule condition");
-    //else if(Array.isArray(subRule.value)){
-    //    subRule.value.forEach((value) => {
-    //        checkRuleCondition(value).forEach((value) => result.push(value));
-    //    });
-    //}
-    
+    else if(Array.isArray(subRule.value)){
+        subRule.value.forEach((value) => {
+            checkRuleCondition(value).forEach((value) => result.push(value));
+        });
+    }
+
     return result;
 }
 
@@ -434,20 +434,17 @@ export function checkRules(rules:any[], resources:ProviderResource, alert: Alert
 
 
     rules.forEach(rule => {
-    
         if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
             let condObj;
             try {
-              condObj = typeof rule.conditions === 'string' ? 
-                JSON.parse(rule.conditions) : rule.conditions;
+                condObj = typeof rule.conditions === 'string' ?
+                    JSON.parse(rule.conditions) : rule.conditions;
             } catch (e) {
-              return;
+                return;
             }
-            const formatted = JSON.stringify(condObj, null, 2)
-              .replace(/"([^"]+)":/g, '$1:');
             rule.conditions = condObj;
             rule.cloudProvider = rule.cloudProvider.name as string;
-          }
+        }
         if(!rule.applied) return;
         context?.log("check rule:"+rule.name);
         logger.info("check rule:"+rule.name);
@@ -456,10 +453,9 @@ export function checkRules(rules:any[], resources:ProviderResource, alert: Alert
             logger.debug("cloud provider not found in config:"+rule.cloudProvider);
             return;
         }
-  
+
         let configAssign = configuration[rule.cloudProvider];
 
-        
         if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
             configAssign.forEach((config: any) => {
                 if (Array.isArray(config.notificationGroups)) {
@@ -471,24 +467,6 @@ export function checkRules(rules:any[], resources:ProviderResource, alert: Alert
                 }
             });
         }
-
-
-// NEEDED CONFIG ASSIGN
-// [
-//   {
-//     description: 'organization 4urcloud',
-//     prefix: 'KUBE1_',
-//     rules: [ 'kubernetesConsumptions', 'kubernetesStatus' ],
-//     ObjectNameNeed: [ 'podsConsumption' ]
-//   },
-//   {
-//     description: 'second proj kube',
-//     prefix: 'KUBE1_',
-//     rules: [ 'kubernetesStatus' ],
-//     ObjectNameNeed: []
-//   }
-// ]
-
 
         let objectResources:any = []
         for(let i = 0; i < configAssign.length; i++){
@@ -504,7 +482,7 @@ export function checkRules(rules:any[], resources:ProviderResource, alert: Alert
                     case BeHaviorEnum.CONTINUE:
                         continue;
                 }
-               objectResources = [...objectResources, ...resources[rule.cloudProvider][i][rule.objectName]]
+                objectResources = [...objectResources, ...resources[rule.cloudProvider][i][rule.objectName]]
             }
         }
         let subResult: ResultScan[] = [];

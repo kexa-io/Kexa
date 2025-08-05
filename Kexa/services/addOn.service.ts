@@ -18,10 +18,12 @@ const serviceAddOnPath = './' + mainFolder + '/services/addOn';
 import fs from 'fs'
 const logger = getNewLogger("LoaderAddOnLogger");
 const reservedNameAddOn=[
-    "export",
     "save",
     "variable",
     "general",
+    "imports",
+    "display",
+    "exportation"
 ]
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 async function init() {

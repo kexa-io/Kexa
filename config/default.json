@@ -9,5 +9,13 @@
       "URL": "https://www.kexa.io",
       "body": { }
     }
+  ],
+  "snowflake": [
+    {
+      "name": "check snowflake",
+      "prefix": "A-",
+      "description": "Second environment (1) : EndPoint B environment",
+      "rules": ["SnowflakeRules"]
+    }
   ]
 }

@@ -60,7 +60,7 @@ export function createFileSync(data:string, filePath:string, jsonData:boolean=fa
     }
 }
 
-function createFolderIfNotExists(filePath:string): boolean{
+export function createFolderIfNotExists(filePath:string): boolean{
     try{
         fs.mkdirSync(filePath, { recursive: true });
         logger.debug("Folder created: " + filePath);

@@ -1,4 +1,3 @@
-import { snowflake } from 'snowflake-sdk';
 /*
     * Provider : snowflake
     * Thumbnail : https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_1080,q_100,w_1080/v1/gcs/platform-data-snowflake/chapter_banners/User%20Groups%20Filler%20Icon_8kXP903.png
@@ -13,7 +12,6 @@ import { snowflake } from 'snowflake-sdk';
 */
 
 import snowflake from 'snowflake-sdk';
-import fs from 'fs';
 import env from "dotenv";
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { getNewLogger } from "../logger.service";
@@ -23,8 +21,6 @@ import { SnowflakeResources } from "../../models/snowflake/resource.models";
 env.config();
 
 const logger = getNewLogger("SnowflakeLogger");
-let currentConfig:SnowflakeConfig;
-let poolConnection;
 
 export async function collectData(snowflakeConfigs: SnowflakeConfig[]): Promise<SnowflakeResources[] | null> {
     const allResources = new Array<SnowflakeResources>();
@@ -32,38 +28,49 @@ export async function collectData(snowflakeConfigs: SnowflakeConfig[]): Promise<
     for (const config of snowflakeConfigs ?? []) {
         currentConfig = config;
         const account = await getConfigOrEnvVar(config, "SNOWFLAKE_ACCOUNT", config.prefix);
-        logger.info(`Starting data collection for Snowflake prefix: ${config.prefix}`);
+        logger.info(`Starting data collection for Snowflake account: ${account}`);
+        let resources: SnowflakeResources = {
+            warehouses: [],
+            queryHistory: [],
+            databases: [],
+            schemas: [],
+            tables: []
+        };
 
         try {
             // Establish the connection
             const connection = await createSnowflakeConnection(config);
-            logger.info(`Successfully connected to Snowflake prefix: ${config.prefix}`);
+            logger.info(`Successfully connected to Snowflake account: ${account}`);
 
             const primaryData = await collectPrimaryData(connection, config);
             resources.warehouses = primaryData.warehouses;
             resources.queryHistory = primaryData.queryHistory;
             resources.databases = primaryData.databases;
 
-            if (resources.databases.length > 0) {
-                const secondaryData = await collectSecondaryData(connection, config, resources.databases);
+            if ((resources.databases ?? []).length > 0) {
+                const secondaryData = await collectSecondaryData(connection, config, resources.databases ?? []);
                 resources.schemas = secondaryData.schemas;
                 resources.tables = secondaryData.tables;
             }
 
             allResources.push(resources);
-            logger.info(`Finished data snowflake collection for prefix: ${config.prefix}`);
+            logger.info(`Finished data snowflake collection for account: ${account}`);
 
-            connection.destroy((err) => {
-                if (err) {
-                    reject(new Error(`Failed to close connection: ${err.message}`));
-                } else {
-                    logger.info(`Connection closed for snowflake prefix: ${config.prefix}`);
-                    resolve();
-                }
+            await new Promise<void>((resolve, reject) => {
+                connection.destroy((err) => {
+                    if (err) {
+                        logger.error(`Failed to close connection: ${err.message}`);
+                        reject(new Error(`Failed to close connection: ${err.message}`));
+                    } else {
+                        logger.info(`Connection closed for snowflake account: ${account}`);
+                        resolve();
+                    }
+                });
             });
 
         } catch (e: any) {
-            logger.error(`An error occurred while processing snowflake prefix ${config.prefix}: ${e.message}`);
+            throw e;
+            logger.error(`An error occurred while processing snowflake account: ${account}: ${e.message}`);
         }
     }
     return allResources.length > 0 ? allResources : null;
@@ -81,20 +88,20 @@ async function collectPrimaryData(connection: snowflake.Connection, config: Snow
 }
 
 async function collectWarehouseData(connection: snowflake.Connection, config: SnowflakeConfig): Promise<any[]> {
-    if (!config.objectNameNeed?.includes("warehouses")) return [];
-    logger.info("Collecting warehouses...");
+    //if (!config.objectNameNeed?.includes("warehouses")) return [];
+    logger.debug("Collecting warehouses...");
     return await executeQuery(connection, "SHOW WAREHOUSES;");
 }
 
 async function collectDatabaseData(connection: snowflake.Connection, config: SnowflakeConfig): Promise<any[]> {
-    if (!config.objectNameNeed?.includes("databases")) return [];
-    logger.info("Collecting databases...");
+    //if (!config.objectNameNeed?.includes("databases")) return [];
+    logger.debug("Collecting databases...");
     return await executeQuery(connection, "SHOW DATABASES;");
 }
 
 async function queryHistoryData(connection: snowflake.Connection, config: SnowflakeConfig): Promise<any[]> {
-    if (!config.objectNameNeed?.includes("queryHistory")) return [];
-    logger.info("Collecting query history (last 7 days)...");
+    //if (!config.objectNameNeed?.includes("queryHistory")) return [];
+    logger.debug("Collecting query history (last 7 days)...");
     return await executeQuery(connection, `
         SELECT * FROM SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY
         WHERE START_TIME >= DATEADD(day, -7, CURRENT_TIMESTAMP())
@@ -116,15 +123,15 @@ async function processDatabase(connection: snowflake.Connection, config: Snowfla
     const collectedSchemas: any[] = [];
     const collectedTables: any[] = [];
 
-    logger.info(`Collecting schemas for database: ${dbName}`);
+    logger.debug(`Collecting schemas for database: ${dbName}`);
     const schemasInDb = await executeQuery(connection, `SHOW SCHEMAS IN DATABASE "${dbName}";`);
     schemasInDb.forEach(s => s.database_name = dbName);
 
-    if (config.objectNameNeed?.includes("schemas")) {
+    if (config.objectNameNeed?.includes("schemas") || true) {
         collectedSchemas.push(...schemasInDb);
     }
 
-    if (config.objectNameNeed?.includes("tables")) {
+    if (config.objectNameNeed?.includes("tables") || true) {
         const tablePromises = schemasInDb.map(schema => 
             collectTablesForSchema(connection, dbName, schema.name)
         );
@@ -136,7 +143,7 @@ async function processDatabase(connection: snowflake.Connection, config: Snowfla
 }
 
 async function collectTablesForSchema(connection: snowflake.Connection, dbName: string, schemaName: string): Promise<any[]> {
-    logger.info(`Collecting tables for schema: ${dbName}.${schemaName}`);
+    logger.debug(`Collecting tables for schema: ${dbName}.${schemaName}`);
     const tables = await executeQuery(connection, `SHOW TABLES IN SCHEMA "${dbName}"."${schemaName}";`);
 
     tables.forEach(t => {
@@ -150,6 +157,7 @@ async function createSnowflakeConnection(config: SnowflakeConfig): Promise<snowf
     const account = await getConfigOrEnvVar(config, "SNOWFLAKE_ACCOUNT", config.prefix);
     const username = await getConfigOrEnvVar(config, "SNOWFLAKE_USERNAME", config.prefix);
     const password = await getConfigOrEnvVar(config, "SNOWFLAKE_PASSWORD", config.prefix);
+    logger.debug(`Creating connection to Snowflake account: ${account}`);
     const connectionPool = snowflake.createPool({
         account: account,
         username: username,
@@ -160,6 +168,7 @@ async function createSnowflakeConnection(config: SnowflakeConfig): Promise<snowf
         min: 1,
         idleTimeoutMillis: 10000,
     });
+    logger.debug(`Connection pool created for Snowflake account: ${account}`);
     return connectionPool;
 }
 
@@ -172,7 +181,7 @@ async function executeQuery(connection: snowflake.Connection, query: string): Pr
                     logger.error(`Error executing query: ${err.message}`);
                     reject(err);
                 } else {
-                    resolve(rows);
+                    resolve(rows ?? []);
                 }
             }
         });

@@ -54,7 +54,7 @@ export async function mainScan(settings: SettingFile[], allScan: ResultScan[][],
     deleteFile("./config/headers.json");
     const delta = Date.now() - start.getTime();
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    logger.info("___________________________________________________________________________________________________"); 
+    logger.info("___________________________________________________________________________________________________");
     logger.info("_______________________________________-= End Kexa scan =-_________________________________________");
     logger.info("_".repeat(99-15-delta.toString().length)+"Scan done in "+delta+"ms");
     logger.debug(await getEnvVar("test"));
@@ -94,8 +94,6 @@ const {
   } = require('node:timers');
 
 import {alertFromGlobal} from "./services/alerte.service";
-import { Condition } from "@aws-sdk/client-forecast";
-import type { KexaSaveConfig } from "./models/export/kexa/config.model";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function main(retryLeft = -1) {
