@@ -157,6 +157,7 @@ async function createSnowflakeConnection(config: SnowflakeConfig): Promise<snowf
     const account = await getConfigOrEnvVar(config, "SNOWFLAKE_ACCOUNT", config.prefix);
     const username = await getConfigOrEnvVar(config, "SNOWFLAKE_USERNAME", config.prefix);
     const password = await getConfigOrEnvVar(config, "SNOWFLAKE_PASSWORD", config.prefix);
+    // https://docs.snowflake.com/en/user-guide/programmatic-access-tokens#using-a-programmatic-access-token-as-a-password
     logger.debug(`Creating connection to Snowflake account: ${account}`);
     const connectionPool = snowflake.createPool({
         account: account,
