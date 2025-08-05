@@ -19,7 +19,7 @@ async function getFromApi(name:string, prefix:string) {
     try {
         return await getEnvVarFromApi(name, prefix);
     } catch(e) {
-        console.error("Error fetching variables from Kexa API");  
+        console.error("Error fetching variables from Kexa API");
     }
 }
 
