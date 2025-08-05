@@ -9,5 +9,15 @@
       "URL": "https://www.kexa.io",
       "body": { }
     }
-  ]
+  ],
+  "mysql": {
+    "name": "MySQL",
+    "prefix": "ENDPOINTB-",
+    "description": "Second environment (1) : EndPoint B environment",
+    "rules": ["MySQL"],
+    "HOST": "localhost",
+    "PORT": 7575,
+    "USER": "root",
+    "PASSWORD": "root"
+  }
 }
