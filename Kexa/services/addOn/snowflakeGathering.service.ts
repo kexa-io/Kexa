@@ -88,19 +88,19 @@ async function collectPrimaryData(connection: snowflake.Connection, config: Snow
 }
 
 async function collectWarehouseData(connection: snowflake.Connection, config: SnowflakeConfig): Promise<any[]> {
-    //if (!config.objectNameNeed?.includes("warehouses")) return [];
+    if (!config.ObjectNameNeed?.includes("warehouses")) return [];
     logger.debug("Collecting warehouses...");
     return await executeQuery(connection, "SHOW WAREHOUSES;");
 }
 
 async function collectDatabaseData(connection: snowflake.Connection, config: SnowflakeConfig): Promise<any[]> {
-    //if (!config.objectNameNeed?.includes("databases")) return [];
+    if (!config.ObjectNameNeed?.includes("databases")) return [];
     logger.debug("Collecting databases...");
     return await executeQuery(connection, "SHOW DATABASES;");
 }
 
 async function queryHistoryData(connection: snowflake.Connection, config: SnowflakeConfig): Promise<any[]> {
-    //if (!config.objectNameNeed?.includes("queryHistory")) return [];
+    if (!config.ObjectNameNeed?.includes("queryHistory")) return [];
     logger.debug("Collecting query history (last 7 days)...");
     return await executeQuery(connection, `
         SELECT * FROM SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY
@@ -127,11 +127,11 @@ async function processDatabase(connection: snowflake.Connection, config: Snowfla
     const schemasInDb = await executeQuery(connection, `SHOW SCHEMAS IN DATABASE "${dbName}";`);
     schemasInDb.forEach(s => s.database_name = dbName);
 
-    if (config.objectNameNeed?.includes("schemas") || true) {
+    if (config.ObjectNameNeed?.includes("schemas") || true) {
         collectedSchemas.push(...schemasInDb);
     }
 
-    if (config.objectNameNeed?.includes("tables") || true) {
+    if (config.ObjectNameNeed?.includes("tables") || true) {
         const tablePromises = schemasInDb.map(schema => 
             collectTablesForSchema(connection, dbName, schema.name)
         );
