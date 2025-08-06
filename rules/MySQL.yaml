@@ -55,7 +55,127 @@
       applied: true
       level: 0
       cloudProvider: mysql
-      objectName : request
+      objectName : users
+      conditions:
+        - operator : OR
+          criteria:
+            - property : .
+              condition : DIFFERENT
+              value : 200
+    - name: "mysql-query-response-time"
+      description : "check for slow query response time"
+      applied: true
+      level: 0
+      cloudProvider: mysql
+      objectName : databases
+      conditions:
+        - operator : OR
+          criteria:
+            - property : .
+              condition : DIFFERENT
+              value : 200
+    - name: "mysql-query-response-time"
+      description : "check for slow query response time"
+      applied: true
+      level: 0
+      cloudProvider: mysql
+      objectName : tables
+      conditions:
+        - operator : OR
+          criteria:
+            - property : .
+              condition : DIFFERENT
+              value : 200
+    - name: "mysql-query-response-time"
+      description : "check for slow query response time"
+      applied: true
+      level: 0
+      cloudProvider: mysql
+      objectName : grants
+      conditions:
+        - operator : OR
+          criteria:
+            - property : .
+              condition : DIFFERENT
+              value : 200
+    - name: "mysql-query-response-time"
+      description : "check for slow query response time"
+      applied: true
+      level: 0
+      cloudProvider: mysql
+      objectName : variables
+      conditions:
+        - operator : OR
+          criteria:
+            - property : .
+              condition : DIFFERENT
+              value : 200
+    - name: "mysql-query-response-time"
+      description : "check for slow query response time"
+      applied: true
+      level: 0
+      cloudProvider: mysql
+      objectName : status
+      conditions:
+        - operator : OR
+          criteria:
+            - property : .
+              condition : DIFFERENT
+              value : 200
+    - name: "mysql-query-response-time"
+      description : "check for slow query response time"
+      applied: true
+      level: 0
+      cloudProvider: mysql
+      objectName : engines
+      conditions:
+        - operator : OR
+          criteria:
+            - property : .
+              condition : DIFFERENT
+              value : 200
+    - name: "mysql-query-response-time"
+      description : "check for slow query response time"
+      applied: true
+      level: 0
+      cloudProvider: mysql
+      objectName : processlist
+      conditions:
+        - operator : OR
+          criteria:
+            - property : .
+              condition : DIFFERENT
+              value : 200
+    - name: "mysql-query-response-time"
+      description : "check for slow query response time"
+      applied: true
+      level: 0
+      cloudProvider: mysql
+      objectName : views
+      conditions:
+        - operator : OR
+          criteria:
+            - property : .
+              condition : DIFFERENT
+              value : 200
+    - name: "mysql-query-response-time"
+      description : "check for slow query response time"
+      applied: true
+      level: 0
+      cloudProvider: mysql
+      objectName : routines
+      conditions:
+        - operator : OR
+          criteria:
+            - property : .
+              condition : DIFFERENT
+              value : 200
+    - name: "mysql-query-response-time"
+      description : "check for slow query response time"
+      applied: true
+      level: 0
+      cloudProvider: mysql
+      objectName : triggers
       conditions:
         - operator : OR
           criteria:

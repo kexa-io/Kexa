@@ -6,11 +6,12 @@
     * Note :
     * Resources :
     *       - databases
-    *       - tables
     *       - users
     *       - grants
     *       - variables
     *       - status
+    *       - engines
+    *       - processlist
 */
 
 import mysql from 'mysql2/promise';
@@ -29,22 +30,20 @@ async function createMySqlConnection(config: MySqlConfig): Promise<mysql.Connect
     const host = await getConfigOrEnvVar(config, "MYSQL_HOST", config.prefix);
     const user = await getConfigOrEnvVar(config, "MYSQL_USER", config.prefix);
     const password = await getConfigOrEnvVar(config, "MYSQL_PASSWORD", config.prefix);
-    const database = await getConfigOrEnvVar(config, "MYSQL_DATABASE", config.prefix);
     const port = Number(await getConfigOrEnvVar(config, "MYSQL_PORT", config.prefix)) || 3306;
 
     if (!host || !user || !password) {
         throw new Error("MySQL login details (host, user, password) are required. Please check your configuration.");
     }
 
-    logger.info("Création de la connexion à MySQL...");
+    logger.debug("Attempting to connect to MySQL");
     const connection = await mysql.createConnection({
         host,
         user,
         password,
-        database,
-        port
+        port,
     });
-    logger.info("Connexion à MySQL établie avec succès.");
+    logger.debug("Connected to MySQL successfully");
     return connection;
 }
 
@@ -62,23 +61,44 @@ export async function collectData(mysqlConfigs: MySqlConfig[]): Promise<MySqlRes
 
             connection = await createMySqlConnection(config);
 
-            const users = await collectUsers(connection);
-            const databases = await collectDatabases(connection);
+            const dbList = await collectDatabases(connection);
+            const databaseNames = dbList.map(db => db.Database);
 
-            const [tables, grants, variables, status] = await Promise.all([
-                collectTables(connection, databases.map(db => db.Database)),
-                collectGrants(connection, users),
+            const detailedDatabases = [];
+            for (const dbName of databaseNames) {
+                logger.info(`Collecting resources for database: ${dbName}`);
+                const [tables, views, routines, triggers] = await Promise.all([
+                    collectTablesAndDetailsForDB(connection, dbName),
+                    collectViewsForDB(connection, dbName),
+                    collectRoutinesForDB(connection, dbName),
+                    collectTriggersForDB(connection, dbName)
+                ]);
+                detailedDatabases.push({
+                    name: dbName,
+                    tables,
+                    views,
+                    routines,
+                    triggers
+                });
+            }
+
+            const [users, grants, variables, status, engines, processlist] = await Promise.all([
+                collectUsers(connection),
+                collectGrants(connection),
                 collectVariables(connection),
-                collectStatus(connection)
+                collectStatus(connection),
+                collectEngines(connection),
+                collectProcessList(connection)
             ]);
 
             allResources.push({
-                databases,
-                tables,
+                databases: detailedDatabases,
                 users,
                 grants,
                 variables,
                 status,
+                engines,
+                processlist,
             });
 
         } catch (e: any) {
@@ -106,40 +126,69 @@ async function executeQuery(connection: mysql.Connection, query: string): Promis
 
 async function collectDatabases(connection: mysql.Connection): Promise<any[]> {
     if (!currentConfig?.ObjectNameNeed?.includes("databases")) return [];
-    logger.info("Database collection...");
+    logger.info("Collecting database list...");
     return await executeQuery(connection, "SHOW DATABASES;");
 }
 
-async function collectTables(connection: mysql.Connection, databaseNames: string[]): Promise<any[]> {
+async function collectTablesAndDetailsForDB(connection: mysql.Connection, dbName: string): Promise<any[]> {
     if (!currentConfig?.ObjectNameNeed?.includes("tables")) return [];
-    logger.info("Table collection...");
-    const allTables: any[] = [];
-    for (const dbName of databaseNames) {
-        // if (['information_schema', 'mysql', 'performance_schema', 'sys'].includes(dbName)) continue;
+    logger.debug(`Collecting table details for database: ${dbName}`);
+    const allTablesDetails: any[] = [];
 
-        logger.info(`Collecting tables for database: ${dbName}`);
-        await connection.changeUser({ database: dbName });
-        const tables = await executeQuery(connection, "SHOW TABLES;");
-        tables.forEach(table => {
-            table.database = dbName;
+    await connection.changeUser({ database: dbName });
+    const tables = await executeQuery(connection, "SHOW FULL TABLES;");
+    const tableNames = tables.map(t => t[`Tables_in_${dbName}`]);
+
+    for (const tableName of tableNames) {
+        const [createResult, columns, indexes, sizeInfo] = await Promise.all([
+            executeQuery(connection, `SHOW CREATE TABLE \`${tableName}\`;`),
+            executeQuery(connection, `SHOW FULL COLUMNS FROM \`${tableName}\`;`),
+            executeQuery(connection, `SHOW INDEX FROM \`${tableName}\`;`),
+            executeQuery(connection, `SELECT * FROM information_schema.tables WHERE table_schema = '${dbName}' AND table_name = '${tableName}';`)
+        ]);
+
+        allTablesDetails.push({
+            tableName: tableName,
+            columns: columns,
+            indexes: indexes,
+            sizeInfo: sizeInfo[0] || {},
+            createStatement: createResult[0] ? createResult[0]['Create Table'] : ''
         });
-        allTables.push(...tables);
     }
-    return allTables;
+    return allTablesDetails;
+}
+
+async function collectViewsForDB(connection: mysql.Connection, dbName: string): Promise<any[]> {
+    if (!currentConfig?.ObjectNameNeed?.includes("views")) return [];
+    logger.debug(`Collecting views for database: ${dbName}`);
+    return await executeQuery(connection, `SELECT * FROM information_schema.views WHERE table_schema = '${dbName}';`);
+}
+
+async function collectRoutinesForDB(connection: mysql.Connection, dbName: string): Promise<any[]> {
+    if (!currentConfig?.ObjectNameNeed?.includes("routines")) return [];
+    logger.debug(`Collecting routines for database: ${dbName}`);
+    return await executeQuery(connection, `SHOW PROCEDURE STATUS WHERE db = '${dbName}';`);
+}
+
+async function collectTriggersForDB(connection: mysql.Connection, dbName: string): Promise<any[]> {
+    if (!currentConfig?.ObjectNameNeed?.includes("triggers")) return [];
+    logger.debug(`Collecting triggers for database: ${dbName}`);
+    return await executeQuery(connection, `select * from information_schema.triggers where information_schema.triggers.trigger_schema like '%${dbName}%';`);
 }
 
 async function collectUsers(connection: mysql.Connection): Promise<any[]> {
     if (!currentConfig?.ObjectNameNeed?.includes("users")) return [];
-    logger.info("User collection...");
+    logger.info("Collecting users...");
     return await executeQuery(connection, "SELECT User, Host FROM mysql.user;");
 }
 
-async function collectGrants(connection: mysql.Connection, users: any[]): Promise<any[]> {
+async function collectGrants(connection: mysql.Connection): Promise<any[]> {
     if (!currentConfig?.ObjectNameNeed?.includes("grants")) return [];
-    logger.info("Grant collection...");
+    logger.info("Collecting grants for users...");
+    const users = await collectUsers(connection);
     const allGrants: any[] = [];
     for (const user of users) {
-        const grants = await executeQuery(connection, `SHOW GRANTS FOR '${user.User}'@'${user.Host}';`);
+        const grants = await executeQuery(connection, `SHOW GRANTS FOR \`${user.User}\`@\`${user.Host}\`;`);
         grants.forEach(grant => {
             grant.user = user.User;
             grant.host = user.Host;
@@ -152,11 +201,23 @@ async function collectGrants(connection: mysql.Connection, users: any[]): Promis
 async function collectVariables(connection: mysql.Connection): Promise<any[]> {
     if (!currentConfig?.ObjectNameNeed?.includes("variables")) return [];
     logger.info("Collecting server variables...");
-    return await executeQuery(connection, "SHOW VARIABLES;");
+    return await executeQuery(connection, "SHOW GLOBAL VARIABLES;");
 }
 
 async function collectStatus(connection: mysql.Connection): Promise<any[]> {
     if (!currentConfig?.ObjectNameNeed?.includes("status")) return [];
     logger.info("Collecting server global status...");
     return await executeQuery(connection, "SHOW GLOBAL STATUS;");
+}
+
+async function collectEngines(connection: mysql.Connection): Promise<any[]> {
+    if (!currentConfig?.ObjectNameNeed?.includes("engines")) return [];
+    logger.info("Collecting storage engines...");
+    return await executeQuery(connection, "SHOW ENGINES;");
+}
+
+async function collectProcessList(connection: mysql.Connection): Promise<any[]> {
+    if (!currentConfig?.ObjectNameNeed?.includes("processlist")) return [];
+    logger.info("Collecting process list...");
+    return await executeQuery(connection, "SHOW FULL PROCESSLIST;");
 }

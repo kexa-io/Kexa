@@ -1,10 +1,10 @@
-import { ResultScan, SubResultScan } from "../models/resultScan.models"
-import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models"
-import { Rules } from "../models/settingFile/rules.models"
+import type { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
+import type { Rules } from "../models/settingFile/rules.models";
 const levelAlert = ["info", "warning", "error", "critical"];
 
+const actualYear = new Date().getFullYear();
 export const Emails = {
-    OneAlert : (receiver:string, rule: Rules, identification:string, color: string= "#4f5660") => {return `<!doctype html>
+    OneAlert : (receiver:string, rule: Rules, identification:string, color: string= "#4f5660", year: number= actualYear) => {return `<!doctype html>
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
     <head>
       <title></title>
@@ -160,7 +160,7 @@ export const Emails = {
           <table role="presentation" border="0" cellpadding="0" cellspaci=
     ng="0"><tr><td style="vertical-align:top;width:640px;">
           <![endif]--></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:0px;" align="center"><div style="cursor:auto;color:#99AAB5;font-family:Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;font-size:12px;line-height:24px;text-align:center;">
-          4urcloud - 2023
+          4urcloud - ${year}
         </div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:0px;" align="left"><div style="cursor:auto;color:#000000;font-family:Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;font-size:13px;line-height:22px;text-align:left;">
         </div></td></tr></tbody></table></div><!--[if mso | IE]>
           </td></tr></table>
@@ -169,7 +169,7 @@ export const Emails = {
           <![endif]--></div>
     </html>`
   },
-  GlobalAlert : (receiver:string, compteError: number[], allScanRenderTable: string, allScanLoudRenderTable: string, alert: GlobalConfigAlert) => {return `<!doctype html>
+  GlobalAlert : (receiver:string, compteError: number[], allScanRenderTable: string, allScanLoudRenderTable: string, alert: GlobalConfigAlert, year: number= actualYear) => {return `<!doctype html>
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
     <head>
       <title></title>
@@ -337,7 +337,7 @@ export const Emails = {
           <table role="presentation" border="0" cellpadding="0" cellspaci=
     ng="0"><tr><td style="vertical-align:top;width:640px;">
           <![endif]--></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:0px;" align="center"><div style="cursor:auto;color:#99AAB5;font-family:Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;font-size:12px;line-height:24px;text-align:center;">
-          4urcloud - 2023
+          4urcloud - ${year}
         </div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:0px;" align="left"><div style="cursor:auto;color:#000000;font-family:Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;font-size:13px;line-height:22px;text-align:left;">
         </div></td></tr></tbody></table></div><!--[if mso | IE]>
           </td></tr></table>
@@ -346,7 +346,7 @@ export const Emails = {
           <![endif]--></div>
     </html>`
   },
-  Recap : (compteError: number[], allScanRenderTable: string, allScanLoudRenderTable: string, alert: GlobalConfigAlert) => {return `<!doctype html>
+  Recap : (compteError: number[], allScanRenderTable: string, allScanLoudRenderTable: string, alert: GlobalConfigAlert, year: number= actualYear) => {return `<!doctype html>
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
     <head>
       <title></title>
@@ -507,7 +507,7 @@ export const Emails = {
           <table role="presentation" border="0" cellpadding="0" cellspaci=
     ng="0"><tr><td style="vertical-align:top;width:640px;">
           <![endif]--></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:0px;" align="center"><div style="cursor:auto;color:#99AAB5;font-family:Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;font-size:12px;line-height:24px;text-align:center;">
-          4urcloud - 2023
+          4urcloud - ${year}
         </div></td></tr><tr><td style="word-break:break-word;font-size:0px;padding:0px;" align="left"><div style="cursor:auto;color:#000000;font-family:Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;font-size:13px;line-height:22px;text-align:left;">
         </div></td></tr></tbody></table></div><!--[if mso | IE]>
           </td></tr></table>

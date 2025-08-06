@@ -13,10 +13,16 @@ import { exportationData } from "./services/exportation.service";
 import { getConfig } from "./helpers/loaderConfig";
 import { jsonStringify } from "./helpers/jsonStringify";
 import { Memoisation } from "./services/memoisation.service";
-import { SettingFile } from "./models/settingFile/settingFile.models";
-import { ResultScan, SubResultScan } from "./models/resultScan.models";
+import type { SettingFile } from "./models/settingFile/settingFile.models";
+import type { ResultScan, SubResultScan } from "./models/resultScan.models";
 import { exit } from "process";
+import {alertFromGlobal} from "./services/alerte.service";
+import { setup as setupLogger } from 'adze';
 
+const {
+    setTimeout: setTimer,
+    clearTimeout: clearTimer
+} = require('node:timers');
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const args = yargs(hideBin(process.argv)).argv
@@ -54,7 +60,7 @@ export async function mainScan(settings: SettingFile[], allScan: ResultScan[][],
     deleteFile("./config/headers.json");
     const delta = Date.now() - start.getTime();
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    logger.info("___________________________________________________________________________________________________"); 
+    logger.info("___________________________________________________________________________________________________");
     logger.info("_______________________________________-= End Kexa scan =-_________________________________________");
     logger.info("_".repeat(99-15-delta.toString().length)+"Scan done in "+delta+"ms");
     logger.debug(await getEnvVar("test"));
@@ -88,15 +94,6 @@ export async function GlobalAlert(settings: SettingFile[], allScan: ResultScan[]
     return retError;
 }
 
-const {
-    setTimeout: setTimer,
-    clearTimeout: clearTimer
-  } = require('node:timers');
-
-import {alertFromGlobal} from "./services/alerte.service";
-import { Condition } from "@aws-sdk/client-forecast";
-import type { KexaSaveConfig } from "./models/export/kexa/config.model";
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function main(retryLeft = -1) {
     const configuration = await getConfig();
@@ -108,7 +105,9 @@ async function main(retryLeft = -1) {
 
     if (process.env.DEV) {
         if (process.env.DEV == "true") {
-            logger.setting.level = 2;
+            setupLogger({
+                activeLevel: 'debug'
+            });
         }
     }
 
@@ -135,7 +134,7 @@ async function main(retryLeft = -1) {
                 const timeoutError = {
                     value: "Enabled",
                     condition: [
-                        { 
+                        {
                             property: 'KexaExecutionTime',
                             condition: 'InferiorThan',
                             value: timeout
@@ -145,7 +144,7 @@ async function main(retryLeft = -1) {
                 }
                 const objectContentCustom = (timeout / 1000).toString() + " seconds custom timeout";
                 const objectContentDefault = "5 minutes default timeout";
-                const timeoutScan: ResultScan = { 
+                const timeoutScan: ResultScan = {
                     error: [timeoutError as SubResultScan],
                     rule: {
                         level: 3,

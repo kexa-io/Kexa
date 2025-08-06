@@ -1,16 +1,5 @@
 {
-  "http": [
-    {
-      "name": "check kexa website",
-      "prefix": "ENDPOINTA-",
-      "description": "First environment (0) : EndPoint A environment",
-      "rules": ["HTTPRules"],
-      "METHOD": "GET",
-      "URL": "https://www.kexa.io",
-      "body": { }
-    }
-  ],
-  "mysql": {
+  "mysql": [{
     "name": "MySQL",
     "prefix": "ENDPOINTB-",
     "description": "Second environment (1) : EndPoint B environment",
@@ -19,5 +8,5 @@
     "PORT": 7575,
     "USER": "root",
     "PASSWORD": "root"
-  }
+  }]
 }

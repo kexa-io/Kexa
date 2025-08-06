@@ -1,14 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // import section
-import { Provider, ProviderResource } from "../models/providerResource.models";
-import { Header } from "../models/settingFile/header.models";
+import type { Provider, ProviderResource } from "../models/providerResource.models";
+import type { Header } from "../models/settingFile/header.models";
 import { writeStringToJsonFile } from "../helpers/files"
-import { Capacity } from "../models/settingFile/capacity.models";
+import type { Capacity } from "../models/settingFile/capacity.models";
 import {getContext, getNewLogger} from "./logger.service";
-import { SettingFile } from "../models/settingFile/settingFile.models";
+import type { SettingFile } from "../models/settingFile/settingFile.models";
 import { getConfig } from "../helpers/loaderConfig";
 import { jsonStringify } from "../helpers/jsonStringify";
-import  {formatProviderNeededData} from "./api/formatterApi.service";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // variable section
@@ -78,9 +77,7 @@ export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResour
         if((result?.delta)??0 > 15){
             logger.info(`AddOn ${result.key} collect in ${result.delta}ms`);
             context?.log(`AddOn ${result.key} collect in ${result.delta}ms`);
-        }else{
-            if(result?.delta) addOnShortCollect.push(result.key);
-        }
+        }else if(result?.delta) addOnShortCollect.push(result.key);
     });
     if(addOnShortCollect.length > 0){
         logger.info(`AddOn ${addOnShortCollect} load in less than 15ms; No data has been collected for these addOns`);
@@ -90,7 +87,6 @@ export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResour
 }
 
 async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): Promise<{ key: string; data: Provider|null; delta: number } | null> {
-    let context = getContext();
 
     try {
         if (file.endsWith('Gathering.service.ts')) {
@@ -101,7 +97,7 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): 
                 logger.warn(header);
                 return null;
             }
-            
+
             try {
                 const module = await import(`./addOn/${file.replace(".ts", ".js")}`);
                 const { collectData } = module;
@@ -109,7 +105,7 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): 
                     logger.error(`collectData is not a function in ${file}`);
                     return null;
                 }
-                
+
                 let start = Date.now();
                 const addOnConfig = (configuration.hasOwnProperty(nameAddOn)) ? configuration[nameAddOn] : null;
                 if (!addOnConfig) {
@@ -120,8 +116,8 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): 
                 if (process.env.INTERFACE_CONFIGURATION_ENABLED === 'true') {
                     addOnConfig.forEach((config: any) => {
                         if (Array.isArray(config.notificationGroups)) {
-                            for (let i = 0; i < config.notificationGroups.length; i++) {
-                                config.rules.push(config.notificationGroups[i].name);
+                            for (const notificationGroup of config.notificationGroups) {
+                                config.rules.push(notificationGroup.name);
                             }
                         }
                     });
@@ -142,10 +138,8 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): 
 
                 try {
                     logger.info(`Starting data collection for ${nameAddOn}`);
-                    const data = await collectData(addOnConfig);                    
+                    const data = await collectData(addOnConfig);
                     let delta = Date.now() - start;
-                    context?.log(`AddOn ${nameAddOn} collect in ${delta}ms`);
-                    logger.info(`AddOn ${nameAddOn} collect in ${delta}ms`);
                     return { key: nameAddOn, data: (checkIfDataIsProvider(data) ? data : null), delta };
                 } catch (error) {
                     logger.error(`Error during data collection for ${nameAddOn}:`, error);
