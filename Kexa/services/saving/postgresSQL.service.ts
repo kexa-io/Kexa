@@ -1,15 +1,15 @@
-import { Pool, PoolConfig, PoolClient, QueryResult } from 'pg';
+import { Pool, type PoolConfig, type PoolClient, type QueryResult } from 'pg';
 import { TableIQuery } from '../../query/tablePg.iquery';
 import { CRUDProvidersIQuery } from '../../query/CRUDPostgres/providers.iquery';
 import { CRUDOriginIQuery } from '../../query/CRUDPostgres/origins.iquery';
 import { CRUDProviderItemsIQuery } from '../../query/CRUDPostgres/providerItems.iquery';
 import { CRUDResourcesIQuery } from '../../query/CRUDPostgres/resources.iquery';
 import { CRUDLogsIQuery } from '../../query/CRUDPostgres/logs.iquery';
-import { getContext, getNewLogger } from "../logger.service";
-import { Rules } from '../../models/settingFile/rules.models';
-import { Log } from '../../models/settingFile/logs.models';
+import { getNewLogger } from "../logger.service";
+import type { Rules } from '../../models/settingFile/rules.models';
+import type { Log } from '../../models/settingFile/logs.models';
 import { CRUDRulesIQuery } from '../../query/CRUDPostgres/rules.iquery';
-import { ResultScan } from '../../models/resultScan.models';
+import type { ResultScan } from '../../models/resultScan.models';
 import { CRUDScansIQuery } from '../../query/CRUDPostgres/scans.iquery';
 import { jsonStringify } from '../../helpers/jsonStringify';
 import { createHash } from 'crypto';
@@ -71,7 +71,7 @@ export class PostgreSQLClass {
                     await Promise.race([
                         this.pool.end(),
                         timeoutPromise
-                    ]);                    
+                    ]);
                     logger.info("Successfully disconnected from PostgreSQL");
                 } else {
                     logger.debug("Connection pool is already null or does not exist.");
@@ -114,14 +114,14 @@ export class PostgreSQLClass {
         this.closeConnection(conn);
         return result.rows[0].id;
     }
-    
+
     public async getOneProviderByName(name: string): Promise<any> {
         let conn = await this.getConnection();
         let result: QueryResult = await conn.query(CRUDProvidersIQuery.Read.OneByName, [name]);
         this.closeConnection(conn);
         return result.rows[0];
     }
-    
+
     public async createAndGetOrigin(dataEnvConfig: any): Promise<number> {
         let conn = await this.getConnection();
         await conn.query(CRUDOriginIQuery.Create.One, [dataEnvConfig?.name ?? "Unknown", dataEnvConfig?.description ?? "No description"]);
@@ -129,7 +129,7 @@ export class PostgreSQLClass {
         this.closeConnection(conn);
         return result.rows[0].id;
     }
-    
+
     public async createAndGetProviderItems(providerId:number, providerItems: string[]): Promise<{[key:string]: number}> {
         const providerItemsDict: {[key:string]: number} = {};
         await Promise.all(providerItems.map(async (item) => {
@@ -138,7 +138,7 @@ export class PostgreSQLClass {
         }));
         return providerItemsDict;
     }
-    
+
     public async getProviderItemsByNameAndProvider(providerId: number, name: string): Promise<any> {
         let conn = await this.getConnection();
         let result: QueryResult = await conn.query(CRUDProviderItemsIQuery.Read.OneByNameAndProvider, [name, providerId]);
@@ -149,14 +149,14 @@ export class PostgreSQLClass {
         this.closeConnection(conn);
         return result.rows[0];
     }
-    
+
     public async createAndGetResources(resources: any, originId: number, providerItemsId: number): Promise<number[]> {
         let ids = await Promise.all(resources.map(async (resource: any) => {
             return await this.createAndGetResource(resource, originId, providerItemsId);
         }));
         return ids;
     }
-    
+
     public async createAndGetResource(resource: any, originId: number, providerItemsId: number): Promise<number | undefined> {
         try {
             let conn = await this.getConnection();
@@ -174,7 +174,7 @@ export class PostgreSQLClass {
             logger.debug(e);
         }
     }
-    
+
     public async createAndGetRule(rule: Rules, providerId:number, providerItemId:number): Promise<number> {
         let conn = await this.getConnection();
         await conn.query(CRUDRulesIQuery.Create.One, [rule.name ?? "Unknown", rule.description ?? "No description", rule?.loud ?? 0, rule.level, providerId, providerItemId]);
@@ -182,14 +182,14 @@ export class PostgreSQLClass {
         this.closeConnection(conn);
         return result.rows[0].id;
     }
-    
+
     public async createScan(resultScan: ResultScan, resourceId: number, ruleId: number, batchId: string): Promise<void> {
         let conn = await this.getConnection();
         await conn.query(CRUDScansIQuery.Create.One, [(resultScan.error.length > 0), resourceId, ruleId, batchId]);
         this.closeConnection(conn);
     }
 
- 
+
     public async createLog(message: string, resourceId: number): Promise<void> {
         const conn = await this.getConnection();
         const messageHash = createHash('sha256').update(message).digest('hex');
@@ -243,5 +243,5 @@ export class PostgreSQLClass {
         await conn.query(CRUDLogsIQuery.Delete.One, [id]);
         this.closeConnection(conn);
     }
-    
+
 }

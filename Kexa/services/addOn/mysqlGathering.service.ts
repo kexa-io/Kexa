@@ -175,7 +175,7 @@ async function collectTriggersForDB(connection: mysql.Connection, dbName: string
 async function collectUsers(connection: mysql.Connection): Promise<any[]> {
     if (!currentConfig?.ObjectNameNeed?.includes("users")) return [];
     logger.debug("Collecting users...");
-    return await executeQuery(connection, "SELECT User, Host FROM mysql.user;");
+    return await executeQuery(connection, "SELECT * FROM mysql.user;");
 }
 
 async function collectGrants(connection: mysql.Connection): Promise<any[]> {

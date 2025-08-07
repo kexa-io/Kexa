@@ -55,7 +55,7 @@
       applied: true
       level: 0
       cloudProvider: mysql
-      objectName : databases
+      objectName : users
       conditions:
         - operator : OR
           criteria:
