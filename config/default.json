@@ -1,12 +1,8 @@
 {
-  "postgresql": [{
-    "name": "MySQL",
-    "prefix": "ENDPOINTC-",
-    "description": "Second environment (1) : EndPoint C environment",
-    "rules": ["PostgreSQL"],
-    "HOST": "localhost",
-    "PORT": 7575,
-    "USER": "root",
-    "PASSWORD": "root"
+  "mongodb": [{
+    "name": "mongodb",
+    "prefix": "ENDPOINTD-",
+    "description": "Second environment (1) : EndPoint D environment",
+    "rules": ["MongoDB"]
   }]
 }

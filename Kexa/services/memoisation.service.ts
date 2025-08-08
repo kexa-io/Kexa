@@ -42,7 +42,13 @@ export class Memoisation{
     }
 
     public static needToBeCache(rule: Rules, value: any, idScan:string, start?:Date): boolean {
-        const key = Memoisation.addOnPropertyToSend[rule.cloudProvider](rule, value) + "Rule: " + rule.name + "Level: " + rule.level;
+        let key;
+        try {
+            key = Memoisation.addOnPropertyToSend[rule.cloudProvider](rule, value) + "Rule: " + rule.name + "Level: " + rule.level;
+        } catch (error) {
+            logger.error("Error during the memoisation process: please check if you have the display addon associated with your rule", rule, error);
+            return false;
+        }
         if (!Memoisation.cache.has(key)){ // all new object pass here and need to be save
             Memoisation.setCache(rule, value, idScan);
             return true;

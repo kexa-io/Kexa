@@ -1,5 +1,5 @@
 <div align="center">
-    <a href="https://www.kexa.io/addOn/azure">
+    <a href="https://www.kexa.io/addOn/http">
         <img src="../../images/https-logo.png" alt="Logo" width="200"/>
     </a>
 </div>
