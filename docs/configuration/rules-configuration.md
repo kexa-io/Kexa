@@ -69,6 +69,24 @@ Conditions are the core comparison operators used to evaluate resources in your 
    - `INTERVAL`: Checks if within a time interval
    - `DATE_INTERVAL`: Checks if within a date range
 
+4. **List Operators**
+
+    These operators are designed to perform checks on properties that are lists (or arrays) of items. They introduce two unique behaviors:
+
+    1. List Iteration: To check the items within a list, use . as the value for property inside a nested condition. This . acts as a placeholder for each item in the list being evaluated.
+
+    2. Nested Conditions: The value for these operators is not a simple string or number, but a block of one or more conditions that will be applied to the items of the list.
+
+  - ALL: Checks if all elements in a list satisfy the nested condition(s).
+
+  - NOT_ANY: Checks if no element in a list satisfies the nested condition(s).
+
+  - SOME: Checks if at least one element in the list satisfies the nested condition(s).
+
+  - ONE: Checks if exactly one element in the list satisfies the nested condition(s).
+
+Example Usage for List Operators:
+
 #### Example Usage
 
 ```yaml
@@ -87,6 +105,42 @@ conditions:
   - property: lastModified
     condition: DATE_SUP
     value: "2024-01-01T00:00:00.000Z"
+
+  # Example Usage for List Operators
+  # Rule to check if SOME disk in a VM is larger than 500 GB.
+  conditions:
+    - property: storageProfile.dataDisks # This is a list of disks
+      condition: SOME
+      value:
+        - property: diskSizeGB
+          condition: SUP
+          value: 500
+
+  # Rule to verify that EXACTLY ONE tag has the key 'owner'.
+  conditions:
+    - property: tags # This is a list of tags
+      condition: ONE
+      value:
+        - property: key
+          condition: EQUAL
+          value: "owner"
+
+  # Rule to verify that got at least ONE disk with the key/value 'project:Kexa'.
+  conditions:
+    - property: . # This is a list of disks gathered
+      condition: SOME
+      value:
+        - property: tags # This is a list of tags
+          condition: ONE
+          value:
+            - operator: AND # Check for both key and value (Logical Operators see in the next section)
+              criteria:
+                - property: key
+                  condition: EQUAL
+                  value: "project"
+                - property: value
+                  condition: EQUAL
+                  value: "Kexa"
 ```
 
 #### Logical Operators
