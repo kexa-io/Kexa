@@ -1,223 +1,296 @@
 import env from "dotenv";
+import Log, { setup as setupLogger } from 'adze';
+import { exit } from "process";
+
+import { setTimeout as setTimer, clearTimeout as clearTimer } from 'node:timers';
+
+import { getConfig } from "./helpers/loaderConfig";
+import { deleteFile, createFileSync } from "./helpers/files";
+import { jsonStringify } from "./helpers/jsonStringify";
+
 import { checkRules, gatheringRules } from "./services/analyse.service";
-import { alertGlobal } from "./services/alerte.service";
-import { AsciiArtText, renderTableAllScan, renderTableAllScanLoud} from "./services/display.service";
+import { alertGlobal, alertFromGlobal } from "./services/alerte.service";
+import { AsciiArtText, renderTableAllScan, renderTableAllScanLoud } from "./services/display.service";
 import { getEnvVar } from "./services/manageVarEnvironnement.service";
 import { loadAddOns } from "./services/addOn.service";
-import { deleteFile, createFileSync } from "./helpers/files";
-import {getContext, getNewLogger} from "./services/logger.service";
-import { Emails } from "./emails/emails";
+import { getContext, getNewLogger } from "./services/logger.service";
 import { saveResult } from "./services/save.service";
-import { initOnly } from "./services/addOn/save/kexaSave.service";
 import { exportationData } from "./services/exportation.service";
-import { getConfig } from "./helpers/loaderConfig";
-import { jsonStringify } from "./helpers/jsonStringify";
 import { Memoisation } from "./services/memoisation.service";
+import { initOnly } from "./services/addOn/save/kexaSave.service";
+
 import type { SettingFile } from "./models/settingFile/settingFile.models";
 import type { ResultScan, SubResultScan } from "./models/resultScan.models";
-import { exit } from "process";
-import {alertFromGlobal} from "./services/alerte.service";
-import { setup as setupLogger } from 'adze';
 
-const {
-    setTimeout: setTimer,
-    clearTimeout: clearTimer
-} = require('node:timers');
-const yargs = require('yargs/yargs')
-const { hideBin } = require('yargs/helpers')
-const args = yargs(hideBin(process.argv)).argv
-const folderOutput = process.env.OUTPUT??"./output";
+import { Emails } from "./emails/emails";
+import { ConditionEnum } from "./enum/condition.enum";
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-env?.config();
+const yargs = require('yargs/yargs');
+const { hideBin } = require('yargs/helpers');
+const DEFAULT_RULES_DIRECTORY = "https://github.com/kexa-io/public-rules";
+const DEFAULT_TIMEOUT_MINUTES = 15;
+const DEFAULT_MAX_RETRY = 3;
+const FOLDER_OUTPUT = process.env.OUTPUT ?? "./output";
+const ARGS = yargs(hideBin(process.argv)).argv;
 
-export async function mainScan(settings: SettingFile[], allScan: ResultScan[][], idScan?: string): Promise<ResultScan[][]> {
-    let context = getContext();
-    const logger = getNewLogger("ScanLogger"+(idScan?idScan:""));
-    const start:Date = new Date;
+
+async function initializeApplication(): Promise<{ logger: Log<string, unknown>, settings: SettingFile[] }> {
+    const context = getContext();
+    context?.log("Initializing application...");
+
+    if (process.env.DEV === "true") {
+        setupLogger({
+            activeLevel: 'debug'
+        });
+    }
+
+    const logger = getNewLogger("MainLogger");
+    AsciiArtText("Kexa");
+    logger.info("Application starting...");
+
+    const rulesDirectory = await getEnvVar("RULESDIRECTORY") ?? DEFAULT_RULES_DIRECTORY;
+    const settings = await gatheringRules(rulesDirectory);
+
+    logger.info(`Found ${settings.length} settings files.`);
+    return { logger, settings };
+}
+
+export async function performScan(settings: SettingFile[], scanId: string): Promise<ResultScan[][]> {
+    const logger = getNewLogger(`ScanLogger_${scanId}`);
+    const start = new Date();
     logger.info("___________________________________________________________________________________________________");
     logger.info("___________________________________-= running Kexa scan =-_________________________________________");
     logger.info("___________________________________________________________________________________________________");
-    if(idScan && parseInt(idScan) > 0) {
-        logger.debug(`Starting scan n°${idScan}, clearing states...`);
+    if(scanId && parseInt(scanId) > 0) {
+        logger.debug(`Starting scan n°${scanId}, clearing states...`);
     }
-    let allPromises = [];
-    if(settings.length != 0){
-        let resources = await loadAddOns(settings);
-        allPromises.push(exportationData(resources));
-        if(args.o) createFileSync(JSON.stringify(resources), folderOutput + "/resources/"+ new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '') +".json", true);
-        settings.forEach(setting => {
-            let result = checkRules(setting.rules, resources, setting.alert);
-            const realResult = JSON.parse(jsonStringify(result));
-            result = result.map(scan => scan.filter((rule) => Memoisation.needToBeCache(rule.rule, rule.objectContent, (idScan??""), start)));
-            result.forEach(scan => {if(scan.length>0) allScan.push(scan)});
-            allPromises.push(saveResult(realResult));
-        });
-        await Promise.all(allPromises);
-    }else {
+
+    if (settings.length === 0) {
         logger.error("No correct rules found, please check the rules directory or the rules files.");
+        return [];
     }
-    deleteFile("./config/headers.json");
+
+    const allScanResults: ResultScan[][] = [];
+    const resources = await loadAddOns();
+    if (ARGS.o) {
+        const timestamp = new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '');
+        const filePath = `${FOLDER_OUTPUT}/resources/${timestamp}.json`;
+        createFileSync(JSON.stringify(resources), filePath, true);
+        logger.info(`Exported resources to ${filePath}`);
+    }
+    await exportationData(resources);
+
+    const scanPromises = settings.map(setting => {
+        const results = checkRules(setting.rules, resources, setting.alert);
+        const clonedResults = JSON.parse(jsonStringify(results));
+
+        const resultsToCache = results.map(scan =>
+            scan.filter(rule => Memoisation.needToBeCache(rule.rule, rule.objectContent, scanId, start))
+        );
+        resultsToCache.forEach(scan => {
+            if (scan.length > 0) allScanResults.push(scan);
+        });
+
+        return saveResult(clonedResults);
+    });
+
+    await Promise.all(scanPromises);
+
     const delta = Date.now() - start.getTime();
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     logger.info("___________________________________________________________________________________________________");
     logger.info("_______________________________________-= End Kexa scan =-_________________________________________");
     logger.info("_".repeat(99-15-delta.toString().length)+"Scan done in "+delta+"ms");
     logger.debug(await getEnvVar("test"));
-    context?.log(await getEnvVar("test"));
-    return allScan;
+    return allScanResults;
 }
 
-export async function GlobalAlert(settings: SettingFile[], allScan: ResultScan[][]) : Promise<boolean> {
-    let retError = false;
 
-    settings.forEach(setting => {
-        if(setting.alert.global.enabled){
-            let render_table = renderTableAllScan(allScan.map(scan => scan.filter(value => value.error.length>0)));
-            let render_table_loud = renderTableAllScanLoud(allScan.map(scan => scan.filter(value => value.loud)));
-            let compteError = [0,0,0,0];
-            allScan.forEach((rule) => {
-                rule.forEach((scan) => {
-                    if(scan.error.length > 0) {
-                        compteError[scan.rule?.level??3]++;
-                        if (scan.rule?.level >= 2) {
-                            retError = true;
-                        }
-                    }
-                });
-            });
-            let mail = Emails.Recap(compteError, render_table, render_table_loud, setting.alert.global);
-            createFileSync(mail, folderOutput + "/scans/"+ setting.alert.global.name + "/" + new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '') +".html");
-            alertGlobal(allScan, setting.alert.global);
-        }
-    });
-    return retError;
-}
+export async function processGlobalAlerts(settings: SettingFile[], allScanResults: ResultScan[][]): Promise<boolean> {
+    let hasCriticalError = false;
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-async function main(retryLeft = -1) {
-    const configuration = await getConfig();
-    const generalConfig = (configuration.hasOwnProperty("general")) ? configuration["general"] : null;
-    let context = getContext();
-    context?.log("entering main");
-    const logger = getNewLogger("MainLogger");
-    context?.log("logger created");
+    for (const setting of settings) {
+        if (!setting.alert.global.enabled) continue;
 
-    if (process.env.DEV) {
-        if (process.env.DEV == "true") {
-            setupLogger({
-                activeLevel: 'debug'
-            });
-        }
+        const resultsWithErrors = allScanResults.map(scan => scan.filter(value => value.error.length > 0));
+        const loudResults = allScanResults.map(scan => scan.filter(value => value.loud));
+
+        const errorCounts = [0, 0, 0, 0];
+        allScanResults.flat().forEach(scan => {
+            if (scan.error.length > 0) {
+                const level = scan.rule?.level ?? 3;
+                errorCounts[level]++;
+                if (level >= 2) {
+                    hasCriticalError = true;
+                }
+            }
+        });
+
+        const tableRender = renderTableAllScan(resultsWithErrors);
+        const loudTableRender = renderTableAllScanLoud(loudResults);
+
+        const emailContent = Emails.Recap(errorCounts, tableRender, loudTableRender, setting.alert.global);
+        const timestamp = new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '');
+        const filePath = `${FOLDER_OUTPUT}/scans/${setting.alert.global.name}/${timestamp}.html`;
+        createFileSync(emailContent, filePath);
+
+        await alertGlobal(allScanResults, setting.alert.global);
     }
 
-    context?.log("logger configured");
-    AsciiArtText("Kexa");
-    let idScan = 0;
-    let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"https://github.com/kexa-io/public-rules");
-    let retError = false;
-    let timer;
+    return hasCriticalError;
+}
 
-    /* 3 default max retry when timeout happen in continuous run */
-    const defaultMaxRetry = generalConfig?.checkInterval != null ? 3 : 0;
-    if (retryLeft == -1)
-        retryLeft = (generalConfig?.maxRetry != null && generalConfig?.checkInterval != null) ? generalConfig?.maxRetry : defaultMaxRetry;
+async function handleScanIteration(settings: SettingFile[], scanId: number, logger: Log<string, unknown>): Promise<{ hasCriticalError: boolean, settings: SettingFile[] }> {
+    logger.info(`Starting scan iteration ${scanId}`);
+    let currentSettings = settings;
 
-    while (1) {
-        let allScan: ResultScan[][] = [];
-        /* 5 minutes default timeout */
-        const defaultTimeout = 15;
-        const minuteTimeout = 60 * 1000;
-        const timeout = minuteTimeout * (generalConfig?.timeout != null ? generalConfig?.timeout : defaultTimeout);
-        timer = setTimer(() => {
-            if (retryLeft == 0) {
-                const timeoutError = {
-                    value: "Enabled",
-                    condition: [
-                        {
-                            property: 'KexaExecutionTime',
-                            condition: 'InferiorThan',
-                            value: timeout
-                        }
-                    ],
-                    result: false
-                }
-                const objectContentCustom = (timeout / 1000).toString() + " seconds custom timeout";
-                const objectContentDefault = "5 minutes default timeout";
-                const timeoutScan: ResultScan = {
-                    error: [timeoutError as SubResultScan],
-                    rule: {
-                        level: 3,
-                        name: "Timeout",
-                        applied: true,
-                        cloudProvider: "Kexa",
-                        description: "Timeout",
-                        objectName: "Timer",
-                        conditions: []
-                    },
-                    objectContent: {
-                        id: (generalConfig?.timeout != null ? objectContentCustom : objectContentDefault)
-                    }
-                }
-                allScan = [[timeoutScan as ResultScan]];
-                settings.forEach(setting => {
-                    alertFromGlobal(setting.alert.global, [], allScan)
-                });
-                process.exit(1);
-            } else {
-                retryLeft--;
-                logger.error("Timeout reached, retrying scan");
-                return (2);
-            }
-        }, timeout);
-        if (timer == 2)
-            continue;
-        let startTimeStamp = Date.now();
-        logger.info(`Starting scan iteration ${idScan}`);
+    try {
+        logger.debug(`Reloading settings for scan iteration ${scanId}`);
+        const rulesDirectory = await getEnvVar("RULESDIRECTORY") ?? DEFAULT_RULES_DIRECTORY;
+        currentSettings = await gatheringRules(rulesDirectory);
+        logger.debug(`Settings reloaded, found ${currentSettings.length} setting files.`);
+    } catch (e) {
+        logger.error("Failed to reload settings:", e);
+        if (scanId === 0) throw e;
+        logger.warn("Using previous settings for this iteration.");
+    }
+
+    const allScanResults = await performScan(currentSettings, scanId.toString());
+    logger.debug(`Processing global alerts for scan ${scanId}, found ${allScanResults.length} scan results.`);
+    const hasCriticalError = await processGlobalAlerts(currentSettings, allScanResults);
+
+    return { hasCriticalError, settings: currentSettings };
+}
+
+function createTimeoutResult(timeoutMillis: number, config: any | null): ResultScan {
+    const timeoutError: SubResultScan = {
+        value: "Enabled",
+        condition: [{
+            property: 'KexaExecutionTime',
+            condition: ConditionEnum.INF,
+            value: timeoutMillis
+        }],
+        result: false
+    };
+
+    const objectContentCustom = `${timeoutMillis / 1000} seconds custom timeout`;
+    const objectContentDefault = `${DEFAULT_TIMEOUT_MINUTES} minutes default timeout`;
+
+    return {
+        error: [timeoutError],
+        rule: {
+            level: 3,
+            name: "Timeout",
+            applied: true,
+            cloudProvider: "Kexa",
+            description: "Scan duration exceeded the configured timeout.",
+            objectName: "Timer",
+            conditions: []
+        },
+        objectContent: {
+            id: (config?.timeout != null ? objectContentCustom : objectContentDefault)
+        }
+    };
+}
+
+
+async function runScanLoop(config: any | null, initialSettings: SettingFile[], logger: Log<string, unknown>) {
+    let scanId = 0;
+    let settings = initialSettings;
+    let retryLeft = config?.maxRetry ?? DEFAULT_MAX_RETRY;
+    const checkIntervalSeconds = config?.checkInterval ?? 0;
+
+    while (true) {
+        const startTimeStamp = Date.now();
+        let timeoutId: NodeJS.Timeout | null = null;
+
+        const scanPromise = handleScanIteration(settings, scanId, logger);
+
+        const timeoutMillis = (config?.timeout ?? DEFAULT_TIMEOUT_MINUTES) * 60 * 1000;
+        const timeoutPromise = new Promise((_, reject) => {
+            timeoutId = setTimer(() => {
+                logger.error(`Timeout of ${timeoutMillis / 1000}s reached.`);
+                reject(new Error("Timeout"));
+            }, timeoutMillis);
+        });
+
         try {
-            logger.debug(`Reloading settings for scan iteration ${idScan}`);
-            settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"https://github.com/kexa-io/public-rules");
-            logger.debug(`Settings reloaded for iteration ${idScan}, found ${settings.length} setting files`);
-        } catch (e) {
-            logger.error("Failed to reload settings:", e);
-            if (idScan === 0) {
-                throw e;
+            const { hasCriticalError, settings: newSettings } = await Promise.race([scanPromise, timeoutPromise]) as { hasCriticalError: boolean, settings: SettingFile[] };
+            settings = newSettings;
+            if (timeoutId) clearTimer(timeoutId);
+            retryLeft = config?.maxRetry ?? DEFAULT_MAX_RETRY;
+
+            if (hasCriticalError && !checkIntervalSeconds) {
+                logger.error("Critical error found. Exiting.");
+                exit(1);
             }
-            logger.warn("Using previous settings for this iteration");
+
+        } catch (error) {
+            if (timeoutId) clearTimer(timeoutId);
+            if (retryLeft > 0) {
+                retryLeft--;
+                logger.warn(`Scan failed. Retrying... (${retryLeft} attempts left)`);
+                continue;
+            } else {
+                logger.error("Scan failed after multiple retries. Reporting timeout and exiting.");
+                const timeoutResult = createTimeoutResult(timeoutMillis, config);
+                settings.forEach(setting => {
+                    alertFromGlobal(setting.alert.global, [], [[timeoutResult]]);
+                });
+                exit(1);
+            }
         }
-        await mainScan(settings, allScan, idScan.toString());
-        logger.debug(`Processing global alerts for scan ${idScan}, found ${allScan.length} scan results`);
-        retError = await GlobalAlert(settings, allScan);
-        if(retError && !generalConfig?.checkInterval) {
-            logger.error("High level error found in scan, exiting Kexa");
-            clearTimer(timer);
-            break;
-        }
-        allScan = [];
-        if (generalConfig?.checkInterval && (~~generalConfig.checkInterval > 0 || ~~generalConfig.checkInterval == -1)) {
-            logger.info("Waiting for next scan in " + generalConfig.checkInterval + " seconds");
-            clearTimer(timer);
-            await new Promise(r => setTimeout(r, Math.max((~~generalConfig.checkInterval - (Date.now()-startTimeStamp)/1000)*1000, 0)));
+
+        if (checkIntervalSeconds > 0) {
+            const elapsedTimeSeconds = (Date.now() - startTimeStamp) / 1000;
+            const waitTime = Math.max((checkIntervalSeconds - elapsedTimeSeconds) * 1000, 0);
+            logger.info(`Waiting ${waitTime / 1000} seconds for the next scan.`);
+            await new Promise(r => setTimeout(r, waitTime));
         } else {
-            logger.info("No checkInterval found, exiting Kexa");
-            clearTimer(timer);
+            logger.info("Single run complete. Exiting.");
             break;
         }
-        idScan++;
+        scanId++;
     }
-    deleteFile("./config/addOnNeed.json");
-    clearTimer(timer);
-    exit(0);
 }
 
-if (process.env.INIT_PREMIUM_MODE && process.env.INIT_PREMIUM_MODE == 'true') {
-    const configuration = await getConfig(true);
-    if (!configuration.hasOwnProperty("save") || !Array.isArray(configuration["save"])) {
-        console.error("Configuration does not contain 'save' array or it is not an array.");
-        exit(-1);
+async function start() {
+    try {
+        env.config();
+        const configuration = await getConfig();
+        const generalConfig = configuration.general ?? null;
+
+        const { logger, settings } = await initializeApplication();
+
+        if (settings.length === 0) {
+            logger.error("No settings files found, cannot proceed. Exiting.");
+            exit(1);
+        }
+
+        await runScanLoop(generalConfig, settings, logger);
+
+        deleteFile("./config/addOnNeed.json");
+        deleteFile("./config/headers.json");
+        exit(0);
+
+    } catch (error) {
+        console.error("A fatal error occurred:", error);
+        exit(1);
     }
-    const kexaSaveConfig = configuration["save"].find((item: any) => item.type === "kexa");
-    await initOnly(kexaSaveConfig);
-} else {
-    main();
 }
+
+(async () => {
+    if (process.env.INIT_PREMIUM_MODE === 'true') {
+        const configuration = await getConfig(true);
+        if (!configuration.save || !Array.isArray(configuration.save)) {
+            console.error("Configuration does not contain a valid 'save' array.");
+            exit(-1);
+        }
+        const kexaSaveConfig = configuration.save.find((item: any) => item.type === "kexa");
+        if (!kexaSaveConfig) {
+            console.error("Kexa save configuration not found.");
+        }
+        await initOnly(kexaSaveConfig);
+    } else {
+        await start();
+    }
+})();

@@ -1,10 +1,10 @@
-import { AwsConfig } from "../aws/config.models";
-import { AzureConfig } from "../azure/config.models";
-import { SaveConfig } from "../export/config.models";
-import { GcpConfig } from "../gcp/config.models";
-import { GitConfig } from "../git/config.models";
-import { HttpConfig } from "../http/config.models";
-import { KubernetesConfig } from "../kubernetes/config.models";
+import type { AwsConfig } from "../aws/config.models";
+import type { AzureConfig } from "../azure/config.models";
+import type { SaveConfig } from "../export/config.models";
+import type { GcpConfig } from "../gcp/config.models";
+import type { GitConfig } from "../git/config.models";
+import type { HttpConfig } from "../http/config.models";
+import type { KubernetesConfig } from "../kubernetes/config.models";
 
 export interface GlobalConfig{
     azure?: AzureConfig[];

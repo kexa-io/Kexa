@@ -1,5 +1,3 @@
-import { HttpCode } from "./code.models";
-
 export interface HttpRequest {
     certificate: any|null;
     body: any|null;

@@ -1,4 +1,4 @@
-import { NetworkSecurityGroup } from "@azure/arm-network";
+import type { NetworkSecurityGroup } from "@azure/arm-network";
 
 export interface AzureResources {
     'KexaAzure.vm': Array<NetworkSecurityGroup>|null;

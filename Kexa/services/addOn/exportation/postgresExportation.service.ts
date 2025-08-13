@@ -1,7 +1,7 @@
-import { ProviderResource } from '../../../models/providerResource.models';
+import type { ProviderResource } from '../../../models/providerResource.models';
 import { getEnvVar } from "../../manageVarEnvironnement.service";
 import { getContext, getNewLogger } from "../../logger.service";
-import { PostgreSQLSaveConfig } from '../../../models/export/postgre/config.models';
+import type { PostgreSQLSaveConfig } from '../../../models/export/postgre/config.models';
 import { PostgreSQLClass } from '../../saving/postgresSQL.service';
 import { getConfig } from '../../../helpers/loaderConfig';
 
@@ -9,9 +9,6 @@ const logger = getNewLogger("pgSQLExportLogger");
 const context = getContext();
 
 export async function exportation(save: PostgreSQLSaveConfig, resources: ProviderResource): Promise<void>{
-    //////////////////////////
-    ///////////// USE A TIMEOUT
-    ///////////////////////////
     let pgSQL = new PostgreSQLClass();
     try{
         if(!save.urlName) throw new Error("urlName is required");
@@ -29,21 +26,28 @@ export async function exportation(save: PostgreSQLSaveConfig, resources: Provide
         await Promise.all(Object.keys(resources).map(async (providerName) => {
             let providerId = providers[providerName];
             let providerResource = resources[providerName];
-            await Promise.all(providerResource.map(async (resource, indexEnvironnement) => {
-                let dataEnvironnementConfig = config[providerName][indexEnvironnement];
-                const [originId, providerItemsId] = await Promise.all([
-                    pgSQL.createAndGetOrigin(dataEnvironnementConfig),
-                    pgSQL.createAndGetProviderItems(providerId, Object.keys(resource))
-                ]);
-                try  {
-                    await Promise.all(Object.keys(resource).map(async (resourceName) => {
-                        await pgSQL.createAndGetResources(resource[resourceName], originId, providerItemsId[resourceName]);
-                    }));
-                } catch (e) {
-                    logger.warn("Error in creating resources: ", e);
-                    throw e;
-                }
-            }));
+            if (providerResource && typeof providerId === "number") {
+                await Promise.all(providerResource.map(async (resource, indexEnvironnement) => {
+                    let dataEnvironnementConfig = config[providerName][indexEnvironnement];
+                    const [originId, providerItemsId] = await Promise.all([
+                        pgSQL.createAndGetOrigin(dataEnvironnementConfig),
+                        pgSQL.createAndGetProviderItems(providerId, Object.keys(resource))
+                    ]);
+                    try  {
+                        await Promise.all(Object.keys(resource).map(async (resourceName) => {
+                            const itemId = providerItemsId[resourceName];
+                            if (typeof itemId === "number") {
+                                await pgSQL.createAndGetResources(resources[resourceName], originId, itemId);
+                            } else {
+                                logger.warn(`Provider item ID for resource '${resourceName}' is undefined and will be skipped.`);
+                            }
+                        }));
+                    } catch (e) {
+                        logger.warn("Error in creating resources: ", e);
+                        throw e;
+                    }
+                }));
+            }
         }));
         try {
             await pgSQL.disconnect(true);

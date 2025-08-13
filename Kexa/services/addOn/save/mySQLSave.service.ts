@@ -1,11 +1,10 @@
 import { getEnvVar } from "../../manageVarEnvironnement.service";
-import { getContext, getNewLogger } from "../../logger.service";
-import { MySQLSaveConfig } from '../../../models/export/mysql/config.models';
+import { getNewLogger } from "../../logger.service";
+import type { MySQLSaveConfig } from '../../../models/export/mysql/config.models';
 import { MySQLClass } from '../../saving/mySQL.service';
-import { ResultScan } from '../../../models/resultScan.models';
+import type { ResultScan } from '../../../models/resultScan.models';
 
 const logger = getNewLogger("mySQLSaveLogger");
-const context = getContext();
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -21,7 +20,7 @@ export async function save(save: MySQLSaveConfig, result: ResultScan[][]): Promi
         await Promise.all(result.flat().map(async (resultScan) => {
             await saveResultScan(resultScan, save, mySQL, batchId);
         }));
-    
+
         logger.info("All data saved in MySQL");
         await mySQL.disconnect();
     }catch(e:any){
@@ -47,7 +46,6 @@ async function saveResultScan(resultScan: ResultScan, save: MySQLSaveConfig, myS
             logger.info("Saving scan (logs) for: " + providerItem.name);
             await mySQL.createScan(resultScan, resourceId as number, ruleId, batchId);
         }
-        
         if (save.logs) {
             logger.info("Saving logs for: " + providerItem.name);
             const logPromises = resultScan.objectContent.logs.map(async (log: any) => {

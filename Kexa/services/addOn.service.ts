@@ -32,7 +32,7 @@ async function init() {
 }
 init();
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResource>{
+export async function loadAddOns(): Promise<ProviderResource>{
     let resources: ProviderResource = {};
     let context = getContext();
     logger.info("Loading addOns");
@@ -59,12 +59,12 @@ export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResour
 
     if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
         for (const file of files.filter((file: string) => !reservedNameAddOn.includes(file))) {
-            const result = await loadAddOn(file, addOnNeed, settings);
+            const result = await loadAddOn(file, addOnNeed);
             results.push(result);
         }
     } else {
         const promises = files.filter((file:string)=> !reservedNameAddOn.includes(file)).map(async (file: string) => {
-            return await loadAddOn(file, addOnNeed, settings);
+            return await loadAddOn(file, addOnNeed);
         });
         results = await Promise.all(promises);
     }
@@ -86,7 +86,7 @@ export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResour
     return resources;
 }
 
-async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): Promise<{ key: string; data: Provider|null; delta: number } | null> {
+async function loadAddOn(file: string, addOnNeed: any): Promise<{ key: string; data: Provider|null; delta: number } | null> {
 
     try {
         if (file.endsWith('Gathering.service.ts')) {

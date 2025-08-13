@@ -549,6 +549,7 @@
     "@types/chai": "^5.2.2",
     "@types/glob": "^8.1.0",
     "@types/js-yaml": "^4.0.9",
+    "@types/jsdom": "^21.1.7",
     "@types/minimatch": "^5.1.2",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.15.31",

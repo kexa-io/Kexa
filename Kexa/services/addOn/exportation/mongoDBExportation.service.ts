@@ -1,9 +1,9 @@
-import { ProviderResource } from '../../../models/providerResource.models';
+import type { ProviderResource } from '../../../models/providerResource.models';
 import { getEnvVar } from "../../manageVarEnvironnement.service";
 import { getContext, getNewLogger } from "../../logger.service";
-import { MongoDBSaveConfig } from "../../../models/export/mongoDB/config.models";
+import type { MongoDBSaveConfig } from "../../../models/export/mongoDB/config.models";
 import { closeConnection, saveData, setConnection } from "../../saving/mongoDB.service";
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose from 'mongoose';
 
 const logger = getNewLogger("mongoDBExportLogger");
 const context = getContext();

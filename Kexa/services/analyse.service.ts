@@ -388,13 +388,13 @@ export function checkSubRuleCondition(subRule:RulesConditions): string[] {
     else if(!Object.values(ConditionEnum).includes(subRule.condition)) result.push("error - condition not valid in sub rule condition : " + subRule.condition);
     else if (subRule.condition.includes("DATE") && !subRule.hasOwnProperty("date")) result.push("error - date not found in sub rule condition");
     if(!subRule.hasOwnProperty("value")) result.push("error - value not found in sub rule condition");
-    //else if(typeof subRule.value !== "string" && typeof subRule.value !== "number" && !Array.isArray(subRule.value)) result.push("error - value not valid in sub rule condition : " + subRule.value);
-    //else if(Array.isArray(subRule.value) && subRule.value.length === 0) result.push("error - value empty in sub rule condition");
-    //else if(Array.isArray(subRule.value)){
-    //    subRule.value.forEach((value) => {
-    //        checkRuleCondition(value).forEach((value) => result.push(value));
-    //    });
-    //}
+    else if(typeof subRule.value !== "string" && typeof subRule.value !== "number" && !Array.isArray(subRule.value)) result.push("error - value not valid in sub rule condition : " + subRule.value);
+    else if(Array.isArray(subRule.value) && subRule.value.length === 0) result.push("error - value empty in sub rule condition");
+    else if(Array.isArray(subRule.value)){
+        subRule.value.forEach((value) => {
+            checkRuleCondition(value).forEach((value) => result.push(value));
+        });
+    }
 
     return result;
 }
@@ -404,15 +404,15 @@ function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, ind
         logger.warn("This cloud provider is not supported:"+rule.cloudProvider + "\nDon't forget to add this addOn");
         return BeHaviorEnum.RETURN;
     }
-    if(!Array.isArray(resources[rule.cloudProvider]) || resources[rule.cloudProvider].length === 0){
+    if(!Array.isArray(resources[rule.cloudProvider]) || resources[rule.cloudProvider]?.length === 0){
         logger.warn("Did not retriev any resources for cloud provider "+rule.cloudProvider + " with configuration index " + index + "\nVerify credentials and configuration");
         return BeHaviorEnum.RETURN;
     }
-    if(!resources[rule.cloudProvider][index].hasOwnProperty(rule.objectName)){
+    if(!resources[rule.cloudProvider]?.[index]?.hasOwnProperty(rule.objectName)){
         logger.warn("object name : "+rule.objectName + " not found in your provider " + rule.cloudProvider + " with configuration index " + index + "\nMake sure you have the right addOn or the right spelling in your rules");
         return BeHaviorEnum.CONTINUE;
     }
-    if(resources[rule.cloudProvider][index][rule.objectName] === null){
+    if(resources[rule.cloudProvider]?.[index]?.[rule.objectName] === null){
         logger.warn("No " + rule.objectName + " found in your provider " + rule.cloudProvider + " with configuration index " + index);
         return BeHaviorEnum.CONTINUE;
     }
@@ -475,7 +475,7 @@ export function checkRules(rules:any[], resources:ProviderResource, alert: Alert
                     case BeHaviorEnum.CONTINUE:
                         continue;
                 }
-                objectResources = [...objectResources, ...resources[rule.cloudProvider][i][rule.objectName]]
+                objectResources = [...objectResources, ...resources[rule.cloudProvider]?.[i]?.[rule.objectName]]
             }
         }
         let subResult: ResultScan[] = [];

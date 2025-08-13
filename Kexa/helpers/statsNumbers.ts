@@ -1,6 +1,14 @@
 export function getMinMaxMeanMedian(array: Array<number>): MinMaxMeanMedian {
-    let min = array[0];
-    let max = array[0];
+    if(array.length === 0) {
+        return {
+            "min": 0,
+            "max": 0,
+            "mean": 0,
+            "median": 0,
+        };
+    }
+    let max = array[0] || Number.MIN_VALUE;
+    let min = array[0] || Number.MAX_VALUE;
     let sum = 0;
     for(const num of array){
         if(num < min) min = num;
@@ -11,7 +19,7 @@ export function getMinMaxMeanMedian(array: Array<number>): MinMaxMeanMedian {
         "min": min,
         "max": max,
         "mean": sum/array.length,
-        "median": array[Math.floor(array.length/2)],
+        "median": array[(array.length >= 2)?Math.floor(array.length/2):array[0]],
     }
 }
 

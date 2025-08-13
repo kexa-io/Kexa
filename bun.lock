@@ -500,6 +500,7 @@
         "@types/chai": "^5.2.2",
         "@types/glob": "^8.1.0",
         "@types/js-yaml": "^4.0.9",
+        "@types/jsdom": "^21.1.7",
         "@types/minimatch": "^5.1.2",
         "@types/mocha": "^10.0.10",
         "@types/node": "^22.15.31",
@@ -2109,6 +2110,8 @@
     "@types/glob": ["@types/glob@8.1.0", "", { "dependencies": { "@types/minimatch": "^5.1.2", "@types/node": "*" } }, "sha512-IO+MJPVhoqz+28h1qLAcBEH2+xHMK6MTyHJc7MTnnYb6wsoLR29POVGJ7LycmVXIqyy/4/2ShP5sUwTXuOwb/w=="],
 
     "@types/js-yaml": ["@types/js-yaml@4.0.9", "", {}, "sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg=="],
+
+    "@types/jsdom": ["@types/jsdom@21.1.7", "", { "dependencies": { "@types/node": "*", "@types/tough-cookie": "*", "parse5": "^7.0.0" } }, "sha512-yOriVnggzrnQ3a9OKOCxaVuSug3w3/SbOj5i7VwXWZEyUNl3bLF9V3MfxGbZKuwqJOQyRfqXyROBB1CoZLFWzA=="],
 
     "@types/json-schema": ["@types/json-schema@7.0.15", "", {}, "sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA=="],
 

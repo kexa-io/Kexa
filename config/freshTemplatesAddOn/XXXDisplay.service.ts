@@ -1,7 +1,7 @@
 //change the path of this file to "~/Kexa/services/addOns/display/XXXDisplay.service.ts"
 //change XXX by the name of your addOn
 //change the path of this import to match the path of your addOn
-import { Rules } from "../../Kexa/models/settingFile/rules.models";
+import type { Rules } from "../../Kexa/models/settingFile/rules.models";
 
 export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false): string{
     //you can also use a switch on rule.objectName to perform a specific return for each type of objectName you create with your addOn

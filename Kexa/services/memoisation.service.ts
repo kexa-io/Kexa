@@ -1,6 +1,6 @@
 
 import { getConfig } from "../helpers/loaderConfig";
-import { Rules } from "../models/settingFile/rules.models";
+import type { Rules } from "../models/settingFile/rules.models";
 import { loadAddOnsCustomUtility } from "./addOn.service";
 import { getNewLogger } from "./logger.service";
 let configuration: any;
@@ -26,7 +26,11 @@ export class Memoisation{
     private static lastGlobalAlert: Date;
 
     public static setCache(rule: Rules, value: any, idScan:string): void {
-        const key = Memoisation.addOnPropertyToSend[rule.cloudProvider](rule, value) + "Rule: " + rule.name + "Level: " + rule.level;
+        const propertyFn = Memoisation.addOnPropertyToSend[rule.cloudProvider];
+        if (typeof propertyFn !== "function") {
+            throw new Error(`No propertyToSend function found for cloudProvider: ${rule.cloudProvider}`);
+        }
+        const key = propertyFn(rule, value) + "Rule: " + rule.name + "Level: " + rule.level;
         Memoisation.cache.set(key, {
             "time": new Date(),
             idScan
@@ -44,7 +48,11 @@ export class Memoisation{
     public static needToBeCache(rule: Rules, value: any, idScan:string, start?:Date): boolean {
         let key;
         try {
-            key = Memoisation.addOnPropertyToSend[rule.cloudProvider](rule, value) + "Rule: " + rule.name + "Level: " + rule.level;
+            const propertyFn = Memoisation.addOnPropertyToSend[rule.cloudProvider];
+            if (typeof propertyFn !== "function") {
+                throw new Error(`No propertyToSend function found for cloudProvider: ${rule.cloudProvider}`);
+            }
+            key = propertyFn(rule, value) + "Rule: " + rule.name + "Level: " + rule.level;
         } catch (error) {
             logger.error("Error during the memoisation process: please check if you have the display addon associated with your rule", rule, error);
             return false;

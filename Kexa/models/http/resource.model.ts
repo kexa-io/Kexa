@@ -1,4 +1,4 @@
-import { HttpRequest } from "./request.models";
+import type { HttpRequest } from "./request.models";
 
 export interface HttpResources {
     request: Array<HttpRequest>|null;

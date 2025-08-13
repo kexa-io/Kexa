@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-import {createSettingsFileFromApiData} from './formatterApi.service';
-import {decryptData} from './decryptApi.service';
-import {getNewLogger} from '../logger.service';
+import { createSettingsFileFromApiData } from './formatterApi.service';
+import { decryptData } from './decryptApi.service';
+import { getNewLogger } from '../logger.service';
 
 const logger = getNewLogger("ApiLoaderLogger");
 
