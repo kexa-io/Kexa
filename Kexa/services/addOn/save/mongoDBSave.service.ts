@@ -1,7 +1,6 @@
-import { ResultScan } from "../../../models/resultScan.models";
-import { getEnvVar } from "../../manageVarEnvironnement.service";
+import type { ResultScan } from "../../../models/resultScan.models";
 import { getContext, getNewLogger } from "../../logger.service";
-import { MongoDBSaveConfig } from "../../../models/export/mongoDB/config.models";
+import type { MongoDBSaveConfig } from "../../../models/export/mongoDB/config.models";
 import { closeConnection, saveData, setConnection } from "../../saving/mongoDB.service";
 import { getConfigOrEnvVar } from "../../manageVarEnvironnement.service";
 const mongoose = require("mongoose")
@@ -51,7 +50,7 @@ export async function save(save: MongoDBSaveConfig, result: ResultScan[][]): Pro
         url = save.urlName;
     else {
         const config = save;
-        url = await getConfigOrEnvVar(config, save.type, save.prefix);    
+        url = await getConfigOrEnvVar(config, save.type, save.prefix);
     }
     logger.info(`Saving to MongoDB`);
     context?.log(`Saving to MongoDB`);

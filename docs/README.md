@@ -39,6 +39,9 @@ Welcome to the Kexa documentation! This documentation will help you understand a
    - [HTTP/HTTPS](./providers/HTTP.md)
    - [Kubernetes](./providers/Kubernetes.md)
    - [Microsoft/Office 365](./providers/O365.md)
+   - [MongoDB](./providers/MongoDB.md)
+   - [MySQL](./providers/MySQL.md)
+   - [PostgreSQL](./providers/PostgreSQL.md)
 
 6. [Notifications](./notifications/README.md)
    - [Email](./notifications/email.md)

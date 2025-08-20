@@ -3,7 +3,7 @@ export interface ProviderResource {
 }
 
 export interface Provider {
-    [key: string]: Resource[]; 
+    [key: string]: Resource[];
 }
 
 export interface Resource {

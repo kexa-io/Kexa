@@ -1,7 +1,7 @@
-import { Rules } from "./rules.models";
+import type { Rules } from "./rules.models";
 
 export interface Capacity {
-    [key: string]: CapacityProvider; 
+    [key: string]: CapacityProvider;
 }
 
 export interface CapacityProvider {

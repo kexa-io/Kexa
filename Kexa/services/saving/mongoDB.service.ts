@@ -1,5 +1,5 @@
 import { getEnvVar } from "../manageVarEnvironnement.service";
-import { MongoDBSaveConfig } from "../../models/export/mongoDB/config.models";
+import type { MongoDBSaveConfig } from "../../models/export/mongoDB/config.models";
 
 import { createConnection } from 'mongoose';
 

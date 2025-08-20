@@ -1,5 +1,5 @@
-import { AzureBlobStorageSaveConfig } from "../../../models/export/azureBlobStorage/config.models";
-import { ProviderResource } from "../../../models/providerResource.models";
+import type { AzureBlobStorageSaveConfig } from "../../../models/export/azureBlobStorage/config.models";
+import type { ProviderResource } from "../../../models/providerResource.models";
 import { getEnvVar } from "../../manageVarEnvironnement.service";
 import { saveJsonToAzureBlobStorage } from "../../saving/azureBlobStorage.service";
 

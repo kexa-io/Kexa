@@ -1,6 +1,5 @@
-import { AzureBlobStorageSaveConfig } from "../../../models/export/azureBlobStorage/config.models";
-import { ResultScan } from "../../../models/resultScan.models";
-import { getEnvVar } from "../../manageVarEnvironnement.service";
+import type { AzureBlobStorageSaveConfig } from "../../../models/export/azureBlobStorage/config.models";
+import type { ResultScan } from "../../../models/resultScan.models";
 import { saveJsonToAzureBlobStorage } from "../../saving/azureBlobStorage.service";
 import { getConfigOrEnvVar } from "../../manageVarEnvironnement.service";
 
@@ -12,7 +11,7 @@ export async function save(save: AzureBlobStorageSaveConfig, result: ResultScan[
         url = save.urlName;
     else {
         const config = save;
-        url = await getConfigOrEnvVar(config, save.type, save.prefix);    
+        url = await getConfigOrEnvVar(config, save.type, save.prefix);
     }
     await saveJsonToAzureBlobStorage(url, save, {data: result});
 }

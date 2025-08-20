@@ -1,8 +1,6 @@
 import { Context } from "@azure/functions";
 import {DebugEnum} from "../enum/debug.enum";
 import * as dotenv from 'dotenv';
-//import { Context } from "@azure/functions"
-//import { Logger } from "tslog"; // PsK: removing not bun compatible 21032025
 import adze, { setup }  from 'adze';
 
 dotenv.config();

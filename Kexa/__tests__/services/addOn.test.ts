@@ -1,6 +1,5 @@
-import { hasValidHeader, loadAddOns, loadAddOnsCustomUtility } from "../../services/addOn.service";
-import { getConfig } from "../../helpers/loaderConfig";
-import { describe, it, beforeAll } from "bun:test";
+import { hasValidHeader, loadAddOnsCustomUtility } from "../../services/addOn.service";
+import { describe, it } from "bun:test";
 
 const { expect } = require('chai');
 const fs = require('fs');
@@ -13,7 +12,7 @@ describe('Add On', () => {
     const addOnPath = '../../services/addOn';
     describe('Main Add On Folder', () => {
         const files = fs.readdirSync("./" + mainFolder + "/services/addOn");
-        
+
         files.forEach((file: string) => {
             if (file.endsWith('Gathering.service.ts')) {
                 let addOnName = file.split('Gathering.service.ts')[0];
@@ -49,13 +48,6 @@ describe('Add On', () => {
             if(files.some((file: string) => file.endsWith(folderName+'.service.ts'))){
                 describe(`Add On ${folderName}`, () => {
                     let subAddons = loadAddOnsCustomUtility(folder, folder);
-                    //Object.keys(subAddons).forEach((addOnName: string) => {
-                    //    describe(`Add On ${addOnName} for ${folderName}`, () => {
-                    //        it(`File ${addOnName}${folderName}.service should be load`, async () => {
-                    //            expect(subAddons[addOnName]).to.be.a('function');
-                    //        });
-                    //    });
-                    //});
                     files.forEach((file: string) => {
                         if (file.endsWith(folderName+'.service.ts')) {
                             let addOnName = file.split(folderName+'.service.ts')[0];

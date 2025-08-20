@@ -1,12 +1,8 @@
 import crypto from 'crypto'
-import { CipherGCMTypes } from 'crypto';
+import type { CipherGCMTypes } from 'crypto';
 import {config} from './encryption.config'
 
 const { secret_key, secret_iv, ecnryption_method } = config
-
-// if ((process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') && (!secret_key || !secret_iv || !ecnryption_method)) {
-//   throw new Error('secretKey, secretIV, and ecnryptionMethod are required')
-// }
 
 let key: string = '';
 let encryptionIV: string = '';

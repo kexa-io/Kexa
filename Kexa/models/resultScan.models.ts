@@ -1,5 +1,5 @@
-import { ParentRules, RulesConditions } from "./settingFile/conditions.models";
-import { Rules } from "./settingFile/rules.models";
+import type { ParentRules, RulesConditions } from "./settingFile/conditions.models";
+import type { Rules } from "./settingFile/rules.models";
 
 export interface ResultScan {
     objectContent?: any;

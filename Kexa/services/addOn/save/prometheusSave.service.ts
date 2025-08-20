@@ -1,8 +1,8 @@
-import { ResultScan } from "../../../models/resultScan.models";
+import type { ResultScan } from "../../../models/resultScan.models";
 import { getEnvVar } from "../../manageVarEnvironnement.service";
 import { getContext, getNewLogger } from "../../logger.service";
-import { PrometheusSaveConfig } from "../../../models/export/prometheus/config.models";
-import { EventMetric } from "../../../models/export/prometheus/eventMetric.models";
+import type { PrometheusSaveConfig } from "../../../models/export/prometheus/config.models";
+import type { EventMetric } from "../../../models/export/prometheus/eventMetric.models";
 import { loadAddOnsCustomUtility } from "../../addOn.service";
 
 const axios = require('axios');
@@ -34,7 +34,7 @@ function convertResultScanToEventMetric(resultScan: ResultScan): EventMetric {
     return {
         level: resultScan.rule.level,
         timestamp: new Date().getTime(),
-        identifier: addOnPropertyToSend[resultScan.rule.cloudProvider](resultScan),
+        identifier: addOnPropertyToSend?.[resultScan.rule.cloudProvider](resultScan),
         ruleName: resultScan.rule.name??"",
     };
 }

@@ -1,9 +1,9 @@
-import { ResultScan } from "../models/resultScan.models";
-import { Rules } from "../models/settingFile/rules.models";
+import type { ResultScan } from "../models/resultScan.models";
+import type { Rules } from "../models/settingFile/rules.models";
 import { loadAddOnsCustomUtility } from "./addOn.service";
 
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
-import {getContext, getNewLogger} from "./logger.service";
+import {getNewLogger} from "./logger.service";
 const logger = getNewLogger("DiplayLogger");
 const cfonts = require('cfonts');
 
@@ -36,7 +36,7 @@ export function renderTableAllScan(allScan: ResultScan[][]): string{
                         `+ propertyToSend(resultScan.rule, resultScan.objectContent, false) +`
                     </td>
                 </tr>`;
-            result += (listResultScan[listResultScan.length-1].objectContent === resultScan.objectContent)?'</tbody></table></td></tr>':'';
+            result += (listResultScan[listResultScan.length-1]?.objectContent === resultScan.objectContent)?'</tbody></table></td></tr>':'';
             return result
         }).join(' ')
     }).join(' ')
@@ -75,7 +75,7 @@ export function renderTableAllScanLoud(allScan: ResultScan[][]): string{
                         `+ propertyToSend(resultScan.rule, resultScan.objectContent, false) +`
                     </td>
                 </tr>`;
-            result += (listResultScan[listResultScan.length-1].objectContent === resultScan.objectContent)?'</tbody></table></td></tr>':'';
+            result += (listResultScan[listResultScan.length-1]?.objectContent === resultScan.objectContent)?'</tbody></table></td></tr>':'';
             return result
         }).join(' ')
     }).join(' ')
@@ -84,11 +84,12 @@ export function renderTableAllScanLoud(allScan: ResultScan[][]): string{
 }
 
 export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false): string{
-    try{
-        return addOnPropertyToSend[rule?.cloudProvider](rule, objectContent, isSms);
-    }catch(e){
-        logger.warn("Error while loading addOn display for rule : " + rule?.name);
-        return `Id : ` + objectContent.id
+    const fn = addOnPropertyToSend[rule?.cloudProvider];
+    if (typeof fn === "function") {
+        return fn(rule, objectContent, isSms);
+    } else {
+        logger.warn("Error while loading addOn display for rule :" + rule?.cloudProvider);
+        return `Id : ` + objectContent.id;
     }
 }
 
