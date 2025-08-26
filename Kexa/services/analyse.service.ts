@@ -43,6 +43,7 @@ async function init() {
     }
 }
 
+await init();
 const defaultRulesDirectory = "./rules";
 const secondDefaultRulesDirectory = "./Kexa/rules";
 
