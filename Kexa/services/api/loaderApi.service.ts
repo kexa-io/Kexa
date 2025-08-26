@@ -52,6 +52,7 @@ export async function getNotificationGroupsFromApi(config: any){
     let token = process.env.KEXA_API_TOKEN;
     let notificationGroups: any = [];
 
+    logger.info("-------------------DEBUGGING CONFIG---------------",config);
     for (const key of Object.keys(config)) {
         if (key !== 'save') {
             await Promise.all(config[key].map(async (item: any) => {

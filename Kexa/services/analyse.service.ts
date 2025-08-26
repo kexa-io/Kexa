@@ -42,7 +42,7 @@ async function init() {
         logger.error("Failed to load config", error);
     }
 }
-init();
+
 const defaultRulesDirectory = "./rules";
 const secondDefaultRulesDirectory = "./Kexa/rules";
 
@@ -53,6 +53,7 @@ let headers: any;
 export async function gatheringRules(rulesDirectory:string, getAll:boolean=false): Promise<SettingFile[]> {
 
     headers = await extractHeaders();
+    await init();
 
     if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
         logger.warn("Interface configuration enabled, if you're not running Kexa script to work with the SaaS, please configure INTERFACE_CONFIGURATION_ENABLED to false in your .env file");
@@ -140,6 +141,8 @@ export function extractAddOnNeed(settingFileList: any[]){
 }
 
 async function getListNeedRules(): Promise<string[]> {
+    await init();
+
     const config = await getConfig();
     let listNeedRules = new Array<string>();
     for(let cloudProvider of Object.keys(config)){
@@ -162,6 +165,7 @@ async function getListNeedRules(): Promise<string[]> {
 
 export async function analyzeRule(ruleFilePath:string, listNeedRules:string[], getAll:boolean=false): Promise<SettingFile | null> {
     logger.debug("analyze:"+ruleFilePath);
+
     try {
         let lastBlockSplited = ruleFilePath.split('/')[ruleFilePath.split('/').length -1].split(".");
         if(lastBlockSplited.length == 1){
@@ -269,6 +273,7 @@ export async function checkDocAlert(alert:Alert): Promise<string[]> {
 
 export async function checkDocAlertConfig(alertConfig:ConfigAlert, level:string): Promise<string[]> {
     logger.debug("check Alert config in doc");
+
     let result:string[] = [];
     if(!alertConfig.hasOwnProperty("enabled")) result.push("error - enabled not found in alert config for "+level);
     else if(typeof alertConfig.enabled !== "boolean") result.push("error - enabled not boolean in alert config for "+level + " : "+alertConfig.enabled);
