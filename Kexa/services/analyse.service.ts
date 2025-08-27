@@ -390,7 +390,7 @@ export function checkSubRuleCondition(subRule:RulesConditions): string[] {
     else if(!Object.values(ConditionEnum).includes(subRule.condition)) result.push("error - condition not valid in sub rule condition : " + subRule.condition);
     else if (subRule.condition.includes("DATE") && !subRule.hasOwnProperty("date")) result.push("error - date not found in sub rule condition");
     if(!subRule.hasOwnProperty("value")) result.push("error - value not found in sub rule condition");
-    else if(typeof subRule.value !== "string" && typeof subRule.value !== "number" && !Array.isArray(subRule.value)) result.push("error - value not valid in sub rule condition : " + subRule.value);
+    // else if(typeof subRule.value !== "string" && typeof subRule.value !== "number" && !Array.isArray(subRule.value)) result.push("error - value not valid in sub rule condition : " + subRule.value);
     else if(Array.isArray(subRule.value) && subRule.value.length === 0) result.push("error - value empty in sub rule condition");
     else if(Array.isArray(subRule.value)){
         subRule.value.forEach((value) => {
