@@ -75,6 +75,7 @@ export async function getNotificationGroupsFromApi(config: any){
             }));
         }
     }
+    logger.info("Debugging Notification Groups ", notificationGroups);
     return notificationGroups;
 }
 
@@ -99,6 +100,7 @@ export async function getRulesFromApi(notificationGroups: any){
             logger.error(error);
         }
     }
+    logger.info("Debugging RRules ", rules);
     return rules;
 }
 
