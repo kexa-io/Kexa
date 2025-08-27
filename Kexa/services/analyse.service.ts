@@ -58,7 +58,6 @@ export async function gatheringRules(rulesDirectory:string, getAll:boolean=false
 
     if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
         logger.warn("Interface configuration enabled, if you're not running Kexa script to work with the SaaS, please configure INTERFACE_CONFIGURATION_ENABLED to false in your .env file");
-        logger.info("Gathering rules from api...");
         let rules =  await getSettingsFileFromApi(config);
         extractAddOnNeed(rules);
         logger.debug("rules list:");
