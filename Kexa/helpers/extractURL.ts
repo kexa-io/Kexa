@@ -1,6 +1,5 @@
-const jsdom = require("jsdom")
-const { JSDOM } = jsdom
-global.DOMParser = new JSDOM().window.DOMParser
+import { JSDOM } from "jsdom";
+global.DOMParser = new JSDOM().window.DOMParser;
 
 export const extractURL = (text: string): string | null => {
     return extractFirstURLFromHTML(text)??extractFirstURL(text);

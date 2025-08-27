@@ -1,8 +1,8 @@
 import { getEnvVar } from "../../manageVarEnvironnement.service";
 import { getContext, getNewLogger } from "../../logger.service";
-import { ProviderResource } from "../../../models/providerResource.models";
+import type { ProviderResource } from "../../../models/providerResource.models";
 import { getConfig } from "../../../helpers/loaderConfig";
-import { KexaSaveConfig } from "../../../models/export/kexa/config.model";
+import type { KexaSaveConfig } from "../../../models/export/kexa/config.model";
 import { propertyToSend } from "../../display.service";
 
 const axios = require('axios');
@@ -20,9 +20,9 @@ export async function exportation(save: KexaSaveConfig, resources: ProviderResou
     let configSend:any = {};
     Object.keys(resources).forEach((providerName) => {
         configSend[providerName] = config[providerName]??[];
-        resources[providerName].forEach((provider) => {
+        resources?.[providerName]?.forEach((provider) => {
             Object.keys(provider).forEach((key) => {
-                provider[key].forEach((resource) => {
+                provider?.[key]?.forEach((resource) => {
                     resource.identifier = propertyToSend(resource.rule, resource.objectContent, true);
                 });
             });

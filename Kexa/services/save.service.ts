@@ -1,8 +1,8 @@
 import { Storage } from '@google-cloud/storage';
-import { ResultScan } from '../models/resultScan.models';
+import type { ResultScan } from '../models/resultScan.models';
 import { getContext, getNewLogger } from "./logger.service";
 import { loadAddOnsCustomUtility } from './addOn.service';
-import { SaveConfig } from '../models/export/config.models';
+import type { SaveConfig } from '../models/export/config.models';
 import { getConfig } from '../helpers/loaderConfig';
 import { jsonStringify } from '../helpers/jsonStringify';
 
@@ -29,15 +29,16 @@ export async function saveResult(result: ResultScan[][]): Promise<void> {
     });
     let dataToSave = [ result, resultOnlyWithErrors ];
     return Promise.all(configuration.save.map(async (save: SaveConfig) => {
-        if(addOnSave[save.type]){
-            try{
-                await addOnSave[save.type](save, dataToSave[save.onlyErrors??false ? 1 : 0]);
-            }catch(e:any){
+        const saveFn = addOnSave[save.type];
+        if (typeof saveFn === "function") {
+            try {
+                await saveFn(save, dataToSave[save.onlyErrors ?? false ? 1 : 0]);
+            } catch (e: any) {
                 logger.error("Error in save " + save.type + " : " + e.message);
                 context?.log("Error in save " + save.type + " : " + e.message);
                 logger.debug(e);
             }
-        }else{
+        } else {
             logger.warn('Unknown save type: ' + save.type);
             context?.log('Unknown save type: ' + save.type);
         }

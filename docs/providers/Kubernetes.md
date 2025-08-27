@@ -1,5 +1,5 @@
 <div align="center">
-    <a href="https://www.kexa.io/addOn/azure">
+    <a href="https://www.kexa.io/addOn/kubernetes">
         <img src="../../images/kubernetes-logo.png" alt="Logo" width="300"/>
     </a>
 </div>

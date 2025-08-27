@@ -1,7 +1,7 @@
 import { LevelEnum } from '../../enum/level.enum';
 import { ObjectNameEnum } from '../../enum/objectName.enum';
 import { ProviderEnum } from '../../enum/provider.enum';
-import { ParentRules, RulesConditions } from './conditions.models';
+import type { ParentRules, RulesConditions } from './conditions.models';
 
 export interface Rules {
     name?:string;

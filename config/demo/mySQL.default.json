@@ -1,5 +1,5 @@
 {
-    "azure": [
+    "mysql": [
         {
             "name": "Project A",
             "prefix": "PROJECTA-",

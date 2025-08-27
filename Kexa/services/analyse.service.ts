@@ -1,20 +1,20 @@
 import { LevelEnum } from './../enum/level.enum';
 import fs from "fs";
 import yaml from "js-yaml";
-import { SettingFile } from "../models/settingFile/settingFile.models";
-import { Rules } from "../models/settingFile/rules.models";
-import { ParentRules, RulesConditions } from "../models/settingFile/conditions.models";
+import type { SettingFile } from "../models/settingFile/settingFile.models";
+import type { Rules } from "../models/settingFile/rules.models";
+import type { ParentRules, RulesConditions } from "../models/settingFile/conditions.models";
 import { ConditionEnum } from "../enum/condition.enum";
-import { ProviderResource } from "../models/providerResource.models";
+import type { ProviderResource } from "../models/providerResource.models";
 import { OperatorEnum } from "../enum/operator.enum";
-import { ResultScan, SubResultScan } from "../models/resultScan.models";
+import type { ResultScan, SubResultScan } from "../models/resultScan.models";
 import { alertFromRule } from "./alerte.service";
-import { Alert } from "../models/settingFile/alert.models";
-import { ConfigAlert } from "../models/settingFile/configAlert.models";
-import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
+import type { Alert } from "../models/settingFile/alert.models";
+import type { ConfigAlert } from "../models/settingFile/configAlert.models";
+import type { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
 import { AlertEnum } from '../enum/alert.enum';
 import {getConfigOrEnvVar} from './manageVarEnvironnement.service';
-import moment, { Moment, unitOfTime } from 'moment';
+import moment, { type Moment, type unitOfTime } from 'moment';
 import { BeHaviorEnum } from '../enum/beHavior.enum';
 import { writeStringToJsonFile } from '../helpers/files';
 import { extractHeaders } from './addOn.service';
@@ -29,10 +29,7 @@ import { jsonStringify } from '../helpers/jsonStringify';
 import { Memoisation } from './memoisation.service';
 const logger = getNewLogger("AnalyseLogger");
 import {getSettingsFileFromApi} from "../services/api/loaderApi.service";
-import {escapedYamlToJson} from "../services/api/formatterApi.service";
 
-const jsome = require('jsome');
-jsome.level.show = true;
 const varEnvMin = {
     "email": ["EMAILPORT", "EMAILHOST", "EMAILUSER", "EMAILPWD", "EMAILFROM"],
     "sms": ["SMSACCOUNTSID", "SMSAUTHTOKEN", "SMSFROM"],
@@ -45,8 +42,9 @@ async function init() {
         logger.error("Failed to load config", error);
     }
 }
-init();
-const levelAlert = ["info", "warning", "error", "critical"];
+
+await init();
+
 const defaultRulesDirectory = "./rules";
 const secondDefaultRulesDirectory = "./Kexa/rules";
 
@@ -56,14 +54,11 @@ let headers: any;
 // exam each rules and raise alarm or not
 export async function gatheringRules(rulesDirectory:string, getAll:boolean=false): Promise<SettingFile[]> {
 
-
     headers = await extractHeaders();
 
     if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
         logger.warn("Interface configuration enabled, if you're not running Kexa script to work with the SaaS, please configure INTERFACE_CONFIGURATION_ENABLED to false in your .env file");
-        logger.info("Gathering rules from api...");
         let rules =  await getSettingsFileFromApi(config);
-        let listNeedRules = await getListNeedRules();
         extractAddOnNeed(rules);
         logger.debug("rules list:");
         logger.debug(rules.map((value) => value.alert.global.name).join(", "));
@@ -194,7 +189,7 @@ export async function analyzeRule(ruleFilePath:string, listNeedRules:string[], g
     } catch (e) {
         logger.error("error - "+ ruleFilePath + " was not load properly : "+e);
         return null;
-    }    
+    }
 }
 
 export function replaceElement(contentRuleFile:string, variable: any){
@@ -394,14 +389,14 @@ export function checkSubRuleCondition(subRule:RulesConditions): string[] {
     else if(!Object.values(ConditionEnum).includes(subRule.condition)) result.push("error - condition not valid in sub rule condition : " + subRule.condition);
     else if (subRule.condition.includes("DATE") && !subRule.hasOwnProperty("date")) result.push("error - date not found in sub rule condition");
     if(!subRule.hasOwnProperty("value")) result.push("error - value not found in sub rule condition");
-    //else if(typeof subRule.value !== "string" && typeof subRule.value !== "number" && !Array.isArray(subRule.value)) result.push("error - value not valid in sub rule condition : " + subRule.value);
-    //else if(Array.isArray(subRule.value) && subRule.value.length === 0) result.push("error - value empty in sub rule condition");
-    //else if(Array.isArray(subRule.value)){
-    //    subRule.value.forEach((value) => {
-    //        checkRuleCondition(value).forEach((value) => result.push(value));
-    //    });
-    //}
-    
+    // else if(typeof subRule.value !== "string" && typeof subRule.value !== "number" && !Array.isArray(subRule.value)) result.push("error - value not valid in sub rule condition : " + subRule.value);
+    else if(Array.isArray(subRule.value) && subRule.value.length === 0) result.push("error - value empty in sub rule condition");
+    else if(Array.isArray(subRule.value)){
+        subRule.value.forEach((value) => {
+            checkRuleCondition(value).forEach((value) => result.push(value));
+        });
+    }
+
     return result;
 }
 
@@ -410,15 +405,15 @@ function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, ind
         logger.warn("This cloud provider is not supported:"+rule.cloudProvider + "\nDon't forget to add this addOn");
         return BeHaviorEnum.RETURN;
     }
-    if(!Array.isArray(resources[rule.cloudProvider]) || resources[rule.cloudProvider].length === 0){
+    if(!Array.isArray(resources[rule.cloudProvider]) || resources[rule.cloudProvider]?.length === 0){
         logger.warn("Did not retriev any resources for cloud provider "+rule.cloudProvider + " with configuration index " + index + "\nVerify credentials and configuration");
         return BeHaviorEnum.RETURN;
     }
-    if(!resources[rule.cloudProvider][index].hasOwnProperty(rule.objectName)){
+    if(!resources[rule.cloudProvider]?.[index]?.hasOwnProperty(rule.objectName)){
         logger.warn("object name : "+rule.objectName + " not found in your provider " + rule.cloudProvider + " with configuration index " + index + "\nMake sure you have the right addOn or the right spelling in your rules");
         return BeHaviorEnum.CONTINUE;
     }
-    if(resources[rule.cloudProvider][index][rule.objectName] === null){
+    if(resources[rule.cloudProvider]?.[index]?.[rule.objectName] === null){
         logger.warn("No " + rule.objectName + " found in your provider " + rule.cloudProvider + " with configuration index " + index);
         return BeHaviorEnum.CONTINUE;
     }
@@ -434,20 +429,17 @@ export function checkRules(rules:any[], resources:ProviderResource, alert: Alert
 
 
     rules.forEach(rule => {
-    
         if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
             let condObj;
             try {
-              condObj = typeof rule.conditions === 'string' ? 
+                condObj = typeof rule.conditions === 'string' ? 
                 JSON.parse(rule.conditions) : rule.conditions;
             } catch (e) {
-              return;
+                return;
             }
-            const formatted = JSON.stringify(condObj, null, 2)
-              .replace(/"([^"]+)":/g, '$1:');
             rule.conditions = condObj;
             rule.cloudProvider = rule.cloudProvider.name as string;
-          }
+        }
         if(!rule.applied) return;
         context?.log("check rule:"+rule.name);
         logger.info("check rule:"+rule.name);
@@ -456,39 +448,19 @@ export function checkRules(rules:any[], resources:ProviderResource, alert: Alert
             logger.debug("cloud provider not found in config:"+rule.cloudProvider);
             return;
         }
-  
+
         let configAssign = configuration[rule.cloudProvider];
 
-        
         if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
             configAssign.forEach((config: any) => {
                 if (Array.isArray(config.notificationGroups)) {
-                    for (let i = 0; i < config.notificationGroups.length; i++) {
-                        // if not exist
-                        if (!config.rules.includes(config.notificationGroups[i].name))
-                            config.rules.push(config.notificationGroups[i].name);
+                    for (const notificationGroup of config.notificationGroups) {
+                        if (!config.rules.includes(notificationGroup.name))
+                            config.rules.push(notificationGroup.name);
                     }
                 }
             });
         }
-
-
-// NEEDED CONFIG ASSIGN
-// [
-//   {
-//     description: 'organization 4urcloud',
-//     prefix: 'KUBE1_',
-//     rules: [ 'kubernetesConsumptions', 'kubernetesStatus' ],
-//     ObjectNameNeed: [ 'podsConsumption' ]
-//   },
-//   {
-//     description: 'second proj kube',
-//     prefix: 'KUBE1_',
-//     rules: [ 'kubernetesStatus' ],
-//     ObjectNameNeed: []
-//   }
-// ]
-
 
         let objectResources:any = []
         for(let i = 0; i < configAssign.length; i++){
@@ -504,7 +476,7 @@ export function checkRules(rules:any[], resources:ProviderResource, alert: Alert
                     case BeHaviorEnum.CONTINUE:
                         continue;
                 }
-               objectResources = [...objectResources, ...resources[rule.cloudProvider][i][rule.objectName]]
+                objectResources = [...objectResources, ...resources[rule.cloudProvider]?.[i]?.[rule.objectName]]
             }
         }
         let subResult: ResultScan[] = [];
@@ -609,8 +581,7 @@ export function parentResultScan(subResultScans: SubResultScan[], result: boolea
 export function checkCondition(condition:RulesConditions, resource:any): SubResultScan {
     try{
         let value = getSubProperty(resource, condition.property);
-        if (condition.value === undefined)
-            condition.value =  '';
+        condition.value ??= '';
         if (value === undefined)
             value = '';
         switch(condition.condition){

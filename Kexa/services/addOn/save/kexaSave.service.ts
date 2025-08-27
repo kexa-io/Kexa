@@ -1,12 +1,13 @@
-import { ResultScan } from "../../../models/resultScan.models";
+import type { ResultScan } from "../../../models/resultScan.models";
 import { getEnvVar } from "../../manageVarEnvironnement.service";
 import { getNewLogger } from "../../logger.service";
-import { KexaSaveConfig } from "../../../models/export/kexa/config.model";
+import type { KexaSaveConfig } from "../../../models/export/kexa/config.model";
 import { propertyToSend } from "../../display.service";
 import { extractHeaders } from "../../addOn.service";
 
 const axios = require('axios');
 const logger = getNewLogger("KexaSaveLogger");
+const DEFAULT_KEXA_API_URL = "http://localhost:4012/api";
 
 interface ResourceComparison {
     shouldSendResources: boolean;
@@ -26,7 +27,6 @@ async function compareResourcesWithApi(name: string, token: string, baseApiUrl: 
             }
         }
     }
-    
     const totalResourcesCount = Object.values(resources).reduce((sum, resourceArray) => {
         const uniqueResources = new Set(resourceArray);
         return sum + uniqueResources.size;
@@ -53,16 +53,14 @@ async function compareResourcesWithApi(name: string, token: string, baseApiUrl: 
         const providerItemsFromApi = await axios.get(`${baseApiUrl}/kexa/providerItems`, {
             headers: requestHeaders
         });
-        
+
         let itemsFromApi;
- 
-       if (!Array.isArray(providerItemsFromApi.data.message)) {
+
+        if (!Array.isArray(providerItemsFromApi.data.message)) {
             itemsFromApi = [];
-        }
-        else {
+        } else {
             itemsFromApi = providerItemsFromApi.data.message;
         }
-        
         const existingItems = new Set();
         itemsFromApi.forEach((item: any) => {
             existingItems.add(`${item.providerName}:${item.name}`);
@@ -70,7 +68,7 @@ async function compareResourcesWithApi(name: string, token: string, baseApiUrl: 
 
         const missingProviderItems: { [key: string]: string[] } = {};
         for (const providerName of Object.keys(resources)) {
-            for (const resourceName of resources[providerName]) {
+            for (const resourceName of resources?.[providerName] ?? []) {
                 const key = `${providerName}:${resourceName}`;
                 if (!existingItems.has(key)) {
                     if (!missingProviderItems[providerName]) {
@@ -104,9 +102,9 @@ export async function initOnly(save: KexaSaveConfig): Promise<void> {
     }
 
     logger.info(`Initializing provider items in Kexa Premium`);
-    const baseApiUrl = process.env.KEXA_API_URL ?? `http://localhost:4012/api`;
+    const baseApiUrl = process.env.KEXA_API_URL ?? DEFAULT_KEXA_API_URL;
     const comparison = await compareResourcesWithApi(name, token, baseApiUrl);
-    
+
     if (comparison.shouldSendResources && Object.keys(comparison.missingProviderItems).length > 0) {
         const requestHeaders = {
             User: name,
@@ -141,7 +139,7 @@ export async function save(save: KexaSaveConfig, result: ResultScan[][]): Promis
         name = (await getEnvVar(save.name))??save.name;
         token = (await getEnvVar(save.token))??save.token;
     }
-    
+
     logger.info(`Saving to Kexa API`);
     result.forEach(async (resultScan) => {
         resultScan.forEach(async (subResultScan) => {
@@ -149,7 +147,7 @@ export async function save(save: KexaSaveConfig, result: ResultScan[][]): Promis
         });
     });
 
-    const baseApiUrl = process.env.KEXA_API_URL ?? `http://localhost:4012/api`;
+    const baseApiUrl = process.env.KEXA_API_URL ?? DEFAULT_KEXA_API_URL;
     const comparison = await compareResourcesWithApi(name, token, baseApiUrl);
     logger.info(`There are ${comparison.localCount - comparison.apiCount} missing provider items to synchronize`);
 

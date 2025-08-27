@@ -1,12 +1,15 @@
-import { getNewLogger, setContext } from "../services/logger.service";
-
-
-import { Alert } from "../models/settingFile/alert.models";
+import { getNewLogger } from "../services/logger.service";
+import type { fuzzConfig } from "../models/fuzzing/config.models";
+import { setup as setupLogger } from 'adze';
+import { checkRules } from "../services/analyse.service";
+import type { ProviderResource, Provider } from "../models/providerResource.models";
+import { checkIfDataIsProvider } from "../services/addOn.service";
+import type { Alert } from "../models/settingFile/alert.models";
 import { AlertEnum } from "../enum/alert.enum";
-import { Rules } from "../models/settingFile/rules.models";
-import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
-import { ConfigAlert } from "../models/settingFile/configAlert.models";
-import { SettingFile } from "../models/settingFile/settingFile.models";
+import type { Rules } from "../models/settingFile/rules.models";
+import type { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
+import type { ConfigAlert } from "../models/settingFile/configAlert.models";
+import type { SettingFile } from "../models/settingFile/settingFile.models";
 
 
 function getGlobalConfigAlert(): GlobalConfigAlert {
@@ -69,7 +72,7 @@ function getRuleFromFuzzData3(fuzzData: Buffer): Rules {
 function getRandomizedConditionEnum(): ConditionEnum {
     const conditionEnum = Math.floor(Math.random() * Object.keys(ConditionEnum).length / 2);
     const conditionEnumValue = Object.values(ConditionEnum)[conditionEnum];
-    return conditionEnumValue;
+    return conditionEnumValue ?? ConditionEnum.EQUAL;
 }
 
 function getRuleFromFuzzData2(fuzzData: Buffer): Rules {
@@ -78,11 +81,11 @@ function getRuleFromFuzzData2(fuzzData: Buffer): Rules {
     }
 
     function extractBoolean(offset: number): boolean {
-        return fuzzData[offset] % 2 === 0;
+        return fuzzData?.[offset] % 2 === 0;
     }
 
     function extractNumber(offset: number, max: number): number {
-        return fuzzData[offset] % max;
+        return fuzzData?.[offset] % max;
     }
 
     const rules: Rules = {
@@ -109,18 +112,14 @@ function getRuleFromFuzzData2(fuzzData: Buffer): Rules {
     return rules;
 }
 
-import { fuzzConfig } from "../models/fuzzing/config.models";
-
-import {checkRules} from "../services/analyse.service";
-
 export async function fuzz(fuzzData: Buffer) {
     const configuration = getFuzzConfig(fuzzData);
 
     const logger = getNewLogger("MainLogger");
-    if (process.env.DEV) {
-        if (process.env.DEV == "true") {
-            logger.setting.level = 2;
-        }
+    if (process.env.DEV === "true") {
+        setupLogger({
+            activeLevel: 'debug'
+        });
     }
 
 	const settings: SettingFile[] = [{
@@ -142,21 +141,15 @@ export async function fuzz(fuzzData: Buffer) {
                 providResoruce[res.key] = [];
                 providResoruce[res.key][0] = {};
                 Object.keys(data).forEach((fieldName: any) => {
-                  if (providResoruce[res.key]) {
-                    providResoruce[res.key][0][fieldName] = data[fieldName];
-                  }
+                    if (providResoruce[res.key]) {
+                        providResoruce[res.key][0][fieldName] = data[fieldName];
+                    }
                 });
             });
         }
     }
     checkRules([getRuleFromFuzzData3(fuzzData), getRuleFromFuzzData3(fuzzData), getRuleFromFuzzData3(fuzzData)], providResoruce, getAlert(), getFuzzConfigYaml(fuzzData));
 }
-
-
-import { ProviderResource, Provider, Resource } from "../models/providerResource.models";
-
-
-import {checkIfDataIsProvider} from "../services/addOn.service";
 
 function getFuzzConfig(fuzzData: Buffer) : fuzzConfig {
     return {
@@ -193,7 +186,7 @@ function generateRandomInt(seed: Buffer, min: number, max: number): number {
 function generateRandomConfigList(seed: Buffer): fuzzConfig[] {
     const listSize = generateRandomInt(seed, 1, 10);
     let randomList = [];
-    
+
     for (let i = 0; i < listSize; i++) {
         const itemSeed = Buffer.alloc(seed.length);
         for (let j = 0; j < seed.length; j++) {

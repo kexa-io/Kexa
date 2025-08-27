@@ -1,4 +1,4 @@
-import { SaveConfig } from "../config.models";
+import type { SaveConfig } from "../config.models";
 
 export interface PrometheusSaveConfig extends SaveConfig {
     type: "prometheus";

@@ -1,5 +1,5 @@
 <div align="center">
-    <a href="https://www.kexa.io/addOn/github">
+    <a href="https://www.kexa.io/addOn/googleDrive">
         <img src="../../images/google-drive-logo.png" alt="Logo" width="200"/>
     </a>
 </div>

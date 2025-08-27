@@ -1,5 +1,5 @@
-import { AnonymousCredential, BlobServiceClient, BlockBlobParallelUploadOptions, StorageSharedKeyCredential } from "@azure/storage-blob";
-import { AzureBlobStorageSaveConfig } from "../../models/export/azureBlobStorage/config.models";
+import { AnonymousCredential, BlobServiceClient, type BlockBlobParallelUploadOptions, StorageSharedKeyCredential } from "@azure/storage-blob";
+import type { AzureBlobStorageSaveConfig } from "../../models/export/azureBlobStorage/config.models";
 import { getEnvVar } from "../manageVarEnvironnement.service";
 import { getContext, getNewLogger } from "../logger.service";
 import { DefaultAzureCredential } from "@azure/identity";

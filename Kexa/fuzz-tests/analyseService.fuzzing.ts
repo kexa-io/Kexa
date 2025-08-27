@@ -1,4 +1,4 @@
-import  { RulesConditions } from "../models/settingFile/conditions.models";
+import type { RulesConditions } from "../models/settingFile/conditions.models";
 import { ConditionEnum } from "../enum/condition.enum";
 
 
@@ -18,7 +18,6 @@ function getFuzzDate(fuzzData: Buffer) {
 
 function generateCronExpressionFromFuzzData(fuzzData: Buffer): string {
     // Example: Convert the first few bytes of fuzzData into cron components.
-    
     const minute = fuzzData.readUInt8(0) % 60;
     const hour = fuzzData.readUInt8(1) % 24;
     const dayOfMonth = fuzzData.readUInt8(2) % 31 + 1;
@@ -29,16 +28,16 @@ function generateCronExpressionFromFuzzData(fuzzData: Buffer): string {
 }
 
 export async function fuzz(fuzzData: Buffer) {
- 	fuzzString(getFuzzString(fuzzData));
+	fuzzString(getFuzzString(fuzzData));
 	if (fuzzData.length >= 4) {
 		fuzzNumber(getFuzzNumber(fuzzData));
 		fuzzDate(generateCronExpressionFromFuzzData(fuzzData));
 	}
 }
-	
+
 async function fuzzDate(fuzzDate: string) {
 	const analyseService = await import('../services/analyse.service');
-	
+
 
 	const functionsToTest: Array<keyof typeof analyseService> = [
 		'checkEqualDate',
@@ -61,7 +60,7 @@ async function fuzzDate(fuzzDate: string) {
 				const func = analyseService[functionName];
 				await (func as AnalyseServiceFunction)(rulesConditions, rulesConditions.date);
 			} catch (error) {
-				//console.warn(`Error in function ${functionName}:`, error);
+				console.warn(`Error in function ${functionName}:`, error);
 			}
 		}
 }
@@ -82,7 +81,7 @@ async function fuzzNumber(fuzzData: number) {
         date: undefined
 	};
 
-		for (const functionName of functionsToTest) {	
+		for (const functionName of functionsToTest) {
 			try {
 				const func = analyseService[functionName];
 				await (func as AnalyseServiceFunction)(rulesConditions, fuzzData);
@@ -94,7 +93,7 @@ async function fuzzNumber(fuzzData: number) {
 
 async function fuzzString(fuzzData: string) {
 	const analyseService = await import('../services/analyse.service');
-    
+
 	type AnalyseServiceFunction = (rules: RulesConditions, value: string) => any;
 
     const functionsToTest: Array<keyof typeof analyseService> = [
@@ -123,7 +122,7 @@ async function fuzzString(fuzzData: string) {
                 const func = analyseService[functionName];
                 await (func as AnalyseServiceFunction)(rulesConditions, fuzzData.toString());
             } catch (error) {
-                // console.warn(`Error in function ${functionName}:`, error);
+                console.warn(`Error in function ${functionName}:`, error);
             }
         }
 }

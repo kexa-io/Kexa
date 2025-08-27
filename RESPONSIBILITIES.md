@@ -1,4 +1,8 @@
-# RESPONSIBILITIES
+---
+sidebar_position: 11
+---
+
+# Responsabilities
 
 - [RESPONSIBILITIES](#responsibilities)
   - [Overview](#overview)

@@ -19,11 +19,47 @@ The console displays real-time scan progress with color-coded severity levels an
 	<img alt="Render HTML of security scan" src="../../images/Exemple_Scan_Security_html.png" height="800"/>
 </div>
 
-HTML reports are automatically generated in the `/output` folder with:
+HTML reports are automatically generated in the `/output/scans/<environment>/<YYYYMMDDHHmm>.html` folder with:
 - Summary of all error levels (info to critical)
 - Detailed rule violations and affected resources
 - Clickable links to resources (when available)
 - Resource identification details
+
+## JSON Output
+
+You can also generate JSON output files for programmatic access to gathering results with the argument `-o`.
+The JSON files contain structured data about all the information collected during the scan.
+It will generate at `/output/resources/<YYYYMMDDHHmm>.json` folder with the following structure:
+
+```json
+{
+  "<providerA>": [
+	{ // Environment 1
+		"<resource_type1>": [
+			{} // actual resource data
+		],
+		"<resource_type2>": [
+			{}
+		]
+	},
+	{ // Environment 2
+		"<resource_type1>": [
+			{}
+		],
+		"<resource_type2>": [
+			{}
+		]
+	}
+  ],
+  "<providerB>": [
+	{ // Environment 1
+		"<resource_type3>": [
+			{}
+		]
+	}
+  ],
+}
+```
 
 ## Notification Examples
 

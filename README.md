@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 # Kexa
 
 [![Contributors][contributors-shield]][contributors-url]
@@ -13,7 +17,7 @@
 
 <div align="center">
   <a href="https://www.kexa.io/">
-    <img src="images/kexa-no-background-color.png" alt="Logo" width="100" height="100">
+    <img src="images/kexa-no-background-color.png" alt="Logo" width="100" height="100"/>
   </a>
   <h3>Multi-Cloud Compliance Management Made Simple</h3>
 </div>
@@ -108,9 +112,9 @@ Monitor Azure Machine Learning workspace health by checking for failed training 
 
 4. You can configure Kexa by editing the `default.conf` file inside the `config` folder and re-run the script.
 
-This will check the website <kexa.io> by default.
+This will check the website [kexa.io](https://www.kexa.io/) by default.
 
-see <https://github.com/kexa-io/kexa-samples> for samples.
+see [https://github.com/kexa-io/kexa-samples](https://github.com/kexa-io/kexa-samples) for samples.
 
 ## Installation Methods
 

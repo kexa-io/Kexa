@@ -1,3 +1,7 @@
+---
+sidebar_position: 10
+---
+
 # Changelog
 
 ## [v2.1.3] - 2025-06-23
