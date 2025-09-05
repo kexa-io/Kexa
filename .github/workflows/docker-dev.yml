@@ -37,33 +37,19 @@ jobs:
       - name: Run tests
         run: bun run test
 
+      - name: Get latest release version
+        uses: rez0n/actions-github-release@794c12f5e8d629e6ca329cf2e2daeb0f0ce6a3ce # main
+        id: get_latest_release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: "kexa-io/Kexa"
+          type: "stable"
 
-    ##############################
-    #    this will be deleted once transfer to new registry is done
-    ##############################
+      - name: Print New Latest Version
+        run: echo ${{ steps.get_latest_release.outputs.release }}
+
+
       - name: Login to Docker Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ secrets.DOCKER_REGISTRY_NAME}}
-          username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
-          password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Push on Docker Registry
-        uses: docker/build-push-action@v6
-        with:
-          context: ./
-          push: true
-          tags: ${{ secrets.DOCKER_REGISTRY_NAME}}/${{ vars.IMAGE_NAME }}:latest
-          platforms: linux/amd64,linux/arm64
-    ######################################
-
-      - name: Login to Docker New Registry
         uses: docker/login-action@v3
         with:
           registry: ${{ secrets.DOCKER_REGISTRY_NAME}}
@@ -82,8 +68,11 @@ jobs:
           file: Dockerfile.amd
           context: ./
           push: true
-          tags: ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa-dev:latest-amd64
+          tags: |
+            ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa-dev:${{ steps.get_latest_release.outputs.release }}-amd64
+            ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa-dev:latest-amd64
           platforms: linux/amd64
+
 
       - name: Push on Docker Registry
         uses: docker/build-push-action@v6
@@ -91,5 +80,8 @@ jobs:
           file: Dockerfile
           context: ./
           push: true
-          tags: ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa-dev:latest
+          tags: |
+            ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa-dev:${{ steps.get_latest_release.outputs.release }}
+            ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa-dev:latest
           platforms: linux/amd64,linux/arm64
+
