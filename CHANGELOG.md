@@ -1,3 +1,29 @@
+# [2.2.0](https://github.com/kexa-io/Kexa/compare/v2.1.3...v2.2.0) (2025-09-05)
+
+
+### Bug Fixes
+
+* **api-config:** debug config timing issue ([c68de47](https://github.com/kexa-io/Kexa/commit/c68de47da4aea42a7b70f4ecfdac7e05bf7dc3fb))
+* **cicd:** fix cicd & split clean ([b90d0af](https://github.com/kexa-io/Kexa/commit/b90d0af8da5c34f2576d2ac0bda8d7501ae20aa1))
+* correct some docs + some tweak to clean old files ([f04fd16](https://github.com/kexa-io/Kexa/commit/f04fd16d3f69f912600fed70a551b80fec9958c9))
+* deleted function ([0378c6a](https://github.com/kexa-io/Kexa/commit/0378c6ac0b3d82db6572dd423fa6b032ae3e47b3))
+* **docs:** code conduct MDX ([600bae2](https://github.com/kexa-io/Kexa/commit/600bae2b90c015a9dce412279e865cac85877bd7))
+* **docs:** docusaurus sidebar order ([0f88beb](https://github.com/kexa-io/Kexa/commit/0f88bebfcce1c91e1f0aac13d1db98ba3106a7f5))
+* **docs:** fix title for docusaurus generation ([15c4565](https://github.com/kexa-io/Kexa/commit/15c4565daed5b283989758f30c32d08036f4434a))
+* mdx error root readme ([f23cfa1](https://github.com/kexa-io/Kexa/commit/f23cfa19ab3b2b32e1e28e6123d895aabef0954d))
+* missing await ([89079c9](https://github.com/kexa-io/Kexa/commit/89079c9a4fd190c81390d35f2e3a4114d02c5864))
+* remove debug, await for init ([32b4949](https://github.com/kexa-io/Kexa/commit/32b49491e37513b68ac72bc2e796b14b5329b47e))
+* tmp comment to deploy dev image ([421391d](https://github.com/kexa-io/Kexa/commit/421391d2db64c8265a75bf46902e1776f5d2a053))
+
+
+### Features
+
+* add oracle + https://github.com/kexa-io/Kexa/issues/394 ([270c2ef](https://github.com/kexa-io/Kexa/commit/270c2ef71aa1f74daf70637ea67449b88fe04ea5))
+* add working mongodb + docs for all the 3 new addon ([001bd07](https://github.com/kexa-io/Kexa/commit/001bd07e9fd88ef731d909532769d7dca8ef9198))
+* new addon working postgresql ([b74187d](https://github.com/kexa-io/Kexa/commit/b74187d44066b31bffac55a0d58ccd9966cd6d5d))
+* working display for all elements ([f87c76f](https://github.com/kexa-io/Kexa/commit/f87c76f69b1b0aa32385c358be64c7abc0433f7f))
+* working mysql minimal gather ([5d5116a](https://github.com/kexa-io/Kexa/commit/5d5116ad8e4536e2aafd3a269b056303533f96cc))
+
 ---
 sidebar_position: 10
 ---
