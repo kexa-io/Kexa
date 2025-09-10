@@ -1,3 +1,10 @@
+## [2.3.1](https://github.com/kexa-io/Kexa/compare/v2.3.0...v2.3.1) (2025-09-10)
+
+
+### Bug Fixes
+
+* **github:** bun check + clean id displat ([8c6921c](https://github.com/kexa-io/Kexa/commit/8c6921c347451dbff0a918cb80f3c37f35d932be))
+
 # [2.3.0](https://github.com/kexa-io/Kexa/compare/v2.2.0...v2.3.0) (2025-09-10)
 
 
