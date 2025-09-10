@@ -516,8 +516,9 @@ export async function collectTeamProjects(org:string, team: string): Promise<any
 
 export async function collectPackages(repo: string, owner: string): Promise<any[]>{
     if(!currentConfig?.ObjectNameNeed?.includes("packages")) return [];
+    let octokit = await getOctokit();
+    
     try{
-        let octokit = await getOctokit();
         const res = await octokit.rest.repos.getContent({
             owner,
             repo,
@@ -537,6 +538,7 @@ export async function collectPackages(repo: string, owner: string): Promise<any[
             }));
         };
         const packageInfo = {
+            id: `https://github.com/${owner}/${repo}`,
             name: pkg.name || repo,
             version: pkg.version || "unknown",
             description: pkg.description || null,
@@ -553,23 +555,74 @@ export async function collectPackages(repo: string, owner: string): Promise<any[
         };        
         return [packageInfo];
     }catch(e){
-        logger.debug(`No package.json found for ${owner}/${repo} or error reading it: ${e}`);
-        return [{
-            name: repo,
-            version: "unknown",
-            description: null,
-            dependencies: [],
-            devDependencies: [],
-            scripts: {},
-            author: null,
-            license: null,
-            repository: null,
-            keywords: [],
-            main: null,
-            engines: {},
-            packageJsonExists: false,
-            error: "No package.json found or unable to read"
-        }];
+        logger.debug(`No package.json found for ${owner}/${repo}, trying bun.lock: ${e}`);
+        
+        try {
+            const bunLockRes = await octokit.rest.repos.getContent({
+                owner,
+                repo,
+                path: "bun.lock",
+            });
+
+            if (!("content" in bunLockRes.data)) {
+                throw new Error("No content in bun.lock");
+            }
+
+            const bunLockContent = Buffer.from(bunLockRes.data.content, "base64").toString("utf8");
+            const bunLock = JSON.parse(bunLockContent);
+            
+            const parseBunDependencies = (workspace: any) => {
+                if (!workspace || !workspace.dependencies || typeof workspace.dependencies !== 'object') return [];
+                return Object.entries(workspace.dependencies).map(([name, version]) => ({
+                    name: name,
+                    version: version as string
+                }));
+            };
+
+            const mainWorkspace = bunLock.workspaces?.[""] || {};
+            const packageInfo = {
+                id: `https://github.com/${owner}/${repo}`,
+                name: repo,
+                version: "unknown",
+                description: null,
+                dependencies: parseBunDependencies(mainWorkspace),
+                devDependencies: [],
+                scripts: {},
+                author: null,
+                license: null,
+                repository: null,
+                keywords: [],
+                main: null,
+                engines: {},
+                packageJsonExists: false,
+                bunLockExists: true,
+                lockfileVersion: bunLock.lockfileVersion || "unknown"
+            };
+            
+            logger.debug(`Found bun.lock for ${owner}/${repo} with ${packageInfo.dependencies.length} dependencies`);
+            return [packageInfo];
+            
+        } catch(bunError) {
+            logger.debug(`No bun.lock found for ${owner}/${repo} or error reading it: ${bunError}`);
+            return [{
+                id: `https://github.com/${owner}/${repo}`,
+                name: repo,
+                version: "unknown",
+                description: null,
+                dependencies: [],
+                devDependencies: [],
+                scripts: {},
+                author: null,
+                license: null,
+                repository: null,
+                keywords: [],
+                main: null,
+                engines: {},
+                packageJsonExists: false,
+                bunLockExists: false,
+                error: "No package.json or bun.lock found or unable to read"
+            }];
+        }
     }
 }
 
