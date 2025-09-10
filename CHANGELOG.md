@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/kexa-io/Kexa/compare/v2.2.0...v2.3.0) (2025-09-10)
+
+
+### Features
+
+* **condition:** add IN & NOT_IN (array) and new github pkg gathering ([7dd5ae0](https://github.com/kexa-io/Kexa/commit/7dd5ae0cd40de43a6fc00bb273b63cefa1304f20))
+
 # [2.2.0](https://github.com/kexa-io/Kexa/compare/v2.1.3...v2.2.0) (2025-09-05)
 
 
