@@ -30,4 +30,6 @@ export enum ConditionEnum {
     DATE_INF_OR_EQUAL = "DATE_INF_OR_EQUAL",
     INTERVAL = "INTERVAL",
     DATE_INTERVAL = "DATE_INTERVAL",
+    IN = "IN",
+    NOT_IN = "NOT_IN",
 }
