@@ -392,9 +392,12 @@ export function checkSubRuleCondition(subRule:RulesConditions): string[] {
     // else if(typeof subRule.value !== "string" && typeof subRule.value !== "number" && !Array.isArray(subRule.value)) result.push("error - value not valid in sub rule condition : " + subRule.value);
     else if(Array.isArray(subRule.value) && subRule.value.length === 0) result.push("error - value empty in sub rule condition");
     else if(Array.isArray(subRule.value)){
-        subRule.value.forEach((value) => {
-            checkRuleCondition(value).forEach((value) => result.push(value));
-        });
+        if(subRule.condition === ConditionEnum.IN || subRule.condition === ConditionEnum.NOT_IN) {
+        } else {
+            subRule.value.forEach((value) => {
+                checkRuleCondition(value).forEach((value) => result.push(value));
+            });
+        }
     }
 
     return result;
@@ -647,6 +650,10 @@ export function checkCondition(condition:RulesConditions, resource:any): SubResu
                 return resultScan(condition, value, [checkInterval]);
             case ConditionEnum.DATE_INTERVAL:
                 return resultScan(condition, value, [checkIntervalDate]);
+            case ConditionEnum.IN:
+                return resultScan(condition, value, [checkIn]);
+            case ConditionEnum.NOT_IN:
+                return resultScan(condition, value, [checkNotIn]);
             default:
                 return {
                     value,
@@ -719,6 +726,22 @@ export function checkIncludeNS(condition:RulesConditions, value:any): boolean {
         logger.error("error in checkIncludeNS:"+err);
         return false;
     }
+}
+
+export function checkIn(condition:RulesConditions, value:any): boolean {
+    logger.debug("check in:" + value + " in array " + JSON.stringify(condition.value) + " ?");
+    if(Array.isArray(condition.value)) {
+        return condition.value.includes(value);
+    }
+    return false;
+}
+
+export function checkNotIn(condition:RulesConditions, value:any): boolean {
+    logger.debug("check not in:" + value + " not in array " + JSON.stringify(condition.value) + " ?");
+    if(Array.isArray(condition.value)) {
+        return !condition.value.includes(value);
+    }
+    return true;
 }
 
 export function checkRegex(condition:RulesConditions, value:any): boolean {
