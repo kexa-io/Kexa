@@ -16,6 +16,7 @@
     *     - teamRepositories
     *     - outsideCollaborators
     *     - runners
+    *     - packages
 */
 
 import { Octokit } from "octokit";
@@ -64,7 +65,8 @@ export async function collectData(gitConfig:GitConfig[]): Promise<GitResources[]
                 "teamMembers": secondaryDataOrganization.allTeamMembers,
                 "teamRepositories": secondaryDataOrganization.allTeamRepos,
                 "teamProjects": secondaryDataOrganization.allTeamProjects,
-                "runners": secondaryDataOrganization.allRunners
+                "runners": secondaryDataOrganization.allRunners,
+                "packages": secondaryDataRepo.allPackages
             });
         }catch(e){
             logger.error(e);
@@ -76,20 +78,25 @@ export async function collectData(gitConfig:GitConfig[]): Promise<GitResources[]
 async function collectRepoRelaidInfo(allRepo: any): Promise<any>{
     let allBranches: any[] = [];
     let allIssues: any[] = [];
+    let allPackages: any[] = [];
     logger.info("Collecting github branches");
     logger.info("Collecting github issues");
+    logger.info("Collecting github packages");
     await Promise.all(allRepo.map(async (repo: any) => {
-        const [issues, branches] = await Promise.all([
+        const [issues, branches, packages] = await Promise.all([
             collectIssues(repo.name, repo.owner.login),
-            collectBranch(repo.name, repo.owner.login)
+            collectBranch(repo.name, repo.owner.login),
+            collectPackages(repo.name, repo.owner.login)
         ]);
     
         allIssues.push(...addInfoRepo(repo, issues));
         allBranches.push(...addInfoRepo(repo, branches));
+        allPackages.push(...addInfoRepo(repo, packages));
     }));
     return {
         allIssues,
-        allBranches
+        allBranches,
+        allPackages
     }
 }
 
@@ -228,6 +235,7 @@ export async function collectRepo(){
         !currentConfig?.ObjectNameNeed?.includes("repositories") 
         && !currentConfig?.ObjectNameNeed?.includes("branches")
         && !currentConfig?.ObjectNameNeed?.includes("issues")
+        && !currentConfig?.ObjectNameNeed?.includes("packages")
     ) return [];
     let page = 1;
     try{
@@ -503,6 +511,65 @@ export async function collectTeamProjects(org:string, team: string): Promise<any
     }catch(e){
         logger.debug(e);
         return [];
+    }
+}
+
+export async function collectPackages(repo: string, owner: string): Promise<any[]>{
+    if(!currentConfig?.ObjectNameNeed?.includes("packages")) return [];
+    try{
+        let octokit = await getOctokit();
+        const res = await octokit.rest.repos.getContent({
+            owner,
+            repo,
+            path: "package.json",
+        });
+
+        if (!("content" in res.data)) {
+            return [];
+        }
+        const content = Buffer.from(res.data.content, "base64").toString("utf8");
+        const pkg = JSON.parse(content);
+        const parseDependencies = (deps: any) => {
+            if (!deps || typeof deps !== 'object') return [];
+            return Object.entries(deps).map(([name, version]) => ({
+                name: name,
+                version: version as string
+            }));
+        };
+        const packageInfo = {
+            name: pkg.name || repo,
+            version: pkg.version || "unknown",
+            description: pkg.description || null,
+            dependencies: parseDependencies(pkg.dependencies),
+            devDependencies: parseDependencies(pkg.devDependencies),
+            scripts: pkg.scripts || {},
+            author: pkg.author || null,
+            license: pkg.license || null,
+            repository: pkg.repository || null,
+            keywords: pkg.keywords || [],
+            main: pkg.main || null,
+            engines: pkg.engines || {},
+            packageJsonExists: true
+        };        
+        return [packageInfo];
+    }catch(e){
+        logger.debug(`No package.json found for ${owner}/${repo} or error reading it: ${e}`);
+        return [{
+            name: repo,
+            version: "unknown",
+            description: null,
+            dependencies: [],
+            devDependencies: [],
+            scripts: {},
+            author: null,
+            license: null,
+            repository: null,
+            keywords: [],
+            main: null,
+            engines: {},
+            packageJsonExists: false,
+            error: "No package.json found or unable to read"
+        }];
     }
 }
 
