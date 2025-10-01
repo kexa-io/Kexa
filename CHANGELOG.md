@@ -1,3 +1,10 @@
+## [2.3.3](https://github.com/kexa-io/Kexa/compare/v2.3.2...v2.3.3) (2025-10-01)
+
+
+### Bug Fixes
+
+* **kube:** accept file content & path ([d970f24](https://github.com/kexa-io/Kexa/commit/d970f2455fccff5a74c84662f78841264026ea10))
+
 ## [2.3.2](https://github.com/kexa-io/Kexa/compare/v2.3.1...v2.3.2) (2025-10-01)
 
 
