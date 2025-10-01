@@ -1,3 +1,11 @@
+## [2.3.2](https://github.com/kexa-io/Kexa/compare/v2.3.1...v2.3.2) (2025-10-01)
+
+
+### Bug Fixes
+
+* **kube:** tls fix + no hpa api instance ([8846f4c](https://github.com/kexa-io/Kexa/commit/8846f4cc348831a1a2c2eb767da3241d967d5542))
+* useless line ([190fe37](https://github.com/kexa-io/Kexa/commit/190fe37ffa7bb5c0e93bf8e65e1a2ab9740775d3))
+
 ## [2.3.1](https://github.com/kexa-io/Kexa/compare/v2.3.0...v2.3.1) (2025-09-10)
 
 
