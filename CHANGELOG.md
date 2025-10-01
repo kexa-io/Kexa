@@ -1,4 +1,7 @@
-## [2.3.2](https://github.com/kexa-io/Kexa/compare/v2.3.1...v2.3.2) (2025-10-01)
+# Changelog
+
+## [v2.3.2] - 2025-10-01
+
 
 
 ### Bug Fixes
