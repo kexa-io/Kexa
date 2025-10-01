@@ -34,25 +34,6 @@
     *     - podsConsumption
 */
 
-//*     - job
-//*     - cronjob
-//*     - role
-//*     - rolebinding
-//*     - clusterrole
-//*     - clusterrolebinding
-//*     - certificate
-//*     - certificateSigningRequest
-//*     - podsecuritypolicy
-//*     - horizontalpodautoscaler
-//*     - verticalpodautoscaler
-//*     - priorityclass
-//*     - customresourcedefinition
-//*     - poddisruptionbudget
-//*     - endpoint
-//*     - mutatingwebhookconfiguration
-//*     - validatingwebhookconfiguration
-//*     - controllerrevision
-
 import { getConfig } from "../../helpers/loaderConfig";
 import helm from 'helm-ts';
 import type { KubernetesResources } from "../../models/kubernetes/kubernetes.models";
@@ -66,10 +47,8 @@ import {getNewLogger} from "../logger.service";
 const logger = getNewLogger("KubernetesLogger");
 
 import * as k8s from '@kubernetes/client-node';
+import * as https from "https";
 let currentConfig:KubernetesConfig;
-
-//disable check ssl : https://github.com/oven-sh/bun/issues/7332
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 // let globalConfiguration = getConfig().global ?? {};
 
@@ -154,27 +133,47 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
     return resources??null;
 }
 
-//kubernetes list
-export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
+export async function kubernetesListing(pathKubeFile: string): Promise<any> {
     logger.info("starting kubernetesListing");
-    // connecting to kubernetes
-    const kc = new k8s.KubeConfig();
-    kc.loadFromDefault();
-    //
-    const metricsClient = new k8s.Metrics(kc);
 
-    //opening different api to get kubernetes resources
-    const autoscalingV1Api = kc.makeApiClient(k8s.AutoscalingV1Api);
-    const k8sApiCore = kc.makeApiClient(k8s.CoreV1Api);
-    const k8sAppsV1Api = kc.makeApiClient(k8s.AppsV1Api);
-    // const k8sExtensionsV1beta1Api = kc.makeApiClient(k8s.ExtensionsV1beta1Api);
-    const k8sNetworkingV1Api = kc.makeApiClient(k8s.NetworkingV1Api);
-    // const k8sRbacAuthorizationV1Api = kc.makeApiClient(k8s.rbacAuthorizationV1Api);
-    const k8sStorageV1Api = kc.makeApiClient(k8s.StorageV1Api);
-    const k8sApiregistrationV1Api = kc.makeApiClient(k8s.ApiregistrationV1Api);
-    const k8CoordinationV1Api = kc.makeApiClient(k8s.CoordinationV1Api);
-    const k8sLog = new k8s.Log(kc);
-        //const k8scertificatesV1Api = kc.makeApiClient(k8s.certificatesV1Api);
+    // disable TLS verification for Bun compatibility
+    if (process.env.NODE_TLS_REJECT_UNAUTHORIZED == '0') {
+        process.env.HTTPS_PROXY = '';
+        process.env.HTTP_PROXY = '';
+    }
+
+    try {
+        const kc = new k8s.KubeConfig();
+        if (pathKubeFile && pathKubeFile !== "") {
+            try {
+                const fs = require('fs');
+                let content = fs.readFileSync(pathKubeFile, 'utf8');
+                content = content.replace(/\0/g, '').trim();
+                const tempPath = pathKubeFile + '.clean';
+                fs.writeFileSync(tempPath, content, 'utf8');
+                kc.loadFromFile(tempPath);
+                fs.unlinkSync(tempPath);
+            } catch (error) {
+                logger.error(`Failed to load kubeconfig from ${pathKubeFile}, falling back to default`);
+                kc.loadFromDefault();
+            }
+        } else {
+            kc.loadFromDefault();
+        }
+
+        const metricsClient = new k8s.Metrics(kc);
+        let autoscalingV1Api: any;
+        if (!currentConfig?.ObjectNameNeed?.includes("hpa")) {
+             autoscalingV1Api = kc.makeApiClient(k8s.AutoscalingV1Api);
+        }
+        const k8sApiCore = kc.makeApiClient(k8s.CoreV1Api);
+        const k8sAppsV1Api = kc.makeApiClient(k8s.AppsV1Api);
+        const k8sNetworkingV1Api = kc.makeApiClient(k8s.NetworkingV1Api);
+        const k8sStorageV1Api = kc.makeApiClient(k8s.StorageV1Api);
+        const k8sApiregistrationV1Api = kc.makeApiClient(k8s.ApiregistrationV1Api);
+        const k8CoordinationV1Api = kc.makeApiClient(k8s.CoordinationV1Api);
+        const k8sLog = new k8s.Log(kc);
+
     /////////////////////////////////////////////////////////////////////////////////
     let namespaces = await k8sApiCore.listNamespace();
     let kubResources: KubernetesResources = createKubernetesResourcesDefault();
@@ -330,6 +329,10 @@ export async function kubernetesListing(isPathKubeFile: boolean): Promise<any> {
     });
     await Promise.all(namespacePromises);
     return kubResources;
+    } catch (error) {
+        logger.error("Error in kubernetesListing:", error);
+        throw error;
+    }
 }
 
 async function getAllElementsWithNameSpace(resources: [any, string], namespace:string, kubResources: KubernetesResources): Promise<KubernetesResources>{
