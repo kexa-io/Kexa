@@ -138,7 +138,6 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
 
     // disable TLS verification for Bun compatibility
     if (process.env.NODE_TLS_REJECT_UNAUTHORIZED == '0') {
-        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
         process.env.HTTPS_PROXY = '';
         process.env.HTTP_PROXY = '';
     }
