@@ -146,15 +146,22 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
         const kc = new k8s.KubeConfig();
         if (pathKubeFile && pathKubeFile !== "") {
             try {
-                const fs = require('fs');
-                let content = fs.readFileSync(pathKubeFile, 'utf8');
-                content = content.replace(/\0/g, '').trim();
-                const tempPath = pathKubeFile + '.clean';
-                fs.writeFileSync(tempPath, content, 'utf8');
-                kc.loadFromFile(tempPath);
-                fs.unlinkSync(tempPath);
+                if (pathKubeFile.trim().startsWith('apiVersion:') || pathKubeFile.includes('\nclusters:')) {
+                    logger.info("Loading kubeconfig from YAML content");
+                    const cleanedContent = pathKubeFile.replace(/\0/g, '').trim();
+                    kc.loadFromString(cleanedContent);
+                } else {
+                    logger.info(`Loading kubeconfig from file path: ${pathKubeFile}`);
+                    const fs = require('fs');
+                    let content = fs.readFileSync(pathKubeFile, 'utf8');
+                    content = content.replace(/\0/g, '').trim();
+                    const tempPath = pathKubeFile + '.clean';
+                    fs.writeFileSync(tempPath, content, 'utf8');
+                    kc.loadFromFile(tempPath);
+                    fs.unlinkSync(tempPath);
+                }
             } catch (error) {
-                logger.error(`Failed to load kubeconfig from ${pathKubeFile}, falling back to default`);
+                logger.error(`Failed to load kubeconfig, falling back to default:`, error);
                 kc.loadFromDefault();
             }
         } else {
