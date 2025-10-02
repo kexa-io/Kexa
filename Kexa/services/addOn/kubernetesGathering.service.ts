@@ -935,6 +935,9 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
                         interval: interval
                     });
                 });
+                logStream.on('error', (err: any) => {
+                    logger.silly(`Log stream error for pod: ${pod.metadata.name}, container: ${containerName}`);
+                });
                 try {
                     const req = await k8sLog.log(
                         namespace, 
