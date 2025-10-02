@@ -939,27 +939,21 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
                 });
                 logStream.on('error', () => {});
                 try {
-                    const req = await k8sLog.log(
+                    await k8sLog.log(
                         namespace,
                         pod.metadata.name,
                         containerName,
                         logStream,
                         {
-                            follow: true,
+                            follow: false,
                             tailLines: 50,
                             pretty: false,
                             timestamps: true,
                             sinceSeconds: sinceSeconds
                         }
                     ).catch(() => null);
-                    if (req) {
-                        await delay(1000);
-                        try {
-                            req.abort();
-                        } catch (abortErr: any) {}
-                    }
                 } catch (err: any) {}
-                await delay(500);
+                await delay(100);
             }));
         }));
         return logsData;
