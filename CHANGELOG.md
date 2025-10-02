@@ -1,3 +1,13 @@
+## [2.3.5](https://github.com/kexa-io/Kexa/compare/v2.3.4...v2.3.5) (2025-10-02)
+
+
+### Bug Fixes
+
+* **kube:** any for kube logs ([3e17caa](https://github.com/kexa-io/Kexa/commit/3e17caa7a60dfd66d71d0554e4ba8e71c838fd42))
+* **kube:** remove fixed tailLines ([a1baa8f](https://github.com/kexa-io/Kexa/commit/a1baa8f46bd76315725195969a81b064a90eaa4c))
+* **kube:** try no follow for logs stream ([3d7b195](https://github.com/kexa-io/Kexa/commit/3d7b195982344672293f8da50207fa06cb48e5fa))
+* test catch log stream errr ([6df1a03](https://github.com/kexa-io/Kexa/commit/6df1a03003f39fbac0ba651a5a32ba8aefe4cfe3))
+
 ## [2.3.4](https://github.com/kexa-io/Kexa/compare/v2.3.3...v2.3.4) (2025-10-02)
 
 
