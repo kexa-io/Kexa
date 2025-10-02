@@ -946,7 +946,6 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
                         logStream,
                         {
                             follow: false,
-                            tailLines: 50,
                             pretty: false,
                             timestamps: true,
                             sinceSeconds: sinceSeconds
