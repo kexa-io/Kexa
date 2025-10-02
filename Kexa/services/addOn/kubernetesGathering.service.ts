@@ -951,7 +951,11 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
                     );
                     if (req) {
                         await delay(1000);
-                        req.abort();
+                        try {
+                            req.abort();
+                        } catch (abortErr: any) {
+                            logger.silly(`Log stream aborted for pod: ${pod.metadata.name}, container: ${containerName}`);
+                        }
                     }
                 } catch (err: any) {
                     logger.debug(`Error when retrieving log on pod: ${pod.metadata.name}, container: ${containerName} (${err})`);
