@@ -1,3 +1,10 @@
+## [2.3.4](https://github.com/kexa-io/Kexa/compare/v2.3.3...v2.3.4) (2025-10-02)
+
+
+### Bug Fixes
+
+* **kube:** added catch for abort() + logs ([2394cf5](https://github.com/kexa-io/Kexa/commit/2394cf52f60a267cc71272bb8f6d077f6409d44e))
+
 ## [2.3.3](https://github.com/kexa-io/Kexa/compare/v2.3.2...v2.3.3) (2025-10-01)
 
 
