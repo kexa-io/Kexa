@@ -927,23 +927,23 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
                 const containerName = container.name;
                 const logStream = new stream.PassThrough();
                 logStream.on('data', (chunk: any) => {
-                    const logEntries = chunk.toString();
-                    logsData.push({
-                        metadata: pod.metadata,
-                        containerName: containerName,
-                        logs: logEntries.split('\n').map((line: string) => ({ line })),
-                        interval: interval
-                    });
+                    try {
+                        const logEntries = chunk.toString();
+                        logsData.push({
+                            metadata: pod.metadata,
+                            containerName: containerName,
+                            logs: logEntries.split('\n').map((line: string) => ({ line })),
+                            interval: interval
+                        });
+                    } catch (e) {}
                 });
-                logStream.on('error', (err: any) => {
-                    logger.silly(`Log stream error for pod: ${pod.metadata.name}, container: ${containerName}`);
-                });
+                logStream.on('error', () => {});
                 try {
                     const req = await k8sLog.log(
-                        namespace, 
-                        pod.metadata.name, 
-                        containerName, 
-                        logStream, 
+                        namespace,
+                        pod.metadata.name,
+                        containerName,
+                        logStream,
                         {
                             follow: true,
                             tailLines: 50,
@@ -951,19 +951,14 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
                             timestamps: true,
                             sinceSeconds: sinceSeconds
                         }
-                    );
+                    ).catch(() => null);
                     if (req) {
                         await delay(1000);
                         try {
                             req.abort();
-                        } catch (abortErr: any) {
-                            logger.silly(`Log stream aborted for pod: ${pod.metadata.name}, container: ${containerName}`);
-                        }
+                        } catch (abortErr: any) {}
                     }
-                } catch (err: any) {
-                    logger.debug(`Error when retrieving log on pod: ${pod.metadata.name}, container: ${containerName} (${err})`);
-                    logger.silly(err);
-                }
+                } catch (err: any) {}
                 await delay(500);
             }));
         }));
