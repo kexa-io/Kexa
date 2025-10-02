@@ -910,7 +910,7 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
         const logsData: any[] = [];
         const delay = (ms: any) => new Promise((resolve: any) => setTimeout(resolve, ms));
 
-        await Promise.all((pods?.items).map(async (pod) => {
+        await Promise.all((pods?.items).map(async (pod: any) => {
             if (pod.status.phase !== 'Running') {
                 return;
             }
