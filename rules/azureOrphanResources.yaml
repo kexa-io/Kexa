@@ -1,0 +1,750 @@
+- version: 1.0.0
+  date: 10-03-2025
+  alert:
+    fatal:
+      enabled: true
+      type:
+        - log
+        # - email
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type:
+        - log
+        # - email
+        # - sms
+      to:
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type:
+        - log
+        # - email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type:
+        - log
+        # - email
+      to:
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type:
+        - log
+        # - webhook
+        # - sms
+        # - email
+      to:
+        # - http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    ##################################
+    #   STORAGE / DISK / SNAPSHOT    #
+    ##################################
+
+    - name: "azure-disk-unattached-older-than-30-days"
+      description: "Unattached managed disks older than 30 days — likely orphaned"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: ComputeManagementClient.disks
+      conditions:
+        - operator: OR
+          criteria:
+            - property: diskState
+              condition: DIFFERENT
+              value: 'Unattached'
+            - property: timeCreated
+              condition: DATE_INF_OR_EQUAL
+              value: 0 0 0 0 0 1 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+    - name: "azure-snapshots-orphaned"
+      description: "Snapshots with no source disk (managedBy null) or older than threshold"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: ComputeManagementClient.snapshots
+      conditions:
+        - operator: OR
+          criteria:
+            - property: managedBy
+              condition: DIFFERENT
+              value: null
+            - property: timeCreated
+              condition: DATE_INF_OR_EQUAL
+              value: 0 0 0 0 0 3 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+    - name: "azure-disk-reserved-state-old"
+      description: "Potentially wasted: disk in Reserved state (attached to stopped-deallocated VM) for more than 30 days"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: ComputeManagementClient.disks
+      conditions:
+        - operator: OR
+          criteria:
+            - property: diskState
+              condition: DIFFERENT
+              value: 'Reserved'
+            - property: timeCreated
+              condition: DATE_INF_OR_EQUAL
+              value: 0 0 0 0 0 1 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+    ##################################
+    #   VM / COMPUTE / UNDERUSE      #
+    ##################################
+
+    - name: "azure-vm-very-low-cpu"
+      description: "VMs with very low CPU usage (e.g. < 5%)"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: ComputeManagementClient.virtualMachines
+      conditions:
+        - property: metrics.cpuPercentage
+          condition: SUP_OR_EQUAL
+          value: 5
+
+    - name: "azure-vm-idle-network-traffic"
+      description: "VMs with minimal network I/O over the past window"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: ComputeManagementClient.virtualMachines
+      conditions:
+        - operator: OR
+          criteria:
+            - property: metrics.networkIn
+              condition: SUP
+              value: 0
+            - property: metrics.networkOut
+              condition: SUP
+              value: 0
+
+    ##################################
+    #   SQL / DATABASE               #
+    ##################################
+
+    - name: "azure-sql-db-low-dtu-or-throughput"
+      description: "Azure SQL databases with very low utilization (DTU / vCore usage under threshold)"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: SqlManagementClient.databases
+      conditions:
+        - property: metrics.dtuPercentage
+          condition: SUP_OR_EQUAL
+          value: 5
+
+    - name: "azure-sql-elastic-pool-no-databases"
+      description: "Unused resource: SQL Elastic Pool with no databases"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: SqlManagementClient.elasticPools
+      conditions:
+        - operator: OR
+          criteria:
+            - property: state
+              condition: DIFFERENT
+              value: 'Ready'
+            - property: databases
+              condition: COUNT_SUP
+              value: 0
+
+    ##################################
+    #   COSMOS DB                    #
+    ##################################
+
+    - name: "azure-cosmos-db-low-usage"
+      description: "Cosmos DB accounts with low RU usage over past window"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: CosmosDBManagementClient.databaseAccounts
+      conditions:
+        - property: metrics.totalRequests
+          condition: SUP_OR_EQUAL
+          value: 10
+
+    - name: "azure-cosmos-db-no-containers"
+      description: "Unused resource: Cosmos DB account with no databases/containers"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: CosmosDBManagementClient.databaseAccounts
+      conditions:
+        - operator: OR
+          criteria:
+            - property: provisioningState
+              condition: DIFFERENT
+              value: 'Succeeded'
+            - property: databases
+              condition: COUNT_SUP
+              value: 0
+
+    ##################################
+    #   NETWORK / IP / NSG / NIC     #  
+    ##################################
+
+    - name: "azure-nsg-unreferenced"
+      description: "Orphaned resource: NSG not associated with any NICs or subnets"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.networkSecurityGroups
+      conditions:
+        - operator: OR
+          criteria:
+            - property: networkInterfaces
+              condition: COUNT_SUP
+              value: 0
+            - property: subnets
+              condition: COUNT_SUP
+              value: 0
+
+    - name: "azure-vnet-no-subnets"
+      description: "Unused resource: Virtual Network with no subnets configured"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.virtualNetworks
+      conditions:
+        - property: subnets
+          condition: COUNT_SUP
+          value: 0
+
+    - name: "azure-public-ip-static-unassociated"
+      description: "Wasted cost: Static public IP not associated with any resource"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.publicIPAddresses
+      conditions:
+        - operator: OR
+          criteria:
+            - property: publicIPAllocationMethod
+              condition: DIFFERENT
+              value: 'Static'
+            - property: ipConfiguration
+              condition: DIFFERENT
+              value: null
+
+    - name: "azure-route-table-not-associated"
+      description: "Orphaned resource: Route table not associated with any subnet"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.routeTables
+      conditions:
+        - property: subnets
+          condition: COUNT_SUP
+          value: 0
+
+    - name: "azure-ddos-protection-plan-no-vnets"
+      description: "Unused resource: DDoS Protection Plan not protecting any VNets"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.ddosProtectionPlans
+      conditions:
+        - property: virtualNetworks
+          condition: COUNT_SUP
+          value: 0
+
+    - name: "azure-traffic-manager-no-endpoints"
+      description: "Unused resource: Traffic Manager profile with no endpoints"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.networkSecurityGroups
+      conditions:
+        - property: endpoints
+          condition: COUNT_SUP
+          value: 0
+
+    - name: "azure-bastion-host-check"
+      description: "Review usage: Azure Bastion host (check connection logs)"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName: NetworkManagementClient.bastionHosts
+      conditions:
+        - property: provisioningState
+          condition: EQUAL
+          value: 'Succeeded'
+
+    - name: "azure-firewall-no-rules"
+      description: "Potentially misconfigured: Azure Firewall with no rules configured"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.azureFirewalls
+      conditions:
+        - operator: OR
+          criteria:
+            - property: provisioningState
+              condition: DIFFERENT
+              value: 'Succeeded'
+            - property: applicationRuleCollections
+              condition: COUNT_SUP
+              value: 0
+
+    - name: "azure-private-dns-zone-no-vnet-links"
+      description: "Unused resource: Private DNS Zone with no virtual network links"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: PrivateDnsManagementClient.privateZones
+      conditions:
+        - property: numberOfVirtualNetworkLinks
+          condition: SUP
+          value: 0
+
+    - name: "azure-load-balancer-zero-flows"
+      description: "Load balancers with no data flows over period"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.loadBalancers
+      conditions:
+        - operator: OR
+          criteria:
+            - property: metrics.bytesIn
+              condition: SUP
+              value: 0
+            - property: metrics.bytesOut
+              condition: SUP
+              value: 0
+
+    ##################################
+    #   PaaS / APP / SERVICE / OTHER #
+    ##################################
+
+    - name: "azure-app-service-plan-underutilized"
+      description: "App Service Plan where all web apps have < 5% CPU consumption"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.appServicePlans
+      conditions:
+        - property: metrics.cpuPercentage
+          condition: SUP_OR_EQUAL
+          value: 5
+
+    - name: "azure-app-service-plan-all-apps-stopped"
+      description: "Wasted cost: App Service Plan with apps but all stopped"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.appServicePlans
+      conditions:
+        - operator: OR
+          criteria:
+            - property: numberOfSites
+              condition: INF_OR_EQUAL
+              value: 0
+            - property: status
+              condition: DIFFERENT
+              value: 'Ready'
+
+    - name: "azure-app-service-unused"
+      description: "Web apps with zero HTTP requests over past window"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.webApps
+      conditions:
+        - property: metrics.requests
+          condition: SUP
+          value: 0
+
+    ##################################
+    #   CDN / FRONT DOOR / API MGMT  #
+    ##################################
+
+    - name: "azure-cdn-profile-no-endpoints"
+      description: "Unused resource: CDN Profile with no endpoints configured"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: CdnManagementClient.profiles
+      conditions:
+        - property: endpoints
+          condition: COUNT_SUP
+          value: 0
+
+    - name: "azure-front-door-idle"
+      description: "Front Door with zero requests over period"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: FrontDoorManagementClient.frontDoors
+      conditions:
+        - property: metrics.requests
+          condition: SUP
+          value: 0
+
+    - name: "azure-api-management-no-apis"
+      description: "Unused resource: API Management service with no APIs configured"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: ApiManagementClient.apiManagementService
+      conditions:
+        - operator: OR
+          criteria:
+            - property: provisioningState
+              condition: DIFFERENT
+              value: 'Succeeded'
+            - property: apis
+              condition: COUNT_SUP
+              value: 0
+
+    ##################################
+    #      KEY VAULT                 #
+    ##################################
+
+    - name: "azure-key-vault-empty"
+      description: "Potentially unused: Key Vault with no keys, secrets, or certificates"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.vaults
+      conditions:
+        - operator: OR
+          criteria:
+            - property: keys
+              condition: COUNT_SUP
+              value: 0
+            - property: secrets
+              condition: COUNT_SUP
+              value: 0
+            - property: certificates
+              condition: COUNT_SUP
+              value: 0
+
+    - name: "azure-key-vault-insufficient-retention-period"
+      description: "Security risk: Key Vault soft delete retention period is less than 90 days"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName: KexaAzure.vaults
+      conditions:
+        - operator: OR
+          criteria:
+            - property: properties.enableSoftDelete
+              condition: DIFFERENT
+              value: true
+            - property: properties.softDeleteRetentionInDays
+              condition: SUP_OR_EQUAL
+              value: 30
+
+    - name: "azure-key-vault-public-network-access-enabled"
+      description: "Security risk: Key Vault allows public network access"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.vaults
+      conditions:
+        - property: properties.publicNetworkAccess
+          condition: DIFFERENT
+          value: 'Enabled'
+
+    ##################################
+    #      CONTAINER REGISTRY        #
+    ##################################
+
+    - name: "azure-container-registry-premium-unused"
+      description: "Cost optimization: Premium Container Registry (review if premium tier needed)"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName: ContainerRegistryManagementClient.registries
+      conditions:
+        - property: sku.tier
+          condition: EQUAL
+          value: 'Premium'
+
+    ##################################
+    #      EVENT GRID                #
+    ##################################
+
+    - name: "azure-event-grid-topic-no-subscriptions"
+      description: "Unused resource: Event Grid topic with no event subscriptions"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: EventGridManagementClient.topics
+      conditions:
+        - operator: OR
+          criteria:
+            - property: provisioningState
+              condition: DIFFERENT
+              value: 'Succeeded'
+            - property: eventSubscriptions
+              condition: COUNT_SUP
+              value: 0
+
+    ##################################
+    #      SERVICE BUS               #
+    ##################################
+
+    - name: "azure-service-bus-namespace-no-queues-topics"
+      description: "Unused resource: Service Bus namespace with no queues or topics"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: ServiceBusManagementClient.namespaces
+      conditions:
+        - operator: OR
+          criteria:
+            - property: provisioningState
+              condition: DIFFERENT
+              value: 'Succeeded'
+            - operator: AND
+              criteria:
+                - property: queues
+                  condition: COUNT_SUP
+                  value: 0
+                - property: topics
+                  condition: COUNT_SUP
+                  value: 0
+
+    ##################################
+    #      EVENT HUB                 #
+    ##################################
+
+    - name: "azure-event-hub-namespace-no-hubs"
+      description: "Unused resource: Event Hub namespace with no event hubs"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: EventHubManagementClient.namespaces
+      conditions:
+        - operator: OR
+          criteria:
+            - property: provisioningState
+              condition: DIFFERENT
+              value: 'Succeeded'
+            - property: eventHubs
+              condition: COUNT_SUP
+              value: 0
+
+    ##################################
+    #      NOTIFICATION HUB          #
+    ##################################
+
+    - name: "azure-notification-hub-namespace-no-hubs"
+      description: "Unused resource: Notification Hub namespace with no notification hubs"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: NotificationHubsManagementClient.namespaces
+      conditions:
+        - operator: OR
+          criteria:
+            - property: provisioningState
+              condition: DIFFERENT
+              value: 'Succeeded'
+            - property: notificationHubs
+              condition: COUNT_SUP
+              value: 0
+
+    ##################################
+    #      DATA FACTORY              #
+    ##################################
+
+    - name: "azure-data-factory-no-pipelines"
+      description: "Unused resource: Data Factory with no pipelines configured"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: DataFactoryManagementClient.factories
+      conditions:
+        - operator: OR
+          criteria:
+            - property: provisioningState
+              condition: DIFFERENT
+              value: 'Succeeded'
+            - property: pipelines
+              condition: COUNT_SUP
+              value: 0
+
+    ##################################
+    #      BATCH ACCOUNT             #
+    ##################################
+
+    - name: "azure-batch-account-no-pools"
+      description: "Unused resource: Batch account with no compute pools"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: BatchManagementClient.batchAccountOperations
+      conditions:
+        - operator: OR
+          criteria:
+            - property: provisioningState
+              condition: DIFFERENT
+              value: 'Succeeded'
+            - property: pools
+              condition: COUNT_SUP
+              value: 0
+
+    ##################################
+    #      IOT HUB                   #
+    ##################################
+
+    - name: "azure-iot-hub-no-devices"
+      description: "Unused resource: IoT Hub with no registered devices"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: IotHubClient.iotHubResource
+      conditions:
+        - operator: OR
+          criteria:
+            - property: properties.state
+              condition: DIFFERENT
+              value: 'Active'
+            - property: properties.deviceCount
+              condition: SUP
+              value: 0
+
+    ##################################
+    #      SEARCH SERVICE            #
+    ##################################
+
+    - name: "azure-search-service-no-indexes"
+      description: "Unused resource: Azure Search service with no search indexes"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: SearchManagementClient.services
+      conditions:
+        - operator: OR
+          criteria:
+            - property: status
+              condition: DIFFERENT
+              value: 'running'
+            - property: indexes
+              condition: COUNT_SUP
+              value: 0
+
+    ##################################
+    #      REDIS CACHE               #
+    ##################################
+
+    - name: "azure-redis-cache-premium-unused"
+      description: "Cost optimization: Premium Redis Cache (review if premium tier needed)"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName: RedisManagementClient.redis
+      conditions:
+        - property: sku.name
+          condition: EQUAL
+          value: 'Premium'
+
+    ##################################
+    #      DATABRICKS                #
+    ##################################
+
+    - name: "azure-databricks-workspace-check"
+      description: "Review usage: Databricks workspace (check for active clusters)"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName: AzureDatabricksManagementClient.workspaces
+      conditions:
+        - property: provisioningState
+          condition: EQUAL
+          value: 'Succeeded'
+
+    ##################################
+    #      SYNAPSE ANALYTICS         #
+    ##################################
+
+    - name: "azure-synapse-workspace-no-pools"
+      description: "Unused resource: Synapse workspace with no SQL/Spark pools"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: SqlManagementClient.servers
+      conditions:
+        - operator: OR
+          criteria:
+            - property: kind
+              condition: NOT_INCLUDE
+              value: 'synapse'
+            - property: state
+              condition: DIFFERENT
+              value: 'Ready'
+            - property: sqlPools
+              condition: COUNT_SUP
+              value: 0
+
+    ##################################
+    #      MACHINE LEARNING          #
+    ##################################
+
+    - name: "azure-ml-workspace-no-compute"
+      description: "Unused resource: ML workspace with no compute instances/clusters"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: AzureMachineLearningServicesManagementClient.workspaces
+      conditions:
+        - operator: OR
+          criteria:
+            - property: provisioningState
+              condition: DIFFERENT
+              value: 'Succeeded'
+            - property: computeOperations
+              condition: COUNT_SUP
+              value: 0
+
+    ##################################
+    #      COGNITIVE SERVICES        #
+    ##################################
+
+    - name: "azure-cognitive-services-multi-service-unused"
+      description: "Review usage: Cognitive Services multi-service account"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName: CognitiveServicesManagementClient.accounts
+      conditions:
+        - property: kind
+          condition: EQUAL
+          value: 'CognitiveServices'
+
+    ##################################
+    #      LOGIC APPS                #
+    ##################################
+
+    - name: "azure-logic-app-idle"
+      description: "Logic Apps with zero runs in past period"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: LogicManagementClient.workflows
+      conditions:
+        - property: metrics.runCount
+          condition: SUP
+          value: 0
