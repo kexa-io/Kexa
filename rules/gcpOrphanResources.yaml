@@ -1,0 +1,304 @@
+- version: 1.0.0
+  date: 10-15-2025
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        #- yourEmail@mail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        #- yourEmail@mail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        #- yourEmail@mail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        #- yourEmail@mail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- webhook
+        #- sms
+      to: 
+        #- http://127.0.0.1:5000/test
+        #- yourEmail@mail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    ##################################
+    #    COMPUTE ENGINE INSTANCES    # ok
+    ##################################
+    - name: "gcp-compute-instance-stopped-unused"
+      description: "Detect stopped or idle compute instances for more than 30 days"
+      applied: true
+      level: 2
+      cloudProvider: gcp
+      objectName: compute
+      conditions:
+        - property: status
+          condition: DIFFERENT
+          value: 'TERMINATED'
+    
+    - name: "gcp-compute-instance-untagged"
+      description: "Detect compute instances without required labels (env, owner, cost-center)"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: compute
+      conditions:
+        - property: labels
+          condition: COUNT_SUP
+          value: 0
+    
+    - name: "gcp-compute-instance-preemptible-non-dev"
+      description: "Ensure non-development instances use standard (non-preemptible) scheduling"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: compute
+      conditions:
+        - operator: AND
+          criteria:
+            - property: labels.env
+              condition: DIFFERENT
+              value: 'dev'
+            - property: scheduling.preemptible
+              condition: EQUAL
+              value: true
+    
+    - name: "gcp-compute-instance-invalid-region"
+      description: "Verify compute instance is in allowed regions"
+      applied: false
+      level: 1
+      cloudProvider: gcp
+      objectName: compute
+      conditions:
+        - property: zone
+          condition: IN
+          value:
+            - 'us-central1-a'
+            - 'us-central1-b'
+            - 'us-east1-b'
+            - 'europe-west1-b'
+    
+    - name: "gcp-compute-instance-old-creation"
+      description: "Detect instances created more than 180 days ago for review"
+      applied: true
+      level: 0
+      cloudProvider: gcp
+      objectName: compute
+      conditions:
+        - property: creationTimestamp
+          condition: DATE_INF
+          value: 0 0 0 0 0 6 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+    ##################################
+    #       PERSISTENT DISKS         # ok
+    ##################################
+
+    - name: "gcp-disk-must-be-attached-or-small"
+      description: "Disks larger than 500GB must be attached to an instance"
+      applied: true
+      level: 2
+      cloudProvider: gcp
+      objectName: disk
+      conditions:
+        - operator: OR
+          criteria:
+            - property: users
+              condition: COUNT_SUP_OR_EQUAL
+              value: 1
+            - property: sizeGb
+              condition: INF_OR_EQUAL
+              value: 50
+
+    - name: "gcp-disk-size-limit"
+      description: "Disks should not exceed 1TB without justification"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: disk
+      conditions:
+        - property: sizeGb
+          condition: INF_OR_EQUAL
+          value: 1000
+
+    - name: "gcp-disk-large-must-be-recent"
+      description: "Disks larger than 500GB should be created within last 6 months or reviewed"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: disk
+      conditions:
+        - operator: OR
+          criteria:
+            - property: sizeGb
+              condition: INF_OR_EQUAL
+              value: 500
+            - property: creationTimestamp
+              condition: DATE_SUP_OR_EQUAL
+              value: 0 0 0 0 0 6 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+    - name: "gcp-disk-unattached-from-long-time"
+      description: "Unattached disks should not exist for more than 15 days"
+      applied: true
+      level: 2
+      cloudProvider: gcp
+      objectName: disk
+      conditions:
+        - operator: OR
+          criteria:
+            - property: users
+              condition: COUNT_SUP_OR_EQUAL
+              value: 1
+            - property: lastAttachTimestamp
+              condition: DATE_INF_OR_EQUAL
+              value: 0 0 0 15 0 0 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+    - name: "gcp-disk-ssd-size-limit"
+      description: "SSD disks should not exceed 2TB due to high cost"
+      applied: true
+      level: 2
+      cloudProvider: gcp
+      objectName: disk
+      conditions:
+        - operator: OR
+          criteria:
+            - operator: AND
+              criteria:
+                - property: type
+                  condition: NOT_INCLUDE
+                  value: 'pd-ssd'
+                - property: type
+                  condition: NOT_INCLUDE
+                  value: 'pd-extreme'
+            - property: sizeGb
+              condition: INF_OR_EQUAL
+              value: 2000
+
+    - name: "gcp-disk-must-be-attached"
+      description: "All disks must be attached to an instance"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: disk
+      conditions:
+        - property: users
+          condition: COUNT_SUP
+          value: 0
+
+
+    - name: "gcp-disk-very-large-review"
+      description: "Warning: Very large disks (>1TB) - verify actual usage requirement"
+      applied: true
+      level: 2
+      cloudProvider: gcp
+      objectName: disk
+      conditions:
+        - operator: AND
+          criteria:
+            - property: sizeGb
+              condition: SUP
+              value: 1000
+            - property: users
+              condition: COUNT_SUP
+              value: 0
+
+
+    ##################################
+    #       CLOUD STORAGE            #
+    ##################################
+
+    - name: "gcp-bucket-must-be-active"
+      description: "Storage buckets must be updated within the last 90 days"
+      applied: true
+      level: 2
+      cloudProvider: gcp
+      objectName: bucket
+      conditions:
+        - property: updated
+          condition: DATE_INF_OR_EQUAL
+          value: 0 0 0 0 0 3 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+    - name: "gcp-bucket-age-review"
+      description: "Storage buckets older than 1 year should be reviewed"
+      applied: true
+      level: 0
+      cloudProvider: gcp
+      objectName: bucket
+      conditions:
+        - property: timeCreated
+          condition: DATE_SUP_OR_EQUAL
+          value: 0 0 0 0 0 0 1
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+    ##################################
+    #       CERTIFICATES             #
+    ##################################
+    - name: "gcp-certificate-expiring-30-days"
+      description: "Detect certificates expiring within 30 days"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: certificate
+      conditions:
+        - property: expireTime
+          condition: DATE_INF
+          value: 0 0 0 30 0 0 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    
+    - name: "gcp-certificate-expired"
+      description: "Detect expired certificates"
+      applied: true
+      level: 2
+      cloudProvider: gcp
+      objectName: certificate
+      conditions:
+        - property: expireTime
+          condition: DATE_INF
+          value: 0 0 0 0 0 0 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+    ##################################
+    #      GLOBAL                    #
+    ##################################
+    - name: "gcp-project-orphaned-resources"
+      description: "Review projects for orphaned or unused resources"
+      applied: true
+      level: 0
+      cloudProvider: gcp
+      objectName: project
+      conditions:
+        - property: state
+          condition: EQUAL
+          value: 'ACTIVE'        
+    

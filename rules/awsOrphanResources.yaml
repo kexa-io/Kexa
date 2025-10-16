@@ -1,0 +1,367 @@
+- version: 1.0.0
+  date: 10-03-2025
+  alert:
+    fatal:
+      enabled: true
+      type:
+        - log
+        # - email
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type:
+        - log
+        # - email
+        # - sms
+      to:
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type:
+        - log
+        # - email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type:
+        - log
+        # - email
+      to:
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type:
+        - log
+        # - webhook
+        # - sms
+        # - email
+      to:
+        # - http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    ##############################################
+    #           AWS ORPHAN RESOURCES             #
+    ##############################################
+
+    ###################
+    #       EC2       #
+    ###################
+
+    # WARNING : This is a costly rule, meaning it will gather a lot of data.
+    # only use once sometimes to clean up, should not be used as an everyday check.
+    - name: "aws-ebs-owned-snapshot-in-error-state"
+      description: "Check for EBS snapshots in error state (owned)"
+      applied: false
+      level: 2
+      cloudProvider: aws
+      objectName: EC2Client.Snapshots
+      conditions:
+        - operator: OR
+          criteria:
+            - property: OwnerAlias
+              condition: EQUAL
+              value: 'amazon'
+            # deleted volume placeholder (copied snapshots)
+            - property: VolumeId
+              condition: EQUAL
+              value: 'vol-ffffffff'
+            - property: VolumeId
+              condition: DIFFERENT
+              value: null
+            #  AWS Backup (aws:backup:source-resource tag)
+            - property: Tags
+              condition: SOME
+              value:
+                - property: Key
+                  condition: EQUAL
+                  value: 'aws:backup:source-resource'
+            # Managed by AWS Lifecycle (dlm:managed tag)
+            - property: Tags 
+              condition: SOME
+              value:
+                - property: Key
+                  condition: EQUAL
+                  value: 'dlm:managed'
+            - property: State
+              condition: DIFFERENT
+              value: 'error'
+
+    # WARNING : This is a costly rule, meaning it will gather a lot of data.
+    # only use once sometimes to clean up, should not be used as an everyday check.
+    - name: "aws-ebs-owned-snapshots-orphaned"
+      description: "Alert on orphaned EBS snapshots (owned)"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.Snapshots
+      conditions:
+        - operator: OR
+          criteria:
+            - property: OwnerAlias
+              condition: EQUAL
+              value: 'amazon'
+            # deleted volume placeholder (copied snapshots)
+            - property: VolumeId
+              condition: EQUAL
+              value: 'vol-ffffffff'
+            - property: VolumeId
+              condition: DIFFERENT
+              value: null
+            #  12 months old
+            - property: StartTime
+              condition: DATE_SUP
+              value: 0 0 0 0 0 12 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+            #  AWS Backup (aws:backup:source-resource tag)
+            - property: Tags
+              condition: SOME
+              value:
+                - property: Key
+                  condition: EQUAL
+                  value: 'aws:backup:source-resource'
+            # Managed by AWS Lifecycle (dlm:managed tag)
+            - property: Tags 
+              condition: SOME
+              value:
+                - property: Key
+                  condition: EQUAL
+                  value: 'dlm:managed'
+
+    - name: "aws-ebs-volumes-unattached"
+      description: "Alert on unattached/orphan EBS volumes (30 days old or more)"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.Volumes
+      conditions:
+        - operator: OR
+          criteria:
+            - property: Attachments
+              condition: COUNT_SUP
+              value: 0
+            - property: State
+              condition: DIFFERENT
+              value: 'available'
+            - property: CreateTime
+              condition: DATE_SUP
+              value: 0 0 0 30 0 0 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+    - name: "aws-ec2-volume-low-iops"
+      description: "Check for EBS volumes with low IOPS - potentially unused (30 days old or more)"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.Volumes
+      conditions:
+        - operator: OR
+          criteria:
+            - property: Iops
+              condition: SUP_OR_EQUAL
+              value: 10
+            - property: CreateTime
+              condition: DATE_INF
+              value: 0 0 0 0 1 0 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+            
+    - name: "aws-elastic-ip-unassociated"
+      description: "Elastic IPs that are allocated but not associated with any instance"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.Addresses
+      conditions:
+        - property: AssociationId
+          condition: DIFFERENT
+          value: null
+
+    - name: "aws-nat-gateway-available"
+      description: "NAT Gateways that are available (cost money even when idle)"
+      applied: true
+      level: 2
+      cloudProvider: aws
+      objectName: EC2Client.NatGateways
+      conditions:
+        - property: State
+          condition: DIFFERENT
+          value: 'available'
+
+    - name: "aws-ec2-instances-stopped"
+      description: "Stopped EC2 instances (can cost for attached EBS volumes)"
+      applied: true
+      level: 2
+      cloudProvider: aws
+      objectName: EC2Client.Instances
+      conditions:
+        - property: Instances
+          condition: ALL
+          value:
+            - property: State.Name
+              condition: DIFFERENT
+              value: 'stopped'
+
+    - name: "aws-reserved-instances-unused"
+      description: "Reserved Instances that are not active or have zero instance count"
+      applied: true
+      level: 2
+      cloudProvider: aws
+      objectName: EC2Client.ReservedInstances
+      conditions:
+        - operator: OR
+          criteria:
+            - property: State
+              condition: DIFFERENT
+              value: 'active'
+            - property: InstanceCount
+              condition: EQUAL
+              value: 0
+
+    - name: "aws-vpc-endpoints-interface-available"
+      description: "Interface VPC Endpoints that are available (potentially not used)"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.VpcEndpoints
+      conditions:
+        - operator: OR
+          criteria:
+            - property: State
+              condition: DIFFERENT
+              value: 'available'
+            # (free)
+            - property: VpcEndpointType
+              condition: EQUAL
+              value: 'Gateway'
+            # Compliant: Is GatewayLoadBalancer type
+            - property: VpcEndpointType
+              condition: EQUAL
+              value: 'GatewayLoadBalancer'
+   # DEV HERE -------------------------------------
+
+    ###################
+    #       EBS       #
+    ###################
+
+
+    - name: "aws-classic-lb-no-instances"
+      description: "Classic Load Balancers (no V2) with no registered instances"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: ElasticLoadBalancingClient.LoadBalancers
+      conditions:
+        - property: Instances
+          condition: COUNT_SUP
+          value: 0
+
+
+    ###################
+    #       RDS       #
+    ###################
+
+    - name: "aws-rds-manual-snapshots-old"
+      description: "Alert on manual RDS snapshots older than 12 months - likely forgotten and costing money"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: RDSClient.DBSnapshots
+      conditions:
+        - operator: OR
+          criteria:
+            # not manual
+            - property: SnapshotType
+              condition: EQUAL
+              value: 'automated'
+            # older than 12 months
+            - property: SnapshotCreateTime
+              condition: DATE_SUP
+              value: 0 0 0 0 0 12 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+            - property: TagList
+              condition: SOME
+              value:
+                - property: Key
+                  condition: EQUAL
+                  value: 'aws:backup:source-resource'
+
+    - name: "aws-rds-cluster-snapshots-old"
+      description: "Alert on manual RDS cluster snapshots older than 12 months"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: RDSClient.DBClusterSnapshots
+      conditions:
+        - operator: OR
+          criteria:
+            # not manual
+            - property: SnapshotType
+              condition: EQUAL
+              value: 'automated'
+            # older than 12 months
+            - property: SnapshotCreateTime
+              condition: DATE_SUP
+              value: 0 0 0 0 0 12 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+            - property: TagList
+              condition: SOME
+              value:
+                - property: Key
+                  condition: EQUAL
+                  value: 'aws:backup:source-resource'
+
+    - name: "aws-rds-instances-stopped"
+      description: "Alert on stopped RDS instances - still costing for storage"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: RDSClient.DBInstances
+      conditions:
+        - property: DBInstanceStatus
+          condition: DIFFERENT
+          value: 'stopped'
+
+    - name: "aws-rds-instances-stopped-longer-than-30-days"
+      description: "Alert on RDS instances stopped longer than 30 days - likely forgotten"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: RDSClient.DBInstances
+      conditions:
+        - operator: OR
+          criteria:
+            - property: DBInstanceStatus
+              condition: DIFFERENT
+              value: 'stopped'
+            # 7 days old (in case it is a test instance)
+            - property: InstanceCreateTime
+              condition: DATE_SUP
+              value: 0 0 0 7 0 0 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+    - name: "aws-rds-clusters-stopped"
+      description: "Alert on stopped RDS clusters - still costing for storage"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: RDSClient.DBClusters
+      conditions:
+        - operator: OR
+          criteria:  
+            - property: Status
+              condition: DIFFERENT
+              value: 'stopped'
+            - property: ClusterCreateTime
+              condition: DATE_SUP
+              value: 0 0 0 7 0 0 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
