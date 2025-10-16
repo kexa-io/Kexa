@@ -405,7 +405,7 @@
     ##################################
 
     - name: "azure-key-vault-empty"
-      description: "Potentially unused: Key Vault with no keys, secrets, or certificates"
+      description: "Potentially unused: Key Vault with neither keys nor secrets"
       applied: true
       level: 1
       cloudProvider: azure
@@ -417,9 +417,6 @@
               condition: COUNT_SUP
               value: 0
             - property: secrets
-              condition: COUNT_SUP
-              value: 0
-            - property: certificates
               condition: COUNT_SUP
               value: 0
 

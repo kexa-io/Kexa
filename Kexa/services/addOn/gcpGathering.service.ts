@@ -227,6 +227,7 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 compute_item: compute_itemList,
                 tags_keys: tags_keysList
             };
+            console.log(gcpResources['project']);
         }
         catch (e) {
             logger.error("error in collectGCPData: " + projectId);
@@ -371,25 +372,31 @@ async function listTasks(projectId: string, regionsList: Array<string>, credenti
 }
 
 const compute = require('@google-cloud/compute');
+const {InstancesClient} = compute.v1;
 
 async function listAllComputes(projectId: string, credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("compute")) return null;
     let jsonData = [];
-
-    const instancesClient = createClientWithCredentials(compute.InstancesClient, credentialsObject);
-    const aggListRequest =  await instancesClient.aggregatedListAsync({
-        project: projectId
-    });
-    for await (const [zone, instancesObject] of aggListRequest) {
-        const instances = instancesObject.instances;
-
-        if (instances && instances.length > 0) {
-            for (let i = 0; i < instances.length; i++) {
-                jsonData.push(JSON.parse(jsonStringify(instances[i].metadata.items.length)));
+    const instancesClient = createClientWithCredentials(InstancesClient, credentialsObject);
+    try {
+        const aggListRequest = instancesClient.aggregatedListAsync({
+            project: projectId
+        });
+        for await (const [zone, instancesObject] of aggListRequest) {
+            const instances = instancesObject.instances;
+            if (instances && instances.length > 0) {
+                for (let i = 0; i < instances.length; i++) {
+                    const instanceData = JSON.parse(jsonStringify(instances[i]));
+                    instanceData.zone = zone;
+                    jsonData.push(instanceData);
+                }
             }
         }
+        logger.info("GCP Compute Listing Done");
+    } catch (e) {
+        logger.error("Error while retrieving GCP Compute Instances");
+        logger.debug(e);
     }
-    logger.info("GCP Compute Listing Done");
     return jsonData ?? null;
 }
 
@@ -434,26 +441,42 @@ async function listPersistentDisks(projectId: string, credentialsObject?: any) {
 
 async function listAllBucket(credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("bucket")) return null;
+    let jsonData = [];
+    
     try {
-        const storage = credentialsObject ? 
-            new Storage({ credentials: credentialsObject, projectId: credentialsObject.project_id }) :
-            new Storage();
+        logger.info("Starting GCP Buckets listing...");
+        if (!credentialsObject || !credentialsObject.project_id) {
+            logger.error("No credentials or project_id provided for bucket listing");
+            return null;
+        }
+        const storage = new Storage({ 
+            credentials: credentialsObject,
+            projectId: credentialsObject.project_id
+        });
         const [buckets] = await storage.getBuckets();
-
-        const promises = buckets.map(async (bucket) => {
+        if (buckets.length === 0) {
+            return [];
+        }
+        for (const bucket of buckets) {
             try {
-                const test = await storage.bucket(bucket.name).iam.getPolicy();
-            } catch (e) {
-                logger.debug(e);
+                const [metadata] = await bucket.getMetadata();
+                jsonData.push(JSON.parse(jsonStringify(metadata)));
+            } catch (bucketError: any) {
+                logger.warn(`Could not get metadata for bucket ${bucket.name}: ${bucketError.message}`);
             }
-        });        
-        await Promise.all(promises);
-        
-        return buckets;
-    } catch (e) {
+        }
+        logger.info(`GCP Buckets Listing Done`);
+        return jsonData;
+    } catch (e: any) {
+        logger.error("Error while retrieving GCP Buckets");
+        logger.error(`  Message: ${e.message}`);
+        if (e.code) {
+            logger.error(`  Code: ${e.code}`);
+        }
         logger.debug(e);
     }
-  return null;
+    
+    return null;
 }
 
 import { ClusterManagerClient } from '@google-cloud/container';

@@ -1979,7 +1979,6 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
 					collectKexaRestructuredData(credential, subscriptionId, config)
 				]);
 				let finalResources = {...autoFlatResources, ...dataComplementaryFlat};
-	
 				Object.keys(finalResources).forEach(key => {
 					if (finalResources[key] === undefined) {
 						finalResources[key] = [{}];
@@ -2725,7 +2724,30 @@ async function keyvaultListing(client: KeyVaultManagementClient): Promise<any> {
 		let result:any = item;
 		try {
 			const res = await client.vaults.get(result.resourceGroupName, result.name);
-			resultVault.push(res);
+			let vault:any = res;
+			vault.keys = [];
+			try {
+				for await (let keyItem of client.keys.list(result.resourceGroupName, result.name)) {
+					vault.keys.push(keyItem);
+				}
+			} catch (e: any) {
+				if (e?.statusCode === 403 || e?.code === 'Forbidden' || e?.code === 'AuthorizationFailed') {
+					vault.keys = null;
+				}
+				logger.debug("Failed to retrieve vault keys", e);
+			}
+			vault.secrets = [];
+			try {
+				for await (let secretItem of client.secrets.list(result.resourceGroupName, result.name)) {
+					vault.secrets.push(secretItem);
+				}
+			} catch (e: any) {
+				if (e?.statusCode === 403 || e?.code === 'Forbidden' || e?.code === 'AuthorizationFailed') {
+					vault.secrets = null;
+				}
+				logger.debug("Failed to retrieve vault secrets", e);
+			}
+			resultVault.push(vault);
 		} catch (e) {
 			logger.debug("Failed to retrieve vault informations", e);
 		}
