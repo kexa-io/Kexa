@@ -11,8 +11,9 @@ RUN upx --best --lzma bun
 # Stage 2: Install production dependencies
 FROM --platform=linux/amd64 frolvlad/alpine-glibc AS deps
 WORKDIR /usr/src/app
+
 COPY --from=compress /usr/local/bin/bun /usr/local/bin/
-COPY package.json bun.lock ./
+COPY package.json ./
 RUN bun install --production
 
 # Reduce size of node_modules
