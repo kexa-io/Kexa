@@ -22,8 +22,16 @@ interface ItemMemoisationInterface {
 
 export class Memoisation{
     private static cache = new Map<string, ItemMemoisationInterface>();
-    private static addOnPropertyToSend: { [key: string]: Function; } = loadAddOnsCustomUtility("display", "propertyToSend");
+    private static addOnPropertyToSend: { [key: string]: Function; } = {};
+    private static addOnPropertyToSendInitialized = false;
     private static lastGlobalAlert: Date;
+
+    public static async initAddOnPropertyToSend() {
+        if (!Memoisation.addOnPropertyToSendInitialized) {
+            Memoisation.addOnPropertyToSend = await loadAddOnsCustomUtility("display", "propertyToSend");
+            Memoisation.addOnPropertyToSendInitialized = true;
+        }
+    }
 
     public static setCache(rule: Rules, value: any, idScan:string): void {
         const key = Memoisation.addOnPropertyToSend[rule.cloudProvider](rule, value) + "Rule: " + rule.name + "Level: " + rule.level;

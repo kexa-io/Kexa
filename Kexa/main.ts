@@ -1,7 +1,7 @@
 import env from "dotenv";
 import { checkRules, gatheringRules } from "./services/analyse.service";
 import { alertGlobal } from "./services/alerte.service";
-import { AsciiArtText, renderTableAllScan, renderTableAllScanLoud} from "./services/display.service";
+import { AsciiArtText, renderTableAllScan, renderTableAllScanLoud, initAddOnPropertyToSend} from "./services/display.service";
 import { getEnvVar } from "./services/manageVarEnvironnement.service";
 import { loadAddOns } from "./services/addOn.service";
 import { deleteFile, createFileSync } from "./helpers/files";
@@ -16,10 +16,12 @@ import { Memoisation } from "./services/memoisation.service";
 import { SettingFile } from "./models/settingFile/settingFile.models";
 import { ResultScan, SubResultScan } from "./models/resultScan.models";
 import { exit } from "process";
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
+import { setTimeout as setTimer, clearTimeout as clearTimer } from 'node:timers';
+import { alertFromGlobal } from "./services/alerte.service";
 
-const yargs = require('yargs/yargs')
-const { hideBin } = require('yargs/helpers')
-const args = yargs(hideBin(process.argv)).argv
+const args = yargs(hideBin(process.argv)).argv;
 const folderOutput = process.env.OUTPUT??"./output";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -88,15 +90,6 @@ export async function GlobalAlert(settings: SettingFile[], allScan: ResultScan[]
     return retError;
 }
 
-const {
-    setTimeout: setTimer,
-    clearTimeout: clearTimer
-  } = require('node:timers');
-
-import {alertFromGlobal} from "./services/alerte.service";
-import { Condition } from "@aws-sdk/client-forecast";
-import type { KexaSaveConfig } from "./models/export/kexa/config.model";
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 async function main(retryLeft = -1) {
     const configuration = await getConfig();
@@ -114,6 +107,11 @@ async function main(retryLeft = -1) {
 
     context?.log("logger configured");
     AsciiArtText("Kexa");
+
+    // Initialize display addOns
+    await initAddOnPropertyToSend();
+    await Memoisation.initAddOnPropertyToSend();
+
     let idScan = 0;
     let settings = await gatheringRules(await getEnvVar("RULESDIRECTORY")??"https://github.com/kexa-io/public-rules");
     let retError = false;

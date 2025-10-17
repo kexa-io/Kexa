@@ -20,7 +20,7 @@ const context = getContext();
 
 export async function exportationData(resources: ProviderResource): Promise<any[]> {
     if(!configuration.export) return [];
-    const addOnExportation: { [key: string]: Function; } = loadAddOnsCustomUtility("exportation", "exportation", configuration.export.map((save: SaveConfig) => save.type));
+    const addOnExportation: { [key: string]: Function; } = await loadAddOnsCustomUtility("exportation", "exportation", configuration.export.map((save: SaveConfig) => save.type));
     if(!Array.isArray(configuration.export)) configuration.export = [configuration.export];
     let promises = Promise.all(configuration.export.map(async (save: SaveConfig) => {
         if(addOnExportation[save.type]){

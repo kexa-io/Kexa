@@ -83,7 +83,13 @@ export async function gatheringRules(rulesDirectory:string, getAll:boolean=false
         if(paths.length === 0) paths = fs.readdirSync(secondDefaultRulesDirectory, { withFileTypes: true});
         logger.debug("listing rules files.");
         settingFileList = new Array<SettingFile>;
-        headers = require('../../config/headers.json');
+        try {
+            const headersContent = fs.readFileSync('./config/headers.json', 'utf-8');
+            headers = JSON.parse(headersContent);
+        } catch (headersErr) {
+            logger.warn("Could not load headers.json, using empty object");
+            headers = {};
+        }
     } catch (err) {
         logger.error("Error reading rules directory: " + err);
         throw new Error("Rules directory not found or empty");

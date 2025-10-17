@@ -9,6 +9,7 @@ import { SettingFile } from "../models/settingFile/settingFile.models";
 import { getConfig } from "../helpers/loaderConfig";
 import { jsonStringify } from "../helpers/jsonStringify";
 import  {formatProviderNeededData} from "./api/formatterApi.service";
+import { getAddOnModule, hasAddOnModule, getAllAddOnFiles } from "./addOnRegistry";
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // test import static for cli 
 //import "./addOn/display/awsDisplay.service.ts" with { type: "file" };
@@ -58,7 +59,8 @@ export async function loadAddOns(settings:SettingFile[]): Promise<ProviderResour
 
     if (!addOnNeed.addOn) addOnNeed.addOn = [];
     if (!addOnNeed.objectNameNeed) addOnNeed.objectNameNeed = {};
-    const files = fs.readdirSync(serviceAddOnPath);
+    // Use registry instead of filesystem for compiled binary compatibility
+    const files = getAllAddOnFiles('gathering');
     let results: any[] = [];
 
     if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
@@ -106,7 +108,11 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): 
             }
             
             try {
-                const module = await import(`./addOn/${file.replace(".ts", ".js")}`);
+                const module = getAddOnModule('gathering', file);
+                if (!module) {
+                    logger.error(`Module ${file} not found in registry`);
+                    return null;
+                }
                 const { collectData } = module;
                 if (typeof collectData !== 'function') {
                     logger.error(`collectData is not a function in ${file}`);
@@ -165,25 +171,32 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[]): 
     return null;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-export function loadAddOnsCustomUtility(usage: string, funcName:string, onlyFiles: string[]|null = null) : { [key: string]: Function; }{
+export async function loadAddOnsCustomUtility(usage: string, funcName:string, onlyFiles: string[]|null = null) : Promise<{ [key: string]: Function; }>{
     let dictFunc: { [key: string]: Function; } = {};
-    const files = fs.readdirSync(serviceAddOnPath + "/" + usage);
-    files.map((file: string) => {
-        if(onlyFiles && !onlyFiles.some((onlyFile:string) => {return file.includes(onlyFile)})) return;
-        let result = loadAddOnCustomUtility(file, usage, funcName);
+    // Use registry instead of filesystem for compiled binary compatibility
+    const files = getAllAddOnFiles(usage);
+    const promises = files.map(async (file: string) => {
+        if(onlyFiles && !onlyFiles.some((onlyFile:string) => {return file.includes(onlyFile)})) return null;
+        let result = await loadAddOnCustomUtility(file, usage, funcName);
         if(result?.data){
             dictFunc[result.key] = result.data;
         }
+        return result;
     });
+    await Promise.all(promises);
     return dictFunc;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-function loadAddOnCustomUtility(file: string, usage: string, funcName:string): { key: string; data: Function; } | null {
+async function loadAddOnCustomUtility(file: string, usage: string, funcName:string): Promise<{ key: string; data: Function; } | null> {
     try{
         let formatUsage = usage.slice(0,1).toUpperCase() + usage.slice(1);
         if (file.includes(formatUsage+ '.service')){
             let nameAddOn = file.split(formatUsage + '.service')[0];
-            const moduleExports = require(`./addOn/${usage}/${nameAddOn}${formatUsage}.service`);
+            const moduleExports = getAddOnModule(usage, file);
+            if (!moduleExports) {
+                logger.warn(`Module ${file} not found in ${usage} registry`);
+                return null;
+            }
             const funcCall = moduleExports[funcName];
             return { key: nameAddOn, data:funcCall};
         }

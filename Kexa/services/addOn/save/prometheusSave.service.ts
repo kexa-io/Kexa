@@ -8,7 +8,16 @@ import { loadAddOnsCustomUtility } from "../../addOn.service";
 const axios = require('axios');
 const logger = getNewLogger("prometheusLogger");
 const context = getContext();
-const addOnPropertyToSend: { [key: string]: Function; } = loadAddOnsCustomUtility("display", "propertyToSend");
+// Lazy loading for compiled binary compatibility
+let addOnPropertyToSend: { [key: string]: Function; } = {};
+let addOnPropertyToSendInitialized = false;
+
+async function initAddOnPropertyToSend() {
+    if (!addOnPropertyToSendInitialized) {
+        addOnPropertyToSend = await loadAddOnsCustomUtility("display", "propertyToSend");
+        addOnPropertyToSendInitialized = true;
+    }
+}
 
 export async function save(save: PrometheusSaveConfig, result: ResultScan[][]): Promise<void>{
     throw new Error("Implementation not yet complete");
