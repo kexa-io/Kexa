@@ -227,7 +227,6 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 compute_item: compute_itemList,
                 tags_keys: tags_keysList
             };
-            console.log(gcpResources['project']);
         }
         catch (e) {
             logger.error("error in collectGCPData: " + projectId);
@@ -707,12 +706,11 @@ async function listResourceSettings(projectId: string, credentialsObject?: any):
 
 async function listRedisInstances(projectId: string, regionsList: Array<string>, credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("redis_instance")) return null;
-    const {CloudRedisClient} = require('@google-cloud/redis');
+    const {CloudRedisClient} = require('@google-cloud/redis').v1;
     let jsonData = [];
-
     try {
         const client = createClientWithCredentials(CloudRedisClient, credentialsObject);
-        jsonData = await executeAllRegions(projectId, client.listInstances, client, regionsList, false);
+        jsonData = await executeAllRegions(projectId, client.listInstances, client, regionsList, true);
     } catch (e) {
         logger.debug(e);
     }
