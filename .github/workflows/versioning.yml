@@ -22,6 +22,11 @@ jobs:
       id-token: write
 
     steps:
+      - name: Setup up node 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
       - uses: actions/create-github-app-token@v2
         id: app-token
         with:
