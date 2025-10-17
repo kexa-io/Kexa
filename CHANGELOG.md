@@ -1,3 +1,10 @@
+## [2.4.1](https://github.com/kexa-io/Kexa/compare/v2.4.0...v2.4.1) (2025-10-17)
+
+
+### Bug Fixes
+
+* remove frozen lock ([3cd979d](https://github.com/kexa-io/Kexa/commit/3cd979de1fd3495f66b0cb20538d0f756629a36f))
+
 # Changelog
 
 ## [v2.3.5] - 2025-10-02
