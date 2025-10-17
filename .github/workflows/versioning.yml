@@ -137,6 +137,7 @@ jobs:
           context: ./
           push: true
           no-cache: true
+          platforms: linux/arm64
           tags: |
             ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa:${{ steps.get_latest_release.outputs.release }}
             ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa:latest
@@ -147,6 +148,8 @@ jobs:
           context: ./
           file: Dockerfile.amd
           push: true
+          no-cache: true
+          platforms: linux/amd64
           tags: |
             ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa:${{ steps.get_latest_release.outputs.release }}
             ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa:latest-amd64
