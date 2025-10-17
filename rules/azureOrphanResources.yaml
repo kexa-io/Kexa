@@ -1,0 +1,443 @@
+- version: 1.0.0
+  date: 10-03-2025
+  alert:
+    fatal:
+      enabled: true
+      type:
+        - log
+        # - email
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type:
+        - log
+        # - email
+        # - sms
+      to:
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type:
+        - log
+        # - email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type:
+        - log
+        # - email
+      to:
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type:
+        - log
+        # - webhook
+        # - sms
+        # - email
+      to:
+        # - http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    ##################################
+    #   STORAGE / DISK / SNAPSHOT    #
+    ##################################
+
+    - name: "azure-disk-unattached-older-than-30-days"
+      description: "Unattached managed disks older than 30 days likely orphaned"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: ComputeManagementClient.disks
+      conditions:
+        - operator: OR
+          criteria:
+            - property: diskState
+              condition: DIFFERENT
+              value: 'Unattached'
+            - property: timeCreated
+              condition: DATE_INF_OR_EQUAL
+              value: 0 0 0 0 0 1 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+    - name: "azure-snapshots-orphaned"
+      description: "Snapshots with no source disk (managedBy null) or older than threshold"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: ComputeManagementClient.snapshots
+      conditions:
+        - operator: OR
+          criteria:
+            - property: managedBy
+              condition: DIFFERENT
+              value: null
+            - property: timeCreated
+              condition: DATE_INF_OR_EQUAL
+              value: 0 0 0 0 0 3 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+    - name: "azure-disk-reserved-state-old"
+      description: "Potentially wasted: disk in Reserved state (attached to stopped-deallocated VM) for more than 30 days"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: ComputeManagementClient.disks
+      conditions:
+        - operator: OR
+          criteria:
+            - property: diskState
+              condition: DIFFERENT
+              value: 'Reserved'
+            - property: timeCreated
+              condition: DATE_INF_OR_EQUAL
+              value: 0 0 0 0 0 1 0
+              date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+    ##################################
+    #   VM / COMPUTE / UNDERUSE      #
+    ##################################
+
+    - name: "not-under-use-VM"
+      description: "this rule is if a VM is under-used (50% > CPU or 50%>RAM over 2 weeks) "
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.vm
+      conditions:
+        - operator: OR
+          criteria:
+            - property: instanceView.percentageCPU.mean
+              condition: SUP
+              value: 50
+            - property: instanceView.availableMemoryBytes.mean
+              condition: SUP
+              value: 50
+
+    ##################################
+    #   NETWORK / IP / NSG / NIC     #  
+    ##################################
+
+    - name: "azure-vnet-no-subnets"
+      description: "Unused resource: Virtual Network with no subnets configured"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.virtualNetworks
+      conditions:
+        - property: subnets
+          condition: COUNT_SUP
+          value: 0
+
+    - name: "azure-public-ip-static-unassociated"
+      description: "Wasted cost: Static public IP not associated with any resource"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.publicIPAddresses
+      conditions:
+        - operator: OR
+          criteria:
+            - property: publicIPAllocationMethod
+              condition: DIFFERENT
+              value: 'Static'
+            - property: ipConfiguration
+              condition: DIFFERENT
+              value: null
+
+    - name: "azure-route-table-not-associated"
+      description: "Orphaned resource: Route table not associated with any subnet"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.routeTables
+      conditions:
+        - property: subnets
+          condition: COUNT_SUP
+          value: 0
+
+    - name: "azure-ddos-protection-plan-no-vnets"
+      description: "Unused resource: DDoS Protection Plan not protecting any VNets"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.ddosProtectionPlans
+      conditions:
+        - property: virtualNetworks
+          condition: COUNT_SUP
+          value: 0
+
+    - name: "azure-nsg-orphaned-unused"
+      description: "Identify orphaned/unused Network Security Groups with no attached network interfaces or subnets"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.networkSecurityGroups
+      conditions:
+        - operator: NAND
+          criteria:
+            - property: networkInterfaces
+              condition: COUNT_INF_OR_EQUAL
+              value: 0
+            - property: subnets
+              condition: COUNT_INF_OR_EQUAL
+              value: 0
+
+    - name: "azure-bastion-host-check"
+      description: "Review usage: Azure Bastion host (check connection logs)"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName: NetworkManagementClient.bastionHosts
+      conditions:
+        - property: provisioningState
+          condition: EQUAL
+          value: 'Succeeded'
+
+    - name: "azure-firewall-no-rules"
+      description: "Potentially misconfigured: Azure Firewall not configured"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.azureFirewalls
+      conditions:
+        - property: provisioningState
+          condition: EQUAL
+          value: 'Succeeded'
+        - operator: OR
+          criteria:
+            - property: applicationRuleCollections
+              condition: COUNT_SUP
+              value: 0
+            - property: networkRuleCollections
+              condition: COUNT_SUP
+              value: 0
+            - property: natRuleCollections
+              condition: COUNT_SUP
+              value: 0
+            
+
+    - name: "azure-private-dns-zone-no-vnet-links"
+      description: "Unused resource: Private DNS Zone with no virtual network links"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: PrivateDnsManagementClient.privateZones
+      conditions:
+        - property: provisioningState
+          condition: EQUAL
+          value: 'Succeeded'
+        - operator: OR
+          criteria:
+            - property: numberOfVirtualNetworkLinksWithRegistration
+              condition: COUNT_SUP
+              value: 0
+            - property: numberOfVirtualNetworkLinks
+              condition: COUNT_SUP
+              value: 0
+            - property: numberOfRecordSets
+              condition: COUNT_SUP
+              value: 0
+
+    ##################################
+    #   PaaS / APP / SERVICE / OTHER #
+    ##################################
+
+    - name: "azure-app-service-plan-underutilized"
+      description: "App Service Plan where all web apps have < 5% CPU consumption"
+      applied: false
+      level: 1
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.appServicePlans
+      conditions:
+        - property: metrics.cpuPercentage
+          condition: SUP_OR_EQUAL
+          value: 5
+
+    - name: "azure-app-service-plan-no-sites"
+      description: "App Service Plan with zero apps assigned - unused resource generating costs"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.appServicePlans
+      conditions:
+        - operator: AND
+          criteria:
+            - property: provisioningState
+              condition: EQUAL
+              value: 'Succeeded'
+            - property: numberOfSites
+              condition: EQUAL
+              value: 0
+    
+    - name: "azure-app-service-plan-no-workers"
+      description: "App Service Plan with zero worker instances - not serving any apps"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.appServicePlans
+      conditions:
+        - operator: AND
+          criteria:
+            - property: provisioningState
+              condition: EQUAL
+              value: 'Succeeded'
+            - property: numberOfWorkers
+              condition: EQUAL
+              value: 0
+            - property: numberOfSites
+              condition: SUP
+              value: 0
+
+    ##################################
+    #   CDN / FRONT DOOR / API MGMT  #
+    ##################################
+
+    - name: "azure-cdn-endpoint-no-origins"
+      description: "CDN Endpoint with no origins configured - cannot serve content"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: CdnManagementClient.endpoints
+      conditions:
+        - operator: AND
+          criteria:
+            - property: provisioningState
+              condition: EQUAL
+              value: 'Succeeded'
+            - property: origins
+              condition: COUNT_INF_OR_EQUAL
+              value: 0
+    
+    - name: "azure-cdn-endpoint-disabled"
+      description: "CDN Endpoint in stopped/disabled state - unused resource"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: CdnManagementClient.endpoints
+      conditions:
+        - operator: AND
+          criteria:
+            - property: provisioningState
+              condition: EQUAL
+              value: 'Succeeded'
+            - property: resourceState
+              condition: REGEX
+              value: '^(Stopped|Disabled)$'
+  
+    - name: "azure-front-door-disabled"
+      description: "Front Door with disabled operational status - unused resource generating costs"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: FrontDoorManagementClient.frontDoors
+      conditions:
+        - operator: AND
+          criteria:
+            - property: provisioningState
+              condition: EQUAL
+              value: 'Succeeded'
+            - property: enabledState
+              condition: EQUAL
+              value: 'Disabled'
+    
+    - name: "azure-front-door-no-backend-pools"
+      description: "Front Door with no backend pools configured - unused resource"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: FrontDoorManagementClient.frontDoors
+      conditions:
+        - operator: AND
+          criteria:
+            - property: provisioningState
+              condition: EQUAL
+              value: 'Succeeded'
+            - property: backendPools
+              condition: COUNT_INF_OR_EQUAL
+              value: 0
+    
+    - name: "azure-front-door-no-routing-rules"
+      description: "Front Door with no routing rules configured - cannot serve traffic"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: FrontDoorManagementClient.frontDoors
+      conditions:
+        - operator: AND
+          criteria:
+            - property: provisioningState
+              condition: EQUAL
+              value: 'Succeeded'
+            - property: routingRules
+              condition: COUNT_INF_OR_EQUAL
+              value: 0
+
+    - name: "azure-api-management-gateway-disabled"
+      description: "API Management service with gateway disabled - unused resource generating costs"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: ApiManagementClient.apiManagementService
+      conditions:
+        - operator: AND
+          criteria:
+            - property: provisioningState
+              condition: EQUAL
+              value: 'Succeeded'
+            - property: disableGateway
+              condition: EQUAL
+              value: true
+
+    ##################################
+    #      KEY VAULT                 #
+    ##################################
+
+    - name: "azure-key-vault-empty"
+      description: "Potentially unused: Key Vault with neither keys nor secrets"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.vaults
+      conditions:
+        - operator: OR
+          criteria:
+            - property: keys
+              condition: COUNT_SUP
+              value: 0
+            - property: secrets
+              condition: COUNT_SUP
+              value: 0
+
+ 
+
+    ##################################
+    #      CONTAINER REGISTRY        #
+    ##################################
+
+    - name: "azure-acr-potentially-orphaned"
+      description: "Check if container registry is potentially orphaned - older than 90 days with no private endpoints and public access disabled"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: ContainerRegistryManagementClient.registries
+      conditions:
+        - operator: AND
+          criteria:
+            - property: privateEndpointConnections
+              condition: COUNT_SUP_OR_EQUAL
+              value: 0
+            - property: publicNetworkAccess
+              condition: EQUAL
+              value: 'Disabled' 
