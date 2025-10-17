@@ -1,3 +1,10 @@
+## [2.4.2](https://github.com/kexa-io/Kexa/compare/v2.4.1...v2.4.2) (2025-10-17)
+
+
+### Bug Fixes
+
+* **dockerfile:** force arm64 ([18420bf](https://github.com/kexa-io/Kexa/commit/18420bff49fc01080fea13acc858e9d310a70a15))
+
 ## [2.4.1](https://github.com/kexa-io/Kexa/compare/v2.4.0...v2.4.1) (2025-10-17)
 
 
