@@ -136,6 +136,7 @@ jobs:
           file: Dockerfile
           context: ./
           push: true
+          no-cache: true
           tags: |
             ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa:${{ steps.get_latest_release.outputs.release }}
             ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa:latest
