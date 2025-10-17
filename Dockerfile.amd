@@ -13,7 +13,7 @@ FROM --platform=linux/amd64 frolvlad/alpine-glibc AS deps
 WORKDIR /usr/src/app
 COPY --from=compress /usr/local/bin/bun /usr/local/bin/
 COPY package.json bun.lock ./
-RUN bun install --production --frozen-lockfile
+RUN bun install --production
 
 # Reduce size of node_modules
 RUN find node_modules -type f \
