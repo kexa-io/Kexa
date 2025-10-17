@@ -1,3 +1,10 @@
+## [2.4.3](https://github.com/kexa-io/Kexa/compare/v2.4.2...v2.4.3) (2025-10-17)
+
+
+### Bug Fixes
+
+* docker set platforms from in cicd ([3e95911](https://github.com/kexa-io/Kexa/commit/3e95911df68f0640160a0d8d21c547ebc5c0013c))
+
 ## [2.4.2](https://github.com/kexa-io/Kexa/compare/v2.4.1...v2.4.2) (2025-10-17)
 
 
