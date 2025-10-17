@@ -22,6 +22,19 @@ sidebar_position: 1
   <h3>Multi-Cloud Compliance Management Made Simple</h3>
 </div>
 
+## Quick samples (run a quick security or finops audit on specific provider)
+
+**If you want to first try Kexa the fastest way**, check out this repository which use pre-defined samples
+to run complete audit on a specific provider (only required is **Docker**)
+
+
+Here is the Kexa samples : https://github.com/kexa-io/kexa-samples
+
+
+Follow readme in this repo and you will be able to run your first scan on any provider with **ONE** command.
+
+
+
 ## Why Kexa ?
 
 Ever needed to verify security and compliance across your multi-cloud infrastructure at low cost while keeping complete control over webhooks and alerting? Kexa.io makes it effortless.

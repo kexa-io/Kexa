@@ -3,6 +3,21 @@
 ## [v2.3.5] - 2025-10-02
 
 
+### Bug Fixes
+
+* **cicd:** setup to node 24 ([5848aa3](https://github.com/kexa-io/Kexa/commit/5848aa365858e9fba358c8d6d6f03f898e565c98))
+* **docs:** add samples link ([19ecbfb](https://github.com/kexa-io/Kexa/commit/19ecbfbe96a76d45432409840d121d2656d04404))
+* **rules:** AWS & Azure orphans ([c7dc572](https://github.com/kexa-io/Kexa/commit/c7dc57211d6031d8526fa878a2d7700b9a6c4c2a))
+* **rules:** aws orphan rules set ([60754cc](https://github.com/kexa-io/Kexa/commit/60754cc43fff27af8566df8b5a94e4929766de35))
+
+
+### Features
+
+* **rules:** azure & gcp (start) orphaned rules ([6c539ec](https://github.com/kexa-io/Kexa/commit/6c539ec5d2885abe1c4ba5041e323752a21cbba6))
+* **rules:** idles resources rules gcp done ([97a13f6](https://github.com/kexa-io/Kexa/commit/97a13f69b7dad134bad42cb285bbad7f73c357ad))
+
+## [2.3.5](https://github.com/kexa-io/Kexa/compare/v2.3.4...v2.3.5) (2025-10-02)
+
 
 ### Bug Fixes
 
