@@ -261,6 +261,38 @@
           value: 0 0 0 0 0 0 1
           date: "YYYY-MM-DDThh:mm:ss.SSSZ"
 
+
+    ##################################
+    #       REDIS INSTANCES          #
+    ##################################
+    - name: "gcp-redis-instance-not-ready"
+      description: "Detect Redis instances not in READY state"
+      applied: true
+      level: 2
+      cloudProvider: gcp
+      objectName: redis_instance
+      conditions:
+        - property: state
+          condition: DIFFERENT
+          value: 'READY'
+
+
+    ##################################
+    #       SECRETS MANAGER          # ok
+    ##################################
+
+    - name: "gcp-secret-unused-90-days"
+      description: "Detect secrets not accessed for more than 90 days"
+      applied: true
+      level: 2
+      cloudProvider: gcp
+      objectName: secret
+      conditions:
+        - property: metadata.labels.lastAccessed
+          condition: DATE_INF
+          value: 0 0 0 0 0 3 0
+          date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+  
     ##################################
     #       CERTIFICATES             #
     ##################################
@@ -289,7 +321,7 @@
           date: "YYYY-MM-DDThh:mm:ss.SSSZ"
 
     ##################################
-    #      GLOBAL                    #
+    #      GLOBAL / PROJECT          #
     ##################################
     - name: "gcp-project-orphaned-resources"
       description: "Review projects for orphaned or unused resources"
