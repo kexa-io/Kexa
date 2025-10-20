@@ -137,19 +137,7 @@ jobs:
           context: ./
           push: true
           no-cache: true
-          platforms: linux/arm64
+          platforms: linux/arm64,linux/amd64
           tags: |
             ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa:${{ steps.get_latest_release.outputs.release }}
             ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa:latest
-
-      - name: Push on Docker Registry
-        uses: docker/build-push-action@v6
-        with:
-          context: ./
-          file: Dockerfile.amd
-          push: true
-          no-cache: true
-          platforms: linux/amd64
-          tags: |
-            ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa:${{ steps.get_latest_release.outputs.release }}
-            ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa:latest-amd64
