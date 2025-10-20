@@ -65,18 +65,6 @@ jobs:
       - name: Push on Docker Registry
         uses: docker/build-push-action@v6
         with:
-          file: Dockerfile.amd
-          context: ./
-          push: true
-          tags: |
-            ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa-dev:${{ steps.get_latest_release.outputs.release }}-amd64
-            ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa-dev:latest-amd64
-          platforms: linux/amd64
-
-
-      - name: Push on Docker Registry
-        uses: docker/build-push-action@v6
-        with:
           file: Dockerfile
           context: ./
           push: true
