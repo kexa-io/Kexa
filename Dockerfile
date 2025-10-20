@@ -1,15 +1,15 @@
 # syntax=docker/dockerfile:1
 # Stage 1: Get and compress Bun binary
-FROM --platform=linux/arm64 oven/bun:slim AS bun-source
+FROM oven/bun:slim AS bun-source
 
-FROM alpine:3.22 AS compress
+FROM alpine:latest AS compress
 RUN apk add --no-cache upx
 COPY --from=bun-source /usr/local/bin/bun /usr/local/bin/
 WORKDIR /usr/local/bin
 RUN upx --best --lzma bun
 
 # Stage 2: Install production dependencies
-FROM --platform=linux/arm64 frolvlad/alpine-glibc AS deps
+FROM frolvlad/alpine-glibc AS deps
 WORKDIR /usr/src/app
 
 COPY --from=compress /usr/local/bin/bun /usr/local/bin/
@@ -22,7 +22,7 @@ RUN find node_modules -type f \
   -delete
 
 # Stage 3: Build final image
-FROM --platform=linux/arm64 frolvlad/alpine-glibc
+FROM frolvlad/alpine-glibc
 RUN apk add --no-cache libgcc
 COPY --from=compress /usr/local/bin/bun /usr/local/bin/
 
