@@ -1,3 +1,10 @@
+## [2.4.4](https://github.com/kexa-io/Kexa/compare/v2.4.3...v2.4.4) (2025-10-23)
+
+
+### Bug Fixes
+
+* **azure:** retrieve all sp + secrets ([1d277df](https://github.com/kexa-io/Kexa/commit/1d277dfd85b46c43d0fa5cfe26d1b3650bf16cc3))
+
 ## [2.4.3](https://github.com/kexa-io/Kexa/compare/v2.4.2...v2.4.3) (2025-10-17)
 
 
