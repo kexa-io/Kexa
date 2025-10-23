@@ -52,3 +52,7 @@ config/resources*.json
 **/kubernetes.json
 
 examples/*/data/*
+
+#bun build
+*.bun-build
+*kexa-cli
