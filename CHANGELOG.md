@@ -1,3 +1,12 @@
+## [2.4.5](https://github.com/kexa-io/Kexa/compare/v2.4.4...v2.4.5) (2025-10-23)
+
+
+### Bug Fixes
+
+* **azure:** add pagination to custom gather object ([f476f75](https://github.com/kexa-io/Kexa/commit/f476f751d271fc79716551f8b884e36911889972))
+* **rules:** sp expire correct rule ([ccd2448](https://github.com/kexa-io/Kexa/commit/ccd2448d759dd64ebadc481a69e72479236ef41f))
+* **unit_tests:** move & await loadAddOnsCustomUtility call ([ec20ebc](https://github.com/kexa-io/Kexa/commit/ec20ebca600b0d733680bd739a33ad2f1bf5917e))
+
 ## [2.4.4](https://github.com/kexa-io/Kexa/compare/v2.4.3...v2.4.4) (2025-10-23)
 
 
