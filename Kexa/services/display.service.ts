@@ -7,7 +7,16 @@ import {getNewLogger} from "./logger.service";
 const logger = getNewLogger("DiplayLogger");
 const cfonts = require('cfonts');
 
-const addOnPropertyToSend: { [key: string]: Function; } = loadAddOnsCustomUtility("display", "propertyToSend");
+let addOnPropertyToSend: { [key: string]: Function; } = {};
+let addOnPropertyToSendInitialized = false;
+
+export async function initAddOnPropertyToSend() {
+    if (!addOnPropertyToSendInitialized) {
+        addOnPropertyToSend = await loadAddOnsCustomUtility("display", "propertyToSend");
+        addOnPropertyToSendInitialized = true;
+    }
+    return addOnPropertyToSend;
+}
 
 export function renderTableAllScan(allScan: ResultScan[][]): string{
     let lastRule = ""

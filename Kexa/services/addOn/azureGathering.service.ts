@@ -3065,8 +3065,14 @@ async function conditionnalAccessListing(client: Client): Promise<any> {
 	let resultsGraph:any = [];
 	resultsGraph.id = "Conditional Access";
 	try {
-		const res = await client.api('/identity/conditionalAccess/policies').get();
-		resultsGraph = res.value;
+		let response = await client.api('/identity/conditionalAccess/policies').get();
+		resultsGraph = response.value || [];
+		while (response['@odata.nextLink']) {
+			response = await client.api(response['@odata.nextLink']).get();
+			if (response.value && Array.isArray(response.value)) {
+				resultsGraph = resultsGraph.concat(response.value);
+			}
+		}
 	} catch (error) {
 		logger.debug("error:",error);
 	}
@@ -3075,10 +3081,16 @@ async function conditionnalAccessListing(client: Client): Promise<any> {
 }
 
 async function namedLocationsListing(client: Client): Promise<any> {
-	let resultsGraph:any = {};
+	let resultsGraph:any = [];
 	try {
-		const res = await client.api('/identity/conditionalAccess/namedLocations').get();
-		resultsGraph = res.value;
+		let response = await client.api('/identity/conditionalAccess/namedLocations').get();
+		resultsGraph = response.value || [];
+		while (response['@odata.nextLink']) {
+			response = await client.api(response['@odata.nextLink']).get();
+			if (response.value && Array.isArray(response.value)) {
+				resultsGraph = resultsGraph.concat(response.value);
+			}
+		}
 		resultsGraph.forEach(async (item:any) => {
 			item.dataType = item['@odata.type'];
 		});
@@ -3091,8 +3103,14 @@ async function namedLocationsListing(client: Client): Promise<any> {
 async function groupsListing(client: Client): Promise<any> {
 	let groups:any = [];
 	try {
-		const res = await client.api('/groups').get();
-		groups = res.value;
+		let response = await client.api('/groups').get();
+		groups = response.value || [];
+		while (response['@odata.nextLink']) {
+			response = await client.api(response['@odata.nextLink']).get();
+			if (response.value && Array.isArray(response.value)) {
+				groups = groups.concat(response.value);
+			}
+		}
 		groups.forEach(async (group:any) => {
 			try {
 				//const res2 = await client.api(`/groups/${group.id}/settings`).get();
@@ -3122,17 +3140,24 @@ async function groupsListing(client: Client): Promise<any> {
 }
 
 async function testGraphListing(client: Client, subscriptionId: any): Promise<any> {
-	
+
 	let usersReponse:any = [];
 	try {
-		usersReponse = await client.api("/users")
+		let response = await client.api("/users")
 		.select("id,userPrincipalName,mail,userType,customSecurityAttributes,lastPasswordChangeDateTime,passwordPolicies,passwordProfile,signInActivity")
 		.get();
+		usersReponse = response.value || [];
+		while (response['@odata.nextLink']) {
+			response = await client.api(response['@odata.nextLink']).get();
+			if (response.value && Array.isArray(response.value)) {
+				usersReponse = usersReponse.concat(response.value);
+			}
+		}
 	} catch (error) {
 	  logger.error("Error retrieving users:", error);
 	}
 
-	const userPromise = usersReponse.value.map( async (userItem: any) => {
+	const userPromise = usersReponse.map( async (userItem: any) => {
 		let user:any = userItem;
 		try {
 			const res = await client.api(`/users/${user.id}/authentication/methods`).get();
@@ -3193,8 +3218,14 @@ async function testGraphListing(client: Client, subscriptionId: any): Promise<an
 	let resultsGraph:any = [];
 
 	try {
-		const tmp = await client.api(`/applications`).get();
-		resultsGraph = tmp.value;
+		let response = await client.api(`/applications`).get();
+		resultsGraph = response.value || [];
+		while (response['@odata.nextLink']) {
+			response = await client.api(response['@odata.nextLink']).get();
+			if (response.value && Array.isArray(response.value)) {
+				resultsGraph = resultsGraph.concat(response.value);
+			}
+		}
 	} catch (error) {
 		logger.debug("error:",error);
 	}
@@ -3204,8 +3235,14 @@ async function testGraphListing(client: Client, subscriptionId: any): Promise<an
   async function domainsListing(client: Client): Promise<any> {
 	let resultsGraph:any = [];
 	try {
-		const tmp = await client.api('/domains').get();
-		resultsGraph = tmp.value;
+		let response = await client.api('/domains').get();
+		resultsGraph = response.value || [];
+		while (response['@odata.nextLink']) {
+			response = await client.api(response['@odata.nextLink']).get();
+			if (response.value && Array.isArray(response.value)) {
+				resultsGraph = resultsGraph.concat(response.value);
+			}
+		}
 	} catch (error) {
 		logger.debug("error:",error);
 	}

@@ -20,7 +20,7 @@ const context = getContext();
 
 export async function saveResult(result: ResultScan[][]): Promise<void> {
     if(!configuration.save) return Promise.resolve();
-    const addOnSave: { [key: string]: Function; } = loadAddOnsCustomUtility("save", "save", configuration.save.map((save: SaveConfig) => save.type));
+    const addOnSave: { [key: string]: Function; } = await loadAddOnsCustomUtility("save", "save", configuration.save.map((save: SaveConfig) => save.type));
     if(!Array.isArray(configuration.save)) configuration.save = [configuration.save];
     let resultOnlyWithErrors = result.map((resultScan) => {
         return resultScan.filter((resultScan) => {
