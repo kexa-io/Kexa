@@ -1,10 +1,12 @@
 <div align="center">
-    <a href="https://www.kexa.io/addOn/github">
-        <img src="../../images/google-drive-logo.png" alt="Logo" width="200">
+    <a href="https://www.kexa.io/addOn/googleDrive">
+        <img src="../../images/google-drive-logo.png" alt="Logo" width="200"/>
     </a>
+</div>
 
 # Google Drive addOn
 
+<div>
   <p align="center">
     Reinvent the way you work with Google Drive with our revolutionary data scan add-on, simplifying the collection, organization and analysis of your files and information for unprecedented productivity in the cloud.
     <br />

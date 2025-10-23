@@ -1,7 +1,4 @@
-const levelAlert = ["info", "warning", "error", "fatal"];
-
-import { propertyToSend, renderTableAllScan, renderTableAllScanLoud } from "../services/display.service";
-import { getConfigOrEnvVar } from "../services/manageVarEnvironnement.service";
+import { propertyToSend  } from "../services/display.service";
 
 export const Jira = {
     OneJira: ({ projectKey, summary, issueType, alertLevelEmoji, objectResource, content, assigneeId, rule }: any) => {

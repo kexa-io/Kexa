@@ -1,4 +1,4 @@
-import { CkiNetworkSecurityGroup } from "../../models/azure/ckiNetwordSecurityGroup.models";
+import type { CkiNetworkSecurityGroup } from "../../models/azure/ckiNetwordSecurityGroup.models";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// class azure CLOUD RESOURCES

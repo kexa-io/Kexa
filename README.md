@@ -1,3 +1,7 @@
+---
+sidebar_position: 1
+---
+
 # Kexa
 
 [![Contributors][contributors-shield]][contributors-url]
@@ -13,10 +17,23 @@
 
 <div align="center">
   <a href="https://www.kexa.io/">
-    <img src="images/kexa-no-background-color.png" alt="Logo" width="100" height="100">
+    <img src="images/kexa-no-background-color.png" alt="Logo" width="100" height="100"/>
   </a>
   <h3>Multi-Cloud Compliance Management Made Simple</h3>
 </div>
+
+## Quick samples (run a quick security or finops audit on specific provider)
+
+**If you want to first try Kexa the fastest way**, check out this repository which use pre-defined samples
+to run complete audit on a specific provider (only required is **Docker**)
+
+
+Here is the Kexa samples : https://github.com/kexa-io/kexa-samples
+
+
+Follow readme in this repo and you will be able to run your first scan on any provider with **ONE** command.
+
+
 
 ## Why Kexa ?
 
@@ -108,9 +125,9 @@ Monitor Azure Machine Learning workspace health by checking for failed training 
 
 4. You can configure Kexa by editing the `default.conf` file inside the `config` folder and re-run the script.
 
-This will check the website <kexa.io> by default.
+This will check the website [kexa.io](https://www.kexa.io/) by default.
 
-see <https://github.com/kexa-io/kexa-samples> for samples.
+see [https://github.com/kexa-io/kexa-samples](https://github.com/kexa-io/kexa-samples) for samples.
 
 ## Installation Methods
 

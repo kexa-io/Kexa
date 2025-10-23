@@ -6,9 +6,44 @@ Get Kexa up and running quickly.
 
 Complete [Prerequisites](prerequisites.md) first - you need cloud provider credentials ready.
 
+## Quickest Start with Samples
+
+The fastest way to get started with Kexa is using our pre-configured samples from the [kexa-samples repository](https://github.com/kexa-io/kexa-samples/).
+
+**Steps:**
+
+1. **Clone the samples repository**:
+
+   ```bash
+   git clone https://github.com/kexa-io/kexa-samples.git
+   cd kexa-samples
+   ```
+
+2. **Navigate to a sample directory**:
+
+   ```bash
+   # For HTTP-based deployment samples
+   cd samples/http/
+
+   # Or for Kubernetes deployment samples
+   cd samples/kubernetes/
+   ```
+
+3. **Review and adjust configuration files** (optional):
+
+   Edit the configuration files according to your environment and needs.
+
+4. **Start Kexa with Docker Compose**:
+
+   ```bash
+   docker-compose up
+   ```
+
+The samples include pre-configured setups that serve as reference implementations for your own Kexa deployments. This is the quickest way to see Kexa in action!
+
 ## Manual Quick Start
 
-**Fastest Start (2 minutes)**
+**Fastest Start**
 
 1. **Clone and Install** (30 seconds):
 

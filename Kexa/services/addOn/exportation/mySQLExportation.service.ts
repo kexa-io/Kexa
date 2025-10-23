@@ -1,7 +1,7 @@
-import { ProviderResource } from '../../../models/providerResource.models';
+import type { ProviderResource } from '../../../models/providerResource.models';
 import { getEnvVar } from "../../manageVarEnvironnement.service";
 import { getContext, getNewLogger } from "../../logger.service";
-import { MySQLSaveConfig } from '../../../models/export/mysql/config.models';
+import type { MySQLSaveConfig } from '../../../models/export/mysql/config.models';
 import { MySQLClass } from '../../saving/mySQL.service';
 import { getConfig } from '../../../helpers/loaderConfig';
 
@@ -21,16 +21,25 @@ export async function exportation(save: MySQLSaveConfig, resources: ProviderReso
         await Promise.all(Object.keys(resources).map(async (providerName) => {
             let providerId = providers[providerName];
             let providerResource = resources[providerName];
-            await Promise.all(providerResource.map(async (resources, indexEnvironnement) => {
-                let dataEnvironnementConfig = config[providerName][indexEnvironnement];
-                const [originId, providerItemsId] = await Promise.all([
-                    mySQL.createAndGetOrigin(dataEnvironnementConfig),
-                    mySQL.createAndGetProviderItems(providerId, Object.keys(resources))
-                ]);
-                await Promise.all(Object.keys(resources).map(async (resourceName) => {
-                    await mySQL.createAndGetResources(resources[resourceName], originId, providerItemsId[resourceName]);
+            if (providerResource && typeof providerId === "number") {
+                await Promise.all(providerResource.map(async (resources, indexEnvironnement) => {
+                    let dataEnvironnementConfig = config[providerName][indexEnvironnement];
+                    const [originId, providerItemsId] = await Promise.all([
+                        mySQL.createAndGetOrigin(dataEnvironnementConfig),
+                        mySQL.createAndGetProviderItems(providerId, Object.keys(resources))
+                    ]);
+                    await Promise.all(Object.keys(resources).map(async (resourceName) => {
+                        const itemId = providerItemsId[resourceName];
+                        if (typeof itemId === "number") {
+                            await mySQL.createAndGetResources(resources[resourceName], originId, itemId);
+                        } else {
+                            logger.warn(`Provider item ID for resource '${resourceName}' is undefined and will be skipped.`);
+                        }
+                    }));
                 }));
-            }));
+            } else if (!providerId) {
+                logger.warn(`Provider ID for '${providerName}' is undefined and will be skipped.`);
+            }
         }));
         logger.info("All data exported in MySQL");
         await mySQL.disconnect();

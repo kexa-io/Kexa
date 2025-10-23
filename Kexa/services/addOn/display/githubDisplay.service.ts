@@ -1,4 +1,4 @@
-import { Rules } from "../../../models/settingFile/rules.models";
+import type { Rules } from "../../../models/settingFile/rules.models";
 
 export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false): string {
     let link = "https://github.com/";
@@ -29,6 +29,25 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
             return (isSms ? '' : webLink) + objectContent?.html_url + (isSms ? ' ' : '">') + 'Member : ' + objectContent?.login + ' Team : ' + objectContent?.team + (isSms ? `.` : `</a>`)
         case "teamRepositories":
             return (isSms ? '' : webLink) + objectContent?.html_url + (isSms ? ' ' : '">') + 'Repo : ' + objectContent?.name + ' Team : ' + objectContent?.team + (isSms ? `.` : `</a>`)
+        case "packages":
+            const repoName = objectContent?.repo || "unknown-repo";
+            const repoUrl = objectContent?.repoUrl || `https://github.com/${repoName}`;
+            const packageName = objectContent?.name || "unknown-package";
+            const packageVersion = objectContent?.version || "unknown-version";
+            
+            let packageDetails = '';
+            if (objectContent?.dependencies && objectContent.dependencies.length > 0) {
+                const maliciousDeps = objectContent.dependencies.filter((dep: any) => 
+                    dep.name === "js-yaml" && dep.version === "^4.1.0"
+                );
+                if (maliciousDeps.length > 0) {
+                    packageDetails = ` - Malicious package detected: ${maliciousDeps.map((dep: any) => `${dep.name}@${dep.version}`).join(', ')}`;
+                }
+            }
+            
+            return (isSms ? '' : webLink) + repoUrl + (isSms ? ' ' : '">') + 
+                   `Repo: ${repoName} - Package: ${packageName}@${packageVersion}${packageDetails}` + 
+                   (isSms ? `.` : `</a>`);
         default:
             return 'GIT Scan : Id : ' + objectContent?.id;
     }

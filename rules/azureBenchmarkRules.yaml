@@ -54,6 +54,7 @@
     #            STORAGES            #
     ##################################
     #### storage accounts
+
     - name: "azure-storage-acc-public-network-access"
       description: "this rule to ensure that public network access is disabled for storage accounts"
       applied: true
@@ -178,6 +179,7 @@
     #     VAULTS, SECRETS, KEYS      #
     ##################################
     #### vaults configuration
+
     - name: "azure-vault-no-public-network-access"
       description: "this rule is to ensure vault network public access is disabled"
       applied: true
@@ -221,6 +223,22 @@
         - property: properties.enablePurgeProtection
           condition: EQUAL
           value: true
+    - name: "azure-key-vault-insufficient-retention-period"
+      description: "Security risk: Key Vault soft delete retention period is less than 90 days"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName: KexaAzure.vaults
+      conditions:
+        - operator: OR
+          criteria:
+            - property: properties.enableSoftDelete
+              condition: DIFFERENT
+              value: true
+            - property: properties.softDeleteRetentionInDays
+              condition: SUP_OR_EQUAL
+              value: 30
+
     #### vault secrets
     - name: "azure-secrets-ensure-expiration"
       description: "this rule is to ensure every secrets has an expiration date"
@@ -860,7 +878,6 @@
             - property: endDateTime
               condition: DIFFERENT
               value: null
-
     - name: "azure-application-credentials-expiration-in-10days"
       description: "notify of application credentials expiration in 10 days"
       applied: true

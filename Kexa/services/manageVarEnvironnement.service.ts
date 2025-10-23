@@ -72,7 +72,7 @@ import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-sec
 async function getEnvVarWithAwsSecretManager(name:string){
 
     const credentials = fromNodeProviderChain();
-    
+
     const secretsmanager = new SecretsManagerClient({credentials});
     const secName = process.env.AWS_SECRET_NAME;
 
@@ -106,7 +106,7 @@ async function getEnvVarWithHashicorpVault(name:string) {
         client_id: hcpClientId,
         client_secret: hcpClientSecret,
     };
-    
+
     const authHeaders = {
         'Content-Type': 'application/json',
     };
@@ -130,7 +130,7 @@ async function getEnvVarWithHashicorpVault(name:string) {
             throw error;
         }
     } catch (error) {
-        logger.silly('Error fetching hashicorp secret:', error);
+        logger.debug('Error fetching hashicorp secret:', error);
         return ;
     }
 }

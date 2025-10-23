@@ -1979,7 +1979,6 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
 					collectKexaRestructuredData(credential, subscriptionId, config)
 				]);
 				let finalResources = {...autoFlatResources, ...dataComplementaryFlat};
-	
 				Object.keys(finalResources).forEach(key => {
 					if (finalResources[key] === undefined) {
 						finalResources[key] = [{}];
@@ -2075,7 +2074,7 @@ async function listAllResources(client: any, currentConfig: any) {
                         let resultObject: any[] = [];
                         try {
 							const resourceMethodResult = await resource[method]();
-    
+
 							for await (let item of resourceMethodResult) {
 								item = addingResourceGroups(item);
 								resultObject.push(item);
@@ -2725,7 +2724,30 @@ async function keyvaultListing(client: KeyVaultManagementClient): Promise<any> {
 		let result:any = item;
 		try {
 			const res = await client.vaults.get(result.resourceGroupName, result.name);
-			resultVault.push(res);
+			let vault:any = res;
+			vault.keys = [];
+			try {
+				for await (let keyItem of client.keys.list(result.resourceGroupName, result.name)) {
+					vault.keys.push(keyItem);
+				}
+			} catch (e: any) {
+				if (e?.statusCode === 403 || e?.code === 'Forbidden' || e?.code === 'AuthorizationFailed') {
+					vault.keys = null;
+				}
+				logger.debug("Failed to retrieve vault keys", e);
+			}
+			vault.secrets = [];
+			try {
+				for await (let secretItem of client.secrets.list(result.resourceGroupName, result.name)) {
+					vault.secrets.push(secretItem);
+				}
+			} catch (e: any) {
+				if (e?.statusCode === 403 || e?.code === 'Forbidden' || e?.code === 'AuthorizationFailed') {
+					vault.secrets = null;
+				}
+				logger.debug("Failed to retrieve vault secrets", e);
+			}
+			resultVault.push(vault);
 		} catch (e) {
 			logger.debug("Failed to retrieve vault informations", e);
 		}
@@ -3142,8 +3164,25 @@ async function testGraphListing(client: Client, subscriptionId: any): Promise<an
 	let resultsGraph:any = [];
 
 	try {
-		const tmp = await client.api('/servicePrincipals').get();
-		resultsGraph = tmp.value;
+		let response = await client.api('/servicePrincipals').get();
+		resultsGraph = response.value || [];
+		while (response['@odata.nextLink']) {
+			response = await client.api(response['@odata.nextLink']).get();
+			if (response.value && Array.isArray(response.value)) {
+				resultsGraph = resultsGraph.concat(response.value);
+			}
+		}
+		const spPromises = resultsGraph.map(async (sp: any) => {
+			try {
+				const app = await client.api(`/applications(appId='${sp.appId}')`).get();
+				sp.keyCredentials = app.keyCredentials || [];
+				sp.passwordCredentials = app.passwordCredentials || [];
+			} catch (error) {
+				logger.debug(`Could not fetch credentials for appId ${sp.appId}:`, error);
+			}
+			return sp;
+		});
+		resultsGraph = await Promise.all(spPromises);
 	} catch (error) {
 		logger.debug("error:",error);
 	}

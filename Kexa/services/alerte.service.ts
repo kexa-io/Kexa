@@ -1,11 +1,11 @@
 import { AlertEnum } from "../enum/alert.enum";
 import { LevelEnum } from "../enum/level.enum";
-import { ResultScan, SubResultScan } from "../models/resultScan.models";
-import { Alert } from "../models/settingFile/alert.models";
-import { Rules } from "../models/settingFile/rules.models";
+import type { ResultScan, SubResultScan } from "../models/resultScan.models";
+import type { Alert } from "../models/settingFile/alert.models";
+import type { Rules } from "../models/settingFile/rules.models";
 import { Emails } from "../emails/emails";
-import { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
-import { ConfigAlert } from "../models/settingFile/configAlert.models";
+import type { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
+import type { ConfigAlert } from "../models/settingFile/configAlert.models";
 import { Readable } from "stream";
 import { propertyToSend, renderTableAllScan, renderTableAllScanLoud } from "./display.service";
 import { groupBy } from "../helpers/groupBy";
@@ -17,7 +17,6 @@ import {getContext, getNewLogger} from "./logger.service";
 import { getConfig } from "../helpers/loaderConfig";
 import { jsonStringify, getColorStringHandler } from "../helpers/jsonStringify";
 import {formatAlertCondition} from "./api/formatterApi.service";
-import { get } from "http";
 
 const jsome = require('jsome');
 jsome.level.show = true;
@@ -55,7 +54,7 @@ export function alertGlobal(allScan: ResultScan[][], alert: GlobalConfigAlert) {
 
     alert.conditions.forEach((condition) => {
         if(isAlert) return;
-        if(compteError[condition.level] >= condition.min){
+        if(compteError?.[condition.level] >= condition.min){
             logger.debug("alert:"+levelAlert[condition.level]);
             isAlert = true;
         }

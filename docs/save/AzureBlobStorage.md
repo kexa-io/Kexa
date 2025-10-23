@@ -1,10 +1,12 @@
 <div align="center">
     <a href="https://www.kexa.io/">
-        <img src="../../images/azureBlobStorage.png" alt="Logo" width="200">
+        <img src="../../images/azureBlobStorage.png" alt="Logo" width="200"/>
     </a>
+</div>
 
 # Azure Blob Storage
 
+<div>
   <p align="center">
     Azure Blob Storage addon for Kexa save and export operations
     <br />

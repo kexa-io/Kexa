@@ -1,10 +1,12 @@
 <div align="center">
     <a href="https://www.kexa.io/modules">
-        <img src="../../images/msteams-logo.png" alt="Logo" width="200">
+        <img src="../../images/msteams-logo.png" alt="Logo" width="200"/>
     </a>
+</div>
 
-# <h3 align="center">Teams</h3>
+<h3 align="center">Teams</h3>
 
+<div>
   <p align="center">
     <br />
     <a href="https://github.com/4urcloud/Kexa/issues">Report Bug</a>
@@ -87,5 +89,5 @@ You can also uncomment the '_- log_' lines, so you will be also alerted by logs 
 Here is an example of what you will receive in your Teams channel :
 
 <div align="center">
-  <img src="../../images/expected_teams.png" alt="Logo" width="200">
+  <img src="../../images/expected_teams.png" alt="Logo" width="200"/>
 </div>

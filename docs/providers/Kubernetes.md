@@ -1,10 +1,12 @@
 <div align="center">
-    <a href="https://www.kexa.io/addOn/azure">
-        <img src="../../images/kubernetes-logo.png" alt="Logo" width="300">
+    <a href="https://www.kexa.io/addOn/kubernetes">
+        <img src="../../images/kubernetes-logo.png" alt="Logo" width="300"/>
     </a>
+</div>
 
 # Kubernetes addOn
 
+<div>
   <p align="center">
     Take the security of your Kubernetes environments to the next level with our data scan addon, guaranteeing proactive monitoring and unrivalled protection of your clusters, for total peace of mind in the container world.
     <br />

@@ -1,10 +1,8 @@
 
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import axios from 'axios';
-import { Jira } from "../../emails/jira";
-import {getContext, getNewLogger} from "../logger.service";
+import { getNewLogger } from "../logger.service";
 import { getConfig } from "../../helpers/loaderConfig";
-import { jsonStringify } from "../../helpers/jsonStringify";
 
 
 const logger = getNewLogger("JiraAlertingLogger");
@@ -31,12 +29,9 @@ export async function updateIssueDate(auth: string, issueId: string): Promise<vo
             'Accept': 'application/json',
             'Content-Type': 'application/json',
         }
-    })
-        .then(response => {
-        })
-        .catch(err => {
-            logger.error('Error updating Jira issue:', err.message);
-        });
+    }).then(_ => {}).catch(err => {
+        logger.error('Error updating Jira issue:', err.message);
+    });
 }
 
 export async function searchExistingIssue(auth: string, summary: string, description: string, content: any, issueType: string): Promise<any> {
@@ -67,12 +62,12 @@ export async function searchExistingIssue(auth: string, summary: string, descrip
         const issueContent = issue.fields.description.content;
         const contentCompareArray = content.fields.description.content;
         let i = 0, j = 0;
-    
+
         let allValid = false;
         while (i < issueContent.length && j < contentCompareArray.length) {
             let contentAPIParse = issueContent[i];
             let contentCompareParse = contentCompareArray[j];
-    
+
             const contentCompare = JSON.stringify(contentCompareParse?.content);
             const contentAPI = JSON.stringify(contentAPIParse?.content);
 
@@ -109,7 +104,7 @@ async function getJiraTickets(auth: string, summary: string): Promise<any> {
     const jqlQueryExcludeStatusID = jqlQuery + ` AND status != ${process.env.JIRA_DONE_STATUS_CODE}`;
     const jiraDomain = await getConfigOrEnvVar(config, 'JIRA_DOMAIN');
     const jiraUrlBase = `https://${jiraDomain}/rest/api/3/search?jql=${encodeURIComponent(jqlQueryExcludeStatusID)}`;
-    
+
     const maxResults = 50;
     let startAt = 0;
     let allIssues: any[] = [];
@@ -138,19 +133,6 @@ async function getJiraTickets(auth: string, summary: string): Promise<any> {
         logger.error('Error getting Jira tickets:', error.message);
         return [];
     }
-}
-
-function getJiraPriorityLevel(alertLevel: number): string {
-    if (alertLevel == 0) {
-        return process.env.JIRA_INFO_PRIORITY_LEVEL ?? "5";
-    } else if (alertLevel == 1) {
-        return process.env.JIRA_WARN_PRIORITY_LEVEL ?? "4";
-    } else if (alertLevel == 2) {
-        return process.env.JIRA_ERR_PRIORITY_LEVEL ?? "3";
-    } else if (alertLevel == 3) {
-        return process.env.JIRA_FATAL_PRIORITY_LEVEL ?? "2";
-    }
-    return "3";
 }
 
 export async function createJiraIssue(jiraUrl: string, finalContent: string, auth: string) {

@@ -22,13 +22,18 @@ jobs:
       id-token: write
 
     steps:
+      - name: Setup up node 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
       - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
 
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           token: ${{ steps.app-token.outputs.token }}
 
@@ -91,7 +96,7 @@ jobs:
           mv CHANGELOG.md.new CHANGELOG.md
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c # v6.1.0
+        uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
         with:
           token: ${{ steps.app-token.outputs.token }}
           commit-message: "chore: update version files to ${{ steps.get_latest_release.outputs.release }} [skip ci]"
@@ -109,12 +114,15 @@ jobs:
             package.json
             CHANGELOG.md
 
-      - name: Login to Docker Registry
+    ######################################
+
+
+      - name: Login to Docker New Registry
         uses: docker/login-action@v3
         with:
           registry: ${{ secrets.DOCKER_REGISTRY_NAME}}
-          username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
-          password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+          username: ${{ secrets.DOCKER_REGISTRY_USERNAME_KEXA }}
+          password: ${{ secrets.DOCKER_REGISTRY_PASSWORD_KEXA }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -125,8 +133,11 @@ jobs:
       - name: Push on Docker Registry
         uses: docker/build-push-action@v6
         with:
+          file: Dockerfile
           context: ./
           push: true
+          no-cache: true
+          platforms: linux/arm64,linux/amd64
           tags: |
-            ${{ secrets.DOCKER_REGISTRY_NAME}}/innovtech/kexa:${{ steps.get_latest_release.outputs.release }}
-            ${{ secrets.DOCKER_REGISTRY_NAME}}/innovtech/kexa:latest
+            ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa:${{ steps.get_latest_release.outputs.release }}
+            ${{ secrets.DOCKER_REGISTRY_NAME}}/kexa/kexa:latest

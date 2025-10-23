@@ -13,4 +13,5 @@ export interface GitResources {
     teamRepositories: Array<any>|null;
     outsideCollaborators: Array<any>|null;
     runners: Array<any>|null;
+    packages: Array<any>|null;
 }

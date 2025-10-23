@@ -1,4 +1,4 @@
-import { Rules } from "../../../models/settingFile/rules.models";
+import type { Rules } from "../../../models/settingFile/rules.models";
 
 export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false){
     let link = "https://" + objectContent?.Region + ".console.aws.amazon.com/";
@@ -22,7 +22,7 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
                 return ' Key ID : ' + objectContent?.AccessKeyId;
             }
         default:
-             return ' Object Id(s) : ' + awsFindIdToDisplay(objectContent) + ' in Region : ' + objectContent?.region + ' obj type : ' + rule?.objectName;
+            return ' Object Id(s) : ' + awsFindIdToDisplay(objectContent) + ' in Region : ' + objectContent?.region + ' obj type : ' + rule?.objectName;
     }
 }
 
@@ -37,12 +37,11 @@ function cutAWSAvailabilityToRegion(inputString: string): string {
 function awsFindIdToDisplay(object: any): string[] | null {
     const result: any[] = [];
     for (const key in object) {
-      if (object.hasOwnProperty(key) && typeof object[key] !== 'function' && key.endsWith('Id')) {
-        result.push(key + "=" + object[key]);
-      }
-      else if (object.hasOwnProperty(key) && typeof object[key] !== 'function' && key.endsWith('Name')) {
-        result.push(key + "=" + object[key]);
-      }
+        if (object.hasOwnProperty(key) && typeof object[key] !== 'function' && key.endsWith('Id')) {
+            result.push(key + "=" + object[key]);
+        } else if (object.hasOwnProperty(key) && typeof object[key] !== 'function' && key.endsWith('Name')) {
+            result.push(key + "=" + object[key]);
+        }
     }
     return result ?? null;
 }

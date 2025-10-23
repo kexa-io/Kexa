@@ -1,10 +1,10 @@
-import { Rules } from "../../../models/settingFile/rules.models";
+import type { Rules } from "../../../models/settingFile/rules.models";
 
 function getGCPRegionFromUrl(url: string): string | null {
     try {
         const segments = url.split('/');
         if (segments.length > 0)
-            return segments[segments.length - 1];
+            return segments[segments.length - 1] ?? null;
     } catch (e) {
         return null;
     }

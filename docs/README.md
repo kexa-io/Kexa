@@ -30,15 +30,18 @@ Welcome to the Kexa documentation! This documentation will help you understand a
    - [Community Guidelines](./contributing/community-guidelines.md)
 
 5. [Providers](./providers/README.md)
-   - [AWS](./providers/aws.md)
-   - [Azure](./providers/azure.md)
-   - [GCP](./providers/gcp.md)
-   - [GitHub](./providers/github.md)
-   - [Google Drive](./providers/google-drive.md)
-   - [Google Workspace](./providers/google-workspace.md)
-   - [HTTP/HTTPS](./providers/http.md)
-   - [Kubernetes](./providers/kubernetes.md)
-   - [Microsoft/Office 365](./providers/o365.md)
+   - [AWS](./providers/AWS.md)
+   - [Azure](./providers/Azure.md)
+   - [GCP](./providers/GCP.md)
+   - [GitHub](./providers/Github.md)
+   - [Google Drive](./providers/GoogleDrive.md)
+   - [Google Workspace](./providers/GoogleWorkspace.md)
+   - [HTTP/HTTPS](./providers/HTTP.md)
+   - [Kubernetes](./providers/Kubernetes.md)
+   - [Microsoft/Office 365](./providers/O365.md)
+   - [MongoDB](./providers/MongoDB.md)
+   - [MySQL](./providers/MySQL.md)
+   - [PostgreSQL](./providers/PostgreSQL.md)
 
 6. [Notifications](./notifications/README.md)
    - [Email](./notifications/email.md)
@@ -100,4 +103,4 @@ Kexa is an open-source cloud infrastructure compliance and security monitoring t
 
 - Website: [https://www.kexa.io](https://www.kexa.io)
 - GitHub: [https://github.com/kexa-io/Kexa](https://github.com/kexa-io/Kexa)
-- Email: <support@kexa.io>
+- Email: [contact@kexa.io](mailto:contact@kexa.io)

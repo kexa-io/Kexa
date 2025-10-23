@@ -1,4 +1,4 @@
-import { Config } from "../settingFile/config.models";
+import type { Config } from "../settingFile/config.models";
 
 export interface googleWorkspaceConfig extends Config {
     WORKSPACECRED?: string;
