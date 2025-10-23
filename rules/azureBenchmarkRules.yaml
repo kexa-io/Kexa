@@ -845,14 +845,14 @@
           value:
             - property: endDateTime
               condition: DATE_INF
-              value: 0 0 0 10 0 0 0
+              value: 0 0 0 -10 0 0 0
               date: "YYYY-MM-DDThh:mm:ss.SSSZ"
         - property: keyCredentials
           condition: ALL
           value:
             - property: endDateTime
               condition: DATE_INF
-              value: 0 0 0 10 0 0 0
+              value: 0 0 0 -10 0 0 0
               date: "YYYY-MM-DDThh:mm:ss.SSSZ"
 
 
