@@ -47,7 +47,6 @@ describe('Add On', () => {
             const folderName = folder.slice(0, 1).toUpperCase() + folder.slice(1);
             if(files.some((file: string) => file.endsWith(folderName+'.service.ts'))){
                 describe(`Add On ${folderName}`, () => {
-                    let subAddons = loadAddOnsCustomUtility(folder, folder);
                     files.forEach((file: string) => {
                         if (file.endsWith(folderName+'.service.ts')) {
                             let addOnName = file.split(folderName+'.service.ts')[0];
@@ -61,6 +60,7 @@ describe('Add On', () => {
                         }
                     });
                     it('Number of subAddons should be equal to number of files', async () => {
+                        const subAddons = await loadAddOnsCustomUtility(folder, folder);
                         expect(Object.keys(subAddons).length).to.be.equal(files.length);
                     });
                 });
