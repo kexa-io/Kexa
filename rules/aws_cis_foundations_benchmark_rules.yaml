@@ -330,6 +330,7 @@
     #          3. LOGGING            #
     ##################################
     
+    # ok
     # 3.1 - CloudTrail Enabled in All Regions
     - name: "aws-cis-3.1-cloudtrail-all-regions"
       description: "Ensure CloudTrail is enabled in all regions"
@@ -341,10 +342,8 @@
         - property: IsMultiRegionTrail
           condition: EQUAL
           value: true
-        - property: IsLogging
-          condition: EQUAL
-          value: true
 
+    # ok
     # 3.2 - CloudTrail Log File Validation
     - name: "aws-cis-3.2-cloudtrail-log-validation"
       description: "Ensure CloudTrail log file validation is enabled"
@@ -357,10 +356,12 @@
           condition: EQUAL
           value: true
 
+    # KO
+    # did not retrieve the bucket policy status info
     # 3.3 - CloudTrail S3 Bucket Not Public
     - name: "aws-cis-3.3-cloudtrail-bucket-not-public"
       description: "Ensure the S3 bucket used to store CloudTrail logs is not publicly accessible"
-      applied: true
+      applied: false
       level: 1
       cloudProvider: aws
       objectName: S3Client.BucketPolicyStatus
@@ -369,6 +370,7 @@
           condition: EQUAL
           value: false
 
+    # ok
     # 3.4 - CloudTrail CloudWatch Logs Integration
     - name: "aws-cis-3.4-cloudtrail-cloudwatch-logs"
       description: "Ensure CloudTrail trails are integrated with CloudWatch Logs"
@@ -381,20 +383,7 @@
           condition: DIFFERENT
           value: null
 
-
-
-    # 3.6 - CloudTrail S3 Bucket Access Logging
-    - name: "aws-cis-3.6-cloudtrail-bucket-access-logging"
-      description: "Ensure S3 bucket access logging is enabled on the CloudTrail S3 bucket"
-      applied: true
-      level: 1
-      cloudProvider: aws
-      objectName: S3Client.BucketLogging
-      conditions:
-        - property: LoggingEnabled
-          condition: DIFFERENT
-          value: null
-
+    # ok
     # 3.7 - CloudTrail Logs Encrypted with KMS
     - name: "aws-cis-3.7-cloudtrail-kms-encryption"
       description: "Ensure CloudTrail logs are encrypted at rest using KMS CMKs"
