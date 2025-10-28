@@ -5176,6 +5176,7 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
                 logger.info("- Listing AWS resources done -");
 				
 				const concatedResults = concatAllObjects(collectedResults);
+				
                 resources.push(concatedResults);
             }
         } catch (e) {
@@ -5281,6 +5282,20 @@ let awsGatherDependencies = [
 			},
 		],
 		matchingError: "SecretsManagerServiceException",
+		functions: {}
+	},
+	{
+		client: "clientkms",
+		objects: [
+			{ 
+				name: "Keys",
+				subGatherName: "KeyMetadata",
+				toSend: "KeyId",
+				toFill: "KeyId",
+				results: []
+			}
+		],
+		matchingError: "KMSServiceException",
 		functions: {}
 	}
 ]
