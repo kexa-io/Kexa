@@ -3,7 +3,7 @@
     * Thumbnail : https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-dsc/events/google-cloud-square.png
     * Documentation : https://cloud.google.com/nodejs/docs/reference
     * Creation date : 2023-08-14
-    * Note : 
+    * Note :
     * Resources :
     *     - tasks_queue
     *     - compute
@@ -27,6 +27,12 @@
     *     - disk
     *     - compute_item
     *     - tags_keys
+    *     - bigquery
+    *     - dns_zone
+    *     - logging
+    *     - sql
+    *     - kms_crypto_key
+    *     - kms_key_ring
 */
 
 import { getConfigOrEnvVar, getEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
@@ -90,7 +96,10 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
             "app_gateway": null,
             "disk": null,
             "compute_item": null,
-            "tags_keys": null
+            "tags_keys": null,
+            "bigquery": null,
+            "logging": null,
+            "sql": null
         } as GCPResources;
         let projectId = await getConfigOrEnvVar(config, "GOOGLE_PROJECT_ID", prefix);
         let googleCred = await getConfigOrEnvVar(config, "GOOGLE_APPLICATION_CREDENTIALS", prefix);
@@ -175,7 +184,10 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 listAppGateways(projectId, regionsList, credentialsObject),
                 listPersistentDisks(projectId, credentialsObject),
                 listSSHKey(projectId, credentialsObject),
-                listTagsKeys(projectId, regionsList, credentialsObject)
+                listTagsKeys(projectId, regionsList, credentialsObject),
+                listBigQuery(projectId, credentialsObject),
+                listLogging(projectId, credentialsObject),
+                listSQLInstances(projectId, credentialsObject)
         ];
             const [taskList, computeList, bucketList, projectList, billingAccountList,
                 clusterList, workflowList, webSecurityList, connectorList,
@@ -185,7 +197,8 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 notebookList, lineage_processList, dashboardList, identity_domainList,
                 kms_crypto_keyList, kms_key_ringList, domain_registrationList, dns_zoneList,
                 pipelineList, certificateList, batchJobList, workloadList, artifactRepoList,
-                app_gatewayList, diskList, compute_itemList, tags_keysList] = await Promise.all(promises);
+                app_gatewayList, diskList, compute_itemList, tags_keysList, bigqueryList,
+                loggingList, sqlList] = await Promise.all(promises);
             
             context?.log("- listing cloud resources done -");
             logger.info("- listing cloud resources done -");
@@ -225,7 +238,10 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 app_gateway: app_gatewayList,
                 disk: diskList,
                 compute_item: compute_itemList,
-                tags_keys: tags_keysList
+                tags_keys: tags_keysList,
+                bigquery: bigqueryList,
+                logging: loggingList,
+                sql: sqlList
             };
         }
         catch (e) {
@@ -1078,6 +1094,121 @@ async function listTagsKeys(projectId: string, regionsList: Array<string>, crede
         logger.debug(e);
     }
     logger.info("GCP Tags Keys Listing Done");
+    return jsonData ?? null;
+}
+
+async function listBigQuery(projectId: string, credentialsObject?: any): Promise<Array<any> | null> {
+    if(!currentConfig.ObjectNameNeed?.includes("bigquery")) return null;
+    const {BigQuery} = require('@google-cloud/bigquery');
+    let jsonData = [];
+
+    try {
+        const bigquery = credentialsObject ?
+            new BigQuery({ credentials: credentialsObject, projectId: credentialsObject.project_id }) :
+            new BigQuery();
+        const [datasets] = await bigquery.getDatasets();
+        if (datasets && Array.isArray(datasets)) {
+            for (const dataset of datasets) {
+                const [metadata] = await dataset.getMetadata();
+                const datasetInfo = JSON.parse(jsonStringify(metadata));
+                const [tables] = await dataset.getTables();
+                datasetInfo.tables = [];
+                if (tables && Array.isArray(tables)) {
+                    for (const table of tables) {
+                        const [tableMetadata] = await table.getMetadata();
+                        datasetInfo.tables.push(JSON.parse(jsonStringify(tableMetadata)));
+                    }
+                }
+                jsonData.push(datasetInfo);
+            }
+        }
+    } catch (e) {
+        logger.debug(e);
+    }
+    logger.info("GCP BigQuery Listing Done");
+    return jsonData ?? null;
+}
+
+async function listLogging(projectId: string, credentialsObject?: any): Promise<Array<any> | null> {
+    if(!currentConfig.ObjectNameNeed?.includes("logging")) return null;
+    const {ConfigServiceV2Client} = require('@google-cloud/logging').v2;
+    let jsonData = [];
+
+    try {
+        const loggingClient = credentialsObject ?
+            new ConfigServiceV2Client({
+                credentials: credentialsObject,
+                projectId: credentialsObject.project_id,
+                timeout: 30000
+            }) :
+            new ConfigServiceV2Client({
+                timeout: 30000
+            });
+
+        try {
+            const parent = `projects/${projectId}/locations/global`;
+            const [buckets] = await loggingClient.listBuckets({parent});
+            if (buckets && Array.isArray(buckets)) {
+                for (const bucket of buckets) {
+                    jsonData.push(JSON.parse(jsonStringify({type: 'bucket', ...bucket})));
+                }
+            }
+        } catch (e) {
+            logger.debug(e);
+        }
+
+        try {
+            const [sinks] = await loggingClient.listSinks({parent: `projects/${projectId}`});
+            if (sinks && Array.isArray(sinks)) {
+                for (const sink of sinks) {
+                    jsonData.push(JSON.parse(jsonStringify({type: 'sink', ...sink})));
+                }
+            }
+        } catch (e) {
+            logger.debug(e);
+        }
+    } catch (e) {
+        logger.debug(e);
+    }
+    logger.info("GCP Logging Listing Done");
+    return jsonData ?? null;
+}
+
+async function listSQLInstances(projectId: string, credentialsObject?: any): Promise<Array<any> | null> {
+    if(!currentConfig.ObjectNameNeed?.includes("sql")) return null;
+    const {SqlInstancesServiceClient} = require('@google-cloud/sql').v1;
+    let jsonData = [];
+
+    try {
+        const sqlClient = credentialsObject ?
+            new SqlInstancesServiceClient({
+                credentials: credentialsObject,
+                projectId: credentialsObject.project_id,
+                fallback: 'rest'
+            }) :
+            new SqlInstancesServiceClient({
+                fallback: 'rest'
+            });
+
+        const request = {
+            project: projectId,
+        };
+        const [response] = await sqlClient.list(request);
+
+        if (response && response.items && Array.isArray(response.items)) {
+            for (const instance of response.items) {
+                jsonData.push(JSON.parse(jsonStringify(instance)));
+            }
+        } else if (response && Array.isArray(response)) {
+            for (const instance of response) {
+                jsonData.push(JSON.parse(jsonStringify(instance)));
+            }
+        }
+    } catch (e: any) {
+        logger.error("Error while retrieving GCP SQL Instances");
+        logger.debug(e);
+    }
+    logger.info("GCP SQL Instances Listing Done");
     return jsonData ?? null;
 }
 /////////////////////////////////////////////////////////
