@@ -457,14 +457,14 @@ async function listPersistentDisks(projectId: string, credentialsObject?: any) {
 async function listAllBucket(credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("bucket")) return null;
     let jsonData = [];
-    
+
     try {
         logger.info("Starting GCP Buckets listing...");
         if (!credentialsObject || !credentialsObject.project_id) {
             logger.error("No credentials or project_id provided for bucket listing");
             return null;
         }
-        const storage = new Storage({ 
+        const storage = new Storage({
             credentials: credentialsObject,
             projectId: credentialsObject.project_id
         });
@@ -490,7 +490,7 @@ async function listAllBucket(credentialsObject?: any): Promise<Array<any>|null> 
         }
         logger.debug(e);
     }
-    
+
     return null;
 }
 
@@ -511,7 +511,12 @@ async function listAllClusters(credentialsObject?: any): Promise<Array<any>|null
             zone: "-",
         };
         const [response] = await cnt.listClusters(request);
-        jsonData = JSON.parse(jsonStringify(response));
+        const parsedResponse = JSON.parse(jsonStringify(response));
+        if (parsedResponse && parsedResponse.clusters && Array.isArray(parsedResponse.clusters)) {
+            jsonData = parsedResponse.clusters;
+        } else if (Array.isArray(parsedResponse)) {
+            jsonData = parsedResponse;
+        }
     } catch (e) {
         logger.debug(e);
     }
