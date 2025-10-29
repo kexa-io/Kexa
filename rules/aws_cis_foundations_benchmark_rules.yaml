@@ -1,0 +1,825 @@
+- version: 1.0.0
+  date: 10-27-2025
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+      to: []
+    error:
+      enabled: true
+      type: 
+        - log
+      to: []
+    warning:
+      enabled: true
+      type: 
+        - log
+      to: []
+    info:
+      enabled: true
+      type: 
+        - log
+      to: []
+    global:
+      enabled: true
+      type: 
+        - log
+      to: []
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    ##################################
+    #   ok-  IDENTITY AND ACCESS     #
+    ##################################
+    
+    # # ok
+    # # 1.2 - Security Contact Information
+    # - name: "aws-cis-1.2-security-contact-registered"
+    #   description: "Ensure security contact information is registered"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: AccountClient.AlternateContact
+    #   conditions:
+    #     - property: AlternateContactType
+    #       condition: EQUAL
+    #       value: 'SECURITY'
+    #     - property: EmailAddress
+    #       condition: DIFFERENT
+    #       value: null
+
+    # # ok
+    # # 1.4 - Root User Access Keys
+    # - name: "aws-cis-1.4-no-root-access-keys"
+    #   description: "Ensure no 'root' user account access key exists"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: IAMClient.AccountSummary
+    #   conditions:
+    #     - property: AccountAccessKeysPresent
+    #       condition: EQUAL
+    #       value: 0
+
+    # # ok
+    # # 1.5 - Root User MFA
+    # - name: "aws-cis-1.5-root-mfa-enabled"
+    #   description: "Ensure MFA is enabled for the 'root' user account"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: IAMClient.AccountSummary
+    #   conditions:
+    #     - property: AccountMFAEnabled
+    #       condition: EQUAL
+    #       value: 1
+
+    # # ok
+    # # 1.6 - Root User Hardware MFA
+    # - name: "aws-cis-1.6-root-HARDWARE-mfa"
+    #   description: "Ensure hardware MFA is enabled for the 'root' user account"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: IAMClient.MFADevices
+    #   conditions:
+    #     - property: .
+    #       condition: SOME
+    #       value:
+    #         - property: User.SerialNumber
+    #           condition: INCLUDE
+    #           value: ':root'
+
+
+    # # ok
+    # # 1.8 - IAM Password Policy - Minimum Length
+    # - name: "aws-cis-1.8-password-minimum-length"
+    #   description: "Ensure IAM password policy requires minimum length of 14 or greater"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: IAMClient.AccountPasswordPolicy
+    #   conditions:
+    #     - property: MinimumPasswordLength
+    #       condition: SUP_OR_EQUAL
+    #       value: 14
+
+    # # ok
+    # # 1.9 - IAM Password Policy - Password Reuse
+    # - name: "aws-cis-1.9-password-reuse-prevention"
+    #   description: "Ensure IAM password policy prevents password reuse"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: IAMClient.AccountPasswordPolicy
+    #   conditions:
+    #     - property: PasswordReusePrevention
+    #       condition: SUP_OR_EQUAL
+    #       value: 24
+
+    # # ok
+    # # 1.14 - Access Key Rotation
+    # - name: "aws-cis-1.14-access-key-rotation-90-days"
+    #   description: "Ensure access keys are rotated every 90 days or less"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: IAMClient.AccessKeys
+    #   conditions:
+    #     - property: CreateDate
+    #       condition: DATE_SUP_OR_EQUAL
+    #       value: 0 0 0 90 0 0 0
+    #       date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+
+    # # ok
+    # - name: "aws-iam-accesskey-last-used"
+    #   description: "this rule is to check for acceskeys unused for 1 month"
+    #   applied: true
+    #   level: 0
+    #   cloudProvider: aws
+    #   objectName: IAMClient.AccessKeyLastUsed
+    #   conditions:
+    #     - property: AccessKeyLastUsed.LastUsedDate
+    #       condition: DATE_INF
+    #       value: 0 0 0 0 0 1 0
+    #       date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+    # # ok
+    # # 1.15 - IAM Users Receive Permissions Only Through Groups
+    # - name: "aws-cis-1.15-no-direct-user-policies"
+    #   description: "Ensure IAM Users Receive Permissions Only Through Groups"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: IAMClient.AttachedUserPolicies
+    #   conditions:
+    #     - property: .
+    #       condition: COUNT
+    #       value: 0
+
+    # # ok
+    # # 1.17 - Support Role
+    # - name: "aws-cis-1.17-support-role-exists"
+    #   description: "Ensure a support role has been created to manage incidents with AWS Support"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: IAMClient.Policies
+    #   conditions:
+    #     - property: .
+    #       condition: SOME
+    #       value:
+    #         - operator: AND
+    #           criteria:
+    #             - property: Arn
+    #               condition: EQUAL
+    #               value: 'arn:aws:iam::aws:policy/AWSSupportAccess'
+    #             - property: AttachementCount
+    #               condition: SUP_OR_EQUAL
+    #               value: 1
+
+    # # ok
+    # # 1.18 - IAM Instance Roles
+    # - name: "aws-cis-1.18-instance-roles-used"
+    #   description: "Ensure IAM instance roles are used for AWS resource access from instances"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: EC2Client.Instances
+    #   conditions:
+    #     - property: IamInstanceProfile
+    #       condition: DIFFERENT
+    #       value: null
+
+    # # ok
+    # # 1.19 - Expired SSL/TLS Certificates
+    # - name: "aws-cis-1.19-no-expired-certificates"
+    #   description: "Ensure that all the expired SSL/TLS certificates stored in AWS IAM are removed"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: IAMClient.ServerCertificates
+    #   conditions:
+    #     - property: Expiration
+    #       condition: DATE_SUP
+    #       date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+    #       value: 0 0 0 0 0 0 0
+
+    # # ok
+    # # 1.20 - IAM Access Analyzer
+    # - name: "aws-cis-1.20-access-analyzer-enabled"
+    #   description: "Ensure that IAM Access analyzer is enabled (need in all regions)"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: AccessAnalyzerClient.Analyzers
+    #   conditions:
+    #     - property: status
+    #       condition: EQUAL
+    #       value: 'ACTIVE'
+
+
+    ##################################
+    #          2. STORAGE            #
+    ##################################
+    
+    # # ok
+    # # 2.1.1 - S3 Bucket Policy Denies HTTP
+    # - name: "aws-cis-2.1.1-s3-deny-http-requests"
+    #   description: "Ensure S3 Bucket Policy is set to deny HTTP requests"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: S3Client.BucketPolicy
+    #   conditions:
+    #     - property: Policy
+    #       condition: INCLUDE
+    #       value: '"Effect":"Deny"'
+    #     - property: Policy
+    #       condition: REGEX
+    #       value: '.*"Condition".*"aws:SecureTransport".*"false".*'
+
+    # # ok
+    # # 2.1.2 - S3 MFA Delete
+    # - name: "aws-cis-2.1.2-s3-mfa-delete-enabled"
+    #   description: "Ensure MFA Delete is enabled on S3 buckets"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: S3Client.BucketVersioning
+    #   conditions:
+    #     - property: MFADelete
+    #       condition: EQUAL
+    #       value: 'Enabled'
+
+    # # ok
+    # # 2.2.1 - EBS Volume Encryption
+    # - name: "aws-cis-2.2.1-ebs-encryption-enabled"
+    #   description: "Ensure EBS Volume Encryption is Enabled in all Regions"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: EC2Client.EbsEncryptionByDefault
+    #   conditions:
+    #     - property: EbsEncryptionByDefault
+    #       condition: EQUAL
+    #       value: true
+
+    # # ok
+    # # 2.3.1 - RDS Encryption at Rest
+    # - name: "aws-cis-2.3.1-rds-encryption-at-rest"
+    #   description: "Ensure that encryption-at-rest is enabled for RDS Instances"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: RDSClient.DBInstances
+    #   conditions:
+    #     - property: StorageEncrypted
+    #       condition: EQUAL
+    #       value: true
+
+    # # ok
+    # # 2.3.2 - RDS Auto Minor Version Upgrade
+    # - name: "aws-cis-2.3.2-rds-auto-minor-version-upgrade"
+    #   description: "Ensure Auto Minor Version Upgrade feature is Enabled for RDS Instances"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: RDSClient.DBInstances
+    #   conditions:
+    #     - property: AutoMinorVersionUpgrade
+    #       condition: EQUAL
+    #       value: true
+
+    # # ok
+    # # 2.3.3 - RDS Public Access
+    # - name: "aws-cis-2.3.3-rds-no-public-access"
+    #   description: "Ensure that public access is not given to RDS Instance"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: RDSClient.DBInstances
+    #   conditions:
+    #     - property: PubliclyAccessible
+    #       condition: EQUAL
+    #       value: false
+
+    # # ok
+    # # 2.4.1 - EFS Encryption
+    # - name: "aws-cis-2.4.1-efs-encryption-enabled"
+    #   description: "Ensure that encryption is enabled for EFS file systems"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: EFSClient.FileSystems
+    #   conditions:
+    #     - property: Encrypted
+    #       condition: EQUAL
+    #       value: true
+
+    ##################################
+    #          3. LOGGING            #
+    ##################################
+    
+    # ok
+    # 3.1 - CloudTrail Enabled in All Regions
+    - name: "aws-cis-3.1-cloudtrail-all-regions"
+      description: "Ensure CloudTrail is enabled in all regions"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: CloudTrailClient.Trails
+      conditions:
+        - property: IsMultiRegionTrail
+          condition: EQUAL
+          value: true
+
+    # ok
+    # 3.2 - CloudTrail Log File Validation
+    - name: "aws-cis-3.2-cloudtrail-log-validation"
+      description: "Ensure CloudTrail log file validation is enabled"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: CloudTrailClient.Trails
+      conditions:
+        - property: LogFileValidationEnabled
+          condition: EQUAL
+          value: true
+
+    # KO
+    # did not retrieve the bucket policy status info
+    # 3.3 - CloudTrail S3 Bucket Not Public
+    - name: "aws-cis-3.3-cloudtrail-bucket-not-public"
+      description: "Ensure the S3 bucket used to store CloudTrail logs is not publicly accessible"
+      applied: false
+      level: 1
+      cloudProvider: aws
+      objectName: S3Client.BucketPolicyStatus
+      conditions:
+        - property: IsPublic
+          condition: EQUAL
+          value: false
+
+    # ok
+    # 3.4 - CloudTrail CloudWatch Logs Integration
+    - name: "aws-cis-3.4-cloudtrail-cloudwatch-logs"
+      description: "Ensure CloudTrail trails are integrated with CloudWatch Logs"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: CloudTrailClient.Trails
+      conditions:
+        - property: CloudWatchLogsLogGroupArn
+          condition: DIFFERENT
+          value: null
+
+    # ok
+    # 3.7 - CloudTrail Logs Encrypted with KMS
+    - name: "aws-cis-3.7-cloudtrail-kms-encryption"
+      description: "Ensure CloudTrail logs are encrypted at rest using KMS CMKs"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: CloudTrailClient.Trails
+      conditions:
+        - property: KmsKeyId
+          condition: DIFFERENT
+          value: null
+
+    # 3.8 - KMS Key Rotation
+    - name: "aws-cis-3.8-kms-key-rotation"
+      description: "Ensure rotation for customer created symmetric CMKs is enabled"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: KMSClient.Keys
+      conditions:
+        - property: KeyRotationEnabled
+          condition: EQUAL
+          value: true
+
+    # 3.9 - VPC Flow Logging
+    - name: "aws-cis-3.9-vpc-flow-logging-enabled"
+      description: "Ensure VPC flow logging is enabled in all VPCs"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: EC2Client.Vpcs
+      conditions:
+        - property: FlowLogs
+          condition: COUNT_SUP_OR_EQUAL
+          value: 1
+
+    # 3.10 - S3 Object-level Logging - Write Events
+    - name: "aws-cis-3.10-s3-object-write-logging"
+      description: "Ensure that Object-level logging for write events is enabled for S3 bucket"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: CloudTrailClient.EventSelectors
+      conditions:
+        - property: DataResources
+          condition: SOME
+          value:
+            - operator: AND
+              criteria:
+                - property: Type
+                  condition: EQUAL
+                  value: 'AWS::S3::Object'
+                - property: Values
+                  condition: INCLUDE
+                  value: 'arn:aws:s3'
+
+    # 3.11 - S3 Object-level Logging - Read Events
+    - name: "aws-cis-3.11-s3-object-read-logging"
+      description: "Ensure that Object-level logging for read events is enabled for S3 bucket"
+      applied: true
+      level: 1
+      cloudProvider: aws
+      objectName: CloudTrailClient.EventSelectors
+      conditions:
+        - property: DataResources
+          condition: SOME
+          value:
+            - operator: AND
+              criteria:
+                - property: Type
+                  condition: EQUAL
+                  value: 'AWS::S3::Object'
+                - property: Values
+                  condition: INCLUDE
+                  value: 'arn:aws:s3'
+                - property: ReadWriteType
+                  condition: REGEX
+                  value: '^(All|ReadOnly)$'
+
+    # ##################################
+    # #       4. MONITORING            #
+    # ##################################
+    
+    # # 4.1 - Monitor Unauthorized API Calls
+    # - name: "aws-cis-4.1-monitor-unauthorized-api-calls"
+    #   description: "Ensure unauthorized API calls are monitored"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: CloudWatchLogsClient.MetricFilters
+    #   conditions:
+    #     - property: filterPattern
+    #       condition: REGEX
+    #       value: '.*(UnauthorizedOperation|AccessDenied).*'
+
+    # # 4.2 - Monitor Console Sign-in Without MFA
+    # - name: "aws-cis-4.2-monitor-console-signin-without-mfa"
+    #   description: "Ensure management console sign-in without MFA is monitored"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: CloudWatchLogsClient.MetricFilters
+    #   conditions:
+    #     - property: filterPattern
+    #       condition: REGEX
+    #       value: '.*ConsoleLogin.*MFAUsed.*No.*'
+
+    # # 4.3 - Monitor Root Account Usage
+    # - name: "aws-cis-4.3-monitor-root-account-usage"
+    #   description: "Ensure usage of 'root' account is monitored"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: CloudWatchLogsClient.MetricFilters
+    #   conditions:
+    #     - property: filterPattern
+    #       condition: REGEX
+    #       value: '.*userIdentity.type.*Root.*'
+
+    # # 4.4 - Monitor IAM Policy Changes
+    # - name: "aws-cis-4.4-monitor-iam-policy-changes"
+    #   description: "Ensure IAM policy changes are monitored"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: CloudWatchLogsClient.MetricFilters
+    #   conditions:
+    #     - property: filterPattern
+    #       condition: REGEX
+    #       value: '.*(CreatePolicy|DeletePolicy|CreatePolicyVersion|DeletePolicyVersion|AttachRolePolicy|DetachRolePolicy).*'
+
+    # # 4.5 - Monitor CloudTrail Configuration Changes
+    # - name: "aws-cis-4.5-monitor-cloudtrail-changes"
+    #   description: "Ensure CloudTrail configuration changes are monitored"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: CloudWatchLogsClient.MetricFilters
+    #   conditions:
+    #     - property: filterPattern
+    #       condition: REGEX
+    #       value: '.*(StartLogging|StopLogging|UpdateTrail|CreateTrail|DeleteTrail).*'
+
+    # # 4.6 - Monitor Console Authentication Failures
+    # - name: "aws-cis-4.6-monitor-console-auth-failures"
+    #   description: "Ensure AWS Management Console authentication failures are monitored"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: CloudWatchLogsClient.MetricFilters
+    #   conditions:
+    #     - property: filterPattern
+    #       condition: REGEX
+    #       value: '.*ConsoleLogin.*Failed authentication.*'
+
+    # # 4.7 - Monitor CMK Disabling or Deletion
+    # - name: "aws-cis-4.7-monitor-cmk-deletion"
+    #   description: "Ensure disabling or scheduled deletion of customer created CMKs is monitored"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: CloudWatchLogsClient.MetricFilters
+    #   conditions:
+    #     - property: filterPattern
+    #       condition: REGEX
+    #       value: '.*(DisableKey|ScheduleKeyDeletion).*'
+
+    # # 4.8 - Monitor S3 Bucket Policy Changes
+    # - name: "aws-cis-4.8-monitor-s3-bucket-policy-changes"
+    #   description: "Ensure S3 bucket policy changes are monitored"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: CloudWatchLogsClient.MetricFilters
+    #   conditions:
+    #     - property: filterPattern
+    #       condition: REGEX
+    #       value: '.*(PutBucketPolicy|DeleteBucketPolicy).*'
+
+    # # 4.9 - Monitor AWS Config Changes
+    # - name: "aws-cis-4.9-monitor-config-changes"
+    #   description: "Ensure AWS Config configuration changes are monitored"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: CloudWatchLogsClient.MetricFilters
+    #   conditions:
+    #     - property: filterPattern
+    #       condition: REGEX
+    #       value: '.*(PutConfigurationRecorder|DeleteConfigurationRecorder|PutDeliveryChannel|DeleteDeliveryChannel).*'
+
+    # # 4.10 - Monitor Security Group Changes
+    # - name: "aws-cis-4.10-monitor-security-group-changes"
+    #   description: "Ensure security group changes are monitored"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: CloudWatchLogsClient.MetricFilters
+    #   conditions:
+    #     - property: filterPattern
+    #       condition: REGEX
+    #       value: '.*(AuthorizeSecurityGroup|RevokeSecurityGroup|CreateSecurityGroup|DeleteSecurityGroup).*'
+
+    # # 4.12 - Monitor Network Gateway Changes
+    # - name: "aws-cis-4.12-monitor-network-gateway-changes"
+    #   description: "Ensure changes to network gateways are monitored"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: CloudWatchLogsClient.MetricFilters
+    #   conditions:
+    #     - property: filterPattern
+    #       condition: REGEX
+    #       value: '.*(CreateCustomerGateway|DeleteCustomerGateway|CreateInternetGateway|AttachInternetGateway|DetachInternetGateway|DeleteInternetGateway|CreateNatGateway|DeleteNatGateway).*'
+
+    # # 4.13 - Monitor Route Table Changes
+    # - name: "aws-cis-4.13-monitor-route-table-changes"
+    #   description: "Ensure route table changes are monitored"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: CloudWatchLogsClient.MetricFilters
+    #   conditions:
+    #     - property: filterPattern
+    #       condition: REGEX
+    #       value: '.*(CreateRoute|CreateRouteTable|ReplaceRoute|DeleteRoute|DeleteRouteTable|AssociateRouteTable|DisassociateRouteTable).*'
+
+    # # 4.14 - Monitor VPC Changes
+    # - name: "aws-cis-4.14-monitor-vpc-changes"
+    #   description: "Ensure VPC changes are monitored"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: CloudWatchLogsClient.MetricFilters
+    #   conditions:
+    #     - property: filterPattern
+    #       condition: REGEX
+    #       value: '.*(CreateVpc|DeleteVpc|ModifyVpcAttribute).*'
+
+    # # 4.15 - Monitor AWS Organizations Changes
+    # - name: "aws-cis-4.15-monitor-organizations-changes"
+    #   description: "Ensure AWS Organizations changes are monitored"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: CloudWatchLogsClient.MetricFilters
+    #   conditions:
+    #     - property: filterPattern
+    #       condition: REGEX
+    #       value: '.*(AcceptHandshake|InviteAccountToOrganization|CreateAccount|RemoveAccountFromOrganization|MoveAccount).*'
+
+    # # 4.16 - AWS Security Hub Enabled
+    # - name: "aws-cis-4.16-security-hub-enabled"
+    #   description: "Ensure AWS Security Hub is enabled"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: SecurityHubClient.Hub
+    #   conditions:
+    #     - property: HubArn
+    #       condition: DIFFERENT
+    #       value: null
+
+    # ##################################
+    # #        5. NETWORKING           #
+    # ##################################
+    
+    # # 5.1 - Network ACLs - Remote Server Administration Ports
+    # - name: "aws-cis-5.1-nacl-restrict-admin-ports"
+    #   description: "Ensure no Network ACLs allow ingress from 0.0.0.0/0 to remote server administration ports"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: EC2Client.NetworkAcls
+    #   conditions:
+    #     - property: Entries
+    #       condition: NOT_ANY
+    #       value:
+    #         - operator: AND
+    #           criteria:
+    #             - property: RuleAction
+    #               condition: EQUAL
+    #               value: 'allow'
+    #             - property: Egress
+    #               condition: EQUAL
+    #               value: false
+    #             - property: CidrBlock
+    #               condition: EQUAL
+    #               value: '0.0.0.0/0'
+    #             - operator: OR
+    #               criteria:
+    #                 - operator: AND
+    #                   criteria:
+    #                     - property: PortRange.From
+    #                       condition: INF_OR_EQUAL
+    #                       value: 22
+    #                     - property: PortRange.To
+    #                       condition: SUP_OR_EQUAL
+    #                       value: 22
+    #                 - operator: AND
+    #                   criteria:
+    #                     - property: PortRange.From
+    #                       condition: INF_OR_EQUAL
+    #                       value: 3389
+    #                     - property: PortRange.To
+    #                       condition: SUP_OR_EQUAL
+    #                       value: 3389
+
+    # # 5.2 - Security Groups - IPv4 Remote Administration Ports
+    # - name: "aws-cis-5.2-sg-restrict-admin-ports-ipv4"
+    #   description: "Ensure no security groups allow ingress from 0.0.0.0/0 to remote server administration ports"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: EC2Client.SecurityGroups
+    #   conditions:
+    #     - property: IpPermissions
+    #       condition: NOT_ANY
+    #       value:
+    #         - operator: AND
+    #           criteria:
+    #             - operator: OR
+    #               criteria:
+    #                 - operator: AND
+    #                   criteria:
+    #                     - property: FromPort
+    #                       condition: INF_OR_EQUAL
+    #                       value: 22
+    #                     - property: ToPort
+    #                       condition: SUP_OR_EQUAL
+    #                       value: 22
+    #                 - operator: AND
+    #                   criteria:
+    #                     - property: FromPort
+    #                       condition: INF_OR_EQUAL
+    #                       value: 3389
+    #                     - property: ToPort
+    #                       condition: SUP_OR_EQUAL
+    #                       value: 3389
+    #             - property: IpRanges
+    #               condition: SOME
+    #               value:
+    #                 - property: CidrIp
+    #                   condition: EQUAL
+    #                   value: '0.0.0.0/0'
+
+    # # 5.3 - Security Groups - IPv6 Remote Administration Ports
+    # - name: "aws-cis-5.3-sg-restrict-admin-ports-ipv6"
+    #   description: "Ensure no security groups allow ingress from ::/0 to remote server administration ports"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: EC2Client.SecurityGroups
+    #   conditions:
+    #     - property: IpPermissions
+    #       condition: NOT_ANY
+    #       value:
+    #         - operator: AND
+    #           criteria:
+    #             - operator: OR
+    #               criteria:
+    #                 - operator: AND
+    #                   criteria:
+    #                     - property: FromPort
+    #                       condition: INF_OR_EQUAL
+    #                       value: 22
+    #                     - property: ToPort
+    #                       condition: SUP_OR_EQUAL
+    #                       value: 22
+    #                 - operator: AND
+    #                   criteria:
+    #                     - property: FromPort
+    #                       condition: INF_OR_EQUAL
+    #                       value: 3389
+    #                     - property: ToPort
+    #                       condition: SUP_OR_EQUAL
+    #                       value: 3389
+    #             - property: Ipv6Ranges
+    #               condition: SOME
+    #               value:
+    #                 - property: CidrIpv6
+    #                   condition: EQUAL
+    #                   value: '::/0'
+
+    # # 5.4 - Default Security Group Restricts Traffic
+    # - name: "aws-cis-5.4-default-sg-restricts-all-traffic"
+    #   description: "Ensure the default security group of every VPC restricts all traffic"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: EC2Client.SecurityGroups
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: GroupName
+    #           condition: DIFFERENT
+    #           value: 'default'
+    #         - operator: AND
+    #           criteria:
+    #             - property: IpPermissions
+    #               condition: COUNT
+    #               value: 0
+    #             - property: IpPermissionsEgress
+    #               condition: COUNT
+    #               value: 0
+
+    # # 5.5 - VPC Peering Routing Tables Least Access
+    # - name: "aws-cis-5.5-vpc-peering-least-access"
+    #   description: "Ensure routing tables for VPC peering are 'least access'"
+    #   applied: true
+    #   level: 2
+    #   cloudProvider: aws
+    #   objectName: EC2Client.RouteTables
+    #   conditions:
+    #     - property: Routes
+    #       condition: ALL
+    #       value:
+    #         - operator: OR
+    #           criteria:
+    #             - property: VpcPeeringConnectionId
+    #               condition: EQUAL
+    #               value: null
+    #             - operator: AND
+    #               criteria:
+    #                 - property: DestinationCidrBlock
+    #                   condition: REGEX
+    #                   value: '^(?!0\.0\.0\.0/0$|::/0$).+'
+
+    # # 5.6 - EC2 IMDSv2 Only
+    # - name: "aws-cis-5.6-ec2-imdsv2-only"
+    #   description: "Ensure that EC2 Metadata Service only allows IMDSv2"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: aws
+    #   objectName: EC2Client.Instances
+    #   conditions:
+    #     - property: MetadataOptions.HttpTokens
+    #       condition: EQUAL
+    #       value: 'required'

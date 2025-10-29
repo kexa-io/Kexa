@@ -1,0 +1,55 @@
+name: Build and Release Binaries
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-binaries:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Create dist directory
+        run: mkdir -p dist
+
+      - name: Build Linux x64
+        run: bun build ./Kexa/main.ts --compile --target=bun-linux-x64 --outfile=dist/kexa-linux-x64
+
+      - name: Build Linux ARM64
+        run: bun build ./Kexa/main.ts --compile --target=bun-linux-arm64 --outfile=dist/kexa-linux-arm64
+
+      - name: Build macOS x64
+        run: bun build ./Kexa/main.ts --compile --target=bun-darwin-x64 --outfile=dist/kexa-macos-x64
+
+      - name: Build macOS ARM64
+        run: bun build ./Kexa/main.ts --compile --target=bun-darwin-arm64 --outfile=dist/kexa-macos-arm64
+
+      - name: Build Windows x64
+        run: bun build ./Kexa/main.ts --compile --target=bun-windows-x64 --outfile=dist/kexa-windows-x64.exe
+
+      - name: Upload binaries to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/kexa-linux-x64
+            dist/kexa-linux-arm64
+            dist/kexa-macos-x64
+            dist/kexa-macos-arm64
+            dist/kexa-windows-x64.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
