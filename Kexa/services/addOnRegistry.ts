@@ -31,7 +31,6 @@ import * as kexaSave from './addOn/save/kexaSave.service';
 import * as mongoDBSave from './addOn/save/mongoDBSave.service';
 import * as mySQLSave from './addOn/save/mySQLSave.service';
 import * as postgresSave from './addOn/save/postgresSave.service';
-import * as prometheusSave from './addOn/save/prometheusSave.service';
 
 // Static imports for all exportation services
 import * as azureBlobStorageExportation from './addOn/exportation/azureBlobStorageExportation.service';
@@ -78,7 +77,6 @@ const saveRegistry: { [key: string]: any } = {
     'mongoDBSave.service.ts': mongoDBSave,
     'mySQLSave.service.ts': mySQLSave,
     'postgresSave.service.ts': postgresSave,
-    'prometheusSave.service.ts': prometheusSave,
 };
 
 // Registry for exportation services
