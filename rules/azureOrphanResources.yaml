@@ -54,22 +54,23 @@
     #   STORAGE / DISK / SNAPSHOT    #
     ##################################
 
-    - name: "azure-disk-unattached-older-than-30-days"
-      description: "Unattached managed disks older than 30 days likely orphaned"
+    - name: "azure-disk-unattached-since-X-hours"
+      description: "Unattached managed disks since X hour likely orphaned"
       applied: true
       level: 1
       cloudProvider: azure
       objectName: ComputeManagementClient.disks
       conditions:
-        - operator: OR
+        - operator: NAND
           criteria:
             - property: diskState
-              condition: DIFFERENT
+              condition: EQUAL
               value: 'Unattached'
-            - property: timeCreated
-              condition: DATE_INF_OR_EQUAL
-              value: 0 0 0 0 0 1 0
+            - property: lastOwnershipUpdateTime
+              condition: DATE_SUP
+              value: 0 0 24 0 0 0 0
               date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
 
     - name: "azure-snapshots-orphaned"
       description: "Snapshots with no source disk (managedBy null) or older than threshold"
