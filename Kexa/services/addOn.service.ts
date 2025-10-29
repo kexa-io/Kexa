@@ -106,7 +106,7 @@ async function loadAddOn(file: string, addOnNeed: any): Promise<{ key: string; d
             }
 
             try {
-                const module = getAddOnModule('gathering', file);
+                const module = await getAddOnModule('gathering', file);
                 if (!module) {
                     logger.error(`Module ${file} not found in registry`);
                     return null;
@@ -188,7 +188,7 @@ async function loadAddOnCustomUtility(file: string, usage: string, funcName:stri
         let formatUsage = usage.slice(0,1).toUpperCase() + usage.slice(1);
         if (file.includes(formatUsage+ '.service')){
             let nameAddOn = file.split(formatUsage + '.service')[0];
-            const moduleExports = getAddOnModule(usage, file);
+            const moduleExports = await getAddOnModule(usage, file);
             if (!moduleExports) {
                 logger.warn(`Module ${file} not found in ${usage} registry`);
                 return null;

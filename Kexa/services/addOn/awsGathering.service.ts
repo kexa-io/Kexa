@@ -5059,8 +5059,13 @@ const logger = getNewLogger("AWSLogger");
 
 let currentConfig: AwsConfig;
 
-
-import * as AwsImports from "./imports/awsPackage.import";
+let AwsImports: any = null;
+async function getAwsImports() {
+    if (!AwsImports) {
+        AwsImports = await import("./imports/awsPackage.import");
+    }
+    return AwsImports;
+}
 
 interface AwsClient {
 	[key: string]: any;
@@ -5300,11 +5305,12 @@ let awsGatherDependencies = [
 	}
 ]
 
-function retrieveAwsClients(): Array<any> {
+async function retrieveAwsClients(): Promise<Array<any>> {
+    const imports = await getAwsImports();
     let allObjects = [];
 
-    for (const key of Object.keys(AwsImports)) {
-        const currentItem = (AwsImports as { [key: string]: unknown })[key];
+    for (const key of Object.keys(imports)) {
+        const currentItem = (imports as { [key: string]: unknown })[key];
 		const match = awsGatherDependencies.find(dep => dep.client === key);
 		if (match) {
 			match.functions = extractObjectsOrFunctions(currentItem, true);
@@ -5411,7 +5417,7 @@ async function collectAuto(credential: any, region: string) {
 	logger.info("Retrieving AWS Region: " + region);
 
 	let azureRet: any[] = [];
-	let objectToGather = retrieveAwsClients();
+	let objectToGather = await retrieveAwsClients();
 
 	/* ------------------------- */
 	/* HERE GET THE DEPENDENCIES */
