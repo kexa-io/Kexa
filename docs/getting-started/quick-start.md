@@ -71,6 +71,46 @@ The samples include pre-configured setups that serve as reference implementation
    bun run Kexa/main.ts
    ```
 
+## JSON Export
+
+**Export resources to JSON**:
+
+   ```bash
+   bun run Kexa/main.ts -o
+   bun run Kexa/main.ts --output
+   ```
+
+This exports all gathered resources to `./output/resources/{timestamp}-resources.json`
+
+**Export alerts to JSON**:
+
+   ```bash
+   bun run Kexa/main.ts -a
+   bun run Kexa/main.ts --alerts
+   ```
+
+This exports all resources that raised an alert to `./output/alerts/{timestamp}-alerts.json` grouped by rule.
+
+**Export both resources and alerts**:
+
+   ```bash
+   bun run Kexa/main.ts -o -a
+   ```
+
+**Custom output directory**:
+
+   ```bash
+   OUTPUT=/custom/path bun run Kexa/main.ts -o -a
+   ```
+
+Use the `OUTPUT` environment variable to change the output directory (default: `./output`).
+
+### CLI Options
+
+- `-o, --output` - Export resources to JSON
+- `-a, --alerts` - Export alerts to JSON
+- `--help` - Display help with examples
+
 ## Docker One-Liner
 
 For Azure (replace with your credentials):

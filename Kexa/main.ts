@@ -1,3 +1,4 @@
+#!/usr/bin/env bun
 import env from "dotenv";
 import Log, { setup as setupLogger } from 'adze';
 import { exit } from "process";
@@ -31,7 +32,23 @@ const DEFAULT_RULES_DIRECTORY = "https://github.com/kexa-io/public-rules";
 const DEFAULT_TIMEOUT_MINUTES = 15;
 const DEFAULT_MAX_RETRY = 3;
 const FOLDER_OUTPUT = process.env.OUTPUT ?? "./output";
-const ARGS = yargs(hideBin(process.argv)).argv;
+const ARGS = yargs(hideBin(process.argv))
+    .option('output', {
+        alias: 'o',
+        type: 'boolean',
+        description: 'Export resources to JSON to ./output/resources/'
+    })
+    .option('alerts', {
+        alias: 'a',
+        type: 'boolean',
+        description: 'Export alerts to JSON to ./output/alerts/'
+    })
+    .example('$0', 'Run Kexa scan')
+    .example('$0 -o', 'Run scan and export resources')
+    .example('$0 -a', 'Run scan and export alerts')
+    .example('$0 -o -a', 'Run scan and export both resources and alerts')
+    .help()
+    .argv;
 
 
 async function initializeApplication(): Promise<{ logger: Log<string, unknown>, settings: SettingFile[] }> {
@@ -72,9 +89,9 @@ export async function performScan(settings: SettingFile[], scanId: string): Prom
 
     const allScanResults: ResultScan[][] = [];
     const resources = await loadAddOns();
-    if (ARGS.o) {
+    if (ARGS.output || ARGS.o) {
         const timestamp = new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '');
-        const filePath = `${FOLDER_OUTPUT}/resources/${timestamp}.json`;
+        const filePath = `${FOLDER_OUTPUT}/resources/${timestamp}-resources.json`;
         createFileSync(JSON.stringify(resources), filePath, true);
         logger.info(`Exported resources to ${filePath}`);
     }
@@ -136,7 +153,48 @@ export async function processGlobalAlerts(settings: SettingFile[], allScanResult
         await alertGlobal(allScanResults, setting.alert.global);
     }
 
+    if (ARGS.alerts || ARGS.a) {
+        const logger = getNewLogger("AlertExportCheck");
+        logger.info(`Alert export flag detected. Exporting ${allScanResults.flat().length} scan results.`);
+        exportAlertsToJson(allScanResults);
+    }
+
     return hasCriticalError;
+}
+
+function exportAlertsToJson(allScanResults: ResultScan[][]): void {
+    const logger = getNewLogger("AlertsExportLogger");
+    const timestamp = new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '');
+
+    const resultsWithErrors = allScanResults.flat().filter(value => value.error.length > 0);
+
+    const rulesMap = new Map<string, any>();
+
+    resultsWithErrors.forEach(resultScan => {
+        const ruleName = resultScan.rule?.name ?? 'unknown';
+
+        if (!rulesMap.has(ruleName)) {
+            rulesMap.set(ruleName, {
+                name: resultScan.rule?.name,
+                description: resultScan.rule?.description,
+                level: resultScan.rule?.level,
+                cloudProvider: resultScan.rule?.cloudProvider,
+                objectName: resultScan.rule?.objectName,
+                resources: []
+            });
+        }
+
+        rulesMap.get(ruleName).resources.push(resultScan.objectContent);
+    });
+
+    const alertsJson = {
+        timestamp: new Date().toISOString(),
+        rules: Array.from(rulesMap.values())
+    };
+
+    const filePath = `${FOLDER_OUTPUT}/alerts/${timestamp}-alerts.json`;
+    createFileSync(JSON.stringify(alertsJson, null, 2), filePath, true);
+    logger.info(`Exported alerts to ${filePath}`);
 }
 
 async function handleScanIteration(settings: SettingFile[], scanId: number, logger: Log<string, unknown>): Promise<{ hasCriticalError: boolean, settings: SettingFile[] }> {
