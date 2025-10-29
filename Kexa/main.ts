@@ -10,7 +10,7 @@ import { jsonStringify } from "./helpers/jsonStringify";
 
 import { checkRules, gatheringRules } from "./services/analyse.service";
 import { alertGlobal, alertFromGlobal } from "./services/alerte.service";
-import { AsciiArtText, renderTableAllScan, renderTableAllScanLoud } from "./services/display.service";
+import { AsciiArtText, renderTableAllScan, renderTableAllScanLoud, initAddOnPropertyToSend } from "./services/display.service";
 import { getEnvVar } from "./services/manageVarEnvironnement.service";
 import { loadAddOns } from "./services/addOn.service";
 import { getContext, getNewLogger } from "./services/logger.service";
@@ -25,8 +25,8 @@ import type { ResultScan, SubResultScan } from "./models/resultScan.models";
 import { Emails } from "./emails/emails";
 import { ConditionEnum } from "./enum/condition.enum";
 
-const yargs = require('yargs/yargs');
-const { hideBin } = require('yargs/helpers');
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 const DEFAULT_RULES_DIRECTORY = "https://github.com/kexa-io/public-rules";
 const DEFAULT_TIMEOUT_MINUTES = 15;
 const DEFAULT_MAX_RETRY = 3;
@@ -63,6 +63,9 @@ async function initializeApplication(): Promise<{ logger: Log<string, unknown>, 
     const logger = getNewLogger("MainLogger");
     AsciiArtText("Kexa");
     logger.info("Application starting...");
+
+    await initAddOnPropertyToSend();
+    await Memoisation.initAddOnPropertyToSend();
 
     const rulesDirectory = await getEnvVar("RULESDIRECTORY") ?? DEFAULT_RULES_DIRECTORY;
     const settings = await gatheringRules(rulesDirectory);

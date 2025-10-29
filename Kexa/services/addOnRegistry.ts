@@ -1,122 +1,87 @@
-// Static imports for all gathering services
-import * as awsGathering from './addOn/awsGathering.service';
-import * as azureGathering from './addOn/azureGathering.service';
-import * as fuzzGathering from './addOn/fuzzGathering.service';
-import * as gcpGathering from './addOn/gcpGathering.service';
-import * as githubGathering from './addOn/githubGathering.service';
-import * as googleDriveGathering from './addOn/googleDriveGathering.service';
-import * as googleWorkspaceGathering from './addOn/googleWorkspaceGathering.service';
-import * as helmGathering from './addOn/helmGathering.service';
-import * as httpGathering from './addOn/httpGathering.service';
-import * as kubernetesGathering from './addOn/kubernetesGathering.service';
-import * as o365Gathering from './addOn/o365Gathering.service';
+const gatheringFiles = [
+    'awsGathering.service.ts',
+    'azureGathering.service.ts',
+    'fuzzGathering.service.ts',
+    'gcpGathering.service.ts',
+    'githubGathering.service.ts',
+    'googleDriveGathering.service.ts',
+    'googleWorkspaceGathering.service.ts',
+    'helmGathering.service.ts',
+    'httpGathering.service.ts',
+    'kubernetesGathering.service.ts',
+    'mongodbGathering.service.ts',
+    'mysqlGathering.service.ts',
+    'o365Gathering.service.ts',
+    'oracleGathering.service.ts',
+    'postgresqlGathering.service.ts',
+];
 
-// Static imports for all display services
-import * as awsDisplay from './addOn/display/awsDisplay.service';
-import * as azureDisplay from './addOn/display/azureDisplay.service';
-import * as fuzzDisplay from './addOn/display/fuzzDisplay.service';
-import * as gcpDisplay from './addOn/display/gcpDisplay.service';
-import * as githubDisplay from './addOn/display/githubDisplay.service';
-import * as googleDriveDisplay from './addOn/display/googleDriveDisplay.service';
-import * as googleWorkspaceDisplay from './addOn/display/googleWorkspaceDisplay.service';
-import * as helmDisplay from './addOn/display/helmDisplay.service';
-import * as httpDisplay from './addOn/display/httpDisplay.service';
-import * as kubernetesDisplay from './addOn/display/kubernetesDisplay.service';
-import * as o365Display from './addOn/display/o365Display.service';
+const displayFiles = [
+    'awsDisplay.service.ts',
+    'azureDisplay.service.ts',
+    'fuzzDisplay.service.ts',
+    'gcpDisplay.service.ts',
+    'githubDisplay.service.ts',
+    'googleDriveDisplay.service.ts',
+    'googleWorkspaceDisplay.service.ts',
+    'helmDisplay.service.ts',
+    'httpDisplay.service.ts',
+    'kubernetesDisplay.service.ts',
+    'mongodbDisplay.service.ts',
+    'mysqlDisplay.service.ts',
+    'o365Display.service.ts',
+    'oracleDisplay.service.ts',
+    'postgresqlDisplay.service.ts',
+];
 
-// Static imports for all save services
-import * as amazonS3Save from './addOn/save/amazonS3Save.service';
-import * as azureBlobStorageSave from './addOn/save/azureBlobStorageSave.service';
-import * as kexaSave from './addOn/save/kexaSave.service';
-import * as mongoDBSave from './addOn/save/mongoDBSave.service';
-import * as mySQLSave from './addOn/save/mySQLSave.service';
-import * as postgresSave from './addOn/save/postgresSave.service';
+const saveFiles = [
+    'amazonS3Save.service.ts',
+    'azureBlobStorageSave.service.ts',
+    'kexaSave.service.ts',
+    'mongoDBSave.service.ts',
+    'mySQLSave.service.ts',
+    'postgresSave.service.ts',
+];
 
-// Static imports for all exportation services
-import * as azureBlobStorageExportation from './addOn/exportation/azureBlobStorageExportation.service';
-import * as kexaExportation from './addOn/exportation/kexaExportation.service';
-import * as mongoDBExportation from './addOn/exportation/mongoDBExportation.service';
-import * as mySQLExportation from './addOn/exportation/mySQLExportation.service';
-import * as postgresExportation from './addOn/exportation/postgresExportation.service';
+const exportationFiles = [
+    'azureBlobStorageExportation.service.ts',
+    'kexaExportation.service.ts',
+    'mongoDBExportation.service.ts',
+    'mySQLExportation.service.ts',
+    'postgresExportation.service.ts',
+];
 
-// Registry for gathering services
-const gatheringRegistry: { [key: string]: any } = {
-    'awsGathering.service.ts': awsGathering,
-    'azureGathering.service.ts': azureGathering,
-    'fuzzGathering.service.ts': fuzzGathering,
-    'gcpGathering.service.ts': gcpGathering,
-    'githubGathering.service.ts': githubGathering,
-    'googleDriveGathering.service.ts': googleDriveGathering,
-    'googleWorkspaceGathering.service.ts': googleWorkspaceGathering,
-    'helmGathering.service.ts': helmGathering,
-    'httpGathering.service.ts': httpGathering,
-    'kubernetesGathering.service.ts': kubernetesGathering,
-    'o365Gathering.service.ts': o365Gathering,
-};
+export async function getAddOnModule(type: string, filename: string): Promise<any> {
+    const nameAddOn = filename.split(/Gathering|Display|Save|Exportation/)[0];
 
-// Registry for display services
-const displayRegistry: { [key: string]: any } = {
-    'awsDisplay.service.ts': awsDisplay,
-    'azureDisplay.service.ts': azureDisplay,
-    'fuzzDisplay.service.ts': fuzzDisplay,
-    'gcpDisplay.service.ts': gcpDisplay,
-    'githubDisplay.service.ts': githubDisplay,
-    'googleDriveDisplay.service.ts': googleDriveDisplay,
-    'googleWorkspaceDisplay.service.ts': googleWorkspaceDisplay,
-    'helmDisplay.service.ts': helmDisplay,
-    'httpDisplay.service.ts': httpDisplay,
-    'kubernetesDisplay.service.ts': kubernetesDisplay,
-    'o365Display.service.ts': o365Display,
-};
-
-// Registry for save services
-const saveRegistry: { [key: string]: any } = {
-    'amazonS3Save.service.ts': amazonS3Save,
-    'azureBlobStorageSave.service.ts': azureBlobStorageSave,
-    'kexaSave.service.ts': kexaSave,
-    'mongoDBSave.service.ts': mongoDBSave,
-    'mySQLSave.service.ts': mySQLSave,
-    'postgresSave.service.ts': postgresSave,
-};
-
-// Registry for exportation services
-const exportationRegistry: { [key: string]: any } = {
-    'azureBlobStorageExportation.service.ts': azureBlobStorageExportation,
-    'kexaExportation.service.ts': kexaExportation,
-    'mongoDBExportation.service.ts': mongoDBExportation,
-    'mySQLExportation.service.ts': mySQLExportation,
-    'postgresExportation.service.ts': postgresExportation,
-};
-
-export function getAddOnModule(type: string, filename: string): any {
     switch(type) {
         case 'gathering':
-            return gatheringRegistry[filename];
+            return await import(`./addOn/${nameAddOn}Gathering.service`);
         case 'display':
-            return displayRegistry[filename];
+            return await import(`./addOn/display/${nameAddOn}Display.service`);
         case 'save':
-            return saveRegistry[filename];
+            return await import(`./addOn/save/${nameAddOn}Save.service`);
         case 'exportation':
-            return exportationRegistry[filename];
+            return await import(`./addOn/exportation/${nameAddOn}Exportation.service`);
         default:
             return null;
     }
 }
 
 export function hasAddOnModule(type: string, filename: string): boolean {
-    return getAddOnModule(type, filename) !== null && getAddOnModule(type, filename) !== undefined;
+    return getAllAddOnFiles(type).includes(filename);
 }
 
 export function getAllAddOnFiles(type: string): string[] {
     switch(type) {
         case 'gathering':
-            return Object.keys(gatheringRegistry);
+            return gatheringFiles;
         case 'display':
-            return Object.keys(displayRegistry);
+            return displayFiles;
         case 'save':
-            return Object.keys(saveRegistry);
+            return saveFiles;
         case 'exportation':
-            return Object.keys(exportationRegistry);
+            return exportationFiles;
         default:
             return [];
     }
