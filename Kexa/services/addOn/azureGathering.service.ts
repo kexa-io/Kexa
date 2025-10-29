@@ -1890,22 +1890,34 @@ import { SecurityInsights } from "@azure/arm-securityinsight";
 import {SqlManagementClient } from "@azure/arm-sql";
 import {NotificationHubsManagementClient } from "@azure/arm-notificationhubs";
 import { ApplicationInsightsManagementClient } from "@azure/arm-appinsights";
-import * as AzureImports from "./imports/azurePackage.import";
 import { Client} from "@microsoft/microsoft-graph-client";
 import { TokenCredentialAuthenticationProvider } from "@microsoft/microsoft-graph-client/authProviders/azureTokenCredentials";
 
+let AzureImports: any = null;
+async function getAzureImports() {
+    if (!AzureImports) {
+        AzureImports = await import("./imports/azurePackage.import");
+    }
+    return AzureImports;
+}
 
 let allClients: AzureClients = {};
 
-for (const key of Object.keys(AzureImports)) {
-    const currentItem = (AzureImports as { [key: string]: unknown })[key];
-    const clientsFromModule = extractClients(currentItem);
-    allClients = { ...allClients, ...clientsFromModule };
-}
-
-
 interface AzureClients {
 	[key: string]: any;
+}
+
+async function retrieveAzureClients(): Promise<AzureClients> {
+    const imports = await getAzureImports();
+    let clients: AzureClients = {};
+
+    for (const key of Object.keys(imports)) {
+        const currentItem = (imports as { [key: string]: unknown })[key];
+        const clientsFromModule = extractClients(currentItem);
+        clients = { ...clients, ...clientsFromModule };
+    }
+
+    return clients;
 }
 
 function extractClients(module: any): AzureClients {
@@ -1930,7 +1942,6 @@ import { SecurityCenter } from "@azure/arm-security";
 const clientConstructors: Record<string, any> = {
     ResourceManagementClient,
 };
-Object.assign(clientConstructors, allClients);
 
 
 import { DefaultAzureCredential } from "@azure/identity";
@@ -1999,7 +2010,9 @@ async function collectAuto(credential: any, subscriptionId: any, config: AzureCo
 		[key: string]: any;
 	}
 	const azureRet: AzureRet = {};
-	for (const clientService in allClients) {
+	const clients = await retrieveAzureClients();
+	Object.assign(clientConstructors, clients);
+	for (const clientService in clients) {
 		const constructor = clientConstructors[clientService];
 		const clientName = constructor.name;
 		let requireClient = false;
