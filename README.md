@@ -107,7 +107,7 @@ curl -fsSL https://raw.githubusercontent.com/kexa-io/kexa/main/scripts/install.s
 ```
 
 ```
-export PATH="${HOME}/.local/bin:${PATH}"
+export PATH="${HOME}/.local/bin:${PATH}" 
 ```
 
 **Windows (PowerShell):**
