@@ -8,5 +8,6 @@ export interface CapacityProvider {
     resources: string[];
     thumbnail: string;
     customName?: string;
+    documentation?: string;
     freeRules: Rules[];
 }
