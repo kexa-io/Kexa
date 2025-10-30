@@ -1,3 +1,11 @@
+## [2.5.3](https://github.com/kexa-io/Kexa/compare/v2.5.2...v2.5.3) (2025-10-30)
+
+
+### Bug Fixes
+
+* **azure:** filter out SP (see desc) ([54c783c](https://github.com/kexa-io/Kexa/commit/54c783c79ff23f4ed087fc8dcee6b3437ae6f3fb))
+* **executable:** All services as dynamic imports ([2e531c8](https://github.com/kexa-io/Kexa/commit/2e531c8aecdc581218b507f3b8602ab14ee0d7a7))
+
 ## [2.5.2](https://github.com/kexa-io/Kexa/compare/v2.5.1...v2.5.2) (2025-10-30)
 
 
