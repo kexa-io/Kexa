@@ -34,19 +34,19 @@ jobs:
         run: mkdir -p dist
 
       - name: Build Linux x64
-        run: bun build ./Kexa/main.ts --compile --target=bun-linux-x64 --outfile=dist/kexa-linux-x64
+        run: bun build ./Kexa/main.ts --compile --target=bun-linux-x64 --outfile=dist/kexa-linux-x64 --minify
 
       - name: Build Linux ARM64
-        run: bun build ./Kexa/main.ts --compile --target=bun-linux-arm64 --outfile=dist/kexa-linux-arm64
+        run: bun build ./Kexa/main.ts --compile --target=bun-linux-arm64 --outfile=dist/kexa-linux-arm64 --minify
 
       - name: Build macOS x64
-        run: bun build ./Kexa/main.ts --compile --target=bun-darwin-x64 --outfile=dist/kexa-macos-x64
+        run: bun build ./Kexa/main.ts --compile --target=bun-darwin-x64 --outfile=dist/kexa-macos-x64 --minify
 
       - name: Build macOS ARM64
-        run: bun build ./Kexa/main.ts --compile --target=bun-darwin-arm64 --outfile=dist/kexa-macos-arm64
+        run: bun build ./Kexa/main.ts --compile --target=bun-darwin-arm64 --outfile=dist/kexa-macos-arm64 --minify
 
       - name: Build Windows x64
-        run: bun build ./Kexa/main.ts --compile --target=bun-windows-x64 --outfile=dist/kexa-windows-x64.exe
+        run: bun build ./Kexa/main.ts --compile --target=bun-windows-x64 --outfile=dist/kexa-windows-x64.exe --minify
 
       - name: Upload binaries to release
         uses: softprops/action-gh-release@v2

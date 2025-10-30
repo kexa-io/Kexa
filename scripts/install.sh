@@ -6,7 +6,7 @@ REPO_URL="https://github.com/kexa-io/kexa"
 BIN_DIR="${HOME}/.local/bin"
 
 echo "=================================="
-echo "   Kexa CLI Installer"
+echo "   Kexa Installer"
 echo "=================================="
 echo ""
 
@@ -36,7 +36,7 @@ detect_os
 BINARY_NAME="kexa-${OS_TYPE}-${ARCH_TYPE}"
 DOWNLOAD_URL="${REPO_URL}/releases/latest/download/${BINARY_NAME}"
 
-echo "Downloading Kexa CLI..."
+echo "Downloading Kexa..."
 echo "URL: ${DOWNLOAD_URL}"
 echo ""
 
@@ -57,7 +57,7 @@ echo "=================================="
 echo "Installation complete!"
 echo "=================================="
 echo ""
-echo "Kexa CLI installed to: ${BIN_DIR}/kexa"
+echo "Kexa installed to: ${BIN_DIR}/kexa"
 echo ""
 echo "Make sure ${BIN_DIR} is in your PATH"
 echo "Add this to your shell profile:"

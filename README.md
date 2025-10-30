@@ -95,14 +95,36 @@ Monitor Azure Machine Learning workspace health by checking for failed training 
    docker-compose up
    ```
 
-## Running localy
+## Running locally
 
-### Prerequisites
+### Option 1: Pre-built Binary (Recommended)
+
+The fastest way to run Kexa locally without any dependencies:
+
+**Linux/macOS:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/kexa-io/kexa/main/scripts/install.sh | bash
+export PATH="${HOME}/.local/bin:${PATH}"
+kexa
+```
+
+**Windows (PowerShell):**
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kexa-io/kexa/main/scripts/install.ps1" -OutFile install.ps1 | .\install.ps1
+```
+
+Once done, you can run 'kexa' as a command everywhere.
+
+The binary is standalone and requires no additional dependencies.
+
+### Option 2: Build from Source
+
+#### Prerequisites
 
 - BunJS installed
 - Cloud provider credentials (Azure, AWS, GCP, etc.)
 
-### Installation
+#### Installation
 
 1. Clone the repository:
 
@@ -131,6 +153,7 @@ see [https://github.com/kexa-io/kexa-samples](https://github.com/kexa-io/kexa-sa
 
 ## Installation Methods
 
+- **Pre-built Binary**: Download and run instantly (see above)
 - **Docker Compose**: Use our [Docker Compose file](https://github.com/kexa-io/kexa-samples)
 - **Docker**: Use our [Docker image](./docs/deployment/docker.md)
 - **GitHub Action**: Use our [GitHub Action](./docs/deployment/github-action.md)
