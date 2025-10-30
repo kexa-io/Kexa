@@ -1,10 +1,15 @@
 # Installation Guide
 
-This guide provides detailed instructions for installing Kexa using different methods.
+For local installation instructions (binary or from source), please see the [main README](../../README.md#running-locally).
 
-## Installation Methods
+## Deployment Methods
 
-To know more about installtion methods, refer to [Deployment Documentation](../deployment/README.md)
+For production deployments and other installation methods, refer to [Deployment Documentation](../deployment/README.md):
+
+- Docker / Docker Compose
+- Kubernetes
+- GitHub Actions
+- Azure Functions
 
 ### 1. Basic Configuration
 

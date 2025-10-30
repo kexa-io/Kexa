@@ -41,19 +41,15 @@ The fastest way to get started with Kexa is using our pre-configured samples fro
 
 The samples include pre-configured setups that serve as reference implementations for your own Kexa deployments. This is the quickest way to see Kexa in action!
 
-## Manual Quick Start
+## Installation
 
-**Fastest Start**
+For installation instructions, see the [main README](../../README.md#running-locally) which covers:
+- Pre-built binary installation (recommended)
+- Building from source
 
-1. **Clone and Install** (30 seconds):
+## Running Your First Scan
 
-   ```bash
-   git clone https://github.com/kexa-io/Kexa.git
-   cd Kexa
-   bun install
-   ```
-
-2. **Set Environment Variable** (30 seconds):
+1. **Set Environment Variables**:
 
    ```bash
    # For Azure
@@ -63,12 +59,14 @@ The samples include pre-configured setups that serve as reference implementation
    export A_SUBSCRIPTIONID="your-subscription-id"
    ```
 
-3. **Create Minimal Config**: [Configuration](../configuration/global-configuration.md)
+2. **Create Minimal Config**: See [Configuration](../configuration/global-configuration.md)
 
-4. **Run Your First Scan** (30 seconds):
+3. **Run Your First Scan**:
 
    ```bash
-   bun run Kexa/main.ts
+   kexa  # if using binary
+   # or
+   bun run Kexa/main.ts  # if running from source
    ```
 
 ## JSON Export
@@ -76,8 +74,12 @@ The samples include pre-configured setups that serve as reference implementation
 **Export resources to JSON**:
 
    ```bash
+   # Using binary
+   kexa -o
+   kexa --output
+
+   # Or from source
    bun run Kexa/main.ts -o
-   bun run Kexa/main.ts --output
    ```
 
 This exports all gathered resources to `./output/resources/{timestamp}-resources.json`
@@ -85,8 +87,12 @@ This exports all gathered resources to `./output/resources/{timestamp}-resources
 **Export alerts to JSON**:
 
    ```bash
+   # Using binary
+   kexa -a
+   kexa --alerts
+
+   # Or from source
    bun run Kexa/main.ts -a
-   bun run Kexa/main.ts --alerts
    ```
 
 This exports all resources that raised an alert to `./output/alerts/{timestamp}-alerts.json` grouped by rule.
@@ -94,12 +100,20 @@ This exports all resources that raised an alert to `./output/alerts/{timestamp}-
 **Export both resources and alerts**:
 
    ```bash
+   # Using binary
+   kexa -o -a
+
+   # Or from source
    bun run Kexa/main.ts -o -a
    ```
 
 **Custom output directory**:
 
    ```bash
+   # Using binary
+   OUTPUT=/custom/path kexa -o -a
+
+   # Or from source
    OUTPUT=/custom/path bun run Kexa/main.ts -o -a
    ```
 
