@@ -104,8 +104,10 @@ The fastest way to run Kexa locally without any dependencies:
 **Linux/macOS:**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/kexa-io/kexa/main/scripts/install.sh | bash
+```
+
+```
 export PATH="${HOME}/.local/bin:${PATH}"
-kexa
 ```
 
 **Windows (PowerShell):**
