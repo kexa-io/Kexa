@@ -1,0 +1,323 @@
+- version: 1.0.0
+  date: 02-23-2024
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- webhook
+        #- sms
+        #- email
+      to: 
+        #- http://127.0.0.1:5000/test
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    ## OK ##
+    - name: "azure-cis-compute-21.2"
+      description: "Ensure Virtual Machines are utilizing Managed Disks (Automated)"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: ComputeManagementClient.virtualMachines
+      conditions:
+        - property: storageProfile.osDisk.managedDisk.id
+          condition: DIFFERENT
+          value: null
+    ## OK ##
+    - name: "azure-cis-compute-21.1"
+      description: "Ensure an Azure Bastion Host Exists (Automated)"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.bastionHosts
+      conditions:
+        - property: .
+          condition: COUNT_SUP_OR_EQUAL
+          value: 1
+
+   
+    ## OK ##
+    - name: "azure-cis-compute-21.4"
+      description: "Ensure that 'Unattached disks' are encrypted with 'Customer Managed Key' (CMK) (Automated)"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: ComputeManagementClient.disks
+      conditions:
+        - property: diskState
+          condition: EQUAL
+          value: 'Unattached'
+        - property: encryption.type
+          condition: EQUAL
+          value: "EncryptionAtRestWithCustomerKey"
+
+
+    ## OK ##
+    - name: "azure-cis-compute-21.6"
+      description: "Ensure that Endpoint Protection for all Virtual Machines is installed (Manual)"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName: ComputeManagementClient.virtualMachineExtensions
+      conditions:
+        - property: publisher
+          condition: EQUAL
+          value: 'Microsoft.Azure.Security'   
+
+
+    ## OK ##
+    - name: "azure-cis-foundations-6.4"
+      description: "Ensure that HTTP(S) access from the Internet is evaluated and restricted"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: NetworkManagementClient.networkSecurityGroups
+      conditions:
+        - operator: OR
+          criteria:
+            - property: securityRules
+              condition: SOME
+              value: 
+                - operator: AND
+                  criteria:
+                    - property: access
+                      condition: EQUAL
+                      value: 'Deny'
+                    - property: direction
+                      condition: EQUAL
+                      value: 'Inbound'
+            - property: defaultSecurityRules
+              condition: SOME
+              value: 
+                - operator: AND
+                  criteria:
+                    - property: access
+                      condition: EQUAL
+                      value: 'Deny'
+                    - property: direction
+                      condition: EQUAL
+                      value: 'Inbound'
+
+
+
+    ############################
+    #         Key Vaults OK    #
+    ############################
+
+    - name: "azure-cis-foundations-8.1-2"
+      description: "Ensure that the Expiration Date is set for all Keys"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.vaults
+      conditions:
+        - property: keys
+          condition: ALL
+          value:
+            - property: attributes.expires
+              condition: DIFFERENT
+              value: null
+
+    - name: "azure-cis-foundations-8.3-4"
+      description: "Ensure that the Expiration Date is set for all Secrets"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.vaults
+      conditions:
+        - property: secrets
+          condition: ALL
+          value:
+            - property: attributes.expires
+              condition: DIFFERENT
+              value: null
+
+    - name: "azure-cis-foundations-8.5"
+      description: "Ensure the Key Vault is Recoverable (Automated)"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: KexaAzure.vaults
+      conditions:
+        - property: enableSoftDelete
+          condition: EQUAL
+          value: true
+  
+    - name: "azure-cis-foundations-8.6"
+      description: "Enable Role Based Access Control for Azure Key Vault (Manual)"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName: KexaAzure.vaults
+      conditions:
+        - property: enableRbacAuthorization
+          condition: EQUAL
+          value: true
+
+    - name: "azure-cis-foundations-8.7"
+      description: "Ensure that Private Endpoints are Used for Azure Key Vault (Manual)"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName: KexaAzure.vaults
+      conditions:
+        - property: publicNetworkAccess
+          condition: DIFFERENT
+          value: 'Enabled'
+
+    - name: "azure-cis-foundations-8.8"
+      description: "Ensure Key Rotation is Enabled Within Azure Key Vault for the Supported Services (Manual)"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName: KexaAzure.vaults
+      conditions:
+        - property: keys
+          condition: ALL
+          value:
+            - property: rotationPolicy
+              condition: DIFFERENT
+              value: null
+
+    ############################
+    #         Web app OK       #
+    ############################
+    - name: "azure-cis-foundations-9.2"
+      description: "Ensure Web App Redirects All HTTP traffic to HTTPS in Azure App Service (Automated)"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.webApps
+      conditions:
+        - property: httpsOnly
+          condition: EQUAL
+          value: true
+
+    - name: "azure-cis-foundations-9.3"
+      description: "Ensure Web App is using the latest version of TLS encryption (Automated)"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.webApps
+      conditions:
+        - operator: OR
+          criteria:
+            - property: siteConfig.minTlsVersion
+              condition: EQUAL
+              value: '1.2'
+            - property: siteConfig.minTlsVersion
+              condition: EQUAL
+              value: '1.3'
+
+    - name: "azure-cis-foundations-9.5"
+      description: "Ensure That 'PHP version' is the Latest, If Used to Run the Web App (Manual)"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.webApps
+      conditions:
+        - operator: OR
+          criteria:
+            - property: siteConfig.phpVersion
+              condition: EQUAL
+              value: '8.4'
+            - property: siteConfig.phpVersion
+              condition: EQUAL
+              value: null
+
+    - name: "azure-cis-foundations-9.6"
+      description: "Ensure that 'Python version' is the Latest Stable Version, if Used to Run the Web App (Manual)"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.webApps
+      conditions:
+        - operator: OR
+          criteria:
+            - property: siteConfig.pythonVersion
+              condition: EQUAL
+              value: '3.13'
+            - property: siteConfig.pythonVersion
+              condition: EQUAL
+              value: null
+
+    - name: "azure-cis-foundations-9.7"
+      description: "Ensure that 'Java version' is the latest, if used to run the Web App (Manual)"
+      applied: true
+      level: 0
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.webApps
+      conditions:
+        - operator: OR
+          criteria:
+            - property: siteConfig.javaVersion
+              condition: EQUAL
+              value: '25'
+            - property: siteConfig.javaVersion
+              condition: EQUAL
+              value: null
+
+    - name: "azure-cis-foundations-9.8"
+      description: "Ensure that 'HTTP Version' is the Latest, if Used to Run the Web App (Automated)"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.webApps
+      conditions:
+        - property: siteConfig.http20Enabled
+          condition: EQUAL
+          value: true
+
+    - name: "azure-cis-foundations-9.9"
+      description: "Ensure FTP deployments are Disabled (Automated)"
+      applied: true
+      level: 1
+      cloudProvider: azure
+      objectName: WebSiteManagementClient.webApps
+      conditions:
+        - operator: OR
+          criteria:
+            - property: siteConfig.ftpsState
+              condition: EQUAL
+              value: 'FtpsOnly'
+            - property: siteConfig.ftpsState
+              condition: EQUAL
+              value: 'Disabled'

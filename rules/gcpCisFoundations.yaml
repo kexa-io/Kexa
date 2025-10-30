@@ -1,0 +1,1157 @@
+- version: 3.0.0
+  date: 10-28-2025
+  alert:
+    fatal:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        #- yourEmail@mail.com
+    error:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- sms
+      to: 
+        #- yourEmail@mail.com
+    warning:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to:
+        #- yourEmail@mail.com
+    info:
+      enabled: true
+      type: 
+        - log
+        #- email
+      to: 
+        #- yourEmail@mail.com
+    global:
+      enabled: true
+      type: 
+        - log
+        #- email
+        #- webhook
+        #- sms
+      to: 
+        #- http://127.0.0.1:5000/test
+        #- yourEmail@mail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    ##################################
+    #     SECTION 1: IAM             #
+    ##################################
+
+    #for IAM we will need to gather the iam correct object from gcp
+    
+    # 1.2 - MFA for Non-Service Accounts (Manual)
+    # - name: "gcp-iam-mfa-enabled-non-service-accounts"
+    #   description: "CIS 1.2: Ensure that Multi-Factor Authentication is 'Enabled' for All Non-Service Accounts"
+    #   applied: false  # Manual check required
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: project
+    #   conditions:
+    #     - property: state
+    #       condition: EQUAL
+    #       value: 'ACTIVE'
+
+    # # 1.4 - Service Account Keys Management
+    # - name: "gcp-iam-no-user-managed-service-account-keys"
+    #   description: "CIS 1.4: Ensure That There Are Only GCP-Managed Service Account Keys for Each Service Account"
+    #   applied: false  # Requires custom implementation to check service account keys
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: project
+    #   conditions:
+    #     - property: state
+    #       condition: EQUAL
+    #       value: 'ACTIVE'
+
+    # # 1.5 - Service Account No Admin Privileges
+    # - name: "gcp-iam-service-account-no-admin-privileges"
+    #   description: "CIS 1.5: Ensure That Service Account Has No Admin Privileges"
+    #   applied: false  # Requires IAM policy analysis
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: project
+    #   conditions:
+    #     - property: state
+    #       condition: EQUAL
+    #       value: 'ACTIVE'
+
+    # # 1.6 - IAM Users Not Assigned Service Account User Role
+    # - name: "gcp-iam-users-not-service-account-user"
+    #   description: "CIS 1.6: Ensure That IAM Users Are Not Assigned the Service Account User or Service Account Token Creator Roles at Project Level"
+    #   applied: false  # Requires IAM policy analysis
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: project
+    #   conditions:
+    #     - property: state
+    #       condition: EQUAL
+    #       value: 'ACTIVE'
+
+    # # 1.7 - Service Account Key Rotation
+    # - name: "gcp-iam-service-account-key-rotation-90-days"
+    #   description: "CIS 1.7: Ensure User-Managed/External Keys for Service Accounts Are Rotated Every 90 Days"
+    #   applied: false  # Requires custom key age check
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: project
+    #   conditions:
+    #     - property: state
+    #       condition: EQUAL
+    #       value: 'ACTIVE'
+
+    # # 1.8 - Separation of Duties for Service Accounts
+    # - name: "gcp-iam-separation-of-duties-service-accounts"
+    #   description: "CIS 1.8: Ensure That Separation of Duties Is Enforced While Assigning Service Account Related Roles to Users"
+    #   applied: false  # Requires IAM policy analysis
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: project
+    #   conditions:
+    #     - property: state
+    #       condition: EQUAL
+    #       value: 'ACTIVE'
+
+    # # 1.9 - KMS Crypto Keys Not Public
+    # - name: "gcp-kms-cryptokeys-not-public"
+    #   description: "CIS 1.9: Ensure That Cloud KMS Cryptokeys Are Not Anonymously or Publicly Accessible"
+    #   applied: false  # Requires KMS IAM policy check
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: kms_crypto_key
+    #   conditions:
+    #     - property: name
+    #       condition: DIFFERENT
+    #       value: null
+
+    # # 1.10 - KMS Key Rotation
+    # - name: "gcp-kms-key-rotation-90-days"
+    #   description: "CIS 1.10: Ensure KMS Encryption Keys Are Rotated Within a Period of 90 Days"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: kms_crypto_key
+    #   conditions:
+    #     - property: rotationPeriod
+    #       condition: DIFFERENT
+    #       value: null
+    #     - property: nextRotationTime
+    #       condition: DIFFERENT
+    #       value: null
+
+    # # 1.11 - Separation of Duties for KMS
+    # - name: "gcp-kms-separation-of-duties"
+    #   description: "CIS 1.11: Ensure That Separation of Duties Is Enforced While Assigning KMS Related Roles to Users"
+    #   applied: false  # Requires IAM policy analysis
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: project
+    #   conditions:
+    #     - property: state
+    #       condition: EQUAL
+    #       value: 'ACTIVE'
+
+    # # 1.12 - API Keys Only for Active Services
+    # - name: "gcp-api-keys-only-active-services"
+    #   description: "CIS 1.12: Ensure API Keys Only Exist for Active Services"
+    #   applied: false  # Requires API key analysis
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: project
+    #   conditions:
+    #     - property: state
+    #       condition: EQUAL
+    #       value: 'ACTIVE'
+
+    # # 1.13 - API Keys Restricted to Hosts and Apps
+    # - name: "gcp-api-keys-restricted-hosts-apps"
+    #   description: "CIS 1.13: Ensure API Keys Are Restricted To Use by Only Specified Hosts and Apps"
+    #   applied: false  # Manual check required
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: project
+    #   conditions:
+    #     - property: state
+    #       condition: EQUAL
+    #       value: 'ACTIVE'
+
+    # # 1.14 - API Keys Restricted to Required APIs
+    # - name: "gcp-api-keys-restricted-apis"
+    #   description: "CIS 1.14: Ensure API Keys Are Restricted to Only APIs That Application Needs Access"
+    #   applied: false  # Requires API key restrictions check
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: project
+    #   conditions:
+    #     - property: state
+    #       condition: EQUAL
+    #       value: 'ACTIVE'
+
+    # # 1.15 - API Keys Rotated Every 90 Days
+    # - name: "gcp-api-keys-rotation-90-days"
+    #   description: "CIS 1.15: Ensure API Keys Are Rotated Every 90 Days"
+    #   applied: false  # Requires API key age check
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: project
+    #   conditions:
+    #     - property: state
+    #       condition: EQUAL
+    #       value: 'ACTIVE'
+
+    # # 1.16 - Essential Contacts Configured
+    # - name: "gcp-essential-contacts-configured"
+    #   description: "CIS 1.16: Ensure Essential Contacts is Configured for Organization"
+    #   applied: false  # Requires organization-level check
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: project
+    #   conditions:
+    #     - property: state
+    #       condition: EQUAL
+    #       value: 'ACTIVE'
+
+    ##################################
+    #     SECTION 2: LOGGING         #
+    ##################################
+
+    # ok
+    # 2.1 - Cloud Audit Logging Configured (WORKING - logging is collected)
+    - name: "gcp-cis-2.1-audit-logging-configured"
+      description: "CIS 2.1: Ensure That Cloud Audit Logging Is Configured Properly"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: logging
+      conditions:
+        - property: .
+          condition: COUNT_SUP_OR_EQUAL
+          value: 1
+
+    # ok
+    # 2.2 - Log Sinks Configured (WORKING - logging sinks are collected)
+    - name: "gcp-cis-2.2-log-sinks-configured"
+      description: "CIS 2.2: Ensure That Sinks Are Configured for All Log Entries"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: logging
+      conditions:
+        - property: .
+          condition: SOME
+          value:
+            - property: type
+              condition: EQUAL
+              value: 'sink'
+            - property: destination
+              condition: DIFFERENT
+              value: null
+            - property: disabled
+              condition: EQUAL
+              value: false
+
+    # ok
+    # 2.3 - Retention Policies on Log Storage Buckets (WORKING - bucket is collected)
+    - name: "gcp-cis-2.3-log-bucket-retention-policy"
+      description: "CIS 2.3: Ensure That Retention Policies on Cloud Storage Buckets Used for Exporting Logs Are Configured"
+      applied: true
+      level: 1
+      cloudProvider: gcp
+      objectName: logging
+      conditions:
+        - property: .
+          condition: ALL
+          value:
+            - operator: NAND
+              criteria:
+                - property: type
+                  condition: EQUAL
+                  value: 'bucket'
+                - property: retentionDays
+                  condition: DIFFERENT
+                  value: null
+
+    # KO : no example, need verification of the "type": "dns"
+    # 2.12 - Cloud DNS Logging Enabled (WORKING - dns_zone is collected)
+    - name: "gcp-cis-2.12-dns-logging-enabled"
+      description: "CIS 2.12: Ensure That Cloud DNS Logging Is Enabled for All VPC Networks"
+      applied: false
+      level: 1
+      cloudProvider: gcp
+      objectName: logging
+      conditions:
+        - property: .
+          condition: ALL
+          value:
+            - operator: NAND
+              criteria:
+                - property: type
+                  condition: EQUAL
+                  value: 'dns'
+                - property: retentionDays
+                  condition: DIFFERENT
+                  value: null
+
+
+    #######################
+    #  After this point, work is not done yet and need verification for all (AI generated rules) 
+    ######################  
+
+    ##################################
+    #     SECTION 3: NETWORKING      #
+    ##################################
+    ## All Section KO -> Not enough data in dns_zone
+
+    # # KO
+    # # 3.3 - DNSSEC Enabled
+    # - name: "gcp-cis-3.3-dnssec-enabled"
+    #   description: "CIS 3.3: Ensure That DNSSEC Is Enabled for Cloud DNS"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: dns_zone
+    #   conditions:
+    #     - property: dnssecConfig.state
+    #       condition: EQUAL
+    #       value: 'on'
+
+    # # KO
+    # # 3.4 - RSASHA1 Not Used for Key-Signing
+    # - name: "gcp-cis-3.4-no-rsasha1-key-signing"
+    #   description: "CIS 3.4: Ensure That RSASHA1 Is Not Used for the Key-Signing Key in Cloud DNS DNSSEC"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: dns_zone
+    #   conditions:
+    #     - property: dnssecConfig.defaultKeySpecs
+    #       condition: ALL
+    #       value:
+    #         - property: algorithm
+    #           condition: DIFFERENT
+    #           value: 'rsasha1'
+    # # KO
+    # # 3.5 - RSASHA1 Not Used for Zone-Signing 
+    # - name: "gcp-cis-3.5-no-rsasha1-zone-signing"
+    #   description: "CIS 3.5: Ensure That RSASHA1 Is Not Used for the Zone-Signing Key in Cloud DNS DNSSEC"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: dns_zone
+    #   conditions:
+    #     - property: dnssecConfig.defaultKeySpecs
+    #       condition: ALL
+    #       value:
+    #         - property: algorithm
+    #           condition: DIFFERENT
+    #           value: 'rsasha1'
+
+    # ##################################
+    # #     SECTION 4: COMPUTE         #
+    # ##################################
+
+    # # 4.1 - Not Using Default Service Account (WORKING - compute is collected)
+    # - name: "gcp-cis-4.1-not-default-service-account"
+    #   description: "CIS 4.1: Ensure That Instances Are Not Configured To Use the Default Service Account"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: compute
+    #   conditions:
+    #     - property: serviceAccounts
+    #       condition: ALL
+    #       value:
+    #         - property: email
+    #           condition: NOT_ENDS_WITH
+    #           value: '-compute@developer.gserviceaccount.com'
+
+    # # 4.2 - Not Using Default Service Account with Full Access (WORKING - compute is collected)
+    # - name: "gcp-cis-4.2-not-default-sa-full-access"
+    #   description: "CIS 4.2: Ensure That Instances Are Not Configured To Use the Default Service Account With Full Access to All Cloud APIs"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: compute
+    #   conditions:
+    #     - property: serviceAccounts
+    #       condition: ALL
+    #       value:
+    #         - operator: NAND
+    #           criteria:
+    #             - property: email
+    #               condition: ENDS_WITH
+    #               value: '-compute@developer.gserviceaccount.com'
+    #             - property: scopes
+    #               condition: INCLUDE
+    #               value: 'https://www.googleapis.com/auth/cloud-platform'
+
+    # # 4.3 - Block Project-Wide SSH Keys (WORKING - compute is collected)
+    # - name: "gcp-cis-4.3-block-project-ssh-keys"
+    #   description: "CIS 4.3: Ensure 'Block Project-Wide SSH Keys' Is Enabled for VM Instances"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: compute
+    #   conditions:
+    #     - property: metadata.items
+    #       condition: SOME
+    #       value:
+    #         - operator: AND
+    #           criteria:
+    #             - property: key
+    #               condition: EQUAL
+    #               value: 'block-project-ssh-keys'
+    #             - property: value
+    #               condition: EQUAL
+    #               value: 'true'
+
+    # # 4.5 - Serial Ports Not Enabled (WORKING - compute is collected)
+    # - name: "gcp-cis-4.5-serial-ports-disabled"
+    #   description: "CIS 4.5: Ensure 'Enable Connecting to Serial Ports' Is Not Enabled for VM Instance"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: compute
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: metadata.items
+    #           condition: NOT_ANY
+    #           value:
+    #             - property: key
+    #               condition: EQUAL
+    #               value: 'serial-port-enable'
+    #         - property: metadata.items
+    #           condition: ALL
+    #           value:
+    #             - operator: NAND
+    #               criteria:
+    #                 - property: key
+    #                   condition: EQUAL
+    #                   value: 'serial-port-enable'
+    #                 - property: value
+    #                   condition: EQUAL
+    #                   value: 'true'
+
+    # # 4.6 - IP Forwarding Not Enabled (WORKING - compute is collected)
+    # - name: "gcp-cis-4.6-ip-forwarding-disabled"
+    #   description: "CIS 4.6: Ensure That IP Forwarding Is Not Enabled on Instances"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: compute
+    #   conditions:
+    #     - property: canIpForward
+    #       condition: DIFFERENT
+    #       value: true
+
+    # # 4.7 - VM Disks Encrypted with CSEK (WORKING - disk is collected)
+    # - name: "gcp-cis-4.7-disk-csek-encryption"
+    #   description: "CIS 4.7: Ensure VM Disks for Critical VMs Are Encrypted With Customer-Supplied Encryption Keys (CSEK)"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: disk
+    #   conditions:
+    #     - property: diskEncryptionKey
+    #       condition: DIFFERENT
+    #       value: null
+
+    # # 4.8 - Shielded VM Enabled (WORKING - compute is collected)
+    # - name: "gcp-cis-4.8-shielded-vm-enabled"
+    #   description: "CIS 4.8: Ensure Compute Instances Are Launched With Shielded VM Enabled"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: compute
+    #   conditions:
+    #     - property: shieldedInstanceConfig.enableSecureBoot
+    #       condition: EQUAL
+    #       value: true
+    #     - property: shieldedInstanceConfig.enableVtpm
+    #       condition: EQUAL
+    #       value: true
+    #     - property: shieldedInstanceConfig.enableIntegrityMonitoring
+    #       condition: EQUAL
+    #       value: true
+
+    # # 4.9 - No Public IP Addresses (WORKING - compute is collected)
+    # - name: "gcp-cis-4.9-no-public-ip"
+    #   description: "CIS 4.9: Ensure That Compute Instances Do Not Have Public IP Addresses"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: compute
+    #   conditions:
+    #     - property: networkInterfaces
+    #       condition: ALL
+    #       value:
+    #         - operator: OR
+    #           criteria:
+    #             - property: accessConfigs
+    #               condition: EQUAL
+    #               value: null
+    #             - property: accessConfigs
+    #               condition: COUNT
+    #               value: 0
+
+    # # 4.11 - Confidential Computing Enabled (WORKING - compute is collected)
+    # - name: "gcp-cis-4.11-confidential-computing"
+    #   description: "CIS 4.11: Ensure That Compute Instances Have Confidential Computing Enabled"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: compute
+    #   conditions:
+    #     - property: confidentialInstanceConfig.enableConfidentialCompute
+    #       condition: EQUAL
+    #       value: true
+
+    # ##################################
+    # #     SECTION 5: STORAGE         #
+    # ##################################
+
+    # # 5.1 - Storage Bucket Not Public (WORKING - bucket is collected)
+    # - name: "gcp-cis-5.1-bucket-not-public"
+    #   description: "CIS 5.1: Ensure That Cloud Storage Bucket Is Not Anonymously or Publicly Accessible"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: bucket
+    #   conditions:
+    #     - property: iamConfiguration.publicAccessPrevention
+    #       condition: EQUAL
+    #       value: 'enforced'
+
+    # # 5.2 - Uniform Bucket-Level Access (WORKING - bucket is collected)
+    # - name: "gcp-cis-5.2-bucket-uniform-access"
+    #   description: "CIS 5.2: Ensure That Cloud Storage Buckets Have Uniform Bucket-Level Access Enabled"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: bucket
+    #   conditions:
+    #     - property: iamConfiguration.uniformBucketLevelAccess.enabled
+    #       condition: EQUAL
+    #       value: true
+
+    # ##################################
+    # #     SECTION 6: DATABASE        #
+    # ##################################
+
+    # # 6.1.1 - MySQL No Root Remote Access (WORKING - sql is collected)
+    # - name: "gcp-cis-6.1.1-mysql-no-root-remote"
+    #   description: "CIS 6.1.1: Ensure That a MySQL Database Instance Does Not Allow Anyone To Connect With Administrative Privileges"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: databaseVersion
+    #           condition: NOT_STARTS_WITH
+    #           value: 'MYSQL'
+    #         - property: settings.ipConfiguration.authorizedNetworks
+    #           condition: ALL
+    #           value:
+    #             - property: value
+    #               condition: DIFFERENT
+    #               value: '0.0.0.0/0'
+
+    # # 6.1.2 - MySQL Skip Show Database (WORKING - sql is collected)
+    # - name: "gcp-cis-6.1.2-mysql-skip-show-database"
+    #   description: "CIS 6.1.2: Ensure 'Skip_show_database' Database Flag for Cloud SQL MySQL Instance Is Set to 'On'"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: databaseVersion
+    #           condition: NOT_STARTS_WITH
+    #           value: 'MYSQL'
+    #         - property: settings.databaseFlags
+    #           condition: SOME
+    #           value:
+    #             - operator: AND
+    #               criteria:
+    #                 - property: name
+    #                   condition: EQUAL
+    #                   value: 'skip_show_database'
+    #                 - property: value
+    #                   condition: EQUAL
+    #                   value: 'on'
+
+    # # 6.1.3 - MySQL Local Infile Off (WORKING - sql is collected)
+    # - name: "gcp-cis-6.1.3-mysql-local-infile-off"
+    #   description: "CIS 6.1.3: Ensure That the 'Local_infile' Database Flag for a Cloud SQL MySQL Instance Is Set to 'Off'"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: databaseVersion
+    #           condition: NOT_STARTS_WITH
+    #           value: 'MYSQL'
+    #         - property: settings.databaseFlags
+    #           condition: SOME
+    #           value:
+    #             - operator: AND
+    #               criteria:
+    #                 - property: name
+    #                   condition: EQUAL
+    #                   value: 'local_infile'
+    #                 - property: value
+    #                   condition: EQUAL
+    #                   value: 'off'
+
+    # # 6.2.1 - PostgreSQL Log Error Verbosity (WORKING - sql is collected)
+    # - name: "gcp-cis-6.2.1-postgresql-log-error-verbosity"
+    #   description: "CIS 6.2.1: Ensure 'Log_error_verbosity' Database Flag for Cloud SQL PostgreSQL Instance Is Set Appropriately"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: databaseVersion
+    #           condition: NOT_STARTS_WITH
+    #           value: 'POSTGRES'
+    #         - property: settings.databaseFlags
+    #           condition: SOME
+    #           value:
+    #             - operator: AND
+    #               criteria:
+    #                 - property: name
+    #                   condition: EQUAL
+    #                   value: 'log_error_verbosity'
+    #                 - property: value
+    #                   condition: IN
+    #                   value:
+    #                     - 'default'
+    #                     - 'verbose'
+
+    # # 6.2.2 - PostgreSQL Log Connections (WORKING - sql is collected)
+    # - name: "gcp-cis-6.2.2-postgresql-log-connections"
+    #   description: "CIS 6.2.2: Ensure That the 'Log_connections' Database Flag for Cloud SQL PostgreSQL Instance Is Set to 'On'"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: databaseVersion
+    #           condition: NOT_STARTS_WITH
+    #           value: 'POSTGRES'
+    #         - property: settings.databaseFlags
+    #           condition: SOME
+    #           value:
+    #             - operator: AND
+    #               criteria:
+    #                 - property: name
+    #                   condition: EQUAL
+    #                   value: 'log_connections'
+    #                 - property: value
+    #                   condition: EQUAL
+    #                   value: 'on'
+
+    # # 6.2.3 - PostgreSQL Log Disconnections (WORKING - sql is collected)
+    # - name: "gcp-cis-6.2.3-postgresql-log-disconnections"
+    #   description: "CIS 6.2.3: Ensure That the 'Log_disconnections' Database Flag for Cloud SQL PostgreSQL Instance Is Set to 'On'"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: databaseVersion
+    #           condition: NOT_STARTS_WITH
+    #           value: 'POSTGRES'
+    #         - property: settings.databaseFlags
+    #           condition: SOME
+    #           value:
+    #             - operator: AND
+    #               criteria:
+    #                 - property: name
+    #                   condition: EQUAL
+    #                   value: 'log_disconnections'
+    #                 - property: value
+    #                   condition: EQUAL
+    #                   value: 'on'
+
+    # # 6.2.4 - PostgreSQL Log Statement (WORKING - sql is collected)
+    # - name: "gcp-cis-6.2.4-postgresql-log-statement"
+    #   description: "CIS 6.2.4: Ensure 'Log_statement' Database Flag for Cloud SQL PostgreSQL Instance Is Set Appropriately"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: databaseVersion
+    #           condition: NOT_STARTS_WITH
+    #           value: 'POSTGRES'
+    #         - property: settings.databaseFlags
+    #           condition: SOME
+    #           value:
+    #             - operator: AND
+    #               criteria:
+    #                 - property: name
+    #                   condition: EQUAL
+    #                   value: 'log_statement'
+    #                 - property: value
+    #                   condition: EQUAL
+    #                   value: 'ddl'
+
+    # # 6.2.5 - PostgreSQL Log Min Messages (WORKING - sql is collected)
+    # - name: "gcp-cis-6.2.5-postgresql-log-min-messages"
+    #   description: "CIS 6.2.5: Ensure that the 'Log_min_messages' Flag for a Cloud SQL PostgreSQL Instance is set at minimum to 'Warning'"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: databaseVersion
+    #           condition: NOT_STARTS_WITH
+    #           value: 'POSTGRES'
+    #         - property: settings.databaseFlags
+    #           condition: SOME
+    #           value:
+    #             - operator: AND
+    #               criteria:
+    #                 - property: name
+    #                   condition: EQUAL
+    #                   value: 'log_min_messages'
+    #                 - property: value
+    #                   condition: IN
+    #                   value:
+    #                     - 'warning'
+    #                     - 'error'
+    #                     - 'log'
+    #                     - 'fatal'
+    #                     - 'panic'
+
+    # # 6.2.6 - PostgreSQL Log Min Error Statement (WORKING - sql is collected)
+    # - name: "gcp-cis-6.2.6-postgresql-log-min-error-statement"
+    #   description: "CIS 6.2.6: Ensure 'Log_min_error_statement' Database Flag for Cloud SQL PostgreSQL Instance Is Set to 'Error' or Stricter"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: databaseVersion
+    #           condition: NOT_STARTS_WITH
+    #           value: 'POSTGRES'
+    #         - property: settings.databaseFlags
+    #           condition: SOME
+    #           value:
+    #             - operator: AND
+    #               criteria:
+    #                 - property: name
+    #                   condition: EQUAL
+    #                   value: 'log_min_error_statement'
+    #                 - property: value
+    #                   condition: IN
+    #                   value:
+    #                     - 'error'
+    #                     - 'log'
+    #                     - 'fatal'
+    #                     - 'panic'
+
+    # # 6.2.7 - PostgreSQL Log Min Duration Statement (WORKING - sql is collected)
+    # - name: "gcp-cis-6.2.7-postgresql-log-min-duration"
+    #   description: "CIS 6.2.7: Ensure That the 'Log_min_duration_statement' Database Flag for Cloud SQL PostgreSQL Instance Is Set to '-1'"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: databaseVersion
+    #           condition: NOT_STARTS_WITH
+    #           value: 'POSTGRES'
+    #         - property: settings.databaseFlags
+    #           condition: SOME
+    #           value:
+    #             - operator: AND
+    #               criteria:
+    #                 - property: name
+    #                   condition: EQUAL
+    #                   value: 'log_min_duration_statement'
+    #                 - property: value
+    #                   condition: EQUAL
+    #                   value: '-1'
+
+    # # 6.2.8 - PostgreSQL pgAudit Enabled (WORKING - sql is collected)
+    # - name: "gcp-cis-6.2.8-postgresql-pgaudit-enabled"
+    #   description: "CIS 6.2.8: Ensure That 'cloudsql.enable_pgaudit' Database Flag for each Cloud SQL PostgreSQL Instance Is Set to 'On'"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: databaseVersion
+    #           condition: NOT_STARTS_WITH
+    #           value: 'POSTGRES'
+    #         - property: settings.databaseFlags
+    #           condition: SOME
+    #           value:
+    #             - operator: AND
+    #               criteria:
+    #                 - property: name
+    #                   condition: EQUAL
+    #                   value: 'cloudsql.enable_pgaudit'
+    #                 - property: value
+    #                   condition: EQUAL
+    #                   value: 'on'
+
+    # # 6.3.1 - SQL Server External Scripts Disabled (WORKING - sql is collected)
+    # - name: "gcp-cis-6.3.1-sqlserver-external-scripts-disabled"
+    #   description: "CIS 6.3.1: Ensure 'external scripts enabled' database flag for Cloud SQL SQL Server instance is set to 'off'"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: databaseVersion
+    #           condition: NOT_STARTS_WITH
+    #           value: 'SQLSERVER'
+    #         - property: settings.databaseFlags
+    #           condition: SOME
+    #           value:
+    #             - operator: AND
+    #               criteria:
+    #                 - property: name
+    #                   condition: EQUAL
+    #                   value: 'external scripts enabled'
+    #                 - property: value
+    #                   condition: EQUAL
+    #                   value: 'off'
+
+    # # 6.3.2 - SQL Server Cross DB Ownership Chaining Off (WORKING - sql is collected)
+    # - name: "gcp-cis-6.3.2-sqlserver-cross-db-ownership-off"
+    #   description: "CIS 6.3.2: Ensure that the 'cross db ownership chaining' database flag for Cloud SQL SQL Server instance is set to 'off'"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: databaseVersion
+    #           condition: NOT_STARTS_WITH
+    #           value: 'SQLSERVER'
+    #         - property: settings.databaseFlags
+    #           condition: SOME
+    #           value:
+    #             - operator: AND
+    #               criteria:
+    #                 - property: name
+    #                   condition: EQUAL
+    #                   value: 'cross db ownership chaining'
+    #                 - property: value
+    #                   condition: EQUAL
+    #                   value: 'off'
+
+    # # 6.3.3 - SQL Server User Connections Configured (WORKING - sql is collected)
+    # - name: "gcp-cis-6.3.3-sqlserver-user-connections"
+    #   description: "CIS 6.3.3: Ensure 'user connections' Database Flag for Cloud SQL SQL Server Instance Is Set to a Non-limiting Value"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: databaseVersion
+    #           condition: NOT_STARTS_WITH
+    #           value: 'SQLSERVER'
+    #         - property: settings.databaseFlags
+    #           condition: SOME
+    #           value:
+    #             - operator: AND
+    #               criteria:
+    #                 - property: name
+    #                   condition: EQUAL
+    #                   value: 'user connections'
+    #                 - property: value
+    #                   condition: EQUAL
+    #                   value: '0'
+
+    # # 6.3.4 - SQL Server User Options Not Configured (WORKING - sql is collected)
+    # - name: "gcp-cis-6.3.4-sqlserver-user-options-not-configured"
+    #   description: "CIS 6.3.4: Ensure 'user options' database flag for Cloud SQL SQL Server instance is not configured"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: databaseVersion
+    #           condition: NOT_STARTS_WITH
+    #           value: 'SQLSERVER'
+    #         - property: settings.databaseFlags
+    #           condition: NOT_ANY
+    #           value:
+    #             - property: name
+    #               condition: EQUAL
+    #               value: 'user options'
+
+    # # 6.3.5 - SQL Server Remote Access Off (WORKING - sql is collected)
+    # - name: "gcp-cis-6.3.5-sqlserver-remote-access-off"
+    #   description: "CIS 6.3.5: Ensure 'remote access' database flag for Cloud SQL SQL Server instance is set to 'off'"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: databaseVersion
+    #           condition: NOT_STARTS_WITH
+    #           value: 'SQLSERVER'
+    #         - property: settings.databaseFlags
+    #           condition: SOME
+    #           value:
+    #             - operator: AND
+    #               criteria:
+    #                 - property: name
+    #                   condition: EQUAL
+    #                   value: 'remote access'
+    #                 - property: value
+    #                   condition: EQUAL
+    #                   value: 'off'
+
+    # # 6.3.6 - SQL Server 3625 Trace Flag On (WORKING - sql is collected)
+    # - name: "gcp-cis-6.3.6-sqlserver-3625-trace-flag"
+    #   description: "CIS 6.3.6: Ensure '3625 (trace flag)' database flag for all Cloud SQL Server instances is set to 'on'"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: databaseVersion
+    #           condition: NOT_STARTS_WITH
+    #           value: 'SQLSERVER'
+    #         - property: settings.databaseFlags
+    #           condition: SOME
+    #           value:
+    #             - operator: AND
+    #               criteria:
+    #                 - property: name
+    #                   condition: EQUAL
+    #                   value: '3625'
+    #                 - property: value
+    #                   condition: EQUAL
+    #                   value: 'on'
+
+    # # 6.3.7 - SQL Server Contained Database Authentication Off (WORKING - sql is collected)
+    # - name: "gcp-cis-6.3.7-sqlserver-contained-db-auth-off"
+    #   description: "CIS 6.3.7: Ensure that the 'contained database authentication' database flag for Cloud SQL on the SQL Server instance is set to 'off'"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - operator: OR
+    #       criteria:
+    #         - property: databaseVersion
+    #           condition: NOT_STARTS_WITH
+    #           value: 'SQLSERVER'
+    #         - property: settings.databaseFlags
+    #           condition: SOME
+    #           value:
+    #             - operator: AND
+    #               criteria:
+    #                 - property: name
+    #                   condition: EQUAL
+    #                   value: 'contained database authentication'
+    #                 - property: value
+    #                   condition: EQUAL
+    #                   value: 'off'
+
+    # # 6.4 - SQL Require SSL (WORKING - sql is collected)
+    # - name: "gcp-cis-6.4-sql-require-ssl"
+    #   description: "CIS 6.4: Ensure That the Cloud SQL Database Instance Requires All Incoming Connections To Use SSL"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - property: settings.ipConfiguration.requireSsl
+    #       condition: EQUAL
+    #       value: true
+
+    # # 6.5 - SQL No Public IPs Whitelisted (WORKING - sql is collected)
+    # - name: "gcp-cis-6.5-sql-no-public-ips-whitelisted"
+    #   description: "CIS 6.5: Ensure That Cloud SQL Database Instances Do Not Implicitly Whitelist All Public IP Addresses"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - property: settings.ipConfiguration.authorizedNetworks
+    #       condition: ALL
+    #       value:
+    #         - property: value
+    #           condition: DIFFERENT
+    #           value: '0.0.0.0/0'
+
+    # # 6.6 - SQL No Public IPs (WORKING - sql is collected)
+    # - name: "gcp-cis-6.6-sql-no-public-ip"
+    #   description: "CIS 6.6: Ensure That Cloud SQL Database Instances Do Not Have Public IPs"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - property: settings.ipConfiguration.ipv4Enabled
+    #       condition: DIFFERENT
+    #       value: true
+
+    # # 6.7 - SQL Automated Backups (WORKING - sql is collected)
+    # - name: "gcp-cis-6.7-sql-automated-backups"
+    #   description: "CIS 6.7: Ensure That Cloud SQL Database Instances Are Configured With Automated Backups"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: sql
+    #   conditions:
+    #     - property: settings.backupConfiguration.enabled
+    #       condition: EQUAL
+    #       value: true
+
+    # ##################################
+    # #     SECTION 7: BIGQUERY        #
+    # ##################################
+
+    # # 7.1 - BigQuery Datasets Not Public (WORKING - bigquery is collected)
+    # - name: "gcp-cis-7.1-bigquery-datasets-not-public"
+    #   description: "CIS 7.1: Ensure That BigQuery Datasets Are Not Anonymously or Publicly Accessible"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: bigquery
+    #   conditions:
+    #     - property: access
+    #       condition: ALL
+    #       value:
+    #         - property: iamMember
+    #           condition: NOT_INCLUDE
+    #           value: 'allUsers'
+    #         - property: iamMember
+    #           condition: NOT_INCLUDE
+    #           value: 'allAuthenticatedUsers'
+
+    # # 7.2 - BigQuery Tables CMEK Encrypted (WORKING - bigquery with tables is collected)
+    # - name: "gcp-cis-7.2-bigquery-tables-cmek"
+    #   description: "CIS 7.2: Ensure That All BigQuery Tables Are Encrypted With Customer-Managed Encryption Key (CMEK)"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: bigquery
+    #   conditions:
+    #     - property: tables
+    #       condition: ALL
+    #       value:
+    #         - property: encryptionConfiguration.kmsKeyName
+    #           condition: DIFFERENT
+    #           value: null
+
+    # ##################################
+    # #     SECTION 8: DATAPROC        #
+    # ##################################
+
+    # # 8.1 - Dataproc Cluster CMEK Encrypted (WORKING - cluster is collected)
+    # - name: "gcp-cis-8.1-dataproc-cluster-cmek"
+    #   description: "CIS 8.1: Ensure that Dataproc Cluster is encrypted using Customer-Managed Encryption Key"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: cluster
+    #   conditions:
+    #     - property: config.encryptionConfig.gcePdKmsKeyName
+    #       condition: DIFFERENT
+    #       value: null
+
+    # ##################################
+    # #   ADDITIONAL CERTIFICATE RULES #
+    # ##################################
+
+    # # Certificate Expiration (WORKING - certificate is collected)
+    # - name: "gcp-certificate-expiring-30-days"
+    #   description: "Ensure certificates are not expiring within 30 days"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: certificate
+    #   conditions:
+    #     - property: expireTime
+    #       condition: DATE_SUP
+    #       value: 0 0 0 30 0 0 0
+    #       date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+    # # Certificate Already Expired (WORKING - certificate is collected)
+    # - name: "gcp-certificate-expired"
+    #   description: "Ensure certificates are not expired"
+    #   applied: true
+    #   level: 1
+    #   cloudProvider: gcp
+    #   objectName: certificate
+    #   conditions:
+    #     - property: expireTime
+    #       condition: DATE_SUP
+    #       value: 0 0 0 0 0 0 0
+    #       date: "YYYY-MM-DDThh:mm:ss.SSSZ"
+
+    # ##################################
+    # #   SECRET MANAGEMENT            #
+    # ##################################
+
+    # # Secrets Should Have Metadata (WORKING - secret is collected)
+    # - name: "gcp-secret-has-labels"
+    #   description: "Ensure secrets have proper labels for management"
+    #   applied: true
+    #   level: 0
+    #   cloudProvider: gcp
+    #   objectName: secret
+    #   conditions:
+    #     - property: labels
+    #       condition: COUNT_SUP_OR_EQUAL
+    #       value: 1

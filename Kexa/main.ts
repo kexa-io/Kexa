@@ -1,3 +1,4 @@
+#!/usr/bin/env bun
 import env from "dotenv";
 import Log, { setup as setupLogger } from 'adze';
 import { exit } from "process";
