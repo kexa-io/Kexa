@@ -1,5 +1,4 @@
-import { JSDOM } from "jsdom";
-global.DOMParser = new JSDOM().window.DOMParser;
+import { DOMParser } from "linkedom";
 
 export const extractURL = (text: string): string | null => {
     return extractFirstURLFromHTML(text)??extractFirstURL(text);
