@@ -1,3 +1,10 @@
+## [2.5.1](https://github.com/kexa-io/Kexa/compare/v2.5.0...v2.5.1) (2025-10-30)
+
+
+### Bug Fixes
+
+* **executable:** install docs + minify ([62a996b](https://github.com/kexa-io/Kexa/commit/62a996ba24a4fd7234ecf3e318443eb42fd725e5))
+
 # Changelog
 
 ## [v2.5.0] - 2025-10-30
