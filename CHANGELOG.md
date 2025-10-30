@@ -1,3 +1,10 @@
+## [2.5.2](https://github.com/kexa-io/Kexa/compare/v2.5.1...v2.5.2) (2025-10-30)
+
+
+### Bug Fixes
+
+* **rules:** azure filter on SP ([9ada9b4](https://github.com/kexa-io/Kexa/commit/9ada9b49255c7855bfd2b529f80b15515f5bf232))
+
 ## [2.5.1](https://github.com/kexa-io/Kexa/compare/v2.5.0...v2.5.1) (2025-10-30)
 
 
