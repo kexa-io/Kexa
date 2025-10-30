@@ -1,3 +1,11 @@
+## [2.5.4](https://github.com/kexa-io/Kexa/compare/v2.5.3...v2.5.4) (2025-10-30)
+
+
+### Bug Fixes
+
+* change dom parser pkg to linkedom ([e879890](https://github.com/kexa-io/Kexa/commit/e879890660a8687fbf0775afea76869c66df58ee))
+* trigger cicd versioning ([d6bbeef](https://github.com/kexa-io/Kexa/commit/d6bbeefd69e36a43f0cf6cf7baad21335557947e))
+
 ## [2.5.3](https://github.com/kexa-io/Kexa/compare/v2.5.2...v2.5.3) (2025-10-30)
 
 
