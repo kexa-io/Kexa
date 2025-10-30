@@ -3202,7 +3202,9 @@ async function testGraphListing(client: Client, subscriptionId: any): Promise<an
 	let resultsGraph:any = [];
 
 	try {
-		let response = await client.api('/servicePrincipals').get();
+		let response = await client.api('/servicePrincipals')
+      	.filter("servicePrincipalType eq 'Application'")
+		.get();
 		resultsGraph = response.value || [];
 		while (response['@odata.nextLink']) {
 			response = await client.api(response['@odata.nextLink']).get();
