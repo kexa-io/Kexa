@@ -104,13 +104,15 @@ The fastest way to run Kexa locally without any dependencies:
 **Linux/macOS:**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/kexa-io/kexa/main/scripts/install.sh | bash
+```
+
+```
 export PATH="${HOME}/.local/bin:${PATH}"
-kexa
 ```
 
 **Windows (PowerShell):**
 ```powershell
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kexa-io/kexa/main/scripts/install.ps1" -OutFile install.ps1 | .\install.ps1
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kexa-io/kexa/main/scripts/install.ps1" -OutFile install.ps1; ./install.ps1
 ```
 
 Once done, you can run 'kexa' as a command everywhere.
