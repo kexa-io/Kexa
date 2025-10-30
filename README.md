@@ -110,7 +110,7 @@ kexa
 
 **Windows (PowerShell):**
 ```powershell
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kexa-io/kexa/main/scripts/install.ps1" -OutFile install.ps1 | .\install.ps1
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kexa-io/kexa/main/scripts/install.ps1" -OutFile install.ps1; ./install.ps1
 ```
 
 Once done, you can run 'kexa' as a command everywhere.
