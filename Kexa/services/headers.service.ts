@@ -6951,7 +6951,13 @@ let headersData: Capacity = {
             "airflow_image_version",
             "disk",
             "compute_item",
-            "tags_keys"
+            "tags_keys",
+            "bigquery",
+            "dns_zone",
+            "logging",
+            "sql",
+            "kms_crypto_key",
+            "kms_key_ring"
         ],
         "thumbnail": "https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-dsc/events/google-cloud-square.png",
         "documentation": "https://cloud.google.com/nodejs/docs/reference",
