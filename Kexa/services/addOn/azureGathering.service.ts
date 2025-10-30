@@ -3203,7 +3203,7 @@ async function testGraphListing(client: Client, subscriptionId: any): Promise<an
 
 	try {
 		let response = await client.api('/servicePrincipals')
-      	.filter("servicePrincipalType eq 'Application'")
+  		.filter("tags/any(t:t eq 'WindowsAzureActiveDirectoryIntegratedApp')")
 		.get();
 		resultsGraph = response.value || [];
 		while (response['@odata.nextLink']) {
