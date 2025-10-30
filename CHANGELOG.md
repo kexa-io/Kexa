@@ -1,3 +1,28 @@
+# [2.5.0](https://github.com/kexa-io/Kexa/compare/v2.4.5...v2.5.0) (2025-10-30)
+
+
+### Bug Fixes
+
+* **addon:** remove prometheus ([81439a8](https://github.com/kexa-io/Kexa/commit/81439a8cd677bf58f221fdf3c602e26eeceec0b8))
+* **addon:** remove unused prometheus file ([57eec40](https://github.com/kexa-io/Kexa/commit/57eec40bfdfdbf23d0e6b64c55fc80cdb3a28992))
+* **binary:** fixing long exec time due to static load ([5cf0f98](https://github.com/kexa-io/Kexa/commit/5cf0f9855360e4f58065d6730afcde7be7fbfb78))
+* **executable:** dynamic gathering files imports ([8de97c5](https://github.com/kexa-io/Kexa/commit/8de97c5a8db479fb0c2600ed2b55b27d450deac0))
+* **gcp:** add cis foundations rules (not complete) ([efba691](https://github.com/kexa-io/Kexa/commit/efba691ad4152a96d2d6e563e3d8c1ba4bf024ff))
+* **gcp:** fix cluster array parsing ([230f3be](https://github.com/kexa-io/Kexa/commit/230f3be03a83a1e2343d4c1d90239980738b5bb8))
+* **rules:** aws cis full foundations ([6a90150](https://github.com/kexa-io/Kexa/commit/6a9015037e99b66e1b8112658e6ccfddc36d874a))
+* **rules:** azure cis & idles ([b2b4956](https://github.com/kexa-io/Kexa/commit/b2b495684ab236ad7f8aa6675aa54c1d8fdc903f))
+* up missing packages ([18600e2](https://github.com/kexa-io/Kexa/commit/18600e2f21e981691b4504e6cba631a4a7b3331d))
+
+
+### Features
+
+* **aws:** cis foundations rules + kms dependencies ([0454bd7](https://github.com/kexa-io/Kexa/commit/0454bd761555677a6376365610d71da90bb35b14))
+* **cicd:** release kexa executables ([75a37e4](https://github.com/kexa-io/Kexa/commit/75a37e4dd55fb5c0e94e6ed028e16a7c74a1624d))
+* **executable:** install scripts ([e88cd82](https://github.com/kexa-io/Kexa/commit/e88cd826a956ccc8f052e0fdf1a87eee4a47632b))
+* **executable:** store headers in Typescript bundled file ([f12f2df](https://github.com/kexa-io/Kexa/commit/f12f2dffbaa08334006bcfc9e6370ff0c64699d4))
+* **gcp:** new gathered objects ([08f9534](https://github.com/kexa-io/Kexa/commit/08f953458862cf82cf23bba40a98b795d8412be3))
+* **output:** json alerts output mode ([e54985b](https://github.com/kexa-io/Kexa/commit/e54985bf823dbaeed8c6eb7c9576be55328930ae))
+
 # Changelog
 
 ## [v2.4.5] - 2025-10-23
