@@ -29,6 +29,7 @@ import { jsonStringify } from '../helpers/jsonStringify';
 import { Memoisation } from './memoisation.service';
 const logger = getNewLogger("AnalyseLogger");
 import {getSettingsFileFromApi} from "../services/api/loaderApi.service";
+import { getHeaders } from './headers.service';
 
 const varEnvMin = {
     "email": ["EMAILPORT", "EMAILHOST", "EMAILUSER", "EMAILPWD", "EMAILFROM"],
@@ -55,6 +56,17 @@ let headers: any;
 export async function gatheringRules(rulesDirectory:string, getAll:boolean=false): Promise<SettingFile[]> {
 
     headers = await extractHeaders();
+    if (!headers || Object.keys(headers).length === 0) {
+        logger.info("Could not extract headers from Gathering files, using bundled headers from headers.service.ts");
+        headers = getHeaders();
+        logger.info("Headers from getHeaders() has " + Object.keys(headers).length + " providers");
+        if (!headers || Object.keys(headers).length === 0) {
+            logger.warn("No headers available");
+            headers = {};
+        } else {
+            logger.info("Successfully loaded " + Object.keys(headers).length + " providers from bundled headers");
+        }
+    }
 
     if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
         logger.warn("Interface configuration enabled, if you're not running Kexa script to work with the SaaS, please configure INTERFACE_CONFIGURATION_ENABLED to false in your .env file");
@@ -78,13 +90,6 @@ export async function gatheringRules(rulesDirectory:string, getAll:boolean=false
         if(paths.length === 0) paths = fs.readdirSync(secondDefaultRulesDirectory, { withFileTypes: true});
         logger.debug("listing rules files.");
         settingFileList = new Array<SettingFile>;
-        try {
-            const headersContent = fs.readFileSync('./config/headers.json', 'utf-8');
-            headers = JSON.parse(headersContent);
-        } catch (headersErr) {
-            logger.warn("Could not load headers.json, using empty object");
-            headers = {};
-        }
     } catch (err) {
         logger.error("Error reading rules directory: " + err);
         throw new Error("Rules directory not found or empty");

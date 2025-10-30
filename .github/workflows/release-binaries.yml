@@ -24,6 +24,12 @@ jobs:
       - name: Install dependencies
         run: bun install
 
+      - name: Update headers.service.ts with latest data
+        run: |
+          echo "Running Kexa to generate latest headers data..."
+          timeout 60 bun run Kexa/main.ts || true
+          echo "Headers service file updated with latest provider data"
+
       - name: Create dist directory
         run: mkdir -p dist
 

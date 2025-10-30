@@ -10,6 +10,7 @@ import { getConfig } from "../helpers/loaderConfig";
 import { jsonStringify } from "../helpers/jsonStringify";
 import  {formatProviderNeededData} from "./api/formatterApi.service";
 import { getAddOnModule, hasAddOnModule, getAllAddOnFiles } from "./addOnRegistry";
+import { setHeaders, getHeaders } from "./headers.service";
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // test import static for cli 
 //import "./addOn/display/awsDisplay.service.ts" with { type: "file" };
@@ -215,6 +216,9 @@ export function checkIfDataIsProvider(data: any): data is Provider {
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 export function hasValidHeader(filePath: string): string | Header {
+    const fileName = filePath.split('/').pop();
+    const providerName = fileName?.split('Gathering.service.ts')[0];
+
     try {
         const fileContent = fs.readFileSync(filePath, 'utf-8');
         const lines = fileContent.split('\n');
@@ -281,12 +285,23 @@ export function hasValidHeader(filePath: string): string | Header {
 
         return `Invalid header in ${filePath} file. Please check the header. Have you added the Resources and Provider?`;
     } catch (error) {
+        const bundledHeaders = getHeaders();
+        if (providerName && bundledHeaders[providerName]) {
+            const headerData = bundledHeaders[providerName];
+            return {
+                provider: providerName,
+                thumbnail: headerData.thumbnail,
+                resources: headerData.resources,
+                customName: headerData.customName,
+                documentation: headerData.documentation
+            };
+        }
         return 'Error reading file:' + error;
     }
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 export async function extractHeaders(): Promise<Capacity>{
-    const files = fs.readdirSync(serviceAddOnPath);
+    const files = getAllAddOnFiles('gathering');
     const promises = files.map(async (file: string) => {
         return await extractHeader(file);
     });
@@ -303,11 +318,30 @@ export async function extractHeaders(): Promise<Capacity>{
             };
         }
     });
-    try {
-        writeStringToJsonFile(jsonStringify(finalData,4), "./config/headers.json");
-    } catch (error) {
-        logger.error("Failed to create headers.json", error);
-        return null;
+    if (Object.keys(finalData).length > 0) {
+        setHeaders(finalData);
+        try {
+            writeStringToJsonFile(jsonStringify(finalData,4), "./config/headers.json");
+        } catch (error) {
+            logger.error("Failed to create headers.json", error);
+        }
+        try {
+            const headersServiceContent = `import type { Capacity } from "../models/settingFile/capacity.models";
+
+let headersData: Capacity = ${jsonStringify(finalData, 4)};
+
+export function getHeaders(): Capacity {
+    return headersData;
+}
+
+export function setHeaders(data: Capacity): void {
+    headersData = data;
+}
+`;
+            fs.writeFileSync("./" + mainFolder + "/services/headers.service.ts", headersServiceContent, 'utf8');
+        } catch (error) {
+            logger.debug("Could not write headers.service.ts file (normal for compiled binary)");
+        }
     }
     return finalData;
 }
