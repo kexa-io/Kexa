@@ -1,32 +1,3 @@
-import * as awsDisplay from './addOn/display/awsDisplay.service';
-import * as azureDisplay from './addOn/display/azureDisplay.service';
-import * as fuzzDisplay from './addOn/display/fuzzDisplay.service';
-import * as gcpDisplay from './addOn/display/gcpDisplay.service';
-import * as githubDisplay from './addOn/display/githubDisplay.service';
-import * as googleDriveDisplay from './addOn/display/googleDriveDisplay.service';
-import * as googleWorkspaceDisplay from './addOn/display/googleWorkspaceDisplay.service';
-import * as helmDisplay from './addOn/display/helmDisplay.service';
-import * as httpDisplay from './addOn/display/httpDisplay.service';
-import * as kubernetesDisplay from './addOn/display/kubernetesDisplay.service';
-import * as mongodbDisplay from './addOn/display/mongodbDisplay.service';
-import * as mysqlDisplay from './addOn/display/mysqlDisplay.service';
-import * as o365Display from './addOn/display/o365Display.service';
-import * as oracleDisplay from './addOn/display/oracleDisplay.service';
-import * as postgresqlDisplay from './addOn/display/postgresqlDisplay.service';
-
-import * as amazonS3Save from './addOn/save/amazonS3Save.service';
-import * as azureBlobStorageSave from './addOn/save/azureBlobStorageSave.service';
-import * as kexaSave from './addOn/save/kexaSave.service';
-import * as mongoDBSave from './addOn/save/mongoDBSave.service';
-import * as mySQLSave from './addOn/save/mySQLSave.service';
-import * as postgresSave from './addOn/save/postgresSave.service';
-
-import * as azureBlobStorageExportation from './addOn/exportation/azureBlobStorageExportation.service';
-import * as kexaExportation from './addOn/exportation/kexaExportation.service';
-import * as mongoDBExportation from './addOn/exportation/mongoDBExportation.service';
-import * as mySQLExportation from './addOn/exportation/mySQLExportation.service';
-import * as postgresExportation from './addOn/exportation/postgresExportation.service';
-
 const gatheringFiles = [
     'awsGathering.service.ts',
     'azureGathering.service.ts',
@@ -45,7 +16,45 @@ const gatheringFiles = [
     'postgresqlGathering.service.ts',
 ];
 
+const displayFiles = [
+    'awsDisplay.service.ts',
+    'azureDisplay.service.ts',
+    'fuzzDisplay.service.ts',
+    'gcpDisplay.service.ts',
+    'githubDisplay.service.ts',
+    'googleDriveDisplay.service.ts',
+    'googleWorkspaceDisplay.service.ts',
+    'helmDisplay.service.ts',
+    'httpDisplay.service.ts',
+    'kubernetesDisplay.service.ts',
+    'mongodbDisplay.service.ts',
+    'mysqlDisplay.service.ts',
+    'o365Display.service.ts',
+    'oracleDisplay.service.ts',
+    'postgresqlDisplay.service.ts',
+];
+
+const saveFiles = [
+    'amazonS3Save.service.ts',
+    'azureBlobStorageSave.service.ts',
+    'kexaSave.service.ts',
+    'mongoDBSave.service.ts',
+    'mySQLSave.service.ts',
+    'postgresSave.service.ts',
+];
+
+const exportationFiles = [
+    'azureBlobStorageExportation.service.ts',
+    'kexaExportation.service.ts',
+    'mongoDBExportation.service.ts',
+    'mySQLExportation.service.ts',
+    'postgresExportation.service.ts',
+];
+
 const gatheringModuleCache: { [key: string]: any } = {};
+const displayModuleCache: { [key: string]: any } = {};
+const saveModuleCache: { [key: string]: any } = {};
+const exportationModuleCache: { [key: string]: any } = {};
 
 async function loadGatheringModule(filename: string): Promise<any> {
     if (gatheringModuleCache[filename]) {
@@ -107,61 +116,157 @@ async function loadGatheringModule(filename: string): Promise<any> {
     return module;
 }
 
-const displayRegistry: { [key: string]: any } = {
-    'awsDisplay.service.ts': awsDisplay,
-    'azureDisplay.service.ts': azureDisplay,
-    'fuzzDisplay.service.ts': fuzzDisplay,
-    'gcpDisplay.service.ts': gcpDisplay,
-    'githubDisplay.service.ts': githubDisplay,
-    'googleDriveDisplay.service.ts': googleDriveDisplay,
-    'googleWorkspaceDisplay.service.ts': googleWorkspaceDisplay,
-    'helmDisplay.service.ts': helmDisplay,
-    'httpDisplay.service.ts': httpDisplay,
-    'kubernetesDisplay.service.ts': kubernetesDisplay,
-    'mongodbDisplay.service.ts': mongodbDisplay,
-    'mysqlDisplay.service.ts': mysqlDisplay,
-    'o365Display.service.ts': o365Display,
-    'oracleDisplay.service.ts': oracleDisplay,
-    'postgresqlDisplay.service.ts': postgresqlDisplay,
-};
+async function loadDisplayModule(filename: string): Promise<any> {
+    if (displayModuleCache[filename]) {
+        return displayModuleCache[filename];
+    }
 
-const saveRegistry: { [key: string]: any } = {
-    'amazonS3Save.service.ts': amazonS3Save,
-    'azureBlobStorageSave.service.ts': azureBlobStorageSave,
-    'kexaSave.service.ts': kexaSave,
-    'mongoDBSave.service.ts': mongoDBSave,
-    'mySQLSave.service.ts': mySQLSave,
-    'postgresSave.service.ts': postgresSave,
-};
+    let module;
+    switch(filename) {
+        case 'awsDisplay.service.ts':
+            module = await import('./addOn/display/awsDisplay.service');
+            break;
+        case 'azureDisplay.service.ts':
+            module = await import('./addOn/display/azureDisplay.service');
+            break;
+        case 'fuzzDisplay.service.ts':
+            module = await import('./addOn/display/fuzzDisplay.service');
+            break;
+        case 'gcpDisplay.service.ts':
+            module = await import('./addOn/display/gcpDisplay.service');
+            break;
+        case 'githubDisplay.service.ts':
+            module = await import('./addOn/display/githubDisplay.service');
+            break;
+        case 'googleDriveDisplay.service.ts':
+            module = await import('./addOn/display/googleDriveDisplay.service');
+            break;
+        case 'googleWorkspaceDisplay.service.ts':
+            module = await import('./addOn/display/googleWorkspaceDisplay.service');
+            break;
+        case 'helmDisplay.service.ts':
+            module = await import('./addOn/display/helmDisplay.service');
+            break;
+        case 'httpDisplay.service.ts':
+            module = await import('./addOn/display/httpDisplay.service');
+            break;
+        case 'kubernetesDisplay.service.ts':
+            module = await import('./addOn/display/kubernetesDisplay.service');
+            break;
+        case 'mongodbDisplay.service.ts':
+            module = await import('./addOn/display/mongodbDisplay.service');
+            break;
+        case 'mysqlDisplay.service.ts':
+            module = await import('./addOn/display/mysqlDisplay.service');
+            break;
+        case 'o365Display.service.ts':
+            module = await import('./addOn/display/o365Display.service');
+            break;
+        case 'oracleDisplay.service.ts':
+            module = await import('./addOn/display/oracleDisplay.service');
+            break;
+        case 'postgresqlDisplay.service.ts':
+            module = await import('./addOn/display/postgresqlDisplay.service');
+            break;
+        default:
+            return null;
+    }
 
-const exportationRegistry: { [key: string]: any } = {
-    'azureBlobStorageExportation.service.ts': azureBlobStorageExportation,
-    'kexaExportation.service.ts': kexaExportation,
-    'mongoDBExportation.service.ts': mongoDBExportation,
-    'mySQLExportation.service.ts': mySQLExportation,
-    'postgresExportation.service.ts': postgresExportation,
-};
+    displayModuleCache[filename] = module;
+    return module;
+}
+
+async function loadSaveModule(filename: string): Promise<any> {
+    if (saveModuleCache[filename]) {
+        return saveModuleCache[filename];
+    }
+
+    let module;
+    switch(filename) {
+        case 'amazonS3Save.service.ts':
+            module = await import('./addOn/save/amazonS3Save.service');
+            break;
+        case 'azureBlobStorageSave.service.ts':
+            module = await import('./addOn/save/azureBlobStorageSave.service');
+            break;
+        case 'kexaSave.service.ts':
+            module = await import('./addOn/save/kexaSave.service');
+            break;
+        case 'mongoDBSave.service.ts':
+            module = await import('./addOn/save/mongoDBSave.service');
+            break;
+        case 'mySQLSave.service.ts':
+            module = await import('./addOn/save/mySQLSave.service');
+            break;
+        case 'postgresSave.service.ts':
+            module = await import('./addOn/save/postgresSave.service');
+            break;
+        default:
+            return null;
+    }
+
+    saveModuleCache[filename] = module;
+    return module;
+}
+
+async function loadExportationModule(filename: string): Promise<any> {
+    if (exportationModuleCache[filename]) {
+        return exportationModuleCache[filename];
+    }
+
+    let module;
+    switch(filename) {
+        case 'azureBlobStorageExportation.service.ts':
+            module = await import('./addOn/exportation/azureBlobStorageExportation.service');
+            break;
+        case 'kexaExportation.service.ts':
+            module = await import('./addOn/exportation/kexaExportation.service');
+            break;
+        case 'mongoDBExportation.service.ts':
+            module = await import('./addOn/exportation/mongoDBExportation.service');
+            break;
+        case 'mySQLExportation.service.ts':
+            module = await import('./addOn/exportation/mySQLExportation.service');
+            break;
+        case 'postgresExportation.service.ts':
+            module = await import('./addOn/exportation/postgresExportation.service');
+            break;
+        default:
+            return null;
+    }
+
+    exportationModuleCache[filename] = module;
+    return module;
+}
 
 export async function getAddOnModule(type: string, filename: string): Promise<any> {
     switch(type) {
         case 'gathering':
             return await loadGatheringModule(filename);
         case 'display':
-            return displayRegistry[filename];
+            return await loadDisplayModule(filename);
         case 'save':
-            return saveRegistry[filename];
+            return await loadSaveModule(filename);
         case 'exportation':
-            return exportationRegistry[filename];
+            return await loadExportationModule(filename);
         default:
             return null;
     }
 }
 
 export function hasAddOnModule(type: string, filename: string): boolean {
-    if (type === 'gathering') {
-        return gatheringFiles.includes(filename);
+    switch(type) {
+        case 'gathering':
+            return gatheringFiles.includes(filename);
+        case 'display':
+            return displayFiles.includes(filename);
+        case 'save':
+            return saveFiles.includes(filename);
+        case 'exportation':
+            return exportationFiles.includes(filename);
+        default:
+            return false;
     }
-    return getAddOnModule(type, filename) !== null && getAddOnModule(type, filename) !== undefined;
 }
 
 export function getAllAddOnFiles(type: string): string[] {
@@ -169,11 +274,11 @@ export function getAllAddOnFiles(type: string): string[] {
         case 'gathering':
             return gatheringFiles;
         case 'display':
-            return Object.keys(displayRegistry);
+            return displayFiles;
         case 'save':
-            return Object.keys(saveRegistry);
+            return saveFiles;
         case 'exportation':
-            return Object.keys(exportationRegistry);
+            return exportationFiles;
         default:
             return [];
     }
