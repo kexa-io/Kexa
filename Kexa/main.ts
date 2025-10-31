@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 import env from "dotenv";
-import Log, { setup as setupLogger } from 'adze';
+import Log, { setup, setup as setupLogger } from 'adze';
 import { exit } from "process";
 
 import { setTimeout as setTimer, clearTimeout as clearTimer } from 'node:timers';
@@ -44,10 +44,16 @@ const ARGS = yargs(hideBin(process.argv))
         type: 'boolean',
         description: 'Export alerts to JSON to ./output/alerts/'
     })
+    .option('silent', {
+        alias: 's',
+        type: 'boolean',
+        description: 'Silent mode: suppress all logs, only show JSON output'
+    })
     .example('$0', 'Run Kexa scan')
     .example('$0 -o', 'Run scan and export resources')
     .example('$0 -a', 'Run scan and export alerts')
     .example('$0 -o -a', 'Run scan and export both resources and alerts')
+    .example('$0 -o -s', 'Export resources with no logs (clean JSON output)')
     .help()
     .argv;
 
@@ -56,14 +62,25 @@ async function initializeApplication(): Promise<{ logger: Log<string, unknown>, 
     const context = getContext();
     context?.log("Initializing application...");
 
-    if (process.env.DEV === "true") {
+    if (ARGS.silent || ARGS.s) {
+        setupLogger({
+            silent: true
+        } as any);
+
+        // In silent mode, redirect errors to stderr as JSON
+        console.error = (...args: any[]) => {
+            process.stderr.write(JSON.stringify({ error: args.join(' '), timestamp: new Date().toISOString() }) + '\n');
+        };
+    } else if (process.env.DEV === "true") {
         setupLogger({
             activeLevel: 'debug'
         });
     }
 
     const logger = getNewLogger("MainLogger");
-    AsciiArtText("Kexa");
+    if (!ARGS.silent && !ARGS.s) {
+        AsciiArtText("Kexa");
+    }
     logger.info("Kexa " + VERSION);
     logger.info("Application starting...");
 
@@ -80,6 +97,8 @@ async function initializeApplication(): Promise<{ logger: Log<string, unknown>, 
 export async function performScan(settings: SettingFile[], scanId: string): Promise<ResultScan[][]> {
     const logger = getNewLogger(`ScanLogger_${scanId}`);
     const start = new Date();
+    
+
     logger.info("___________________________________________________________________________________________________");
     logger.info("___________________________________-= running Kexa " + VERSION + " scan =-_________________________________________");
     logger.info("___________________________________________________________________________________________________");
@@ -97,7 +116,9 @@ export async function performScan(settings: SettingFile[], scanId: string): Prom
     if (ARGS.output || ARGS.o) {
         const timestamp = new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '');
         const filePath = `${FOLDER_OUTPUT}/resources/${timestamp}-resources.json`;
-        createFileSync(JSON.stringify(resources), filePath, true);
+        const resourcesJson = JSON.stringify(resources, null, 2);
+        createFileSync(resourcesJson, filePath, true);
+        console.log(resourcesJson);
         logger.info(`Exported resources to ${filePath}`);
     }
     await exportationData(resources);
@@ -197,7 +218,9 @@ function exportAlertsToJson(allScanResults: ResultScan[][]): void {
     };
 
     const filePath = `${FOLDER_OUTPUT}/alerts/${timestamp}-alerts.json`;
-    createFileSync(JSON.stringify(alertsJson, null, 2), filePath, true);
+    const alertsJsonString = JSON.stringify(alertsJson, null, 2);
+    createFileSync(alertsJsonString, filePath, true);
+    console.log(alertsJsonString);
     logger.info(`Exported alerts to ${filePath}`);
 }
 
