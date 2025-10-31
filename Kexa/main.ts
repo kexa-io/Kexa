@@ -34,10 +34,10 @@ const DEFAULT_TIMEOUT_MINUTES = 15;
 const DEFAULT_MAX_RETRY = 3;
 const FOLDER_OUTPUT = process.env.OUTPUT ?? "./output";
 const ARGS = yargs(hideBin(process.argv))
-    .option('output', {
-        alias: 'o',
+    .option('gather', {
+        alias: 'g',
         type: 'boolean',
-        description: 'Export resources to JSON to ./output/resources/'
+        description: 'Export gathered resources to JSON to ./output/resources/'
     })
     .option('alerts', {
         alias: 'a',
@@ -50,10 +50,9 @@ const ARGS = yargs(hideBin(process.argv))
         description: 'Silent mode: suppress all logs, only show JSON output'
     })
     .example('$0', 'Run Kexa scan')
-    .example('$0 -o', 'Run scan and export resources')
+    .example('$0 -g', 'Run scan and export gathered resources')
     .example('$0 -a', 'Run scan and export alerts')
-    .example('$0 -o -a', 'Run scan and export both resources and alerts')
-    .example('$0 -o -s', 'Export resources with no logs (clean JSON output)')
+    .example('$0 -g -s', 'Export gathered resources with no logs (clean JSON output)')
     .help()
     .argv;
 
@@ -124,7 +123,7 @@ export async function performScan(settings: SettingFile[], scanId: string): Prom
 
     const allScanResults: ResultScan[][] = [];
     const resources = await loadAddOns();
-    if (ARGS.output || ARGS.o) {
+    if (ARGS.gather || ARGS.g) {
         const timestamp = new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '');
         const filePath = `${FOLDER_OUTPUT}/resources/${timestamp}-resources.json`;
         const resourcesJson = JSON.stringify(resources, null, 2);
