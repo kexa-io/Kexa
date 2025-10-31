@@ -1,10 +1,11 @@
 #!/usr/bin/env bun
 import env from "dotenv";
-import Log, { setup as setupLogger } from 'adze';
+import Log, { setup, setup as setupLogger } from 'adze';
 import { exit } from "process";
 
 import { setTimeout as setTimer, clearTimeout as clearTimer } from 'node:timers';
 
+import { VERSION } from "./version";
 import { getConfig } from "./helpers/loaderConfig";
 import { deleteFile, createFileSync } from "./helpers/files";
 import { jsonStringify } from "./helpers/jsonStringify";
@@ -33,20 +34,34 @@ const DEFAULT_TIMEOUT_MINUTES = 15;
 const DEFAULT_MAX_RETRY = 3;
 const FOLDER_OUTPUT = process.env.OUTPUT ?? "./output";
 const ARGS = yargs(hideBin(process.argv))
-    .option('output', {
-        alias: 'o',
+    .option('gather', {
+        alias: 'g',
         type: 'boolean',
-        description: 'Export resources to JSON to ./output/resources/'
+        description: 'Export gathered resources to JSON to ./output/resources/'
     })
     .option('alerts', {
         alias: 'a',
         type: 'boolean',
         description: 'Export alerts to JSON to ./output/alerts/'
     })
+    .option('silent', {
+        alias: 's',
+        type: 'boolean',
+        description: 'Silent mode: suppress all logs, only show JSON output'
+    })
+    .option('to', {
+        type: 'string',
+        choices: ['file', 'stdout', 'both'],
+        default: 'both',
+        description: 'Control output destination: file, stdout, or both'
+    })
     .example('$0', 'Run Kexa scan')
-    .example('$0 -o', 'Run scan and export resources')
+    .example('$0 -g', 'Run scan and export gathered resources')
     .example('$0 -a', 'Run scan and export alerts')
-    .example('$0 -o -a', 'Run scan and export both resources and alerts')
+    .example('$0 -g -a', 'Run scan and export both resources and alerts')
+    .example('$0 -g -s', 'Export gathered resources with no logs (clean JSON output)')
+    .example('$0 -g --to file', 'Export gathered resources only to file (clean console logs)')
+    .example('$0 -a --to stdout', 'Export alerts only to stdout')
     .help()
     .argv;
 
@@ -55,14 +70,37 @@ async function initializeApplication(): Promise<{ logger: Log<string, unknown>, 
     const context = getContext();
     context?.log("Initializing application...");
 
-    if (process.env.DEV === "true") {
+    if (ARGS.silent || ARGS.s) {
+        const store = setupLogger({
+            activeLevel: 'alert', // Set to highest level to suppress most logs
+            silent: true
+        } as any);
+
+        // Add listener to capture error logs and output as JSON to stderr
+        store?.addListener('error', (log: any) => {
+            const errorData = {
+                level: log._data?.levelName || 'error',
+                message: log._data?.args?.[0] || '',
+                timestamp: log._data?.timestamp || new Date().toISOString(),
+                namespace: log._data?.namespace || []
+            };
+            process.stderr.write(JSON.stringify(errorData) + '\n');
+        });
+
+        console.error = (...args: any[]) => {
+            process.stderr.write(JSON.stringify({ error: args.join(' '), timestamp: new Date().toISOString() }) + '\n');
+        };
+    } else if (process.env.DEV === "true") {
         setupLogger({
             activeLevel: 'debug'
         });
     }
 
     const logger = getNewLogger("MainLogger");
-    AsciiArtText("Kexa");
+    if (!ARGS.silent && !ARGS.s) {
+        AsciiArtText("Kexa");
+    }
+    logger.info("Kexa " + VERSION);
     logger.info("Application starting...");
 
     await initAddOnPropertyToSend();
@@ -78,8 +116,10 @@ async function initializeApplication(): Promise<{ logger: Log<string, unknown>, 
 export async function performScan(settings: SettingFile[], scanId: string): Promise<ResultScan[][]> {
     const logger = getNewLogger(`ScanLogger_${scanId}`);
     const start = new Date();
+    
+
     logger.info("___________________________________________________________________________________________________");
-    logger.info("___________________________________-= running Kexa scan =-_________________________________________");
+    logger.info("___________________________________-= running Kexa " + VERSION + " scan =-_________________________________________");
     logger.info("___________________________________________________________________________________________________");
     if(scanId && parseInt(scanId) > 0) {
         logger.debug(`Starting scan n°${scanId}, clearing states...`);
@@ -92,11 +132,20 @@ export async function performScan(settings: SettingFile[], scanId: string): Prom
 
     const allScanResults: ResultScan[][] = [];
     const resources = await loadAddOns();
-    if (ARGS.output || ARGS.o) {
+    if (ARGS.gather || ARGS.g) {
         const timestamp = new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '');
         const filePath = `${FOLDER_OUTPUT}/resources/${timestamp}-resources.json`;
-        createFileSync(JSON.stringify(resources), filePath, true);
-        logger.info(`Exported resources to ${filePath}`);
+        const resourcesJson = JSON.stringify(resources, null, 2);
+        const to = ARGS.to || 'both';
+
+        if (to === 'file' || to === 'both') {
+            createFileSync(resourcesJson, filePath, true);
+            logger.info(`Exported resources to ${filePath}`);
+        }
+
+        if (to === 'stdout' || to === 'both') {
+            console.log(resourcesJson);
+        }
     }
     await exportationData(resources);
 
@@ -195,8 +244,17 @@ function exportAlertsToJson(allScanResults: ResultScan[][]): void {
     };
 
     const filePath = `${FOLDER_OUTPUT}/alerts/${timestamp}-alerts.json`;
-    createFileSync(JSON.stringify(alertsJson, null, 2), filePath, true);
-    logger.info(`Exported alerts to ${filePath}`);
+    const alertsJsonString = JSON.stringify(alertsJson, null, 2);
+    const to = ARGS.to || 'both';
+
+    if (to === 'file' || to === 'both') {
+        createFileSync(alertsJsonString, filePath, true);
+        logger.info(`Exported alerts to ${filePath}`);
+    }
+
+    if (to === 'stdout' || to === 'both') {
+        console.log(alertsJsonString);
+    }
 }
 
 async function handleScanIteration(settings: SettingFile[], scanId: number, logger: Log<string, unknown>): Promise<{ hasCriticalError: boolean, settings: SettingFile[] }> {

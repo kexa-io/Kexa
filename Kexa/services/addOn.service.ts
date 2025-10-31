@@ -322,8 +322,11 @@ export async function extractHeaders(): Promise<Capacity>{
         setHeaders(finalData);
         try {
             writeStringToJsonFile(jsonStringify(finalData,4), "./config/headers.json");
-        } catch (error) {
-            logger.error("Failed to create headers.json", error);
+        } catch (error: any) {
+            if (error.code === 'ENOENT') {
+                throw new Error("Config directory not found. Kexa requires a 'config' directory to run. See https://docs.kexa.io for setup instructions.");
+            }
+            throw error;
         }
         try {
             const headersServiceContent = `import type { Capacity } from "../models/settingFile/capacity.models";
