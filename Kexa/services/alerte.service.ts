@@ -98,41 +98,94 @@ export function alertFromGlobal(alert: GlobalConfigAlert, compteError: number[],
 
 export function alertLogGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
     const context = getContext();
-    context?.log("_______________________________________-= Result Global scan: "+ alert.name +" =-___________________________________");
-    logger.info("_______________________________________-= Result Global scan: "+ alert.name +" =-___________________________________");
+    const mainSeparator = "=".repeat(100);
+    const ruleSeparator = "-".repeat(100);
+    const resourceSeparator = "·".repeat(100);
+
+    context?.log("\n" + mainSeparator);
+    logger.info(mainSeparator);
+    context?.log("Result global scan on ruleset: " + alert.name);
+    logger.info("Result global scan on ruleset: " + alert.name);
+    context?.log(mainSeparator);
+    logger.info(mainSeparator);
+
     compteError.forEach((value, index) => {
-        context?.log("number of "+levelAlert[index]+" :"+value);
-        logger.info("number of "+levelAlert[index]+" :"+value);
+        context?.log("  " + levelAlert[index] + ": " + value);
+        logger.info("  " + levelAlert[index] + ": " + value);
     });
-    context?.log("-= Detail for each Rules =-");
-    logger.info("-= Detail for each Rules =-");
+
+    context?.log(mainSeparator);
+    logger.info(mainSeparator);
+    context?.log("Details by rule:");
+    logger.info("Details by rule:");
+    context?.log(mainSeparator + "\n");
+    logger.info(mainSeparator + "\n");
+
     let allScanOneDimension = [];
     for (let row of allScan) for (let e of row) allScanOneDimension.push(e);
     let subResult = groupBy(allScanOneDimension, (scan) => scan.rule?.name);
-    Object.entries(subResult).forEach(([key, value]) => {
-        context?.log("rule:"+key);
-        logger.info("rule:"+key);
-        context?.log("description:"+value[0].rule?.description);
-        logger.info("description:"+value[0].rule?.description);
-        context?.log("all resources who not respect the rules:");
-        logger.info("all resources who not respect the rules:");
-        value.filter(value => value.error.length>0).map((scan:ResultScan) => scan.objectContent).forEach((resource, index) => {
-            context?.log("resource " + (index+1) + ":");
-            logger.info("resource " + (index+1) + ":");
-            alertLog(value[index].rule, value[index].error, resource, false);
-        });
-        if(value[0].rule?.loud){
-            context?.log("all resources who respect the rules:");
-            logger.info("all resources who respect the rules:");
-            value.filter(value => value.loud).map((scan:ResultScan) => scan.objectContent).forEach((resource, index) => {
-                context?.log("resource " + (index+1) + ":");
-                logger.info("resource " + (index+1) + ":");
-                alertLog(value[index].rule, value[index].error, resource, false);
+
+    const ruleEntries = Object.entries(subResult);
+    ruleEntries.forEach(([key, value], ruleIndex) => {
+        const ruleLevel = value[0].rule?.level ?? 0;
+        const levelLabel = levelAlert[ruleLevel];
+
+        context?.log(ruleSeparator);
+        logger.info(ruleSeparator);
+        context?.log("Rule " + (ruleIndex + 1) + " of " + ruleEntries.length + " : " + key);
+        logger.info("Rule " + (ruleIndex + 1) + " of " + ruleEntries.length + " : " + key);
+        context?.log("  Level: " + levelLabel);
+        logger.info("  Level: " + levelLabel);
+        context?.log("  Resource Type: " + (value[0].rule?.objectName));
+        logger.info("  Resource Type: " + (value[0].rule?.objectName));
+        context?.log("  Description: " + (value[0].rule?.description));
+        logger.info("  Description: " + (value[0].rule?.description));
+        const errorsResources = value.filter(v => v.error.length > 0);
+        if (errorsResources.length > 0) {
+            context?.log("  Non-compliant resources: " + errorsResources.length);
+            logger.info("  Non-compliant resources: " + errorsResources.length);
+        context?.log(ruleSeparator);
+        logger.info(ruleSeparator);
+            errorsResources.forEach((scan: ResultScan, index) => {
+                console.log("\n");
+                context?.log("== > Resource " + (index + 1) + "/" + errorsResources.length + ":");
+                logger.info("==> Resource " + (index + 1) + "/" + errorsResources.length + ":");
+                alertLog(scan.rule, scan.error, scan.objectContent, false);
             });
+            context?.log("\n");
+            logger.info("\n");
+        }
+
+        if(value[0].rule?.loud){
+            const loudResources = value.filter(v => v.loud);
+            if (loudResources.length > 0) {
+                context?.log("  Compliant resources: " + loudResources.length);
+                logger.info("  Compliant resources: " + loudResources.length);
+                context?.log("  " + resourceSeparator);
+                logger.info("  " + resourceSeparator);
+
+                loudResources.forEach((scan: ResultScan, index) => {
+                    context?.log("\n  Resource " + (index + 1) + "/" + loudResources.length + ":");
+                    logger.info("\n  Resource " + (index + 1) + "/" + loudResources.length + ":");
+                    alertLog(scan.rule, scan.error, scan.objectContent, false);
+                });
+                context?.log("\n");
+                logger.info("\n");
+            }
+        }
+
+        if (ruleIndex < ruleEntries.length - 1) {
+            context?.log("");
+            logger.info("");
         }
     });
-    context?.log("_____________________________________-= End Result Global scan =-_________________________________");
-    logger.info("_____________________________________-= End Result Global scan =-_________________________________");
+
+    context?.log(mainSeparator);
+    logger.info(mainSeparator);
+    context?.log("End result global scan ");
+    logger.info("End result global scan ");
+    context?.log(mainSeparator + "\n");
+    logger.info(mainSeparator + "\n");
 }
 
 export function alertEmailGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
@@ -226,14 +279,16 @@ export function compteRender(allScan: ResultScan[][]): any {
     return result;
 }
 
-export function alertFromRule(rule:Rules, conditions:SubResultScan[], objectResource:any, alert: Alert) {
+export function alertFromRule(rule:Rules, conditions:SubResultScan[], objectResource:any, alert: Alert, skipLog:boolean = false) {
     let detailAlert = alert[levelAlert[rule.level] as keyof typeof alert];
     if (!detailAlert.enabled) return
     if(rule.level > LevelEnum.FATAL) rule.level = LevelEnum.FATAL;
     detailAlert.type.forEach((type) => {
         switch(type){
             case AlertEnum.LOG:
-                alertLog(rule, conditions, objectResource);
+                if (!skipLog) {
+                    alertLog(rule, conditions, objectResource);
+                }
                 break;
             case AlertEnum.EMAIL:
                 alertEmail(detailAlert, rule, conditions, objectResource);

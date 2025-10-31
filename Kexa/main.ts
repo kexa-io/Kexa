@@ -5,6 +5,7 @@ import { exit } from "process";
 
 import { setTimeout as setTimer, clearTimeout as clearTimer } from 'node:timers';
 
+import { VERSION } from "./version";
 import { getConfig } from "./helpers/loaderConfig";
 import { deleteFile, createFileSync } from "./helpers/files";
 import { jsonStringify } from "./helpers/jsonStringify";
@@ -63,6 +64,7 @@ async function initializeApplication(): Promise<{ logger: Log<string, unknown>, 
 
     const logger = getNewLogger("MainLogger");
     AsciiArtText("Kexa");
+    logger.info("Kexa " + VERSION);
     logger.info("Application starting...");
 
     await initAddOnPropertyToSend();
@@ -79,7 +81,7 @@ export async function performScan(settings: SettingFile[], scanId: string): Prom
     const logger = getNewLogger(`ScanLogger_${scanId}`);
     const start = new Date();
     logger.info("___________________________________________________________________________________________________");
-    logger.info("___________________________________-= running Kexa scan =-_________________________________________");
+    logger.info("___________________________________-= running Kexa " + VERSION + " scan =-_________________________________________");
     logger.info("___________________________________________________________________________________________________");
     if(scanId && parseInt(scanId) > 0) {
         logger.debug(`Starting scan n°${scanId}, clearing states...`);

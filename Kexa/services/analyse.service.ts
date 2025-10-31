@@ -456,7 +456,7 @@ export function checkRules(rules:any[], resources:ProviderResource, alert: Alert
         }
         if(!rule.applied) return;
         context?.log("check rule:"+rule.name);
-        logger.info("check rule:"+rule.name);
+        logger.debug("check rule:"+rule.name);
 
         if(!configuration.hasOwnProperty(rule.cloudProvider)){
             logger.debug("cloud provider not found in config:"+rule.cloudProvider);
@@ -482,8 +482,7 @@ export function checkRules(rules:any[], resources:ProviderResource, alert: Alert
                 if (process.env.INTERFACE_CONFIGURATION_ENABLED == 'true') {
                     rule.objectName = rule.objectName.name;
                 }
-                context?.log("check rule with config with index/prefix :"+ (configAssign[i].prefix??i));
-                logger.info("check rule with config "+ rule.cloudProvider +" with index/prefix :"+ (configAssign[i].prefix??i));
+                logger.debug("check rule with config "+ rule.cloudProvider +" with index/prefix :"+ (configAssign[i].prefix??i));
                 switch(checkMatchConfigAndResource(rule, resources, i)){
                     case BeHaviorEnum.RETURN:
                         return;
@@ -504,7 +503,7 @@ export function checkRules(rules:any[], resources:ProviderResource, alert: Alert
                 error: actionAfterCheckRule(rule, objectResources, alert, subResultScan),
             });
         }else{
-            logger.info("gatherered "+ objectResources.length + " resource(s) to be check with this rule.");
+            logger.debug("gatherered "+ objectResources.length + " resource(s) to be check with this rule.");
             objectResources.forEach((objectResource: any) => {
                 let subResultScan: SubResultScan[] = checkRule(rule.conditions, objectResource);
                 subResult.push({
@@ -531,9 +530,9 @@ function actionAfterCheckRule(rule: Rules, objectResource: any, alert: Alert, su
     let error = subResultScan.filter((value) => !value.result);
     if(error.length > 0){
         if (rule.cloudProvider === "fuzz")
-            alertFromRule(rule, subResultScan, objectResource, alert);
+            alertFromRule(rule, subResultScan, objectResource, alert, alert.global.enabled);
         else if (Memoisation.needToBeCache(rule, objectResource, rule.cloudProvider)){
-            alertFromRule(rule, subResultScan, objectResource, alert);
+            alertFromRule(rule, subResultScan, objectResource, alert, alert.global.enabled);
         }
     }
     return error;
