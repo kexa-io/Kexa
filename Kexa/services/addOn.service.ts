@@ -308,12 +308,12 @@ export async function extractHeaders(): Promise<Capacity>{
     const results = await Promise.all(promises);
     let finalData:any = {};
     results.forEach((result: Header | null) => {
-        if(result?.provider && result?.resources && result?.thumbnail){
+        if(result?.provider && result?.resources){
             finalData[result.provider] = {
                 "resources": result.resources,
-                "thumbnail": result.thumbnail,
+                "thumbnail": result.thumbnail || "",
                 "customName": result.customName,
-                "documentation": result.documentation,
+                "documentation": result.documentation || "",
                 "freeRules": [],
             };
         }
@@ -323,10 +323,7 @@ export async function extractHeaders(): Promise<Capacity>{
         try {
             writeStringToJsonFile(jsonStringify(finalData,4), "./config/headers.json");
         } catch (error: any) {
-            if (error.code === 'ENOENT') {
-                throw new Error("Config directory not found. Kexa requires a 'config' directory to run. See https://docs.kexa.io for setup instructions.");
-            }
-            throw error;
+            logger.debug("Could not write headers.json (will use bundled headers): " + error.message);
         }
         try {
             const headersServiceContent = `import type { Capacity } from "../models/settingFile/capacity.models";
