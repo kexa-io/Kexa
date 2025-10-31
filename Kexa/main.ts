@@ -49,10 +49,19 @@ const ARGS = yargs(hideBin(process.argv))
         type: 'boolean',
         description: 'Silent mode: suppress all logs, only show JSON output'
     })
+    .option('to', {
+        type: 'string',
+        choices: ['file', 'stdout', 'both'],
+        default: 'both',
+        description: 'Control output destination: file, stdout, or both'
+    })
     .example('$0', 'Run Kexa scan')
     .example('$0 -g', 'Run scan and export gathered resources')
     .example('$0 -a', 'Run scan and export alerts')
+    .example('$0 -g -a', 'Run scan and export both resources and alerts')
     .example('$0 -g -s', 'Export gathered resources with no logs (clean JSON output)')
+    .example('$0 -g --to file', 'Export gathered resources only to file (clean console logs)')
+    .example('$0 -a --to stdout', 'Export alerts only to stdout')
     .help()
     .argv;
 
@@ -127,9 +136,16 @@ export async function performScan(settings: SettingFile[], scanId: string): Prom
         const timestamp = new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '');
         const filePath = `${FOLDER_OUTPUT}/resources/${timestamp}-resources.json`;
         const resourcesJson = JSON.stringify(resources, null, 2);
-        createFileSync(resourcesJson, filePath, true);
-        console.log(resourcesJson);
-        logger.info(`Exported resources to ${filePath}`);
+        const to = ARGS.to || 'both';
+
+        if (to === 'file' || to === 'both') {
+            createFileSync(resourcesJson, filePath, true);
+            logger.info(`Exported resources to ${filePath}`);
+        }
+
+        if (to === 'stdout' || to === 'both') {
+            console.log(resourcesJson);
+        }
     }
     await exportationData(resources);
 
@@ -229,9 +245,16 @@ function exportAlertsToJson(allScanResults: ResultScan[][]): void {
 
     const filePath = `${FOLDER_OUTPUT}/alerts/${timestamp}-alerts.json`;
     const alertsJsonString = JSON.stringify(alertsJson, null, 2);
-    createFileSync(alertsJsonString, filePath, true);
-    console.log(alertsJsonString);
-    logger.info(`Exported alerts to ${filePath}`);
+    const to = ARGS.to || 'both';
+
+    if (to === 'file' || to === 'both') {
+        createFileSync(alertsJsonString, filePath, true);
+        logger.info(`Exported alerts to ${filePath}`);
+    }
+
+    if (to === 'stdout' || to === 'both') {
+        console.log(alertsJsonString);
+    }
 }
 
 async function handleScanIteration(settings: SettingFile[], scanId: number, logger: Log<string, unknown>): Promise<{ hasCriticalError: boolean, settings: SettingFile[] }> {

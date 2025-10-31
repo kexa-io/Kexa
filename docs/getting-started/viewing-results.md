@@ -99,6 +99,18 @@ The output structure:
 }
 ```
 
+### Output Destination (`--to`)
+
+Control where JSON output is written using the `--to` flag (default: `both`):
+
+```bash
+# Write only to file (clean console logs)
+kexa -g --to file
+
+# Write only to stdout (no file creation)
+kexa -g --to stdout
+```
+
 ### Silent Mode (`-s` / `--silent`)
 
 For automation and clean JSON output, use the `-s` or `--silent` flag:
@@ -109,6 +121,10 @@ kexa -g -s
 
 # Export alerts with clean JSON output
 kexa -a -s
+
+# Combine with --to for more control on output destination
+kexa -g -s --to file
+kexa -g -s --to stdout
 
 # Pipe to jq for filtering
 kexa -g -s | jq '.azure[0]'
