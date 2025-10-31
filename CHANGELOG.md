@@ -1,4 +1,7 @@
-## [2.5.6](https://github.com/kexa-io/Kexa/compare/v2.5.5...v2.5.6) (2025-10-31)
+# Changelog
+
+## [v2.5.6] - 2025-10-31
+
 
 
 ### Bug Fixes
