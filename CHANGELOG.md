@@ -1,3 +1,10 @@
+## [2.5.6](https://github.com/kexa-io/Kexa/compare/v2.5.5...v2.5.6) (2025-10-31)
+
+
+### Bug Fixes
+
+* **headers:** less strict data and no prevent fallback ([5fdda0a](https://github.com/kexa-io/Kexa/commit/5fdda0a799410b25f7dcf5056c6e3327bd10d03b))
+
 # Changelog
 
 ## [v2.5.5] - 2025-10-31
