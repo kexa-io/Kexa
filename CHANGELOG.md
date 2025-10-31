@@ -1,3 +1,14 @@
+## [2.5.5](https://github.com/kexa-io/Kexa/compare/v2.5.4...v2.5.5) (2025-10-31)
+
+
+### Bug Fixes
+
+* **base:** catch clean error for missing config or rule folder ([d29db95](https://github.com/kexa-io/Kexa/commit/d29db95a330bbb6982c6cf75e3d3399b800a9f04))
+* **logger:** in silent mode, redirect stderr as JSON & set high level ([acea654](https://github.com/kexa-io/Kexa/commit/acea654d3cb3822b7f16b95aecd4c240398a4a82))
+* **logs:** Clean logs, Better format, Version , ascii art as const for binary ([f07adf3](https://github.com/kexa-io/Kexa/commit/f07adf335246f73487736f2f8534f4de7061ebe1))
+* **outputs:** --to flag to choose output dest ([93c2fef](https://github.com/kexa-io/Kexa/commit/93c2fef232dfadd58ac55deed80d21e5dd9753eb))
+* **outputs:** add docs and change -o to -g (gather) to make more sense ([74508a3](https://github.com/kexa-io/Kexa/commit/74508a3dbdf2bb91fe304d7b2d2e453020f4ed24))
+
 # Changelog
 
 ## [v2.5.4] - 2025-10-30
