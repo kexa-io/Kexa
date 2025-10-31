@@ -90,9 +90,11 @@ export async function gatheringRules(rulesDirectory:string, getAll:boolean=false
         if(paths.length === 0) paths = fs.readdirSync(secondDefaultRulesDirectory, { withFileTypes: true});
         logger.debug("listing rules files.");
         settingFileList = new Array<SettingFile>;
-    } catch (err) {
-        logger.error("Error reading rules directory: " + err);
-        throw new Error("Rules directory not found or empty");
+    } catch (err: any) {
+        if (err.code === 'ENOENT') {
+            throw new Error("Rules directory not found. Kexa requires a rules directory to run. See https://docs.kexa.io/docs/configuration/ for setup instructions.");
+        }
+        throw new Error("Error reading rules directory: " + err.message);
     }
     let listNeedRules = await getListNeedRules();
     for(const p of paths) {
