@@ -63,11 +63,22 @@ async function initializeApplication(): Promise<{ logger: Log<string, unknown>, 
     context?.log("Initializing application...");
 
     if (ARGS.silent || ARGS.s) {
-        setupLogger({
+        const store = setupLogger({
+            activeLevel: 'alert', // Set to highest level to suppress most logs
             silent: true
         } as any);
 
-        // In silent mode, redirect errors to stderr as JSON
+        // Add listener to capture error logs and output as JSON to stderr
+        store?.addListener('error', (log: any) => {
+            const errorData = {
+                level: log._data?.levelName || 'error',
+                message: log._data?.args?.[0] || '',
+                timestamp: log._data?.timestamp || new Date().toISOString(),
+                namespace: log._data?.namespace || []
+            };
+            process.stderr.write(JSON.stringify(errorData) + '\n');
+        });
+
         console.error = (...args: any[]) => {
             process.stderr.write(JSON.stringify({ error: args.join(' '), timestamp: new Date().toISOString() }) + '\n');
         };
