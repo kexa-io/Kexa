@@ -13,6 +13,7 @@ sidebar_position: 1
 
 [![Rejoindre le Slack](https://img.shields.io/badge/Slack-Rejoindre%20la%20communauté-blue?style=for-the-badge&logo=slack)](https://join.slack.com/t/kexaio/shared_invite/zt-343gsrm6d-y9glG4khlH7kuecoerYCOQ)
 [![Lisez sur Medium](https://img.shields.io/badge/Medium-Lisez%20nos%20articles-black?style=for-the-badge&logo=medium)](https://medium.com/@contact_52772)
+[![Documentation](https://img.shields.io/badge/Documentation-Read%20the%20docs-green?style=for-the-badge&logo=readthedocs)](https://docs.kexa.io)
 
 
 <div align="center">
