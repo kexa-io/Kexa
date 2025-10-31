@@ -17,8 +17,7 @@ export function writeStringToJsonFile(data: string, filePath: string): boolean {
         fs.writeFileSync(filePath, jsonStringify(JSON.parse(data), 4), 'utf8');
         return true;
     } catch (error) {
-        logger.error(error);
-        return false;
+        throw error;
     }
 }
 
