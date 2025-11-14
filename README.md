@@ -61,6 +61,12 @@ Here is an example of the Kexa engine:
 
 ![kexa-engine](./images/schema-engine.png)
 
+## Demo
+
+See Kexa in action:
+
+![kexa-demo](./kexa-asciinema-git.gif)
+
 ## Use Cases
 
 🔒 Multi-Cloud Storage Security

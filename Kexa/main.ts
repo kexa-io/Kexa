@@ -351,10 +351,14 @@ async function runScanLoop(config: any | null, initialSettings: SettingFile[], l
             } else {
                 logger.error("Scan failed after multiple retries. Reporting timeout and exiting.");
                 const timeoutResult = createTimeoutResult(timeoutMillis, config);
-                settings.forEach(setting => {
-                    alertFromGlobal(setting.alert.global, [], [[timeoutResult]]);
-                });
-                exit(1);
+                try {
+                    settings.forEach(setting => {
+                        alertFromGlobal(setting.alert.global, [], [[timeoutResult]]);
+                    });
+                } catch (alertError) {
+                    logger.error("Failed to send timeout alert:", alertError);
+                }
+                exit(-1);
             }
         }
 
@@ -381,7 +385,7 @@ async function start() {
 
         if (settings.length === 0) {
             logger.error("No settings files found, cannot proceed. Exiting.");
-            exit(1);
+            exit(-1);
         }
 
         await runScanLoop(generalConfig, settings, logger);
@@ -392,7 +396,7 @@ async function start() {
 
     } catch (error) {
         console.error("A fatal error occurred:", error);
-        exit(1);
+        exit(-1);
     }
 }
 

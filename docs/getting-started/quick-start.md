@@ -43,9 +43,55 @@ The samples include pre-configured setups that serve as reference implementation
 
 ## Installation
 
-For installation instructions, see the [main README](../../README.md#running-locally) which covers:
-- Pre-built binary installation (recommended)
-- Building from source
+### Option 1: Pre-built Binary (Recommended)
+
+The fastest way to run Kexa locally:
+
+**Linux/macOS:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/kexa-io/kexa/main/scripts/install.sh | bash
+```
+
+Add Kexa to your PATH:
+```bash
+export PATH="${HOME}/.local/bin:${PATH}"
+```
+
+**Windows (PowerShell):**
+```powershell
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/kexa-io/kexa/main/scripts/install.ps1" -OutFile install.ps1; ./install.ps1
+```
+
+Once installed, you can run `kexa` as a command anywhere.
+
+**Important:** The binary still requires:
+- A `config` folder with configuration files (e.g., `config/default.json`)
+- A `rules` folder with YAML rule files
+- Proper environment variables for your cloud providers
+
+See the [kexa-samples repository](https://github.com/kexa-io/kexa-samples) for ready-to-use configuration examples.
+
+### Option 2: Build from Source
+
+If you prefer to build from source:
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/kexa-io/Kexa.git
+   cd Kexa
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   bun install
+   ```
+
+3. **Run Kexa**:
+   ```bash
+   bun run ./Kexa/main.ts
+   ```
+
+This includes sample config and rules folders to get started immediately.
 
 ## Running Your First Scan
 
