@@ -1,3 +1,10 @@
+## [2.5.7](https://github.com/kexa-io/Kexa/compare/v2.5.6...v2.5.7) (2025-11-14)
+
+
+### Bug Fixes
+
+* **main:** return code -> runtime error (-1) and high level alert (1) ([f7604e1](https://github.com/kexa-io/Kexa/commit/f7604e1220cd919f86209579147759b1bc0f830a))
+
 # Changelog
 
 ## [v2.5.6] - 2025-10-31
