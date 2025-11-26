@@ -34,20 +34,38 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
             const repoUrl = objectContent?.repoUrl || `https://github.com/${repoName}`;
             const packageName = objectContent?.name || "unknown-package";
             const packageVersion = objectContent?.version || "unknown-version";
-            
+
             let packageDetails = '';
             if (objectContent?.dependencies && objectContent.dependencies.length > 0) {
-                const maliciousDeps = objectContent.dependencies.filter((dep: any) => 
+                const maliciousDeps = objectContent.dependencies.filter((dep: any) =>
                     dep.name === "js-yaml" && dep.version === "^4.1.0"
                 );
                 if (maliciousDeps.length > 0) {
                     packageDetails = ` - Malicious package detected: ${maliciousDeps.map((dep: any) => `${dep.name}@${dep.version}`).join(', ')}`;
                 }
             }
-            
-            return (isSms ? '' : webLink) + repoUrl + (isSms ? ' ' : '">') + 
-                   `Repo: ${repoName} - Package: ${packageName}@${packageVersion}${packageDetails}` + 
+
+            return (isSms ? '' : webLink) + repoUrl + (isSms ? ' ' : '">') +
+                   `Repo: ${repoName} - Package: ${packageName}@${packageVersion}${packageDetails}` +
                    (isSms ? `.` : `</a>`);
+        case "pullRequestPackageChanges":
+            const prUrl = objectContent?.prUrl || "#";
+            const prNumber = objectContent?.prNumber || "unknown";
+            const prTitle = objectContent?.prTitle || "Unknown PR";
+            const prAuthor = objectContent?.author || "unknown";
+            const isInfected = objectContent?.sha1huludIndicators?.isInfected || false;
+            const detectionReasons = objectContent?.sha1huludIndicators?.detectionReasons || [];
+            const suspiciousFiles = objectContent?.maliciousPatterns?.suspiciousFilesAdded || [];
+
+            let prDetails = `PR #${prNumber}: ${prTitle} by ${prAuthor}`;
+            if (isInfected) {
+                prDetails += ` - SHA1HULUD DETECTED: ${detectionReasons.join(', ')}`;
+                if (suspiciousFiles.length > 0) {
+                    prDetails += ` - Files: ${suspiciousFiles.join(', ')}`;
+                }
+            }
+
+            return (isSms ? '' : webLink) + prUrl + (isSms ? ' ' : '">') + prDetails + (isSms ? `.` : `</a>`);
         default:
             return 'GIT Scan : Id : ' + objectContent?.id;
     }

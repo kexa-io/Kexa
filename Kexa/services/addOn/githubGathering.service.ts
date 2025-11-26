@@ -66,7 +66,8 @@ export async function collectData(gitConfig:GitConfig[]): Promise<GitResources[]
                 "teamRepositories": secondaryDataOrganization.allTeamRepos,
                 "teamProjects": secondaryDataOrganization.allTeamProjects,
                 "runners": secondaryDataOrganization.allRunners,
-                "packages": secondaryDataRepo.allPackages
+                "packages": secondaryDataRepo.allPackages,
+                "pullRequestPackageChanges": secondaryDataRepo.allPullRequestPackageChanges
             });
         }catch(e){
             logger.error(e);
@@ -79,24 +80,29 @@ async function collectRepoRelaidInfo(allRepo: any): Promise<any>{
     let allBranches: any[] = [];
     let allIssues: any[] = [];
     let allPackages: any[] = [];
+    let allPullRequestPackageChanges: any[] = [];
     logger.info("Collecting github branches");
     logger.info("Collecting github issues");
     logger.info("Collecting github packages");
+    logger.info("Collecting github pull request package changes");
     await Promise.all(allRepo.map(async (repo: any) => {
-        const [issues, branches, packages] = await Promise.all([
+        const [issues, branches, packages, prPackageChanges] = await Promise.all([
             collectIssues(repo.name, repo.owner.login),
             collectBranch(repo.name, repo.owner.login),
-            collectPackages(repo.name, repo.owner.login)
+            collectPackages(repo.name, repo.owner.login),
+            collectPullRequestPackageChanges(repo.name, repo.owner.login)
         ]);
-    
+
         allIssues.push(...addInfoRepo(repo, issues));
         allBranches.push(...addInfoRepo(repo, branches));
         allPackages.push(...addInfoRepo(repo, packages));
+        allPullRequestPackageChanges.push(...addInfoRepo(repo, prPackageChanges));
     }));
     return {
         allIssues,
         allBranches,
-        allPackages
+        allPackages,
+        allPullRequestPackageChanges
     }
 }
 
@@ -232,10 +238,11 @@ async function getOctokit(): Promise<Octokit>{
 
 export async function collectRepo(){
     if(
-        !currentConfig?.ObjectNameNeed?.includes("repositories") 
+        !currentConfig?.ObjectNameNeed?.includes("repositories")
         && !currentConfig?.ObjectNameNeed?.includes("branches")
         && !currentConfig?.ObjectNameNeed?.includes("issues")
         && !currentConfig?.ObjectNameNeed?.includes("packages")
+        && !currentConfig?.ObjectNameNeed?.includes("pullRequestPackageChanges")
     ) return [];
     let page = 1;
     try{
@@ -624,5 +631,160 @@ export async function collectPackages(repo: string, owner: string): Promise<any[
             }];
         }
     }
+}
+
+export async function collectPullRequestPackageChanges(repo: string, owner: string): Promise<any[]>{
+    if(!currentConfig?.ObjectNameNeed?.includes("pullRequestPackageChanges")) return [];
+    let octokit = await getOctokit();
+    let prChanges: any[] = [];
+
+    try{
+        const pulls = await octokit.rest.pulls.list({
+            owner,
+            repo,
+            state: 'open',
+            per_page: 100
+        });
+
+        for (const pr of pulls.data) {
+            try {
+                const files = await octokit.rest.pulls.listFiles({
+                    owner,
+                    repo,
+                    pull_number: pr.number
+                });
+
+                const packageJsonFile = files.data.find(f => f.filename === "package.json");
+
+                if (packageJsonFile) {
+                    const filesChanged = files.data.map(f => f.filename);
+                    const prData = analyzePullRequestForMalwareInjection(
+                        pr,
+                        packageJsonFile,
+                        filesChanged,
+                        owner,
+                        repo
+                    );
+
+                    if (prData) {
+                        prChanges.push(prData);
+                    }
+                }
+            } catch (prError) {
+                logger.debug(`Error analyzing PR #${pr.number} for ${owner}/${repo}: ${prError}`);
+            }
+        }
+
+        return prChanges;
+    }catch(e){
+        logger.debug(`Error collecting PR package changes for ${owner}/${repo}: ${e}`);
+        return [];
+    }
+}
+
+function analyzePullRequestForMalwareInjection(
+    pr: any,
+    packageJsonFile: any,
+    filesChanged: string[],
+    owner: string,
+    repo: string
+): any {
+    const patch = packageJsonFile.patch || "";
+
+    const detectionReasons: string[] = [];
+    let isInfected = false;
+
+    const hasPreinstallScript = /[+].*"preinstall":\s*"/.test(patch);
+    const hasPostinstallScript = /[+].*"postinstall":\s*"/.test(patch);
+
+    const preinstallMatchesSetupBun = /[+].*"preinstall":\s*"node\s+setup_bun\.js"/.test(patch) ||
+                                       /[+].*"preinstall":\s*"node\s+[^"]*setup[^"]*\.js"/.test(patch);
+
+    const preinstallMatchesBunEnv = /[+].*"preinstall":\s*"[^"]*bun[^"]*environment[^"]*\.js"/.test(patch);
+
+    const suspiciousFilesAdded = filesChanged.filter(f =>
+        f.includes("setup_bun.js") ||
+        f.includes("bun_environment.js") ||
+        (f.includes("setup") && f.endsWith(".js") && f.includes("bun")) ||
+        (f.includes("environment") && f.endsWith(".js") && f.includes("bun"))
+    );
+
+    if (preinstallMatchesSetupBun) {
+        detectionReasons.push("preinstall_script_setup_bun");
+        isInfected = true;
+    }
+
+    if (preinstallMatchesBunEnv) {
+        detectionReasons.push("preinstall_script_bun_environment");
+        isInfected = true;
+    }
+
+    if (suspiciousFilesAdded.length > 0) {
+        detectionReasons.push("suspicious_bun_files_added");
+        isInfected = true;
+    }
+
+    if ((hasPreinstallScript || hasPostinstallScript) && suspiciousFilesAdded.length > 0) {
+        detectionReasons.push("install_script_with_suspicious_files");
+        isInfected = true;
+    }
+
+    const scriptsAdded = extractScriptsAdded(patch);
+
+    return {
+        prNumber: pr.number,
+        prUrl: pr.html_url,
+        prTitle: pr.title,
+        prState: pr.state,
+        author: pr.user?.login || "unknown",
+        createdAt: pr.created_at,
+        updatedAt: pr.updated_at,
+        baseBranch: pr.base?.ref || "unknown",
+        headBranch: pr.head?.ref || "unknown",
+        packageJsonModified: true,
+        packageJsonDiff: patch,
+        filesChanged: filesChanged,
+
+        sha1huludIndicators: {
+            isInfected: isInfected,
+            detectionReasons: detectionReasons
+        },
+
+        maliciousPatterns: {
+            hasPreinstallScript: hasPreinstallScript,
+            hasPostinstallScript: hasPostinstallScript,
+            preinstallMatchesSetupBun: preinstallMatchesSetupBun,
+            preinstallMatchesBunEnv: preinstallMatchesBunEnv,
+            suspiciousFilesAdded: suspiciousFilesAdded
+        },
+
+        scriptChanges: {
+            added: scriptsAdded
+        }
+    };
+}
+
+function extractScriptsAdded(patch: string): any {
+    const scriptsAdded: any = {};
+    const lines = patch.split('\n');
+    let inScriptsSection = false;
+
+    for (const line of lines) {
+        if (line.includes('"scripts"')) {
+            inScriptsSection = true;
+        }
+        if (inScriptsSection && (line.trim() === '}' || line.trim() === '},')) {
+            inScriptsSection = false;
+        }
+
+        if (inScriptsSection && line.trim().startsWith('+')) {
+            const match = /[+]\s*"([^"]+)":\s*"([^"]+)"/.exec(line);
+            if (match && match[1] !== 'scripts') {
+                scriptsAdded[match[1]] = match[2];
+            }
+        }
+    }
+
+    return scriptsAdded;
 }
 
