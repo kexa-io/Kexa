@@ -1,3 +1,10 @@
+## [2.5.8](https://github.com/kexa-io/Kexa/compare/v2.5.7...v2.5.8) (2025-11-27)
+
+
+### Bug Fixes
+
+* release kexa fix for js-yaml infected ([985fe36](https://github.com/kexa-io/Kexa/commit/985fe36614fbf518f81885d090b706cf646483ee))
+
 ## [2.5.7](https://github.com/kexa-io/Kexa/compare/v2.5.6...v2.5.7) (2025-11-14)
 
 
