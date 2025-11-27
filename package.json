@@ -569,7 +569,7 @@
     "google-auth-library": "^9.15.1",
     "googleapis": "^148.0.0",
     "helm-ts": "^0.1.5",
-    "js-yaml": "^4.1.0",
+    "js-yaml": "^4.1.1",
     "jsdom": "^26.1.0",
     "jsome": "^2.5.0",
     "linkedom": "^0.18.12",
