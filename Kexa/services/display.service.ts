@@ -92,10 +92,10 @@ export function renderTableAllScanLoud(allScan: ResultScan[][]): string{
     return result
 }
 
-export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false): string{
+export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false, conditions?: any): string{
     const fn = addOnPropertyToSend[rule?.cloudProvider];
     if (typeof fn === "function") {
-        return fn(rule, objectContent, isSms);
+        return fn(rule, objectContent, isSms, conditions);
     } else {
         logger.warn("Error while loading addOn display for rule :" + rule?.cloudProvider);
         return `Id : ` + objectContent.id;

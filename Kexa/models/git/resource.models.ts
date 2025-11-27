@@ -14,4 +14,5 @@ export interface GitResources {
     outsideCollaborators: Array<any>|null;
     runners: Array<any>|null;
     packages: Array<any>|null;
+    pullRequestPackageChanges: Array<any>|null;
 }
