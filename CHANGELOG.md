@@ -1,6 +1,362 @@
+## [2.5.9](https://github.com/kexa-io/Kexa/compare/v2.5.8...v2.5.9) (2025-11-27)
+
+
+### Bug Fixes
+
+* release  ([4cfbc27](https://github.com/kexa-io/Kexa/commit/4cfbc27d45d2e76631d7485c3db7b4d4f29e7d08))
+
+# Changelog
+
+## [v2.5.8] - 2025-11-27
+
+
+
+### Bug Fixes
+
+* release kexa fix for js-yaml infected ([985fe36](https://github.com/kexa-io/Kexa/commit/985fe36614fbf518f81885d090b706cf646483ee))
+
+## [2.5.7](https://github.com/kexa-io/Kexa/compare/v2.5.6...v2.5.7) (2025-11-14)
+
+
+### Bug Fixes
+
+* **main:** return code -> runtime error (-1) and high level alert (1) ([f7604e1](https://github.com/kexa-io/Kexa/commit/f7604e1220cd919f86209579147759b1bc0f830a))
+
+# Changelog
+
+## [v2.5.6] - 2025-10-31
+
+
+
+### Bug Fixes
+
+* **headers:** less strict data and no prevent fallback ([5fdda0a](https://github.com/kexa-io/Kexa/commit/5fdda0a799410b25f7dcf5056c6e3327bd10d03b))
+
+# Changelog
+
+## [v2.5.5] - 2025-10-31
+
+
+
+### Bug Fixes
+
+* **base:** catch clean error for missing config or rule folder ([d29db95](https://github.com/kexa-io/Kexa/commit/d29db95a330bbb6982c6cf75e3d3399b800a9f04))
+* **logger:** in silent mode, redirect stderr as JSON & set high level ([acea654](https://github.com/kexa-io/Kexa/commit/acea654d3cb3822b7f16b95aecd4c240398a4a82))
+* **logs:** Clean logs, Better format, Version , ascii art as const for binary ([f07adf3](https://github.com/kexa-io/Kexa/commit/f07adf335246f73487736f2f8534f4de7061ebe1))
+* **outputs:** --to flag to choose output dest ([93c2fef](https://github.com/kexa-io/Kexa/commit/93c2fef232dfadd58ac55deed80d21e5dd9753eb))
+* **outputs:** add docs and change -o to -g (gather) to make more sense ([74508a3](https://github.com/kexa-io/Kexa/commit/74508a3dbdf2bb91fe304d7b2d2e453020f4ed24))
+
+# Changelog
+
+## [v2.5.4] - 2025-10-30
+
+
+
+### Bug Fixes
+
+* change dom parser pkg to linkedom ([e879890](https://github.com/kexa-io/Kexa/commit/e879890660a8687fbf0775afea76869c66df58ee))
+* trigger cicd versioning ([d6bbeef](https://github.com/kexa-io/Kexa/commit/d6bbeefd69e36a43f0cf6cf7baad21335557947e))
+
+## [2.5.3](https://github.com/kexa-io/Kexa/compare/v2.5.2...v2.5.3) (2025-10-30)
+
+
+### Bug Fixes
+
+* **azure:** filter out SP (see desc) ([54c783c](https://github.com/kexa-io/Kexa/commit/54c783c79ff23f4ed087fc8dcee6b3437ae6f3fb))
+* **executable:** All services as dynamic imports ([2e531c8](https://github.com/kexa-io/Kexa/commit/2e531c8aecdc581218b507f3b8602ab14ee0d7a7))
+
+## [2.5.2](https://github.com/kexa-io/Kexa/compare/v2.5.1...v2.5.2) (2025-10-30)
+
+
+### Bug Fixes
+
+* **rules:** azure filter on SP ([9ada9b4](https://github.com/kexa-io/Kexa/commit/9ada9b49255c7855bfd2b529f80b15515f5bf232))
+
+## [2.5.1](https://github.com/kexa-io/Kexa/compare/v2.5.0...v2.5.1) (2025-10-30)
+
+
+### Bug Fixes
+
+* **executable:** install docs + minify ([62a996b](https://github.com/kexa-io/Kexa/commit/62a996ba24a4fd7234ecf3e318443eb42fd725e5))
+
+# Changelog
+
+## [v2.5.0] - 2025-10-30
+
+
+
+### Bug Fixes
+
+* **addon:** remove prometheus ([81439a8](https://github.com/kexa-io/Kexa/commit/81439a8cd677bf58f221fdf3c602e26eeceec0b8))
+* **addon:** remove unused prometheus file ([57eec40](https://github.com/kexa-io/Kexa/commit/57eec40bfdfdbf23d0e6b64c55fc80cdb3a28992))
+* **binary:** fixing long exec time due to static load ([5cf0f98](https://github.com/kexa-io/Kexa/commit/5cf0f9855360e4f58065d6730afcde7be7fbfb78))
+* **executable:** dynamic gathering files imports ([8de97c5](https://github.com/kexa-io/Kexa/commit/8de97c5a8db479fb0c2600ed2b55b27d450deac0))
+* **gcp:** add cis foundations rules (not complete) ([efba691](https://github.com/kexa-io/Kexa/commit/efba691ad4152a96d2d6e563e3d8c1ba4bf024ff))
+* **gcp:** fix cluster array parsing ([230f3be](https://github.com/kexa-io/Kexa/commit/230f3be03a83a1e2343d4c1d90239980738b5bb8))
+* **rules:** aws cis full foundations ([6a90150](https://github.com/kexa-io/Kexa/commit/6a9015037e99b66e1b8112658e6ccfddc36d874a))
+* **rules:** azure cis & idles ([b2b4956](https://github.com/kexa-io/Kexa/commit/b2b495684ab236ad7f8aa6675aa54c1d8fdc903f))
+* up missing packages ([18600e2](https://github.com/kexa-io/Kexa/commit/18600e2f21e981691b4504e6cba631a4a7b3331d))
+
+
+### Features
+
+* **aws:** cis foundations rules + kms dependencies ([0454bd7](https://github.com/kexa-io/Kexa/commit/0454bd761555677a6376365610d71da90bb35b14))
+* **cicd:** release kexa executables ([75a37e4](https://github.com/kexa-io/Kexa/commit/75a37e4dd55fb5c0e94e6ed028e16a7c74a1624d))
+* **executable:** install scripts ([e88cd82](https://github.com/kexa-io/Kexa/commit/e88cd826a956ccc8f052e0fdf1a87eee4a47632b))
+* **executable:** store headers in Typescript bundled file ([f12f2df](https://github.com/kexa-io/Kexa/commit/f12f2dffbaa08334006bcfc9e6370ff0c64699d4))
+* **gcp:** new gathered objects ([08f9534](https://github.com/kexa-io/Kexa/commit/08f953458862cf82cf23bba40a98b795d8412be3))
+* **output:** json alerts output mode ([e54985b](https://github.com/kexa-io/Kexa/commit/e54985bf823dbaeed8c6eb7c9576be55328930ae))
+
+# Changelog
+
+## [v2.4.5] - 2025-10-23
+
+
+
+### Bug Fixes
+
+* **azure:** add pagination to custom gather object ([f476f75](https://github.com/kexa-io/Kexa/commit/f476f751d271fc79716551f8b884e36911889972))
+* **rules:** sp expire correct rule ([ccd2448](https://github.com/kexa-io/Kexa/commit/ccd2448d759dd64ebadc481a69e72479236ef41f))
+* **unit_tests:** move & await loadAddOnsCustomUtility call ([ec20ebc](https://github.com/kexa-io/Kexa/commit/ec20ebca600b0d733680bd739a33ad2f1bf5917e))
+
+## [2.4.4](https://github.com/kexa-io/Kexa/compare/v2.4.3...v2.4.4) (2025-10-23)
+
+
+### Bug Fixes
+
+* **azure:** retrieve all sp + secrets ([1d277df](https://github.com/kexa-io/Kexa/commit/1d277dfd85b46c43d0fa5cfe26d1b3650bf16cc3))
+
+## [2.4.3](https://github.com/kexa-io/Kexa/compare/v2.4.2...v2.4.3) (2025-10-17)
+
+
+### Bug Fixes
+
+* docker set platforms from in cicd ([3e95911](https://github.com/kexa-io/Kexa/commit/3e95911df68f0640160a0d8d21c547ebc5c0013c))
+
+## [2.4.2](https://github.com/kexa-io/Kexa/compare/v2.4.1...v2.4.2) (2025-10-17)
+
+
+### Bug Fixes
+
+* **dockerfile:** force arm64 ([18420bf](https://github.com/kexa-io/Kexa/commit/18420bff49fc01080fea13acc858e9d310a70a15))
+
+## [2.4.1](https://github.com/kexa-io/Kexa/compare/v2.4.0...v2.4.1) (2025-10-17)
+
+
+### Bug Fixes
+
+* remove frozen lock ([3cd979d](https://github.com/kexa-io/Kexa/commit/3cd979de1fd3495f66b0cb20538d0f756629a36f))
+
+# Changelog
+
+## [v2.3.5] - 2025-10-02
+
+
+### Bug Fixes
+
+* **cicd:** setup to node 24 ([5848aa3](https://github.com/kexa-io/Kexa/commit/5848aa365858e9fba358c8d6d6f03f898e565c98))
+* **docs:** add samples link ([19ecbfb](https://github.com/kexa-io/Kexa/commit/19ecbfbe96a76d45432409840d121d2656d04404))
+* **rules:** AWS & Azure orphans ([c7dc572](https://github.com/kexa-io/Kexa/commit/c7dc57211d6031d8526fa878a2d7700b9a6c4c2a))
+* **rules:** aws orphan rules set ([60754cc](https://github.com/kexa-io/Kexa/commit/60754cc43fff27af8566df8b5a94e4929766de35))
+
+
+### Features
+
+* **rules:** azure & gcp (start) orphaned rules ([6c539ec](https://github.com/kexa-io/Kexa/commit/6c539ec5d2885abe1c4ba5041e323752a21cbba6))
+* **rules:** idles resources rules gcp done ([97a13f6](https://github.com/kexa-io/Kexa/commit/97a13f69b7dad134bad42cb285bbad7f73c357ad))
+
+## [2.3.5](https://github.com/kexa-io/Kexa/compare/v2.3.4...v2.3.5) (2025-10-02)
+
+
+### Bug Fixes
+
+* **kube:** any for kube logs ([3e17caa](https://github.com/kexa-io/Kexa/commit/3e17caa7a60dfd66d71d0554e4ba8e71c838fd42))
+* **kube:** remove fixed tailLines ([a1baa8f](https://github.com/kexa-io/Kexa/commit/a1baa8f46bd76315725195969a81b064a90eaa4c))
+* **kube:** try no follow for logs stream ([3d7b195](https://github.com/kexa-io/Kexa/commit/3d7b195982344672293f8da50207fa06cb48e5fa))
+* test catch log stream errr ([6df1a03](https://github.com/kexa-io/Kexa/commit/6df1a03003f39fbac0ba651a5a32ba8aefe4cfe3))
+
+## [2.3.4](https://github.com/kexa-io/Kexa/compare/v2.3.3...v2.3.4) (2025-10-02)
+
+
+### Bug Fixes
+
+* **kube:** added catch for abort() + logs ([2394cf5](https://github.com/kexa-io/Kexa/commit/2394cf52f60a267cc71272bb8f6d077f6409d44e))
+
+## [2.3.3](https://github.com/kexa-io/Kexa/compare/v2.3.2...v2.3.3) (2025-10-01)
+
+
+### Bug Fixes
+
+* **kube:** accept file content & path ([d970f24](https://github.com/kexa-io/Kexa/commit/d970f2455fccff5a74c84662f78841264026ea10))
+
+## [2.3.2](https://github.com/kexa-io/Kexa/compare/v2.3.1...v2.3.2) (2025-10-01)
+
+
+### Bug Fixes
+
+* **kube:** tls fix + no hpa api instance ([8846f4c](https://github.com/kexa-io/Kexa/commit/8846f4cc348831a1a2c2eb767da3241d967d5542))
+* useless line ([190fe37](https://github.com/kexa-io/Kexa/commit/190fe37ffa7bb5c0e93bf8e65e1a2ab9740775d3))
+
+## [2.3.1](https://github.com/kexa-io/Kexa/compare/v2.3.0...v2.3.1) (2025-09-10)
+
+
+### Bug Fixes
+
+* **github:** bun check + clean id displat ([8c6921c](https://github.com/kexa-io/Kexa/commit/8c6921c347451dbff0a918cb80f3c37f35d932be))
+
+# [2.3.0](https://github.com/kexa-io/Kexa/compare/v2.2.0...v2.3.0) (2025-09-10)
+
+
+### Features
+
+* **condition:** add IN & NOT_IN (array) and new github pkg gathering ([7dd5ae0](https://github.com/kexa-io/Kexa/commit/7dd5ae0cd40de43a6fc00bb273b63cefa1304f20))
+
+# [2.2.0](https://github.com/kexa-io/Kexa/compare/v2.1.3...v2.2.0) (2025-09-05)
+
+
+### Bug Fixes
+
+* **api-config:** debug config timing issue ([c68de47](https://github.com/kexa-io/Kexa/commit/c68de47da4aea42a7b70f4ecfdac7e05bf7dc3fb))
+* **cicd:** fix cicd & split clean ([b90d0af](https://github.com/kexa-io/Kexa/commit/b90d0af8da5c34f2576d2ac0bda8d7501ae20aa1))
+* correct some docs + some tweak to clean old files ([f04fd16](https://github.com/kexa-io/Kexa/commit/f04fd16d3f69f912600fed70a551b80fec9958c9))
+* deleted function ([0378c6a](https://github.com/kexa-io/Kexa/commit/0378c6ac0b3d82db6572dd423fa6b032ae3e47b3))
+* **docs:** code conduct MDX ([600bae2](https://github.com/kexa-io/Kexa/commit/600bae2b90c015a9dce412279e865cac85877bd7))
+* **docs:** docusaurus sidebar order ([0f88beb](https://github.com/kexa-io/Kexa/commit/0f88bebfcce1c91e1f0aac13d1db98ba3106a7f5))
+* **docs:** fix title for docusaurus generation ([15c4565](https://github.com/kexa-io/Kexa/commit/15c4565daed5b283989758f30c32d08036f4434a))
+* mdx error root readme ([f23cfa1](https://github.com/kexa-io/Kexa/commit/f23cfa19ab3b2b32e1e28e6123d895aabef0954d))
+* missing await ([89079c9](https://github.com/kexa-io/Kexa/commit/89079c9a4fd190c81390d35f2e3a4114d02c5864))
+* remove debug, await for init ([32b4949](https://github.com/kexa-io/Kexa/commit/32b49491e37513b68ac72bc2e796b14b5329b47e))
+* tmp comment to deploy dev image ([421391d](https://github.com/kexa-io/Kexa/commit/421391d2db64c8265a75bf46902e1776f5d2a053))
+
+
+### Features
+
+* add oracle + https://github.com/kexa-io/Kexa/issues/394 ([270c2ef](https://github.com/kexa-io/Kexa/commit/270c2ef71aa1f74daf70637ea67449b88fe04ea5))
+* add working mongodb + docs for all the 3 new addon ([001bd07](https://github.com/kexa-io/Kexa/commit/001bd07e9fd88ef731d909532769d7dca8ef9198))
+* new addon working postgresql ([b74187d](https://github.com/kexa-io/Kexa/commit/b74187d44066b31bffac55a0d58ccd9966cd6d5d))
+* working display for all elements ([f87c76f](https://github.com/kexa-io/Kexa/commit/f87c76f69b1b0aa32385c358be64c7abc0433f7f))
+* working mysql minimal gather ([5d5116a](https://github.com/kexa-io/Kexa/commit/5d5116ad8e4536e2aafd3a269b056303533f96cc))
+
 ---
 sidebar_position: 10
 ---
+
+# Changelog
+
+## [v2.1.3] - 2025-06-23
+
+
+
+### Bug Fixes
+
+* **api-config:** add HTTP specific parameter ([f1cb4da](https://github.com/kexa-io/Kexa/commit/f1cb4da29f4266f6b5332e49b4f684cb68623708))
+* **docs:** case sensitive for docosaurus ([3d0cd12](https://github.com/kexa-io/Kexa/commit/3d0cd12390f4e2252e1b9a886645bf92fd8ba134))
+* **docs:** html for MDX + change contact email ([bb12bfa](https://github.com/kexa-io/Kexa/commit/bb12bfaaed315d0a2be7f8eec98ad24d6f06696c))
+* **docs:** image tag htlm end ([2c34be3](https://github.com/kexa-io/Kexa/commit/2c34be3c61cf8cc2c391ceeb15838f89e373394e))
+
+# Changelog
+
+## [v2.1.2] - 2025-06-18
+
+
+
+### Bug Fixes
+
+* **api-loader:** use boolean var ([6333835](https://github.com/kexa-io/Kexa/commit/633383592681995d7eb6cdbe9d4d59cae6fb0b25))
+
+# Changelog
+
+## [v2.1.1] - 2025-06-17
+
+
+
+### Bug Fixes
+
+* **config:** get only save from api for sync ([34bfc68](https://github.com/kexa-io/Kexa/commit/34bfc686ace576e704d1ba57e03562e1eefa56ca))
+
+# Changelog
+
+## [v2.1.0] - 2025-06-17
+
+
+
+### Bug Fixes
+
+* **main:** exit -1 on failure ([13158dc](https://github.com/kexa-io/Kexa/commit/13158dc4ba1aa73a8c6f288ede6907389c81873e))
+* new save svc ([c879bf0](https://github.com/kexa-io/Kexa/commit/c879bf0300b03f8583ccb949d482dd8b8c537704))
+* **save:** fix no return list ([cfa7d16](https://github.com/kexa-io/Kexa/commit/cfa7d16af37a8ffca867b39f28f716108def9e44))
+
+
+### Features
+
+* **save:** init for premium ([ddc8ae6](https://github.com/kexa-io/Kexa/commit/ddc8ae682e361504e631c9476a4d28abb2854e17))
+
+# Changelog
+
+## [v2.0.9] - 2025-06-13
+
+
+
+### Bug Fixes
+
+* **save:** init providerItem on Kexa save ([040a73b](https://github.com/kexa-io/Kexa/commit/040a73bd87a8d9f9f332056b6b03470a6500b8c8))
+
+# Changelog
+
+## [v2.0.8] - 2025-06-10
+
+
+
+### Bug Fixes
+
+* **continuous:** fix continuous run & clean exit ([66f6214](https://github.com/kexa-io/Kexa/commit/66f6214584f400fca90a4a0500acf8b45a696644))
+* **docs:** azure env names ([87c4361](https://github.com/kexa-io/Kexa/commit/87c4361bf25a7fb1a727d3a47d1afe3f07d90171))
+* **docs:** password managers ([1265068](https://github.com/kexa-io/Kexa/commit/1265068953222c0a94d25f18943696296a93f3a4))
+* **gcp:** fixed auth flow + pagination warn (mute & fix some) ([33d786d](https://github.com/kexa-io/Kexa/commit/33d786ddcb9017cfde7fe87e1aa7467710a56c32))
+* **keyvault:** azure regex for hypens ([58069fe](https://github.com/kexa-io/Kexa/commit/58069fed5d805a11c9537bc9caf4605c59aea142))
+* **logs:** add log number resources for rule ([ae94c5f](https://github.com/kexa-io/Kexa/commit/ae94c5fac92743744fde97111f823979b20a019a))
+* undefined err and azure rollback ([f909693](https://github.com/kexa-io/Kexa/commit/f909693774df6b1923356cf4e654b28d84dc40bc))
+
+# Changelog
+
+## [v2.0.7] - 2025-06-05
+
+
+
+### Bug Fixes
+
+* better err handling for rule dir reading, no INTERFACE mode default ([7bc1a39](https://github.com/kexa-io/Kexa/commit/7bc1a394d8a28028796009d50ce810f533126a22))
+* **docs:** remove INTERFACE_CONFIG=false ([d9d23d1](https://github.com/kexa-io/Kexa/commit/d9d23d1df476adb11a0a709fe2cd57dc5e2fa2a1))
+* ensure promise wait for all save & exit 0 ([34377b8](https://github.com/kexa-io/Kexa/commit/34377b84f4e8cbc2242218c42d198a99b583e97b))
+* handle error as RETURN to avoid index access error ([ea247a2](https://github.com/kexa-io/Kexa/commit/ea247a211999719904d8c0279a35dfb1fded1892))
+* **logs:** no warn aws -> debug logs instead ([fd357f9](https://github.com/kexa-io/Kexa/commit/fd357f9a82014ab3895f7fa01b12144b4f6a936d))
+* **logs:** remove err download distant rules & global err ([afd07e5](https://github.com/kexa-io/Kexa/commit/afd07e54293ee26aeccfee5e818c2c9e9d4026aa))
+* remove version compare code ([2bcd428](https://github.com/kexa-io/Kexa/commit/2bcd428cb3c9c9b75430346554552084eeff5097))
+
+# Changelog
+
+## [v2.0.6] - 2025-06-03
+
+
+
+### Bug Fixes
+
+* 4urcloud email sbom actor ([d1e6960](https://github.com/kexa-io/Kexa/commit/d1e696009f355803e40f58e42db959bf7c8cc2db))
+* changelog & no branche create ([3182308](https://github.com/kexa-io/Kexa/commit/318230849cdc5682a21176eb0ef63c6b8c0e7fd1))
+* create dev push to docker hub ([5533c20](https://github.com/kexa-io/Kexa/commit/5533c20381e6e306e6176bcfd5c14220aa749822))
+* no "should upgrade" message ([29c9565](https://github.com/kexa-io/Kexa/commit/29c95654d7e779f2ad99a0484a2d368df55acedb))
+* no "should upgrade" message ([ffdc3ed](https://github.com/kexa-io/Kexa/commit/ffdc3ed17b92c8e77207e722a3f487e620e69b27))
+* no distant rule download err msg ([88fa606](https://github.com/kexa-io/Kexa/commit/88fa6064f9be3af591f5a06bc1465f99164fce5b))
+* no pnpm ([71a0224](https://github.com/kexa-io/Kexa/commit/71a0224cebe58eb39e9ec8c449cc87a52b68eea7))
+* remove rule distant gather error ([70f0b2a](https://github.com/kexa-io/Kexa/commit/70f0b2a8d23ac3b30478ae0d6d52c917cdff02b0))
+* remove rule distant gather error ([74d54e3](https://github.com/kexa-io/Kexa/commit/74d54e33411b6506a8b8a76ff0d7905501c8e2f7))
+* sbom generator to bunjs and push trigger (dev) ([3469e73](https://github.com/kexa-io/Kexa/commit/3469e73fd4157584c56544cb10d3e36feeecb7d1))
+* **sbom:** add identity and skip ci ([04bd391](https://github.com/kexa-io/Kexa/commit/04bd391ae0af735f75bb8c161ab1a41bb41fec2b))
+* test new ci ([f4b9f1e](https://github.com/kexa-io/Kexa/commit/f4b9f1eb9a98c54a158da3fb82222a300bb70b29))
+* update Docker configuration and documentation; add new Dockerfile.light ([3e59779](https://github.com/kexa-io/Kexa/commit/3e5977921664bcb67a91bf109a90f1f148a54120))
+* update entry point in dockerstart.sh from index.ts to main.ts ([3077bc0](https://github.com/kexa-io/Kexa/commit/3077bc03d4fe4fbbf896f1e83840af6efa64da56))
+* Update GitHub Actions workflow for versioning ([8fcd087](https://github.com/kexa-io/Kexa/commit/8fcd087d0206f762a65e38863b7e00526e8c3111))
+* update package.json for run test ([7c2e71c](https://github.com/kexa-io/Kexa/commit/7c2e71c494bce27f676565670796e0254209d80e))
 
 # Changelog
 

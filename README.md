@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Kexa
+# Kexa 
 
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -45,7 +45,7 @@ Ever needed to verify security and compliance across your multi-cloud infrastruc
 - Share YAML rules - Community-driven compliance patterns in simple YAML format
 - Core open source - Transparent, auditable foundation
 - Keep full control and your data stays with you.
-
+ 
 
 Kexa is an open-source compliance management tool that simplifies security and compliance across multiple cloud platforms including Azure, Google Cloud, AWS, and more. It provides:
 
