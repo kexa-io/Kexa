@@ -1,6 +1,7 @@
 import type { Rules } from "../../../models/settingFile/rules.models";
+import type { SubResultScan } from "../../../models/resultScan.models";
 
-export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false): string {
+export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false, conditions?: SubResultScan[]): string {
     let link = "https://github.com/";
     let webLink = `Link : <a href="`;
     let fullLink;
@@ -36,13 +37,51 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
             const packageVersion = objectContent?.version || "unknown-version";
 
             let packageDetails = '';
-            if (objectContent?.dependencies && objectContent.dependencies.length > 0) {
-                const maliciousDeps = objectContent.dependencies.filter((dep: any) =>
-                    dep.name === "js-yaml" && dep.version === "^4.1.0"
-                );
-                if (maliciousDeps.length > 0) {
-                    packageDetails = ` - Malicious package detected: ${maliciousDeps.map((dep: any) => `${dep.name}@${dep.version}`).join(', ')}`;
-                }
+            const maliciousDeps: string[] = [];
+
+            // Extract malicious dependencies from conditions if available
+            if (conditions && conditions.length > 0) {
+                conditions.forEach((condResult: SubResultScan) => {
+                    // Check if this condition is about dependencies or devDependencies
+                    condResult.condition.forEach((cond: any) => {
+                        if ((cond.property === "dependencies" || cond.property === "devDependencies") && condResult.value && cond.value) {
+                            const isDev = cond.property === "devDependencies";
+                            const depsArray = Array.isArray(condResult.value) ? condResult.value : [];
+
+                            // cond.value contains the NAND rules - check which dependencies match them
+                            cond.value.forEach((ruleItem: any) => {
+                                if (ruleItem.operator === "NAND" && ruleItem.criteria) {
+                                    // Extract name and version criteria from NAND
+                                    let targetName = "";
+                                    let targetVersions: string[] = [];
+
+                                    ruleItem.criteria.forEach((criterion: any) => {
+                                        if (criterion.property === "name" && criterion.condition === "EQUAL") {
+                                            targetName = criterion.value;
+                                        }
+                                        if (criterion.property === "version" && criterion.condition === "IN") {
+                                            targetVersions = Array.isArray(criterion.value) ? criterion.value : [criterion.value];
+                                        }
+                                    });
+
+                                    // Find dependencies matching BOTH name and version (NAND fails when both match)
+                                    depsArray.forEach((dep: any) => {
+                                        if (dep && dep.name === targetName && targetVersions.includes(dep.version)) {
+                                            const depStr = `${dep.name}@${dep.version}${isDev ? ' (dev)' : ''}`;
+                                            if (!maliciousDeps.includes(depStr)) {
+                                                maliciousDeps.push(depStr);
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+            if (maliciousDeps.length > 0) {
+                packageDetails = ` - Malicious: ${maliciousDeps.join(', ')}`;
             }
 
             return (isSms ? '' : webLink) + repoUrl + (isSms ? ' ' : '">') +

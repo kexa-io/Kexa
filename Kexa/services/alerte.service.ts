@@ -294,12 +294,12 @@ export function alertFromRule(rule:Rules, conditions:SubResultScan[], objectReso
                 alertEmail(detailAlert, rule, conditions, objectResource);
                 break;
             case AlertEnum.SMS:
-                alertSMS(detailAlert, rule, objectResource);
+                alertSMS(detailAlert, rule, conditions, objectResource);
                 break;
             case AlertEnum.SLACK:
                 throw new Error("not implemented");
             case AlertEnum.TEAMS:
-                alertTeams(detailAlert, rule, objectResource);
+                alertTeams(detailAlert, rule, conditions, objectResource);
                 break;
             case AlertEnum.WEBHOOK:
                 sendWebhook(detailAlert, "Kexa - " + levelAlert[rule.level] + " - " + rule.name, conditions)
@@ -333,8 +333,8 @@ export function alertLog(rule: Rules, conditions: SubResultScan[], objectResourc
                 logger.info(sentenceConditionLog(objectResource.id));
             }
             logger.debug(getColorStringHandler(conditions));
-            context?.log(propertyToSend(rule, objectResource, true));
-            logger.info(propertyToSend(rule, objectResource, true));
+            context?.log(propertyToSend(rule, objectResource, true, conditions));
+            logger.info(propertyToSend(rule, objectResource, true, conditions));
             break;
         case LevelEnum.WARNING:
             warnLog(rule, conditions, objectResource);
@@ -349,8 +349,8 @@ export function alertLog(rule: Rules, conditions: SubResultScan[], objectResourc
                 logger.error(sentenceConditionLog(objectResource.id));
             }
             logger.debug(getColorStringHandler(conditions));
-            context?.log(propertyToSend(rule, objectResource, true));
-            logger.error(propertyToSend(rule, objectResource, true));
+            context?.log(propertyToSend(rule, objectResource, true, conditions));
+            logger.error(propertyToSend(rule, objectResource, true, conditions));
             break;
         case LevelEnum.FATAL:
             if(fullDetail){
@@ -362,8 +362,8 @@ export function alertLog(rule: Rules, conditions: SubResultScan[], objectResourc
                 logger.alert(sentenceConditionLog(objectResource.id));
             }
             logger.debug(getColorStringHandler(conditions));
-            context?.log(propertyToSend(rule, objectResource, true));
-            logger.alert(propertyToSend(rule, objectResource, true));
+            context?.log(propertyToSend(rule, objectResource, true, conditions));
+            logger.alert(propertyToSend(rule, objectResource, true, conditions));
             break;
         default:
             warnLog(rule, conditions, objectResource);
@@ -380,16 +380,16 @@ export function warnLog(rule: Rules, conditions:SubResultScan[], objectResource:
         logger.warn(sentenceConditionLog(objectResource.id));
     }
     logger.debug(getColorStringHandler(conditions));
-    context?.log(propertyToSend(rule, objectResource, true));
-    logger.warn(propertyToSend(rule, objectResource, true));
+    context?.log(propertyToSend(rule, objectResource, true, conditions));
+    logger.warn(propertyToSend(rule, objectResource, true, conditions));
 }
 
-export function alertTeams(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules, objectResource:any) {
+export function alertTeams(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules, conditions:SubResultScan[], objectResource:any) {
     logger.debug("alert Teams");
     for (const teams_to of detailAlert.to) {
         const regex = /^https:\/\/(?:[a-zA-Z0-9_-]+\.)?webhook\.office\.com\/[^\s"]+$/;
         if(!regex.test(teams_to)) return;
-        let content = propertyToSend(rule, objectResource);
+        let content = propertyToSend(rule, objectResource, false, conditions);
         const payload = Teams.OneTeams(colors[rule.level], "Kexa - "+levelAlert[rule.level]+" - "+rule.name, extractURL(content)??"", rule.description??"", content);
         sendCardMessageToTeamsChannel(teams_to, payload);
     }
@@ -400,17 +400,17 @@ export function alertEmail(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rul
     detailAlert.to.forEach((email_to) => {
         if (!email_to.includes("@")) return;
         logger.debug("send email to:"+email_to);
-        let mail = Emails.OneAlert(email_to, rule, propertyToSend(rule, objectResource, false), colors[rule.level]);
+        let mail = Emails.OneAlert(email_to, rule, propertyToSend(rule, objectResource, false, conditions), colors[rule.level]);
         SendMailWithAttachment(mail, email_to, "Kexa - "+levelAlert[rule.level]+" - "+rule.name, objectResource);
     });
 }
 
-export function alertSMS(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules, objectResource:any){
+export function alertSMS(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules, conditions:SubResultScan[], objectResource:any){
     logger.debug("alert sms");
     detailAlert.to.forEach((sms_to) => {
         if (!sms_to.startsWith("+")) return;
         logger.debug("send sms to:"+sms_to);
-        let content = "error with : " + propertyToSend(rule, objectResource, true);
+        let content = "error with : " + propertyToSend(rule, objectResource, true, conditions);
         sendSMS(sms_to, "Kexa - "+ levelAlert[rule.level]+ " - "+ rule.name, content);
     });
 }
