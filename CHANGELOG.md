@@ -1,3 +1,10 @@
+## [2.5.9](https://github.com/kexa-io/Kexa/compare/v2.5.8...v2.5.9) (2025-11-27)
+
+
+### Bug Fixes
+
+* release  ([4cfbc27](https://github.com/kexa-io/Kexa/commit/4cfbc27d45d2e76631d7485c3db7b4d4f29e7d08))
+
 # Changelog
 
 ## [v2.5.8] - 2025-11-27
