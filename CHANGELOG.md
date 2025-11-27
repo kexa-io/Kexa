@@ -1,3 +1,11 @@
+# [2.6.0](https://github.com/kexa-io/Kexa/compare/v2.5.9...v2.6.0) (2025-11-27)
+
+
+### Features
+
+* **github:** test  Sha1hulud supply chain attack rule ([986d3c8](https://github.com/kexa-io/Kexa/commit/986d3c8ef01f628400b67ccf3439267073f041ff))
+* send condition to display in alerting & display addon ([195d467](https://github.com/kexa-io/Kexa/commit/195d4673c3e378a6673f1d69c629c518600d3a0a))
+
 ## [2.5.9](https://github.com/kexa-io/Kexa/compare/v2.5.8...v2.5.9) (2025-11-27)
 
 
