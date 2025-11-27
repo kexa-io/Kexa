@@ -1,4 +1,3 @@
-
 - version: 1.0.0
   date: 09-10-2025
   alert:
@@ -29,7 +28,7 @@
       type: 
         - log
         #- email
-      to: 
+      to:
         - myEmail@gmail.com
     global:
       enabled: true
@@ -65,10 +64,18 @@
               criteria:
                 - property: name
                   condition: EQUAL
+                  value: "uuid"
+                - property: version
+                  condition: IN
+                  value: ["11.1.0", "^11.1.0"]
+            - operator: NAND
+              criteria:
+                - property: name
+                  condition: EQUAL
                   value: "eslint-config-prettier"
                 - property: version
                   condition: IN
-                  value: ["8.10.1", "9.1.1", "10.1.6", "10.1.7"]
+                  value: ["8.10.1", "9.1.1", "10.1.6", "10.1.7", "^8.10.1", "^9.1.1", "^10.1.6", "^10.1.7"]
             - operator: NAND
               criteria:
                 - property: name
@@ -76,31 +83,31 @@
                   value: "eslint-plugin-prettier"
                 - property: version
                   condition: IN
-                  value: ["4.2.2", "4.2.3"]
+                  value: ["4.2.2", "4.2.3", "^4.2.2", "^4.2.3"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "synckit"
                 - property: version
-                  condition: EQUAL
-                  value: "0.11.9"
+                  condition: IN
+                  value: ["0.11.9", "^0.11.9"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "@pkgr/core"
                 - property: version
-                  condition: EQUAL
-                  value: "0.2.8"
+                  condition: IN
+                  value: ["0.2.8", "^0.2.8"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "napi-postinstall"
                 - property: version
-                  condition: EQUAL
-                  value: "0.3.1"
+                  condition: IN
+                  value: ["0.3.1", "^0.3.1"]
             - operator: NAND
               criteria:
                 - property: name
@@ -108,7 +115,7 @@
                   value: "got-fetch"
                 - property: version
                   condition: IN
-                  value: ["5.1.11", "5.1.12"]
+                  value: ["5.1.11", "5.1.12", "^5.1.11", "^5.1.12"]
             - operator: NAND
               criteria:
                 - property: name
@@ -116,159 +123,159 @@
                   value: "is"
                 - property: version
                   condition: IN
-                  value: ["3.3.1", "5.0.0"]
+                  value: ["3.3.1", "5.0.0", "^3.3.1", "^5.0.0"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "ansi-regex"
                 - property: version
-                  condition: EQUAL
-                  value: "6.2.1"
+                  condition: IN
+                  value: ["6.2.1", "^6.2.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "ansi-styles"
                 - property: version
-                  condition: EQUAL
-                  value: "6.2.2"
+                  condition: IN
+                  value: ["6.2.2", "^6.2.2"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "backslash"
                 - property: version
-                  condition: EQUAL
-                  value: "0.2.1"
+                  condition: IN
+                  value: ["0.2.1", "^0.2.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "chalk"
                 - property: version
-                  condition: EQUAL
-                  value: "5.6.1"
+                  condition: IN
+                  value: ["5.6.1", "^5.6.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "chalk-template"
                 - property: version
-                  condition: EQUAL
-                  value: "1.1.1"
+                  condition: IN
+                  value: ["1.1.1", "^1.1.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "color-convert"
                 - property: version
-                  condition: EQUAL
-                  value: "3.1.1"
+                  condition: IN
+                  value: ["3.1.1", "^3.1.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "color-name"
                 - property: version
-                  condition: EQUAL
-                  value: "2.0.1"
+                  condition: IN
+                  value: ["2.0.1", "^2.0.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "color-string"
                 - property: version
-                  condition: EQUAL
-                  value: "2.1.1"
+                  condition: IN
+                  value: ["2.1.1", "^2.1.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "debug"
                 - property: version
-                  condition: EQUAL
-                  value: "4.4.2"
+                  condition: IN
+                  value: ["4.4.2", "^4.4.2"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "error-ex"
                 - property: version
-                  condition: EQUAL
-                  value: "1.3.3"
+                  condition: IN
+                  value: ["1.3.3", "^1.3.3"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "has-ansi"
                 - property: version
-                  condition: EQUAL
-                  value: "6.0.1"
+                  condition: IN
+                  value: ["6.0.1", "^6.0.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "is-arrayish"
                 - property: version
-                  condition: EQUAL
-                  value: "0.3.3"
+                  condition: IN
+                  value: ["0.3.3", "^0.3.3"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "proto-tinker-wc"
                 - property: version
-                  condition: EQUAL
-                  value: "1.8.7"
+                  condition: IN
+                  value: ["1.8.7", "^1.8.7"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "supports-hyperlinks"
                 - property: version
-                  condition: EQUAL
-                  value: "4.1.1"
+                  condition: IN
+                  value: ["4.1.1", "^4.1.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "simple-swizzle"
                 - property: version
-                  condition: EQUAL
-                  value: "0.2.3"
+                  condition: IN
+                  value: ["0.2.3", "^0.2.3"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "slice-ansi"
                 - property: version
-                  condition: EQUAL
-                  value: "7.1.1"
+                  condition: IN
+                  value: ["7.1.1", "^7.1.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "strip-ansi"
                 - property: version
-                  condition: EQUAL
-                  value: "7.1.1"
+                  condition: IN
+                  value: ["7.1.1", "^7.1.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "supports-color"
                 - property: version
-                  condition: EQUAL
-                  value: "10.2.1"
+                  condition: IN
+                  value: ["10.2.1", "^10.2.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "wrap-ansi"
                 - property: version
-                  condition: EQUAL
-                  value: "9.0.1"
+                  condition: IN
+                  value: ["9.0.1", "^9.0.1"]
         - property: devDependencies
           condition: ALL
           value:
@@ -279,7 +286,7 @@
                   value: "eslint-config-prettier"
                 - property: version
                   condition: IN
-                  value: ["8.10.1", "9.1.1", "10.1.6", "10.1.7"]
+                  value: ["8.10.1", "9.1.1", "10.1.6", "10.1.7", "^8.10.1", "^9.1.1", "^10.1.6", "^10.1.7"]
             - operator: NAND
               criteria:
                 - property: name
@@ -287,31 +294,31 @@
                   value: "eslint-plugin-prettier"
                 - property: version
                   condition: IN
-                  value: ["4.2.2", "4.2.3"]
+                  value: ["4.2.2", "4.2.3", "^4.2.2", "^4.2.3"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "synckit"
                 - property: version
-                  condition: EQUAL
-                  value: "0.11.9"
+                  condition: IN
+                  value: ["0.11.9", "^0.11.9"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "@pkgr/core"
                 - property: version
-                  condition: EQUAL
-                  value: "0.2.8"
+                  condition: IN
+                  value: ["0.2.8", "^0.2.8"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "napi-postinstall"
                 - property: version
-                  condition: EQUAL
-                  value: "0.3.1"
+                  condition: IN
+                  value: ["0.3.1", "^0.3.1"]
             - operator: NAND
               criteria:
                 - property: name
@@ -319,7 +326,7 @@
                   value: "got-fetch"
                 - property: version
                   condition: IN
-                  value: ["5.1.11", "5.1.12"]
+                  value: ["5.1.11", "5.1.12", "^5.1.11", "^5.1.12"]
             - operator: NAND
               criteria:
                 - property: name
@@ -327,156 +334,156 @@
                   value: "is"
                 - property: version
                   condition: IN
-                  value: ["3.3.1", "5.0.0"]
+                  value: ["3.3.1", "5.0.0", "^3.3.1", "^5.0.0"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "ansi-regex"
                 - property: version
-                  condition: EQUAL
-                  value: "6.2.1"
+                  condition: IN
+                  value: ["6.2.1", "^6.2.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "ansi-styles"
                 - property: version
-                  condition: EQUAL
-                  value: "6.2.2"
+                  condition: IN
+                  value: ["6.2.2", "^6.2.2"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "backslash"
                 - property: version
-                  condition: EQUAL
-                  value: "0.2.1"
+                  condition: IN
+                  value: ["0.2.1", "^0.2.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "chalk"
                 - property: version
-                  condition: EQUAL
-                  value: "5.6.1"
+                  condition: IN
+                  value: ["5.6.1", "^5.6.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "chalk-template"
                 - property: version
-                  condition: EQUAL
-                  value: "1.1.1"
+                  condition: IN
+                  value: ["1.1.1", "^1.1.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "color-convert"
                 - property: version
-                  condition: EQUAL
-                  value: "3.1.1"
+                  condition: IN
+                  value: ["3.1.1", "^3.1.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "color-name"
                 - property: version
-                  condition: EQUAL
-                  value: "2.0.1"
+                  condition: IN
+                  value: ["2.0.1", "^2.0.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "color-string"
                 - property: version
-                  condition: EQUAL
-                  value: "2.1.1"
+                  condition: IN
+                  value: ["2.1.1", "^2.1.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "debug"
                 - property: version
-                  condition: EQUAL
-                  value: "4.4.2"
+                  condition: IN
+                  value: ["4.4.2", "^4.4.2"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "error-ex"
                 - property: version
-                  condition: EQUAL
-                  value: "1.3.3"
+                  condition: IN
+                  value: ["1.3.3", "^1.3.3"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "has-ansi"
                 - property: version
-                  condition: EQUAL
-                  value: "6.0.1"
+                  condition: IN
+                  value: ["6.0.1", "^6.0.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "is-arrayish"
                 - property: version
-                  condition: EQUAL
-                  value: "0.3.3"
+                  condition: IN
+                  value: ["0.3.3", "^0.3.3"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "proto-tinker-wc"
                 - property: version
-                  condition: EQUAL
-                  value: "1.8.7"
+                  condition: IN
+                  value: ["1.8.7", "^1.8.7"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "supports-hyperlinks"
                 - property: version
-                  condition: EQUAL
-                  value: "4.1.1"
+                  condition: IN
+                  value: ["4.1.1", "^4.1.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "simple-swizzle"
                 - property: version
-                  condition: EQUAL
-                  value: "0.2.3"
+                  condition: IN
+                  value: ["0.2.3", "^0.2.3"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "slice-ansi"
                 - property: version
-                  condition: EQUAL
-                  value: "7.1.1"
+                  condition: IN
+                  value: ["7.1.1", "^7.1.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "strip-ansi"
                 - property: version
-                  condition: EQUAL
-                  value: "7.1.1"
+                  condition: IN
+                  value: ["7.1.1", "^7.1.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "supports-color"
                 - property: version
-                  condition: EQUAL
-                  value: "10.2.1"
+                  condition: IN
+                  value: ["10.2.1", "^10.2.1"]
             - operator: NAND
               criteria:
                 - property: name
                   condition: EQUAL
                   value: "wrap-ansi"
                 - property: version
-                  condition: EQUAL
-                  value: "9.0.1"
+                  condition: IN
+                  value: ["9.0.1", "^9.0.1"]

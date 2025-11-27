@@ -1,6 +1,7 @@
 import type { Rules } from "../../../models/settingFile/rules.models";
+import type { SubResultScan } from "../../../models/resultScan.models";
 
-export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false): string {
+export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false, conditions?: SubResultScan[]): string {
     let link = "https://github.com/";
     let webLink = `Link : <a href="`;
     let fullLink;
@@ -34,20 +35,76 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
             const repoUrl = objectContent?.repoUrl || `https://github.com/${repoName}`;
             const packageName = objectContent?.name || "unknown-package";
             const packageVersion = objectContent?.version || "unknown-version";
-            
+
             let packageDetails = '';
-            if (objectContent?.dependencies && objectContent.dependencies.length > 0) {
-                const maliciousDeps = objectContent.dependencies.filter((dep: any) => 
-                    dep.name === "js-yaml" && dep.version === "^4.1.0"
-                );
-                if (maliciousDeps.length > 0) {
-                    packageDetails = ` - Malicious package detected: ${maliciousDeps.map((dep: any) => `${dep.name}@${dep.version}`).join(', ')}`;
+            const maliciousDeps: string[] = [];
+
+            // Extract malicious dependencies from conditions if available
+            if (conditions && conditions.length > 0) {
+                conditions.forEach((condResult: SubResultScan) => {
+                    // Check if this condition is about dependencies or devDependencies
+                    condResult.condition.forEach((cond: any) => {
+                        if ((cond.property === "dependencies" || cond.property === "devDependencies") && condResult.value && cond.value) {
+                            const isDev = cond.property === "devDependencies";
+                            const depsArray = Array.isArray(condResult.value) ? condResult.value : [];
+
+                            // cond.value contains the NAND rules - check which dependencies match them
+                            cond.value.forEach((ruleItem: any) => {
+                                if (ruleItem.operator === "NAND" && ruleItem.criteria) {
+                                    // Extract name and version criteria from NAND
+                                    let targetName = "";
+                                    let targetVersions: string[] = [];
+
+                                    ruleItem.criteria.forEach((criterion: any) => {
+                                        if (criterion.property === "name" && criterion.condition === "EQUAL") {
+                                            targetName = criterion.value;
+                                        }
+                                        if (criterion.property === "version" && criterion.condition === "IN") {
+                                            targetVersions = Array.isArray(criterion.value) ? criterion.value : [criterion.value];
+                                        }
+                                    });
+
+                                    // Find dependencies matching BOTH name and version (NAND fails when both match)
+                                    depsArray.forEach((dep: any) => {
+                                        if (dep && dep.name === targetName && targetVersions.includes(dep.version)) {
+                                            const depStr = `${dep.name}@${dep.version}${isDev ? ' (dev)' : ''}`;
+                                            if (!maliciousDeps.includes(depStr)) {
+                                                maliciousDeps.push(depStr);
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+
+            if (maliciousDeps.length > 0) {
+                packageDetails = ` - Malicious: ${maliciousDeps.join(', ')}`;
+            }
+
+            return (isSms ? '' : webLink) + repoUrl + (isSms ? ' ' : '">') +
+                   `Repo: ${repoName} - Package: ${packageName}@${packageVersion}${packageDetails}` +
+                   (isSms ? `.` : `</a>`);
+        case "pullRequestPackageChanges":
+            const prUrl = objectContent?.prUrl || "#";
+            const prNumber = objectContent?.prNumber || "unknown";
+            const prTitle = objectContent?.prTitle || "Unknown PR";
+            const prAuthor = objectContent?.author || "unknown";
+            const isInfected = objectContent?.sha1huludIndicators?.isInfected || false;
+            const detectionReasons = objectContent?.sha1huludIndicators?.detectionReasons || [];
+            const suspiciousFiles = objectContent?.maliciousPatterns?.suspiciousFilesAdded || [];
+
+            let prDetails = `PR #${prNumber}: ${prTitle} by ${prAuthor}`;
+            if (isInfected) {
+                prDetails += ` - SHA1HULUD DETECTED: ${detectionReasons.join(', ')}`;
+                if (suspiciousFiles.length > 0) {
+                    prDetails += ` - Files: ${suspiciousFiles.join(', ')}`;
                 }
             }
-            
-            return (isSms ? '' : webLink) + repoUrl + (isSms ? ' ' : '">') + 
-                   `Repo: ${repoName} - Package: ${packageName}@${packageVersion}${packageDetails}` + 
-                   (isSms ? `.` : `</a>`);
+
+            return (isSms ? '' : webLink) + prUrl + (isSms ? ' ' : '">') + prDetails + (isSms ? `.` : `</a>`);
         default:
             return 'GIT Scan : Id : ' + objectContent?.id;
     }
