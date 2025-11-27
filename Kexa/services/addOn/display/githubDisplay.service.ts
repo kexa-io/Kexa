@@ -30,24 +30,7 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
         case "teamRepositories":
             return (isSms ? '' : webLink) + objectContent?.html_url + (isSms ? ' ' : '">') + 'Repo : ' + objectContent?.name + ' Team : ' + objectContent?.team + (isSms ? `.` : `</a>`)
         case "packages":
-            const repoName = objectContent?.repo || "unknown-repo";
-            const repoUrl = objectContent?.repoUrl || `https://github.com/${repoName}`;
-            const packageName = objectContent?.name || "unknown-package";
-            const packageVersion = objectContent?.version || "unknown-version";
-            
-            let packageDetails = '';
-            if (objectContent?.dependencies && objectContent.dependencies.length > 0) {
-                const maliciousDeps = objectContent.dependencies.filter((dep: any) => 
-                    dep.name === "js-yaml" && dep.version === "^4.1.0"
-                );
-                if (maliciousDeps.length > 0) {
-                    packageDetails = ` - Malicious package detected: ${maliciousDeps.map((dep: any) => `${dep.name}@${dep.version}`).join(', ')}`;
-                }
-            }
-            
-            return (isSms ? '' : webLink) + repoUrl + (isSms ? ' ' : '">') + 
-                   `Repo: ${repoName} - Package: ${packageName}@${packageVersion}${packageDetails}` + 
-                   (isSms ? `.` : `</a>`);
+            return (isSms ? '' : webLink) + (isSms ? ' ' : '">') + 'Package : ' + objectContent?.name + (isSms ? `.` : `</a>`)
         default:
             return 'GIT Scan : Id : ' + objectContent?.id;
     }
