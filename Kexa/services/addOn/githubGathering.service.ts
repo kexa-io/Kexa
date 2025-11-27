@@ -561,10 +561,7 @@ export async function collectPackages(repo: string, owner: string): Promise<any[
             engines: pkg.engines || {},
             packageJsonExists: true
         };   
-        // display dependencies
-        for (const dep of packageInfo.dependencies) {
-            logger.info(`Dependency found in ${owner}/${repo}: ${dep.name} & version:${dep.version}`);
-        }     
+
         return [packageInfo];
     }catch(e){
         logger.debug(`No package.json found for ${owner}/${repo}, trying bun.lock: ${e}`);
