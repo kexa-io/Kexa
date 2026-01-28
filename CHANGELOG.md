@@ -1,3 +1,10 @@
+# [2.7.0](https://github.com/kexa-io/Kexa/compare/v2.6.0...v2.7.0) (2026-01-28)
+
+
+### Features
+
+* updates all packages ([27b556d](https://github.com/kexa-io/Kexa/commit/27b556d5833e6bfe6d1c1d92991c4fd9a6c81060))
+
 # Changelog
 
 ## [v2.6.0] - 2025-11-27
