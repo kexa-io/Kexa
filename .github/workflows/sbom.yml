@@ -45,7 +45,7 @@ jobs:
           output-file: ./kexa-sbom.json
 
       - name: Upload SBOM
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: kexa-sbom.json
           path: kexa-sbom.json
