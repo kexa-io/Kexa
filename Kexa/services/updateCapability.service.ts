@@ -5,7 +5,9 @@ import { Rules } from "../models/settingFile/rules.models";
 import { SettingFile } from "../models/settingFile/settingFile.models";
 import { extractHeaders } from "./addOn.service";
 import { gatheringRules } from "./analyse.service";
+import { getNewLogger } from "../services/logger.service";
 
+const logger = getNewLogger("UpdateCapabilityService");
 const fs = require("fs");
 
 async function releaseCapability(){
@@ -122,23 +124,23 @@ async function fetchArmPackages(packageNeedle: string, destFile: string, destFil
         fileContent += `};\n`;
         try {
             fs.writeFileSync("Kexa/services/addOn/imports/" + fileName, fileContent);
-            console.log('File created: ' + destFile);
+            logger.info('File created: ' + destFile);
         } catch (error) {
-            console.error('Error writing file:', error);
+            logger.error('Error writing file:', error);
         }
          /* ************************************************ */
          /* *  Write the addonPackageImport.script.sh      * */
          /* ************************************************ */
         try {
             fs.writeFileSync("Kexa/services/addOn/imports/scripts/" + destFileScript, generateShellScript(stringResults));
-            console.log('File created: ' + destFileScript);
+            logger.info('File created: ' + destFileScript);
         } catch (error) {
-            console.error('Error writing file:', error);
+            logger.error('Error writing file:', error);
 
         }
         return stringResults;
     } catch (error) {
-        console.error('Error fetching data:', error);
+        logger.error('Error fetching data:', error);
         throw error;
     }
 }
@@ -191,7 +193,7 @@ async function createAzureArmPkgImportList() {
         await fetchArmPackages('@azure/arm-', 'azurePackage.import.ts', 'azurePackageInstall.script.sh');
         retrieveAzureArmClients();
     } catch (e) {
-        console.error("Error fetching Azure Packages", e);
+        logger.error("Error fetching Azure Packages", e);
     }
 }
 
@@ -218,7 +220,7 @@ function extractClientsAzure(module: any): AzureClients {
             try {
                 clients[key] = callGenericClient(createGenericClient(module[key], credentials, null));
             } catch (e) {
-                console.debug("Error when using client constructor in update capability.", e);
+                logger.debug("Error when using client constructor in update capability.", e);
             }
 
         }
@@ -247,9 +249,9 @@ let blackListObjectAzure = [
 import { stringKeys } from "../models/azure/resource.models";
 
 function displayTotalGatheredMessage(provider: string, amount: number) {
-    console.log("------------------------------------------");
-    console.log("Gathered " + provider + " objects : " + amount + " items.");
-    console.log("------------------------------------------");
+    logger.info("------------------------------------------");
+    logger.info("Gathered " + provider + " objects : " + amount + " items.");
+    logger.info("------------------------------------------");
 }
 
 function generateResourceListAzure(resources: Record<string, boolean>): string {
@@ -279,9 +281,9 @@ function generateResourceListAzure(resources: Record<string, boolean>): string {
 function writeFileContent(outputFilePath: string, content: string) {
     try {
         fs.writeFileSync(outputFilePath, content, 'utf-8');
-        console.log("Updated " + outputFilePath + " resources header.");
+        logger.info("Updated " + outputFilePath + " resources header.");
     } catch (e) {
-        console.error("Error when writing to file: ", e);
+        logger.error("Error when writing to file: ", e);
     }
 }
 function readFileContent(inputFilePath: string) {
@@ -289,7 +291,7 @@ function readFileContent(inputFilePath: string) {
         const file = fs.readFileSync(inputFilePath, 'utf-8');
         return (file);
     } catch (e) {
-        console.error("Error when reading file: ", e);
+        logger.error("Error when reading file: ", e);
     }
 }
 
@@ -301,14 +303,14 @@ async function fileReplaceContentAzure(inputFilePath: string, outputFilePath: st
         const updatedContent = fileContent.replace(regex, `$1\n${generateResourceListAzure(allClients)}\n$2`);  
         writeFileContent(outputFilePath, updatedContent);
     } catch (error) {
-        console.error('Error:', error);
+        logger.error('Error:', error);
     }
 }
 
 function retrieveAzureArmClients() {
     let allClients: AzureClients = {};
 
-    console.log("retrieve clients from arm pkg...");
+    logger.info("retrieve clients from arm pkg...");
 
     for (const key of Object.keys(AzureImports)) {
         const currentItem = (AzureImports as { [key: string]: unknown })[key];
@@ -316,7 +318,7 @@ function retrieveAzureArmClients() {
         allClients = { ...allClients, ...clientsFromModule };
     }
 
-    console.log("Writing clients to header...");
+    logger.info("Writing clients to header...");
 
     const path = require("path");
     const filePath = path.resolve(__dirname, "../../Kexa/services/addOn/azureGathering.service.ts");
@@ -351,7 +353,7 @@ async function createAwsArmPkgImportList() {
         await fetchArmPackages('@aws-sdk/client-', 'awsPackage.import.ts', 'awsPackageInstall.script.sh', ["data", "browser", "node", "catalog", "service", "generator", "redshift-serverless"]);
         retrieveAwsClients();
     } catch (e) {
-        console.error("Error fetching AWS Packages", e);
+        logger.error("Error fetching AWS Packages", e);
     }
 }
 
@@ -370,7 +372,7 @@ export function extractClientsAws(module: any): AzureClients {
 
 export const extractObjectFromOutputCommand  = (listingCommand: string): string | null => {
     const outputCommand = listingCommand + "Output";
-    console.log(outputCommand);
+    logger.info(outputCommand);
     return null;
 }
 
@@ -393,9 +395,9 @@ export function extractObjectsOrFunctionsAws(module: any, isObject: Boolean): Aw
             if (clientName != "Client") {
                 clientsMatch.push(clientName);
                 if (clientsMatch.length > 1)
-                    console.warn("WARNING: Multiple client found for AWS objects, header & gather could be wrong.");
+                    logger.warn("WARNING: Multiple client found for AWS objects, header & gather could be wrong.");
                 else if (clientsMatch.length < 1)
-                    console.warn("WARNING: No client found for AWS objects, header & gather could be wrong.");
+                    logger.warn("WARNING: No client found for AWS objects, header & gather could be wrong.");
             }
         }
     });
@@ -422,7 +424,7 @@ function retrieveAwsClients() {
     let allClients: AwsClient = {};
     let allObjects: AwsClient = [];
 
-    console.log("retrieve clients from aws pkg...");
+    logger.info("retrieve clients from aws pkg...");
 
     for (const key of Object.keys(AwsImports)) {
         const currentItem = (AwsImports as { [key: string]: unknown })[key];
@@ -435,7 +437,7 @@ function retrieveAwsClients() {
         const clientsFromModule = extractObjectsOrFunctionsAws(currentItem, true);
         allObjects.push(clientsFromModule);
     }
-    console.log("Writing clients to header...");
+    logger.info("Writing clients to header...");
     const path = require("path");
     const filePath = path.resolve(__dirname, "../../Kexa/services/addOn/awsGathering.service.ts");
     fileReplaceContentAws(filePath, filePath, allObjects);
@@ -448,7 +450,7 @@ async function fileReplaceContentAws(inputFilePath: string, outputFilePath: stri
         const updatedContent = fileContent.replace(regex, `$1\n${generateResourceListAws(allObjects)}\n${generateCustomResourceListAws()}\n$2`);  
         writeFileContent(outputFilePath, updatedContent);
     } catch (error) {
-        console.error('Error:', error);
+        logger.error('Error:', error);
     }
 }
 

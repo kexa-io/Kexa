@@ -90,7 +90,7 @@ function execShellCommand(command: string): Promise<number | string> {
           reject(`Error: ${error.message}`);
         }
       } else if (filteredStderr) {
-        console.error('Stderr:', filteredStderr);
+        logger.error('Helm stderr:', filteredStderr);
         reject(-1);
       } else {
         resolve(stdout);

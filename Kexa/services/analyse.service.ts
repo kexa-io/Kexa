@@ -298,7 +298,9 @@ export async function checkDocAlertConfig(alertConfig:ConfigAlert, level:string)
                 for(let env of varEnvMin[type.toLowerCase() as keyof typeof varEnvMin]){
                     if(!(await getConfigOrEnvVar(config, env))) result.push("error - "+env+" not found in env for "+level);
                 }
-            }catch(err){}
+            }catch(err){
+                logger.warn("Failed to check env vars for alert type in " + level, err);
+            }
         };
     }
     if(alertConfig.hasOwnProperty("type") && alertConfig.type.some((type: string) => type !== AlertEnum.LOG)){

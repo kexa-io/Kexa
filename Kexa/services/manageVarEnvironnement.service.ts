@@ -19,7 +19,7 @@ async function getFromApi(name:string, prefix:string) {
     try {
         return await getEnvVarFromApi(name, prefix);
     } catch(e) {
-        console.error("Error fetching variables from Kexa API");  
+        logger.error("Error fetching variables from Kexa API", e);
     }
 }
 
@@ -42,7 +42,9 @@ async function getFromManager(name:string, optionalPrefix:string = ""){
             return await getEnvVarWithAwsSecretManager(name);
         else if (possibleWithHashipcorpVault())
             return await getEnvVarWithHashicorpVault(name);
-        } catch(e) {}
+        } catch(e) {
+            logger.error("Failed to retrieve secret from manager", e);
+        }
     return null;
 }
 
@@ -83,7 +85,7 @@ async function getEnvVarWithAwsSecretManager(name:string){
         const value = secretData[name];
         return (value);
     } catch (e) {
-        console.error("Error fetching secret from AWS");
+        logger.error("Error fetching secret from AWS", e);
     }
 }
 

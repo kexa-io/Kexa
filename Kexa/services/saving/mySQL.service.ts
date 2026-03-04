@@ -52,6 +52,7 @@ export class MySQLClass {
             this.closeConnection(conn);
             return true;
         }catch(error){
+            logger.error("Failed to create MySQL tables", error);
             this.closeConnection(conn);
             return false;
         }

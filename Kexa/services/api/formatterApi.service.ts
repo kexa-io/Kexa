@@ -61,6 +61,10 @@ export function escapedYamlToJson(yamlString: any): any {
     let yamlStringEscaped = yamlString.replace(/\\/g, '');
     const noMoreBraces = yamlStringEscaped.slice(2, -2);
 
-    const parsedObject = JSON.parse(noMoreBraces);
-    return [parsedObject];
+    try {
+        const parsedObject = JSON.parse(noMoreBraces);
+        return [parsedObject];
+    } catch (error) {
+        throw new Error(`Failed to parse escaped YAML as JSON: ${(error as Error).message}`);
+    }
 }

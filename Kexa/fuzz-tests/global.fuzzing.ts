@@ -211,7 +211,7 @@ async function loadAddOn(file: string, addOnNeed: any, settings:SettingFile[], f
             return { key: nameAddOn, data:(checkIfDataIsProvider(data) ? data : null), delta};
         }
     } catch(e) {
-        console.error(e);
+        logger.error("Fuzz test failed for addon", e);
     }
     return null;
 }
