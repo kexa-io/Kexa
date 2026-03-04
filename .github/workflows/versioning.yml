@@ -50,6 +50,9 @@ jobs:
       - name: Run tests
         run: bun run test
 
+      - name: Run integration tests
+        run: bun run test:integration
+
       - name: Install Semantic Release and Plugins
         run: bun add -d semantic-release @semantic-release/changelog @semantic-release/exec
 

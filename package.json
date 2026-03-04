@@ -42,7 +42,8 @@
     "build": "rimraf ./build && touch ./config/headers.json && bun build ./Kexa/main.ts --target bun --outdir ./build",
     "update:capability": "bun run build && bun ./build/services/updateCapability.service.js",
     "test": "bun run build && bun test Kexa/__tests__/**/*.test.ts",
-    "test:nobuild": "bun test Kexa/__tests__/**/*.test.ts"
+    "test:nobuild": "bun test Kexa/__tests__/**/*.test.ts",
+    "test:integration": "bun test ./Kexa/__tests__/integration/"
   },
   "peerDependencies": {
     "typescript": "^4.9.5"
