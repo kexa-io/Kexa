@@ -1,0 +1,13 @@
+{
+  "http": [
+    {
+      "name": "check kexa website",
+      "prefix": "ENDPOINTA-",
+      "description": "Integration test endpoint",
+      "rules": ["HTTPRules"],
+      "METHOD": "GET",
+      "URL": "https://www.kexa.io",
+      "body": {}
+    }
+  ]
+}

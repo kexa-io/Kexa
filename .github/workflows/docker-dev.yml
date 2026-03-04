@@ -35,6 +35,9 @@ jobs:
       - name: Run tests
         run: bun run test
 
+      - name: Run integration tests
+        run: bun run test:integration
+
       - name: Get latest release version
         uses: rez0n/actions-github-release@794c12f5e8d629e6ca329cf2e2daeb0f0ce6a3ce # main
         id: get_latest_release

@@ -57,3 +57,7 @@ examples/*/data/*
 #bun build
 *.bun-build
 *kexa-cli
+
+# downloaded rules (fetched at runtime)
+rules.zip
+rules/kexa-io-public-rules-*/
