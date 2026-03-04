@@ -2,7 +2,8 @@ name: Generate SBOM
 
 on:
   pull_request:
-    push:
+  push:
+    branches:
       - dev
 
 permissions:
@@ -17,27 +18,25 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@v2
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
         with:
           egress-policy: audit
 
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+        uses: oven-sh/setup-bun@3d267786b128fe76c2f16a390aa2448b815359f3 # v2
         with:
           bun-version: latest
-
-      - name: Verify Bun Installation
-        run: |
-          echo "Bun version: $(bun --version)"
+          cache: true
+          cache-dependency-path: bun.lock
 
       - name: Install dependencies
         run: bun i
   
       - name: Generate SBOM
-        uses: anchore/sbom-action@v0
+        uses: anchore/sbom-action@28d71544de8eaf1b958d335707167c5f783590ad # v0
         with:
           file: ./bun.lock
           upload-artifact: true
@@ -45,7 +44,7 @@ jobs:
           output-file: ./kexa-sbom.json
 
       - name: Upload SBOM
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: kexa-sbom.json
           path: kexa-sbom.json
@@ -58,21 +57,21 @@ jobs:
     
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@v2
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
         with:
           egress-policy: audit
 
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
   
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2
         id: app-token
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
   
       - name: Download artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
         with:
           name: kexa-sbom.json
 
@@ -80,8 +79,8 @@ jobs:
         run: |
           git fetch origin
           git checkout dev
-          git config --global user.email "adrien.eppling@4urcloud.eu"
-          git config --global user.name "aesoft"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
           git add kexa-sbom.json
           git commit -m "Add SBOM artifact to dev branch [skip ci]"
           git push origin dev

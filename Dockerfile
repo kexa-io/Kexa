@@ -33,7 +33,6 @@ COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY Kexa ./Kexa
 COPY README.md ./
 COPY capacity.json ./
-COPY VERSION ./
 
 RUN mkdir -p rules output config && touch config/headers.json
 

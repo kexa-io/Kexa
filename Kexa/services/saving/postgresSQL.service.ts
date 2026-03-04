@@ -50,12 +50,14 @@ export class PostgreSQLClass {
                 try {
                     return await conn.query(query);
                 } catch (error) {
+                    logger.error("Failed to execute PostgreSQL query", error);
                     return false;
                 }
             }))
             this.closeConnection(conn);
             return true;
         }catch(error){
+            logger.error("Failed to create PostgreSQL tables", error);
             this.closeConnection(conn);
             return false;
         }

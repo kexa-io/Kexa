@@ -1,5 +1,8 @@
 import type { RulesConditions } from "../models/settingFile/conditions.models";
 import { ConditionEnum } from "../enum/condition.enum";
+import { getNewLogger } from "../services/logger.service";
+
+const logger = getNewLogger("AnalyseServiceFuzzing");
 
 
 type AnalyseServiceFunction = (rules: RulesConditions, value: any) => any;
@@ -60,7 +63,7 @@ async function fuzzDate(fuzzDate: string) {
 				const func = analyseService[functionName];
 				await (func as AnalyseServiceFunction)(rulesConditions, rulesConditions.date);
 			} catch (error) {
-				console.warn(`Error in function ${functionName}:`, error);
+				logger.warn(`Error in function ${functionName}:`, error);
 			}
 		}
 }
@@ -86,7 +89,7 @@ async function fuzzNumber(fuzzData: number) {
 				const func = analyseService[functionName];
 				await (func as AnalyseServiceFunction)(rulesConditions, fuzzData);
 			} catch (error) {
-				console.warn(`Error in function ${functionName}:`, error);
+				logger.warn(`Error in function ${functionName}:`, error);
 			}
 		}
 }
@@ -122,7 +125,7 @@ async function fuzzString(fuzzData: string) {
                 const func = analyseService[functionName];
                 await (func as AnalyseServiceFunction)(rulesConditions, fuzzData.toString());
             } catch (error) {
-                console.warn(`Error in function ${functionName}:`, error);
+                logger.warn(`Error in function ${functionName}:`, error);
             }
         }
 }

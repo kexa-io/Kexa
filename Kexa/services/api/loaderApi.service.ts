@@ -70,7 +70,7 @@ export async function getNotificationGroupsFromApi(config: any){
                         notificationGroups.push(response.data.message);
                     }
                 } catch (error) {
-                    console.error(error);
+                    logger.error("Failed to load notification group from API", error);
                 }
             }));
         }
@@ -130,7 +130,7 @@ async function getSaveModuleFromApi(){
             });
         saveModules = response.data.message;
     } catch (error) {
-        console.error(error);
+        logger.error("Failed to fetch save modules from API", error);
     }
     return saveModules;
 }
@@ -167,7 +167,7 @@ export async function getConfigFromApi(saveOnly: boolean = false){
             });
         projects = response.data.message;
     } catch (error) {
-        console.error(error);
+        logger.error("Failed to fetch projects from API", error);
     }
 
     const groupedProjects = projects.reduce((acc: any, project: any) => {

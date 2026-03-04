@@ -42,6 +42,7 @@ export function getFile(filePath: string){
         }
         return null;
     }catch(error){
+        logger.error("Failed to read file: " + filePath, error);
         return null;
     }
 }

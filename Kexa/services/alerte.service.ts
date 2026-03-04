@@ -20,7 +20,7 @@ import {formatAlertCondition} from "./api/formatterApi.service";
 
 const jsome = require('jsome');
 jsome.level.show = true;
-const request = require('request');
+
 const nodemailer = require("nodemailer");
 const levelAlert = ["info", "warning", "error", "fatal"];
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
@@ -147,7 +147,7 @@ export function alertLogGlobal(alert: GlobalConfigAlert, compteError: number[], 
         context?.log(ruleSeparator);
         logger.info(ruleSeparator);
             errorsResources.forEach((scan: ResultScan, index) => {
-                console.log("\n");
+                logger.info("");
                 context?.log("== > Resource " + (index + 1) + "/" + errorsResources.length + ":");
                 logger.info("==> Resource " + (index + 1) + "/" + errorsResources.length + ":");
                 alertLog(scan.rule, scan.error, scan.objectContent, false);
@@ -213,7 +213,7 @@ export function alertSMSGlobal(alert: GlobalConfigAlert, compteError: number[]) 
     });
 }
 
-export function alertWebhookGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
+export async function alertWebhookGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
     logger.debug("alert webhook");
     let content = compteRender(allScan);
     let nbrError: { [x: string]: number; }[] = [];
@@ -224,15 +224,16 @@ export function alertWebhookGlobal(alert: GlobalConfigAlert, compteError: number
     });
     content["nbrError"] = nbrError;
     content["title"] = "Kexa - Global Alert - "+(alert.name??"Uname");
-    alert.to.forEach((webhook_to) => {
-        if(!webhook_to.includes("http")) return;
+    for (const webhook_to of alert.to) {
+        if(!webhook_to.includes("http")) continue;
         logger.debug("send webhook to:"+webhook_to);
-        request.post(webhook_to, { json: jsonStringify(content) }, (res:any) => {
-            logger.debug(`webhook to: ${webhook_to} are send`)
-        }).on('error', (error:any) => {
-            logger.error(error)
-        });
-    });
+        try {
+            await axios.post(webhook_to, jsonStringify(content));
+            logger.debug(`webhook to: ${webhook_to} are send`);
+        } catch (error) {
+            logger.error(`Failed to send webhook to: ${webhook_to}`, error);
+        }
+    }
 }
 
 export function alertTeamsGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
@@ -469,6 +470,7 @@ async function SendMailWithAttachment(mail: string, to: string, subject: string,
         logger.info(`Email sent: ${subject} to ${to} with attachment`);
         return true;
     }catch (e) {
+        logger.error(`Failed to send email with attachment: ${subject} to ${to}`, e);
         return false;
     }
 }
@@ -606,6 +608,6 @@ export async function sendCardMessageToTeamsChannel(channelWebhook: string, payl
             logger.info('Failed to send card.');
         }
     } catch (error) {
-        console.error('An error occurred:', error);
+        logger.error(`Failed to send Teams card to: ${channelWebhook}`, error);
     }
 }

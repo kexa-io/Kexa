@@ -395,7 +395,8 @@ async function start() {
         exit(0);
 
     } catch (error) {
-        console.error("A fatal error occurred:", error);
+        const fatalLogger = getNewLogger("FatalError");
+        fatalLogger.error("A fatal error occurred:", error);
         exit(-1);
     }
 }
@@ -404,12 +405,14 @@ async function start() {
     if (process.env.INIT_PREMIUM_MODE === 'true') {
         const configuration = await getConfig(true);
         if (!configuration.save || !Array.isArray(configuration.save)) {
-            console.error("Configuration does not contain a valid 'save' array.");
+            const initLogger = getNewLogger("InitPremiumMode");
+            initLogger.error("Configuration does not contain a valid 'save' array.");
             exit(-1);
         }
         const kexaSaveConfig = configuration.save.find((item: any) => item.type === "kexa");
         if (!kexaSaveConfig) {
-            console.error("Kexa save configuration not found.");
+            const initLogger = getNewLogger("InitPremiumMode");
+            initLogger.error("Kexa save configuration not found.");
         }
         await initOnly(kexaSaveConfig);
     } else {

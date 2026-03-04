@@ -935,7 +935,9 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
                             logs: logEntries.split('\n').map((line: string) => ({ line })),
                             interval: interval
                         });
-                    } catch (e) {}
+                    } catch (e) {
+                        logger.debug("Failed to parse log chunk for pod " + pod.metadata?.name, e);
+                    }
                 });
                 logStream.on('error', () => {});
                 try {
@@ -951,7 +953,9 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
                             sinceSeconds: sinceSeconds
                         }
                     ).catch(() => null);
-                } catch (err: any) {}
+                } catch (err: any) {
+                    logger.debug("Failed to fetch logs for pod " + pod.metadata?.name + " container " + containerName, err);
+                }
                 await delay(100);
             }));
         }));
