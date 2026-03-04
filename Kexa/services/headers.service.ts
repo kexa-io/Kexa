@@ -7127,6 +7127,19 @@ let headersData: Capacity = {
         "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Postgresql_elephant.svg/800px-Postgresql_elephant.svg.png",
         "documentation": "https://www.npmjs.com/package/pg",
         "freeRules": []
+    },
+    "ssh": {
+        "resources": [
+            "sshd_config",
+            "sysctl",
+            "users",
+            "services",
+            "file_permissions",
+            "os_info"
+        ],
+        "thumbnail": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Unofficial_SSH_Logo.svg/512px-Unofficial_SSH_Logo.svg.png",
+        "documentation": "https://www.npmjs.com/package/ssh2",
+        "freeRules": []
     }
 };
 

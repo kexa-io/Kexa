@@ -1,0 +1,193 @@
+- version: 1.0.0
+  date: 03-04-2026
+  alert:
+    fatal:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    # ============================================================
+    # variables - CIS MySQL Benchmark
+    # ============================================================
+    - name: "mysql-cis-2.7-ssl-enabled"
+      description: "CIS 2.7 - Ensure SSL is enabled (have_ssl = YES)"
+      applied: true
+      level: 2
+      cloudProvider: mysql
+      objectName: variables
+      conditions:
+        - operator: OR
+          criteria:
+            - property: Variable_name
+              condition: DIFFERENT
+              value: "have_ssl"
+            - property: Value
+              condition: EQUAL
+              value: "YES"
+
+    - name: "mysql-cis-4.3-no-test-db"
+      description: "CIS 4.3 - Ensure test database is not present"
+      applied: true
+      level: 1
+      cloudProvider: mysql
+      objectName: databases
+      conditions:
+        - property: Database
+          condition: DIFFERENT
+          value: "test"
+
+    - name: "mysql-cis-6.1-log-error-enabled"
+      description: "CIS 6.1 - Ensure log_error is configured"
+      applied: true
+      level: 1
+      cloudProvider: mysql
+      objectName: variables
+      conditions:
+        - operator: OR
+          criteria:
+            - property: Variable_name
+              condition: DIFFERENT
+              value: "log_error"
+            - property: Value
+              condition: DIFFERENT
+              value: ""
+
+    - name: "mysql-cis-6.3-general-log-disabled"
+      description: "CIS 6.3 - Ensure general_log is OFF in production"
+      applied: true
+      level: 1
+      cloudProvider: mysql
+      objectName: variables
+      conditions:
+        - operator: OR
+          criteria:
+            - property: Variable_name
+              condition: DIFFERENT
+              value: "general_log"
+            - property: Value
+              condition: EQUAL
+              value: "OFF"
+
+    - name: "mysql-cis-6.5-slow-query-log"
+      description: "CIS 6.5 - Ensure slow_query_log is enabled"
+      applied: true
+      level: 1
+      cloudProvider: mysql
+      objectName: variables
+      conditions:
+        - operator: OR
+          criteria:
+            - property: Variable_name
+              condition: DIFFERENT
+              value: "slow_query_log"
+            - property: Value
+              condition: EQUAL
+              value: "ON"
+
+    - name: "mysql-cis-7.1-password-policy-length"
+      description: "CIS 7.1 - Ensure password policy requires minimum 8 characters"
+      applied: true
+      level: 2
+      cloudProvider: mysql
+      objectName: variables
+      conditions:
+        - operator: OR
+          criteria:
+            - property: Variable_name
+              condition: DIFFERENT
+              value: "validate_password.length"
+            - property: Value
+              condition: SUP_OR_EQUAL
+              value: 8
+
+    - name: "mysql-cis-3.4-local-infile-disabled"
+      description: "CIS 3.4 - Ensure local_infile is disabled"
+      applied: true
+      level: 2
+      cloudProvider: mysql
+      objectName: variables
+      conditions:
+        - operator: OR
+          criteria:
+            - property: Variable_name
+              condition: DIFFERENT
+              value: "local_infile"
+            - property: Value
+              condition: EQUAL
+              value: "OFF"
+
+    - name: "mysql-cis-3.8-secure-file-priv"
+      description: "CIS 3.8 - Ensure secure_file_priv is not empty"
+      applied: true
+      level: 2
+      cloudProvider: mysql
+      objectName: variables
+      conditions:
+        - operator: OR
+          criteria:
+            - property: Variable_name
+              condition: DIFFERENT
+              value: "secure_file_priv"
+            - property: Value
+              condition: DIFFERENT
+              value: ""
+
+    # ============================================================
+    # users - CIS MySQL
+    # ============================================================
+    - name: "mysql-cis-4.5-no-anonymous-accounts"
+      description: "CIS 4.5 - Ensure no anonymous accounts exist"
+      applied: true
+      level: 3
+      cloudProvider: mysql
+      objectName: users
+      conditions:
+        - property: User
+          condition: DIFFERENT
+          value: ""
+
+    - name: "mysql-cis-4.2-no-wildcard-host"
+      description: "CIS 4.2 - Ensure no accounts use wildcard hostname"
+      applied: true
+      level: 2
+      cloudProvider: mysql
+      objectName: users
+      conditions:
+        - property: Host
+          condition: DIFFERENT
+          value: "%"

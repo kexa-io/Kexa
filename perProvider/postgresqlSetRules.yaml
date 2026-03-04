@@ -1,0 +1,200 @@
+- version: 1.0.0
+  date: 03-04-2026
+  alert:
+    fatal:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    # ============================================================
+    # settings - CIS PostgreSQL Benchmark
+    # ============================================================
+    - name: "pg-cis-2.1-ssl-enabled"
+      description: "CIS 2.1 - Ensure SSL is enabled"
+      applied: true
+      level: 2
+      cloudProvider: postgresql
+      objectName: settings
+      conditions:
+        - operator: OR
+          criteria:
+            - property: name
+              condition: DIFFERENT
+              value: "ssl"
+            - property: setting
+              condition: EQUAL
+              value: "on"
+
+    - name: "pg-cis-3.1-log-connections"
+      description: "CIS 3.1 - Ensure log_connections is enabled"
+      applied: true
+      level: 1
+      cloudProvider: postgresql
+      objectName: settings
+      conditions:
+        - operator: OR
+          criteria:
+            - property: name
+              condition: DIFFERENT
+              value: "log_connections"
+            - property: setting
+              condition: EQUAL
+              value: "on"
+
+    - name: "pg-cis-3.2-log-disconnections"
+      description: "CIS 3.2 - Ensure log_disconnections is enabled"
+      applied: true
+      level: 1
+      cloudProvider: postgresql
+      objectName: settings
+      conditions:
+        - operator: OR
+          criteria:
+            - property: name
+              condition: DIFFERENT
+              value: "log_disconnections"
+            - property: setting
+              condition: EQUAL
+              value: "on"
+
+    - name: "pg-cis-6.2-password-encryption"
+      description: "CIS 6.2 - Ensure password_encryption is set to scram-sha-256"
+      applied: true
+      level: 2
+      cloudProvider: postgresql
+      objectName: settings
+      conditions:
+        - operator: OR
+          criteria:
+            - property: name
+              condition: DIFFERENT
+              value: "password_encryption"
+            - property: setting
+              condition: EQUAL
+              value: "scram-sha-256"
+
+    - name: "pg-cis-3.4-log-statement"
+      description: "CIS 3.4 - Ensure log_statement is set to ddl or higher"
+      applied: true
+      level: 1
+      cloudProvider: postgresql
+      objectName: settings
+      conditions:
+        - operator: OR
+          criteria:
+            - property: name
+              condition: DIFFERENT
+              value: "log_statement"
+            - operator: OR
+              criteria:
+                - property: setting
+                  condition: EQUAL
+                  value: "ddl"
+                - property: setting
+                  condition: EQUAL
+                  value: "mod"
+                - property: setting
+                  condition: EQUAL
+                  value: "all"
+
+    - name: "pg-cis-3.5-log-min-duration"
+      description: "CIS 3.5 - Ensure log_min_duration_statement is set"
+      applied: true
+      level: 1
+      cloudProvider: postgresql
+      objectName: settings
+      conditions:
+        - operator: OR
+          criteria:
+            - property: name
+              condition: DIFFERENT
+              value: "log_min_duration_statement"
+            - property: setting
+              condition: DIFFERENT
+              value: "-1"
+
+    - name: "pg-cis-6.7-no-trust-auth"
+      description: "CIS 6.7 - Ensure password_encryption is not disabled"
+      applied: true
+      level: 3
+      cloudProvider: postgresql
+      objectName: settings
+      conditions:
+        - operator: OR
+          criteria:
+            - property: name
+              condition: DIFFERENT
+              value: "password_encryption"
+            - property: setting
+              condition: DIFFERENT
+              value: ""
+
+    # ============================================================
+    # roles - CIS PostgreSQL
+    # ============================================================
+    - name: "pg-cis-4.1-no-superuser-apps"
+      description: "CIS 4.1 - Ensure non-default superuser accounts are reviewed"
+      applied: true
+      level: 1
+      cloudProvider: postgresql
+      objectName: roles
+      conditions:
+        - operator: OR
+          criteria:
+            - property: rolsuper
+              condition: EQUAL
+              value: false
+            - property: rolname
+              condition: EQUAL
+              value: "postgres"
+
+    - name: "pg-cis-4.3-no-createdb"
+      description: "CIS 4.3 - Ensure excessive CREATEDB privileges are not granted"
+      applied: true
+      level: 1
+      cloudProvider: postgresql
+      objectName: roles
+      conditions:
+        - operator: OR
+          criteria:
+            - property: rolcreatedb
+              condition: EQUAL
+              value: false
+            - property: rolsuper
+              condition: EQUAL
+              value: true

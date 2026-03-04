@@ -1,0 +1,253 @@
+- version: 1.0.0
+  date: 03-04-2026
+  alert:
+    fatal:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    # ============================================================
+    # sshd_config - CIS 5.2.x
+    # ============================================================
+    - name: "ssh-cis-5.2.10-no-root-login"
+      description: "CIS 5.2.10 - Ensure SSH root login is disabled"
+      applied: true
+      level: 2
+      cloudProvider: ssh
+      objectName: sshd_config
+      conditions:
+        - property: permitrootlogin
+          condition: EQUAL
+          value: "no"
+
+    - name: "ssh-cis-5.2.4-max-auth-tries"
+      description: "CIS 5.2.4 - Ensure SSH MaxAuthTries is set to 4 or less"
+      applied: true
+      level: 1
+      cloudProvider: ssh
+      objectName: sshd_config
+      conditions:
+        - property: maxauthtries
+          condition: SUP_OR_EQUAL
+          value: 0
+        - property: maxauthtries
+          condition: INF_OR_EQUAL
+          value: 4
+
+    - name: "ssh-cis-5.2.6-disable-password-auth"
+      description: "CIS 5.2.6 - Ensure SSH PasswordAuthentication is disabled"
+      applied: true
+      level: 1
+      cloudProvider: ssh
+      objectName: sshd_config
+      conditions:
+        - property: passwordauthentication
+          condition: EQUAL
+          value: "no"
+
+    - name: "ssh-cis-5.2.11-no-empty-passwords"
+      description: "CIS 5.2.11 - Ensure SSH PermitEmptyPasswords is disabled"
+      applied: true
+      level: 3
+      cloudProvider: ssh
+      objectName: sshd_config
+      conditions:
+        - property: permitemptypasswords
+          condition: EQUAL
+          value: "no"
+
+    - name: "ssh-cis-5.2.14-login-grace-time"
+      description: "CIS 5.2.14 - Ensure SSH LoginGraceTime is set to 60 seconds or less"
+      applied: true
+      level: 1
+      cloudProvider: ssh
+      objectName: sshd_config
+      conditions:
+        - property: logingracetime
+          condition: INF_OR_EQUAL
+          value: 60
+
+    - name: "ssh-cis-5.2.16-idle-timeout"
+      description: "CIS 5.2.16 - Ensure SSH Idle Timeout Interval is configured"
+      applied: true
+      level: 1
+      cloudProvider: ssh
+      objectName: sshd_config
+      conditions:
+        - property: clientaliveinterval
+          condition: DIFFERENT
+          value: "0"
+
+    # ============================================================
+    # sysctl - CIS 3.x / 1.x
+    # ============================================================
+    - name: "ssh-cis-3.1.1-disable-ip-forwarding"
+      description: "CIS 3.1.1 - Ensure IP forwarding is disabled"
+      applied: true
+      level: 2
+      cloudProvider: ssh
+      objectName: sysctl
+      conditions:
+        - operator: OR
+          criteria:
+            - property: key
+              condition: DIFFERENT
+              value: "net.ipv4.ip_forward"
+            - property: value
+              condition: EQUAL
+              value: "0"
+
+    - name: "ssh-cis-3.1.2-disable-packet-redirect"
+      description: "CIS 3.1.2 - Ensure packet redirect sending is disabled"
+      applied: true
+      level: 2
+      cloudProvider: ssh
+      objectName: sysctl
+      conditions:
+        - operator: OR
+          criteria:
+            - property: key
+              condition: DIFFERENT
+              value: "net.ipv4.conf.all.send_redirects"
+            - property: value
+              condition: EQUAL
+              value: "0"
+
+    - name: "ssh-cis-1.5.3-aslr-enabled"
+      description: "CIS 1.5.3 - Ensure ASLR is enabled"
+      applied: true
+      level: 2
+      cloudProvider: ssh
+      objectName: sysctl
+      conditions:
+        - operator: OR
+          criteria:
+            - property: key
+              condition: DIFFERENT
+              value: "kernel.randomize_va_space"
+            - property: value
+              condition: EQUAL
+              value: "2"
+
+    # ============================================================
+    # users - CIS 6.2.x
+    # ============================================================
+    - name: "ssh-cis-6.2.2-no-uid-0-except-root"
+      description: "CIS 6.2.2 - Ensure no accounts other than root have UID 0"
+      applied: true
+      level: 3
+      cloudProvider: ssh
+      objectName: users
+      conditions:
+        - operator: OR
+          criteria:
+            - property: uid
+              condition: DIFFERENT
+              value: 0
+            - property: username
+              condition: EQUAL
+              value: "root"
+
+    # ============================================================
+    # services - CIS 2.x
+    # ============================================================
+    - name: "ssh-cis-2.2.3-avahi-disabled"
+      description: "CIS 2.2.3 - Ensure Avahi Server is not installed or disabled"
+      applied: true
+      level: 1
+      cloudProvider: ssh
+      objectName: services
+      conditions:
+        - operator: OR
+          criteria:
+            - property: name
+              condition: DIFFERENT
+              value: "avahi-daemon"
+            - property: state
+              condition: EQUAL
+              value: "disabled"
+
+    # ============================================================
+    # file_permissions - CIS 6.1.x
+    # ============================================================
+    - name: "ssh-cis-6.1.2-etc-passwd-perms"
+      description: "CIS 6.1.2 - Ensure permissions on /etc/passwd are configured"
+      applied: true
+      level: 2
+      cloudProvider: ssh
+      objectName: file_permissions
+      conditions:
+        - operator: OR
+          criteria:
+            - property: path
+              condition: DIFFERENT
+              value: "/etc/passwd"
+            - operator: AND
+              criteria:
+                - property: mode
+                  condition: EQUAL
+                  value: "644"
+                - property: owner
+                  condition: EQUAL
+                  value: "root"
+
+    - name: "ssh-cis-6.1.3-etc-shadow-perms"
+      description: "CIS 6.1.3 - Ensure permissions on /etc/shadow are configured"
+      applied: true
+      level: 3
+      cloudProvider: ssh
+      objectName: file_permissions
+      conditions:
+        - operator: OR
+          criteria:
+            - property: path
+              condition: DIFFERENT
+              value: "/etc/shadow"
+            - operator: AND
+              criteria:
+                - property: owner
+                  condition: EQUAL
+                  value: "root"
+                - operator: OR
+                  criteria:
+                    - property: mode
+                      condition: EQUAL
+                      value: "640"
+                    - property: mode
+                      condition: EQUAL
+                      value: "600"

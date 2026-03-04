@@ -5,6 +5,7 @@ import type { GcpConfig } from "../gcp/config.models";
 import type { GitConfig } from "../git/config.models";
 import type { HttpConfig } from "../http/config.models";
 import type { KubernetesConfig } from "../kubernetes/config.models";
+import type { SshConfig } from "../ssh/config.models";
 
 export interface GlobalConfig{
     azure?: AzureConfig[];
@@ -13,6 +14,7 @@ export interface GlobalConfig{
     kubernetes?: KubernetesConfig[];
     git?: GitConfig[];
     http?: HttpConfig[];
+    ssh?: SshConfig[];
     save?: SaveConfig[];
     EMAILPORT?: string;
     EMAILHOST?: string;

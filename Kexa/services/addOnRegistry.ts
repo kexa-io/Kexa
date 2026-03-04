@@ -14,6 +14,7 @@ const gatheringFiles = [
     'o365Gathering.service.ts',
     'oracleGathering.service.ts',
     'postgresqlGathering.service.ts',
+    'sshGathering.service.ts',
 ];
 
 const displayFiles = [
@@ -32,6 +33,7 @@ const displayFiles = [
     'o365Display.service.ts',
     'oracleDisplay.service.ts',
     'postgresqlDisplay.service.ts',
+    'sshDisplay.service.ts',
 ];
 
 const saveFiles = [
@@ -108,6 +110,9 @@ async function loadGatheringModule(filename: string): Promise<any> {
         case 'postgresqlGathering.service.ts':
             module = await import('./addOn/postgresqlGathering.service');
             break;
+        case 'sshGathering.service.ts':
+            module = await import('./addOn/sshGathering.service');
+            break;
         default:
             return null;
     }
@@ -167,6 +172,9 @@ async function loadDisplayModule(filename: string): Promise<any> {
             break;
         case 'postgresqlDisplay.service.ts':
             module = await import('./addOn/display/postgresqlDisplay.service');
+            break;
+        case 'sshDisplay.service.ts':
+            module = await import('./addOn/display/sshDisplay.service');
             break;
         default:
             return null;

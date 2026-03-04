@@ -29,6 +29,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@types/bun": "latest",
+    "@types/ssh2": "^1.15.5",
     "eslint": "^9.39.2",
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-security": "^3.0.1",
@@ -43,7 +44,8 @@
     "update:capability": "bun run build && bun ./build/services/updateCapability.service.js",
     "test": "bun run build && bun test Kexa/__tests__/**/*.test.ts",
     "test:nobuild": "bun test Kexa/__tests__/**/*.test.ts",
-    "test:integration": "bun test ./Kexa/__tests__/integration/"
+    "test:integration": "bun test ./Kexa/__tests__/integration/",
+    "mcp": "bun Kexa/mcp-server.ts"
   },
   "peerDependencies": {
     "typescript": "^4.9.5"
@@ -562,6 +564,7 @@
     "@kubernetes/client-node": "^1.4.0",
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "@microsoft/teams-js": "^2.48.0",
+    "@modelcontextprotocol/sdk": "^1.27.1",
     "@octokit/core": "^6.1.6",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^13.0.1",
@@ -609,9 +612,11 @@
     "pino-pretty": "^13.1.3",
     "rimraf": "^6.1.2",
     "semantic-release": "^25.0.2",
+    "ssh2": "^1.17.0",
     "ts-node": "^10.9.2",
     "tslog": "^4.10.2",
     "twilio": "^5.12.0",
-    "uuid": "^12.0.0"
+    "uuid": "^12.0.0",
+    "zod": "^4.3.6"
   }
 }
