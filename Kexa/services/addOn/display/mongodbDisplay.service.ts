@@ -10,6 +10,10 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
             return `version: ${objectContent?.version} | Host: ${objectContent?.host}`;
         case "currentOp":
             return `description: ${objectContent?.desc}`;
+        case "cmdLineOpts":
+            return `MongoDB config`;
+        case "parameters":
+            return `MongoDB parameters`;
         default:
             return JSON.stringify(objectContent);
     }

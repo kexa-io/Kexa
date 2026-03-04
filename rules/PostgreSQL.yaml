@@ -1,44 +1,35 @@
 - version: 1.0.0
-  date: 06-12-2023
+  date: 04-03-2026
   alert:
     fatal:
       enabled: true
-      type: 
+      type:
         - log
-        #- email
-      to: 
+      to:
         - myEmail@gmail.com
     error:
       enabled: true
-      type: 
+      type:
         - log
-        #- email
-        #- sms
-      to: 
+      to:
         - myEmail@gmail.com
     warning:
       enabled: true
-      type: 
+      type:
         - log
-        #- email
       to:
         - myEmail@gmail.com
     info:
       enabled: true
-      type: 
+      type:
         - log
-        #- email
-      to: 
+      to:
         - myEmail@gmail.com
     global:
       enabled: true
-      type: 
+      type:
         - log
-        #- webhook
-        #- sms
-        #- email
-      to: 
-        #- http://127.0.0.1:5000/test
+      to:
         - myEmail@gmail.com
       conditions:
         - level: 0
@@ -50,63 +41,201 @@
         - level: 3
           min: 1
   rules:
-    - name: "postgresql-query-databases"
-      description : "PostgreSQL query databases"
+    #───────────────────────────────────────────────
+    # Settings (pg_settings) — OR-skip pattern
+    #───────────────────────────────────────────────
+
+    - name: "postgresql-cis-3.1-ssl-enabled"
+      description: "CIS 3.1 - SSL must be enabled for encrypted connections"
       applied: true
-      level: 0
+      level: 2
       cloudProvider: postgresql
-      objectName : databases
+      objectName: settings
       conditions:
-        - operator : OR
+        - operator: OR
           criteria:
-            - property : .
-              condition : EQUAL
-              value : 200
-    - name: "postgresql-query-databases"
-      description : "PostgreSQL query databases"
+            - property: name
+              condition: DIFFERENT
+              value: "ssl"
+            - property: setting
+              condition: EQUAL
+              value: "on"
+
+    - name: "postgresql-cis-4.1-password-encryption-scram"
+      description: "CIS 4.1 - Password encryption must use scram-sha-256"
       applied: true
-      level: 0
+      level: 2
       cloudProvider: postgresql
-      objectName : roles
+      objectName: settings
       conditions:
-        - operator : OR
+        - operator: OR
           criteria:
-            - property : .
-              condition : EQUAL
-              value : 200
-    - name: "postgresql-query-databases"
-      description : "PostgreSQL query databases"
+            - property: name
+              condition: DIFFERENT
+              value: "password_encryption"
+            - property: setting
+              condition: EQUAL
+              value: "scram-sha-256"
+
+    - name: "postgresql-cis-3.2-log-connections"
+      description: "CIS 3.2 - Log all connection attempts"
       applied: true
-      level: 0
+      level: 1
       cloudProvider: postgresql
-      objectName : settings
+      objectName: settings
       conditions:
-        - operator : OR
+        - operator: OR
           criteria:
-            - property : .
-              condition : EQUAL
-              value : 200
-    - name: "postgresql-query-databases"
-      description : "PostgreSQL query databases"
+            - property: name
+              condition: DIFFERENT
+              value: "log_connections"
+            - property: setting
+              condition: EQUAL
+              value: "on"
+
+    - name: "postgresql-cis-3.3-log-disconnections"
+      description: "CIS 3.3 - Log all disconnections"
       applied: true
-      level: 0
+      level: 1
       cloudProvider: postgresql
-      objectName : stat_activity
+      objectName: settings
       conditions:
-        - operator : OR
+        - operator: OR
           criteria:
-            - property : .
-              condition : EQUAL
-              value : 200
-    - name: "postgresql-query-databases"
-      description : "PostgreSQL query databases"
+            - property: name
+              condition: DIFFERENT
+              value: "log_disconnections"
+            - property: setting
+              condition: EQUAL
+              value: "on"
+
+    - name: "postgresql-cis-3.7-log-statement-ddl"
+      description: "CIS 3.7 - log_statement must be set to ddl, mod, or all"
       applied: true
-      level: 0
+      level: 1
       cloudProvider: postgresql
-      objectName : extensions
+      objectName: settings
       conditions:
-        - operator : OR
+        - operator: OR
           criteria:
-            - property : .
-              condition : EQUAL
-              value : 200
+            - property: name
+              condition: DIFFERENT
+              value: "log_statement"
+            - property: setting
+              condition: REGEX
+              value: "^(ddl|mod|all)$"
+
+    - name: "postgresql-cis-6.2-pgaudit-loaded"
+      description: "CIS 6.2 - pgaudit extension must be loaded in shared_preload_libraries"
+      applied: true
+      level: 1
+      cloudProvider: postgresql
+      objectName: settings
+      conditions:
+        - operator: OR
+          criteria:
+            - property: name
+              condition: DIFFERENT
+              value: "shared_preload_libraries"
+            - property: setting
+              condition: INCLUDE
+              value: "pgaudit"
+
+    #───────────────────────────────────────────────
+    # Roles (pg_roles) — skip postgres superuser
+    #───────────────────────────────────────────────
+
+    - name: "postgresql-cis-4.2-no-extra-superusers"
+      description: "CIS 4.2 - No role other than postgres should have superuser privilege"
+      applied: true
+      level: 3
+      cloudProvider: postgresql
+      objectName: roles
+      conditions:
+        - operator: OR
+          criteria:
+            - property: rolname
+              condition: EQUAL
+              value: "postgres"
+            - property: rolsuper
+              condition: EQUAL
+              value: false
+
+    - name: "postgresql-cis-4.3-no-createdb-privilege"
+      description: "CIS 4.3 - No role other than postgres should have createdb privilege"
+      applied: true
+      level: 2
+      cloudProvider: postgresql
+      objectName: roles
+      conditions:
+        - operator: OR
+          criteria:
+            - property: rolname
+              condition: EQUAL
+              value: "postgres"
+            - property: rolcreatedb
+              condition: EQUAL
+              value: false
+
+    - name: "postgresql-cis-4.4-no-createrole-privilege"
+      description: "CIS 4.4 - No role other than postgres should have createrole privilege"
+      applied: true
+      level: 2
+      cloudProvider: postgresql
+      objectName: roles
+      conditions:
+        - operator: OR
+          criteria:
+            - property: rolname
+              condition: EQUAL
+              value: "postgres"
+            - property: rolcreaterole
+              condition: EQUAL
+              value: false
+
+    - name: "postgresql-cis-4.5-no-replication-privilege"
+      description: "CIS 4.5 - No role other than postgres should have replication privilege"
+      applied: true
+      level: 2
+      cloudProvider: postgresql
+      objectName: roles
+      conditions:
+        - operator: OR
+          criteria:
+            - property: rolname
+              condition: EQUAL
+              value: "postgres"
+            - property: rolreplication
+              condition: EQUAL
+              value: false
+
+    - name: "postgresql-cis-4.6-no-bypass-rls"
+      description: "CIS 4.6 - No role other than postgres should bypass row-level security"
+      applied: true
+      level: 2
+      cloudProvider: postgresql
+      objectName: roles
+      conditions:
+        - operator: OR
+          criteria:
+            - property: rolname
+              condition: EQUAL
+              value: "postgres"
+            - property: rolbypassrls
+              condition: EQUAL
+              value: false
+
+    #───────────────────────────────────────────────
+    # Stat Activity (pg_stat_activity)
+    #───────────────────────────────────────────────
+
+    - name: "postgresql-health-no-idle-in-transaction"
+      description: "No session should be stuck in idle-in-transaction state"
+      applied: true
+      level: 1
+      cloudProvider: postgresql
+      objectName: stat_activity
+      conditions:
+        - property: state
+          condition: DIFFERENT
+          value: "idle in transaction"
