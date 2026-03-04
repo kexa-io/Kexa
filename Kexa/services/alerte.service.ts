@@ -303,7 +303,7 @@ export function alertFromRule(rule:Rules, conditions:SubResultScan[], objectReso
                 alertTeams(detailAlert, rule, conditions, objectResource);
                 break;
             case AlertEnum.WEBHOOK:
-                sendWebhook(detailAlert, "Kexa - " + levelAlert[rule.level] + " - " + rule.name, conditions)
+                sendWebhook(detailAlert, "Kexa - " + levelAlert[rule.level] + " - " + rule.name, conditions, rule, objectResource)
                 break;
             case AlertEnum.JIRA:
                 sendJiraTicket(detailAlert, "Kexa - " + rule.name, conditions, rule, objectResource);
@@ -492,16 +492,40 @@ ${content}`,
         })
 }
 
-async function sendWebhook(alert: ConfigAlert, subject: string, content: any) {
+async function sendWebhook(alert: ConfigAlert, subject: string, content: any, rule?: Rules, objectResource?: any) {
     const context = getContext();
-    content["title"] = subject;
     logger.debug("send webhook");
     for (const webhook_to of alert.to) {
         if(!webhook_to.includes("http")) continue;
-        const payload = {
+        const payload: any = {
             title: "Kexa scan : " + subject,
-            text: content.content,
+            text: content.content ?? content,
         };
+        if (rule) {
+            payload.version = "1.0";
+            payload.event = "rule.violation";
+            payload.timestamp = new Date().toISOString();
+            payload.rule = {
+                name: rule.name,
+                description: rule.description,
+                level: levelAlert[rule.level],
+                cloudProvider: rule.cloudProvider,
+                objectName: rule.objectName,
+            };
+            if (objectResource) {
+                payload.resource = objectResource;
+            }
+            if (Array.isArray(content)) {
+                payload.violations = content
+                    .filter((r: SubResultScan) => !r.result)
+                    .map((r: SubResultScan) => ({
+                        property: r.condition?.[0]?.property,
+                        condition: r.condition?.[0]?.condition,
+                        expected: r.condition?.[0]?.value,
+                        actual: r.value,
+                    }));
+            }
+        }
         try {
             const response = await axios.post(webhook_to, payload);
             if (response.status === 200) {
