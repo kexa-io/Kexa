@@ -1,44 +1,35 @@
 - version: 1.0.0
-  date: 06-12-2023
+  date: 04-03-2026
   alert:
     fatal:
       enabled: true
-      type: 
+      type:
         - log
-        #- email
-      to: 
+      to:
         - myEmail@gmail.com
     error:
       enabled: true
-      type: 
+      type:
         - log
-        #- email
-        #- sms
-      to: 
+      to:
         - myEmail@gmail.com
     warning:
       enabled: true
-      type: 
+      type:
         - log
-        #- email
       to:
         - myEmail@gmail.com
     info:
       enabled: true
-      type: 
+      type:
         - log
-        #- email
-      to: 
+      to:
         - myEmail@gmail.com
     global:
       enabled: true
-      type: 
+      type:
         - log
-        #- webhook
-        #- sms
-        #- email
-      to: 
-        #- http://127.0.0.1:5000/test
+      to:
         - myEmail@gmail.com
       conditions:
         - level: 0
@@ -50,15 +41,197 @@
         - level: 3
           min: 1
   rules:
-    - name: "mysql-query-databases"
-      description : "MySQL query databases"
+    #───────────────────────────────────────────────
+    # Variables (SHOW GLOBAL VARIABLES) — OR-skip pattern
+    #───────────────────────────────────────────────
+
+    - name: "mysql-cis-3.2-ssl-available"
+      description: "CIS 3.2 - SSL must be available (have_ssl = YES)"
+      applied: true
+      level: 2
+      cloudProvider: mysql
+      objectName: variables
+      conditions:
+        - operator: OR
+          criteria:
+            - property: Variable_name
+              condition: DIFFERENT
+              value: "have_ssl"
+            - property: Value
+              condition: EQUAL
+              value: "YES"
+
+    - name: "mysql-cis-4.1-local-infile-disabled"
+      description: "CIS 4.1 - LOAD DATA LOCAL INFILE must be disabled"
+      applied: true
+      level: 2
+      cloudProvider: mysql
+      objectName: variables
+      conditions:
+        - operator: OR
+          criteria:
+            - property: Variable_name
+              condition: DIFFERENT
+              value: "local_infile"
+            - property: Value
+              condition: EQUAL
+              value: "OFF"
+
+    - name: "mysql-cis-4.5-secure-file-priv-set"
+      description: "CIS 4.5 - secure_file_priv must be set to restrict file operations"
+      applied: true
+      level: 2
+      cloudProvider: mysql
+      objectName: variables
+      conditions:
+        - operator: OR
+          criteria:
+            - property: Variable_name
+              condition: DIFFERENT
+              value: "secure_file_priv"
+            - property: Value
+              condition: DIFFERENT
+              value: ""
+
+    - name: "mysql-cis-5.1-log-error-enabled"
+      description: "CIS 5.1 - Error log must be enabled"
+      applied: true
+      level: 1
+      cloudProvider: mysql
+      objectName: variables
+      conditions:
+        - operator: OR
+          criteria:
+            - property: Variable_name
+              condition: DIFFERENT
+              value: "log_error"
+            - property: Value
+              condition: DIFFERENT
+              value: ""
+
+    - name: "mysql-cis-5.4-log-error-verbosity"
+      description: "CIS 5.4 - Log error verbosity must be at least 2"
+      applied: true
+      level: 1
+      cloudProvider: mysql
+      objectName: variables
+      conditions:
+        - operator: OR
+          criteria:
+            - property: Variable_name
+              condition: DIFFERENT
+              value: "log_error_verbosity"
+            - property: Value
+              condition: SUP_OR_EQUAL
+              value: 2
+
+    - name: "mysql-cis-6.1-password-history"
+      description: "CIS 6.1 - Password history must retain at least 5 previous passwords"
+      applied: true
+      level: 1
+      cloudProvider: mysql
+      objectName: variables
+      conditions:
+        - operator: OR
+          criteria:
+            - property: Variable_name
+              condition: DIFFERENT
+              value: "password_history"
+            - property: Value
+              condition: SUP_OR_EQUAL
+              value: 5
+
+    - name: "mysql-cis-6.3-max-connect-errors"
+      description: "CIS 6.3 - max_connect_errors must be 100 or less to limit brute-force"
+      applied: true
+      level: 1
+      cloudProvider: mysql
+      objectName: variables
+      conditions:
+        - operator: OR
+          criteria:
+            - property: Variable_name
+              condition: DIFFERENT
+              value: "max_connect_errors"
+            - property: Value
+              condition: INF_OR_EQUAL
+              value: 100
+
+    - name: "mysql-health-binlog-retention"
+      description: "Binary log retention must be enabled (binlog_expire_logs_seconds > 0)"
+      applied: true
+      level: 1
+      cloudProvider: mysql
+      objectName: variables
+      conditions:
+        - operator: OR
+          criteria:
+            - property: Variable_name
+              condition: DIFFERENT
+              value: "binlog_expire_logs_seconds"
+            - property: Value
+              condition: SUP
+              value: 0
+
+    - name: "mysql-health-max-connections"
+      description: "max_connections should not exceed 500 to prevent resource exhaustion"
       applied: true
       level: 0
       cloudProvider: mysql
-      objectName : users
+      objectName: variables
       conditions:
-        - operator : OR
+        - operator: OR
           criteria:
-            - property : .
-              condition : EQUAL
-              value : 200
+            - property: Variable_name
+              condition: DIFFERENT
+              value: "max_connections"
+            - property: Value
+              condition: INF_OR_EQUAL
+              value: 500
+
+    #───────────────────────────────────────────────
+    # Users (mysql.user)
+    #───────────────────────────────────────────────
+
+    - name: "mysql-cis-2.1-no-anonymous-users"
+      description: "CIS 2.1 - No anonymous user accounts should exist"
+      applied: true
+      level: 3
+      cloudProvider: mysql
+      objectName: users
+      conditions:
+        - property: User
+          condition: DIFFERENT
+          value: ""
+
+    - name: "mysql-cis-2.3-no-root-remote-login"
+      description: "CIS 2.3 - Root account must only be accessible from localhost"
+      applied: true
+      level: 3
+      cloudProvider: mysql
+      objectName: users
+      conditions:
+        - operator: OR
+          criteria:
+            - property: User
+              condition: DIFFERENT
+              value: "root"
+            - property: Host
+              condition: EQUAL
+              value: "localhost"
+
+    - name: "mysql-cis-2.5-no-unlocked-expired-passwords"
+      description: "CIS 2.5 - Accounts with expired passwords must be locked"
+      applied: true
+      level: 2
+      cloudProvider: mysql
+      objectName: users
+      conditions:
+        - operator: OR
+          criteria:
+            - property: password_expired
+              condition: DIFFERENT
+              value: "Y"
+            - property: account_locked
+              condition: EQUAL
+              value: "Y"

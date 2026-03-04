@@ -1,0 +1,178 @@
+- version: 1.0.0
+  date: 04-03-2026
+  alert:
+    fatal:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+    error:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+    warning:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+    info:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+    global:
+      enabled: true
+      type:
+        - log
+      to:
+        - myEmail@gmail.com
+      conditions:
+        - level: 0
+          min: 1
+        - level: 1
+          min: 1
+        - level: 2
+          min: 1
+        - level: 3
+          min: 1
+  rules:
+    #───────────────────────────────────────────────
+    # Parameters (V$SYSTEM_PARAMETER) — OR-skip pattern
+    # Note: Oracle columns are UPPERCASE
+    #───────────────────────────────────────────────
+
+    - name: "oracle-cis-2.1.1-remote-os-auth-disabled"
+      description: "CIS 2.1.1 - Remote OS authentication must be disabled"
+      applied: true
+      level: 3
+      cloudProvider: oracle
+      objectName: parameters
+      conditions:
+        - operator: OR
+          criteria:
+            - property: NAME
+              condition: DIFFERENT
+              value: "remote_os_authent"
+            - property: VALUE
+              condition: EQUAL
+              value: "FALSE"
+
+    - name: "oracle-cis-2.1.3-remote-os-roles-disabled"
+      description: "CIS 2.1.3 - Remote OS roles must be disabled"
+      applied: true
+      level: 3
+      cloudProvider: oracle
+      objectName: parameters
+      conditions:
+        - operator: OR
+          criteria:
+            - property: NAME
+              condition: DIFFERENT
+              value: "remote_os_roles"
+            - property: VALUE
+              condition: EQUAL
+              value: "FALSE"
+
+    - name: "oracle-cis-2.2.1-audit-sys-operations"
+      description: "CIS 2.2.1 - SYS operations must be audited"
+      applied: true
+      level: 2
+      cloudProvider: oracle
+      objectName: parameters
+      conditions:
+        - operator: OR
+          criteria:
+            - property: NAME
+              condition: DIFFERENT
+              value: "audit_sys_operations"
+            - property: VALUE
+              condition: EQUAL
+              value: "TRUE"
+
+    - name: "oracle-cis-2.2.2-audit-trail-enabled"
+      description: "CIS 2.2.2 - Audit trail must be enabled (DB, OS, or XML)"
+      applied: true
+      level: 2
+      cloudProvider: oracle
+      objectName: parameters
+      conditions:
+        - operator: OR
+          criteria:
+            - property: NAME
+              condition: DIFFERENT
+              value: "audit_trail"
+            - property: VALUE
+              condition: REGEX
+              value: "^(DB|OS|XML)"
+
+    - name: "oracle-cis-3.1-failed-login-limit"
+      description: "CIS 3.1 - Failed login attempts must be limited to 10 or fewer"
+      applied: true
+      level: 2
+      cloudProvider: oracle
+      objectName: parameters
+      conditions:
+        - operator: OR
+          criteria:
+            - property: NAME
+              condition: DIFFERENT
+              value: "sec_max_failed_login_attempts"
+            - property: VALUE
+              condition: INF_OR_EQUAL
+              value: 10
+
+    - name: "oracle-cis-3.2-sql92-security"
+      description: "CIS 3.2 - SQL92 security must be enabled"
+      applied: true
+      level: 2
+      cloudProvider: oracle
+      objectName: parameters
+      conditions:
+        - operator: OR
+          criteria:
+            - property: NAME
+              condition: DIFFERENT
+              value: "sql92_security"
+            - property: VALUE
+              condition: EQUAL
+              value: "TRUE"
+
+    #───────────────────────────────────────────────
+    # Privileges (USER_SYS_PRIVS) — skip SYS/SYSTEM
+    #───────────────────────────────────────────────
+
+    - name: "oracle-cis-6.1-no-admin-option"
+      description: "CIS 6.1 - Non-system users must not have ADMIN OPTION on privileges"
+      applied: true
+      level: 3
+      cloudProvider: oracle
+      objectName: privileges
+      conditions:
+        - operator: OR
+          criteria:
+            - property: USERNAME
+              condition: REGEX
+              value: "^(SYS|SYSTEM)$"
+            - property: ADMIN_OPTION
+              condition: EQUAL
+              value: "NO"
+
+    #───────────────────────────────────────────────
+    # Sessions (v$session)
+    #───────────────────────────────────────────────
+
+    - name: "oracle-health-no-killed-sessions"
+      description: "No session should be in KILLED state"
+      applied: true
+      level: 1
+      cloudProvider: oracle
+      objectName: sessions
+      conditions:
+        - property: STATUS
+          condition: DIFFERENT
+          value: "KILLED"
