@@ -136,11 +136,13 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
 export async function kubernetesListing(pathKubeFile: string): Promise<any> {
     logger.info("starting kubernetesListing");
 
-    // disable TLS verification for Bun compatibility
-    if (process.env.NODE_TLS_REJECT_UNAUTHORIZED == '0') {
-        process.env.HTTPS_PROXY = '';
-        process.env.HTTP_PROXY = '';
-    }
+    // Workaround: Bun's node:https Agent doesn't forward TLS options (cert/key/ca)
+    // to the native fetch layer, breaking @kubernetes/client-node mTLS auth.
+    // See: https://github.com/oven-sh/bun/issues/7332, PR #26964 pending fix.
+    // TODO: remove once Bun merges PR #26964 and we upgrade.
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+    process.env.HTTPS_PROXY = '';
+    process.env.HTTP_PROXY = '';
 
     try {
         const kc = new k8s.KubeConfig();
