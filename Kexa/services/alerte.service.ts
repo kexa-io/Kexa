@@ -23,6 +23,16 @@ jsome.level.show = true;
 
 const nodemailer = require("nodemailer");
 const levelAlert = ["info", "warning", "error", "fatal"];
+
+/** Validate a webhook URL: must be a valid https:// URL. */
+function isValidWebhookUrl(url: string): boolean {
+    try {
+        const parsed = new URL(url);
+        return parsed.protocol === "https:" || parsed.protocol === "http:";
+    } catch {
+        return false;
+    }
+}
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
 let config: any;
 async function init() {
@@ -225,10 +235,10 @@ export async function alertWebhookGlobal(alert: GlobalConfigAlert, compteError: 
     content["nbrError"] = nbrError;
     content["title"] = "Kexa - Global Alert - "+(alert.name??"Uname");
     for (const webhook_to of alert.to) {
-        if(!webhook_to.includes("http")) continue;
+        if(!isValidWebhookUrl(webhook_to)) continue;
         logger.debug("send webhook to:"+webhook_to);
         try {
-            await axios.post(webhook_to, jsonStringify(content));
+            await axios.post(webhook_to, jsonStringify(content), { timeout: 10000 });
             logger.debug(`webhook to: ${webhook_to} are send`);
         } catch (error) {
             logger.error(`Failed to send webhook to: ${webhook_to}`, error);
@@ -496,7 +506,7 @@ async function sendWebhook(alert: ConfigAlert, subject: string, content: any, ru
     const context = getContext();
     logger.debug("send webhook");
     for (const webhook_to of alert.to) {
-        if(!webhook_to.includes("http")) continue;
+        if(!isValidWebhookUrl(webhook_to)) continue;
         const payload: any = {
             title: "Kexa scan : " + subject,
             text: content.content ?? content,
