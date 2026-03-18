@@ -252,7 +252,7 @@ export function alertTeamsGlobal(alert: GlobalConfigAlert, compteError: number[]
     }
     for (const teams_to of alert.to) {
         const regex = /^https:\/\/(?:[a-zA-Z0-9_-]+\.)?webhook\.office\.com\/[^\s"]+$/;
-        if(!regex.test(teams_to)) return;
+        if(!regex.test(teams_to)) continue;
         logger.debug("send teams to:"+teams_to);
         const payload = Teams.GlobalTeams(colors[0], "Global Alert - "+(alert.name??"Uname"), content, nbrError);
         sendCardMessageToTeamsChannel(teams_to, payload);
