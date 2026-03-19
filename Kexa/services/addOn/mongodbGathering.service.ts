@@ -9,6 +9,8 @@
     *       - users
     *       - serverStatus
     *       - currentOp
+    *       - cmdLineOpts
+    *       - parameters
 */
 
 import { MongoClient, Db } from 'mongodb';
@@ -51,11 +53,13 @@ export async function collectData(mongoDbConfigs: MongoDbConfig[]): Promise<Mong
 
             client = await createMongoDbConnection(config);
 
-            const [databases, users, serverStatus, currentOp] = await Promise.all([
+            const [databases, users, serverStatus, currentOp, cmdLineOpts, parameters] = await Promise.all([
                 collectDatabases(client),
                 collectUsers(client),
                 collectServerStatus(client),
-                collectCurrentOp(client)
+                collectCurrentOp(client),
+                collectCmdLineOpts(client),
+                collectParameters(client)
             ]);
 
             allResources.push({
@@ -63,6 +67,8 @@ export async function collectData(mongoDbConfigs: MongoDbConfig[]): Promise<Mong
                 users,
                 serverStatus,
                 currentOp,
+                cmdLineOpts,
+                parameters,
             });
 
         } catch (e: any) {
@@ -207,6 +213,28 @@ async function collectCurrentOp(client: MongoClient): Promise<any> {
         return ((await client.db().admin().command({ currentOp: 1 })).inprog) || [];
     } catch (error: any) {
         logger.error(`Error occurred while collecting currentOp: ${error.message}`);
+        return null;
+    }
+}
+
+async function collectCmdLineOpts(client: MongoClient): Promise<any> {
+    if (!currentConfig?.ObjectNameNeed?.includes("cmdLineOpts")) return null;
+    logger.debug("Collecting command line options...");
+    try {
+        return [await client.db().admin().command({ getCmdLineOpts: 1 })];
+    } catch (error: any) {
+        logger.error(`Error occurred while collecting cmdLineOpts: ${error.message}`);
+        return null;
+    }
+}
+
+async function collectParameters(client: MongoClient): Promise<any> {
+    if (!currentConfig?.ObjectNameNeed?.includes("parameters")) return null;
+    logger.debug("Collecting server parameters...");
+    try {
+        return [await client.db().admin().command({ getParameter: "*" })];
+    } catch (error: any) {
+        logger.error(`Error occurred while collecting parameters: ${error.message}`);
         return null;
     }
 }

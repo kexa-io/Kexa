@@ -30,16 +30,15 @@ const reservedNameAddOn=[
     "general",
 ]
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-async function init() {
-    try {
-        configuration = await getConfig();
-    } catch (error) {
-        logger.error("Failed to load config", error);
-    }
-}
-init();
-///////////////////////////////////////////////////////////////////////////////////////////////////
 export async function loadAddOns(): Promise<ProviderResource>{
+    if (!configuration) {
+        try {
+            configuration = await getConfig();
+        } catch (error) {
+            logger.error("Failed to load config", error);
+            throw new Error("Configuration could not be loaded");
+        }
+    }
     let resources: ProviderResource = {};
     let context = getContext();
     logger.info("Loading addOns");

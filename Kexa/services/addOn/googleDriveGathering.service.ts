@@ -90,7 +90,7 @@ async function listFiles(authClient:any) {
             return [];
         }
     } catch (err) {
-        console.debug("Erreur lors de la récupération des fichiers :", err);
+        logger.debug("Erreur lors de la récupération des fichiers :", err);
     }
 }
 

@@ -70,7 +70,7 @@ export async function collectData(gitConfig:GitConfig[]): Promise<GitResources[]
                 "pullRequestPackageChanges": secondaryDataRepo.allPullRequestPackageChanges
             });
         }catch(e){
-            logger.error(e);
+            logger.error("Error collecting GitHub data: " + (e instanceof Error ? e.message : "Unknown error"));
         }
     }
     return resources??null;

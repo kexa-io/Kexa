@@ -111,5 +111,5 @@ export function AsciiArtText(text:string){
     ██║  ██╗███████╗██╔╝ ██╗██║  ██║
     ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝
 `;
-    console.log(asciiArt);
+    logger.info(asciiArt);
 }

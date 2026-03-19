@@ -9,17 +9,18 @@ permissions:
   contents: write
 
 jobs:
-  build-binaries:
+  prepare:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: latest
+          cache: true
+          cache-dependency-path: bun.lock
 
       - name: Install dependencies
         run: bun install
@@ -30,32 +31,70 @@ jobs:
           timeout 60 bun run Kexa/main.ts || true
           echo "Headers service file updated with latest provider data"
 
-      - name: Create dist directory
-        run: mkdir -p dist
+      - name: Upload source for build
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: source-with-headers
+          path: |
+            Kexa/
+            node_modules/
+            package.json
+            bun.lock
+          retention-days: 1
 
-      - name: Build Linux x64
-        run: bun build ./Kexa/main.ts --compile --target=bun-linux-x64 --outfile=dist/kexa-linux-x64 --minify
+  build:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - target: bun-linux-x64
+            output: kexa-linux-x64
+          - target: bun-linux-arm64
+            output: kexa-linux-arm64
+          - target: bun-darwin-x64
+            output: kexa-macos-x64
+          - target: bun-darwin-arm64
+            output: kexa-macos-arm64
+          - target: bun-windows-x64
+            output: kexa-windows-x64.exe
+    steps:
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: latest
 
-      - name: Build Linux ARM64
-        run: bun build ./Kexa/main.ts --compile --target=bun-linux-arm64 --outfile=dist/kexa-linux-arm64 --minify
+      - name: Download source
+        uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 # v8.0.0
+        with:
+          name: source-with-headers
 
-      - name: Build macOS x64
-        run: bun build ./Kexa/main.ts --compile --target=bun-darwin-x64 --outfile=dist/kexa-macos-x64 --minify
+      - name: Build ${{ matrix.target }}
+        run: |
+          mkdir -p dist
+          bun build ./Kexa/main.ts --compile --target=${{ matrix.target }} --outfile=dist/${{ matrix.output }} --minify
 
-      - name: Build macOS ARM64
-        run: bun build ./Kexa/main.ts --compile --target=bun-darwin-arm64 --outfile=dist/kexa-macos-arm64 --minify
+      - name: Upload binary
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: ${{ matrix.output }}
+          path: dist/${{ matrix.output }}
+          retention-days: 1
 
-      - name: Build Windows x64
-        run: bun build ./Kexa/main.ts --compile --target=bun-windows-x64 --outfile=dist/kexa-windows-x64.exe --minify
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all binaries
+        uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 # v8.0.0
+        with:
+          path: dist
+          pattern: kexa-*
+          merge-multiple: true
 
       - name: Upload binaries to release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe # v2
         with:
-          files: |
-            dist/kexa-linux-x64
-            dist/kexa-linux-arm64
-            dist/kexa-macos-x64
-            dist/kexa-macos-arm64
-            dist/kexa-windows-x64.exe
+          files: dist/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

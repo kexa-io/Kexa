@@ -120,7 +120,7 @@ export async function initOnly(save: KexaSaveConfig): Promise<void> {
             });
             logger.info(`Provider items initialized - sent ${comparison.localCount - comparison.apiCount} missing resources`);
         } catch (error: any) {
-            console.log(error);
+            logger.error("Failed to initialize provider items", error);
             throw new Error(`Failed to initialize provider items: ${error.message}`);
         }
     } else {

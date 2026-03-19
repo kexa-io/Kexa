@@ -7060,7 +7060,9 @@ let headersData: Capacity = {
             "databases",
             "users",
             "serverStatus",
-            "currentOp"
+            "currentOp",
+            "cmdLineOpts",
+            "parameters"
         ],
         "thumbnail": "https://webassets.mongodb.com/_com_assets/cms/mongodb_logo1-76twgcu2dm.png",
         "documentation": "https://www.npmjs.com/package/mongodb",

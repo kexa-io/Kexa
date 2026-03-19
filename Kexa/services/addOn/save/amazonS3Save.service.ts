@@ -4,22 +4,24 @@ import type { AmazonS3SaveConfig } from "../../../models/export/amazonS3/config.
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { jsonStringify } from '../../../helpers/jsonStringify';
 
-const logger = getNewLogger("AzureBlobStorageLogger");
+const logger = getNewLogger("AmazonS3SaveLogger");
 const context = getContext();
 
 export async function save(save: AmazonS3SaveConfig, result: ResultScan[][]): Promise<void>{
-    throw new Error("Implementation not yet complete");
-    if(!save.bucketName) throw new Error("bucketName is missing");
-
+    if(!save.bucketName) throw new Error("S3 save: bucketName is required");
     await saveJsonToAmazonS3(save, result);
 }
 
 async function saveJsonToAmazonS3(save: AmazonS3SaveConfig, result: ResultScan[][]): Promise<void> {
-    const client = new S3Client();
+    const client = new S3Client({
+        ...(save.region && { region: save.region }),
+    });
+    const key = (save?.origin ?? "kexa/") + new Date().toISOString().slice(0, 16).replace(/[-T:]/g, '') + ".json";
     await client.send(new PutObjectCommand({
-        Bucket: save.bucketName??"Kexa",
-        Key: (save?.origin ?? "") + new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '') + ".json",
+        Bucket: save.bucketName,
+        Key: key,
         Body: jsonStringify({data: result}),
+        ContentType: "application/json",
     }));
-    logger.info("Saved to Amazon S3");
+    logger.info(`Saved scan results to s3://${save.bucketName}/${key}`);
 }

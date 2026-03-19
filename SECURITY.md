@@ -16,13 +16,13 @@ If you believe you have found a security vulnerability in our project, we apprec
    - Steps to reproduce the vulnerability.
    - Any related information, such as affected versions.
 
-3. **Contact Us Privately:** Report the issue privately to our email at [contact@4urcloud.eu](mailto:contact@4urcloud.eu).
+3. **Contact Us Privately:** Report the issue privately to our email at [contact@kexa.io](mailto:contact@kexa.io).
 
 ## Security Policy Response
 
 Once we receive your report, we will do the following:
 
-1. **Acknowledge Receipt:** We will acknowledge the receipt of your report within [timeframe, e.g., 48 hours].
+1. **Acknowledge Receipt:** We will acknowledge the receipt of your report within 48 hours.
 
 2. **Assessment:** Our team will investigate and assess the reported vulnerability.
 
@@ -48,4 +48,4 @@ We believe in responsible disclosure and appreciate your cooperation in making o
 
 Thank you for helping us keep our project safe and secure!
 
-4urcloud
+The Kexa Team

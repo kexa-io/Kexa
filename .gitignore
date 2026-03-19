@@ -26,6 +26,7 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 .eslintcache
 .cache
 *.tsbuildinfo
+.fastembed_cache/
 
 # Finder (MacOS) folder config
 .DS_Store
@@ -56,3 +57,7 @@ examples/*/data/*
 #bun build
 *.bun-build
 *kexa-cli
+
+# downloaded rules (fetched at runtime)
+rules.zip
+rules/kexa-io-public-rules-*/

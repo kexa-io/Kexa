@@ -170,7 +170,7 @@ async function getToken(tenantId: string, clientId: string, clientSecret: string
             return null;
         }
     } catch (error) {
-        console.error('O365 - Error fetching token:', error);
+        logger.error('O365 - Error fetching token:', error);
         throw error;
     }
     return accessToken ?? null;
@@ -220,8 +220,7 @@ async function  listUsers(endpoint: string, accessToken: string, headers: Header
             }
         }
     } catch (error: any) {
-        console.error('O365 - Error fetching :');
-        console.error(error.response.data);
+        logger.error('O365 - Error fetching users:', error.response?.data);
     }
     return  jsonData ?? null;
 }

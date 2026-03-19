@@ -20,9 +20,19 @@ import {formatAlertCondition} from "./api/formatterApi.service";
 
 const jsome = require('jsome');
 jsome.level.show = true;
-const request = require('request');
+
 const nodemailer = require("nodemailer");
 const levelAlert = ["info", "warning", "error", "fatal"];
+
+/** Validate a webhook URL: must be a valid https:// URL. */
+function isValidWebhookUrl(url: string): boolean {
+    try {
+        const parsed = new URL(url);
+        return parsed.protocol === "https:" || parsed.protocol === "http:";
+    } catch {
+        return false;
+    }
+}
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
 let config: any;
 async function init() {
@@ -78,7 +88,7 @@ export function alertFromGlobal(alert: GlobalConfigAlert, compteError: number[],
                 alertSMSGlobal(alert, compteError);
                 break;
             case AlertEnum.SLACK:
-                throw new Error("not implemented");
+                alertSlackGlobal(alert, compteError, allScan);
                 break;
             case AlertEnum.TEAMS:
                 alertTeamsGlobal(alert, compteError, allScan);
@@ -147,7 +157,7 @@ export function alertLogGlobal(alert: GlobalConfigAlert, compteError: number[], 
         context?.log(ruleSeparator);
         logger.info(ruleSeparator);
             errorsResources.forEach((scan: ResultScan, index) => {
-                console.log("\n");
+                logger.info("");
                 context?.log("== > Resource " + (index + 1) + "/" + errorsResources.length + ":");
                 logger.info("==> Resource " + (index + 1) + "/" + errorsResources.length + ":");
                 alertLog(scan.rule, scan.error, scan.objectContent, false);
@@ -213,7 +223,7 @@ export function alertSMSGlobal(alert: GlobalConfigAlert, compteError: number[]) 
     });
 }
 
-export function alertWebhookGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
+export async function alertWebhookGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
     logger.debug("alert webhook");
     let content = compteRender(allScan);
     let nbrError: { [x: string]: number; }[] = [];
@@ -224,15 +234,16 @@ export function alertWebhookGlobal(alert: GlobalConfigAlert, compteError: number
     });
     content["nbrError"] = nbrError;
     content["title"] = "Kexa - Global Alert - "+(alert.name??"Uname");
-    alert.to.forEach((webhook_to) => {
-        if(!webhook_to.includes("http")) return;
+    for (const webhook_to of alert.to) {
+        if(!isValidWebhookUrl(webhook_to)) continue;
         logger.debug("send webhook to:"+webhook_to);
-        request.post(webhook_to, { json: jsonStringify(content) }, (res:any) => {
-            logger.debug(`webhook to: ${webhook_to} are send`)
-        }).on('error', (error:any) => {
-            logger.error(error)
-        });
-    });
+        try {
+            await axios.post(webhook_to, jsonStringify(content), { timeout: 10000 });
+            logger.debug(`webhook to: ${webhook_to} are send`);
+        } catch (error) {
+            logger.error(`Failed to send webhook to: ${webhook_to}`, error);
+        }
+    }
 }
 
 export function alertTeamsGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
@@ -251,7 +262,7 @@ export function alertTeamsGlobal(alert: GlobalConfigAlert, compteError: number[]
     }
     for (const teams_to of alert.to) {
         const regex = /^https:\/\/(?:[a-zA-Z0-9_-]+\.)?webhook\.office\.com\/[^\s"]+$/;
-        if(!regex.test(teams_to)) return;
+        if(!regex.test(teams_to)) continue;
         logger.debug("send teams to:"+teams_to);
         const payload = Teams.GlobalTeams(colors[0], "Global Alert - "+(alert.name??"Uname"), content, nbrError);
         sendCardMessageToTeamsChannel(teams_to, payload);
@@ -297,12 +308,13 @@ export function alertFromRule(rule:Rules, conditions:SubResultScan[], objectReso
                 alertSMS(detailAlert, rule, conditions, objectResource);
                 break;
             case AlertEnum.SLACK:
-                throw new Error("not implemented");
+                alertSlack(detailAlert, rule, conditions, objectResource);
+                break;
             case AlertEnum.TEAMS:
                 alertTeams(detailAlert, rule, conditions, objectResource);
                 break;
             case AlertEnum.WEBHOOK:
-                sendWebhook(detailAlert, "Kexa - " + levelAlert[rule.level] + " - " + rule.name, conditions)
+                sendWebhook(detailAlert, "Kexa - " + levelAlert[rule.level] + " - " + rule.name, conditions, rule, objectResource)
                 break;
             case AlertEnum.JIRA:
                 sendJiraTicket(detailAlert, "Kexa - " + rule.name, conditions, rule, objectResource);
@@ -388,11 +400,59 @@ export function alertTeams(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rul
     logger.debug("alert Teams");
     for (const teams_to of detailAlert.to) {
         const regex = /^https:\/\/(?:[a-zA-Z0-9_-]+\.)?webhook\.office\.com\/[^\s"]+$/;
-        if(!regex.test(teams_to)) return;
+        if(!regex.test(teams_to)) continue;
         let content = propertyToSend(rule, objectResource, false, conditions);
         const payload = Teams.OneTeams(colors[rule.level], "Kexa - "+levelAlert[rule.level]+" - "+rule.name, extractURL(content)??"", rule.description??"", content);
         sendCardMessageToTeamsChannel(teams_to, payload);
     }
+}
+
+export async function alertSlackGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
+    logger.debug("alert Slack Global");
+    const blocks: any[] = [
+        { type: "header", text: { type: "plain_text", text: "Kexa - Global Alert - " + (alert.name ?? "Unnamed") } },
+        { type: "section", text: { type: "mrkdwn", text: compteError.map((c, i) => `*${levelAlert[i]}*: ${c}`).join(" | ") } },
+    ];
+    allScan.forEach((scan) => {
+        scan.filter(s => s.error.length > 0).forEach((s) => {
+            const ruleName = typeof s.rule === 'string' ? s.rule : (s.rule?.name ?? "unknown");
+            blocks.push({ type: "section", text: { type: "mrkdwn", text: `• ${ruleName} — ${s.error.join(", ")}` } });
+        });
+    });
+    for (const slack_to of alert.to) {
+        if (!isValidSlackWebhook(slack_to)) continue;
+        try {
+            await axios.post(slack_to, { blocks }, { timeout: 10000 });
+            logger.info("Slack global alert sent");
+        } catch (error) {
+            logger.error(`Failed to send Slack alert to: ${slack_to}`, error);
+        }
+    }
+}
+
+export async function alertSlack(detailAlert: ConfigAlert|GlobalConfigAlert, rule: Rules, conditions: SubResultScan[], objectResource: any) {
+    logger.debug("alert Slack");
+    const content = propertyToSend(rule, objectResource, true, conditions);
+    const payload = {
+        blocks: [
+            { type: "header", text: { type: "plain_text", text: "Kexa - " + levelAlert[rule.level] + " - " + rule.name } },
+            { type: "section", text: { type: "mrkdwn", text: rule.description ?? "" } },
+            { type: "section", text: { type: "mrkdwn", text: "```\n" + content + "\n```" } },
+        ],
+    };
+    for (const slack_to of detailAlert.to) {
+        if (!isValidSlackWebhook(slack_to)) continue;
+        try {
+            await axios.post(slack_to, payload, { timeout: 10000 });
+            logger.info("Slack alert sent for rule: " + rule.name);
+        } catch (error) {
+            logger.error(`Failed to send Slack alert to: ${slack_to}`, error);
+        }
+    }
+}
+
+function isValidSlackWebhook(url: string): boolean {
+    return /^https:\/\/hooks\.slack\.com\/services\/[A-Za-z0-9/]+$/.test(url);
 }
 
 export function alertEmail(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules, conditions:SubResultScan[], objectResource:any){
@@ -469,6 +529,7 @@ async function SendMailWithAttachment(mail: string, to: string, subject: string,
         logger.info(`Email sent: ${subject} to ${to} with attachment`);
         return true;
     }catch (e) {
+        logger.error(`Failed to send email with attachment: ${subject} to ${to}`, e);
         return false;
     }
 }
@@ -490,16 +551,40 @@ ${content}`,
         })
 }
 
-async function sendWebhook(alert: ConfigAlert, subject: string, content: any) {
+async function sendWebhook(alert: ConfigAlert, subject: string, content: any, rule?: Rules, objectResource?: any) {
     const context = getContext();
-    content["title"] = subject;
     logger.debug("send webhook");
     for (const webhook_to of alert.to) {
-        if(!webhook_to.includes("http")) continue;
-        const payload = {
+        if(!isValidWebhookUrl(webhook_to)) continue;
+        const payload: any = {
             title: "Kexa scan : " + subject,
-            text: content.content,
+            text: content.content ?? content,
         };
+        if (rule) {
+            payload.version = "1.0";
+            payload.event = "rule.violation";
+            payload.timestamp = new Date().toISOString();
+            payload.rule = {
+                name: rule.name,
+                description: rule.description,
+                level: levelAlert[rule.level],
+                cloudProvider: rule.cloudProvider,
+                objectName: rule.objectName,
+            };
+            if (objectResource) {
+                payload.resource = objectResource;
+            }
+            if (Array.isArray(content)) {
+                payload.violations = content
+                    .filter((r: SubResultScan) => !r.result)
+                    .map((r: SubResultScan) => ({
+                        property: r.condition?.[0]?.property,
+                        condition: r.condition?.[0]?.condition,
+                        expected: r.condition?.[0]?.value,
+                        actual: r.value,
+                    }));
+            }
+        }
         try {
             const response = await axios.post(webhook_to, payload);
             if (response.status === 200) {
@@ -606,6 +691,6 @@ export async function sendCardMessageToTeamsChannel(channelWebhook: string, payl
             logger.info('Failed to send card.');
         }
     } catch (error) {
-        console.error('An error occurred:', error);
+        logger.error(`Failed to send Teams card to: ${channelWebhook}`, error);
     }
 }

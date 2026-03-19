@@ -8,7 +8,11 @@ export async function getConfig(saveOnly: boolean = false): Promise<any> {
         return await getConfigFromApi(saveOnly);
     }
     if (process.env.SPECIALCONFIG) {
-        return JSON.parse(fs.readFileSync(process.env.SPECIALCONFIG, 'utf8'));
+        const configPath = process.env.SPECIALCONFIG;
+        if (!fs.existsSync(configPath)) {
+            throw new Error(`SPECIALCONFIG file not found: ${configPath}`);
+        }
+        return JSON.parse(fs.readFileSync(configPath, 'utf8'));
     } else {
         return require('node-config-ts').config;
     }

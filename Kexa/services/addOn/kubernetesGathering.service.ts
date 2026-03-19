@@ -136,11 +136,13 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
 export async function kubernetesListing(pathKubeFile: string): Promise<any> {
     logger.info("starting kubernetesListing");
 
-    // disable TLS verification for Bun compatibility
-    if (process.env.NODE_TLS_REJECT_UNAUTHORIZED == '0') {
-        process.env.HTTPS_PROXY = '';
-        process.env.HTTP_PROXY = '';
-    }
+    // Workaround: Bun's node:https Agent doesn't forward TLS options (cert/key/ca)
+    // to the native fetch layer, breaking @kubernetes/client-node mTLS auth.
+    // See: https://github.com/oven-sh/bun/issues/7332, PR #26964 pending fix.
+    // TODO: remove once Bun merges PR #26964 and we upgrade.
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+    process.env.HTTPS_PROXY = '';
+    process.env.HTTP_PROXY = '';
 
     try {
         const kc = new k8s.KubeConfig();
@@ -177,6 +179,7 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
         const k8sAppsV1Api = kc.makeApiClient(k8s.AppsV1Api);
         const k8sNetworkingV1Api = kc.makeApiClient(k8s.NetworkingV1Api);
         const k8sStorageV1Api = kc.makeApiClient(k8s.StorageV1Api);
+        const k8sBatchV1Api = kc.makeApiClient(k8s.BatchV1Api);
         const k8sApiregistrationV1Api = kc.makeApiClient(k8s.ApiregistrationV1Api);
         const k8CoordinationV1Api = kc.makeApiClient(k8s.CoordinationV1Api);
         const k8sLog = new k8s.Log(kc);
@@ -195,8 +198,8 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
             collectReplicaset(k8sAppsV1Api, item.metadata.name),
             collectStatefulset(k8sAppsV1Api, item.metadata.name),
             collectDaemonset(k8sAppsV1Api, item.metadata.name),
-            //collectJob(k8sApiCore, item.metadata.name),
-            //collectCronjob(k8sApiCore, item.metadata.name),
+            collectJob(k8sBatchV1Api, item.metadata.name),
+            collectCronjob(k8sBatchV1Api, item.metadata.name),
             collectIngress(k8sNetworkingV1Api, item.metadata.name),
             collectPersistentvolume(k8sApiCore, item.metadata.name),
             collectPersistentvolumeclaim(k8sApiCore, item.metadata.name),
@@ -241,8 +244,8 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
             replicasetData,
             statefulsetData,
             daemonsetData,
-            //jobData,
-            //cronjobData,
+            jobData,
+            cronjobData,
             ingressData,
             persistentvolumeData,
             persistentvolumeclaimData,
@@ -288,8 +291,8 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
             [replicasetData, "replicaset"], // work
             [statefulsetData, "statefulset"], // work
             [daemonsetData, "daemonset"], // work
-            //[jobData, "job"],
-            //[cronjobData, "cronjob"],
+            [jobData, "job"],
+            [cronjobData, "cronjob"],
             [ingressData, "ingress"], // work
             [persistentvolumeData, "persistentvolume"], // work
             [persistentvolumeclaimData, "persistentvolumeclaim"], // work
@@ -510,11 +513,10 @@ async function collectDaemonset(k8sAppsV1Api: any, namespace: string): Promise<a
     }
 }
 
-//TODO:find a way to get jobs
-async function collectJob(k8sApiCore: any, namespace: string): Promise<any> {
+async function collectJob(k8sBatchV1Api: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("job")) return [];
     try {
-        const jobs = await k8sApiCore.listNamespacedJob({namespace: namespace});
+        const jobs = await k8sBatchV1Api.listNamespacedJob({namespace: namespace});
         return jobs?.items;
     } catch (e) {
         logger.debug(e);
@@ -522,11 +524,10 @@ async function collectJob(k8sApiCore: any, namespace: string): Promise<any> {
     }
 }
 
-//TODO:find a way to get cronjobs
-async function collectCronjob(k8sApiCore: any, namespace: string): Promise<any> {
+async function collectCronjob(k8sBatchV1Api: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("cronjob")) return [];
     try {
-        const cronjobs = await k8sApiCore.listNamespacedCronJob({namespace: namespace});
+        const cronjobs = await k8sBatchV1Api.listNamespacedCronJob({namespace: namespace});
         return cronjobs?.items;
     } catch (e) {
         logger.debug(e);
@@ -935,7 +936,9 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
                             logs: logEntries.split('\n').map((line: string) => ({ line })),
                             interval: interval
                         });
-                    } catch (e) {}
+                    } catch (e) {
+                        logger.debug("Failed to parse log chunk for pod " + pod.metadata?.name, e);
+                    }
                 });
                 logStream.on('error', () => {});
                 try {
@@ -951,7 +954,9 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
                             sinceSeconds: sinceSeconds
                         }
                     ).catch(() => null);
-                } catch (err: any) {}
+                } catch (err: any) {
+                    logger.debug("Failed to fetch logs for pod " + pod.metadata?.name + " container " + containerName, err);
+                }
                 await delay(100);
             }));
         }));

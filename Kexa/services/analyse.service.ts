@@ -157,7 +157,7 @@ async function getListNeedRules(): Promise<string[]> {
     const config = await getConfig();
     let listNeedRules = new Array<string>();
     for(let cloudProvider of Object.keys(config)){
-        if(["host", "host", "workerId", "requestId", "grpcMaxMessageLength"].includes(cloudProvider)) continue;
+        if(["host", "general", "workerId", "requestId", "grpcMaxMessageLength"].includes(cloudProvider)) continue;
         let configAssign = config[cloudProvider];
         try{
             for(let config of configAssign){
@@ -191,7 +191,11 @@ export async function analyzeRule(ruleFilePath:string, listNeedRules:string[], g
         let contentRuleFile = fs.readFileSync(ruleFilePath, 'utf8');
         const configHere = await getConfig();
         contentRuleFile = replaceElement(contentRuleFile, configHere?.variable?.[name]);
-        const doc = (yaml.load(contentRuleFile) as SettingFile[])[0];
+        const docs = yaml.load(contentRuleFile) as SettingFile[];
+        if (!docs || !Array.isArray(docs) || docs.length === 0) {
+            throw new Error("Empty or invalid rule file: " + name);
+        }
+        const doc = docs[0];
         let result = await checkDoc(doc);
         logCheckDoc(result);
         result.forEach((value) => {
@@ -294,11 +298,12 @@ export async function checkDocAlertConfig(alertConfig:ConfigAlert, level:string)
                 result.push("warn - type not valid in alert config for "+level+" : "+type);
                 continue;
             }
-            try{
-                for(let env of varEnvMin[type.toLowerCase() as keyof typeof varEnvMin]){
+            const envVars = varEnvMin[type.toLowerCase() as keyof typeof varEnvMin];
+            if(envVars){
+                for(let env of envVars){
                     if(!(await getConfigOrEnvVar(config, env))) result.push("error - "+env+" not found in env for "+level);
                 }
-            }catch(err){}
+            }
         };
     }
     if(alertConfig.hasOwnProperty("type") && alertConfig.type.some((type: string) => type !== AlertEnum.LOG)){
@@ -572,6 +577,7 @@ export function checkParentRule(parentRule:ParentRules, resources:any): SubResul
         case OperatorEnum.XNOR:
             return parentResultScan(result, result.filter((value) => value.result).length !== 1);
         case OperatorEnum.NOT:
+            if (result.length === 0) return { value: resources, condition: [], result: false, message: "NOT operator requires at least one criteria" };
             return parentResultScan(result, !result[0].result);
         default:
             return {
@@ -697,9 +703,10 @@ export function getSubProperty(object:any, property:string): any {
     if (property === ".")  return object;
     let properties = splitProperty(property, ".", "/");
     let result = object;
-    properties.forEach(prop => {
+    for (const prop of properties) {
+        if (result == null) return undefined;
         result = result[prop];
-    });
+    }
     return result;
 }
 

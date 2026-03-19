@@ -1,44 +1,35 @@
 - version: 1.0.0
-  date: 06-12-2023
+  date: 04-03-2026
   alert:
     fatal:
       enabled: true
-      type: 
+      type:
         - log
-        #- email
-      to: 
+      to:
         - myEmail@gmail.com
     error:
       enabled: true
-      type: 
+      type:
         - log
-        #- email
-        #- sms
-      to: 
+      to:
         - myEmail@gmail.com
     warning:
       enabled: true
-      type: 
+      type:
         - log
-        #- email
       to:
         - myEmail@gmail.com
     info:
       enabled: true
-      type: 
+      type:
         - log
-        #- email
-      to: 
+      to:
         - myEmail@gmail.com
     global:
       enabled: true
-      type: 
+      type:
         - log
-        #- webhook
-        #- sms
-        #- email
-      to: 
-        #- http://127.0.0.1:5000/test
+      to:
         - myEmail@gmail.com
       conditions:
         - level: 0
@@ -50,51 +41,122 @@
         - level: 3
           min: 1
   rules:
-    - name: "mongodb-query-databases"
-      description : "mongodb query databases"
+    #───────────────────────────────────────────────
+    # cmdLineOpts (getCmdLineOpts) — single object
+    #───────────────────────────────────────────────
+
+    - name: "mongodb-cis-2.1-auth-enabled"
+      description: "CIS 2.1 - Authentication must be enabled (security.authorization = enabled)"
       applied: true
-      level: 0
+      level: 3
       cloudProvider: mongodb
-      objectName : databases
+      objectName: cmdLineOpts
       conditions:
-        - operator : OR
-          criteria:
-            - property : .
-              condition : EQUAL
-              value : 200
-    - name: "mongodb-query-databases"
-      description : "mongodb query databases"
+        - property: parsed.security.authorization
+          condition: EQUAL
+          value: "enabled"
+
+    - name: "mongodb-cis-2.2-bind-ip-restricted"
+      description: "CIS 2.2 - MongoDB must not bind to 0.0.0.0 (all interfaces)"
       applied: true
-      level: 0
+      level: 2
       cloudProvider: mongodb
-      objectName : users
+      objectName: cmdLineOpts
       conditions:
-        - operator : OR
-          criteria:
-            - property : .
-              condition : EQUAL
-              value : 200
-    - name: "mongodb-query-databases"
-      description : "mongodb query databases"
+        - property: parsed.net.bindIp
+          condition: DIFFERENT
+          value: "0.0.0.0"
+
+    #───────────────────────────────────────────────
+    # parameters (getParameter) — single object
+    #───────────────────────────────────────────────
+
+    - name: "mongodb-cis-3.1-tls-enabled"
+      description: "CIS 3.1 - TLS must be enabled (tlsMode should be requireTLS or preferTLS)"
       applied: true
-      level: 0
+      level: 2
       cloudProvider: mongodb
-      objectName : serverStatus
+      objectName: parameters
       conditions:
-        - operator : OR
-          criteria:
-            - property : host
-              condition : EQUAL
-              value : 200
-    - name: "mongodb-query-databases"
-      description : "mongodb query databases"
+        - property: tlsMode
+          condition: REGEX
+          value: "^(requireTLS|preferTLS)$"
+
+    - name: "mongodb-cis-4.1-log-verbosity"
+      description: "CIS 4.1 - Log verbosity must be at least 1 for access control auditing"
       applied: true
-      level: 0
+      level: 1
       cloudProvider: mongodb
-      objectName : currentOp
+      objectName: parameters
       conditions:
-        - operator : OR
+        - property: logLevel
+          condition: SUP_OR_EQUAL
+          value: 1
+
+    - name: "mongodb-cis-4.2-quiet-mode-disabled"
+      description: "CIS 4.2 - Quiet mode must be disabled to ensure proper logging"
+      applied: true
+      level: 1
+      cloudProvider: mongodb
+      objectName: parameters
+      conditions:
+        - property: quiet
+          condition: EQUAL
+          value: false
+
+    #───────────────────────────────────────────────
+    # users (system.users) — skip admin user
+    #───────────────────────────────────────────────
+
+    - name: "mongodb-cis-5.1-no-extra-root-roles"
+      description: "CIS 5.1 - No user other than the admin should have the root role"
+      applied: true
+      level: 3
+      cloudProvider: mongodb
+      objectName: users
+      conditions:
+        - operator: OR
           criteria:
-            - property : .
-              condition : EQUAL
-              value : 200
+            - property: user
+              condition: EQUAL
+              value: "kexa"
+            - property: roles
+              condition: NOT_ANY
+              value:
+                - property: role
+                  condition: EQUAL
+                  value: "root"
+
+    - name: "mongodb-cis-5.2-no-dbowner-on-admin"
+      description: "CIS 5.2 - No user should have dbOwner role on admin database"
+      applied: true
+      level: 2
+      cloudProvider: mongodb
+      objectName: users
+      conditions:
+        - property: roles
+          condition: NOT_ANY
+          value:
+            - operator: AND
+              criteria:
+                - property: role
+                  condition: EQUAL
+                  value: "dbOwner"
+                - property: db
+                  condition: EQUAL
+                  value: "admin"
+
+    #───────────────────────────────────────────────
+    # serverStatus — health checks
+    #───────────────────────────────────────────────
+
+    - name: "mongodb-health-connections-limit"
+      description: "Current connections should not exceed 80% of available connections"
+      applied: true
+      level: 1
+      cloudProvider: mongodb
+      objectName: serverStatus
+      conditions:
+        - property: connections.available
+          condition: SUP
+          value: 0

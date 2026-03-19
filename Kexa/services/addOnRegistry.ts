@@ -37,6 +37,7 @@ const displayFiles = [
 const saveFiles = [
     'amazonS3Save.service.ts',
     'azureBlobStorageSave.service.ts',
+    'gcpCloudStorageSave.service.ts',
     'kexaSave.service.ts',
     'mongoDBSave.service.ts',
     'mySQLSave.service.ts',
@@ -45,6 +46,7 @@ const saveFiles = [
 
 const exportationFiles = [
     'azureBlobStorageExportation.service.ts',
+    'gcpCloudStorageExportation.service.ts',
     'kexaExportation.service.ts',
     'mongoDBExportation.service.ts',
     'mySQLExportation.service.ts',
@@ -201,6 +203,9 @@ async function loadSaveModule(filename: string): Promise<any> {
         case 'postgresSave.service.ts':
             module = await import('./addOn/save/postgresSave.service');
             break;
+        case 'gcpCloudStorageSave.service.ts':
+            module = await import('./addOn/save/gcpCloudStorageSave.service');
+            break;
         default:
             return null;
     }
@@ -230,6 +235,9 @@ async function loadExportationModule(filename: string): Promise<any> {
             break;
         case 'postgresExportation.service.ts':
             module = await import('./addOn/exportation/postgresExportation.service');
+            break;
+        case 'gcpCloudStorageExportation.service.ts':
+            module = await import('./addOn/exportation/gcpCloudStorageExportation.service');
             break;
         default:
             return null;

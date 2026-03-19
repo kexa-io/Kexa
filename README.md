@@ -23,6 +23,31 @@ sidebar_position: 1
   <h3>Multi-Cloud Compliance Management Made Simple</h3>
 </div>
 
+## Try Kexa in 30 seconds
+
+```bash
+docker run --rm -v $(pwd)/config:/app/config ghcr.io/kexa-io/kexa:latest
+```
+
+> See [kexa-samples](https://github.com/kexa-io/kexa-samples) for ready-to-use configurations per provider.
+
+---
+
+## How does Kexa compare?
+
+| Feature | Kexa | Checkov | Prowler | ScoutSuite |
+|---------|------|---------|---------|------------|
+| Multi-cloud (Azure, AWS, GCP) | Yes | Yes | AWS + Azure + GCP | AWS + Azure + GCP |
+| Kubernetes scanning | Yes | Yes (IaC) | No | No |
+| Database scanning (SQL, Mongo, Oracle) | Yes | No | No | No |
+| GitHub / O365 / Google Workspace | Yes | No | No | No |
+| Number of providers | **15+** | ~10 (IaC focused) | 3 | 4 |
+| Rule format | **Simple YAML** | Python / YAML | Python | Python |
+| Standalone binary | Yes | No | No | No |
+| Lightweight (no Python runtime) | Yes | No | No | No |
+
+---
+
 ## Quick samples (run a quick security or finops audit on specific provider)
 
 **If you want to first try Kexa the fastest way**, check out this repository which use pre-defined samples
@@ -190,6 +215,11 @@ For detailed documentation, including:
 - Best practices
 
 Visit our [Documentation](./docs/README.md)
+
+**More resources:**
+- [FAQ](./docs/FAQ.md)
+- [CHANGELOG](./CHANGELOG.md)
+- [GitHub Releases](https://github.com/kexa-io/Kexa/releases)
 
 ## Contributing
 
