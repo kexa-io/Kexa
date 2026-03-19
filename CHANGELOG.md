@@ -1,3 +1,24 @@
+# [2.8.0](https://github.com/kexa-io/Kexa/compare/v2.7.0...v2.8.0) (2026-03-19)
+
+
+### Bug Fixes
+
+* address regressions and remaining security issues from re-audit ([8d7d0cb](https://github.com/kexa-io/Kexa/commit/8d7d0cb9e6dbebdb635e5a52c397dab4ac661883))
+* address remaining bugs, hardening, and test coverage ([5de96be](https://github.com/kexa-io/Kexa/commit/5de96be8b6faaa0c0f1efe0261b6b92db21d5e25))
+* migrate console.* to logger, remove request pkg, fix empty catches ([a37faa0](https://github.com/kexa-io/Kexa/commit/a37faa0f9172e409aa094164c985542055f7f691))
+* P1 hardening — GCP log sanitization, Docker non-root, K8s Jobs ([6393dba](https://github.com/kexa-io/Kexa/commit/6393dba06edb1c8c41cdd08aa286b9062d7f7df8))
+* prevent TypeError when alert type has no required env vars ([7e1d4a2](https://github.com/kexa-io/Kexa/commit/7e1d4a218e038f8c78809a4eef8179d26ed6bef8))
+* remove AWS key from logs, add GCP Cloud Storage export/save ([00684da](https://github.com/kexa-io/Kexa/commit/00684da245f8d8a67069273f0eb1e16f5c588b46))
+* **security:** address critical injection and TLS vulnerabilities ([aa09eb0](https://github.com/kexa-io/Kexa/commit/aa09eb0f0757fb9e6a7c46b522bd338ffd1957bd)), closes [#7332](https://github.com/kexa-io/Kexa/issues/7332)
+
+
+### Features
+
+* add CIS security rules for PostgreSQL, MySQL, Oracle and MongoDB ([#656](https://github.com/kexa-io/Kexa/issues/656)) ([4cc8fc9](https://github.com/kexa-io/Kexa/commit/4cc8fc91f012573f30579aef07822f3638bea740))
+* add integration tests to CI/CD pipelines ([#655](https://github.com/kexa-io/Kexa/issues/655)) ([491da53](https://github.com/kexa-io/Kexa/commit/491da5364f87f015bb13f1694fe22a8cab465658))
+* enrich per-rule webhook payload for external remediation ([#657](https://github.com/kexa-io/Kexa/issues/657)) ([231eba7](https://github.com/kexa-io/Kexa/commit/231eba7b3ddc3183336e27ecd308c6df509c8835))
+* implement remaining P0 — SSRF protection, Slack alerts, S3 save ([0e28825](https://github.com/kexa-io/Kexa/commit/0e28825fe283cab2c74d23afa7163c433b422a1b))
+
 # Changelog
 
 ## [v2.7.0] - 2026-01-28
