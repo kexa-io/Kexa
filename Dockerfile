@@ -34,7 +34,12 @@ COPY Kexa ./Kexa
 COPY README.md ./
 COPY capacity.json ./
 
-RUN mkdir -p rules output config && touch config/headers.json
+RUN addgroup -g 1000 kexa && adduser -u 1000 -G kexa -s /sbin/nologin -D kexa \
+    && mkdir -p rules output config \
+    && touch config/headers.json \
+    && chown -R kexa:kexa /app
+
+USER kexa
 
 ENV NODE_ENV=production
 

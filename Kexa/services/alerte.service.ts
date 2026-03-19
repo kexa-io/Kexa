@@ -415,7 +415,8 @@ export async function alertSlackGlobal(alert: GlobalConfigAlert, compteError: nu
     ];
     allScan.forEach((scan) => {
         scan.filter(s => s.error.length > 0).forEach((s) => {
-            blocks.push({ type: "section", text: { type: "mrkdwn", text: `• ${s.rule} — ${s.error.join(", ")}` } });
+            const ruleName = typeof s.rule === 'string' ? s.rule : (s.rule?.name ?? "unknown");
+            blocks.push({ type: "section", text: { type: "mrkdwn", text: `• ${ruleName} — ${s.error.join(", ")}` } });
         });
     });
     for (const slack_to of alert.to) {

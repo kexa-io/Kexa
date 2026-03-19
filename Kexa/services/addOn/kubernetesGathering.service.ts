@@ -179,6 +179,7 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
         const k8sAppsV1Api = kc.makeApiClient(k8s.AppsV1Api);
         const k8sNetworkingV1Api = kc.makeApiClient(k8s.NetworkingV1Api);
         const k8sStorageV1Api = kc.makeApiClient(k8s.StorageV1Api);
+        const k8sBatchV1Api = kc.makeApiClient(k8s.BatchV1Api);
         const k8sApiregistrationV1Api = kc.makeApiClient(k8s.ApiregistrationV1Api);
         const k8CoordinationV1Api = kc.makeApiClient(k8s.CoordinationV1Api);
         const k8sLog = new k8s.Log(kc);
@@ -197,8 +198,8 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
             collectReplicaset(k8sAppsV1Api, item.metadata.name),
             collectStatefulset(k8sAppsV1Api, item.metadata.name),
             collectDaemonset(k8sAppsV1Api, item.metadata.name),
-            //collectJob(k8sApiCore, item.metadata.name),
-            //collectCronjob(k8sApiCore, item.metadata.name),
+            collectJob(k8sBatchV1Api, item.metadata.name),
+            collectCronjob(k8sBatchV1Api, item.metadata.name),
             collectIngress(k8sNetworkingV1Api, item.metadata.name),
             collectPersistentvolume(k8sApiCore, item.metadata.name),
             collectPersistentvolumeclaim(k8sApiCore, item.metadata.name),
@@ -243,8 +244,8 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
             replicasetData,
             statefulsetData,
             daemonsetData,
-            //jobData,
-            //cronjobData,
+            jobData,
+            cronjobData,
             ingressData,
             persistentvolumeData,
             persistentvolumeclaimData,
@@ -290,8 +291,8 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
             [replicasetData, "replicaset"], // work
             [statefulsetData, "statefulset"], // work
             [daemonsetData, "daemonset"], // work
-            //[jobData, "job"],
-            //[cronjobData, "cronjob"],
+            [jobData, "job"],
+            [cronjobData, "cronjob"],
             [ingressData, "ingress"], // work
             [persistentvolumeData, "persistentvolume"], // work
             [persistentvolumeclaimData, "persistentvolumeclaim"], // work
@@ -512,11 +513,10 @@ async function collectDaemonset(k8sAppsV1Api: any, namespace: string): Promise<a
     }
 }
 
-//TODO:find a way to get jobs
-async function collectJob(k8sApiCore: any, namespace: string): Promise<any> {
+async function collectJob(k8sBatchV1Api: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("job")) return [];
     try {
-        const jobs = await k8sApiCore.listNamespacedJob({namespace: namespace});
+        const jobs = await k8sBatchV1Api.listNamespacedJob({namespace: namespace});
         return jobs?.items;
     } catch (e) {
         logger.debug(e);
@@ -524,11 +524,10 @@ async function collectJob(k8sApiCore: any, namespace: string): Promise<any> {
     }
 }
 
-//TODO:find a way to get cronjobs
-async function collectCronjob(k8sApiCore: any, namespace: string): Promise<any> {
+async function collectCronjob(k8sBatchV1Api: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("cronjob")) return [];
     try {
-        const cronjobs = await k8sApiCore.listNamespacedCronJob({namespace: namespace});
+        const cronjobs = await k8sBatchV1Api.listNamespacedCronJob({namespace: namespace});
         return cronjobs?.items;
     } catch (e) {
         logger.debug(e);

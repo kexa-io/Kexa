@@ -410,7 +410,7 @@ async function listAllComputes(projectId: string, credentialsObject?: any): Prom
         logger.info("GCP Compute Listing Done");
     } catch (e) {
         logger.error("Error while retrieving GCP Compute Instances");
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     return jsonData ?? null;
 }
@@ -488,7 +488,7 @@ async function listAllBucket(credentialsObject?: any): Promise<Array<any>|null> 
         if (e.code) {
             logger.error(`  Code: ${e.code}`);
         }
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
 
     return null;
@@ -518,7 +518,7 @@ async function listAllClusters(credentialsObject?: any): Promise<Array<any>|null
             jsonData = parsedResponse;
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Clusters Listing Done");
     return jsonData ?? null;
@@ -538,7 +538,7 @@ async function listAllProject(credentialsObject?: any): Promise<Array<any>|null>
             }
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Projects Listing Done");
     return jsonData ?? null;
@@ -558,7 +558,7 @@ async function getBillingAccount(projectId: string, credentialsObject?: any): Pr
             jsonData.push(JSON.parse(jsonStringify(account)));
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Billing Accounts Listing Done");
     return jsonData ?? null;
@@ -577,7 +577,7 @@ async function listWorkflows(projectId: string, credentialsObject?: any): Promis
             jsonData.push(JSON.parse(jsonStringify(workflow)));
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Workflows Listing Done");
     return jsonData ?? null;
@@ -599,7 +599,7 @@ async function listWebSecurityConfig(projectId: string, credentialsObject?: any)
         }
     }
     catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Web Security Configs Listing Done");
     return jsonData ?? null;
@@ -613,7 +613,7 @@ async function listVpcConnectors(projectId: string, regionsList: Array<string>, 
         const client = createClientWithCredentials(VpcAccessServiceClient, credentialsObject);
         jsonData = await executeAllRegions(projectId, client.listConnectors, client, regionsList, false )
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP VPC Connectors Listing Done");
     return jsonData ?? null;
@@ -636,7 +636,7 @@ async function listVMWareEngine(projectId: string, credentialsObject?: any): Pro
             }
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP VMWare Engine Listing Done");
     return jsonData ?? null;
@@ -652,7 +652,7 @@ async function listNamespaces(projectId: string, regionsList: Array<string>, cre
         jsonData = await executeAllRegions(projectId, registrationServiceClient.listNamespaces, registrationServiceClient,
             regionsList, false);
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Namespaces Listing Done");
     return jsonData ?? null;
@@ -674,7 +674,7 @@ export async function listSecrets(projectId: string, credentialsObject?: any): P
             }
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Secrets Listing Done");
     return jsonData ?? null;
@@ -696,7 +696,7 @@ async function listConnectivityTests(projectId: string, credentialsObject?: any)
             }
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Connectivity Tests Listing Done");
     return jsonData ?? null;
@@ -719,7 +719,7 @@ async function listResourceSettings(projectId: string, credentialsObject?: any):
             }
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Resources Settings Listing Done");
     return jsonData ?? null;
@@ -733,7 +733,7 @@ async function listRedisInstances(projectId: string, regionsList: Array<string>,
         const client = createClientWithCredentials(CloudRedisClient, credentialsObject);
         jsonData = await executeAllRegions(projectId, client.listInstances, client, regionsList, true);
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Redis Instances Listing Done");
     return jsonData ?? null;
@@ -755,7 +755,7 @@ async function listOSConfig(projectId: string, credentialsObject?: any): Promise
             }
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP OS Config Listing Done");
     return jsonData ?? null;
@@ -777,7 +777,7 @@ async function listOrgPolicyContraints(projectId: string, credentialsObject?: an
             }
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP OrgPolicy Contraints Listing Done");
     return jsonData ?? null;
@@ -792,7 +792,7 @@ async function listOrchestrationAirflow(projectId: string, regionsList: Array<st
         const client = createClientWithCredentials(ImageVersionsClient, credentialsObject);
         jsonData = await executeAllRegions(projectId, client.listImageVersions, client, regionsList, false);
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Airflow Image Versions Listing Done");
     return jsonData ?? null;
@@ -814,7 +814,7 @@ async function listNotebookInstances(projectId: string, credentialsObject?: any)
             }
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Notebook Instances Listing Done");
     return jsonData ?? null;
@@ -835,7 +835,7 @@ async function listDashboards(projectId: string, credentialsObject?: any): Promi
             }
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Dashboards Listing Done");
     return jsonData ?? null;
@@ -878,7 +878,7 @@ async function listLineageProcesses(projectId: string, credentialsObject?: any):
             }
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Lineage Processes Listing Done");
     return jsonData ?? null;
@@ -903,7 +903,7 @@ async function listKMSCryptoKeys(projectId: string, credentialsObject?: any): Pr
             }
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP KMS Crypto Keys Listing Done");
     return jsonData ?? null;
@@ -926,7 +926,7 @@ async function listKMSKeyRings(projectId: string, credentialsObject?: any): Prom
             }
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP KMS Key Rings Listing Done");
     return jsonData ?? null;
@@ -948,7 +948,7 @@ async function listDomainsRegistration(projectId: string, credentialsObject?: an
             }
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Domains Registration Listing Done");
     return jsonData ?? null;
@@ -970,7 +970,7 @@ async function listDnsZones(credentialsObject?: any): Promise<Array<any> | null>
             }
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP DNS Zones Listing Done");
     return jsonData ?? null;
@@ -985,7 +985,7 @@ async function listDeliveryPipelines(projectId: string, regionsList: Array<strin
         const deployClient = createClientWithCredentials(CloudDeployClient, credentialsObject);
         jsonData = await executeAllRegions(projectId, deployClient.listDeliveryPipelines, deployClient, regionsList, false);
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Delivery Pipelines Listing Done");
     return jsonData ?? null;
@@ -1007,7 +1007,7 @@ async function listCertificates(projectId: string, credentialsObject?: any): Pro
             }
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Certificates Listing Done");
     return jsonData ?? null;
@@ -1022,7 +1022,7 @@ async function listBatchJobs(projectId: string, regionsList: Array<string>, cred
         const batchClient = createClientWithCredentials(BatchServiceClient, credentialsObject);
         jsonData = await executeAllRegions(projectId, batchClient.listJobs, batchClient, regionsList, false);
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Batch Jobs Listing Done");
     return jsonData ?? null;
@@ -1045,7 +1045,7 @@ async function listWorkloads(projectId: string, credentialsObject?: any): Promis
             jsonData = JSON.parse(jsonStringify(workload));
         }*/
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Workloads Listing Done");
     return jsonData ?? null;
@@ -1060,7 +1060,7 @@ async function listArtifactsRepositories(projectId: string, regionsList: Array<s
         const client = createClientWithCredentials(ArtifactRegistryClient, credentialsObject);
         jsonData = await executeAllRegions(projectId, client.listRepositories, client, regionsList, false);
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Artifacts Repositories Listing Done");
     return jsonData ?? null;
@@ -1075,7 +1075,7 @@ async function listAppGateways(projectId: string, regionsList: Array<string>, cr
         const appgatewaysClient = createClientWithCredentials(AppGatewaysServiceClient, credentialsObject);
         jsonData = await executeAllRegions(projectId, appgatewaysClient.listAppGateways, appgatewaysClient, regionsList, false);
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP App Gateways Listing Done");
     return jsonData ?? null;
@@ -1096,7 +1096,7 @@ async function listTagsKeys(projectId: string, regionsList: Array<string>, crede
             }
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Tags Keys Listing Done");
     return jsonData ?? null;
@@ -1128,7 +1128,7 @@ async function listBigQuery(projectId: string, credentialsObject?: any): Promise
             }
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP BigQuery Listing Done");
     return jsonData ?? null;
@@ -1159,7 +1159,7 @@ async function listLogging(projectId: string, credentialsObject?: any): Promise<
                 }
             }
         } catch (e) {
-            logger.debug(e);
+            logger.debug(e instanceof Error ? e.message : "Unknown error");
         }
 
         try {
@@ -1170,10 +1170,10 @@ async function listLogging(projectId: string, credentialsObject?: any): Promise<
                 }
             }
         } catch (e) {
-            logger.debug(e);
+            logger.debug(e instanceof Error ? e.message : "Unknown error");
         }
     } catch (e) {
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP Logging Listing Done");
     return jsonData ?? null;
@@ -1211,7 +1211,7 @@ async function listSQLInstances(projectId: string, credentialsObject?: any): Pro
         }
     } catch (e: any) {
         logger.error("Error while retrieving GCP SQL Instances");
-        logger.debug(e);
+        logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
     logger.info("GCP SQL Instances Listing Done");
     return jsonData ?? null;
