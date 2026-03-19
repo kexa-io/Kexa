@@ -5171,8 +5171,8 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
 						})
 						collectedResults.push(newResources);
                     } catch (e) {
-                        logger.error("error in collectAWSData with AWS_ACCESS_KEY_ID: " + (oneConfig["AWS_ACCESS_KEY_ID"] ?? null));
-                        logger.error(e);
+                        logger.error("error in collectAWSData for config: " + (oneConfig["name"] ?? "unnamed"));
+                        logger.error(e instanceof Error ? e.message : e);
                     }
                 });
 				await Promise.all(promises);
@@ -5185,9 +5185,9 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
                 resources.push(concatedResults);
             }
         } catch (e) {
-            context?.log("error in AWS connect with AWS_ACCESS_KEY_ID: " + (oneConfig["AWS_ACCESS_KEY_ID"] ?? null));
-            logger.error("error in AWS connect with AWS_ACCESS_KEY_ID: " + (oneConfig["AWS_ACCESS_KEY_ID"] ?? null));
-            logger.error(e);
+            context?.log("error in AWS connect for config: " + (oneConfig["name"] ?? "unnamed"));
+            logger.error("error in AWS connect for config: " + (oneConfig["name"] ?? "unnamed"));
+            logger.error(e instanceof Error ? e.message : e);
         }
     }
     return resources ?? null;
