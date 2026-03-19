@@ -3,16 +3,17 @@ import { getConfig } from "../helpers/loaderConfig";
 import type { Rules } from "../models/settingFile/rules.models";
 import { loadAddOnsCustomUtility } from "./addOn.service";
 import { getNewLogger } from "./logger.service";
-const logger = getNewLogger("MemoisationLogger");
-let generalConfig: any = null;
-const configReady: Promise<void> = (async () => {
+let configuration: any;
+async function init() {
     try {
-        const configuration = await getConfig();
-        generalConfig = configuration?.general ?? null;
+        configuration = await getConfig();
     } catch (error) {
         logger.error("Failed to load config", error);
     }
-})();
+}
+init();
+const generalConfig = (configuration?.general != undefined) ? configuration["general"] : null;
+const logger = getNewLogger("MemoisationLogger");
 
 interface ItemMemoisationInterface {
     time: Date;
@@ -26,7 +27,6 @@ export class Memoisation{
     private static lastGlobalAlert: Date;
 
     public static async initAddOnPropertyToSend() {
-        await configReady;
         if (!Memoisation.addOnPropertyToSendInitialized) {
             Memoisation.addOnPropertyToSend = await loadAddOnsCustomUtility("display", "propertyToSend");
             Memoisation.addOnPropertyToSendInitialized = true;

@@ -191,11 +191,7 @@ export async function analyzeRule(ruleFilePath:string, listNeedRules:string[], g
         let contentRuleFile = fs.readFileSync(ruleFilePath, 'utf8');
         const configHere = await getConfig();
         contentRuleFile = replaceElement(contentRuleFile, configHere?.variable?.[name]);
-        const docs = yaml.load(contentRuleFile) as SettingFile[];
-        if (!docs || !Array.isArray(docs) || docs.length === 0) {
-            throw new Error("Empty or invalid rule file: " + name);
-        }
-        const doc = docs[0];
+        const doc = (yaml.load(contentRuleFile) as SettingFile[])[0];
         let result = await checkDoc(doc);
         logCheckDoc(result);
         result.forEach((value) => {
@@ -577,7 +573,6 @@ export function checkParentRule(parentRule:ParentRules, resources:any): SubResul
         case OperatorEnum.XNOR:
             return parentResultScan(result, result.filter((value) => value.result).length !== 1);
         case OperatorEnum.NOT:
-            if (result.length === 0) return { value: resources, condition: [], result: false, message: "NOT operator requires at least one criteria" };
             return parentResultScan(result, !result[0].result);
         default:
             return {

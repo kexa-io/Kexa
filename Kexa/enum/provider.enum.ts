@@ -8,11 +8,5 @@ export enum ProviderEnum {
     HELM = "helm",
     O365 = "o365",
     GOOGLEWORKSPACE = "googleWorkspace",
-    GOOGLEDRIVE = "googleDrive",
-    MONGODB = "mongoDB",
-    MYSQL = "mySQL",
-    POSTGRESQL = "postgreSQL",
-    ORACLE = "oracle",
-    SSH = "ssh",
     FUZZ = "fuzz"
 }

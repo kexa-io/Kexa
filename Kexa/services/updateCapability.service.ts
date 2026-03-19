@@ -26,12 +26,7 @@ async function releaseCapability(){
 
 export function updateVersion(){
     let packageJson = require("../../package.json");
-    const versionPath = "./VERSION";
-    if (!fs.existsSync(versionPath)) {
-        logger.warn("VERSION file not found, skipping version update");
-        return;
-    }
-    let version = fs.readFileSync(versionPath, "utf8");
+    let version = fs.readFileSync("./VERSION", "utf8");
     packageJson.version = version.split("\n")[0];
     fs.writeFileSync("./package.json", jsonStringify(packageJson, 4));
 }

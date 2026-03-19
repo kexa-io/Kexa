@@ -6,20 +6,20 @@ import type { SaveConfig } from '../models/export/config.models';
 import { getConfig } from '../helpers/loaderConfig';
 import { jsonStringify } from '../helpers/jsonStringify';
 
-const logger = getNewLogger("SaveLogger");
 let configuration: any;
-const configReady: Promise<void> = (async () => {
+async function init() {
     try {
         configuration = await getConfig();
     } catch (error) {
         logger.error("Failed to load config", error);
     }
-})();
+}
+init();
+const logger = getNewLogger("SaveLogger");
 const context = getContext();
 
 export async function saveResult(result: ResultScan[][]): Promise<void> {
-    await configReady;
-    if(!configuration?.save) return Promise.resolve();
+    if(!configuration.save) return Promise.resolve();
     const addOnSave: { [key: string]: Function; } = await loadAddOnsCustomUtility("save", "save", configuration.save.map((save: SaveConfig) => save.type));
     if(!Array.isArray(configuration.save)) configuration.save = [configuration.save];
     let resultOnlyWithErrors = result.map((resultScan) => {
