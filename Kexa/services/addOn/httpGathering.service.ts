@@ -17,6 +17,7 @@ import { HttpConfig } from "../../models/http/config.models";
 import { isEmpty } from "../../helpers/isEmpty";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import https from 'https';
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 let httpConfig: HttpConfig[] = [];
 
 const jsome = require('jsome');

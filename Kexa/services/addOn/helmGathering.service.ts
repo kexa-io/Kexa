@@ -74,20 +74,11 @@ export async function collectData(helmConfig:HelmConfig[]): Promise<HelmResource
 }
 
 
-const { execFile } = require('child_process');
-
-/** Validate that a Helm argument contains only safe characters. */
-function validateHelmArg(arg: string): string {
-  if (!/^[a-zA-Z0-9._\-\/: ]+$/.test(arg)) {
-    throw new Error(`Invalid Helm argument: ${arg}`);
-  }
-  return arg;
-}
-
-function execShellCommand(command: string, args: string[] = []): Promise<number | string> {
+const { exec } = require('child_process');
+function execShellCommand(command: string): Promise<number | string> {
   return new Promise((resolve, reject) => {
-    execFile(command, args, { maxBuffer: 1024 * 1024 * 10 }, (error: Error | null, stdout: string, stderr: string) => {
-      const filteredStderr = stderr.split('\n').filter((line: string) =>
+    exec(command, { maxBuffer: 1024 * 1024 * 10 }, (error: Error | null, stdout: string, stderr: string) => {
+      const filteredStderr = stderr.split('\n').filter(line => 
         !line.includes("Kubernetes configuration file is group-readable. This is insecure.")
       ).join('\n');
 
@@ -111,11 +102,8 @@ function execShellCommand(command: string, args: string[] = []): Promise<number 
 
   async function getHelmReleaseInfo(releaseName: string, namespace: string) {
     try {
-      const output = await execShellCommand('helm', [
-        'get', 'all', validateHelmArg(releaseName),
-        '--namespace', validateHelmArg(namespace),
-        '--kubeconfig', './config/kubernetes.json'
-      ]);
+      const cmd = `helm get all ${releaseName} --namespace ${namespace} --kubeconfig "./config/kubernetes.json"`;
+      const output = await execShellCommand(cmd);
       if (typeof output == 'number') {
         return output;
       } else if (typeof output == 'string' && output.length == 0) {
@@ -155,10 +143,8 @@ function execShellCommand(command: string, args: string[] = []): Promise<number 
 }
   async function getHelmLatestVersionFromHub(chartName: string, appVersion: string) {
     try {
-      let output = await execShellCommand('helm', [
-        'search', 'hub', validateHelmArg(chartName),
-        '--kubeconfig', './config/kubernetes.json'
-      ]);
+      const cmd = `helm search hub ${chartName} --kubeconfig "./config/kubernetes.json"`;
+      let output = await execShellCommand(cmd);
       let latest = null;
       if (typeof output == 'number' && output == -1) {
         return output;
@@ -193,10 +179,8 @@ function execShellCommand(command: string, args: string[] = []): Promise<number 
 
   async function getHelmLatestVersion(chartName: string, appVersion: string) {
     try {
-      let output = await execShellCommand('helm', [
-        'search', 'repo', validateHelmArg(chartName),
-        '--versions', '--kubeconfig', './config/kubernetes.json'
-      ]);
+      const cmd = `helm search repo ${chartName} --versions --kubeconfig "./config/kubernetes.json"`;
+      let output = await execShellCommand(cmd);
       if (typeof output == 'number' && output == -1) {
         let output = await getHelmLatestVersionFromHub(chartName, appVersion);
         if (output != null && output != -1) {

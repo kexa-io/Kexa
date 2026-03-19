@@ -114,19 +114,14 @@ export async function collectData(mysqlConfigs: MySqlConfig[]): Promise<MySqlRes
     return allResources.length > 0 ? allResources : null;
 }
 
-async function executeQuery(connection: mysql.Connection, query: string, params: any[] = []): Promise<any[]> {
+async function executeQuery(connection: mysql.Connection, query: string): Promise<any[]> {
     try {
-        const [rows] = await connection.execute(query, params);
+        const [rows] = await connection.execute(query);
         return rows as any[];
     } catch (error: any) {
-        logger.error(`Error during query execution: ${error.message}`);
+        logger.error(`Error during query execution "${query}": ${error.message}`);
         return [];
     }
-}
-
-/** Sanitize a MySQL identifier (database/table/user/host name) to prevent injection. */
-function sanitizeIdentifier(name: string): string {
-    return name.replace(/[`\\]/g, '');
 }
 
 async function collectDatabases(connection: mysql.Connection): Promise<any[]> {
@@ -144,12 +139,11 @@ async function collectTablesAndDetailsForDB(connection: mysql.Connection, dbName
     const tableNames = tables.map(t => t[`Tables_in_${dbName}`]);
 
     for (const tableName of tableNames) {
-        const safeTable = sanitizeIdentifier(tableName);
         const [createResult, columns, indexes, sizeInfo] = await Promise.all([
-            executeQuery(connection, `SHOW CREATE TABLE \`${safeTable}\`;`),
-            executeQuery(connection, `SHOW FULL COLUMNS FROM \`${safeTable}\`;`),
-            executeQuery(connection, `SHOW INDEX FROM \`${safeTable}\`;`),
-            executeQuery(connection, `SELECT * FROM information_schema.tables WHERE table_schema = ? AND table_name = ?;`, [dbName, tableName])
+            executeQuery(connection, `SHOW CREATE TABLE \`${tableName}\`;`),
+            executeQuery(connection, `SHOW FULL COLUMNS FROM \`${tableName}\`;`),
+            executeQuery(connection, `SHOW INDEX FROM \`${tableName}\`;`),
+            executeQuery(connection, `SELECT * FROM information_schema.tables WHERE table_schema = '${dbName}' AND table_name = '${tableName}';`)
         ]);
 
         allTablesDetails.push({
@@ -165,17 +159,17 @@ async function collectTablesAndDetailsForDB(connection: mysql.Connection, dbName
 
 async function collectViewsForDB(connection: mysql.Connection, dbName: string): Promise<any[]> {
     logger.debug(`Collecting views for database: ${dbName}`);
-    return await executeQuery(connection, `SELECT * FROM information_schema.views WHERE table_schema = ?;`, [dbName]);
+    return await executeQuery(connection, `SELECT * FROM information_schema.views WHERE table_schema = '${dbName}';`);
 }
 
 async function collectRoutinesForDB(connection: mysql.Connection, dbName: string): Promise<any[]> {
     logger.debug(`Collecting routines for database: ${dbName}`);
-    return await executeQuery(connection, `SHOW PROCEDURE STATUS WHERE db = ?;`, [dbName]);
+    return await executeQuery(connection, `SHOW PROCEDURE STATUS WHERE db = '${dbName}';`);
 }
 
 async function collectTriggersForDB(connection: mysql.Connection, dbName: string): Promise<any[]> {
     logger.debug(`Collecting triggers for database: ${dbName}`);
-    return await executeQuery(connection, `SELECT * FROM information_schema.triggers WHERE trigger_schema = ?;`, [dbName]);
+    return await executeQuery(connection, `select * from information_schema.triggers where information_schema.triggers.trigger_schema like '%${dbName}%';`);
 }
 
 async function collectUsers(connection: mysql.Connection): Promise<any[]> {
@@ -190,9 +184,7 @@ async function collectGrants(connection: mysql.Connection): Promise<any[]> {
     const users = await collectUsers(connection);
     const allGrants: any[] = [];
     for (const user of users) {
-        const safeUser = sanitizeIdentifier(user.User);
-        const safeHost = sanitizeIdentifier(user.Host);
-        const grants = await executeQuery(connection, `SHOW GRANTS FOR \`${safeUser}\`@\`${safeHost}\`;`);
+        const grants = await executeQuery(connection, `SHOW GRANTS FOR \`${user.User}\`@\`${user.Host}\`;`);
         grants.forEach(grant => {
             grant.user = user.User;
             grant.host = user.Host;

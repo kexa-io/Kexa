@@ -157,7 +157,7 @@ async function getListNeedRules(): Promise<string[]> {
     const config = await getConfig();
     let listNeedRules = new Array<string>();
     for(let cloudProvider of Object.keys(config)){
-        if(["host", "general", "workerId", "requestId", "grpcMaxMessageLength"].includes(cloudProvider)) continue;
+        if(["host", "host", "workerId", "requestId", "grpcMaxMessageLength"].includes(cloudProvider)) continue;
         let configAssign = config[cloudProvider];
         try{
             for(let config of configAssign){
@@ -698,10 +698,9 @@ export function getSubProperty(object:any, property:string): any {
     if (property === ".")  return object;
     let properties = splitProperty(property, ".", "/");
     let result = object;
-    for (const prop of properties) {
-        if (result == null) return undefined;
+    properties.forEach(prop => {
         result = result[prop];
-    }
+    });
     return result;
 }
 
