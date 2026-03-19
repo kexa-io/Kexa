@@ -88,7 +88,7 @@ export function alertFromGlobal(alert: GlobalConfigAlert, compteError: number[],
                 alertSMSGlobal(alert, compteError);
                 break;
             case AlertEnum.SLACK:
-                alertSlackGlobal(alert, compteError, allScan);
+                throw new Error("not implemented");
                 break;
             case AlertEnum.TEAMS:
                 alertTeamsGlobal(alert, compteError, allScan);
@@ -308,8 +308,7 @@ export function alertFromRule(rule:Rules, conditions:SubResultScan[], objectReso
                 alertSMS(detailAlert, rule, conditions, objectResource);
                 break;
             case AlertEnum.SLACK:
-                alertSlack(detailAlert, rule, conditions, objectResource);
-                break;
+                throw new Error("not implemented");
             case AlertEnum.TEAMS:
                 alertTeams(detailAlert, rule, conditions, objectResource);
                 break;
@@ -400,58 +399,11 @@ export function alertTeams(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rul
     logger.debug("alert Teams");
     for (const teams_to of detailAlert.to) {
         const regex = /^https:\/\/(?:[a-zA-Z0-9_-]+\.)?webhook\.office\.com\/[^\s"]+$/;
-        if(!regex.test(teams_to)) continue;
+        if(!regex.test(teams_to)) return;
         let content = propertyToSend(rule, objectResource, false, conditions);
         const payload = Teams.OneTeams(colors[rule.level], "Kexa - "+levelAlert[rule.level]+" - "+rule.name, extractURL(content)??"", rule.description??"", content);
         sendCardMessageToTeamsChannel(teams_to, payload);
     }
-}
-
-export async function alertSlackGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
-    logger.debug("alert Slack Global");
-    const blocks: any[] = [
-        { type: "header", text: { type: "plain_text", text: "Kexa - Global Alert - " + (alert.name ?? "Unnamed") } },
-        { type: "section", text: { type: "mrkdwn", text: compteError.map((c, i) => `*${levelAlert[i]}*: ${c}`).join(" | ") } },
-    ];
-    allScan.forEach((scan) => {
-        scan.filter(s => s.error.length > 0).forEach((s) => {
-            blocks.push({ type: "section", text: { type: "mrkdwn", text: `• ${s.rule} — ${s.error.join(", ")}` } });
-        });
-    });
-    for (const slack_to of alert.to) {
-        if (!isValidSlackWebhook(slack_to)) continue;
-        try {
-            await axios.post(slack_to, { blocks }, { timeout: 10000 });
-            logger.info("Slack global alert sent");
-        } catch (error) {
-            logger.error(`Failed to send Slack alert to: ${slack_to}`, error);
-        }
-    }
-}
-
-export async function alertSlack(detailAlert: ConfigAlert|GlobalConfigAlert, rule: Rules, conditions: SubResultScan[], objectResource: any) {
-    logger.debug("alert Slack");
-    const content = propertyToSend(rule, objectResource, true, conditions);
-    const payload = {
-        blocks: [
-            { type: "header", text: { type: "plain_text", text: "Kexa - " + levelAlert[rule.level] + " - " + rule.name } },
-            { type: "section", text: { type: "mrkdwn", text: rule.description ?? "" } },
-            { type: "section", text: { type: "mrkdwn", text: "```\n" + content + "\n```" } },
-        ],
-    };
-    for (const slack_to of detailAlert.to) {
-        if (!isValidSlackWebhook(slack_to)) continue;
-        try {
-            await axios.post(slack_to, payload, { timeout: 10000 });
-            logger.info("Slack alert sent for rule: " + rule.name);
-        } catch (error) {
-            logger.error(`Failed to send Slack alert to: ${slack_to}`, error);
-        }
-    }
-}
-
-function isValidSlackWebhook(url: string): boolean {
-    return /^https:\/\/hooks\.slack\.com\/services\/[A-Za-z0-9/]+$/.test(url);
 }
 
 export function alertEmail(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules, conditions:SubResultScan[], objectResource:any){

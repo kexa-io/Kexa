@@ -23,31 +23,7 @@ const jsome = require('jsome');
 jsome.level.show = true;
 
 import {getNewLogger} from "../logger.service";
-import net from 'net';
 const logger = getNewLogger("HttpLogger");
-
-/** Block requests to private/internal IP ranges (SSRF protection). */
-function isPrivateUrl(urlStr: string): boolean {
-    try {
-        const parsed = new URL(urlStr);
-        const hostname = parsed.hostname;
-        // Block metadata endpoints
-        if (hostname === "169.254.169.254") return true;
-        // Block localhost
-        if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1" || hostname === "[::1]") return true;
-        // Block private ranges via IP check
-        if (net.isIPv4(hostname)) {
-            const parts = hostname.split('.').map(Number);
-            if (parts[0] === 10) return true;
-            if (parts[0] === 172 && parts[1] >= 16 && parts[1] <= 31) return true;
-            if (parts[0] === 192 && parts[1] === 168) return true;
-            if (parts[0] === 0) return true;
-        }
-        return false;
-    } catch {
-        return true;
-    }
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //// LISTING HTTP RESOURCES
@@ -69,17 +45,10 @@ export async function collectData(_httpConfig:HttpConfig[]) {
                         throw new Error("- Please pass URL in your config file");
                     }
                     if (!Array.isArray(url)) {
-                        if (isPrivateUrl(url)) {
-                            throw new Error("Requests to private/internal addresses are blocked");
-                        }
                         let data = await getDataHttp(url, config);
                         listHttpResources.push(data);
                     }else{
                         await Promise.all(url.map(async (url) => {
-                            if (isPrivateUrl(url)) {
-                                logger.warn("Skipping private/internal URL: " + url);
-                                return Promise.resolve();
-                            }
                             let data = await getDataHttp(url, config);
                             listHttpResources.push(data);
                             return Promise.resolve();
@@ -117,7 +86,7 @@ function getBody(config: HttpConfig): any{
     return body;
 }
 
-const urlModule = require('url')
+const URL = require('url')
 
 async function makeHttpRequest<T>(
     method: string,
@@ -148,7 +117,7 @@ async function makeHttpRequest<T>(
 async function getCertificateFromResponse(response: AxiosResponse<any>): Promise<any> {
     return new Promise((resolve, reject) => {
         const socket: TLSSocket = tls.connect({
-            host: urlModule.parse(response.config.url!).hostname!,
+            host: URL.parse(response.config.url!).hostname!,
             port: 443,
             socket: response.config.httpsAgent?.keepAliveSocket,
         }, () => {
@@ -209,7 +178,7 @@ async function getDataHttp(url: string, config: HttpConfig): Promise<HttpRequest
         httpResources.headers = response?.headers;
         httpResources.code = response?.status;
         httpResources.url = url;
-        httpResources.ip = await dnsLookup(urlModule.parse(url).hostname!);
+        httpResources.ip = await dnsLookup(URL.parse(url).hostname!);
         const {cert, TLS} = await getCertificateFromResponse(response);
         httpResources.certificate = cert;
         httpResources.tls = TLS
