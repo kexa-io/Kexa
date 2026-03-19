@@ -100,7 +100,8 @@ export async function searchExistingIssue(auth: string, summary: string, descrip
 
 
 async function getJiraTickets(auth: string, summary: string): Promise<any> {
-    const jqlQuery = `project=${process.env.JIRA_PROJECT_KEY ?? "XXXXX"} AND summary~"${summary}"`;
+    const safeSummary = summary.replace(/[\\"]/g, '\\$&');
+    const jqlQuery = `project=${process.env.JIRA_PROJECT_KEY ?? "XXXXX"} AND summary~"${safeSummary}"`;
     const jqlQueryExcludeStatusID = jqlQuery + ` AND status != ${process.env.JIRA_DONE_STATUS_CODE}`;
     const jiraDomain = await getConfigOrEnvVar(config, 'JIRA_DOMAIN');
     const jiraUrlBase = `https://${jiraDomain}/rest/api/3/search?jql=${encodeURIComponent(jqlQueryExcludeStatusID)}`;

@@ -244,8 +244,8 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
             replicasetData,
             statefulsetData,
             daemonsetData,
-            //jobData,
-            //cronjobData,
+            jobData,
+            cronjobData,
             ingressData,
             persistentvolumeData,
             persistentvolumeclaimData,
@@ -291,8 +291,8 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
             [replicasetData, "replicaset"], // work
             [statefulsetData, "statefulset"], // work
             [daemonsetData, "daemonset"], // work
-            //[jobData, "job"],
-            //[cronjobData, "cronjob"],
+            [jobData, "job"],
+            [cronjobData, "cronjob"],
             [ingressData, "ingress"], // work
             [persistentvolumeData, "persistentvolume"], // work
             [persistentvolumeclaimData, "persistentvolumeclaim"], // work
