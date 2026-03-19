@@ -294,11 +294,12 @@ export async function checkDocAlertConfig(alertConfig:ConfigAlert, level:string)
                 result.push("warn - type not valid in alert config for "+level+" : "+type);
                 continue;
             }
-            const envVars = varEnvMin[type.toLowerCase() as keyof typeof varEnvMin];
-            if(envVars){
-                for(let env of envVars){
+            try{
+                for(let env of varEnvMin[type.toLowerCase() as keyof typeof varEnvMin]){
                     if(!(await getConfigOrEnvVar(config, env))) result.push("error - "+env+" not found in env for "+level);
                 }
+            }catch(err){
+                logger.warn("Failed to check env vars for alert type in " + level, err);
             }
         };
     }
