@@ -50,15 +50,22 @@
     - [ ] Collect all meaning item
 - [ ] OVH
     - [ ] Collect all meaning item
-- [ ] Database
-	- [ ] Postgres
-        - [ ] Collect all meaning item
-	- [ ] SQL
-        - [ ] Collect all meaning item
-	- [ ] Mysql/MariaDB
-        - [ ] Collect all meaning item
-	- [ ] Oracle
-        - [ ] Collect all meaning item
+- [X] Database
+	- [X] PostgreSQL
+        - [X] Collect all meaning item
+        - [X] CIS security rules
+	- [X] MySQL/MariaDB
+        - [X] Collect all meaning item
+        - [X] CIS security rules
+	- [X] Oracle
+        - [X] Collect all meaning item
+        - [X] CIS security rules
+	- [X] MongoDB
+        - [X] Collect all meaning item
+        - [X] CIS security rules
+- [X] SSH
+    - [X] Collect system configuration
+    - [X] CIS security rules
 
 ## Output
 
@@ -69,27 +76,27 @@
         - [X] Teams
         - [X] webhook
         - [X] Jira
-        - [ ] Slack
+        - [X] Slack
     - [X] For each set of rules
         - [X] Email
         - [X] SMS
         - [X] Teams
         - [X] webhook
         - [X] Jira
-        - [ ] Slack
+        - [X] Slack
 - Export data scanned
     - [X] Azure blob storage
     - [X] Mongo DB
     - [X] MySQL
-    - [ ] Amazon Simple Storage Service (S3)
-    - [ ] Cloud Storage (GCP)
+    - [X] Amazon Simple Storage Service (S3)
+    - [X] Cloud Storage (GCP)
 -  Save result of scan
     - [X] Azure blob storage
     - [X] Mongo DB
     - [X] MySQL
-    - [x] Postgres
-    - [ ] Amazon Simple Storage Service (S3)
-    - [ ] Cloud Storage (GCP)
+    - [X] Postgres
+    - [X] Amazon Simple Storage Service (S3)
+    - [X] Cloud Storage (GCP)
 
 ## Maintenance
 
