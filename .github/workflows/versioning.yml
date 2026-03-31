@@ -103,7 +103,16 @@ jobs:
           mv CHANGELOG.md.new CHANGELOG.md
 
       - name: Remove checkout credentials to avoid duplicate Authorization header
-        run: git config --local --unset-all http.https://github.com/.extraheader || true
+        run: |
+          git config --local --unset-all http.https://github.com/.extraheader || true
+          # Also remove external credential config files set by actions/checkout v6
+          for f in /home/runner/work/_temp/git-credentials-*.config; do
+            [ -f "$f" ] && rm -f "$f"
+          done
+          # Remove any include.path pointing to deleted credential files
+          git config --local --get-all include.path | while read p; do
+            [ ! -f "$p" ] && git config --local --unset include.path "$p" || true
+          done
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
