@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kexa Compliance Report</title>
+<style>
+  :root {
+    --bg: #0d1117; --surface: #161b22; --border: #30363d;
+    --text: #e6edf3; --muted: #8b949e; --accent: #58a6ff;
+    --green: #3fb950; --yellow: #d29922; --red: #f85149; --fatal: #da3633;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background:var(--bg); color:var(--text); padding:24px; }
+  .container { max-width:1100px; margin:0 auto; }
+  header { display:flex; align-items:center; justify-content:space-between; margin-bottom:32px; padding-bottom:16px; border-bottom:1px solid var(--border); }
+  header h1 { font-size:24px; font-weight:600; }
+  header h1 span { color:var(--accent); }
+  .meta { color:var(--muted); font-size:13px; }
+  .summary { display:flex; gap:16px; margin-bottom:32px; }
+  .card { flex:1; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:20px; text-align:center; }
+  .card .count { font-size:36px; font-weight:700; }
+  .card .label { color:var(--muted); font-size:13px; text-transform:uppercase; letter-spacing:1px; margin-top:4px; }
+  .card.info .count { color:var(--green); }
+  .card.warning .count { color:var(--yellow); }
+  .card.error .count { color:var(--red); }
+  .card.fatal .count { color:var(--fatal); }
+  table { width:100%; border-collapse:collapse; background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  th { background:#1c2128; text-align:left; padding:12px 16px; font-size:12px; text-transform:uppercase; letter-spacing:1px; color:var(--muted); border-bottom:1px solid var(--border); }
+  td { padding:12px 16px; border-bottom:1px solid var(--border); font-size:14px; }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:#1c2128; }
+  .badge { display:inline-block; padding:2px 10px; border-radius:12px; font-size:12px; font-weight:600; }
+  .badge-info { background:rgba(63,185,80,.15); color:var(--green); }
+  .badge-warning { background:rgba(210,153,34,.15); color:var(--yellow); }
+  .badge-error { background:rgba(248,81,73,.15); color:var(--red); }
+  .badge-fatal { background:rgba(218,54,51,.25); color:var(--fatal); }
+  .provider { color:var(--accent); }
+  footer { margin-top:32px; text-align:center; color:var(--muted); font-size:12px; padding-top:16px; border-top:1px solid var(--border); }
+  @media (max-width:600px) { .summary { flex-direction:column; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1><span>Kexa</span> Compliance Report</h1>
+    <div class="meta">
+      <div>Ruleset: <strong>{{RULESET_NAME}}</strong></div>
+      <div>{{TIMESTAMP}}</div>
+    </div>
+  </header>
+
+  <div class="summary">
+    <div class="card info"><div class="count">{{COUNT_INFO}}</div><div class="label">Info</div></div>
+    <div class="card warning"><div class="count">{{COUNT_WARNING}}</div><div class="label">Warning</div></div>
+    <div class="card error"><div class="count">{{COUNT_ERROR}}</div><div class="label">Error</div></div>
+    <div class="card fatal"><div class="count">{{COUNT_FATAL}}</div><div class="label">Fatal</div></div>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Level</th><th>Rule</th><th>Provider</th><th>Resources</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      {{TABLE_ROWS}}
+    </tbody>
+  </table>
+
+  <footer>Kexa {{VERSION}} — {{TIMESTAMP}} — <a href="https://kexa.io" style="color:var(--accent)">kexa.io</a></footer>
+</div>
+</body>
+</html>
