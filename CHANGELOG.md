@@ -1,3 +1,11 @@
+## [2.8.2](https://github.com/kexa-io/Kexa/compare/v2.8.1...v2.8.2) (2026-03-31)
+
+
+### Bug Fixes
+
+* **ci:** clear checkout credentials before create-pull-request ([0d882b9](https://github.com/kexa-io/Kexa/commit/0d882b9bc29dce7d5ea427d73af70ae0409fdef9))
+* **ci:** fix versioning workflow duplicate Authorization header ([eabdbf3](https://github.com/kexa-io/Kexa/commit/eabdbf356443df09e2232e4b0bed45d378948bea))
+
 ## [2.8.1](https://github.com/kexa-io/Kexa/compare/v2.8.0...v2.8.1) (2026-03-31)
 
 
