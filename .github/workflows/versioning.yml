@@ -36,6 +36,10 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           token: ${{ steps.app-token.outputs.token }}
+          persist-credentials: false
+
+      - name: Configure git credentials for semantic-release
+        run: git config --local url."https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/".insteadOf "https://github.com/"
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
@@ -102,8 +106,8 @@ jobs:
 
           mv CHANGELOG.md.new CHANGELOG.md
 
-      - name: Remove checkout credentials to avoid duplicate Authorization header
-        run: git config --local --unset-all http.https://github.com/.extraheader || true
+      - name: Remove git credentials before create-pull-request
+        run: git config --local --unset-all url."https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/".insteadOf || true
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
