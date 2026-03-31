@@ -1,3 +1,10 @@
+## [2.8.3](https://github.com/kexa-io/Kexa/compare/v2.8.2...v2.8.3) (2026-03-31)
+
+
+### Bug Fixes
+
+* **ci:** fix checkout v6 credential conflict with create-pull-request ([8c8e1db](https://github.com/kexa-io/Kexa/commit/8c8e1db82f63f80785b0235cf553948567fd968f))
+
 ## [2.8.2](https://github.com/kexa-io/Kexa/compare/v2.8.1...v2.8.2) (2026-03-31)
 
 
