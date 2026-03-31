@@ -9,6 +9,7 @@ import { VERSION } from "./version";
 import { getConfig } from "./helpers/loaderConfig";
 import { deleteFile, createFileSync } from "./helpers/files";
 import { jsonStringify } from "./helpers/jsonStringify";
+import { formatOutput } from "./helpers/formatters";
 
 import { checkRules, gatheringRules } from "./services/analyse.service";
 import { alertGlobal, alertFromGlobal } from "./services/alerte.service";
@@ -55,13 +56,24 @@ const ARGS = yargs(hideBin(process.argv))
         default: 'both',
         description: 'Control output destination: file, stdout, or both'
     })
+    .option('format', {
+        alias: 'f',
+        type: 'string',
+        choices: ['table', 'json', 'csv', 'toml'],
+        default: 'table',
+        description: 'Output format for alerts: table (colorized), json, csv, or toml'
+    })
+    .option('verbose', {
+        alias: 'v',
+        type: 'boolean',
+        default: false,
+        description: 'Verbose mode: show detailed scan logs (default: quiet, summary only)'
+    })
     .example('$0', 'Run Kexa scan')
-    .example('$0 -g', 'Run scan and export gathered resources')
-    .example('$0 -a', 'Run scan and export alerts')
-    .example('$0 -g -a', 'Run scan and export both resources and alerts')
-    .example('$0 -g -s', 'Export gathered resources with no logs (clean JSON output)')
-    .example('$0 -g --to file', 'Export gathered resources only to file (clean console logs)')
-    .example('$0 -a --to stdout', 'Export alerts only to stdout')
+    .example('$0 -a', 'Run scan and export alerts as table')
+    .example('$0 -a -f json', 'Run scan and export alerts as JSON')
+    .example('$0 -a -f csv', 'Run scan and export alerts as CSV')
+    .example('$0 -v', 'Run scan with verbose logging')
     .help()
     .argv;
 
@@ -94,14 +106,23 @@ async function initializeApplication(): Promise<{ logger: Log<string, unknown>, 
         setupLogger({
             activeLevel: 'debug'
         });
+    } else if (!(ARGS.verbose || ARGS.v)) {
+        setupLogger({
+            activeLevel: 'error'
+        });
     }
 
     const logger = getNewLogger("MainLogger");
-    if (!ARGS.silent && !ARGS.s) {
+    const isVerbose = ARGS.verbose || ARGS.v;
+    if (!ARGS.silent && !ARGS.s && isVerbose) {
         AsciiArtText("Kexa");
     }
-    logger.info("Kexa " + VERSION);
-    logger.info("Application starting...");
+    if (isVerbose) {
+        logger.info("Kexa " + VERSION);
+        logger.info("Application starting...");
+    } else if (!ARGS.silent && !ARGS.s) {
+        process.stdout.write(`\x1b[1;37mKexa ${VERSION}\x1b[0m\n`);
+    }
 
     await initAddOnPropertyToSend();
     await Memoisation.initAddOnPropertyToSend();
@@ -118,9 +139,21 @@ export async function performScan(settings: SettingFile[], scanId: string): Prom
     const start = new Date();
     
 
-    logger.info("___________________________________________________________________________________________________");
-    logger.info("___________________________________-= running Kexa " + VERSION + " scan =-_________________________________________");
-    logger.info("___________________________________________________________________________________________________");
+    const isVerbose = ARGS.verbose || ARGS.v;
+    let spinner: ReturnType<typeof setInterval> | null = null;
+    if (isVerbose) {
+        logger.info("___________________________________________________________________________________________________");
+        logger.info("___________________________________-= running Kexa " + VERSION + " scan =-_________________________________________");
+        logger.info("___________________________________________________________________________________________________");
+    } else {
+        const frames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+        let i = 0;
+        process.stdout.write(`${frames[0]} Scanning...`);
+        spinner = setInterval(() => {
+            i = (i + 1) % frames.length;
+            process.stdout.write(`\r${frames[i]} Scanning...`);
+        }, 80);
+    }
     if(scanId && parseInt(scanId) > 0) {
         logger.debug(`Starting scan n°${scanId}, clearing states...`);
     }
@@ -166,9 +199,17 @@ export async function performScan(settings: SettingFile[], scanId: string): Prom
     await Promise.all(scanPromises);
 
     const delta = Date.now() - start.getTime();
-    logger.info("___________________________________________________________________________________________________");
-    logger.info("_______________________________________-= End Kexa scan =-_________________________________________");
-    logger.info("_".repeat(99-15-delta.toString().length)+"Scan done in "+delta+"ms");
+    if (spinner) {
+        clearInterval(spinner);
+        process.stdout.write(`\r\x1b[K`); // clear spinner line
+    }
+    if (isVerbose) {
+        logger.info("___________________________________________________________________________________________________");
+        logger.info("_______________________________________-= End Kexa scan =-_________________________________________");
+        logger.info("_".repeat(99-15-delta.toString().length)+"Scan done in "+delta+"ms");
+    } else {
+        process.stdout.write(`✓ Scan done in ${delta}ms\n`);
+    }
     logger.debug(await getEnvVar("test"));
     return allScanResults;
 }
@@ -201,59 +242,41 @@ export async function processGlobalAlerts(settings: SettingFile[], allScanResult
         const filePath = `${FOLDER_OUTPUT}/scans/${setting.alert.global.name}/${timestamp}.html`;
         createFileSync(emailContent, filePath);
 
-        await alertGlobal(allScanResults, setting.alert.global);
-    }
+        if (!ARGS.verbose && !ARGS.v) {
+            // Quiet mode: skip detailed rule-by-rule log output, use formatted output instead
+        } else {
+            await alertGlobal(allScanResults, setting.alert.global);
+        }
 
-    if (ARGS.alerts || ARGS.a) {
-        const logger = getNewLogger("AlertExportCheck");
-        logger.info(`Alert export flag detected. Exporting ${allScanResults.flat().length} scan results.`);
-        exportAlertsToJson(allScanResults);
+        if (ARGS.alerts || ARGS.a) {
+            const logger = getNewLogger("AlertExportCheck");
+            logger.info(`Alert export flag detected. Exporting ${allScanResults.flat().length} scan results.`);
+            exportAlerts(allScanResults, setting.alert.global.name);
+        }
     }
 
     return hasCriticalError;
 }
 
-function exportAlertsToJson(allScanResults: ResultScan[][]): void {
+function exportAlerts(allScanResults: ResultScan[][], rulesetName?: string): void {
     const logger = getNewLogger("AlertsExportLogger");
     const timestamp = new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '');
-
-    const resultsWithErrors = allScanResults.flat().filter(value => value.error.length > 0);
-
-    const rulesMap = new Map<string, any>();
-
-    resultsWithErrors.forEach(resultScan => {
-        const ruleName = resultScan.rule?.name ?? 'unknown';
-
-        if (!rulesMap.has(ruleName)) {
-            rulesMap.set(ruleName, {
-                name: resultScan.rule?.name,
-                description: resultScan.rule?.description,
-                level: resultScan.rule?.level,
-                cloudProvider: resultScan.rule?.cloudProvider,
-                objectName: resultScan.rule?.objectName,
-                resources: []
-            });
-        }
-
-        rulesMap.get(ruleName).resources.push(resultScan.objectContent);
-    });
-
-    const alertsJson = {
-        timestamp: new Date().toISOString(),
-        rules: Array.from(rulesMap.values())
-    };
-
-    const filePath = `${FOLDER_OUTPUT}/alerts/${timestamp}-alerts.json`;
-    const alertsJsonString = JSON.stringify(alertsJson, null, 2);
+    const format = (ARGS.format as string) || 'table';
     const to = ARGS.to || 'both';
 
+    const formatted = formatOutput(allScanResults, format, rulesetName);
+
+    const extMap: Record<string, string> = { table: 'txt', json: 'json', csv: 'csv', toml: 'toml' };
+    const ext = extMap[format] || 'txt';
+    const filePath = `${FOLDER_OUTPUT}/alerts/${timestamp}-alerts.${ext}`;
+
     if (to === 'file' || to === 'both') {
-        createFileSync(alertsJsonString, filePath, true);
+        createFileSync(formatted, filePath, true);
         logger.info(`Exported alerts to ${filePath}`);
     }
 
     if (to === 'stdout' || to === 'both') {
-        console.log(alertsJsonString);
+        console.log(formatted);
     }
 }
 
