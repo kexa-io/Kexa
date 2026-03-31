@@ -59,7 +59,7 @@ const ARGS = yargs(hideBin(process.argv))
     .option('format', {
         alias: 'f',
         type: 'string',
-        choices: ['table', 'json', 'csv', 'toml'],
+        choices: ['table', 'json', 'csv', 'toml', 'html'],
         default: 'table',
         description: 'Output format for alerts: table (colorized), json, csv, or toml'
     })
@@ -266,12 +266,12 @@ function exportAlerts(allScanResults: ResultScan[][], rulesetName?: string): voi
 
     const formatted = formatOutput(allScanResults, format, rulesetName);
 
-    const extMap: Record<string, string> = { table: 'txt', json: 'json', csv: 'csv', toml: 'toml' };
+    const extMap: Record<string, string> = { table: 'txt', json: 'json', csv: 'csv', toml: 'toml', html: 'html' };
     const ext = extMap[format] || 'txt';
     const filePath = `${FOLDER_OUTPUT}/alerts/${timestamp}-alerts.${ext}`;
 
     if (to === 'file' || to === 'both') {
-        createFileSync(formatted, filePath, true);
+        createFileSync(formatted, filePath, format === 'json');
         logger.info(`Exported alerts to ${filePath}`);
     }
 
