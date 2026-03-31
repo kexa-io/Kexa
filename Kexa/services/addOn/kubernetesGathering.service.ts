@@ -136,10 +136,16 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
 export async function kubernetesListing(pathKubeFile: string): Promise<any> {
     logger.info("starting kubernetesListing");
 
-    // Workaround: Bun's node:https Agent doesn't forward TLS options (cert/key/ca)
-    // to the native fetch layer, breaking @kubernetes/client-node mTLS auth.
-    // See: https://github.com/oven-sh/bun/issues/7332, PR #26964 pending fix.
-    // TODO: remove once Bun merges PR #26964 and we upgrade.
+    // WORKAROUND: Bun's fetch does not forward TLS options (cert/key/ca) from
+    // node:https Agent, breaking @kubernetes/client-node mTLS authentication.
+    // This is a known Bun bug open since Nov 2023, assigned but no fix in sight:
+    //   https://github.com/oven-sh/bun/issues/7332
+    // The community PR #26964 that attempted to fix this was closed without merge
+    // on 2026-03-24 with no explanation.
+    // Disabling TLS verification is process-wide and affects ALL HTTPS connections
+    // for the lifetime of the process — this is a security risk (MITM).
+    // We restore it to '1' after Kubernetes gathering to limit the blast radius.
+    // TODO: remove this workaround when Bun fixes #7332 or when we migrate to Node.
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     process.env.HTTPS_PROXY = '';
     process.env.HTTP_PROXY = '';
@@ -342,6 +348,9 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
     } catch (error) {
         logger.error("Error in kubernetesListing:", error);
         throw error;
+    } finally {
+        // Restore TLS verification to limit the blast radius of the workaround above.
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
     }
 }
 
