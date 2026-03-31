@@ -1,3 +1,10 @@
+# [2.10.0](https://github.com/kexa-io/Kexa/compare/v2.9.0...v2.10.0) (2026-03-31)
+
+
+### Features
+
+* add HTML dashboard report format + fix YAML indentation ([15a6dd2](https://github.com/kexa-io/Kexa/commit/15a6dd2b81928d0adee3a4e30d33e40cbad37e8a))
+
 # [2.9.0](https://github.com/kexa-io/Kexa/compare/v2.8.3...v2.9.0) (2026-03-31)
 
 
