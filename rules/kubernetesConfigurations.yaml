@@ -49,7 +49,7 @@
     #############################
     #          PODS             #
     #############################
-     - name: "kube-pods-cpu-limit-request-set"
+    - name: "kube-pods-cpu-limit-request-set"
       description : "this rules is to verify cpu limit and request are set"
       applied: false
       level: 1
