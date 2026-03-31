@@ -1,3 +1,10 @@
+## [2.8.1](https://github.com/kexa-io/Kexa/compare/v2.8.0...v2.8.1) (2026-03-31)
+
+
+### Bug Fixes
+
+* **security:** upgrade all deps — axios supply chain attack (2026-03-31) ([7b416bc](https://github.com/kexa-io/Kexa/commit/7b416bcaee20edf1eed341b993454e5014dd7175))
+
 # [2.8.0](https://github.com/kexa-io/Kexa/compare/v2.7.0...v2.8.0) (2026-03-19)
 
 
