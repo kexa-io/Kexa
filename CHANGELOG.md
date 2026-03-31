@@ -1,3 +1,10 @@
+# [2.9.0](https://github.com/kexa-io/Kexa/compare/v2.8.3...v2.9.0) (2026-03-31)
+
+
+### Features
+
+* add --format (table/json/csv/toml) and --verbose flags ([2db8427](https://github.com/kexa-io/Kexa/commit/2db84276817b8fbd8fed0aabbe49ce83923a0e59))
+
 # Changelog
 
 ## [v2.8.3] - 2026-03-31
