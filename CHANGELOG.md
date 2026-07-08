@@ -1,3 +1,10 @@
+## [2.10.1](https://github.com/kexa-io/Kexa/compare/v2.10.0...v2.10.1) (2026-07-08)
+
+
+### Bug Fixes
+
+* GCP bucket listing with file-path credentials + K8s TLS restore ([#693](https://github.com/kexa-io/Kexa/issues/693)) ([197d970](https://github.com/kexa-io/Kexa/commit/197d9701a909f3be570e6a53b15ed76531656ebd))
+
 # Changelog
 
 ## [v2.10.0] - 2026-03-31
