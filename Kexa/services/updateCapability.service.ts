@@ -349,8 +349,8 @@ createAwsArmPkgImportList();
 
 import * as AwsImports from "./addOn/imports/awsPackage.import";
 
-const additionalAwsImports = ["import * as clientec2 from '@aws-sdk/client-ec2';\n",
-"import * as clients3 from '@aws-sdk/client-s3';\n"];
+const additionalAwsImports = ["const clientec2 = require('@aws-sdk/client-ec2');\n",
+"const clients3 = require('@aws-sdk/client-s3');\n"];
 
 const additionalAwsImportsKeys = ["clientec2", "clients3"];
 

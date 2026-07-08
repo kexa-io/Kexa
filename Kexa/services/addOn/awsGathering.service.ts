@@ -5780,11 +5780,25 @@ function extractObjectsOrFunctions(module: any, isObject: Boolean): ClientResult
     const endString = "Command";
     let clientName;
 
+	// Match on export keys, not runtime function names: names are mangled by
+	// --minify in compiled binaries while export keys are not. Reading an
+	// export can also throw in bundles (Bun synthesizes namespace getters
+	// that may reference dropped symbols), so access defensively.
+	const readExport = (key: string): any => {
+		try {
+			return module[key];
+		} catch (e) {
+			logger.debug(`Skipping unreadable export ${key}: ${e}`);
+			return undefined;
+		}
+	};
+
 	Object.keys(module).forEach((key) => {
-        if ((module[key] instanceof Function && module[key].prototype !== undefined && module[key].name.endsWith("Client"))) {
-			clientName = module[key].name;
+		const exported = readExport(key);
+        if ((exported instanceof Function && exported.prototype !== undefined && key.endsWith("Client"))) {
+			clientName = key;
             if (clientName != "Client") {
-				clientsMatch.push({ name: clientName, func: module[key] });
+				clientsMatch.push({ name: clientName, func: exported });
                 if (clientsMatch.length > 1)
                     logger.warn("WARNING: Multiple client found for AWS objects, gather could be wrong.");
                 else if (clientsMatch.length < 1)
@@ -5795,22 +5809,23 @@ function extractObjectsOrFunctions(module: any, isObject: Boolean): ClientResult
 
 
     Object.keys(module).forEach((key) => {
-        if ((module[key] instanceof Function && module[key].prototype !== undefined 
-            && module[key].name.endsWith(endString) && startStrings.some(startString => module[key].name.startsWith(startString)))) {
+		const exported = readExport(key);
+        if ((exported instanceof Function && exported.prototype !== undefined
+            && key.endsWith(endString) && startStrings.some(startString => key.startsWith(startString)))) {
 				if (isObject) {
-					const objectName = extractObjectBetween(module[key].name, startStrings, endString);
+					const objectName = extractObjectBetween(key, startStrings, endString);
 
                     if (clientsMatch.length < 1)
                         clients[key] = objectName;
                     else {
-						clientsResults.push({ clientName: clientsMatch[clientsMatch.length - 1].name, 
+						clientsResults.push({ clientName: clientsMatch[clientsMatch.length - 1].name,
 							clientFunc: clientsMatch[clientsMatch.length - 1].func,
-							 objectName: objectName as string, objectFunc: module[key] /*,  input  ,  output */ });
-                        clients[key] = clientsMatch[clientsMatch.length - 1].name + "." + objectName + "." + module[key].name;
+							 objectName: objectName as string, objectFunc: exported /*,  input  ,  output */ });
+                        clients[key] = clientsMatch[clientsMatch.length - 1].name + "." + objectName + "." + key;
 					}
                 }
                 else
-                    clients[key] = module[key];
+                    clients[key] = exported;
         }
     });
     return clientsResults;
@@ -5953,7 +5968,9 @@ async function gatherAwsObject(credential: any, region:string, object: ClientRes
 			if (e instanceof Error) {
 				const error = e;
 				for (const dependence of awsGatherDependencies) {
-					if (dependence.matchingError == error.constructor.name) {
+					// error.name is set explicitly by AWS SDK service exceptions
+					// and survives --minify; error.constructor.name does not.
+					if (dependence.matchingError == error.name) {
 						let promises = [];
 						let validated = false;
 						for (const obj of dependence.objects) {
