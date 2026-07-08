@@ -14,13 +14,11 @@
 */
 
 import { MongoClient, Db } from 'mongodb';
-import env from "dotenv";
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { getContext, getNewLogger } from "../logger.service";
 import type { MongoDbResources } from "../../models/mongodb/resource.models";
 import type { MongoDbConfig } from "../../models/mongodb/config.models";
 
-env.config();
 const logger = getNewLogger("MongoDbLogger");
 
 let currentConfig: MongoDbConfig;

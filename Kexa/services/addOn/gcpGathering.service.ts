@@ -503,7 +503,6 @@ async function listAllBucket(credentialsObject?: any): Promise<Array<any>|null> 
 import { ClusterManagerClient } from '@google-cloud/container';
 import {CloudBillingClient} from "@google-cloud/billing";
 import {VpcAccessServiceClient} from "@google-cloud/vpc-access";
-import { config } from "dotenv";
 
 async function listAllClusters(credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("cluster")) return null;

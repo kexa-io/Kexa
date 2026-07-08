@@ -6,12 +6,11 @@ import { PostgreSQLClass } from '../../saving/postgresSQL.service';
 
 const logger = getNewLogger("pgSQLSaveLogger");
 
-const { v4: uuidv4 } = require('uuid');
 
 
 export async function save(save: PostgreSQLSaveConfig, result: ResultScan[][]): Promise<void> {
     let pgSQL = new PostgreSQLClass();
-    let batchId = uuidv4();
+    let batchId = crypto.randomUUID();
     try {
 
         if(!save.urlName) throw new Error("urlName is required");
