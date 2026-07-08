@@ -23,16 +23,28 @@
 	*	- AccessAnalyzerClient.FindingsV2
 	*	- AccessAnalyzerClient.PolicyGenerations
 	*	- AccessAnalyzerClient.TagsForResource
+	*	- AccountClient.AccountInformation
 	*	- AccountClient.AlternateContact
 	*	- AccountClient.ContactInformation
+	*	- AccountClient.GovCloudAccountInformation
 	*	- AccountClient.PrimaryEmail
 	*	- AccountClient.RegionOptStatus
 	*	- AccountClient.Regions
+	*	- ACMClient.AcmeAccount
+	*	- ACMClient.AcmeDomainValidation
+	*	- ACMClient.AcmeEndpoint
+	*	- ACMClient.AcmeExternalAccountBinding
 	*	- ACMClient.Certificate
 	*	- ACMClient.AccountConfiguration
+	*	- ACMClient.AcmeExternalAccountBindingCredentials
 	*	- ACMClient.Certificate
+	*	- ACMClient.AcmeAccounts
+	*	- ACMClient.AcmeDomainValidations
+	*	- ACMClient.AcmeEndpoints
+	*	- ACMClient.AcmeExternalAccountBindings
 	*	- ACMClient.Certificates
 	*	- ACMClient.TagsForCertificate
+	*	- ACMClient.TagsForResource
 	*	- ACMPCAClient.CertificateAuthorityAuditReport
 	*	- ACMPCAClient.CertificateAuthority
 	*	- ACMPCAClient.CertificateAuthorityCertificate
@@ -66,11 +78,17 @@
 	*	- AlexaForBusinessClient.SmartHomeAppliances
 	*	- AlexaForBusinessClient.Tags
 	*	- AmpClient.AlertManagerDefinition
+	*	- AmpClient.AnomalyDetector
 	*	- AmpClient.LoggingConfiguration
+	*	- AmpClient.QueryLoggingConfiguration
+	*	- AmpClient.ResourcePolicy
 	*	- AmpClient.RuleGroupsNamespace
 	*	- AmpClient.Scraper
+	*	- AmpClient.ScraperLoggingConfiguration
 	*	- AmpClient.Workspace
+	*	- AmpClient.WorkspaceConfiguration
 	*	- AmpClient.DefaultScraperConfiguration
+	*	- AmpClient.AnomalyDetectors
 	*	- AmpClient.RuleGroupsNamespaces
 	*	- AmpClient.Scrapers
 	*	- AmpClient.TagsForResource
@@ -164,6 +182,8 @@
 	*	- AppConfigClient.Deployment
 	*	- AppConfigClient.DeploymentStrategy
 	*	- AppConfigClient.Environment
+	*	- AppConfigClient.ExperimentDefinition
+	*	- AppConfigClient.ExperimentRun
 	*	- AppConfigClient.ExtensionAssociation
 	*	- AppConfigClient.Extension
 	*	- AppConfigClient.HostedConfigurationVersion
@@ -172,6 +192,9 @@
 	*	- AppConfigClient.DeploymentStrategies
 	*	- AppConfigClient.Deployments
 	*	- AppConfigClient.Environments
+	*	- AppConfigClient.ExperimentDefinitions
+	*	- AppConfigClient.ExperimentRunEvents
+	*	- AppConfigClient.ExperimentRuns
 	*	- AppConfigClient.ExtensionAssociations
 	*	- AppConfigClient.Extensions
 	*	- AppConfigClient.HostedConfigurationVersions
@@ -254,6 +277,7 @@
 	*	- AppStreamClient.AppBlockBuilderAppBlockAssociations
 	*	- AppStreamClient.AppBlockBuilders
 	*	- AppStreamClient.AppBlocks
+	*	- AppStreamClient.AppLicenseUsage
 	*	- AppStreamClient.ApplicationFleetAssociations
 	*	- AppStreamClient.Applications
 	*	- AppStreamClient.DirectoryConfigs
@@ -263,14 +287,17 @@
 	*	- AppStreamClient.ImagePermissions
 	*	- AppStreamClient.Images
 	*	- AppStreamClient.Sessions
+	*	- AppStreamClient.SoftwareAssociations
 	*	- AppStreamClient.Stacks
 	*	- AppStreamClient.ThemeForStack
 	*	- AppStreamClient.UsageReportSubscriptions
 	*	- AppStreamClient.UserStackAssociations
 	*	- AppStreamClient.Users
+	*	- AppStreamClient.ExportImageTask
 	*	- AppStreamClient.AssociatedFleets
 	*	- AppStreamClient.AssociatedStacks
 	*	- AppStreamClient.EntitledApplications
+	*	- AppStreamClient.ExportImageTasks
 	*	- AppStreamClient.TagsForResource
 	*	- AppSyncClient.ApiAssociation
 	*	- AppSyncClient.ApiCache
@@ -313,7 +340,9 @@
 	*	- AthenaClient.QueryExecution
 	*	- AthenaClient.QueryResults
 	*	- AthenaClient.QueryRuntimeStatistics
+	*	- AthenaClient.ResourceDashboard
 	*	- AthenaClient.Session
+	*	- AthenaClient.SessionEndpoint
 	*	- AthenaClient.SessionStatus
 	*	- AthenaClient.TableMetadata
 	*	- AthenaClient.WorkGroup
@@ -399,6 +428,7 @@
 	*	- BackupClient.ReportJob
 	*	- BackupClient.ReportPlan
 	*	- BackupClient.RestoreJob
+	*	- BackupClient.ScanJob
 	*	- BackupClient.BackupPlan
 	*	- BackupClient.BackupPlanFromJSON
 	*	- BackupClient.BackupPlanFromTemplate
@@ -406,6 +436,7 @@
 	*	- BackupClient.BackupVaultAccessPolicy
 	*	- BackupClient.BackupVaultNotifications
 	*	- BackupClient.LegalHold
+	*	- BackupClient.PITRMalwareScanResults
 	*	- BackupClient.RecoveryPointIndexDetails
 	*	- BackupClient.RecoveryPointRestoreMetadata
 	*	- BackupClient.RestoreJobMetadata
@@ -413,6 +444,7 @@
 	*	- BackupClient.RestoreTestingPlan
 	*	- BackupClient.RestoreTestingSelection
 	*	- BackupClient.SupportedResourceTypes
+	*	- BackupClient.TieringConfiguration
 	*	- BackupClient.BackupJobSummaries
 	*	- BackupClient.BackupJobs
 	*	- BackupClient.BackupPlanTemplates
@@ -432,12 +464,16 @@
 	*	- BackupClient.RecoveryPointsByResource
 	*	- BackupClient.ReportJobs
 	*	- BackupClient.ReportPlans
+	*	- BackupClient.RestoreAccessBackupVaults
 	*	- BackupClient.RestoreJobSummaries
 	*	- BackupClient.RestoreJobsByProtectedResource
 	*	- BackupClient.RestoreJobs
 	*	- BackupClient.RestoreTestingPlans
 	*	- BackupClient.RestoreTestingSelections
+	*	- BackupClient.ScanJobSummaries
+	*	- BackupClient.ScanJobs
 	*	- BackupClient.Tags
+	*	- BackupClient.TieringConfigurations
 	*	- BackupGatewayClient.BandwidthRateLimitSchedule
 	*	- BackupGatewayClient.Gateway
 	*	- BackupGatewayClient.Hypervisor
@@ -452,12 +488,17 @@
 	*	- BatchClient.JobDefinitions
 	*	- BatchClient.JobQueues
 	*	- BatchClient.Jobs
+	*	- BatchClient.QuotaShare
 	*	- BatchClient.SchedulingPolicies
+	*	- BatchClient.ServiceEnvironments
+	*	- BatchClient.ServiceJob
 	*	- BatchClient.JobQueueSnapshot
 	*	- BatchClient.ConsumableResources
 	*	- BatchClient.JobsByConsumableResource
 	*	- BatchClient.Jobs
+	*	- BatchClient.QuotaShares
 	*	- BatchClient.SchedulingPolicies
+	*	- BatchClient.ServiceJobs
 	*	- BatchClient.TagsForResource
 	*	- BillingconductorClient.BillingGroupCostReport
 	*	- BillingconductorClient.AccountAssociations
@@ -591,6 +632,7 @@
 	*	- CloudFormationClient.AccountLimits
 	*	- CloudFormationClient.ChangeSet
 	*	- CloudFormationClient.ChangeSetHooks
+	*	- CloudFormationClient.Events
 	*	- CloudFormationClient.GeneratedTemplate
 	*	- CloudFormationClient.OrganizationsAccess
 	*	- CloudFormationClient.Publisher
@@ -608,6 +650,7 @@
 	*	- CloudFormationClient.Type
 	*	- CloudFormationClient.TypeRegistration
 	*	- CloudFormationClient.GeneratedTemplate
+	*	- CloudFormationClient.HookResult
 	*	- CloudFormationClient.StackPolicy
 	*	- CloudFormationClient.Template
 	*	- CloudFormationClient.TemplateSummary
@@ -632,6 +675,7 @@
 	*	- CloudFormationClient.TypeRegistrations
 	*	- CloudFormationClient.TypeVersions
 	*	- CloudFormationClient.Types
+	*	- CloudFrontClient.ConnectionFunction
 	*	- CloudFrontClient.Function
 	*	- CloudFrontClient.KeyValueStore
 	*	- CloudFrontClient.AnycastIpList
@@ -639,18 +683,25 @@
 	*	- CloudFrontClient.CachePolicyConfig
 	*	- CloudFrontClient.CloudFrontOriginAccessIdentity
 	*	- CloudFrontClient.CloudFrontOriginAccessIdentityConfig
+	*	- CloudFrontClient.ConnectionFunction
+	*	- CloudFrontClient.ConnectionGroupByRoutingEndpoint
+	*	- CloudFrontClient.ConnectionGroup
 	*	- CloudFrontClient.ContinuousDeploymentPolicy
 	*	- CloudFrontClient.ContinuousDeploymentPolicyConfig
 	*	- CloudFrontClient.Distribution
 	*	- CloudFrontClient.DistributionConfig
+	*	- CloudFrontClient.DistributionTenantByDomain
+	*	- CloudFrontClient.DistributionTenant
 	*	- CloudFrontClient.FieldLevelEncryption
 	*	- CloudFrontClient.FieldLevelEncryptionConfig
 	*	- CloudFrontClient.FieldLevelEncryptionProfile
 	*	- CloudFrontClient.FieldLevelEncryptionProfileConfig
 	*	- CloudFrontClient.Function
 	*	- CloudFrontClient.Invalidation
+	*	- CloudFrontClient.InvalidationForDistributionTenant
 	*	- CloudFrontClient.KeyGroup
 	*	- CloudFrontClient.KeyGroupConfig
+	*	- CloudFrontClient.ManagedCertificateDetails
 	*	- CloudFrontClient.MonitoringSubscription
 	*	- CloudFrontClient.OriginAccessControl
 	*	- CloudFrontClient.OriginAccessControlConfig
@@ -659,29 +710,41 @@
 	*	- CloudFrontClient.PublicKey
 	*	- CloudFrontClient.PublicKeyConfig
 	*	- CloudFrontClient.RealtimeLogConfig
+	*	- CloudFrontClient.ResourcePolicy
 	*	- CloudFrontClient.ResponseHeadersPolicy
 	*	- CloudFrontClient.ResponseHeadersPolicyConfig
 	*	- CloudFrontClient.StreamingDistribution
 	*	- CloudFrontClient.StreamingDistributionConfig
+	*	- CloudFrontClient.TrustStore
 	*	- CloudFrontClient.VpcOrigin
 	*	- CloudFrontClient.AnycastIpLists
 	*	- CloudFrontClient.CachePolicies
 	*	- CloudFrontClient.CloudFrontOriginAccessIdentities
 	*	- CloudFrontClient.ConflictingAliases
+	*	- CloudFrontClient.ConnectionFunctions
+	*	- CloudFrontClient.ConnectionGroups
 	*	- CloudFrontClient.ContinuousDeploymentPolicies
+	*	- CloudFrontClient.DistributionTenantsByCustomization
+	*	- CloudFrontClient.DistributionTenants
 	*	- CloudFrontClient.DistributionsByAnycastIpListId
 	*	- CloudFrontClient.DistributionsByCachePolicyId
+	*	- CloudFrontClient.DistributionsByConnectionFunction
+	*	- CloudFrontClient.DistributionsByConnectionMode
 	*	- CloudFrontClient.DistributionsByKeyGroup
 	*	- CloudFrontClient.DistributionsByOriginRequestPolicyId
+	*	- CloudFrontClient.DistributionsByOwnedResource
 	*	- CloudFrontClient.DistributionsByRealtimeLogConfig
 	*	- CloudFrontClient.DistributionsByResponseHeadersPolicyId
+	*	- CloudFrontClient.DistributionsByTrustStore
 	*	- CloudFrontClient.DistributionsByVpcOriginId
 	*	- CloudFrontClient.DistributionsByWebACLId
 	*	- CloudFrontClient.Distributions
+	*	- CloudFrontClient.DomainConflicts
 	*	- CloudFrontClient.FieldLevelEncryptionConfigs
 	*	- CloudFrontClient.FieldLevelEncryptionProfiles
 	*	- CloudFrontClient.Functions
 	*	- CloudFrontClient.Invalidations
+	*	- CloudFrontClient.InvalidationsForDistributionTenant
 	*	- CloudFrontClient.KeyGroups
 	*	- CloudFrontClient.KeyValueStores
 	*	- CloudFrontClient.OriginAccessControls
@@ -691,6 +754,7 @@
 	*	- CloudFrontClient.ResponseHeadersPolicies
 	*	- CloudFrontClient.StreamingDistributions
 	*	- CloudFrontClient.TagsForResource
+	*	- CloudFrontClient.TrustStores
 	*	- CloudFrontClient.VpcOrigins
 	*	- CloudHSMClient.Hapg
 	*	- CloudHSMClient.Hsm
@@ -715,6 +779,7 @@
 	*	- CloudTrailClient.Trails
 	*	- CloudTrailClient.Channel
 	*	- CloudTrailClient.Dashboard
+	*	- CloudTrailClient.EventConfiguration
 	*	- CloudTrailClient.EventDataStore
 	*	- CloudTrailClient.EventSelectors
 	*	- CloudTrailClient.Import
@@ -728,22 +793,28 @@
 	*	- CloudTrailClient.EventDataStores
 	*	- CloudTrailClient.ImportFailures
 	*	- CloudTrailClient.Imports
+	*	- CloudTrailClient.InsightsData
 	*	- CloudTrailClient.InsightsMetricData
 	*	- CloudTrailClient.PublicKeys
 	*	- CloudTrailClient.Queries
 	*	- CloudTrailClient.Tags
 	*	- CloudTrailClient.Trails
+	*	- CloudWatchClient.AlarmContributors
 	*	- CloudWatchClient.AlarmHistory
 	*	- CloudWatchClient.Alarms
 	*	- CloudWatchClient.AlarmsForMetric
 	*	- CloudWatchClient.AnomalyDetectors
 	*	- CloudWatchClient.InsightRules
+	*	- CloudWatchClient.AlarmMuteRule
 	*	- CloudWatchClient.Dashboard
+	*	- CloudWatchClient.Dataset
 	*	- CloudWatchClient.InsightRuleReport
 	*	- CloudWatchClient.MetricData
 	*	- CloudWatchClient.MetricStatistics
 	*	- CloudWatchClient.MetricStream
 	*	- CloudWatchClient.MetricWidgetImage
+	*	- CloudWatchClient.OTelEnrichment
+	*	- CloudWatchClient.AlarmMuteRules
 	*	- CloudWatchClient.Dashboards
 	*	- CloudWatchClient.ManagedInsightRules
 	*	- CloudWatchClient.MetricStreams
@@ -777,9 +848,12 @@
 	*	- CloudWatchLogsClient.Destinations
 	*	- CloudWatchLogsClient.ExportTasks
 	*	- CloudWatchLogsClient.FieldIndexes
+	*	- CloudWatchLogsClient.ImportTaskBatches
+	*	- CloudWatchLogsClient.ImportTasks
 	*	- CloudWatchLogsClient.IndexPolicies
 	*	- CloudWatchLogsClient.LogGroups
 	*	- CloudWatchLogsClient.LogStreams
+	*	- CloudWatchLogsClient.LookupTables
 	*	- CloudWatchLogsClient.MetricFilters
 	*	- CloudWatchLogsClient.Queries
 	*	- CloudWatchLogsClient.QueryDefinitions
@@ -793,14 +867,25 @@
 	*	- CloudWatchLogsClient.Integration
 	*	- CloudWatchLogsClient.LogAnomalyDetector
 	*	- CloudWatchLogsClient.LogEvents
+	*	- CloudWatchLogsClient.LogFields
 	*	- CloudWatchLogsClient.LogGroupFields
+	*	- CloudWatchLogsClient.LogObject
 	*	- CloudWatchLogsClient.LogRecord
+	*	- CloudWatchLogsClient.LookupTable
 	*	- CloudWatchLogsClient.QueryResults
+	*	- CloudWatchLogsClient.ScheduledQuery
+	*	- CloudWatchLogsClient.ScheduledQueryHistory
+	*	- CloudWatchLogsClient.StorageTierPolicy
 	*	- CloudWatchLogsClient.Transformer
+	*	- CloudWatchLogsClient.AggregateLogGroupSummaries
 	*	- CloudWatchLogsClient.Anomalies
 	*	- CloudWatchLogsClient.Integrations
 	*	- CloudWatchLogsClient.LogAnomalyDetectors
+	*	- CloudWatchLogsClient.LogGroups
 	*	- CloudWatchLogsClient.LogGroupsForQuery
+	*	- CloudWatchLogsClient.ScheduledQueries
+	*	- CloudWatchLogsClient.SourcesForS3TableIntegration
+	*	- CloudWatchLogsClient.SyslogConfigurations
 	*	- CloudWatchLogsClient.TagsForResource
 	*	- CloudWatchLogsClient.TagsLogGroup
 	*	- CodeartifactClient.Domain
@@ -835,12 +920,15 @@
 	*	- CodeBuildClient.BuildBatchesForProject
 	*	- CodeBuildClient.Builds
 	*	- CodeBuildClient.BuildsForProject
+	*	- CodeBuildClient.
 	*	- CodeBuildClient.CuratedEnvironmentImages
 	*	- CodeBuildClient.Fleets
 	*	- CodeBuildClient.Projects
 	*	- CodeBuildClient.ReportGroups
 	*	- CodeBuildClient.Reports
 	*	- CodeBuildClient.ReportsForReportGroup
+	*	- CodeBuildClient.Sandboxes
+	*	- CodeBuildClient.SandboxesForProject
 	*	- CodeBuildClient.SharedProjects
 	*	- CodeBuildClient.SharedReportGroups
 	*	- CodeBuildClient.SourceCredentials
@@ -917,6 +1005,7 @@
 	*	- CodePipelineClient.ThirdPartyJobDetails
 	*	- CodePipelineClient.ActionExecutions
 	*	- CodePipelineClient.ActionTypes
+	*	- CodePipelineClient.DeployActionExecutionTargets
 	*	- CodePipelineClient.PipelineExecutions
 	*	- CodePipelineClient.Pipelines
 	*	- CodePipelineClient.RuleExecutions
@@ -964,6 +1053,7 @@
 	*	- CognitoIdentityProviderClient.ManagedLoginBranding
 	*	- CognitoIdentityProviderClient.ResourceServer
 	*	- CognitoIdentityProviderClient.RiskConfiguration
+	*	- CognitoIdentityProviderClient.Terms
 	*	- CognitoIdentityProviderClient.UserImportJob
 	*	- CognitoIdentityProviderClient.UserPoolClient
 	*	- CognitoIdentityProviderClient.UserPool
@@ -973,7 +1063,9 @@
 	*	- CognitoIdentityProviderClient.Group
 	*	- CognitoIdentityProviderClient.IdentityProviderByIdentifier
 	*	- CognitoIdentityProviderClient.LogDeliveryConfiguration
+	*	- CognitoIdentityProviderClient.ProvisionedLimit
 	*	- CognitoIdentityProviderClient.SigningCertificate
+	*	- CognitoIdentityProviderClient.TokensFromRefreshToken
 	*	- CognitoIdentityProviderClient.UICustomization
 	*	- CognitoIdentityProviderClient.UserAttributeVerificationCode
 	*	- CognitoIdentityProviderClient.UserAuthFactors
@@ -984,8 +1076,11 @@
 	*	- CognitoIdentityProviderClient.IdentityProviders
 	*	- CognitoIdentityProviderClient.ResourceServers
 	*	- CognitoIdentityProviderClient.TagsForResource
+	*	- CognitoIdentityProviderClient.Terms
 	*	- CognitoIdentityProviderClient.UserImportJobs
+	*	- CognitoIdentityProviderClient.UserPoolClientSecrets
 	*	- CognitoIdentityProviderClient.UserPoolClients
+	*	- CognitoIdentityProviderClient.UserPoolReplicas
 	*	- CognitoIdentityProviderClient.UserPools
 	*	- CognitoIdentityProviderClient.Users
 	*	- CognitoIdentityProviderClient.UsersInGroup
@@ -1072,11 +1167,15 @@
 	*	- ComputeOptimizerClient.RecommendationPreferences
 	*	- ComputeOptimizerClient.RecommendationSummaries
 	*	- ConnectClient.AgentStatus
+	*	- ConnectClient.AttachedFilesConfiguration
 	*	- ConnectClient.AuthenticationProfile
 	*	- ConnectClient.Contact
 	*	- ConnectClient.ContactEvaluation
 	*	- ConnectClient.ContactFlow
+	*	- ConnectClient.ContactFlowModuleAlias
 	*	- ConnectClient.ContactFlowModule
+	*	- ConnectClient.DataTableAttribute
+	*	- ConnectClient.DataTable
 	*	- ConnectClient.EmailAddress
 	*	- ConnectClient.EvaluationForm
 	*	- ConnectClient.HoursOfOperation
@@ -1084,6 +1183,7 @@
 	*	- ConnectClient.InstanceAttribute
 	*	- ConnectClient.Instance
 	*	- ConnectClient.InstanceStorageConfig
+	*	- ConnectClient.Notification
 	*	- ConnectClient.PhoneNumber
 	*	- ConnectClient.PredefinedAttribute
 	*	- ConnectClient.Prompt
@@ -1092,37 +1192,51 @@
 	*	- ConnectClient.RoutingProfile
 	*	- ConnectClient.Rule
 	*	- ConnectClient.SecurityProfile
+	*	- ConnectClient.TestCase
 	*	- ConnectClient.TrafficDistributionGroup
 	*	- ConnectClient.User
 	*	- ConnectClient.UserHierarchyGroup
 	*	- ConnectClient.UserHierarchyStructure
 	*	- ConnectClient.View
 	*	- ConnectClient.Vocabulary
+	*	- ConnectClient.Workspace
 	*	- ConnectClient.AttachedFile
 	*	- ConnectClient.ContactAttributes
+	*	- ConnectClient.ContactMetrics
 	*	- ConnectClient.CurrentMetricData
 	*	- ConnectClient.CurrentUserData
 	*	- ConnectClient.EffectiveHoursOfOperations
+	*	- ConnectClient.EvaluationFormValidation
 	*	- ConnectClient.FederationToken
 	*	- ConnectClient.FlowAssociation
 	*	- ConnectClient.MetricData
 	*	- ConnectClient.MetricDataV2
 	*	- ConnectClient.PromptFile
 	*	- ConnectClient.TaskTemplate
+	*	- ConnectClient.TestCaseExecutionSummary
 	*	- ConnectClient.TrafficDistribution
 	*	- ConnectClient.AgentStatuses
 	*	- ConnectClient.AnalyticsDataAssociations
 	*	- ConnectClient.AnalyticsDataLakeDataSets
 	*	- ConnectClient.ApprovedOrigins
 	*	- ConnectClient.AssociatedContacts
+	*	- ConnectClient.AttachedFilesConfigurations
 	*	- ConnectClient.AuthenticationProfiles
 	*	- ConnectClient.Bots
+	*	- ConnectClient.ChildHoursOfOperations
 	*	- ConnectClient.ContactEvaluations
+	*	- ConnectClient.ContactFlowModuleAliases
+	*	- ConnectClient.ContactFlowModuleVersions
 	*	- ConnectClient.ContactFlowModules
 	*	- ConnectClient.ContactFlowVersions
 	*	- ConnectClient.ContactFlows
 	*	- ConnectClient.ContactReferences
+	*	- ConnectClient.DataTableAttributes
+	*	- ConnectClient.DataTablePrimaryValues
+	*	- ConnectClient.DataTableValues
+	*	- ConnectClient.DataTables
 	*	- ConnectClient.DefaultVocabularies
+	*	- ConnectClient.EntitySecurityProfiles
 	*	- ConnectClient.EvaluationFormVersions
 	*	- ConnectClient.EvaluationForms
 	*	- ConnectClient.FlowAssociations
@@ -1134,31 +1248,42 @@
 	*	- ConnectClient.IntegrationAssociations
 	*	- ConnectClient.LambdaFunctions
 	*	- ConnectClient.LexBots
+	*	- ConnectClient.Notifications
 	*	- ConnectClient.PhoneNumbers
 	*	- ConnectClient.PhoneNumbersV2
 	*	- ConnectClient.PredefinedAttributes
 	*	- ConnectClient.Prompts
+	*	- ConnectClient.QueueEmailAddresses
 	*	- ConnectClient.QueueQuickConnects
 	*	- ConnectClient.Queues
 	*	- ConnectClient.QuickConnects
 	*	- ConnectClient.RealtimeContactAnalysisSegmentsV2
+	*	- ConnectClient.RoutingProfileManualAssignmentQueues
 	*	- ConnectClient.RoutingProfileQueues
 	*	- ConnectClient.RoutingProfiles
 	*	- ConnectClient.Rules
 	*	- ConnectClient.SecurityKeys
 	*	- ConnectClient.SecurityProfileApplications
+	*	- ConnectClient.SecurityProfileFlowModules
 	*	- ConnectClient.SecurityProfilePermissions
 	*	- ConnectClient.SecurityProfiles
 	*	- ConnectClient.TagsForResource
 	*	- ConnectClient.TaskTemplates
+	*	- ConnectClient.TestCaseExecutionRecords
+	*	- ConnectClient.TestCaseExecutions
+	*	- ConnectClient.TestCases
 	*	- ConnectClient.TrafficDistributionGroupUsers
 	*	- ConnectClient.TrafficDistributionGroups
 	*	- ConnectClient.UseCases
 	*	- ConnectClient.UserHierarchyGroups
+	*	- ConnectClient.UserNotifications
 	*	- ConnectClient.UserProficiencies
 	*	- ConnectClient.Users
 	*	- ConnectClient.ViewVersions
 	*	- ConnectClient.Views
+	*	- ConnectClient.WorkspaceMedia
+	*	- ConnectClient.WorkspacePages
+	*	- ConnectClient.Workspaces
 	*	- ConnectCampaignsClient.Campaign
 	*	- ConnectCampaignsClient.CampaignStateBatch
 	*	- ConnectCampaignsClient.CampaignState
@@ -1178,8 +1303,10 @@
 	*	- CostExplorerClient.ApproximateUsageRecords
 	*	- CostExplorerClient.CommitmentPurchaseAnalysis
 	*	- CostExplorerClient.CostAndUsage
+	*	- CostExplorerClient.CostAndUsageComparisons
 	*	- CostExplorerClient.CostAndUsageWithResources
 	*	- CostExplorerClient.CostCategories
+	*	- CostExplorerClient.CostComparisonDrivers
 	*	- CostExplorerClient.CostForecast
 	*	- CostExplorerClient.DimensionValues
 	*	- CostExplorerClient.ReservationCoverage
@@ -1197,42 +1324,62 @@
 	*	- CostExplorerClient.CostAllocationTagBackfillHistory
 	*	- CostExplorerClient.CostAllocationTags
 	*	- CostExplorerClient.CostCategoryDefinitions
+	*	- CostExplorerClient.CostCategoryResourceAssociations
 	*	- CostExplorerClient.SavingsPlansPurchaseRecommendationGeneration
 	*	- CostExplorerClient.TagsForResource
 	*	- CustomerProfilesClient.AutoMergingPreview
 	*	- CustomerProfilesClient.CalculatedAttributeDefinition
 	*	- CustomerProfilesClient.CalculatedAttributeForProfile
 	*	- CustomerProfilesClient.Domain
+	*	- CustomerProfilesClient.DomainLayout
+	*	- CustomerProfilesClient.DomainObjectType
 	*	- CustomerProfilesClient.EventStream
 	*	- CustomerProfilesClient.EventTrigger
 	*	- CustomerProfilesClient.IdentityResolutionJob
 	*	- CustomerProfilesClient.Integration
 	*	- CustomerProfilesClient.Matches
+	*	- CustomerProfilesClient.ObjectTypeAttributeStatistics
+	*	- CustomerProfilesClient.ProfileHistoryRecord
 	*	- CustomerProfilesClient.ProfileObjectType
 	*	- CustomerProfilesClient.ProfileObjectTypeTemplate
+	*	- CustomerProfilesClient.ProfileRecommendations
+	*	- CustomerProfilesClient.Recommender
+	*	- CustomerProfilesClient.RecommenderFilter
+	*	- CustomerProfilesClient.RecommenderSchema
 	*	- CustomerProfilesClient.SegmentDefinition
 	*	- CustomerProfilesClient.SegmentEstimate
 	*	- CustomerProfilesClient.SegmentMembership
 	*	- CustomerProfilesClient.SegmentSnapshot
 	*	- CustomerProfilesClient.SimilarProfiles
+	*	- CustomerProfilesClient.UploadJob
+	*	- CustomerProfilesClient.UploadJobPath
 	*	- CustomerProfilesClient.Workflow
 	*	- CustomerProfilesClient.WorkflowSteps
 	*	- CustomerProfilesClient.AccountIntegrations
 	*	- CustomerProfilesClient.CalculatedAttributeDefinitions
 	*	- CustomerProfilesClient.CalculatedAttributesForProfile
+	*	- CustomerProfilesClient.DomainLayouts
+	*	- CustomerProfilesClient.DomainObjectTypes
 	*	- CustomerProfilesClient.Domains
 	*	- CustomerProfilesClient.EventStreams
 	*	- CustomerProfilesClient.EventTriggers
 	*	- CustomerProfilesClient.IdentityResolutionJobs
 	*	- CustomerProfilesClient.Integrations
+	*	- CustomerProfilesClient.ObjectTypeAttributeValues
 	*	- CustomerProfilesClient.ObjectTypeAttributes
 	*	- CustomerProfilesClient.ProfileAttributeValues
+	*	- CustomerProfilesClient.ProfileHistoryRecords
 	*	- CustomerProfilesClient.ProfileObjectTypeTemplates
 	*	- CustomerProfilesClient.ProfileObjectTypes
 	*	- CustomerProfilesClient.ProfileObjects
+	*	- CustomerProfilesClient.RecommenderFilters
+	*	- CustomerProfilesClient.RecommenderRecipes
+	*	- CustomerProfilesClient.RecommenderSchemas
+	*	- CustomerProfilesClient.Recommenders
 	*	- CustomerProfilesClient.RuleBasedMatches
 	*	- CustomerProfilesClient.SegmentDefinitions
 	*	- CustomerProfilesClient.TagsForResource
+	*	- CustomerProfilesClient.UploadJobs
 	*	- CustomerProfilesClient.Workflows
 	*	- DataBrewClient.Dataset
 	*	- DataBrewClient.Job
@@ -1270,7 +1417,6 @@
 	*	- DataPipelineClient.PipelineDefinition
 	*	- DataPipelineClient.Pipelines
 	*	- DataSyncClient.Agent
-	*	- DataSyncClient.DiscoveryJob
 	*	- DataSyncClient.LocationAzureBlob
 	*	- DataSyncClient.LocationEfs
 	*	- DataSyncClient.LocationFsxLustre
@@ -1282,15 +1428,10 @@
 	*	- DataSyncClient.LocationObjectStorage
 	*	- DataSyncClient.LocationS3
 	*	- DataSyncClient.LocationSmb
-	*	- DataSyncClient.StorageSystem
-	*	- DataSyncClient.StorageSystemResourceMetrics
-	*	- DataSyncClient.StorageSystemResources
 	*	- DataSyncClient.Task
 	*	- DataSyncClient.TaskExecution
 	*	- DataSyncClient.Agents
-	*	- DataSyncClient.DiscoveryJobs
 	*	- DataSyncClient.Locations
-	*	- DataSyncClient.StorageSystems
 	*	- DataSyncClient.TagsForResource
 	*	- DataSyncClient.TaskExecutions
 	*	- DataSyncClient.Tasks
@@ -1459,6 +1600,7 @@
 	*	- EBSClient.ChangedBlocks
 	*	- EBSClient.SnapshotBlocks
 	*	- EC2Client.AccountAttributes
+	*	- EC2Client.AccountVpcEncryptionControl
 	*	- EC2Client.AddressTransfers
 	*	- EC2Client.AddressesAttribute
 	*	- EC2Client.Addresses
@@ -1470,8 +1612,13 @@
 	*	- EC2Client.CapacityBlockExtensionHistory
 	*	- EC2Client.CapacityBlockExtensionOfferings
 	*	- EC2Client.CapacityBlockOfferings
+	*	- EC2Client.CapacityBlockStatus
+	*	- EC2Client.CapacityBlocks
+	*	- EC2Client.CapacityManagerDataExports
 	*	- EC2Client.CapacityReservationBillingRequests
+	*	- EC2Client.CapacityReservationCancellationQuotes
 	*	- EC2Client.CapacityReservationFleets
+	*	- EC2Client.CapacityReservationTopology
 	*	- EC2Client.CapacityReservations
 	*	- EC2Client.CarrierGateways
 	*	- EC2Client.ClassicLinkInstances
@@ -1504,6 +1651,9 @@
 	*	- EC2Client.IdFormat
 	*	- EC2Client.IdentityIdFormat
 	*	- EC2Client.ImageAttribute
+	*	- EC2Client.ImageReferences
+	*	- EC2Client.ImageUsageReportEntries
+	*	- EC2Client.ImageUsageReports
 	*	- EC2Client.Images
 	*	- EC2Client.ImportImageTasks
 	*	- EC2Client.ImportSnapshotTasks
@@ -1513,6 +1663,8 @@
 	*	- EC2Client.InstanceEventNotificationAttributes
 	*	- EC2Client.InstanceEventWindows
 	*	- EC2Client.InstanceImageMetadata
+	*	- EC2Client.InstanceSqlHaHistoryStates
+	*	- EC2Client.InstanceSqlHaStates
 	*	- EC2Client.InstanceStatus
 	*	- EC2Client.InstanceTopology
 	*	- EC2Client.InstanceTypeOfferings
@@ -1521,7 +1673,11 @@
 	*	- EC2Client.InternetGateways
 	*	- EC2Client.IpamByoasn
 	*	- EC2Client.IpamExternalResourceVerificationTokens
+	*	- EC2Client.IpamPolicies
+	*	- EC2Client.IpamPoolAllocations
 	*	- EC2Client.IpamPools
+	*	- EC2Client.IpamPrefixListResolverTargets
+	*	- EC2Client.IpamPrefixListResolvers
 	*	- EC2Client.IpamResourceDiscoveries
 	*	- EC2Client.IpamResourceDiscoveryAssociations
 	*	- EC2Client.IpamScopes
@@ -1538,6 +1694,7 @@
 	*	- EC2Client.LocalGateways
 	*	- EC2Client.LockedSnapshots
 	*	- EC2Client.MacHosts
+	*	- EC2Client.MacModificationTasks
 	*	- EC2Client.ManagedPrefixLists
 	*	- EC2Client.MovingAddresses
 	*	- EC2Client.NatGateways
@@ -1549,6 +1706,7 @@
 	*	- EC2Client.NetworkInterfaceAttribute
 	*	- EC2Client.NetworkInterfacePermissions
 	*	- EC2Client.NetworkInterfaces
+	*	- EC2Client.OutpostLags
 	*	- EC2Client.PlacementGroups
 	*	- EC2Client.PrefixLists
 	*	- EC2Client.PrincipalIdFormat
@@ -1565,10 +1723,14 @@
 	*	- EC2Client.RouteTables
 	*	- EC2Client.ScheduledInstanceAvailability
 	*	- EC2Client.ScheduledInstances
+	*	- EC2Client.SecondaryInterfaces
+	*	- EC2Client.SecondaryNetworks
+	*	- EC2Client.SecondarySubnets
 	*	- EC2Client.SecurityGroupReferences
 	*	- EC2Client.SecurityGroupRules
 	*	- EC2Client.SecurityGroupVpcAssociations
 	*	- EC2Client.SecurityGroups
+	*	- EC2Client.ServiceLinkVirtualInterfaces
 	*	- EC2Client.SnapshotAttribute
 	*	- EC2Client.SnapshotTierStatus
 	*	- EC2Client.Snapshots
@@ -1589,6 +1751,7 @@
 	*	- EC2Client.TransitGatewayAttachments
 	*	- EC2Client.TransitGatewayConnectPeers
 	*	- EC2Client.TransitGatewayConnects
+	*	- EC2Client.TransitGatewayMeteringPolicies
 	*	- EC2Client.TransitGatewayMulticastDomains
 	*	- EC2Client.TransitGatewayPeeringAttachments
 	*	- EC2Client.TransitGatewayPolicyTables
@@ -1611,6 +1774,7 @@
 	*	- EC2Client.VpcBlockPublicAccessOptions
 	*	- EC2Client.VpcClassicLink
 	*	- EC2Client.VpcClassicLinkDnsSupport
+	*	- EC2Client.VpcEncryptionControls
 	*	- EC2Client.VpcEndpointAssociations
 	*	- EC2Client.VpcEndpointConnectionNotifications
 	*	- EC2Client.VpcEndpointConnections
@@ -1620,12 +1784,18 @@
 	*	- EC2Client.VpcEndpoints
 	*	- EC2Client.VpcPeeringConnections
 	*	- EC2Client.Vpcs
+	*	- EC2Client.VpnConcentrators
 	*	- EC2Client.VpnConnections
 	*	- EC2Client.VpnGateways
+	*	- EC2Client.ActiveVpnTunnelStatus
 	*	- EC2Client.AllowedImagesSettings
 	*	- EC2Client.AssociatedEnclaveCertificateIamRoles
 	*	- EC2Client.AssociatedIpv6PoolCidrs
 	*	- EC2Client.AwsNetworkPerformanceData
+	*	- EC2Client.CapacityManagerAttributes
+	*	- EC2Client.CapacityManagerMetricData
+	*	- EC2Client.CapacityManagerMetricDimensions
+	*	- EC2Client.CapacityManagerMonitoredTagKeys
 	*	- EC2Client.CapacityReservationUsage
 	*	- EC2Client.CoipPoolUsage
 	*	- EC2Client.ConsoleOutput
@@ -1634,9 +1804,11 @@
 	*	- EC2Client.DefaultCreditSpecification
 	*	- EC2Client.EbsDefaultKmsKeyId
 	*	- EC2Client.EbsEncryptionByDefault
+	*	- EC2Client.EnabledIpamPolicy
 	*	- EC2Client.FlowLogsIntegrationTemplate
 	*	- EC2Client.GroupsForCapacityReservation
 	*	- EC2Client.HostReservationPurchasePreview
+	*	- EC2Client.ImageAncestry
 	*	- EC2Client.ImageBlockPublicAccessState
 	*	- EC2Client.InstanceMetadataDefaults
 	*	- EC2Client.InstanceTpmEkPub
@@ -1646,12 +1818,18 @@
 	*	- EC2Client.IpamDiscoveredAccounts
 	*	- EC2Client.IpamDiscoveredPublicAddresses
 	*	- EC2Client.IpamDiscoveredResourceCidrs
+	*	- EC2Client.IpamPolicyAllocationRules
+	*	- EC2Client.IpamPolicyOrganizationTargets
 	*	- EC2Client.IpamPoolAllocations
 	*	- EC2Client.IpamPoolCidrs
+	*	- EC2Client.IpamPrefixListResolverRules
+	*	- EC2Client.IpamPrefixListResolverVersionEntries
+	*	- EC2Client.IpamPrefixListResolverVersions
 	*	- EC2Client.IpamResourceCidrs
 	*	- EC2Client.LaunchTemplateData
 	*	- EC2Client.ManagedPrefixListAssociations
 	*	- EC2Client.ManagedPrefixListEntries
+	*	- EC2Client.ManagedResourceVisibility
 	*	- EC2Client.NetworkInsightsAccessScopeAnalysisFindings
 	*	- EC2Client.NetworkInsightsAccessScopeContent
 	*	- EC2Client.PasswordData
@@ -1665,6 +1843,7 @@
 	*	- EC2Client.SpotPlacementScores
 	*	- EC2Client.SubnetCidrReservations
 	*	- EC2Client.TransitGatewayAttachmentPropagations
+	*	- EC2Client.TransitGatewayMeteringPolicyEntries
 	*	- EC2Client.TransitGatewayMulticastDomainAssociations
 	*	- EC2Client.TransitGatewayPolicyTableAssociations
 	*	- EC2Client.TransitGatewayPolicyTableEntries
@@ -1674,13 +1853,16 @@
 	*	- EC2Client.VerifiedAccessEndpointPolicy
 	*	- EC2Client.VerifiedAccessEndpointTargets
 	*	- EC2Client.VerifiedAccessGroupPolicy
+	*	- EC2Client.VpcResourcesBlockingEncryptionEnforcement
 	*	- EC2Client.VpnConnectionDeviceSampleConfiguration
 	*	- EC2Client.VpnConnectionDeviceTypes
 	*	- EC2Client.VpnTunnelReplacementStatus
 	*	- EC2Client.ImagesInRecycleBin
 	*	- EC2Client.SnapshotsInRecycleBin
+	*	- EC2Client.VolumesInRecycleBin
 	*	- ECRClient.ImageReplicationStatus
 	*	- ECRClient.ImageScanFindings
+	*	- ECRClient.ImageSigningStatus
 	*	- ECRClient.Images
 	*	- ECRClient.PullThroughCacheRules
 	*	- ECRClient.Registry
@@ -1694,7 +1876,10 @@
 	*	- ECRClient.RegistryPolicy
 	*	- ECRClient.RegistryScanningConfiguration
 	*	- ECRClient.RepositoryPolicy
+	*	- ECRClient.SigningConfiguration
+	*	- ECRClient.ImageReferrers
 	*	- ECRClient.Images
+	*	- ECRClient.PullTimeUpdateExclusions
 	*	- ECRClient.TagsForResource
 	*	- ECRPUBLICClient.ImageTags
 	*	- ECRPUBLICClient.Images
@@ -1708,6 +1893,11 @@
 	*	- ECSClient.CapacityProviders
 	*	- ECSClient.Clusters
 	*	- ECSClient.ContainerInstances
+	*	- ECSClient.Daemon
+	*	- ECSClient.DaemonDeployments
+	*	- ECSClient.DaemonRevisions
+	*	- ECSClient.DaemonTaskDefinition
+	*	- ECSClient.ExpressGatewayService
 	*	- ECSClient.ServiceDeployments
 	*	- ECSClient.ServiceRevisions
 	*	- ECSClient.Services
@@ -1719,6 +1909,9 @@
 	*	- ECSClient.Attributes
 	*	- ECSClient.Clusters
 	*	- ECSClient.ContainerInstances
+	*	- ECSClient.DaemonDeployments
+	*	- ECSClient.DaemonTaskDefinitions
+	*	- ECSClient.Daemons
 	*	- ECSClient.ServiceDeployments
 	*	- ECSClient.ServicesByNamespace
 	*	- ECSClient.Services
@@ -1741,12 +1934,14 @@
 	*	- EKSClient.Addon
 	*	- EKSClient.AddonConfiguration
 	*	- EKSClient.AddonVersions
+	*	- EKSClient.Capability
 	*	- EKSClient.Cluster
 	*	- EKSClient.ClusterVersions
 	*	- EKSClient.EksAnywhereSubscription
 	*	- EKSClient.FargateProfile
 	*	- EKSClient.IdentityProviderConfig
 	*	- EKSClient.Insight
+	*	- EKSClient.InsightsRefresh
 	*	- EKSClient.Nodegroup
 	*	- EKSClient.PodIdentityAssociation
 	*	- EKSClient.Update
@@ -1754,6 +1949,7 @@
 	*	- EKSClient.AccessPolicies
 	*	- EKSClient.Addons
 	*	- EKSClient.AssociatedAccessPolicies
+	*	- EKSClient.Capabilities
 	*	- EKSClient.Clusters
 	*	- EKSClient.EksAnywhereSubscriptions
 	*	- EKSClient.FargateProfiles
@@ -1819,6 +2015,7 @@
 	*	- EMRClient.Cluster
 	*	- EMRClient.JobFlows
 	*	- EMRClient.NotebookExecution
+	*	- EMRClient.PersistentAppUI
 	*	- EMRClient.ReleaseLabel
 	*	- EMRClient.SecurityConfiguration
 	*	- EMRClient.Step
@@ -1827,6 +2024,10 @@
 	*	- EMRClient.BlockPublicAccessConfiguration
 	*	- EMRClient.ClusterSessionCredentials
 	*	- EMRClient.ManagedScalingPolicy
+	*	- EMRClient.OnClusterAppUIPresignedURL
+	*	- EMRClient.PersistentAppUIPresignedURL
+	*	- EMRClient.Session
+	*	- EMRClient.SessionEndpoint
 	*	- EMRClient.StudioSessionMapping
 	*	- EMRClient.BootstrapActions
 	*	- EMRClient.Clusters
@@ -1836,6 +2037,7 @@
 	*	- EMRClient.NotebookExecutions
 	*	- EMRClient.ReleaseLabels
 	*	- EMRClient.SecurityConfigurations
+	*	- EMRClient.Sessions
 	*	- EMRClient.Steps
 	*	- EMRClient.StudioSessionMappings
 	*	- EMRClient.Studios
@@ -1855,9 +2057,13 @@
 	*	- EMRServerlessClient.Application
 	*	- EMRServerlessClient.DashboardForJobRun
 	*	- EMRServerlessClient.JobRun
+	*	- EMRServerlessClient.ResourceDashboard
+	*	- EMRServerlessClient.Session
+	*	- EMRServerlessClient.SessionEndpoint
 	*	- EMRServerlessClient.Applications
 	*	- EMRServerlessClient.JobRunAttempts
 	*	- EMRServerlessClient.JobRuns
+	*	- EMRServerlessClient.Sessions
 	*	- EMRServerlessClient.TagsForResource
 	*	- EventBridgeClient.ApiDestination
 	*	- EventBridgeClient.Archive
@@ -2016,6 +2222,7 @@
 	*	- FSxClient.FileCaches
 	*	- FSxClient.FileSystemAliases
 	*	- FSxClient.FileSystems
+	*	- FSxClient.S3AccessPointAttachments
 	*	- FSxClient.SharedVpcConfiguration
 	*	- FSxClient.Snapshots
 	*	- FSxClient.StorageVirtualMachines
@@ -2026,6 +2233,7 @@
 	*	- GameLiftClient.Compute
 	*	- GameLiftClient.ContainerFleet
 	*	- GameLiftClient.ContainerGroupDefinition
+	*	- GameLiftClient.ContainerGroupPortMappings
 	*	- GameLiftClient.EC2InstanceLimits
 	*	- GameLiftClient.FleetAttributes
 	*	- GameLiftClient.FleetCapacity
@@ -2057,6 +2265,7 @@
 	*	- GameLiftClient.ComputeAuthToken
 	*	- GameLiftClient.GameSessionLogUrl
 	*	- GameLiftClient.InstanceAccess
+	*	- GameLiftClient.PlayerConnectionDetails
 	*	- GameLiftClient.Aliases
 	*	- GameLiftClient.Builds
 	*	- GameLiftClient.Compute
@@ -2126,6 +2335,8 @@
 	*	- GlueClient.Entity
 	*	- GlueClient.InboundIntegrations
 	*	- GlueClient.Integrations
+	*	- GlueClient.Asset
+	*	- GlueClient.AssetType
 	*	- GlueClient.Blueprint
 	*	- GlueClient.BlueprintRun
 	*	- GlueClient.BlueprintRuns
@@ -2145,6 +2356,7 @@
 	*	- GlueClient.CrawlerMetrics
 	*	- GlueClient.Crawlers
 	*	- GlueClient.CustomEntityType
+	*	- GlueClient.DashboardUrl
 	*	- GlueClient.DataCatalogEncryptionSettings
 	*	- GlueClient.DataQualityModel
 	*	- GlueClient.DataQualityModelResult
@@ -2158,6 +2370,10 @@
 	*	- GlueClient.DevEndpoint
 	*	- GlueClient.DevEndpoints
 	*	- GlueClient.EntityRecords
+	*	- GlueClient.FormType
+	*	- GlueClient.Glossary
+	*	- GlueClient.GlossaryTerm
+	*	- GlueClient.GlueIdentityCenterConfiguration
 	*	- GlueClient.IntegrationResourceProperty
 	*	- GlueClient.IntegrationTableProperties
 	*	- GlueClient.JobBookmark
@@ -2170,6 +2386,7 @@
 	*	- GlueClient.MLTransform
 	*	- GlueClient.MLTransforms
 	*	- GlueClient.Mapping
+	*	- GlueClient.MaterializedViewRefreshTaskRun
 	*	- GlueClient.Partition
 	*	- GlueClient.PartitionIndexes
 	*	- GlueClient.Partitions
@@ -2184,6 +2401,7 @@
 	*	- GlueClient.SecurityConfiguration
 	*	- GlueClient.SecurityConfigurations
 	*	- GlueClient.Session
+	*	- GlueClient.SessionEndpoint
 	*	- GlueClient.Statement
 	*	- GlueClient.Table
 	*	- GlueClient.TableOptimizer
@@ -2203,6 +2421,7 @@
 	*	- GlueClient.WorkflowRun
 	*	- GlueClient.WorkflowRunProperties
 	*	- GlueClient.WorkflowRuns
+	*	- GlueClient.AssetTypes
 	*	- GlueClient.Blueprints
 	*	- GlueClient.ColumnStatisticsTaskRuns
 	*	- GlueClient.ConnectionTypes
@@ -2217,8 +2436,14 @@
 	*	- GlueClient.DataQualityStatistics
 	*	- GlueClient.DevEndpoints
 	*	- GlueClient.Entities
+	*	- GlueClient.FormTypes
+	*	- GlueClient.Glossaries
+	*	- GlueClient.GlossaryTerms
+	*	- GlueClient.IntegrationResourceProperties
+	*	- GlueClient.IterableForms
 	*	- GlueClient.Jobs
 	*	- GlueClient.MLTransforms
+	*	- GlueClient.MaterializedViewRefreshTaskRuns
 	*	- GlueClient.Registries
 	*	- GlueClient.SchemaVersions
 	*	- GlueClient.Schemas
@@ -2283,17 +2508,22 @@
 	*	- GreengrassClient.SubscriptionDefinitions
 	*	- GreengrassClient.TagsForResource
 	*	- GroundStationClient.Contact
+	*	- GroundStationClient.ContactVersion
 	*	- GroundStationClient.Ephemeris
 	*	- GroundStationClient.AgentConfiguration
+	*	- GroundStationClient.AgentTaskResponseUrl
 	*	- GroundStationClient.Config
 	*	- GroundStationClient.DataflowEndpointGroup
 	*	- GroundStationClient.MinuteUsage
 	*	- GroundStationClient.MissionProfile
 	*	- GroundStationClient.Satellite
+	*	- GroundStationClient.Antennas
 	*	- GroundStationClient.Configs
+	*	- GroundStationClient.ContactVersions
 	*	- GroundStationClient.Contacts
 	*	- GroundStationClient.DataflowEndpointGroups
 	*	- GroundStationClient.Ephemerides
+	*	- GroundStationClient.GroundStationReservations
 	*	- GroundStationClient.GroundStations
 	*	- GroundStationClient.MissionProfiles
 	*	- GroundStationClient.Satellites
@@ -2308,28 +2538,36 @@
 	*	- GuardDutyClient.Findings
 	*	- GuardDutyClient.FindingsStatistics
 	*	- GuardDutyClient.IPSet
+	*	- GuardDutyClient.Investigation
 	*	- GuardDutyClient.InvitationsCount
 	*	- GuardDutyClient.MalwareProtectionPlan
+	*	- GuardDutyClient.MalwareScan
 	*	- GuardDutyClient.MalwareScanSettings
 	*	- GuardDutyClient.MasterAccount
 	*	- GuardDutyClient.MemberDetectors
 	*	- GuardDutyClient.Members
 	*	- GuardDutyClient.OrganizationStatistics
 	*	- GuardDutyClient.RemainingFreeTrialDays
+	*	- GuardDutyClient.ThreatEntitySet
 	*	- GuardDutyClient.ThreatIntelSet
+	*	- GuardDutyClient.TrustedEntitySet
 	*	- GuardDutyClient.UsageStatistics
 	*	- GuardDutyClient.Coverage
 	*	- GuardDutyClient.Detectors
 	*	- GuardDutyClient.Filters
 	*	- GuardDutyClient.Findings
 	*	- GuardDutyClient.IPSets
+	*	- GuardDutyClient.Investigations
 	*	- GuardDutyClient.Invitations
 	*	- GuardDutyClient.MalwareProtectionPlans
+	*	- GuardDutyClient.MalwareScans
 	*	- GuardDutyClient.Members
 	*	- GuardDutyClient.OrganizationAdminAccounts
 	*	- GuardDutyClient.PublishingDestinations
 	*	- GuardDutyClient.TagsForResource
+	*	- GuardDutyClient.ThreatEntitySets
 	*	- GuardDutyClient.ThreatIntelSets
+	*	- GuardDutyClient.TrustedEntitySets
 	*	- HealthClient.AffectedAccountsForOrganization
 	*	- HealthClient.AffectedEntities
 	*	- HealthClient.AffectedEntitiesForOrganization
@@ -2362,13 +2600,16 @@
 	*	- IAMClient.ContextKeysForCustomPolicy
 	*	- IAMClient.ContextKeysForPrincipalPolicy
 	*	- IAMClient.CredentialReport
+	*	- IAMClient.DelegationRequest
 	*	- IAMClient.Group
 	*	- IAMClient.GroupPolicy
+	*	- IAMClient.HumanReadableSummary
 	*	- IAMClient.InstanceProfile
 	*	- IAMClient.LoginProfile
 	*	- IAMClient.MFADevice
 	*	- IAMClient.OpenIDConnectProvider
 	*	- IAMClient.OrganizationsAccessReport
+	*	- IAMClient.OutboundWebIdentityFederationInfo
 	*	- IAMClient.Policy
 	*	- IAMClient.PolicyVersion
 	*	- IAMClient.Role
@@ -2386,6 +2627,7 @@
 	*	- IAMClient.AttachedGroupPolicies
 	*	- IAMClient.AttachedRolePolicies
 	*	- IAMClient.AttachedUserPolicies
+	*	- IAMClient.DelegationRequests
 	*	- IAMClient.EntitiesForPolicy
 	*	- IAMClient.GroupPolicies
 	*	- IAMClient.Groups
@@ -2500,6 +2742,7 @@
 	*	- IoTClient.DetectMitigationActionsTask
 	*	- IoTClient.Dimension
 	*	- IoTClient.DomainConfiguration
+	*	- IoTClient.EncryptionConfiguration
 	*	- IoTClient.Endpoint
 	*	- IoTClient.EventConfigurations
 	*	- IoTClient.FleetMetric
@@ -2618,10 +2861,12 @@
 	*	- IoTAnalyticsClient.Datastores
 	*	- IoTAnalyticsClient.Pipelines
 	*	- IoTAnalyticsClient.TagsForResource
+	*	- IoTDataPlaneClient.Connection
 	*	- IoTDataPlaneClient.RetainedMessage
 	*	- IoTDataPlaneClient.ThingShadow
 	*	- IoTDataPlaneClient.NamedShadowsForThing
 	*	- IoTDataPlaneClient.RetainedMessages
+	*	- IoTDataPlaneClient.Subscriptions
 	*	- IotDeviceAdvisorClient.Endpoint
 	*	- IotDeviceAdvisorClient.SuiteDefinition
 	*	- IotDeviceAdvisorClient.SuiteRun
@@ -2656,11 +2901,15 @@
 	*	- IoTSiteWiseClient.AssetCompositeModel
 	*	- IoTSiteWiseClient.AssetModel
 	*	- IoTSiteWiseClient.AssetModelCompositeModel
+	*	- IoTSiteWiseClient.AssetModelInterfaceRelationship
 	*	- IoTSiteWiseClient.AssetProperty
 	*	- IoTSiteWiseClient.BulkImportJob
+	*	- IoTSiteWiseClient.ComputationModel
+	*	- IoTSiteWiseClient.ComputationModelExecutionSummary
 	*	- IoTSiteWiseClient.Dashboard
 	*	- IoTSiteWiseClient.Dataset
 	*	- IoTSiteWiseClient.DefaultEncryptionConfiguration
+	*	- IoTSiteWiseClient.Execution
 	*	- IoTSiteWiseClient.GatewayCapabilityConfiguration
 	*	- IoTSiteWiseClient.Gateway
 	*	- IoTSiteWiseClient.LoggingOptions
@@ -2683,9 +2932,14 @@
 	*	- IoTSiteWiseClient.AssociatedAssets
 	*	- IoTSiteWiseClient.BulkImportJobs
 	*	- IoTSiteWiseClient.CompositionRelationships
+	*	- IoTSiteWiseClient.ComputationModelDataBindingUsages
+	*	- IoTSiteWiseClient.ComputationModelResolveToResources
+	*	- IoTSiteWiseClient.ComputationModels
 	*	- IoTSiteWiseClient.Dashboards
 	*	- IoTSiteWiseClient.Datasets
+	*	- IoTSiteWiseClient.Executions
 	*	- IoTSiteWiseClient.Gateways
+	*	- IoTSiteWiseClient.InterfaceRelationships
 	*	- IoTSiteWiseClient.Portals
 	*	- IoTSiteWiseClient.ProjectAssets
 	*	- IoTSiteWiseClient.Projects
@@ -2766,6 +3020,7 @@
 	*	- IoTWirelessClient.WirelessDevices
 	*	- IoTWirelessClient.WirelessGatewayTaskDefinitions
 	*	- IoTWirelessClient.WirelessGateways
+	*	- IvsClient.AdConfiguration
 	*	- IvsClient.Channel
 	*	- IvsClient.PlaybackKeyPair
 	*	- IvsClient.PlaybackRestrictionPolicy
@@ -2773,6 +3028,7 @@
 	*	- IvsClient.Stream
 	*	- IvsClient.StreamKey
 	*	- IvsClient.StreamSession
+	*	- IvsClient.AdConfigurations
 	*	- IvsClient.Channels
 	*	- IvsClient.PlaybackKeyPairs
 	*	- IvsClient.PlaybackRestrictionPolicies
@@ -2793,6 +3049,8 @@
 	*	- KafkaClient.Configuration
 	*	- KafkaClient.ConfigurationRevision
 	*	- KafkaClient.Replicator
+	*	- KafkaClient.Topic
+	*	- KafkaClient.TopicPartitions
 	*	- KafkaClient.VpcConnection
 	*	- KafkaClient.BootstrapBrokers
 	*	- KafkaClient.ClusterPolicy
@@ -2809,6 +3067,7 @@
 	*	- KafkaClient.Replicators
 	*	- KafkaClient.ScramSecrets
 	*	- KafkaClient.TagsForResource
+	*	- KafkaClient.Topics
 	*	- KafkaClient.VpcConnections
 	*	- KafkaConnectClient.Connector
 	*	- KafkaConnectClient.ConnectorOperation
@@ -2852,6 +3111,7 @@
 	*	- KeyspacesClient.Tables
 	*	- KeyspacesClient.TagsForResource
 	*	- KeyspacesClient.Types
+	*	- KinesisClient.AccountSettings
 	*	- KinesisClient.Limits
 	*	- KinesisClient.Stream
 	*	- KinesisClient.StreamConsumer
@@ -2862,6 +3122,7 @@
 	*	- KinesisClient.Shards
 	*	- KinesisClient.StreamConsumers
 	*	- KinesisClient.Streams
+	*	- KinesisClient.TagsForResource
 	*	- KinesisClient.TagsForStream
 	*	- KinesisAnalyticsClient.Application
 	*	- KinesisAnalyticsClient.Applications
@@ -2873,6 +3134,7 @@
 	*	- KinesisVideoClient.NotificationConfiguration
 	*	- KinesisVideoClient.SignalingChannel
 	*	- KinesisVideoClient.Stream
+	*	- KinesisVideoClient.StreamStorageConfiguration
 	*	- KinesisVideoClient.DataEndpoint
 	*	- KinesisVideoClient.SignalingChannelEndpoint
 	*	- KinesisVideoClient.EdgeAgentConfigurations
@@ -2890,6 +3152,7 @@
 	*	- KinesisVideoSignalingClient.IceServerConfig
 	*	- KMSClient.CustomKeyStores
 	*	- KMSClient.Key
+	*	- KMSClient.KeyLastUsage
 	*	- KMSClient.KeyPolicy
 	*	- KMSClient.KeyRotationStatus
 	*	- KMSClient.ParametersForImport
@@ -2914,6 +3177,7 @@
 	*	- LakeFormationClient.QueryStatistics
 	*	- LakeFormationClient.ResourceLFTags
 	*	- LakeFormationClient.TableObjects
+	*	- LakeFormationClient.TemporaryDataLocationCredentials
 	*	- LakeFormationClient.TemporaryGluePartitionCredentials
 	*	- LakeFormationClient.TemporaryGlueTableCredentials
 	*	- LakeFormationClient.WorkUnitResults
@@ -2928,7 +3192,11 @@
 	*	- LakeFormationClient.Transactions
 	*	- LambdaClient.AccountSettings
 	*	- LambdaClient.Alias
+	*	- LambdaClient.CapacityProvider
 	*	- LambdaClient.CodeSigningConfig
+	*	- LambdaClient.DurableExecution
+	*	- LambdaClient.DurableExecutionHistory
+	*	- LambdaClient.DurableExecutionState
 	*	- LambdaClient.EventSourceMapping
 	*	- LambdaClient.FunctionCodeSigningConfig
 	*	- LambdaClient.Function
@@ -2936,6 +3204,7 @@
 	*	- LambdaClient.FunctionConfiguration
 	*	- LambdaClient.FunctionEventInvokeConfig
 	*	- LambdaClient.FunctionRecursionConfig
+	*	- LambdaClient.FunctionScalingConfig
 	*	- LambdaClient.FunctionUrlConfig
 	*	- LambdaClient.LayerVersionByArn
 	*	- LambdaClient.LayerVersion
@@ -2944,10 +3213,13 @@
 	*	- LambdaClient.ProvisionedConcurrencyConfig
 	*	- LambdaClient.RuntimeManagementConfig
 	*	- LambdaClient.Aliases
+	*	- LambdaClient.CapacityProviders
 	*	- LambdaClient.CodeSigningConfigs
+	*	- LambdaClient.DurableExecutionsByFunction
 	*	- LambdaClient.EventSourceMappings
 	*	- LambdaClient.FunctionEventInvokeConfigs
 	*	- LambdaClient.FunctionUrlConfigs
+	*	- LambdaClient.FunctionVersionsByCapacityProvider
 	*	- LambdaClient.FunctionsByCodeSigningConfig
 	*	- LambdaClient.Functions
 	*	- LambdaClient.LayerVersions
@@ -2957,16 +3229,22 @@
 	*	- LambdaClient.VersionsByFunction
 	*	- LicenseManagerClient.AccessToken
 	*	- LicenseManagerClient.Grant
+	*	- LicenseManagerClient.LicenseAssetGroup
+	*	- LicenseManagerClient.LicenseAssetRuleset
 	*	- LicenseManagerClient.License
 	*	- LicenseManagerClient.LicenseConfiguration
 	*	- LicenseManagerClient.LicenseConversionTask
 	*	- LicenseManagerClient.LicenseManagerReportGenerator
 	*	- LicenseManagerClient.LicenseUsage
 	*	- LicenseManagerClient.ServiceSettings
+	*	- LicenseManagerClient.AssetsForLicenseAssetGroup
 	*	- LicenseManagerClient.AssociationsForLicenseConfiguration
 	*	- LicenseManagerClient.DistributedGrants
 	*	- LicenseManagerClient.FailuresForLicenseConfigurationOperations
+	*	- LicenseManagerClient.LicenseAssetGroups
+	*	- LicenseManagerClient.LicenseAssetRulesets
 	*	- LicenseManagerClient.LicenseConfigurations
+	*	- LicenseManagerClient.LicenseConfigurationsForOrganization
 	*	- LicenseManagerClient.LicenseConversionTasks
 	*	- LicenseManagerClient.LicenseManagerReportGenerators
 	*	- LicenseManagerClient.LicenseSpecificationsForResource
@@ -3054,6 +3332,7 @@
 	*	- LocationClient.DevicePosition
 	*	- LocationClient.DevicePositionHistory
 	*	- LocationClient.Geofence
+	*	- LocationClient.Job
 	*	- LocationClient.MapGlyphs
 	*	- LocationClient.MapSprites
 	*	- LocationClient.MapStyleDescriptor
@@ -3062,6 +3341,7 @@
 	*	- LocationClient.DevicePositions
 	*	- LocationClient.GeofenceCollections
 	*	- LocationClient.Geofences
+	*	- LocationClient.Jobs
 	*	- LocationClient.Keys
 	*	- LocationClient.Maps
 	*	- LocationClient.PlaceIndexes
@@ -3146,6 +3426,11 @@
 	*	- MediaConnectClient.GatewayInstance
 	*	- MediaConnectClient.Offering
 	*	- MediaConnectClient.Reservation
+	*	- MediaConnectClient.RouterInput
+	*	- MediaConnectClient.RouterInputSourceMetadata
+	*	- MediaConnectClient.RouterInputThumbnail
+	*	- MediaConnectClient.RouterNetworkInterface
+	*	- MediaConnectClient.RouterOutput
 	*	- MediaConnectClient.Bridges
 	*	- MediaConnectClient.Entitlements
 	*	- MediaConnectClient.Flows
@@ -3153,10 +3438,15 @@
 	*	- MediaConnectClient.Gateways
 	*	- MediaConnectClient.Offerings
 	*	- MediaConnectClient.Reservations
+	*	- MediaConnectClient.RouterInputs
+	*	- MediaConnectClient.RouterNetworkInterfaces
+	*	- MediaConnectClient.RouterOutputs
+	*	- MediaConnectClient.TagsForGlobalResource
 	*	- MediaConnectClient.TagsForResource
 	*	- MediaConvertClient.Endpoints
 	*	- MediaConvertClient.Job
 	*	- MediaConvertClient.JobTemplate
+	*	- MediaConvertClient.JobsQueryResults
 	*	- MediaConvertClient.Policy
 	*	- MediaConvertClient.Preset
 	*	- MediaConvertClient.Queue
@@ -3181,16 +3471,19 @@
 	*	- MediaLiveClient.Offering
 	*	- MediaLiveClient.Reservation
 	*	- MediaLiveClient.Schedule
+	*	- MediaLiveClient.SdiSource
 	*	- MediaLiveClient.Thumbnails
 	*	- MediaLiveClient.CloudWatchAlarmTemplate
 	*	- MediaLiveClient.CloudWatchAlarmTemplateGroup
 	*	- MediaLiveClient.EventBridgeRuleTemplate
 	*	- MediaLiveClient.EventBridgeRuleTemplateGroup
 	*	- MediaLiveClient.SignalMap
+	*	- MediaLiveClient.Alerts
 	*	- MediaLiveClient.ChannelPlacementGroups
 	*	- MediaLiveClient.Channels
 	*	- MediaLiveClient.CloudWatchAlarmTemplateGroups
 	*	- MediaLiveClient.CloudWatchAlarmTemplates
+	*	- MediaLiveClient.ClusterAlerts
 	*	- MediaLiveClient.Clusters
 	*	- MediaLiveClient.EventBridgeRuleTemplateGroups
 	*	- MediaLiveClient.EventBridgeRuleTemplates
@@ -3198,12 +3491,14 @@
 	*	- MediaLiveClient.InputDevices
 	*	- MediaLiveClient.InputSecurityGroups
 	*	- MediaLiveClient.Inputs
+	*	- MediaLiveClient.MultiplexAlerts
 	*	- MediaLiveClient.MultiplexPrograms
 	*	- MediaLiveClient.Multiplexes
 	*	- MediaLiveClient.Networks
 	*	- MediaLiveClient.Nodes
 	*	- MediaLiveClient.Offerings
 	*	- MediaLiveClient.Reservations
+	*	- MediaLiveClient.SdiSources
 	*	- MediaLiveClient.SignalMaps
 	*	- MediaLiveClient.TagsForResource
 	*	- MediaLiveClient.Versions
@@ -3235,10 +3530,12 @@
 	*	- MediaTailorClient.VodSource
 	*	- MediaTailorClient.ChannelPolicy
 	*	- MediaTailorClient.ChannelSchedule
+	*	- MediaTailorClient.Function
 	*	- MediaTailorClient.PlaybackConfiguration
 	*	- MediaTailorClient.PrefetchSchedule
 	*	- MediaTailorClient.Alerts
 	*	- MediaTailorClient.Channels
+	*	- MediaTailorClient.Functions
 	*	- MediaTailorClient.LiveSources
 	*	- MediaTailorClient.PlaybackConfigurations
 	*	- MediaTailorClient.PrefetchSchedules
@@ -3250,6 +3547,8 @@
 	*	- MemoryDBClient.EngineVersions
 	*	- MemoryDBClient.Events
 	*	- MemoryDBClient.MultiRegionClusters
+	*	- MemoryDBClient.MultiRegionParameterGroups
+	*	- MemoryDBClient.MultiRegionParameters
 	*	- MemoryDBClient.ParameterGroups
 	*	- MemoryDBClient.Parameters
 	*	- MemoryDBClient.ReservedNodes
@@ -3268,14 +3567,29 @@
 	*	- MgnClient.SourceServers
 	*	- MgnClient.VcenterClients
 	*	- MgnClient.LaunchConfiguration
+	*	- MgnClient.NetworkMigrationDefinition
+	*	- MgnClient.NetworkMigrationMapperSegmentConstruct
 	*	- MgnClient.ReplicationConfiguration
 	*	- MgnClient.Applications
 	*	- MgnClient.Connectors
 	*	- MgnClient.ExportErrors
 	*	- MgnClient.Exports
 	*	- MgnClient.ImportErrors
+	*	- MgnClient.ImportFileEnrichments
 	*	- MgnClient.Imports
 	*	- MgnClient.ManagedAccounts
+	*	- MgnClient.NetworkMigrationAnalyses
+	*	- MgnClient.NetworkMigrationAnalysisResults
+	*	- MgnClient.NetworkMigrationCodeGenerationSegments
+	*	- MgnClient.NetworkMigrationCodeGenerations
+	*	- MgnClient.NetworkMigrationDefinitions
+	*	- MgnClient.NetworkMigrationDeployedStacks
+	*	- MgnClient.NetworkMigrationDeployments
+	*	- MgnClient.NetworkMigrationExecutions
+	*	- MgnClient.NetworkMigrationMapperSegmentConstructs
+	*	- MgnClient.NetworkMigrationMapperSegments
+	*	- MgnClient.NetworkMigrationMappingUpdates
+	*	- MgnClient.NetworkMigrationMappings
 	*	- MgnClient.SourceServerActions
 	*	- MgnClient.TagsForResource
 	*	- MgnClient.TemplateActions
@@ -3326,6 +3640,7 @@
 	*	- MqClient.BrokerInstanceOptions
 	*	- MqClient.Configuration
 	*	- MqClient.ConfigurationRevision
+	*	- MqClient.SharedResources
 	*	- MqClient.User
 	*	- MqClient.Brokers
 	*	- MqClient.ConfigurationRevisions
@@ -3372,23 +3687,36 @@
 	*	- NeptuneClient.PendingMaintenanceActions
 	*	- NeptuneClient.ValidDBInstanceModifications
 	*	- NeptuneClient.TagsForResource
+	*	- NetworkFirewallClient.ContainerAssociation
 	*	- NetworkFirewallClient.Firewall
+	*	- NetworkFirewallClient.FirewallMetadata
 	*	- NetworkFirewallClient.FirewallPolicy
 	*	- NetworkFirewallClient.FlowOperation
 	*	- NetworkFirewallClient.LoggingConfiguration
+	*	- NetworkFirewallClient.Proxy
+	*	- NetworkFirewallClient.ProxyConfiguration
+	*	- NetworkFirewallClient.ProxyRule
+	*	- NetworkFirewallClient.ProxyRuleGroup
 	*	- NetworkFirewallClient.ResourcePolicy
 	*	- NetworkFirewallClient.RuleGroup
 	*	- NetworkFirewallClient.RuleGroupMetadata
+	*	- NetworkFirewallClient.RuleGroupSummary
 	*	- NetworkFirewallClient.TLSInspectionConfiguration
+	*	- NetworkFirewallClient.VpcEndpointAssociation
 	*	- NetworkFirewallClient.AnalysisReportResults
 	*	- NetworkFirewallClient.AnalysisReports
+	*	- NetworkFirewallClient.ContainerAssociations
 	*	- NetworkFirewallClient.FirewallPolicies
 	*	- NetworkFirewallClient.Firewalls
 	*	- NetworkFirewallClient.FlowOperationResults
 	*	- NetworkFirewallClient.FlowOperations
+	*	- NetworkFirewallClient.Proxies
+	*	- NetworkFirewallClient.ProxyConfigurations
+	*	- NetworkFirewallClient.ProxyRuleGroups
 	*	- NetworkFirewallClient.RuleGroups
 	*	- NetworkFirewallClient.TLSInspectionConfigurations
 	*	- NetworkFirewallClient.TagsForResource
+	*	- NetworkFirewallClient.VpcEndpointAssociations
 	*	- NetworkManagerClient.GlobalNetworks
 	*	- NetworkManagerClient.ConnectAttachment
 	*	- NetworkManagerClient.ConnectPeerAssociations
@@ -3417,9 +3745,12 @@
 	*	- NetworkManagerClient.TransitGatewayRegistrations
 	*	- NetworkManagerClient.TransitGatewayRouteTableAttachment
 	*	- NetworkManagerClient.VpcAttachment
+	*	- NetworkManagerClient.AttachmentRoutingPolicyAssociations
 	*	- NetworkManagerClient.Attachments
 	*	- NetworkManagerClient.ConnectPeers
 	*	- NetworkManagerClient.CoreNetworkPolicyVersions
+	*	- NetworkManagerClient.CoreNetworkPrefixListAssociations
+	*	- NetworkManagerClient.CoreNetworkRoutingInformation
 	*	- NetworkManagerClient.CoreNetworks
 	*	- NetworkManagerClient.OrganizationServiceAccessStatus
 	*	- NetworkManagerClient.Peerings
@@ -3447,6 +3778,7 @@
 	*	- NimbleClient.StudioMembers
 	*	- NimbleClient.Studios
 	*	- NimbleClient.TagsForResource
+	*	- OpenSearchClient.DataSourceAttachment
 	*	- OpenSearchClient.DomainAutoTunes
 	*	- OpenSearchClient.DomainChangeProgress
 	*	- OpenSearchClient.Domain
@@ -3456,6 +3788,7 @@
 	*	- OpenSearchClient.Domains
 	*	- OpenSearchClient.DryRunProgress
 	*	- OpenSearchClient.InboundConnections
+	*	- OpenSearchClient.InsightDetails
 	*	- OpenSearchClient.InstanceTypeLimits
 	*	- OpenSearchClient.OutboundConnections
 	*	- OpenSearchClient.Packages
@@ -3463,20 +3796,27 @@
 	*	- OpenSearchClient.ReservedInstances
 	*	- OpenSearchClient.VpcEndpoints
 	*	- OpenSearchClient.Application
+	*	- OpenSearchClient.Capability
 	*	- OpenSearchClient.CompatibleVersions
 	*	- OpenSearchClient.DataSource
+	*	- OpenSearchClient.DefaultApplicationSetting
 	*	- OpenSearchClient.DirectQueryDataSource
 	*	- OpenSearchClient.DomainMaintenanceStatus
+	*	- OpenSearchClient.Index
+	*	- OpenSearchClient.Migration
 	*	- OpenSearchClient.PackageVersionHistory
 	*	- OpenSearchClient.UpgradeHistory
 	*	- OpenSearchClient.UpgradeStatus
 	*	- OpenSearchClient.Applications
+	*	- OpenSearchClient.DataSourceAttachments
 	*	- OpenSearchClient.DataSources
 	*	- OpenSearchClient.DirectQueryDataSources
 	*	- OpenSearchClient.DomainMaintenances
 	*	- OpenSearchClient.DomainNames
 	*	- OpenSearchClient.DomainsForPackage
+	*	- OpenSearchClient.Insights
 	*	- OpenSearchClient.InstanceTypeDetails
+	*	- OpenSearchClient.Migrations
 	*	- OpenSearchClient.PackagesForDomain
 	*	- OpenSearchClient.ScheduledActions
 	*	- OpenSearchClient.Tags
@@ -3522,16 +3862,21 @@
 	*	- OrganizationsClient.OrganizationalUnit
 	*	- OrganizationsClient.Policy
 	*	- OrganizationsClient.ResourcePolicy
+	*	- OrganizationsClient.ResponsibilityTransfer
 	*	- OrganizationsClient.AWSServiceAccessForOrganization
 	*	- OrganizationsClient.Accounts
 	*	- OrganizationsClient.AccountsForParent
+	*	- OrganizationsClient.AccountsWithInvalidEffectivePolicy
 	*	- OrganizationsClient.Children
 	*	- OrganizationsClient.CreateAccountStatus
 	*	- OrganizationsClient.DelegatedAdministrators
 	*	- OrganizationsClient.DelegatedServicesForAccount
+	*	- OrganizationsClient.EffectivePolicyValidationErrors
 	*	- OrganizationsClient.HandshakesForAccount
 	*	- OrganizationsClient.HandshakesForOrganization
+	*	- OrganizationsClient.InboundResponsibilityTransfers
 	*	- OrganizationsClient.OrganizationalUnitsForParent
+	*	- OrganizationsClient.OutboundResponsibilityTransfers
 	*	- OrganizationsClient.Parents
 	*	- OrganizationsClient.Policies
 	*	- OrganizationsClient.PoliciesForTarget
@@ -3542,9 +3887,12 @@
 	*	- OutpostsClient.CatalogItem
 	*	- OutpostsClient.Connection
 	*	- OutpostsClient.Order
+	*	- OutpostsClient.OutpostBillingInformation
 	*	- OutpostsClient.Outpost
 	*	- OutpostsClient.OutpostInstanceTypes
 	*	- OutpostsClient.OutpostSupportedInstanceTypes
+	*	- OutpostsClient.Quote
+	*	- OutpostsClient.RenewalPricing
 	*	- OutpostsClient.SiteAddress
 	*	- OutpostsClient.Site
 	*	- OutpostsClient.AssetInstances
@@ -3552,8 +3900,10 @@
 	*	- OutpostsClient.BlockingInstancesForCapacityTask
 	*	- OutpostsClient.CapacityTasks
 	*	- OutpostsClient.CatalogItems
+	*	- OutpostsClient.OrderableInstanceTypes
 	*	- OutpostsClient.Orders
 	*	- OutpostsClient.Outposts
+	*	- OutpostsClient.Quotes
 	*	- OutpostsClient.Sites
 	*	- OutpostsClient.TagsForResource
 	*	- PanoramaClient.ApplicationInstance
@@ -3622,6 +3972,7 @@
 	*	- PIClient.ResourceMetrics
 	*	- PIClient.AvailableResourceDimensions
 	*	- PIClient.AvailableResourceMetrics
+	*	- PIClient.PerformanceAnalysisReportRecommendations
 	*	- PIClient.PerformanceAnalysisReports
 	*	- PIClient.TagsForResource
 	*	- PinpointClient.AdmChannel
@@ -3757,14 +4108,20 @@
 	*	- QLDBClient.JournalS3ExportsForLedger
 	*	- QLDBClient.Ledgers
 	*	- QLDBClient.TagsForResource
+	*	- QuickSightClient.AccountCustomPermission
 	*	- QuickSightClient.AccountCustomization
 	*	- QuickSightClient.AccountSettings
 	*	- QuickSightClient.AccountSubscription
+	*	- QuickSightClient.ActionConnector
+	*	- QuickSightClient.ActionConnectorPermissions
+	*	- QuickSightClient.Agent
+	*	- QuickSightClient.AgentPermissions
 	*	- QuickSightClient.Analysis
 	*	- QuickSightClient.AnalysisDefinition
 	*	- QuickSightClient.AnalysisPermissions
 	*	- QuickSightClient.AssetBundleExportJob
 	*	- QuickSightClient.AssetBundleImportJob
+	*	- QuickSightClient.AutomationJob
 	*	- QuickSightClient.BrandAssignment
 	*	- QuickSightClient.Brand
 	*	- QuickSightClient.BrandPublishedVersion
@@ -3781,6 +4138,7 @@
 	*	- QuickSightClient.DataSource
 	*	- QuickSightClient.DataSourcePermissions
 	*	- QuickSightClient.DefaultQBusinessApplication
+	*	- QuickSightClient.Flow
 	*	- QuickSightClient.Folder
 	*	- QuickSightClient.FolderPermissions
 	*	- QuickSightClient.FolderResolvedPermissions
@@ -3790,11 +4148,17 @@
 	*	- QuickSightClient.Ingestion
 	*	- QuickSightClient.IpRestriction
 	*	- QuickSightClient.KeyRegistration
+	*	- QuickSightClient.KnowledgeBase
+	*	- QuickSightClient.KnowledgeBasePermissions
 	*	- QuickSightClient.Namespace
+	*	- QuickSightClient.OAuthClientApplication
 	*	- QuickSightClient.QPersonalizationConfiguration
 	*	- QuickSightClient.QuickSightQSearchConfiguration
 	*	- QuickSightClient.RefreshSchedule
 	*	- QuickSightClient.RoleCustomPermission
+	*	- QuickSightClient.SelfUpgradeConfiguration
+	*	- QuickSightClient.Space
+	*	- QuickSightClient.SpacePermissions
 	*	- QuickSightClient.TemplateAlias
 	*	- QuickSightClient.Template
 	*	- QuickSightClient.TemplateDefinition
@@ -3809,7 +4173,12 @@
 	*	- QuickSightClient.User
 	*	- QuickSightClient.VPCConnection
 	*	- QuickSightClient.DashboardEmbedUrl
+	*	- QuickSightClient.FlowMetadata
+	*	- QuickSightClient.FlowPermissions
+	*	- QuickSightClient.IdentityContext
 	*	- QuickSightClient.SessionEmbedUrl
+	*	- QuickSightClient.ActionConnectors
+	*	- QuickSightClient.Agents
 	*	- QuickSightClient.Analyses
 	*	- QuickSightClient.AssetBundleExportJobs
 	*	- QuickSightClient.AssetBundleImportJobs
@@ -3819,6 +4188,7 @@
 	*	- QuickSightClient.Dashboards
 	*	- QuickSightClient.DataSets
 	*	- QuickSightClient.DataSources
+	*	- QuickSightClient.Flows
 	*	- QuickSightClient.FolderMembers
 	*	- QuickSightClient.Folders
 	*	- QuickSightClient.FoldersForResource
@@ -3828,9 +4198,14 @@
 	*	- QuickSightClient.IAMPolicyAssignmentsForUser
 	*	- QuickSightClient.IdentityPropagationConfigs
 	*	- QuickSightClient.Ingestions
+	*	- QuickSightClient.KnowledgeBases
 	*	- QuickSightClient.Namespaces
+	*	- QuickSightClient.OAuthClientApplications
 	*	- QuickSightClient.RefreshSchedules
 	*	- QuickSightClient.RoleMemberships
+	*	- QuickSightClient.SelfUpgrades
+	*	- QuickSightClient.SpaceResources
+	*	- QuickSightClient.Spaces
 	*	- QuickSightClient.TagsForResource
 	*	- QuickSightClient.TemplateAliases
 	*	- QuickSightClient.TemplateVersions
@@ -3843,6 +4218,7 @@
 	*	- QuickSightClient.Topics
 	*	- QuickSightClient.UserGroups
 	*	- QuickSightClient.Users
+	*	- QuickSightClient.UsersIndexCapacity
 	*	- QuickSightClient.VPCConnections
 	*	- RAMClient.Permission
 	*	- RAMClient.ResourcePolicies
@@ -3858,6 +4234,7 @@
 	*	- RAMClient.ResourceSharePermissions
 	*	- RAMClient.ResourceTypes
 	*	- RAMClient.Resources
+	*	- RAMClient.SourceAssociations
 	*	- RbinClient.Rule
 	*	- RbinClient.Rules
 	*	- RbinClient.TagsForResource
@@ -3876,6 +4253,7 @@
 	*	- RDSClient.DBInstanceAutomatedBackups
 	*	- RDSClient.DBInstances
 	*	- RDSClient.DBLogFiles
+	*	- RDSClient.DBMajorEngineVersions
 	*	- RDSClient.DBParameterGroups
 	*	- RDSClient.DBParameters
 	*	- RDSClient.DBProxies
@@ -3903,6 +4281,7 @@
 	*	- RDSClient.PendingMaintenanceActions
 	*	- RDSClient.ReservedDBInstances
 	*	- RDSClient.ReservedDBInstancesOfferings
+	*	- RDSClient.ServerlessV2PlatformVersions
 	*	- RDSClient.SourceRegions
 	*	- RDSClient.TenantDatabases
 	*	- RDSClient.ValidDBInstanceModifications
@@ -3950,6 +4329,7 @@
 	*	- RedshiftClient.UsageLimits
 	*	- RedshiftClient.ClusterCredentials
 	*	- RedshiftClient.ClusterCredentialsWithIAM
+	*	- RedshiftClient.IdentityCenterAuthToken
 	*	- RedshiftClient.ReservedNodeExchangeConfigurationOptions
 	*	- RedshiftClient.ReservedNodeExchangeOfferings
 	*	- RedshiftClient.ResourcePolicy
@@ -4041,6 +4421,7 @@
 	*	- ResourceGroupsTaggingAPIClient.Resources
 	*	- ResourceGroupsTaggingAPIClient.TagKeys
 	*	- ResourceGroupsTaggingAPIClient.TagValues
+	*	- ResourceGroupsTaggingAPIClient.RequiredTags
 	*	- RoboMakerClient.DeploymentJob
 	*	- RoboMakerClient.Fleet
 	*	- RoboMakerClient.RobotApplication
@@ -4071,6 +4452,7 @@
 	*	- RUMClient.AppMonitors
 	*	- RUMClient.RumMetricsDestinations
 	*	- RUMClient.TagsForResource
+	*	- S3Client.BucketAbac
 	*	- S3Client.BucketAccelerateConfiguration
 	*	- S3Client.BucketAcl
 	*	- S3Client.BucketAnalyticsConfiguration
@@ -4081,6 +4463,7 @@
 	*	- S3Client.BucketLifecycleConfiguration
 	*	- S3Client.BucketLocation
 	*	- S3Client.BucketLogging
+	*	- S3Client.BucketMetadataConfiguration
 	*	- S3Client.BucketMetadataTableConfiguration
 	*	- S3Client.BucketMetricsConfiguration
 	*	- S3Client.BucketNotificationConfiguration
@@ -4093,6 +4476,7 @@
 	*	- S3Client.BucketVersioning
 	*	- S3Client.BucketWebsite
 	*	- S3Client.ObjectAcl
+	*	- S3Client.ObjectAnnotation
 	*	- S3Client.ObjectAttributes
 	*	- S3Client.Object
 	*	- S3Client.ObjectLegalHold
@@ -4108,10 +4492,14 @@
 	*	- S3Client.Buckets
 	*	- S3Client.DirectoryBuckets
 	*	- S3Client.MultipartUploads
+	*	- S3Client.ObjectAnnotations
 	*	- S3Client.ObjectVersions
 	*	- S3Client.Objects
 	*	- S3Client.ObjectsV2
 	*	- S3Client.Parts
+	*	- SageMakerClient.AIBenchmarkJob
+	*	- SageMakerClient.AIRecommendationJob
+	*	- SageMakerClient.AIWorkloadConfig
 	*	- SageMakerClient.Action
 	*	- SageMakerClient.Algorithm
 	*	- SageMakerClient.App
@@ -4120,6 +4508,7 @@
 	*	- SageMakerClient.AutoMLJob
 	*	- SageMakerClient.AutoMLJobV2
 	*	- SageMakerClient.Cluster
+	*	- SageMakerClient.ClusterEvent
 	*	- SageMakerClient.ClusterNode
 	*	- SageMakerClient.ClusterSchedulerConfig
 	*	- SageMakerClient.CodeRepository
@@ -4147,8 +4536,11 @@
 	*	- SageMakerClient.InferenceComponent
 	*	- SageMakerClient.InferenceExperiment
 	*	- SageMakerClient.InferenceRecommendationsJob
+	*	- SageMakerClient.Job
+	*	- SageMakerClient.JobSchemaVersion
 	*	- SageMakerClient.LabelingJob
 	*	- SageMakerClient.LineageGroup
+	*	- SageMakerClient.MlflowApp
 	*	- SageMakerClient.MlflowTrackingServer
 	*	- SageMakerClient.ModelBiasJobDefinition
 	*	- SageMakerClient.ModelCard
@@ -4168,11 +4560,13 @@
 	*	- SageMakerClient.PipelineExecution
 	*	- SageMakerClient.ProcessingJob
 	*	- SageMakerClient.Project
+	*	- SageMakerClient.ReservedCapacity
 	*	- SageMakerClient.Space
 	*	- SageMakerClient.StudioLifecycleConfig
 	*	- SageMakerClient.SubscribedWorkteam
 	*	- SageMakerClient.TrainingJob
 	*	- SageMakerClient.TrainingPlan
+	*	- SageMakerClient.TrainingPlanExtensionHistory
 	*	- SageMakerClient.TransformJob
 	*	- SageMakerClient.Trial
 	*	- SageMakerClient.TrialComponent
@@ -4185,6 +4579,9 @@
 	*	- SageMakerClient.SagemakerServicecatalogPortfolioStatus
 	*	- SageMakerClient.ScalingConfigurationRecommendation
 	*	- SageMakerClient.SearchSuggestions
+	*	- SageMakerClient.AIBenchmarkJobs
+	*	- SageMakerClient.AIRecommendationJobs
+	*	- SageMakerClient.AIWorkloadConfigs
 	*	- SageMakerClient.Actions
 	*	- SageMakerClient.Algorithms
 	*	- SageMakerClient.Aliases
@@ -4194,6 +4591,7 @@
 	*	- SageMakerClient.Associations
 	*	- SageMakerClient.AutoMLJobs
 	*	- SageMakerClient.CandidatesForAutoMLJob
+	*	- SageMakerClient.ClusterEvents
 	*	- SageMakerClient.ClusterNodes
 	*	- SageMakerClient.ClusterSchedulerConfigs
 	*	- SageMakerClient.Clusters
@@ -4223,9 +4621,12 @@
 	*	- SageMakerClient.InferenceExperiments
 	*	- SageMakerClient.InferenceRecommendationsJobSteps
 	*	- SageMakerClient.InferenceRecommendationsJobs
+	*	- SageMakerClient.JobSchemaVersions
+	*	- SageMakerClient.Jobs
 	*	- SageMakerClient.LabelingJobs
 	*	- SageMakerClient.LabelingJobsForWorkteam
 	*	- SageMakerClient.LineageGroups
+	*	- SageMakerClient.MlflowApps
 	*	- SageMakerClient.MlflowTrackingServers
 	*	- SageMakerClient.ModelBiasJobDefinitions
 	*	- SageMakerClient.ModelCardExportJobs
@@ -4248,6 +4649,7 @@
 	*	- SageMakerClient.PipelineExecutionSteps
 	*	- SageMakerClient.PipelineExecutions
 	*	- SageMakerClient.PipelineParametersForExecution
+	*	- SageMakerClient.PipelineVersions
 	*	- SageMakerClient.Pipelines
 	*	- SageMakerClient.ProcessingJobs
 	*	- SageMakerClient.Projects
@@ -4263,12 +4665,14 @@
 	*	- SageMakerClient.TransformJobs
 	*	- SageMakerClient.TrialComponents
 	*	- SageMakerClient.Trials
+	*	- SageMakerClient.UltraServersByReservedCapacity
 	*	- SageMakerClient.UserProfiles
 	*	- SageMakerClient.Workforces
 	*	- SageMakerClient.Workteams
 	*	- SagemakerEdgeClient.Deployments
 	*	- SagemakerEdgeClient.DeviceRegistration
 	*	- SageMakerFeatureStoreRuntimeClient.Record
+	*	- SageMakerFeatureStoreRuntimeClient.Records
 	*	- SavingsplansClient.SavingsPlanRates
 	*	- SavingsplansClient.SavingsPlans
 	*	- SavingsplansClient.SavingsPlansOfferingRates
@@ -4296,24 +4700,41 @@
 	*	- SecurityHubClient.Hub
 	*	- SecurityHubClient.OrganizationConfiguration
 	*	- SecurityHubClient.Products
+	*	- SecurityHubClient.ProductsV2
+	*	- SecurityHubClient.SecurityHubV2
 	*	- SecurityHubClient.Standards
 	*	- SecurityHubClient.StandardsControls
 	*	- SecurityHubClient.AdministratorAccount
+	*	- SecurityHubClient.AggregatorV2
+	*	- SecurityHubClient.AutomationRuleV2
 	*	- SecurityHubClient.ConfigurationPolicyAssociation
 	*	- SecurityHubClient.ConfigurationPolicy
+	*	- SecurityHubClient.Connector
+	*	- SecurityHubClient.ConnectorV2
 	*	- SecurityHubClient.EnabledStandards
 	*	- SecurityHubClient.FindingAggregator
 	*	- SecurityHubClient.FindingHistory
+	*	- SecurityHubClient.FindingStatisticsV2
 	*	- SecurityHubClient.Findings
+	*	- SecurityHubClient.FindingsTrendsV2
+	*	- SecurityHubClient.FindingsV2
 	*	- SecurityHubClient.InsightResults
 	*	- SecurityHubClient.Insights
 	*	- SecurityHubClient.InvitationsCount
 	*	- SecurityHubClient.MasterAccount
 	*	- SecurityHubClient.Members
+	*	- SecurityHubClient.RecommendedPolicyV2
+	*	- SecurityHubClient.ResourcesStatisticsV2
+	*	- SecurityHubClient.ResourcesTrendsV2
+	*	- SecurityHubClient.ResourcesV2
 	*	- SecurityHubClient.SecurityControlDefinition
+	*	- SecurityHubClient.AggregatorsV2
 	*	- SecurityHubClient.AutomationRules
+	*	- SecurityHubClient.AutomationRulesV2
 	*	- SecurityHubClient.ConfigurationPolicies
 	*	- SecurityHubClient.ConfigurationPolicyAssociations
+	*	- SecurityHubClient.Connectors
+	*	- SecurityHubClient.ConnectorsV2
 	*	- SecurityHubClient.EnabledProductsForImport
 	*	- SecurityHubClient.FindingAggregators
 	*	- SecurityHubClient.Invitations
@@ -4351,6 +4772,8 @@
 	*	- ServiceDiscoveryClient.TagsForResource
 	*	- ServiceQuotasClient.AWSDefaultServiceQuota
 	*	- ServiceQuotasClient.AssociationForServiceQuotaTemplate
+	*	- ServiceQuotasClient.AutoManagementConfiguration
+	*	- ServiceQuotasClient.QuotaUtilizationReport
 	*	- ServiceQuotasClient.RequestedServiceQuotaChange
 	*	- ServiceQuotasClient.ServiceQuota
 	*	- ServiceQuotasClient.ServiceQuotaIncreaseRequestFromTemplate
@@ -4510,8 +4933,10 @@
 	*	- SSMClient.PatchGroups
 	*	- SSMClient.PatchProperties
 	*	- SSMClient.Sessions
+	*	- SSMClient.AccessToken
 	*	- SSMClient.AutomationExecution
 	*	- SSMClient.CalendarState
+	*	- SSMClient.CloudConnector
 	*	- SSMClient.
 	*	- SSMClient.ConnectionStatus
 	*	- SSMClient.DefaultPatchBaseline
@@ -4538,6 +4963,7 @@
 	*	- SSMClient.ServiceSetting
 	*	- SSMClient.AssociationVersions
 	*	- SSMClient.Associations
+	*	- SSMClient.CloudConnectors
 	*	- SSMClient.
 	*	- SSMClient.
 	*	- SSMClient.ComplianceItems
@@ -4597,11 +5023,13 @@
 	*	- SSOAdminClient.Instance
 	*	- SSOAdminClient.PermissionSet
 	*	- SSOAdminClient.PermissionSetProvisioningStatus
+	*	- SSOAdminClient.Region
 	*	- SSOAdminClient.TrustedTokenIssuer
 	*	- SSOAdminClient.ApplicationAccessScope
 	*	- SSOAdminClient.ApplicationAssignmentConfiguration
 	*	- SSOAdminClient.ApplicationAuthenticationMethod
 	*	- SSOAdminClient.ApplicationGrant
+	*	- SSOAdminClient.ApplicationSessionConfiguration
 	*	- SSOAdminClient.InlinePolicyForPermissionSet
 	*	- SSOAdminClient.PermissionsBoundaryForPermissionSet
 	*	- SSOAdminClient.AccountAssignmentCreationStatus
@@ -4622,6 +5050,7 @@
 	*	- SSOAdminClient.PermissionSetProvisioningStatus
 	*	- SSOAdminClient.PermissionSets
 	*	- SSOAdminClient.PermissionSetsProvisionedToAccount
+	*	- SSOAdminClient.Regions
 	*	- SSOAdminClient.TagsForResource
 	*	- SSOAdminClient.TrustedTokenIssuers
 	*	- StorageGatewayClient.AvailabilityMonitorTest
@@ -4659,8 +5088,10 @@
 	*	- StorageGatewayClient.Volumes
 	*	- STSClient.AccessKeyInfo
 	*	- STSClient.CallerIdentity
+	*	- STSClient.DelegatedAccessToken
 	*	- STSClient.FederationToken
 	*	- STSClient.SessionToken
+	*	- STSClient.WebIdentityToken
 	*	- SupportClient.Attachment
 	*	- SupportClient.Cases
 	*	- SupportClient.Communications
@@ -4980,6 +5411,7 @@
 	*	- WorkSpacesClient.ConnectClientAddIns
 	*	- WorkSpacesClient.ConnectionAliasPermissions
 	*	- WorkSpacesClient.ConnectionAliases
+	*	- WorkSpacesClient.CustomWorkspaceImageImport
 	*	- WorkSpacesClient.ImageAssociations
 	*	- WorkSpacesClient.IpGroups
 	*	- WorkSpacesClient.Tags
@@ -5004,6 +5436,7 @@
 	*	- WorkSpacesWebClient.Portal
 	*	- WorkSpacesWebClient.PortalServiceProviderMetadata
 	*	- WorkSpacesWebClient.Session
+	*	- WorkSpacesWebClient.SessionLogger
 	*	- WorkSpacesWebClient.TrustStoreCertificate
 	*	- WorkSpacesWebClient.TrustStore
 	*	- WorkSpacesWebClient.UserAccessLoggingSettings
@@ -5014,6 +5447,7 @@
 	*	- WorkSpacesWebClient.IpAccessSettings
 	*	- WorkSpacesWebClient.NetworkSettings
 	*	- WorkSpacesWebClient.Portals
+	*	- WorkSpacesWebClient.SessionLoggers
 	*	- WorkSpacesWebClient.Sessions
 	*	- WorkSpacesWebClient.TagsForResource
 	*	- WorkSpacesWebClient.TrustStoreCertificates
