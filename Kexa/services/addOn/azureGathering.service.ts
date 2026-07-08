@@ -2020,12 +2020,11 @@ interface AzureClients {
 
 async function retrieveAzureClients(): Promise<AzureClients> {
     const imports = await getAzureImports();
-    let clients: AzureClients = {};
+    const clients: AzureClients = {};
 
     for (const key of Object.keys(imports)) {
         const currentItem = (imports as { [key: string]: unknown })[key];
-        const clientsFromModule = extractClients(currentItem);
-        clients = { ...clients, ...clientsFromModule };
+        Object.assign(clients, extractClients(currentItem));
     }
 
     return clients;
@@ -2034,8 +2033,21 @@ async function retrieveAzureClients(): Promise<AzureClients> {
 function extractClients(module: any): AzureClients {
 	const clients: AzureClients = {};
 	Object.keys(module).forEach((key) => {
-		if ((module[key] instanceof Function && module[key].prototype !== undefined && module[key].name.endsWith("Client"))) {
-			clients[key] = module[key];
+		let exported: any;
+		try {
+			// Reading an export can throw in compiled binaries: Bun's bundler
+			// synthesizes namespace getters that may reference renamed or
+			// dropped symbols (ReferenceError). Skip those exports instead of
+			// losing the whole Azure client collection.
+			exported = module[key];
+		} catch (e) {
+			logger.debug(`Skipping unreadable export ${key}: ${e}`);
+			return;
+		}
+		// Match on the export key, not exported.name: function names are
+		// mangled by --minify in compiled binaries while export keys are not.
+		if ((exported instanceof Function && exported.prototype !== undefined && key.endsWith("Client"))) {
+			clients[key] = exported;
 		}
 	});
 	return clients;
@@ -2125,16 +2137,18 @@ async function collectAuto(credential: any, subscriptionId: any, config: AzureCo
 	Object.assign(clientConstructors, clients);
 	for (const clientService in clients) {
 		const constructor = clientConstructors[clientService];
-		const clientName = constructor.name;
+		// Use the registry key, not constructor.name: class names are mangled
+		// by --minify in compiled binaries while registry keys are not.
+		const clientName = clientService;
 		let requireClient = false;
 		if (Array.isArray(config.ObjectNameNeed)) {
-			requireClient = config.ObjectNameNeed.some((item: string) => item.startsWith(constructor.name));
+			requireClient = config.ObjectNameNeed.some((item: string) => item.startsWith(clientName));
 		} else {
 			requireClient = false;
 		}
 		if (requireClient) {
 			try {
-				azureRet[clientName] = await callGenericClient(createGenericClient(constructor, credential, subscriptionId), config);
+				azureRet[clientName] = await callGenericClient(createGenericClient(constructor, credential, subscriptionId), config, clientName);
 			} catch (e) {
 				logger.debug("Error constructing client", e);
 			}
@@ -2161,20 +2175,22 @@ function createGenericClient<T>(Client: new (credential: any, subscriptionId: an
     return new Client(credential, subscriptionId);
 }
 
-async function callGenericClient(client: any, config: any) {
+async function callGenericClient(client: any, config: any, clientName: string) {
     let results = [];
-    logger.info("starting " + client.constructor.name + " Listing");
-    results.push(await listAllResources(client, config));
+    logger.info("starting " + clientName + " Listing");
+    results.push(await listAllResources(client, config, clientName));
     return results;
 }
 
-async function listAllResources(client: any, currentConfig: any) {
+async function listAllResources(client: any, currentConfig: any, clientName: string) {
     logger.debug("Automatic gathering...");
     const properties = Object.getOwnPropertyNames(client);
     const resultList: Record<string, any> = {};
 
     const promises = properties.map(async (element) => {
-		const toCheck = client.constructor.name + '.' + element;
+		// clientName is the stable registry key; client.constructor.name is
+		// mangled by --minify in compiled binaries.
+		const toCheck = clientName + '.' + element;
 		if(!currentConfig.ObjectNameNeed?.includes(toCheck)) return Promise.resolve();
         type StatusKey = keyof typeof client;
         let key: StatusKey = element;
