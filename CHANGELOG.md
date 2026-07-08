@@ -1,5 +1,32 @@
 # Changelog
 
+## [v2.10.1] - 2026-07-08
+
+
+
+### Bug Fixes
+
+* GCP bucket listing with file-path credentials + K8s TLS restore ([#693](https://github.com/kexa-io/Kexa/issues/693)) ([197d970](https://github.com/kexa-io/Kexa/commit/197d9701a909f3be570e6a53b15ed76531656ebd))
+
+# Changelog
+
+## [v2.10.0] - 2026-03-31
+
+
+
+### Features
+
+* add HTML dashboard report format + fix YAML indentation ([15a6dd2](https://github.com/kexa-io/Kexa/commit/15a6dd2b81928d0adee3a4e30d33e40cbad37e8a))
+
+# [2.9.0](https://github.com/kexa-io/Kexa/compare/v2.8.3...v2.9.0) (2026-03-31)
+
+
+### Features
+
+* add --format (table/json/csv/toml) and --verbose flags ([2db8427](https://github.com/kexa-io/Kexa/commit/2db84276817b8fbd8fed0aabbe49ce83923a0e59))
+
+# Changelog
+
 ## [v2.8.3] - 2026-03-31
 
 
