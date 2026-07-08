@@ -10,6 +10,9 @@
 	*	- AdvisorManagementClient.recommendations
 	*	- AdvisorManagementClient.operations
 	*	- AdvisorManagementClient.suppressions
+	*	- ApiManagementClient.apiGateway
+	*	- ApiManagementClient.apiManagementGatewaySkus
+	*	- ApiManagementClient.allPolicies
 	*	- ApiManagementClient.api
 	*	- ApiManagementClient.apiRevision
 	*	- ApiManagementClient.apiRelease
@@ -31,11 +34,11 @@
 	*	- ApiManagementClient.apiWikis
 	*	- ApiManagementClient.apiExport
 	*	- ApiManagementClient.apiVersionSet
-	*	- ApiManagementClient.authorizationServer
 	*	- ApiManagementClient.authorizationProvider
 	*	- ApiManagementClient.authorization
 	*	- ApiManagementClient.authorizationLoginLinks
 	*	- ApiManagementClient.authorizationAccessPolicy
+	*	- ApiManagementClient.authorizationServer
 	*	- ApiManagementClient.backend
 	*	- ApiManagementClient.cache
 	*	- ApiManagementClient.certificate
@@ -46,7 +49,9 @@
 	*	- ApiManagementClient.apiManagementServiceSkus
 	*	- ApiManagementClient.apiManagementService
 	*	- ApiManagementClient.diagnostic
+	*	- ApiManagementClient.documentation
 	*	- ApiManagementClient.emailTemplate
+	*	- ApiManagementClient.apiGatewayConfigConnection
 	*	- ApiManagementClient.gateway
 	*	- ApiManagementClient.gatewayHostnameConfiguration
 	*	- ApiManagementClient.gatewayApi
@@ -66,6 +71,8 @@
 	*	- ApiManagementClient.policy
 	*	- ApiManagementClient.policyDescription
 	*	- ApiManagementClient.policyFragment
+	*	- ApiManagementClient.policyRestriction
+	*	- ApiManagementClient.policyRestrictionValidations
 	*	- ApiManagementClient.portalConfig
 	*	- ApiManagementClient.portalRevision
 	*	- ApiManagementClient.portalSettings
@@ -80,6 +87,8 @@
 	*	- ApiManagementClient.productPolicy
 	*	- ApiManagementClient.productWiki
 	*	- ApiManagementClient.productWikis
+	*	- ApiManagementClient.productApiLink
+	*	- ApiManagementClient.productGroupLink
 	*	- ApiManagementClient.quotaByCounterKeys
 	*	- ApiManagementClient.quotaByPeriodKeys
 	*	- ApiManagementClient.region
@@ -89,6 +98,9 @@
 	*	- ApiManagementClient.apiManagementSkus
 	*	- ApiManagementClient.subscription
 	*	- ApiManagementClient.tagResource
+	*	- ApiManagementClient.tagApiLink
+	*	- ApiManagementClient.tagOperationLink
+	*	- ApiManagementClient.tagProductLink
 	*	- ApiManagementClient.tenantAccess
 	*	- ApiManagementClient.tenantAccessGit
 	*	- ApiManagementClient.tenantConfiguration
@@ -97,7 +109,43 @@
 	*	- ApiManagementClient.userSubscription
 	*	- ApiManagementClient.userIdentities
 	*	- ApiManagementClient.userConfirmationPassword
-	*	- ApiManagementClient.documentation
+	*	- ApiManagementClient.workspaceBackend
+	*	- ApiManagementClient.workspaceCertificate
+	*	- ApiManagementClient.workspaceDiagnostic
+	*	- ApiManagementClient.workspaceApiDiagnostic
+	*	- ApiManagementClient.apiManagementWorkspaceLinks
+	*	- ApiManagementClient.apiManagementWorkspaceLink
+	*	- ApiManagementClient.workspaceLogger
+	*	- ApiManagementClient.workspace
+	*	- ApiManagementClient.workspacePolicy
+	*	- ApiManagementClient.workspaceNamedValue
+	*	- ApiManagementClient.workspaceGlobalSchema
+	*	- ApiManagementClient.workspaceNotification
+	*	- ApiManagementClient.workspaceNotificationRecipientUser
+	*	- ApiManagementClient.workspaceNotificationRecipientEmail
+	*	- ApiManagementClient.workspacePolicyFragment
+	*	- ApiManagementClient.workspaceGroup
+	*	- ApiManagementClient.workspaceGroupUser
+	*	- ApiManagementClient.workspaceSubscription
+	*	- ApiManagementClient.workspaceApiVersionSet
+	*	- ApiManagementClient.workspaceApi
+	*	- ApiManagementClient.workspaceApiRevision
+	*	- ApiManagementClient.workspaceApiRelease
+	*	- ApiManagementClient.workspaceApiOperation
+	*	- ApiManagementClient.workspaceApiOperationPolicy
+	*	- ApiManagementClient.workspaceApiPolicy
+	*	- ApiManagementClient.workspaceApiSchema
+	*	- ApiManagementClient.workspaceProduct
+	*	- ApiManagementClient.workspaceProductApiLink
+	*	- ApiManagementClient.workspaceProductGroupLink
+	*	- ApiManagementClient.workspaceProductPolicy
+	*	- ApiManagementClient.workspaceTag
+	*	- ApiManagementClient.workspaceTagApiLink
+	*	- ApiManagementClient.workspaceTagOperationLink
+	*	- ApiManagementClient.workspaceTagProductLink
+	*	- ApiManagementClient.workspaceApiExport
+	*	- ApiManagementClient.operationStatus
+	*	- ApiManagementClient.operationsResults
 	*	- ContainerAppsAPIClient.containerAppsAuthConfigs
 	*	- ContainerAppsAPIClient.availableWorkloadProfiles
 	*	- ContainerAppsAPIClient.billingMeters
@@ -113,16 +161,23 @@
 	*	- ContainerAppsAPIClient.managedEnvironmentsDiagnostics
 	*	- ContainerAppsAPIClient.jobs
 	*	- ContainerAppsAPIClient.operations
+	*	- ContainerAppsAPIClient.javaComponents
 	*	- ContainerAppsAPIClient.jobsExecutions
 	*	- ContainerAppsAPIClient.managedEnvironments
 	*	- ContainerAppsAPIClient.certificates
 	*	- ContainerAppsAPIClient.managedCertificates
 	*	- ContainerAppsAPIClient.namespaces
+	*	- ContainerAppsAPIClient.managedEnvironmentPrivateEndpointConnections
+	*	- ContainerAppsAPIClient.managedEnvironmentPrivateLinkResources
 	*	- ContainerAppsAPIClient.daprComponents
+	*	- ContainerAppsAPIClient.httpRouteConfigOperations
+	*	- ContainerAppsAPIClient.maintenanceConfigurations
 	*	- ContainerAppsAPIClient.managedEnvironmentsStorages
+	*	- ContainerAppsAPIClient.containerAppsSessionPools
 	*	- ContainerAppsAPIClient.containerAppsSourceControls
 	*	- ContainerAppsAPIClient.usages
 	*	- ContainerAppsAPIClient.managedEnvironmentUsages
+	*	- ContainerAppsAPIClient.logicApps
 	*	- AppConfigurationManagementClient.configurationStores
 	*	- AppConfigurationManagementClient.operations
 	*	- AppConfigurationManagementClient.privateEndpointConnections
@@ -185,34 +240,29 @@
 	*	- AppPlatformManagementClient.applicationAccelerators
 	*	- AppPlatformManagementClient.customizedAccelerators
 	*	- AppPlatformManagementClient.predefinedAccelerators
-	*	- WebSiteManagementClient.appServiceCertificateOrders
-	*	- WebSiteManagementClient.certificateOrdersDiagnostics
-	*	- WebSiteManagementClient.certificateRegistrationProvider
-	*	- WebSiteManagementClient.domainRegistrationProvider
-	*	- WebSiteManagementClient.domains
-	*	- WebSiteManagementClient.topLevelDomains
-	*	- WebSiteManagementClient.appServiceEnvironments
-	*	- WebSiteManagementClient.appServicePlans
-	*	- WebSiteManagementClient.certificates
+	*	- WebSiteManagementClient.getUsagesInLocation
+	*	- WebSiteManagementClient.workflowRunActionRepetitionsRequestHistories
+	*	- WebSiteManagementClient.workflowRunActionRepetitions
+	*	- WebSiteManagementClient.workflows
+	*	- WebSiteManagementClient.resourceHealthMetadata
 	*	- WebSiteManagementClient.deletedWebApps
+	*	- WebSiteManagementClient.provider
+	*	- WebSiteManagementClient.workflowVersions
+	*	- WebSiteManagementClient.workflowTriggerHistories
+	*	- WebSiteManagementClient.workflowTriggers
+	*	- WebSiteManagementClient.workflowRunActionScopeRepetitions
+	*	- WebSiteManagementClient.workflowRunActions
+	*	- WebSiteManagementClient.workflowRuns
+	*	- WebSiteManagementClient.kubeEnvironments
 	*	- WebSiteManagementClient.diagnostics
 	*	- WebSiteManagementClient.global
-	*	- WebSiteManagementClient.kubeEnvironments
-	*	- WebSiteManagementClient.provider
-	*	- WebSiteManagementClient.recommendations
-	*	- WebSiteManagementClient.resourceHealthMetadataOperations
-	*	- WebSiteManagementClient.getUsagesInLocation
-	*	- WebSiteManagementClient.staticSites
+	*	- WebSiteManagementClient.siteCertificates
+	*	- WebSiteManagementClient.certificates
+	*	- WebSiteManagementClient.appServicePlans
 	*	- WebSiteManagementClient.webApps
-	*	- WebSiteManagementClient.workflows
-	*	- WebSiteManagementClient.workflowRuns
-	*	- WebSiteManagementClient.workflowRunActions
-	*	- WebSiteManagementClient.workflowRunActionRepetitions
-	*	- WebSiteManagementClient.workflowRunActionRepetitionsRequestHistories
-	*	- WebSiteManagementClient.workflowRunActionScopeRepetitions
-	*	- WebSiteManagementClient.workflowTriggers
-	*	- WebSiteManagementClient.workflowTriggerHistories
-	*	- WebSiteManagementClient.workflowVersions
+	*	- WebSiteManagementClient.staticSites
+	*	- WebSiteManagementClient.recommendations
+	*	- WebSiteManagementClient.appServiceEnvironments
 	*	- AttestationManagementClient.operations
 	*	- AttestationManagementClient.attestationProviders
 	*	- AttestationManagementClient.privateEndpointConnections
@@ -244,20 +294,29 @@
 	*	- AzureStackManagementClient.products
 	*	- AzureStackManagementClient.registrations
 	*	- AzureStackManagementClient.customerSubscriptions
-	*	- AzureStackHCIClient.arcSettings
-	*	- AzureStackHCIClient.clusters
+	*	- AzureStackHCIClient.updateSummaries
+	*	- AzureStackHCIClient.validatedSolutionRecipes
+	*	- AzureStackHCIClient.updates
+	*	- AzureStackHCIClient.updateRuns
+	*	- AzureStackHCIClient.skus
+	*	- AzureStackHCIClient.securitySettings
 	*	- AzureStackHCIClient.extensions
+	*	- AzureStackHCIClient.edgeDevices
+	*	- AzureStackHCIClient.edgeDeviceJobs
+	*	- AzureStackHCIClient.deploymentSettings
+	*	- AzureStackHCIClient.clusters
+	*	- AzureStackHCIClient.offers
+	*	- AzureStackHCIClient.arcSettings
 	*	- AzureStackHCIClient.operations
-	*	- BatchManagementClient.batchAccountOperations
-	*	- BatchManagementClient.applicationPackageOperations
-	*	- BatchManagementClient.applicationOperations
 	*	- BatchManagementClient.location
+	*	- BatchManagementClient.networkSecurityPerimeter
+	*	- BatchManagementClient.pool
+	*	- BatchManagementClient.privateEndpointConnection
+	*	- BatchManagementClient.privateLinkResource
+	*	- BatchManagementClient.application
+	*	- BatchManagementClient.applicationPackage
+	*	- BatchManagementClient.batchAccount
 	*	- BatchManagementClient.operations
-	*	- BatchManagementClient.certificateOperations
-	*	- BatchManagementClient.privateLinkResourceOperations
-	*	- BatchManagementClient.privateEndpointConnectionOperations
-	*	- BatchManagementClient.poolOperations
-	*	- BatchManagementClient.networkSecurityPerimeterOperations
 	*	- BatchAIManagementClient.acceptLanguage
 	*	- BatchAIManagementClient.longRunningOperationRetryTimeout
 	*	- BatchAIManagementClient.baseUri
@@ -342,9 +401,16 @@
 	*	- CognitiveServicesManagementClient.raiPolicies
 	*	- CognitiveServicesManagementClient.raiBlocklists
 	*	- CognitiveServicesManagementClient.raiBlocklistItems
+	*	- CognitiveServicesManagementClient.raiTopics
 	*	- CognitiveServicesManagementClient.raiContentFilters
 	*	- CognitiveServicesManagementClient.networkSecurityPerimeterConfigurations
 	*	- CognitiveServicesManagementClient.defenderForAISettings
+	*	- CognitiveServicesManagementClient.projects
+	*	- CognitiveServicesManagementClient.accountConnections
+	*	- CognitiveServicesManagementClient.projectConnections
+	*	- CognitiveServicesManagementClient.accountCapabilityHosts
+	*	- CognitiveServicesManagementClient.projectCapabilityHosts
+	*	- CognitiveServicesManagementClient.quotaTiers
 	*	- UsageManagementClient.acceptLanguage
 	*	- UsageManagementClient.longRunningOperationRetryTimeout
 	*	- UsageManagementClient.baseUri
@@ -361,63 +427,65 @@
 	*	- AzureMLCommitmentPlansManagementClient.commitmentAssociations
 	*	- AzureMLCommitmentPlansManagementClient.commitmentPlans
 	*	- AzureMLCommitmentPlansManagementClient.usageHistory
-	*	- CommunicationServiceManagementClient.operations
-	*	- CommunicationServiceManagementClient.communicationServices
-	*	- CommunicationServiceManagementClient.domains
-	*	- CommunicationServiceManagementClient.emailServices
+	*	- CommunicationServiceManagementClient.suppressionListAddresses
+	*	- CommunicationServiceManagementClient.suppressionLists
+	*	- CommunicationServiceManagementClient.smtpUsernames
 	*	- CommunicationServiceManagementClient.senderUsernames
-	*	- ComputeManagementClient.operations
-	*	- ComputeManagementClient.usageOperations
-	*	- ComputeManagementClient.virtualMachineSizes
-	*	- ComputeManagementClient.virtualMachineScaleSets
-	*	- ComputeManagementClient.virtualMachineScaleSetExtensions
-	*	- ComputeManagementClient.virtualMachineScaleSetRollingUpgrades
-	*	- ComputeManagementClient.virtualMachineScaleSetVMExtensions
-	*	- ComputeManagementClient.virtualMachineScaleSetVMs
-	*	- ComputeManagementClient.virtualMachineExtensions
-	*	- ComputeManagementClient.virtualMachines
+	*	- CommunicationServiceManagementClient.emailServices
+	*	- CommunicationServiceManagementClient.domains
+	*	- CommunicationServiceManagementClient.communicationServices
+	*	- CommunicationServiceManagementClient.operations
+	*	- ComputeManagementClient.gallerySharingProfile
+	*	- ComputeManagementClient.softDeletedResource
+	*	- ComputeManagementClient.diskRestorePoint
+	*	- ComputeManagementClient.logAnalytics
 	*	- ComputeManagementClient.virtualMachineImages
 	*	- ComputeManagementClient.virtualMachineImagesEdgeZone
-	*	- ComputeManagementClient.virtualMachineExtensionImages
-	*	- ComputeManagementClient.availabilitySets
-	*	- ComputeManagementClient.proximityPlacementGroups
-	*	- ComputeManagementClient.dedicatedHostGroups
-	*	- ComputeManagementClient.dedicatedHosts
+	*	- ComputeManagementClient.virtualMachineSizes
+	*	- ComputeManagementClient.usage
 	*	- ComputeManagementClient.sshPublicKeys
-	*	- ComputeManagementClient.images
-	*	- ComputeManagementClient.restorePointCollections
-	*	- ComputeManagementClient.restorePoints
-	*	- ComputeManagementClient.capacityReservationGroups
-	*	- ComputeManagementClient.capacityReservations
-	*	- ComputeManagementClient.logAnalytics
-	*	- ComputeManagementClient.virtualMachineRunCommands
-	*	- ComputeManagementClient.virtualMachineScaleSetVMRunCommands
-	*	- ComputeManagementClient.disks
-	*	- ComputeManagementClient.diskAccesses
-	*	- ComputeManagementClient.diskEncryptionSets
-	*	- ComputeManagementClient.diskRestorePointOperations
-	*	- ComputeManagementClient.snapshots
+	*	- ComputeManagementClient.virtualMachineScaleSetVMs
+	*	- ComputeManagementClient.virtualMachineScaleSetRollingUpgrades
 	*	- ComputeManagementClient.resourceSkus
-	*	- ComputeManagementClient.galleries
-	*	- ComputeManagementClient.galleryImages
-	*	- ComputeManagementClient.galleryImageVersions
-	*	- ComputeManagementClient.galleryApplications
-	*	- ComputeManagementClient.galleryApplicationVersions
-	*	- ComputeManagementClient.softDeletedResource
-	*	- ComputeManagementClient.gallerySharingProfile
-	*	- ComputeManagementClient.galleryInVMAccessControlProfiles
-	*	- ComputeManagementClient.galleryInVMAccessControlProfileVersions
-	*	- ComputeManagementClient.sharedGalleries
-	*	- ComputeManagementClient.sharedGalleryImages
-	*	- ComputeManagementClient.sharedGalleryImageVersions
-	*	- ComputeManagementClient.communityGalleries
-	*	- ComputeManagementClient.communityGalleryImages
 	*	- ComputeManagementClient.communityGalleryImageVersions
-	*	- ComputeManagementClient.cloudServiceRoleInstances
-	*	- ComputeManagementClient.cloudServiceRoles
-	*	- ComputeManagementClient.cloudServices
-	*	- ComputeManagementClient.cloudServicesUpdateDomain
-	*	- ComputeManagementClient.cloudServiceOperatingSystems
+	*	- ComputeManagementClient.communityGalleryImages
+	*	- ComputeManagementClient.communityGalleries
+	*	- ComputeManagementClient.sharedGalleryImageVersions
+	*	- ComputeManagementClient.sharedGalleryImages
+	*	- ComputeManagementClient.sharedGalleries
+	*	- ComputeManagementClient.galleryInVMAccessControlProfileVersions
+	*	- ComputeManagementClient.galleryInVMAccessControlProfiles
+	*	- ComputeManagementClient.galleryScriptVersions
+	*	- ComputeManagementClient.galleryScripts
+	*	- ComputeManagementClient.galleryApplicationVersions
+	*	- ComputeManagementClient.galleryApplications
+	*	- ComputeManagementClient.galleryImageVersions
+	*	- ComputeManagementClient.galleryImages
+	*	- ComputeManagementClient.galleries
+	*	- ComputeManagementClient.snapshots
+	*	- ComputeManagementClient.diskEncryptionSets
+	*	- ComputeManagementClient.diskAccesses
+	*	- ComputeManagementClient.disks
+	*	- ComputeManagementClient.virtualMachineScaleSetVMRunCommands
+	*	- ComputeManagementClient.virtualMachineRunCommands
+	*	- ComputeManagementClient.interconnectBlocks
+	*	- ComputeManagementClient.capacityReservations
+	*	- ComputeManagementClient.capacityReservationGroups
+	*	- ComputeManagementClient.restorePoints
+	*	- ComputeManagementClient.restorePointCollections
+	*	- ComputeManagementClient.images
+	*	- ComputeManagementClient.dedicatedHosts
+	*	- ComputeManagementClient.dedicatedHostGroups
+	*	- ComputeManagementClient.proximityPlacementGroups
+	*	- ComputeManagementClient.availabilitySets
+	*	- ComputeManagementClient.virtualMachineExtensionImages
+	*	- ComputeManagementClient.virtualMachineExtensions
+	*	- ComputeManagementClient.virtualMachines
+	*	- ComputeManagementClient.virtualMachineScaleSetVMExtensions
+	*	- ComputeManagementClient.virtualMachineScaleSetLifeCycleHookEvents
+	*	- ComputeManagementClient.virtualMachineScaleSetExtensions
+	*	- ComputeManagementClient.virtualMachineScaleSets
+	*	- ComputeManagementClient.operations
 	*	- ConfidentialLedgerClient.operations
 	*	- ConfidentialLedgerClient.ledger
 	*	- ConfluentManagementClient.marketplaceAgreements
@@ -447,28 +515,29 @@
 	*	- ContainerInstanceManagementClient.location
 	*	- ContainerInstanceManagementClient.containers
 	*	- ContainerInstanceManagementClient.subnetServiceAssociationLink
+	*	- ContainerRegistryManagementClient.webhooks
+	*	- ContainerRegistryManagementClient.tokens
+	*	- ContainerRegistryManagementClient.scopeMaps
+	*	- ContainerRegistryManagementClient.replications
+	*	- ContainerRegistryManagementClient.privateEndpointConnections
+	*	- ContainerRegistryManagementClient.connectedRegistries
+	*	- ContainerRegistryManagementClient.credentialSets
+	*	- ContainerRegistryManagementClient.cacheRules
 	*	- ContainerRegistryManagementClient.registries
 	*	- ContainerRegistryManagementClient.operations
-	*	- ContainerRegistryManagementClient.privateEndpointConnections
-	*	- ContainerRegistryManagementClient.replications
-	*	- ContainerRegistryManagementClient.scopeMaps
-	*	- ContainerRegistryManagementClient.tokens
-	*	- ContainerRegistryManagementClient.webhooks
-	*	- ContainerRegistryManagementClient.agentPools
-	*	- ContainerRegistryManagementClient.runs
-	*	- ContainerRegistryManagementClient.taskRuns
-	*	- ContainerRegistryManagementClient.tasks
-	*	- ContainerServiceClient.operations
-	*	- ContainerServiceClient.managedClusters
-	*	- ContainerServiceClient.maintenanceConfigurations
-	*	- ContainerServiceClient.agentPools
-	*	- ContainerServiceClient.privateEndpointConnections
-	*	- ContainerServiceClient.privateLinkResources
-	*	- ContainerServiceClient.resolvePrivateLinkServiceId
-	*	- ContainerServiceClient.snapshots
-	*	- ContainerServiceClient.trustedAccessRoleBindings
 	*	- ContainerServiceClient.trustedAccessRoles
+	*	- ContainerServiceClient.resolvePrivateLinkServiceId
+	*	- ContainerServiceClient.privateLinkResources
+	*	- ContainerServiceClient.operations
+	*	- ContainerServiceClient.identityBindings
+	*	- ContainerServiceClient.trustedAccessRoleBindings
+	*	- ContainerServiceClient.snapshots
+	*	- ContainerServiceClient.privateEndpointConnections
 	*	- ContainerServiceClient.machines
+	*	- ContainerServiceClient.managedNamespaces
+	*	- ContainerServiceClient.maintenanceConfigurations
+	*	- ContainerServiceClient.managedClusters
+	*	- ContainerServiceClient.agentPools
 	*	- CosmosDBManagementClient.databaseAccounts
 	*	- CosmosDBManagementClient.operations
 	*	- CosmosDBManagementClient.database
@@ -506,6 +575,9 @@
 	*	- CosmosDBManagementClient.restorableTables
 	*	- CosmosDBManagementClient.restorableTableResources
 	*	- CosmosDBManagementClient.service
+	*	- CosmosDBManagementClient.fleet
+	*	- CosmosDBManagementClient.fleetspace
+	*	- CosmosDBManagementClient.fleetspaceAccount
 	*	- CustomerInsightsManagementClient.operations
 	*	- CustomerInsightsManagementClient.hubs
 	*	- CustomerInsightsManagementClient.profiles
@@ -523,11 +595,13 @@
 	*	- CustomerInsightsManagementClient.roleAssignments
 	*	- CustomerInsightsManagementClient.images
 	*	- CustomerInsightsManagementClient.predictions
-	*	- DashboardManagementClient.operations
-	*	- DashboardManagementClient.grafana
-	*	- DashboardManagementClient.privateEndpointConnections
-	*	- DashboardManagementClient.privateLinkResources
 	*	- DashboardManagementClient.managedPrivateEndpoints
+	*	- DashboardManagementClient.grafana
+	*	- DashboardManagementClient.managedDashboards
+	*	- DashboardManagementClient.integrationFabrics
+	*	- DashboardManagementClient.privateLinkResources
+	*	- DashboardManagementClient.privateEndpointConnections
+	*	- DashboardManagementClient.operations
 	*	- DataBoxManagementClient.operations
 	*	- DataBoxManagementClient.jobs
 	*	- DataBoxManagementClient.service
@@ -564,29 +638,30 @@
 	*	- MicrosoftDatadogClient.tagRules
 	*	- MicrosoftDatadogClient.singleSignOnConfigurations
 	*	- MicrosoftDatadogClient.monitoredSubscriptions
-	*	- DataFactoryManagementClient.operations
-	*	- DataFactoryManagementClient.factories
-	*	- DataFactoryManagementClient.exposureControl
-	*	- DataFactoryManagementClient.integrationRuntimes
-	*	- DataFactoryManagementClient.integrationRuntimeObjectMetadata
-	*	- DataFactoryManagementClient.integrationRuntimeNodes
-	*	- DataFactoryManagementClient.linkedServices
-	*	- DataFactoryManagementClient.datasets
-	*	- DataFactoryManagementClient.pipelines
-	*	- DataFactoryManagementClient.pipelineRuns
-	*	- DataFactoryManagementClient.activityRuns
-	*	- DataFactoryManagementClient.triggers
-	*	- DataFactoryManagementClient.triggerRuns
-	*	- DataFactoryManagementClient.dataFlows
-	*	- DataFactoryManagementClient.dataFlowDebugSession
-	*	- DataFactoryManagementClient.managedVirtualNetworks
-	*	- DataFactoryManagementClient.managedPrivateEndpoints
-	*	- DataFactoryManagementClient.credentialOperations
+	*	- DataFactoryManagementClient.changeDataCapture
+	*	- DataFactoryManagementClient.globalParameters
 	*	- DataFactoryManagementClient.privateEndPointConnections
 	*	- DataFactoryManagementClient.privateEndpointConnection
+	*	- DataFactoryManagementClient.credentialOperations
+	*	- DataFactoryManagementClient.managedPrivateEndpoints
+	*	- DataFactoryManagementClient.managedVirtualNetworks
+	*	- DataFactoryManagementClient.dataFlows
+	*	- DataFactoryManagementClient.pipelines
+	*	- DataFactoryManagementClient.datasets
+	*	- DataFactoryManagementClient.linkedServices
+	*	- DataFactoryManagementClient.integrationRuntime
+	*	- DataFactoryManagementClient.integrationRuntimeNodes
+	*	- DataFactoryManagementClient.integrationRuntimeObjectMetadata
+	*	- DataFactoryManagementClient.integrationRuntimes
 	*	- DataFactoryManagementClient.privateLinkResources
-	*	- DataFactoryManagementClient.globalParameters
-	*	- DataFactoryManagementClient.changeDataCapture
+	*	- DataFactoryManagementClient.dataFlowDebugSession
+	*	- DataFactoryManagementClient.triggerRuns
+	*	- DataFactoryManagementClient.triggers
+	*	- DataFactoryManagementClient.activityRuns
+	*	- DataFactoryManagementClient.pipelineRuns
+	*	- DataFactoryManagementClient.exposureControl
+	*	- DataFactoryManagementClient.factories
+	*	- DataFactoryManagementClient.operations
 	*	- DataLakeAnalyticsAccountManagementClient.acceptLanguage
 	*	- DataLakeAnalyticsAccountManagementClient.longRunningOperationRetryTimeout
 	*	- DataLakeAnalyticsAccountManagementClient.baseUri
@@ -599,19 +674,21 @@
 	*	- DataLakeAnalyticsAccountManagementClient.firewallRules
 	*	- DataLakeAnalyticsAccountManagementClient.operations
 	*	- DataLakeAnalyticsAccountManagementClient.locations
-	*	- DataMigrationServiceClient.acceptLanguage
-	*	- DataMigrationServiceClient.longRunningOperationRetryTimeout
-	*	- DataMigrationServiceClient.baseUri
-	*	- DataMigrationServiceClient.requestContentType
-	*	- DataMigrationServiceClient.credentials
-	*	- DataMigrationServiceClient.resourceSkus
-	*	- DataMigrationServiceClient.services
-	*	- DataMigrationServiceClient.tasks
-	*	- DataMigrationServiceClient.serviceTasks
-	*	- DataMigrationServiceClient.projects
-	*	- DataMigrationServiceClient.usages
-	*	- DataMigrationServiceClient.operations
-	*	- DataMigrationServiceClient.files
+	*	- DataMigrationManagementClient.databaseMigrationsMongoToCosmosDbRUMongo
+	*	- DataMigrationManagementClient.databaseMigrationsMongoToCosmosDbvCoreMongo
+	*	- DataMigrationManagementClient.databaseMigrationsSqlDb
+	*	- DataMigrationManagementClient.databaseMigrationsSqlMi
+	*	- DataMigrationManagementClient.databaseMigrationsSqlVm
+	*	- DataMigrationManagementClient.operations
+	*	- DataMigrationManagementClient.migrationServices
+	*	- DataMigrationManagementClient.sqlMigrationServices
+	*	- DataMigrationManagementClient.resourceSkus
+	*	- DataMigrationManagementClient.services
+	*	- DataMigrationManagementClient.tasks
+	*	- DataMigrationManagementClient.serviceTasks
+	*	- DataMigrationManagementClient.projects
+	*	- DataMigrationManagementClient.usages
+	*	- DataMigrationManagementClient.files
 	*	- DesktopVirtualizationAPIClient.operations
 	*	- DesktopVirtualizationAPIClient.workspaces
 	*	- DesktopVirtualizationAPIClient.privateEndpointConnections
@@ -676,6 +753,10 @@
 	*	- DnsResolverManagementClient.dnsForwardingRulesets
 	*	- DnsResolverManagementClient.forwardingRules
 	*	- DnsResolverManagementClient.virtualNetworkLinks
+	*	- DnsResolverManagementClient.dnsResolverPolicies
+	*	- DnsResolverManagementClient.dnsSecurityRules
+	*	- DnsResolverManagementClient.dnsResolverPolicyVirtualNetworkLinks
+	*	- DnsResolverManagementClient.dnsResolverDomainLists
 	*	- EducationManagementClient.operations
 	*	- EducationManagementClient.grants
 	*	- EducationManagementClient.labs
@@ -801,17 +882,17 @@
 	*	- IotHubClient.privateEndpointConnections
 	*	- IoTSpacesClient.ioTSpaces
 	*	- IoTSpacesClient.operations
-	*	- KeyVaultManagementClient.keys
-	*	- KeyVaultManagementClient.managedHsmKeys
-	*	- KeyVaultManagementClient.vaults
-	*	- KeyVaultManagementClient.privateEndpointConnections
-	*	- KeyVaultManagementClient.privateLinkResources
-	*	- KeyVaultManagementClient.managedHsms
 	*	- KeyVaultManagementClient.mhsmPrivateEndpointConnections
-	*	- KeyVaultManagementClient.mhsmPrivateLinkResources
 	*	- KeyVaultManagementClient.mhsmRegions
-	*	- KeyVaultManagementClient.operations
+	*	- KeyVaultManagementClient.mhsmPrivateLinkResources
+	*	- KeyVaultManagementClient.privateLinkResources
+	*	- KeyVaultManagementClient.managedHsmKeys
+	*	- KeyVaultManagementClient.keys
 	*	- KeyVaultManagementClient.secrets
+	*	- KeyVaultManagementClient.managedHsms
+	*	- KeyVaultManagementClient.privateEndpointConnections
+	*	- KeyVaultManagementClient.vaults
+	*	- KeyVaultManagementClient.operations
 	*	- SourceControlConfigurationClient.extensions
 	*	- SourceControlConfigurationClient.operationStatus
 	*	- SourceControlConfigurationClient.fluxConfigurations
@@ -1059,195 +1140,217 @@
 	*	- MySQLManagementFlexibleServerClient.checkNameAvailability
 	*	- MySQLManagementFlexibleServerClient.getPrivateDnsZoneSuffix
 	*	- MySQLManagementFlexibleServerClient.operations
-	*	- NetAppManagementClient.operations
+	*	- NetAppManagementClient.netAppResourceUsages
 	*	- NetAppManagementClient.netAppResource
-	*	- NetAppManagementClient.netAppResourceQuotaLimits
-	*	- NetAppManagementClient.netAppResourceRegionInfos
-	*	- NetAppManagementClient.accounts
-	*	- NetAppManagementClient.pools
-	*	- NetAppManagementClient.volumes
-	*	- NetAppManagementClient.snapshots
-	*	- NetAppManagementClient.snapshotPolicies
-	*	- NetAppManagementClient.backupPolicies
-	*	- NetAppManagementClient.volumeQuotaRules
-	*	- NetAppManagementClient.volumeGroups
 	*	- NetAppManagementClient.subvolumes
-	*	- NetAppManagementClient.backups
-	*	- NetAppManagementClient.backupVaults
-	*	- NetAppManagementClient.backupsUnderBackupVault
 	*	- NetAppManagementClient.backupsUnderVolume
+	*	- NetAppManagementClient.backupsUnderBackupVault
+	*	- NetAppManagementClient.pools
 	*	- NetAppManagementClient.backupsUnderAccount
-	*	- NetworkManagementClient.applicationGateways
-	*	- NetworkManagementClient.applicationGatewayPrivateLinkResources
-	*	- NetworkManagementClient.applicationGatewayPrivateEndpointConnections
-	*	- NetworkManagementClient.applicationGatewayWafDynamicManifestsDefault
-	*	- NetworkManagementClient.applicationGatewayWafDynamicManifests
-	*	- NetworkManagementClient.applicationSecurityGroups
-	*	- NetworkManagementClient.availableDelegations
-	*	- NetworkManagementClient.availableResourceGroupDelegations
-	*	- NetworkManagementClient.availableServiceAliases
-	*	- NetworkManagementClient.azureFirewalls
-	*	- NetworkManagementClient.azureFirewallFqdnTags
-	*	- NetworkManagementClient.webCategories
-	*	- NetworkManagementClient.bastionHosts
-	*	- NetworkManagementClient.networkInterfaces
-	*	- NetworkManagementClient.publicIPAddresses
-	*	- NetworkManagementClient.vipSwap
-	*	- NetworkManagementClient.customIPPrefixes
-	*	- NetworkManagementClient.ddosCustomPolicies
-	*	- NetworkManagementClient.ddosProtectionPlans
-	*	- NetworkManagementClient.dscpConfigurationOperations
-	*	- NetworkManagementClient.availableEndpointServices
-	*	- NetworkManagementClient.expressRouteCircuitAuthorizations
-	*	- NetworkManagementClient.expressRouteCircuitPeerings
-	*	- NetworkManagementClient.expressRouteCircuitConnections
-	*	- NetworkManagementClient.peerExpressRouteCircuitConnections
-	*	- NetworkManagementClient.expressRouteCircuits
-	*	- NetworkManagementClient.expressRouteServiceProviders
-	*	- NetworkManagementClient.expressRouteCrossConnections
-	*	- NetworkManagementClient.expressRouteCrossConnectionPeerings
-	*	- NetworkManagementClient.expressRoutePortsLocations
-	*	- NetworkManagementClient.expressRoutePorts
-	*	- NetworkManagementClient.expressRouteLinks
-	*	- NetworkManagementClient.expressRoutePortAuthorizations
-	*	- NetworkManagementClient.expressRouteProviderPortsLocation
-	*	- NetworkManagementClient.firewallPolicies
-	*	- NetworkManagementClient.firewallPolicyRuleCollectionGroups
-	*	- NetworkManagementClient.firewallPolicyIdpsSignatures
-	*	- NetworkManagementClient.firewallPolicyIdpsSignaturesOverrides
-	*	- NetworkManagementClient.firewallPolicyIdpsSignaturesFilterValues
-	*	- NetworkManagementClient.firewallPolicyDrafts
-	*	- NetworkManagementClient.firewallPolicyDeployments
-	*	- NetworkManagementClient.firewallPolicyRuleCollectionGroupDrafts
-	*	- NetworkManagementClient.ipamPools
-	*	- NetworkManagementClient.staticCidrs
-	*	- NetworkManagementClient.ipAllocations
-	*	- NetworkManagementClient.ipGroups
-	*	- NetworkManagementClient.loadBalancers
-	*	- NetworkManagementClient.loadBalancerBackendAddressPools
-	*	- NetworkManagementClient.loadBalancerFrontendIPConfigurations
-	*	- NetworkManagementClient.inboundNatRules
-	*	- NetworkManagementClient.loadBalancerLoadBalancingRules
-	*	- NetworkManagementClient.loadBalancerOutboundRules
-	*	- NetworkManagementClient.loadBalancerNetworkInterfaces
-	*	- NetworkManagementClient.loadBalancerProbes
-	*	- NetworkManagementClient.natGateways
-	*	- NetworkManagementClient.networkInterfaceIPConfigurations
-	*	- NetworkManagementClient.networkInterfaceLoadBalancers
-	*	- NetworkManagementClient.networkInterfaceTapConfigurations
-	*	- NetworkManagementClient.networkManagers
-	*	- NetworkManagementClient.networkManagerCommits
-	*	- NetworkManagementClient.networkManagerDeploymentStatusOperations
-	*	- NetworkManagementClient.subscriptionNetworkManagerConnections
-	*	- NetworkManagementClient.managementGroupNetworkManagerConnections
-	*	- NetworkManagementClient.connectivityConfigurations
-	*	- NetworkManagementClient.networkGroups
-	*	- NetworkManagementClient.staticMembers
-	*	- NetworkManagementClient.networkManagerRoutingConfigurations
-	*	- NetworkManagementClient.routingRuleCollections
-	*	- NetworkManagementClient.routingRules
-	*	- NetworkManagementClient.scopeConnections
-	*	- NetworkManagementClient.securityAdminConfigurations
-	*	- NetworkManagementClient.adminRuleCollections
-	*	- NetworkManagementClient.adminRules
-	*	- NetworkManagementClient.securityUserConfigurations
-	*	- NetworkManagementClient.securityUserRuleCollections
-	*	- NetworkManagementClient.securityUserRules
-	*	- NetworkManagementClient.networkProfiles
-	*	- NetworkManagementClient.networkSecurityGroups
-	*	- NetworkManagementClient.securityRules
-	*	- NetworkManagementClient.defaultSecurityRules
-	*	- NetworkManagementClient.reachabilityAnalysisIntents
-	*	- NetworkManagementClient.reachabilityAnalysisRuns
-	*	- NetworkManagementClient.verifierWorkspaces
-	*	- NetworkManagementClient.networkVirtualAppliances
-	*	- NetworkManagementClient.virtualApplianceSites
-	*	- NetworkManagementClient.virtualApplianceSkus
-	*	- NetworkManagementClient.inboundSecurityRuleOperations
-	*	- NetworkManagementClient.networkWatchers
-	*	- NetworkManagementClient.packetCaptures
-	*	- NetworkManagementClient.connectionMonitors
-	*	- NetworkManagementClient.flowLogs
-	*	- NetworkManagementClient.operations
-	*	- NetworkManagementClient.privateEndpoints
-	*	- NetworkManagementClient.availablePrivateEndpointTypes
-	*	- NetworkManagementClient.privateDnsZoneGroups
-	*	- NetworkManagementClient.privateLinkServices
-	*	- NetworkManagementClient.publicIPPrefixes
-	*	- NetworkManagementClient.routeFilters
-	*	- NetworkManagementClient.routeFilterRules
-	*	- NetworkManagementClient.routeTables
-	*	- NetworkManagementClient.routes
-	*	- NetworkManagementClient.securityPartnerProviders
-	*	- NetworkManagementClient.bgpServiceCommunities
-	*	- NetworkManagementClient.serviceEndpointPolicies
-	*	- NetworkManagementClient.serviceEndpointPolicyDefinitions
-	*	- NetworkManagementClient.serviceTags
-	*	- NetworkManagementClient.serviceTagInformationOperations
+	*	- NetAppManagementClient.accounts
+	*	- NetAppManagementClient.netAppResourceRegionInfos
+	*	- NetAppManagementClient.netAppResourceQuotaLimits
+	*	- NetAppManagementClient.caches
+	*	- NetAppManagementClient.buckets
+	*	- NetAppManagementClient.backupVaults
+	*	- NetAppManagementClient.ransomwareReports
+	*	- NetAppManagementClient.volumeQuotaRules
+	*	- NetAppManagementClient.backupPolicies
+	*	- NetAppManagementClient.snapshotPolicies
+	*	- NetAppManagementClient.snapshots
+	*	- NetAppManagementClient.volumes
+	*	- NetAppManagementClient.backups
+	*	- NetAppManagementClient.volumeGroups
+	*	- NetAppManagementClient.netAppResourceQuotaLimitsAccount
+	*	- NetAppManagementClient.operations
 	*	- NetworkManagementClient.usages
-	*	- NetworkManagementClient.virtualNetworks
-	*	- NetworkManagementClient.subnets
-	*	- NetworkManagementClient.resourceNavigationLinks
-	*	- NetworkManagementClient.serviceAssociationLinks
-	*	- NetworkManagementClient.virtualNetworkPeerings
-	*	- NetworkManagementClient.virtualNetworkGateways
-	*	- NetworkManagementClient.virtualNetworkGatewayConnections
-	*	- NetworkManagementClient.localNetworkGateways
-	*	- NetworkManagementClient.virtualNetworkGatewayNatRules
-	*	- NetworkManagementClient.virtualNetworkTaps
-	*	- NetworkManagementClient.virtualRouters
-	*	- NetworkManagementClient.virtualRouterPeerings
-	*	- NetworkManagementClient.virtualWans
-	*	- NetworkManagementClient.vpnSites
-	*	- NetworkManagementClient.vpnSiteLinks
-	*	- NetworkManagementClient.vpnSitesConfiguration
-	*	- NetworkManagementClient.vpnServerConfigurations
-	*	- NetworkManagementClient.configurationPolicyGroups
-	*	- NetworkManagementClient.virtualHubs
-	*	- NetworkManagementClient.routeMaps
-	*	- NetworkManagementClient.hubVirtualNetworkConnections
-	*	- NetworkManagementClient.vpnGateways
+	*	- NetworkManagementClient.serviceTagInformationOperations
+	*	- NetworkManagementClient.serviceTags
+	*	- NetworkManagementClient.bgpServiceCommunities
+	*	- NetworkManagementClient.availablePrivateEndpointTypes
+	*	- NetworkManagementClient.networkSecurityPerimeterServiceTags
+	*	- NetworkManagementClient.networkSecurityPerimeterOperationStatuses
+	*	- NetworkManagementClient.networkSecurityPerimeterAssociableResourceTypes
+	*	- NetworkManagementClient.expressRouteServiceProviders
+	*	- NetworkManagementClient.availableEndpointServices
+	*	- NetworkManagementClient.azureFirewallFqdnTags
+	*	- NetworkManagementClient.availableServiceAliases
+	*	- NetworkManagementClient.availableResourceGroupDelegations
+	*	- NetworkManagementClient.availableDelegations
+	*	- NetworkManagementClient.routingIntentOperations
+	*	- NetworkManagementClient.virtualHubIpConfiguration
+	*	- NetworkManagementClient.virtualHubBgpConnections
+	*	- NetworkManagementClient.virtualHubBgpConnection
+	*	- NetworkManagementClient.expressRouteConnections
+	*	- NetworkManagementClient.p2SVpnGateways
+	*	- NetworkManagementClient.natRules
 	*	- NetworkManagementClient.vpnLinkConnections
 	*	- NetworkManagementClient.vpnConnections
-	*	- NetworkManagementClient.vpnSiteLinkConnections
-	*	- NetworkManagementClient.natRules
-	*	- NetworkManagementClient.p2SVpnGateways
-	*	- NetworkManagementClient.vpnServerConfigurationsAssociatedWithVirtualWan
 	*	- NetworkManagementClient.virtualHubRouteTableV2S
-	*	- NetworkManagementClient.expressRouteGateways
-	*	- NetworkManagementClient.expressRouteConnections
-	*	- NetworkManagementClient.networkVirtualApplianceConnections
-	*	- NetworkManagementClient.virtualHubBgpConnection
-	*	- NetworkManagementClient.virtualHubBgpConnections
-	*	- NetworkManagementClient.virtualHubIpConfiguration
-	*	- NetworkManagementClient.hubRouteTables
-	*	- NetworkManagementClient.routingIntentOperations
+	*	- NetworkManagementClient.hubVirtualNetworkConnections
+	*	- NetworkManagementClient.configurationPolicyGroups
+	*	- NetworkManagementClient.vpnServerConfigurationsAssociatedWithVirtualWan
+	*	- NetworkManagementClient.vpnSitesConfiguration
+	*	- NetworkManagementClient.serviceAssociationLinks
+	*	- NetworkManagementClient.resourceNavigationLinks
+	*	- NetworkManagementClient.routeFilterRules
+	*	- NetworkManagementClient.privateDnsZoneGroups
+	*	- NetworkManagementClient.connectionMonitors
+	*	- NetworkManagementClient.packetCaptures
+	*	- NetworkManagementClient.inboundSecurityRuleOperations
+	*	- NetworkManagementClient.virtualApplianceSkus
+	*	- NetworkManagementClient.networkSecurityPerimeterLoggingConfigurations
+	*	- NetworkManagementClient.networkSecurityPerimeterLinkReferences
+	*	- NetworkManagementClient.networkSecurityPerimeterLinks
+	*	- NetworkManagementClient.networkSecurityPerimeterAssociations
+	*	- NetworkManagementClient.networkSecurityPerimeterAccessRules
+	*	- NetworkManagementClient.networkSecurityPerimeterProfiles
+	*	- NetworkManagementClient.adminRules
+	*	- NetworkManagementClient.subscriptionNetworkManagerConnections
+	*	- NetworkManagementClient.loadBalancerProbes
+	*	- NetworkManagementClient.loadBalancerOutboundRules
+	*	- NetworkManagementClient.loadBalancerLoadBalancingRules
+	*	- NetworkManagementClient.loadBalancerFrontendIPConfigurations
+	*	- NetworkManagementClient.loadBalancerBackendAddressPools
+	*	- NetworkManagementClient.loadBalancerNetworkInterfaces
+	*	- NetworkManagementClient.networkManagerDeploymentStatusOperations
+	*	- NetworkManagementClient.networkManagerCommits
+	*	- NetworkManagementClient.firewallPolicyDeployments
+	*	- NetworkManagementClient.firewallPolicyIdpsSignaturesFilterValues
+	*	- NetworkManagementClient.firewallPolicyIdpsSignatures
+	*	- NetworkManagementClient.expressRouteLinks
+	*	- NetworkManagementClient.expressRouteCrossConnectionPeerings
+	*	- NetworkManagementClient.dscpConfigurationOperations
+	*	- NetworkManagementClient.customIPPrefixes
+	*	- NetworkManagementClient.vipSwap
+	*	- NetworkManagementClient.networkInterfaceLoadBalancers
+	*	- NetworkManagementClient.expressRouteProviderPortsLocation
+	*	- NetworkManagementClient.webCategories
+	*	- NetworkManagementClient.applicationGatewayWafDynamicManifests
+	*	- NetworkManagementClient.applicationGatewayWafDynamicManifestsDefault
+	*	- NetworkManagementClient.applicationGatewayPrivateLinkResources
+	*	- NetworkManagementClient.subgroups
+	*	- NetworkManagementClient.interconnectGroups
+	*	- NetworkManagementClient.serviceGateways
+	*	- NetworkManagementClient.virtualNetworkAppliances
 	*	- NetworkManagementClient.webApplicationFirewallPolicies
+	*	- NetworkManagementClient.connectionPolicies
+	*	- NetworkManagementClient.hubRouteTables
+	*	- NetworkManagementClient.expressRouteGateways
+	*	- NetworkManagementClient.vpnSiteLinkConnections
+	*	- NetworkManagementClient.vpnGateways
+	*	- NetworkManagementClient.routeMaps
+	*	- NetworkManagementClient.virtualHubs
+	*	- NetworkManagementClient.vpnServerConfigurations
+	*	- NetworkManagementClient.vpnSiteLinks
+	*	- NetworkManagementClient.vpnSites
+	*	- NetworkManagementClient.virtualWans
+	*	- NetworkManagementClient.virtualRouterPeerings
+	*	- NetworkManagementClient.virtualRouters
+	*	- NetworkManagementClient.virtualNetworkTaps
+	*	- NetworkManagementClient.virtualNetworkGatewayNatRules
+	*	- NetworkManagementClient.localNetworkGateways
+	*	- NetworkManagementClient.virtualNetworkGatewayConnections
+	*	- NetworkManagementClient.virtualNetworkGateways
+	*	- NetworkManagementClient.virtualNetworkPeerings
+	*	- NetworkManagementClient.subnets
+	*	- NetworkManagementClient.virtualNetworks
+	*	- NetworkManagementClient.serviceEndpointPolicyDefinitions
+	*	- NetworkManagementClient.serviceEndpointPolicies
+	*	- NetworkManagementClient.securityPartnerProviders
+	*	- NetworkManagementClient.routes
+	*	- NetworkManagementClient.routeTables
+	*	- NetworkManagementClient.routeFilters
+	*	- NetworkManagementClient.publicIPPrefixes
+	*	- NetworkManagementClient.privateLinkServices
+	*	- NetworkManagementClient.privateEndpoints
+	*	- NetworkManagementClient.flowLogs
+	*	- NetworkManagementClient.networkWatchers
+	*	- NetworkManagementClient.virtualApplianceSites
+	*	- NetworkManagementClient.networkVirtualAppliances
+	*	- NetworkManagementClient.networkVirtualApplianceConnections
+	*	- NetworkManagementClient.reachabilityAnalysisRuns
+	*	- NetworkManagementClient.verifierWorkspaces
+	*	- NetworkManagementClient.reachabilityAnalysisIntents
+	*	- NetworkManagementClient.networkSecurityPerimeters
+	*	- NetworkManagementClient.defaultSecurityRules
+	*	- NetworkManagementClient.securityRules
+	*	- NetworkManagementClient.networkSecurityGroups
+	*	- NetworkManagementClient.networkProfiles
+	*	- NetworkManagementClient.securityUserRules
+	*	- NetworkManagementClient.securityUserRuleCollections
+	*	- NetworkManagementClient.securityUserConfigurations
+	*	- NetworkManagementClient.adminRuleCollections
+	*	- NetworkManagementClient.securityAdminConfigurations
+	*	- NetworkManagementClient.commits
+	*	- NetworkManagementClient.scopeConnections
+	*	- NetworkManagementClient.routingRules
+	*	- NetworkManagementClient.routingRuleCollections
+	*	- NetworkManagementClient.networkManagerRoutingConfigurations
+	*	- NetworkManagementClient.staticMembers
+	*	- NetworkManagementClient.networkGroups
+	*	- NetworkManagementClient.connectivityConfigurations
+	*	- NetworkManagementClient.managementGroupNetworkManagerConnections
+	*	- NetworkManagementClient.networkInterfaceTapConfigurations
+	*	- NetworkManagementClient.networkInterfaceIPConfigurations
+	*	- NetworkManagementClient.natGateways
+	*	- NetworkManagementClient.inboundNatRules
+	*	- NetworkManagementClient.loadBalancers
+	*	- NetworkManagementClient.ipGroups
+	*	- NetworkManagementClient.ipAllocations
+	*	- NetworkManagementClient.staticCidrs
+	*	- NetworkManagementClient.networkManagers
+	*	- NetworkManagementClient.ipamPools
+	*	- NetworkManagementClient.firewallPolicyRuleCollectionGroupDrafts
+	*	- NetworkManagementClient.firewallPolicyDrafts
+	*	- NetworkManagementClient.firewallPolicyIdpsSignaturesOverrides
+	*	- NetworkManagementClient.firewallPolicyRuleCollectionGroups
+	*	- NetworkManagementClient.firewallPolicies
+	*	- NetworkManagementClient.expressRoutePortAuthorizations
+	*	- NetworkManagementClient.expressRoutePorts
+	*	- NetworkManagementClient.expressRoutePortsLocations
+	*	- NetworkManagementClient.expressRouteCrossConnections
+	*	- NetworkManagementClient.peerExpressRouteCircuitConnections
+	*	- NetworkManagementClient.expressRouteCircuitConnections
+	*	- NetworkManagementClient.expressRouteCircuitPeerings
+	*	- NetworkManagementClient.expressRouteCircuits
+	*	- NetworkManagementClient.expressRouteCircuitAuthorizations
+	*	- NetworkManagementClient.ddosProtectionPlans
+	*	- NetworkManagementClient.ddosCustomPolicies
+	*	- NetworkManagementClient.publicIPAddresses
+	*	- NetworkManagementClient.networkInterfaces
+	*	- NetworkManagementClient.bastionHosts
+	*	- NetworkManagementClient.azureFirewalls
+	*	- NetworkManagementClient.applicationSecurityGroups
+	*	- NetworkManagementClient.applicationGatewayPrivateEndpointConnections
+	*	- NetworkManagementClient.applicationGateways
+	*	- NetworkManagementClient.operations
 	*	- NotificationHubsManagementClient.operations
 	*	- NotificationHubsManagementClient.namespaces
 	*	- NotificationHubsManagementClient.notificationHubs
-	*	- OperationalInsightsManagementClient.queryPacks
-	*	- OperationalInsightsManagementClient.queries
+	*	- OperationalInsightsManagementClient.availableServiceTiers
+	*	- OperationalInsightsManagementClient.clusters
 	*	- OperationalInsightsManagementClient.dataExports
 	*	- OperationalInsightsManagementClient.dataSources
+	*	- OperationalInsightsManagementClient.gateways
 	*	- OperationalInsightsManagementClient.intelligencePacks
 	*	- OperationalInsightsManagementClient.linkedServices
 	*	- OperationalInsightsManagementClient.linkedStorageAccounts
 	*	- OperationalInsightsManagementClient.managementGroups
-	*	- OperationalInsightsManagementClient.operationStatuses
-	*	- OperationalInsightsManagementClient.sharedKeysOperations
-	*	- OperationalInsightsManagementClient.usages
-	*	- OperationalInsightsManagementClient.storageInsightConfigs
-	*	- OperationalInsightsManagementClient.savedSearches
-	*	- OperationalInsightsManagementClient.availableServiceTiers
-	*	- OperationalInsightsManagementClient.gateways
-	*	- OperationalInsightsManagementClient.schemaOperations
-	*	- OperationalInsightsManagementClient.workspacePurge
-	*	- OperationalInsightsManagementClient.clusters
 	*	- OperationalInsightsManagementClient.operations
+	*	- OperationalInsightsManagementClient.operationStatuses
+	*	- OperationalInsightsManagementClient.queries
+	*	- OperationalInsightsManagementClient.queryPacks
+	*	- OperationalInsightsManagementClient.savedSearches
+	*	- OperationalInsightsManagementClient.schemaOperations
+	*	- OperationalInsightsManagementClient.sharedKeysOperations
+	*	- OperationalInsightsManagementClient.storageInsightConfigs
+	*	- OperationalInsightsManagementClient.tables
+	*	- OperationalInsightsManagementClient.usages
+	*	- OperationalInsightsManagementClient.workspacePurge
 	*	- OperationalInsightsManagementClient.workspaces
 	*	- OperationalInsightsManagementClient.deletedWorkspaces
-	*	- OperationalInsightsManagementClient.tables
+	*	- OperationalInsightsManagementClient.summaryLogsOperations
 	*	- PeeringManagementClient.cdnPeeringPrefixes
 	*	- PeeringManagementClient.legacyPeerings
 	*	- PeeringManagementClient.lookingGlass
@@ -1264,11 +1367,11 @@
 	*	- PeeringManagementClient.prefixes
 	*	- PeeringManagementClient.peeringServiceProviders
 	*	- PeeringManagementClient.peeringServices
-	*	- PolicyClient.dataPolicyManifests
-	*	- PolicyClient.policyAssignments
 	*	- PolicyClient.policyDefinitions
+	*	- PolicyClient.policyDefinitionVersions
 	*	- PolicyClient.policySetDefinitions
-	*	- PolicyClient.policyExemptions
+	*	- PolicyClient.policySetDefinitionVersions
+	*	- PolicyClient.policyAssignments
 	*	- PolicyInsightsClient.policyTrackedResources
 	*	- PolicyInsightsClient.remediations
 	*	- PolicyInsightsClient.policyEvents
@@ -1296,27 +1399,27 @@
 	*	- PostgreSQLManagementClient.privateEndpointConnections
 	*	- PostgreSQLManagementClient.privateLinkResources
 	*	- PostgreSQLManagementClient.serverKeys
-	*	- PostgreSQLManagementFlexibleServerClient.administrators
-	*	- PostgreSQLManagementFlexibleServerClient.backups
-	*	- PostgreSQLManagementFlexibleServerClient.locationBasedCapabilities
-	*	- PostgreSQLManagementFlexibleServerClient.serverCapabilities
-	*	- PostgreSQLManagementFlexibleServerClient.checkNameAvailability
-	*	- PostgreSQLManagementFlexibleServerClient.checkNameAvailabilityWithLocation
+	*	- PostgreSQLManagementFlexibleServerClient.administratorsMicrosoftEntra
+	*	- PostgreSQLManagementFlexibleServerClient.advancedThreatProtectionSettings
+	*	- PostgreSQLManagementFlexibleServerClient.serverThreatProtectionSettings
+	*	- PostgreSQLManagementFlexibleServerClient.backupsAutomaticAndOnDemand
+	*	- PostgreSQLManagementFlexibleServerClient.capabilitiesByLocation
+	*	- PostgreSQLManagementFlexibleServerClient.capabilitiesByServer
+	*	- PostgreSQLManagementFlexibleServerClient.capturedLogs
 	*	- PostgreSQLManagementFlexibleServerClient.configurations
 	*	- PostgreSQLManagementFlexibleServerClient.databases
 	*	- PostgreSQLManagementFlexibleServerClient.firewallRules
-	*	- PostgreSQLManagementFlexibleServerClient.servers
-	*	- PostgreSQLManagementFlexibleServerClient.flexibleServer
-	*	- PostgreSQLManagementFlexibleServerClient.ltrBackupOperations
+	*	- PostgreSQLManagementFlexibleServerClient.backupsLongTermRetention
 	*	- PostgreSQLManagementFlexibleServerClient.migrations
+	*	- PostgreSQLManagementFlexibleServerClient.nameAvailability
 	*	- PostgreSQLManagementFlexibleServerClient.operations
-	*	- PostgreSQLManagementFlexibleServerClient.getPrivateDnsZoneSuffix
+	*	- PostgreSQLManagementFlexibleServerClient.privateDnsZoneSuffix
 	*	- PostgreSQLManagementFlexibleServerClient.privateEndpointConnections
-	*	- PostgreSQLManagementFlexibleServerClient.privateEndpointConnectionOperations
 	*	- PostgreSQLManagementFlexibleServerClient.privateLinkResources
+	*	- PostgreSQLManagementFlexibleServerClient.quotaUsages
 	*	- PostgreSQLManagementFlexibleServerClient.replicas
-	*	- PostgreSQLManagementFlexibleServerClient.logFiles
-	*	- PostgreSQLManagementFlexibleServerClient.serverThreatProtectionSettings
+	*	- PostgreSQLManagementFlexibleServerClient.servers
+	*	- PostgreSQLManagementFlexibleServerClient.tuningOptionsOperations
 	*	- PostgreSQLManagementFlexibleServerClient.virtualEndpoints
 	*	- PostgreSQLManagementFlexibleServerClient.virtualNetworkSubnetUsage
 	*	- PowerBIEmbeddedManagementClient.workspaceCollections
@@ -1329,15 +1432,16 @@
 	*	- PurviewManagementClient.operations
 	*	- PurviewManagementClient.privateEndpointConnections
 	*	- PurviewManagementClient.privateLinkResources
-	*	- RecoveryServicesClient.vaultCertificates
-	*	- RecoveryServicesClient.registeredIdentities
-	*	- RecoveryServicesClient.replicationUsages
-	*	- RecoveryServicesClient.privateLinkResourcesOperations
 	*	- RecoveryServicesClient.recoveryServices
-	*	- RecoveryServicesClient.vaults
-	*	- RecoveryServicesClient.operations
 	*	- RecoveryServicesClient.vaultExtendedInfo
 	*	- RecoveryServicesClient.usages
+	*	- RecoveryServicesClient.replicationUsages
+	*	- RecoveryServicesClient.registeredIdentities
+	*	- RecoveryServicesClient.vaultCertificates
+	*	- RecoveryServicesClient.privateLinkResources
+	*	- RecoveryServicesClient.deletedVaults
+	*	- RecoveryServicesClient.vaults
+	*	- RecoveryServicesClient.operations
 	*	- RecoveryServicesBackupClient.backupResourceStorageConfigsNonCRR
 	*	- RecoveryServicesBackupClient.protectionIntentOperations
 	*	- RecoveryServicesBackupClient.backupStatus
@@ -1390,34 +1494,37 @@
 	*	- RecoveryServicesBackupClient.fetchTieringCost
 	*	- RecoveryServicesBackupClient.getTieringCostOperationResult
 	*	- RecoveryServicesBackupClient.tieringCostOperationStatus
-	*	- SiteRecoveryManagementClient.operations
-	*	- SiteRecoveryManagementClient.replicationAlertSettings
+	*	- SiteRecoveryManagementClient.replicationVaultHealth
+	*	- SiteRecoveryManagementClient.supportedOperatingSystems
 	*	- SiteRecoveryManagementClient.replicationAppliances
-	*	- SiteRecoveryManagementClient.replicationEligibilityResultsOperations
-	*	- SiteRecoveryManagementClient.replicationEvents
-	*	- SiteRecoveryManagementClient.replicationFabrics
-	*	- SiteRecoveryManagementClient.replicationLogicalNetworks
-	*	- SiteRecoveryManagementClient.replicationNetworks
-	*	- SiteRecoveryManagementClient.replicationNetworkMappings
-	*	- SiteRecoveryManagementClient.replicationProtectionContainers
-	*	- SiteRecoveryManagementClient.replicationMigrationItems
-	*	- SiteRecoveryManagementClient.migrationRecoveryPoints
+	*	- SiteRecoveryManagementClient.operations
+	*	- SiteRecoveryManagementClient.replicationVaultSetting
+	*	- SiteRecoveryManagementClient.replicationRecoveryPlans
+	*	- SiteRecoveryManagementClient.replicationPolicies
+	*	- SiteRecoveryManagementClient.replicationJobs
+	*	- SiteRecoveryManagementClient.replicationvCenters
+	*	- SiteRecoveryManagementClient.replicationStorageClassificationMappings
+	*	- SiteRecoveryManagementClient.replicationStorageClassifications
+	*	- SiteRecoveryManagementClient.replicationRecoveryServicesProviders
+	*	- SiteRecoveryManagementClient.replicationProtectionContainerMappings
+	*	- SiteRecoveryManagementClient.clusterRecoveryPoint
 	*	- SiteRecoveryManagementClient.replicationProtectableItems
-	*	- SiteRecoveryManagementClient.replicationProtectedItems
+	*	- SiteRecoveryManagementClient.replicationMigrationItems
+	*	- SiteRecoveryManagementClient.replicationProtectionContainers
+	*	- SiteRecoveryManagementClient.replicationNetworkMappings
+	*	- SiteRecoveryManagementClient.replicationNetworks
+	*	- SiteRecoveryManagementClient.replicationLogicalNetworks
+	*	- SiteRecoveryManagementClient.replicationFabrics
+	*	- SiteRecoveryManagementClient.replicationEvents
+	*	- SiteRecoveryManagementClient.replicationEligibilityResults
+	*	- SiteRecoveryManagementClient.replicationAlertSettings
+	*	- SiteRecoveryManagementClient.replicationProtectionIntents
+	*	- SiteRecoveryManagementClient.clusterRecoveryPoints
+	*	- SiteRecoveryManagementClient.replicationProtectionClusters
 	*	- SiteRecoveryManagementClient.recoveryPoints
 	*	- SiteRecoveryManagementClient.targetComputeSizes
-	*	- SiteRecoveryManagementClient.replicationProtectionContainerMappings
-	*	- SiteRecoveryManagementClient.replicationRecoveryServicesProviders
-	*	- SiteRecoveryManagementClient.replicationStorageClassifications
-	*	- SiteRecoveryManagementClient.replicationStorageClassificationMappings
-	*	- SiteRecoveryManagementClient.replicationvCenters
-	*	- SiteRecoveryManagementClient.replicationJobs
-	*	- SiteRecoveryManagementClient.replicationPolicies
-	*	- SiteRecoveryManagementClient.replicationProtectionIntents
-	*	- SiteRecoveryManagementClient.replicationRecoveryPlans
-	*	- SiteRecoveryManagementClient.supportedOperatingSystemsOperations
-	*	- SiteRecoveryManagementClient.replicationVaultHealth
-	*	- SiteRecoveryManagementClient.replicationVaultSetting
+	*	- SiteRecoveryManagementClient.replicationProtectedItems
+	*	- SiteRecoveryManagementClient.migrationRecoveryPoints
 	*	- RedisManagementClient.operations
 	*	- RedisManagementClient.redis
 	*	- RedisManagementClient.firewallRules
@@ -1432,6 +1539,7 @@
 	*	- RedisEnterpriseManagementClient.operationsStatus
 	*	- RedisEnterpriseManagementClient.redisEnterprise
 	*	- RedisEnterpriseManagementClient.databases
+	*	- RedisEnterpriseManagementClient.accessPolicyAssignmentOperations
 	*	- RedisEnterpriseManagementClient.privateEndpointConnections
 	*	- RedisEnterpriseManagementClient.privateLinkResources
 	*	- ResourceGraphClient.acceptLanguage
@@ -1441,16 +1549,13 @@
 	*	- ResourceGraphClient.credentials
 	*	- ResourceGraphClient.operations
 	*	- ResourceManagementClient.operations
-	*	- ResourceManagementClient.deployments
 	*	- ResourceManagementClient.providers
 	*	- ResourceManagementClient.providerResourceTypes
 	*	- ResourceManagementClient.resources
 	*	- ResourceManagementClient.resourceGroups
 	*	- ResourceManagementClient.tagsOperations
-	*	- ResourceManagementClient.deploymentOperations
-	*	- SubscriptionClient.subscriptions
-	*	- SubscriptionClient.tenants
-	*	- SubscriptionClient.subscriptionOperations
+	*	- SubscriptionClient.subscription
+	*	- SubscriptionClient.subscriptionOperation
 	*	- SubscriptionClient.operations
 	*	- SubscriptionClient.alias
 	*	- SubscriptionClient.subscriptionPolicy
@@ -1463,6 +1568,7 @@
 	*	- SearchManagementClient.privateEndpointConnections
 	*	- SearchManagementClient.sharedPrivateLinkResources
 	*	- SearchManagementClient.usages
+	*	- SearchManagementClient.networkSecurityPerimeterConfigurations
 	*	- MicrosoftSerialConsoleClient.serialPorts
 	*	- ServiceBusManagementClient.namespaces
 	*	- ServiceBusManagementClient.privateEndpointConnections
@@ -1518,155 +1624,154 @@
 	*	- SignalRManagementClient.signalRPrivateEndpointConnections
 	*	- SignalRManagementClient.signalRPrivateLinkResources
 	*	- SignalRManagementClient.signalRSharedPrivateLinkResources
-	*	- SqlManagementClient.dataMaskingPolicies
-	*	- SqlManagementClient.dataMaskingRules
-	*	- SqlManagementClient.geoBackupPolicies
-	*	- SqlManagementClient.databases
-	*	- SqlManagementClient.elasticPools
-	*	- SqlManagementClient.serverCommunicationLinks
-	*	- SqlManagementClient.serviceObjectives
-	*	- SqlManagementClient.elasticPoolActivities
-	*	- SqlManagementClient.elasticPoolDatabaseActivities
-	*	- SqlManagementClient.serverUsages
-	*	- SqlManagementClient.databaseAdvisors
-	*	- SqlManagementClient.databaseAutomaticTuningOperations
-	*	- SqlManagementClient.databaseColumns
-	*	- SqlManagementClient.databaseRecommendedActions
-	*	- SqlManagementClient.databaseSchemas
-	*	- SqlManagementClient.databaseSecurityAlertPolicies
-	*	- SqlManagementClient.databaseTables
-	*	- SqlManagementClient.databaseVulnerabilityAssessmentRuleBaselines
-	*	- SqlManagementClient.databaseVulnerabilityAssessments
-	*	- SqlManagementClient.databaseVulnerabilityAssessmentScans
-	*	- SqlManagementClient.dataWarehouseUserActivitiesOperations
-	*	- SqlManagementClient.deletedServers
-	*	- SqlManagementClient.elasticPoolOperations
-	*	- SqlManagementClient.encryptionProtectors
-	*	- SqlManagementClient.failoverGroups
-	*	- SqlManagementClient.firewallRules
-	*	- SqlManagementClient.instancePools
-	*	- SqlManagementClient.jobAgents
-	*	- SqlManagementClient.jobCredentials
-	*	- SqlManagementClient.jobExecutions
-	*	- SqlManagementClient.jobs
-	*	- SqlManagementClient.jobStepExecutions
-	*	- SqlManagementClient.jobSteps
-	*	- SqlManagementClient.jobTargetExecutions
-	*	- SqlManagementClient.jobTargetGroups
-	*	- SqlManagementClient.jobVersions
 	*	- SqlManagementClient.capabilities
-	*	- SqlManagementClient.longTermRetentionPolicies
-	*	- SqlManagementClient.maintenanceWindowOptionsOperations
-	*	- SqlManagementClient.maintenanceWindowsOperations
-	*	- SqlManagementClient.managedBackupShortTermRetentionPolicies
-	*	- SqlManagementClient.managedDatabaseColumns
-	*	- SqlManagementClient.managedDatabaseQueries
-	*	- SqlManagementClient.managedDatabaseSchemas
-	*	- SqlManagementClient.managedDatabaseSecurityAlertPolicies
-	*	- SqlManagementClient.managedDatabaseSecurityEvents
-	*	- SqlManagementClient.managedDatabaseTables
-	*	- SqlManagementClient.managedDatabaseTransparentDataEncryption
-	*	- SqlManagementClient.managedDatabaseVulnerabilityAssessmentRuleBaselines
-	*	- SqlManagementClient.managedDatabaseVulnerabilityAssessments
-	*	- SqlManagementClient.managedDatabaseVulnerabilityAssessmentScans
-	*	- SqlManagementClient.managedInstanceAdministrators
-	*	- SqlManagementClient.managedInstanceAzureADOnlyAuthentications
-	*	- SqlManagementClient.managedInstanceEncryptionProtectors
-	*	- SqlManagementClient.managedInstanceKeys
-	*	- SqlManagementClient.managedInstanceLongTermRetentionPolicies
-	*	- SqlManagementClient.managedInstanceOperations
-	*	- SqlManagementClient.managedInstancePrivateEndpointConnections
-	*	- SqlManagementClient.managedInstancePrivateLinkResources
-	*	- SqlManagementClient.managedInstanceTdeCertificates
-	*	- SqlManagementClient.managedInstanceVulnerabilityAssessments
-	*	- SqlManagementClient.managedRestorableDroppedDatabaseBackupShortTermRetentionPolicies
-	*	- SqlManagementClient.managedServerSecurityAlertPolicies
-	*	- SqlManagementClient.operations
-	*	- SqlManagementClient.privateEndpointConnections
-	*	- SqlManagementClient.privateLinkResources
-	*	- SqlManagementClient.recoverableManagedDatabases
-	*	- SqlManagementClient.restorePoints
-	*	- SqlManagementClient.serverAdvisors
-	*	- SqlManagementClient.serverAutomaticTuningOperations
-	*	- SqlManagementClient.serverAzureADAdministrators
-	*	- SqlManagementClient.serverAzureADOnlyAuthentications
-	*	- SqlManagementClient.serverDevOpsAuditSettings
-	*	- SqlManagementClient.serverDnsAliases
-	*	- SqlManagementClient.serverKeys
-	*	- SqlManagementClient.serverOperations
-	*	- SqlManagementClient.serverSecurityAlertPolicies
-	*	- SqlManagementClient.serverTrustGroups
-	*	- SqlManagementClient.serverVulnerabilityAssessments
+	*	- SqlManagementClient.transparentDataEncryptions
 	*	- SqlManagementClient.sqlAgent
-	*	- SqlManagementClient.subscriptionUsages
-	*	- SqlManagementClient.syncAgents
-	*	- SqlManagementClient.syncGroups
-	*	- SqlManagementClient.syncMembers
-	*	- SqlManagementClient.tdeCertificates
-	*	- SqlManagementClient.timeZones
-	*	- SqlManagementClient.virtualNetworkRules
-	*	- SqlManagementClient.workloadClassifiers
-	*	- SqlManagementClient.workloadGroups
-	*	- SqlManagementClient.backupShortTermRetentionPolicies
-	*	- SqlManagementClient.databaseExtensionsOperations
-	*	- SqlManagementClient.databaseOperations
-	*	- SqlManagementClient.databaseUsages
-	*	- SqlManagementClient.ledgerDigestUploadsOperations
-	*	- SqlManagementClient.outboundFirewallRules
-	*	- SqlManagementClient.usages
-	*	- SqlManagementClient.longTermRetentionBackups
-	*	- SqlManagementClient.longTermRetentionManagedInstanceBackups
-	*	- SqlManagementClient.restorableDroppedManagedDatabases
-	*	- SqlManagementClient.serverConnectionPolicies
-	*	- SqlManagementClient.distributedAvailabilityGroups
-	*	- SqlManagementClient.serverTrustCertificates
-	*	- SqlManagementClient.iPv6FirewallRules
-	*	- SqlManagementClient.endpointCertificates
-	*	- SqlManagementClient.managedDatabaseSensitivityLabels
-	*	- SqlManagementClient.managedDatabaseRecommendedSensitivityLabels
-	*	- SqlManagementClient.sensitivityLabels
-	*	- SqlManagementClient.recommendedSensitivityLabels
-	*	- SqlManagementClient.serverBlobAuditingPolicies
-	*	- SqlManagementClient.databaseBlobAuditingPolicies
-	*	- SqlManagementClient.extendedDatabaseBlobAuditingPolicies
-	*	- SqlManagementClient.extendedServerBlobAuditingPolicies
-	*	- SqlManagementClient.databaseAdvancedThreatProtectionSettings
+	*	- SqlManagementClient.serverAutomaticTuningOperations
 	*	- SqlManagementClient.serverAdvancedThreatProtectionSettings
-	*	- SqlManagementClient.managedServerDnsAliases
-	*	- SqlManagementClient.databaseSqlVulnerabilityAssessmentBaselines
-	*	- SqlManagementClient.databaseSqlVulnerabilityAssessmentExecuteScan
-	*	- SqlManagementClient.databaseSqlVulnerabilityAssessmentRuleBaselines
-	*	- SqlManagementClient.databaseSqlVulnerabilityAssessmentScanResult
-	*	- SqlManagementClient.databaseSqlVulnerabilityAssessmentScans
-	*	- SqlManagementClient.databaseSqlVulnerabilityAssessmentsSettings
-	*	- SqlManagementClient.managedDatabaseAdvancedThreatProtectionSettings
+	*	- SqlManagementClient.managedLedgerDigestUploadsOperations
+	*	- SqlManagementClient.managedInstancePrivateLinkResources
 	*	- SqlManagementClient.managedInstanceAdvancedThreatProtectionSettings
-	*	- SqlManagementClient.replicationLinks
-	*	- SqlManagementClient.sqlVulnerabilityAssessmentBaseline
-	*	- SqlManagementClient.sqlVulnerabilityAssessmentBaselines
-	*	- SqlManagementClient.sqlVulnerabilityAssessmentExecuteScan
-	*	- SqlManagementClient.sqlVulnerabilityAssessmentRuleBaseline
+	*	- SqlManagementClient.managedDatabaseTransparentDataEncryption
+	*	- SqlManagementClient.managedDatabaseRestoreDetails
+	*	- SqlManagementClient.managedDatabaseQueries
+	*	- SqlManagementClient.managedDatabaseMoveOperations
+	*	- SqlManagementClient.managedDatabaseAdvancedThreatProtectionSettings
+	*	- SqlManagementClient.maintenanceWindowsOperations
+	*	- SqlManagementClient.maintenanceWindowOptionsOperations
+	*	- SqlManagementClient.ledgerDigestUploadsOperations
+	*	- SqlManagementClient.usages
+	*	- SqlManagementClient.elasticPoolOperations
+	*	- SqlManagementClient.managedInstanceTdeCertificates
+	*	- SqlManagementClient.managedDatabaseRecommendedSensitivityLabels
+	*	- SqlManagementClient.managedDatabaseSecurityEvents
+	*	- SqlManagementClient.dataWarehouseUserActivitiesOperations
+	*	- SqlManagementClient.dataMaskingRules
+	*	- SqlManagementClient.databaseVulnerabilityAssessmentScans
+	*	- SqlManagementClient.databaseSqlVulnerabilityAssessmentScans
 	*	- SqlManagementClient.sqlVulnerabilityAssessmentRuleBaselines
-	*	- SqlManagementClient.sqlVulnerabilityAssessmentScanResult
+	*	- SqlManagementClient.sqlVulnerabilityAssessmentExecuteScan
+	*	- SqlManagementClient.databaseSqlVulnerabilityAssessmentExecuteScan
+	*	- SqlManagementClient.databaseSqlVulnerabilityAssessmentsSettings
+	*	- SqlManagementClient.sqlVulnerabilityAssessmentBaselines
+	*	- SqlManagementClient.databaseSqlVulnerabilityAssessmentBaselines
+	*	- SqlManagementClient.databaseRecommendedActions
+	*	- SqlManagementClient.databaseExtensionsOperations
+	*	- SqlManagementClient.databaseAutomaticTuningOperations
+	*	- SqlManagementClient.databaseAdvisors
+	*	- SqlManagementClient.databaseAdvancedThreatProtectionSettings
+	*	- SqlManagementClient.tdeCertificates
+	*	- SqlManagementClient.serverUsages
+	*	- SqlManagementClient.serverOperations
+	*	- SqlManagementClient.synapseLinkWorkspaces
+	*	- SqlManagementClient.recommendedSensitivityLabels
+	*	- SqlManagementClient.databaseUsages
+	*	- SqlManagementClient.databaseOperations
+	*	- SqlManagementClient.databaseEncryptionProtectors
+	*	- SqlManagementClient.managedDatabaseSensitivityLabels
+	*	- SqlManagementClient.workloadGroups
+	*	- SqlManagementClient.workloadClassifiers
+	*	- SqlManagementClient.virtualNetworkRules
+	*	- SqlManagementClient.virtualClusters
+	*	- SqlManagementClient.timeZones
+	*	- SqlManagementClient.syncMembers
+	*	- SqlManagementClient.syncGroups
+	*	- SqlManagementClient.syncAgents
+	*	- SqlManagementClient.subscriptionUsages
+	*	- SqlManagementClient.startStopManagedInstanceSchedules
+	*	- SqlManagementClient.serverVulnerabilityAssessments
+	*	- SqlManagementClient.serverTrustCertificates
+	*	- SqlManagementClient.serverSecurityAlertPolicies
+	*	- SqlManagementClient.serverKeys
+	*	- SqlManagementClient.serverDnsAliases
+	*	- SqlManagementClient.serverDevOpsAuditSettings
+	*	- SqlManagementClient.serverConnectionPolicies
+	*	- SqlManagementClient.serverConfigurationOptions
+	*	- SqlManagementClient.serverAzureADOnlyAuthentications
+	*	- SqlManagementClient.serverAzureADAdministrators
+	*	- SqlManagementClient.restorableDroppedManagedDatabases
+	*	- SqlManagementClient.restorableDroppedDatabases
+	*	- SqlManagementClient.recoverableManagedDatabases
+	*	- SqlManagementClient.recoverableDatabases
+	*	- SqlManagementClient.privateLinkResources
+	*	- SqlManagementClient.privateEndpointConnections
+	*	- SqlManagementClient.outboundFirewallRules
+	*	- SqlManagementClient.networkSecurityPerimeterConfigurations
+	*	- SqlManagementClient.managedServerSecurityAlertPolicies
+	*	- SqlManagementClient.managedServerDnsAliases
+	*	- SqlManagementClient.managedInstanceVulnerabilityAssessments
+	*	- SqlManagementClient.managedInstancePrivateEndpointConnections
+	*	- SqlManagementClient.managedInstanceOperations
+	*	- SqlManagementClient.managedInstanceLongTermRetentionPolicies
+	*	- SqlManagementClient.managedInstanceKeys
+	*	- SqlManagementClient.managedInstanceEncryptionProtectors
+	*	- SqlManagementClient.managedInstanceDtcs
+	*	- SqlManagementClient.managedInstanceAzureADOnlyAuthentications
+	*	- SqlManagementClient.managedInstanceAdministrators
+	*	- SqlManagementClient.managedDatabaseSecurityAlertPolicies
+	*	- SqlManagementClient.managedRestorableDroppedDatabaseBackupShortTermRetentionPolicies
+	*	- SqlManagementClient.managedBackupShortTermRetentionPolicies
+	*	- SqlManagementClient.longTermRetentionPolicies
+	*	- SqlManagementClient.longTermRetentionManagedInstanceBackups
+	*	- SqlManagementClient.longTermRetentionBackups
+	*	- SqlManagementClient.jobVersions
+	*	- SqlManagementClient.jobTargetGroups
+	*	- SqlManagementClient.jobSteps
+	*	- SqlManagementClient.jobPrivateEndpoints
+	*	- SqlManagementClient.jobs
+	*	- SqlManagementClient.jobTargetExecutions
+	*	- SqlManagementClient.jobStepExecutions
+	*	- SqlManagementClient.jobCredentials
+	*	- SqlManagementClient.jobAgents
+	*	- SqlManagementClient.jobExecutions
+	*	- SqlManagementClient.iPv6FirewallRules
+	*	- SqlManagementClient.instancePools
+	*	- SqlManagementClient.instancePoolOperations
+	*	- SqlManagementClient.instanceFailoverGroups
+	*	- SqlManagementClient.geoBackupPolicies
+	*	- SqlManagementClient.failoverGroups
+	*	- SqlManagementClient.endpointCertificates
+	*	- SqlManagementClient.encryptionProtectors
+	*	- SqlManagementClient.elasticPools
+	*	- SqlManagementClient.managedInstances
+	*	- SqlManagementClient.serverTrustGroups
+	*	- SqlManagementClient.managedDatabases
+	*	- SqlManagementClient.distributedAvailabilityGroups
+	*	- SqlManagementClient.deletedServers
+	*	- SqlManagementClient.dataMaskingPolicies
+	*	- SqlManagementClient.managedDatabaseVulnerabilityAssessmentScans
+	*	- SqlManagementClient.managedDatabaseVulnerabilityAssessments
+	*	- SqlManagementClient.databaseVulnerabilityAssessments
+	*	- SqlManagementClient.managedDatabaseVulnerabilityAssessmentRuleBaselines
+	*	- SqlManagementClient.databaseVulnerabilityAssessmentRuleBaselines
 	*	- SqlManagementClient.sqlVulnerabilityAssessmentScans
+	*	- SqlManagementClient.sqlVulnerabilityAssessmentScanResult
+	*	- SqlManagementClient.databaseSqlVulnerabilityAssessmentScanResult
+	*	- SqlManagementClient.sqlVulnerabilityAssessmentRuleBaseline
+	*	- SqlManagementClient.databaseSqlVulnerabilityAssessmentRuleBaselines
 	*	- SqlManagementClient.sqlVulnerabilityAssessmentsSettings
 	*	- SqlManagementClient.sqlVulnerabilityAssessments
-	*	- SqlManagementClient.managedDatabaseMoveOperations
-	*	- SqlManagementClient.managedInstanceDtcs
-	*	- SqlManagementClient.synapseLinkWorkspaces
-	*	- SqlManagementClient.virtualClusters
-	*	- SqlManagementClient.instanceFailoverGroups
-	*	- SqlManagementClient.managedDatabaseRestoreDetails
-	*	- SqlManagementClient.managedDatabases
-	*	- SqlManagementClient.databaseEncryptionProtectors
-	*	- SqlManagementClient.managedInstances
-	*	- SqlManagementClient.managedLedgerDigestUploadsOperations
-	*	- SqlManagementClient.recoverableDatabases
-	*	- SqlManagementClient.restorableDroppedDatabases
-	*	- SqlManagementClient.serverConfigurationOptions
+	*	- SqlManagementClient.sqlVulnerabilityAssessmentBaseline
+	*	- SqlManagementClient.databaseSecurityAlertPolicies
+	*	- SqlManagementClient.managedDatabaseSchemas
+	*	- SqlManagementClient.databaseSchemas
+	*	- SqlManagementClient.managedDatabaseTables
+	*	- SqlManagementClient.databaseTables
+	*	- SqlManagementClient.managedDatabaseColumns
+	*	- SqlManagementClient.serverAdvisors
+	*	- SqlManagementClient.extendedServerBlobAuditingPolicies
+	*	- SqlManagementClient.extendedDatabaseBlobAuditingPolicies
+	*	- SqlManagementClient.databaseBlobAuditingPolicies
+	*	- SqlManagementClient.serverBlobAuditingPolicies
 	*	- SqlManagementClient.servers
-	*	- SqlManagementClient.startStopManagedInstanceSchedules
-	*	- SqlManagementClient.transparentDataEncryptions
+	*	- SqlManagementClient.replicationLinks
+	*	- SqlManagementClient.firewallRules
+	*	- SqlManagementClient.databases
+	*	- SqlManagementClient.sensitivityLabels
+	*	- SqlManagementClient.restorePoints
+	*	- SqlManagementClient.databaseColumns
+	*	- SqlManagementClient.backupShortTermRetentionPolicies
+	*	- SqlManagementClient.operations
 	*	- SqlVirtualMachineManagementClient.acceptLanguage
 	*	- SqlVirtualMachineManagementClient.longRunningOperationRetryTimeout
 	*	- SqlVirtualMachineManagementClient.baseUri
@@ -1676,32 +1781,38 @@
 	*	- SqlVirtualMachineManagementClient.operations
 	*	- SqlVirtualMachineManagementClient.sqlVirtualMachineGroups
 	*	- SqlVirtualMachineManagementClient.sqlVirtualMachines
-	*	- StorageManagementClient.blobServices
-	*	- StorageManagementClient.blobContainers
+	*	- StorageManagementClient.usages
+	*	- StorageManagementClient.skus
+	*	- StorageManagementClient.storageTaskAssignmentInstancesReport
+	*	- StorageManagementClient.table
+	*	- StorageManagementClient.localUsers
+	*	- StorageManagementClient.objectReplicationPolicies
+	*	- StorageManagementClient.queue
+	*	- StorageManagementClient.storageTaskAssignmentsInstancesReport
+	*	- StorageManagementClient.privateLinkResources
+	*	- StorageManagementClient.advancedPlatformMetrics
+	*	- StorageManagementClient.dataShares
+	*	- StorageManagementClient.connectors
+	*	- StorageManagementClient.storageTaskAssignments
+	*	- StorageManagementClient.networkSecurityPerimeterConfigurations
+	*	- StorageManagementClient.tableServices
+	*	- StorageManagementClient.encryptionScopes
+	*	- StorageManagementClient.privateEndpointConnections
+	*	- StorageManagementClient.blobInventoryPolicies
+	*	- StorageManagementClient.managementPolicies
+	*	- StorageManagementClient.deletedAccounts
+	*	- StorageManagementClient.queueServices
 	*	- StorageManagementClient.fileServices
 	*	- StorageManagementClient.fileShares
-	*	- StorageManagementClient.queueServices
-	*	- StorageManagementClient.queue
-	*	- StorageManagementClient.operations
-	*	- StorageManagementClient.skus
 	*	- StorageManagementClient.storageAccounts
-	*	- StorageManagementClient.deletedAccounts
-	*	- StorageManagementClient.usages
-	*	- StorageManagementClient.managementPolicies
-	*	- StorageManagementClient.blobInventoryPolicies
-	*	- StorageManagementClient.privateEndpointConnections
-	*	- StorageManagementClient.privateLinkResources
-	*	- StorageManagementClient.objectReplicationPoliciesOperations
-	*	- StorageManagementClient.localUsersOperations
-	*	- StorageManagementClient.encryptionScopes
-	*	- StorageManagementClient.tableServices
-	*	- StorageManagementClient.tableOperations
-	*	- StorageManagementClient.networkSecurityPerimeterConfigurations
-	*	- StorageManagementClient.storageTaskAssignments
-	*	- StorageManagementClient.storageTaskAssignmentsInstancesReport
-	*	- StorageManagementClient.storageTaskAssignmentInstancesReport
+	*	- StorageManagementClient.blobServices
+	*	- StorageManagementClient.blobContainers
+	*	- StorageManagementClient.operations
 	*	- StorageCacheManagementClient.amlFilesystems
+	*	- StorageCacheManagementClient.autoExportJobs
 	*	- StorageCacheManagementClient.importJobs
+	*	- StorageCacheManagementClient.autoImportJobs
+	*	- StorageCacheManagementClient.expansionJobs
 	*	- StorageCacheManagementClient.operations
 	*	- StorageCacheManagementClient.skus
 	*	- StorageCacheManagementClient.usageModels

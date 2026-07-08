@@ -1,6 +1,9 @@
 import { LevelEnum } from './../enum/level.enum';
 import fs from "fs";
-import yaml from "js-yaml";
+import * as yaml from "js-yaml";
+// Kexa rule files rely on YAML 1.1 merge keys (`<<`) for alert templates,
+// which js-yaml 5's default CORE_SCHEMA no longer includes.
+const RULE_YAML_SCHEMA = yaml.YAML11_SCHEMA;
 import type { SettingFile } from "../models/settingFile/settingFile.models";
 import type { Rules } from "../models/settingFile/rules.models";
 import type { ParentRules, RulesConditions } from "../models/settingFile/conditions.models";
@@ -191,7 +194,7 @@ export async function analyzeRule(ruleFilePath:string, listNeedRules:string[], g
         let contentRuleFile = fs.readFileSync(ruleFilePath, 'utf8');
         const configHere = await getConfig();
         contentRuleFile = replaceElement(contentRuleFile, configHere?.variable?.[name]);
-        const docs = yaml.load(contentRuleFile) as SettingFile[];
+        const docs = yaml.load(contentRuleFile, { schema: RULE_YAML_SCHEMA }) as SettingFile[];
         if (!docs || !Array.isArray(docs) || docs.length === 0) {
             throw new Error("Empty or invalid rule file: " + name);
         }

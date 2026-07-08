@@ -5,7 +5,7 @@ import type { ProviderResource } from "../../models/providerResource.models";
 import type { ResultScan } from "../../models/resultScan.models";
 import { ConditionEnum } from "../../enum/condition.enum";
 import { OperatorEnum } from "../../enum/operator.enum";
-import yaml from "js-yaml";
+import * as yaml from "js-yaml";
 import fs from "fs";
 import path from "path";
 
