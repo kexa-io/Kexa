@@ -15,13 +15,11 @@
 */
 
 import oracledb from 'oracledb';
-import env from "dotenv";
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { getContext, getNewLogger } from "../logger.service";
 import type { OracleResources } from "../../models/oracle/resource.models";
 import type { OracleConfig } from "../../models/oracle/config.models";
 
-env.config();
 const logger = getNewLogger("OracleLogger");
 
 let currentConfig: OracleConfig;

@@ -1,5 +1,4 @@
 #!/usr/bin/env bun
-import env from "dotenv";
 import Log, { setup, setup as setupLogger } from 'adze';
 import { exit } from "process";
 
@@ -400,7 +399,6 @@ async function runScanLoop(config: any | null, initialSettings: SettingFile[], l
 
 async function start() {
     try {
-        env.config();
         const configuration = await getConfig();
         const generalConfig = configuration.general ?? null;
 
