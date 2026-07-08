@@ -15,13 +15,11 @@
 */
 
 import mysql from 'mysql2/promise';
-import env from "dotenv";
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { getContext, getNewLogger } from "../logger.service";
 import type { MySqlResources } from "../../models/mysql/resource.models";
 import type { MySqlConfig } from "../../models/mysql/config.models";
 
-env.config();
 const logger = getNewLogger("MySqlLogger");
 
 let currentConfig: MySqlConfig;

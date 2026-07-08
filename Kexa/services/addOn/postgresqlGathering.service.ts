@@ -12,13 +12,11 @@
 */
 
 import { Client } from 'pg';
-import env from "dotenv";
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { getContext, getNewLogger } from "../logger.service";
 import type { PostgresqlResources } from "../../models/postgresql/resource.models";
 import type { PostgresqlConfig } from "../../models/postgresql/config.models";
 
-env.config();
 const logger = getNewLogger("PostgresLogger");
 
 let currentConfig: PostgresqlConfig;

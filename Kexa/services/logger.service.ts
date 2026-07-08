@@ -1,9 +1,7 @@
 import { Context } from "@azure/functions";
 import {DebugEnum} from "../enum/debug.enum";
-import * as dotenv from 'dotenv';
 import adze, { setup }  from 'adze';
 
-dotenv.config();
 const process = require('process');
 
 let isSetupCalled = false;

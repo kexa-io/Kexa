@@ -20,11 +20,9 @@
 */
 
 import { Octokit } from "octokit";
-import env from "dotenv";
 import { GitResources } from "../../models/git/resource.models";
 import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
 import { GitConfig } from "../../models/git/config.models";
-env.config();
 
 import {getContext, getNewLogger} from "../logger.service";
 const logger = getNewLogger("GithubLogger");

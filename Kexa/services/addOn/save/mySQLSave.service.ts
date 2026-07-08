@@ -6,11 +6,9 @@ import type { ResultScan } from '../../../models/resultScan.models';
 
 const logger = getNewLogger("mySQLSaveLogger");
 
-const { v4: uuidv4 } = require('uuid');
-
 export async function save(save: MySQLSaveConfig, result: ResultScan[][]): Promise<void>{
     let mySQL = new MySQLClass();
-    let batchId = uuidv4();
+    let batchId = crypto.randomUUID();
     try{
         if(!save.urlName) throw new Error("urlName is required");
         let url = (await getEnvVar(save.urlName))??save.urlName;

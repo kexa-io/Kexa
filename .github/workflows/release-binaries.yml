@@ -50,14 +50,23 @@ jobs:
         include:
           - target: bun-linux-x64
             output: kexa-linux-x64
+            upx: true
           - target: bun-linux-arm64
             output: kexa-linux-arm64
+            upx: true
+          # macOS binaries are left uncompressed: UPX-packed Mach-O executables
+          # are rejected by Gatekeeper / break code signing.
           - target: bun-darwin-x64
             output: kexa-macos-x64
+            upx: false
           - target: bun-darwin-arm64
             output: kexa-macos-arm64
+            upx: false
+          # Windows left uncompressed: UPX-packed PE files are commonly flagged
+          # by antivirus engines as false positives.
           - target: bun-windows-x64
             output: kexa-windows-x64.exe
+            upx: false
     steps:
       - name: Setup Bun
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
@@ -73,6 +82,30 @@ jobs:
         run: |
           mkdir -p dist
           bun build ./Kexa/main.ts --compile --target=${{ matrix.target }} --outfile=dist/${{ matrix.output }} --minify
+
+      - name: Compress binary with UPX
+        if: matrix.upx
+        run: |
+          sudo apt-get update -q && sudo apt-get install -y -q upx-ucl
+          ls -la dist/${{ matrix.output }}
+          upx --best --lzma dist/${{ matrix.output }}
+          ls -la dist/${{ matrix.output }}
+
+      - name: Set up QEMU (arm64 smoke test)
+        if: matrix.target == 'bun-linux-arm64'
+        uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3
+
+      - name: Smoke test compressed binary (x64)
+        if: matrix.target == 'bun-linux-x64'
+        run: |
+          chmod +x dist/${{ matrix.output }}
+          ./dist/${{ matrix.output }} --help
+
+      - name: Smoke test compressed binary (arm64 via QEMU)
+        if: matrix.target == 'bun-linux-arm64'
+        run: |
+          chmod +x dist/${{ matrix.output }}
+          docker run --rm --platform linux/arm64 -v "$PWD/dist:/dist" frolvlad/alpine-glibc /dist/${{ matrix.output }} --help
 
       - name: Upload binary
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
