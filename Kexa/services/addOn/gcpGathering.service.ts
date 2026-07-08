@@ -109,6 +109,12 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
          // check if google cred is a path or a json
         if (googleCred && typeof googleCred === 'string' && googleCred.includes(".json")) {
             setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", googleCred);
+            try {
+                credentialsObject = JSON.parse(getFile(googleCred)??"");
+                if (!projectId) projectId = credentialsObject?.project_id;
+            } catch (e) {
+                logger.warn("GCP - Could not parse credentials file, will rely on GOOGLE_APPLICATION_CREDENTIALS env var");
+            }
         }
         else if (projectId && googleCred) {
             try {
