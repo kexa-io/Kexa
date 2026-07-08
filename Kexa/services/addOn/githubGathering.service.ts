@@ -141,8 +141,9 @@ async function collectOrganizationRelaidInfo(allOrganizations: any): Promise<any
     }
 }
 
-async function collectRunnersInfo(org: string): Promise<any>{
-    let allRunners = [];
+async function collectRunnersInfo(org: string): Promise<any[]>{
+    if(!currentConfig?.ObjectNameNeed?.includes("runners")) return [];
+    let allRunners: any[] = [];
     logger.info("Collecting github runners");
     try{
         let octokit = await getOctokit();
@@ -160,9 +161,7 @@ async function collectRunnersInfo(org: string): Promise<any>{
     }catch(e){
         logger.debug(e);
     }
-    return {
-        allRunners
-    }
+    return allRunners;
 }
 
 async function collectTeamsRelaidInfo(org: string): Promise<any>{
