@@ -121,11 +121,11 @@ This includes sample config and rules folders to get started immediately.
 
    ```bash
    # Using binary
-   kexa -o
-   kexa --output
+   kexa -g
+   kexa --gather
 
    # Or from source
-   bun run Kexa/main.ts -o
+   bun run Kexa/main.ts -g
    ```
 
 This exports all gathered resources to `./output/resources/{timestamp}-resources.json`
@@ -147,27 +147,27 @@ This exports all resources that raised an alert to `./output/alerts/{timestamp}-
 
    ```bash
    # Using binary
-   kexa -o -a
+   kexa -g -a
 
    # Or from source
-   bun run Kexa/main.ts -o -a
+   bun run Kexa/main.ts -g -a
    ```
 
 **Custom output directory**:
 
    ```bash
    # Using binary
-   OUTPUT=/custom/path kexa -o -a
+   OUTPUT=/custom/path kexa -g -a
 
    # Or from source
-   OUTPUT=/custom/path bun run Kexa/main.ts -o -a
+   OUTPUT=/custom/path bun run Kexa/main.ts -g -a
    ```
 
 Use the `OUTPUT` environment variable to change the output directory (default: `./output`).
 
 ### CLI Options
 
-- `-o, --output` - Export resources to JSON
+- `-g, --gather` - Export resources to JSON
 - `-a, --alerts` - Export alerts to JSON
 - `--help` - Display help with examples
 
@@ -182,7 +182,7 @@ docker run -v $(pwd)/config:/app/config \
 -e A_AZURETENANTID="your-tenant-id" \
 -e A_AZURECLIENTSECRET="your-client-secret" \
 -e A_SUBSCRIPTIONID="your-subscription-id" \
-innovtech/kexa
+kexa/kexa
 ```
 
 ## What Happens Next?
