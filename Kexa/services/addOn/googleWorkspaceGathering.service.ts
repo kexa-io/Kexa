@@ -218,8 +218,12 @@ async function listUsers(auth: any): Promise<Array<any> | null> {
             });
 
         } catch (error) {
-            logger.debug('Error listing user roles:', error);
-            return [];
+            // A per-user roles lookup failing (rate limit, permission edge
+            // case for that one account...) used to discard the entire,
+            // already-fetched user directory. Skip just this user's admin
+            // status (left unknown/false) and keep processing the rest.
+            logger.debug('Error listing user roles for ' + jsonData[i]?.primaryEmail + ':', error);
+            continue;
         }
         if (isSuperAdmin) {
             nbSuperAdmin = nbSuperAdmin + 1;

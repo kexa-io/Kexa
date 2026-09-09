@@ -338,13 +338,44 @@ export async function collectOrganizations(): Promise<any>{
     }
 }
 
+/** Marks each member's `mfa` field from a *complete* set of logins known to
+ * have 2FA disabled (built by fully paginating the 2fa_disabled filter
+ * independently of the full member list's own pagination -- see the note in
+ * collectMembers). Extracted as a pure function so the cross-referencing
+ * logic itself is testable without mocking Octokit. */
+export function annotateMfaStatus(members: any[], loginsWithoutMFA: Set<string>): void {
+    members.forEach((_member: any) => {
+        _member["mfa"] = !loginsWithoutMFA.has(_member.login);
+    });
+}
+
 export async function collectMembers(org: string): Promise<any>{
     if(!currentConfig?.ObjectNameNeed?.includes("members")) return [];
-    let page = 1;
     try{
         let octokit = await getOctokit();
         let members = [];
 
+        // The full member list and the 2fa_disabled-filtered list paginate
+        // *independently* (the filtered list is a subset, so it can run out
+        // of pages long before the full list does). Fetching "page N" of
+        // both in lockstep meant any org whose filtered list was shorter
+        // than its full list got an empty page for every later page of
+        // members -- silently marking every one of those members as
+        // MFA-enabled (a false negative), including genuinely 2FA-disabled
+        // ones. Fetch the complete filtered list once, then cross-reference.
+        const loginsWithoutMFA = new Set<string>();
+        for (let mfaPage = 1; ; mfaPage++) {
+            let memberWithoutMFA = (await (octokit).request('GET /orgs/{org}/members?filter=2fa_disabled&page=' + mfaPage, {
+                org: org,
+                headers: {
+                    'X-GitHub-Api-Version': '2022-11-28'
+                }
+            })).data;
+            if (memberWithoutMFA.length == 0) break;
+            memberWithoutMFA.forEach((_member: any) => loginsWithoutMFA.add(_member.login));
+        }
+
+        let page = 1;
         while(true){
             let member = (await (octokit).request('GET /orgs/{org}/members?page=' + page, {
                 org: org,
@@ -355,15 +386,7 @@ export async function collectMembers(org: string): Promise<any>{
             if(member.length == 0){
                 break;
             }
-            let memberWithoutMFA = (await (octokit).request('GET /orgs/{org}/members?filter=2fa_disabled&page=' + page + '&filter=2fa_disabled', {
-                org: org,
-                headers: {
-                    'X-GitHub-Api-Version': '2022-11-28'
-                }
-            })).data;
-            member.forEach((_member: any) => {
-                _member["mfa"] = ((memberWithoutMFA.filter((memberWithoutMFA: any) => memberWithoutMFA.login == _member.login).length == 0) ? true : false);
-            });
+            annotateMfaStatus(member, loginsWithoutMFA);
             page++;
             members.push(...member);
         }
