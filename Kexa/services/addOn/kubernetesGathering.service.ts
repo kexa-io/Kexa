@@ -133,6 +133,21 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
     return resources??null;
 }
 
+/** Writes `content` to `tempPath` (mode 0o600 -- this carries the same
+ * cluster credentials, client cert/key/tokens, as the source kubeconfig, so
+ * it must never be left world-readable), invokes `load(tempPath)`, and
+ * deletes the temp file in all cases, including when `load` throws --
+ * previously the file was left on disk indefinitely on that path. */
+export function writeCleanedKubeconfigAndLoad(tempPath: string, content: string, load: (tempPath: string) => void): void {
+    const fs = require('fs');
+    fs.writeFileSync(tempPath, content, { encoding: 'utf8', mode: 0o600 });
+    try {
+        load(tempPath);
+    } finally {
+        fs.unlinkSync(tempPath);
+    }
+}
+
 export async function kubernetesListing(pathKubeFile: string): Promise<any> {
     logger.info("starting kubernetesListing");
 
@@ -156,10 +171,7 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
                     const fs = require('fs');
                     let content = fs.readFileSync(pathKubeFile, 'utf8');
                     content = content.replace(/\0/g, '').trim();
-                    const tempPath = pathKubeFile + '.clean';
-                    fs.writeFileSync(tempPath, content, 'utf8');
-                    kc.loadFromFile(tempPath);
-                    fs.unlinkSync(tempPath);
+                    writeCleanedKubeconfigAndLoad(pathKubeFile + '.clean', content, (tempPath) => kc.loadFromFile(tempPath));
                 }
             } catch (error) {
                 logger.error(`Failed to load kubeconfig, falling back to default:`, error);
