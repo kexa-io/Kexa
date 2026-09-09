@@ -2672,6 +2672,7 @@ async function getVMDetails(VMSize:string): Promise<any> {
     try {
         let capabilities = (await axios.post("https://api.thecloudprices.com/api/props/sku", {"name": VMSize})).data.message.CommonCapabilities;
         capabilities.MemoryGb = parseFloat(capabilities.MemoryGb.$numberDecimal);
+        VMSizeMemory[VMSize] = capabilities;
         return capabilities;
     } catch (err) {
         logger.debug("error in getVMDetails:"+err);
@@ -2929,6 +2930,7 @@ async function appConfigurationListing(client: ApplicationInsightsManagementClie
 	} catch (e) {
 		logger.debug("Error on graph services listing:", e);
 	}
+	return resultGraph;
 }
 
 async function monitorListing(client: MonitorClient, resClient: ResourceManagementClient): Promise<any> {
@@ -2958,32 +2960,36 @@ async function monitorListing(client: MonitorClient, resClient: ResourceManageme
 }
 
 async function blobPropertiesListing(client: BlobServiceClient): Promise<any> {
-	let resultMonitor:any = [];
 	const properties = await client.getProperties();
-	return resultMonitor;
+	return properties ?? [];
 }
 
 async function storageListing(client: StorageManagementClient): Promise<any> {
 	let resultStorage:any = [];
 	for await (let item of client.storageAccounts.list()) {
 		item = addingResourceGroups(item);
-		let result:any = item;
+		let result:any = item as any;
 		try {
-			const properties = await client.storageAccounts.getProperties(result.resourceGroupName, result.name);
+			result.properties = await client.storageAccounts.getProperties(result.resourceGroupName, result.name);
 		} catch (e) {
 			logger.debug("Failed to retrieve storage informations", e);
 		}
 		try {
+			// Only recording *whether* keys could be listed (a permission/
+			// rotation signal), never the key material itself -- listKeys()
+			// returns live storage account keys, which is credential
+			// material and must not be persisted into scan results.
 			const accountSAS = await client.storageAccounts.listKeys(result.resourceGroupName, result.name);
+			result.hasAccessibleKeys = Boolean(accountSAS?.keys?.length);
 		} catch (e) {
 			logger.debug("Failed to retrieve storage informations", e);
 		}
 		try {
-			const polciies = await client.managementPolicies.get(result.resourceGroupName, result.name, "default");
+			result.managementPolicy = await client.managementPolicies.get(result.resourceGroupName, result.name, "default");
 		} catch (e) {
 			logger.debug("Failed to retrieve storage informations", e);
 		}
-		resultStorage.push(item);
+		resultStorage.push(result);
 	}
 	return resultStorage;
 }
@@ -3189,7 +3195,11 @@ async function notificationsListing(client: NotificationHubsManagementClient): P
 			if (namespace.name) {
 				for await (let hub of client.notificationHubs.list(result.resourceGroupName, namespace.name)) {
 					if (hub.name) {
-					
+						resultsNotifications.push({
+							resourceGroupName: result.resourceGroupName,
+							namespace: namespace.name,
+							hub: hub.name,
+						});
 					}
 				}
 			}
@@ -3251,7 +3261,7 @@ async function groupsListing(client: Client): Promise<any> {
 				groups = groups.concat(response.value);
 			}
 		}
-		groups.forEach(async (group:any) => {
+		await Promise.all(groups.map(async (group:any) => {
 			try {
 				//const res2 = await client.api(`/groups/${group.id}/settings`).get();
 			//	groups/{group-id}/permissionGrants
@@ -3261,7 +3271,7 @@ async function groupsListing(client: Client): Promise<any> {
 			} catch (error) {
 				logger.debug("error:",error);
 			}
-		});
+		}));
 	} catch (error) {
 		logger.debug("error:",error);
 	}
