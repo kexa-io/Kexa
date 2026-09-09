@@ -2084,7 +2084,7 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
     let resources = new Array<Object>();
     for(let config of azureConfig??[]){
         logger.debug("config: ");
-        logger.debug(jsonStringify(config, 4));
+        logger.debug(jsonStringify(redactSecrets(config), 4));
         let prefix = config.prefix??(azureConfig.indexOf(config).toString());
         try {
             logger.debug("prefix: " + prefix);
@@ -2750,6 +2750,7 @@ import { AzureMachineLearningServicesManagementClient } from "@azure/arm-machine
 
 import { convertMinMaxMeanMedianToPercentage } from "../../helpers/statsNumbers";
 import { jsonStringify } from "../../helpers/jsonStringify";
+import { redactSecrets } from "../../helpers/redactSecrets";
 
 async function workspacesListing(mlClient: MachineLearningWorkspacesManagementClient): Promise<any> {
 	let workspacesResult: any[] = [];
