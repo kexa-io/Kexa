@@ -2067,8 +2067,8 @@ const clientConstructors: Record<string, any> = {
 };
 
 
-import { DefaultAzureCredential } from "@azure/identity";
-import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
+import { DefaultAzureCredential, ClientSecretCredential } from "@azure/identity";
+import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { AzureConfig } from "../../models/azure/config.models";
 import axios from "axios";
 
@@ -2089,18 +2089,31 @@ export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|n
             logger.debug("prefix: " + prefix);
             let subscriptionId = await getConfigOrEnvVar(config, "SUBSCRIPTIONID", prefix);
             let azureClientId = await getConfigOrEnvVar(config, "AZURECLIENTID", prefix);
-            if(azureClientId) setEnvVar("AZURE_CLIENT_ID", azureClientId);
-            else logger.warn(prefix + "AZURECLIENTID not found");
+            if(!azureClientId) logger.warn(prefix + "AZURECLIENTID not found");
             let azureClientSecret = await getConfigOrEnvVar(config, "AZURECLIENTSECRET", prefix);
-            if(azureClientSecret) setEnvVar("AZURE_CLIENT_SECRET", azureClientSecret);
-            else logger.warn(prefix + "AZURECLIENTSECRET not found");
+            if(!azureClientSecret) logger.warn(prefix + "AZURECLIENTSECRET not found");
             let azureTenantId = await getConfigOrEnvVar(config, "AZURETENANTID", prefix);
-            if(azureTenantId) setEnvVar("AZURE_TENANT_ID", azureTenantId);
-            else logger.warn(prefix + "AZURETENANTID not found");
-            let UAI = {}
-            let useAzureIdentity = await getConfigOrEnvVar(config, "USERAZUREIDENTITYID", prefix);
-            if(useAzureIdentity) UAI = {managedIdentityClientId: useAzureIdentity};
-            const credential = new DefaultAzureCredential(UAI);
+            if(!azureTenantId) logger.warn(prefix + "AZURETENANTID not found");
+
+            let credential;
+            if (azureClientId && azureClientSecret && azureTenantId) {
+                credential = new ClientSecretCredential(azureTenantId, azureClientId, azureClientSecret);
+            } else {
+                // No explicit (prefixed or bare) credentials resolved for this
+                // account: fall back to DefaultAzureCredential's own provider
+                // chain (managed identity, Azure CLI, ...). This must NOT
+                // write AZURE_CLIENT_ID/AZURE_CLIENT_SECRET/AZURE_TENANT_ID to
+                // process.env for any account, explicit-credential accounts
+                // included: DefaultAzureCredential tries EnvironmentCredential
+                // before ManagedIdentityCredential, so a previous account's
+                // bare env vars would otherwise be silently inherited here
+                // instead of falling through to the intended managed identity
+                // (same class of bug fixed for AWS in PR #747).
+                let UAI = {}
+                let useAzureIdentity = await getConfigOrEnvVar(config, "USERAZUREIDENTITYID", prefix);
+                if(useAzureIdentity) UAI = {managedIdentityClientId: useAzureIdentity};
+                credential = new DefaultAzureCredential(UAI);
+            }
             if(!subscriptionId) {
                 throw new Error("- Please pass "+ prefix + "SUBSCRIPTIONID in your config file");
             } else {
