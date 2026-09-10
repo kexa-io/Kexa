@@ -5958,10 +5958,6 @@ async function collectAuto(credential: any, region: string) {
 }
 
 
-function gatherDependenciesResources(credential: any, region:string, object: ClientResultsInterface) {
-
-}
-
 async function gatherAwsObject(credential: any, region:string, object: ClientResultsInterface) {
 	let alreadyStructured = false;
 	let customJsonObjectBef;

@@ -433,14 +433,6 @@ async function listGroups(endpoint: string, accessToken: string, headers: Header
     return jsonData ?? null;
 }
 
-// NEED TO LINK THIS TO A USER AUTH METHOD ???
-async function listPolicies3(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null> {
-    let jsonData : any[] | null;
-
-    jsonData = await genericListing(endpoint, accessToken, "policies/authenticationStrengthPolicies", "Policies");
-    return jsonData ?? null;
-}
-
 // NEED RESOURCE TO TEST ON PORTAL
 async function listConditionalAccess(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null> {
     let jsonDataPolicies : any[] | null;

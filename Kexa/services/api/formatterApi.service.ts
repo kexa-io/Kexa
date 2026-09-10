@@ -22,49 +22,10 @@ export async function createSettingsFileFromApiData(oneConfig: any){
     return settingsObj;
 }
 
-export async function formatProviderNeededData(providerData: any) {
-    let formattedProviderData = [];
-    for (let i = 0; i < providerData.length; i++) {
-        let provider = providerData[i];
-        formattedProviderData.push(provider.name);
-    }
-    return formattedProviderData;
-}
-
-
-export async function formatRuleCondition(rulesData: any) {
-
-    let formattedRulesData = [];
-    for (let i = 0; i < rulesData.length; i++) {
-        let rule = rulesData[i];
-        let formattedConditions = [];
-        for (let j = 0; j < rule.conditions.length; j++) {
-            let condition = rule.conditions[j];
-            let formattedCondition = {property: condition.property, condition: condition.condition, value: condition.value};
-            formattedConditions.push(formattedCondition);
-        }
-        rule.conditions = formattedConditions;
-        formattedRulesData.push(rule);
-    }
-
-}
-
 export function formatAlertCondition(alertCondition: any) {
     let formattedAlertCondition = [];
     for (const key of Object.keys(alertCondition)) {
         formattedAlertCondition.push({level: parseInt(key), min: alertCondition[key]});
     }
     return formattedAlertCondition;
-}
-
-export function escapedYamlToJson(yamlString: any): any {
-    let yamlStringEscaped = yamlString.replace(/\\/g, '');
-    const noMoreBraces = yamlStringEscaped.slice(2, -2);
-
-    try {
-        const parsedObject = JSON.parse(noMoreBraces);
-        return [parsedObject];
-    } catch (error) {
-        throw new Error(`Failed to parse escaped YAML as JSON: ${(error as Error).message}`);
-    }
 }
