@@ -1,5 +1,6 @@
 import { LevelEnum } from './../enum/level.enum';
 import fs from "fs";
+import vm from "vm";
 import * as yaml from "js-yaml";
 // Kexa rule files rely on YAML 1.1 merge keys (`<<`) for alert templates,
 // which js-yaml 5's default CORE_SCHEMA no longer includes.
@@ -497,7 +498,7 @@ export function checkRules(rules:any[], resources:ProviderResource, alert: Alert
                     case BeHaviorEnum.CONTINUE:
                         continue;
                 }
-                objectResources = [...objectResources, ...resources[rule.cloudProvider]?.[i]?.[rule.objectName]]
+                objectResources.push(...(resources[rule.cloudProvider]?.[i]?.[rule.objectName] ?? []))
             }
         }
         let subResult: ResultScan[] = [];
@@ -764,17 +765,31 @@ export function checkNotIn(condition:RulesConditions, value:any): boolean {
     return true;
 }
 
+const REGEX_TIMEOUT_MS = 250;
+
+// Rule-supplied patterns are untrusted (they can come from a remote rules
+// repository, see RULESDIRECTORY). A pattern like /(a+)+$/ matched against a
+// long non-matching value can backtrack catastrophically and hang the
+// process (ReDoS). Run the match in a separate V8 context with a wall-clock
+// timeout so a malicious/malformed pattern can only ever cost REGEX_TIMEOUT_MS,
+// never hang the scan indefinitely.
+function execRegexWithTimeout(pattern: string, input: string): boolean {
+    try {
+        const script = new vm.Script("(function(p, v) { return v.match(p) !== null; })(pattern, input)");
+        const context = vm.createContext({ pattern, input });
+        return Boolean(script.runInContext(context, { timeout: REGEX_TIMEOUT_MS }));
+    } catch (e) {
+        logger.warn("check regex: pattern took too long or failed to evaluate, treating as no match: " + pattern, e);
+        return false;
+    }
+}
+
 export function checkRegex(condition:RulesConditions, value:any): boolean {
     if (typeof value == "number") {
         logger.debug("check regex:" + condition.value + "for" + value.toString() + " ?");
-        if (RegExp(condition.value.toString()).exec(value.toString()))
-            return true;
-        else
-            return false;
+        return execRegexWithTimeout(condition.value.toString(), value.toString());
     }
-    if (value.match(condition.value))
-        return true;
-    return false;
+    return execRegexWithTimeout(condition.value.toString(), value.toString());
 }
 
 export function checkStartsWith(condition:RulesConditions, value:any): boolean {

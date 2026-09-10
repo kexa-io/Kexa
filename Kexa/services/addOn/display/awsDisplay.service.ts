@@ -1,7 +1,8 @@
 import type { Rules } from "../../../models/settingFile/rules.models";
+import { escapeHtml } from "../../../helpers/escapeHtml";
 
 export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false){
-    let link = "https://" + objectContent?.Region + ".console.aws.amazon.com/";
+    let link = "https://" + encodeURIComponent(objectContent?.Region ?? "") + ".console.aws.amazon.com/";
     let webLink = `Id : <a href="`;
     let fullLink;
     if (isSms)
@@ -10,19 +11,25 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
         fullLink = webLink.concat(link.toString());
     switch (rule?.objectName) {
         case "KexaAwsCustoms.tagsValueListing":
-            return  'Tag name : ' + objectContent?.Value + ' in Region : ' + objectContent?.Region;
+            return isSms
+                ? 'Tag name : ' + objectContent?.Value + ' in Region : ' + objectContent?.Region
+                : 'Tag name : ' + escapeHtml(objectContent?.Value) + ' in Region : ' + escapeHtml(objectContent?.Region);
         case "ec2SG":
-            return fullLink + `ec2/home?region=` + objectContent?.Region + `#SecurityGroup:groupId=`+ objectContent?.GroupId + (isSms ? ' ' : '">') + objectContent?.GroupId + (isSms ? `.` : `</a>`)
+            return isSms
+                ? fullLink + `ec2/home?region=` + objectContent?.Region + `#SecurityGroup:groupId=`+ objectContent?.GroupId + ' ' + objectContent?.GroupId + `.`
+                : fullLink + `ec2/home?region=` + encodeURIComponent(objectContent?.Region ?? "") + `#SecurityGroup:groupId=`+ encodeURIComponent(objectContent?.GroupId ?? "") + '">' + escapeHtml(objectContent?.GroupId) + `</a>`;
         case "resourceGroups":
-            return 'GroupArn :' + objectContent?.GroupArn;
+            return isSms ? 'GroupArn :' + objectContent?.GroupArn : 'GroupArn :' + escapeHtml(objectContent?.GroupArn);
         case rule?.objectName:
             if (rule.objectName.startsWith("S3Client.")) {
-                return ' Object name : ' + objectContent?.Name;
+                return isSms ? ' Object name : ' + objectContent?.Name : ' Object name : ' + escapeHtml(objectContent?.Name);
             } else if (rule?.objectName.includes("IAMClient.AccessKey")) {
-                return ' Key ID : ' + objectContent?.AccessKeyId;
+                return isSms ? ' Key ID : ' + objectContent?.AccessKeyId : ' Key ID : ' + escapeHtml(objectContent?.AccessKeyId);
             }
         default:
-            return ' Object Id(s) : ' + awsFindIdToDisplay(objectContent) + ' in Region : ' + objectContent?.region + ' obj type : ' + rule?.objectName;
+            return isSms
+                ? ' Object Id(s) : ' + awsFindIdToDisplay(objectContent) + ' in Region : ' + objectContent?.region + ' obj type : ' + rule?.objectName
+                : ' Object Id(s) : ' + escapeHtml(awsFindIdToDisplay(objectContent)) + ' in Region : ' + escapeHtml(objectContent?.region) + ' obj type : ' + escapeHtml(rule?.objectName);
     }
 }
 

@@ -78,9 +78,12 @@ export async function collectData(mysqlConfigs: MySqlConfig[]): Promise<MySqlRes
                 });
             }
 
-            const [users, grants, variables, status, engines, processlist] = await Promise.all([
-                collectUsers(connection),
-                collectGrants(connection),
+            const needsUsers = currentConfig?.ObjectNameNeed?.includes("users") ?? false;
+            const needsGrants = currentConfig?.ObjectNameNeed?.includes("grants") ?? false;
+            const rawUsers = (needsUsers || needsGrants) ? await fetchMySqlUsers(connection) : [];
+
+            const [grants, variables, status, engines, processlist] = await Promise.all([
+                collectGrants(connection, rawUsers),
                 collectVariables(connection),
                 collectStatus(connection),
                 collectEngines(connection),
@@ -89,7 +92,7 @@ export async function collectData(mysqlConfigs: MySqlConfig[]): Promise<MySqlRes
 
             allResources.push({
                 databases: detailedDatabases,
-                users,
+                users: needsUsers ? rawUsers : [],
                 grants,
                 variables,
                 status,
@@ -173,16 +176,13 @@ async function collectTriggersForDB(connection: mysql.Connection, dbName: string
     return await executeQuery(connection, `SELECT * FROM information_schema.triggers WHERE trigger_schema = ?;`, [dbName]);
 }
 
-async function collectUsers(connection: mysql.Connection): Promise<any[]> {
-    if (!currentConfig?.ObjectNameNeed?.includes("users")) return [];
-    logger.debug("Collecting users...");
+async function fetchMySqlUsers(connection: mysql.Connection): Promise<any[]> {
     return await executeQuery(connection, "SELECT * FROM mysql.user;");
 }
 
-async function collectGrants(connection: mysql.Connection): Promise<any[]> {
+async function collectGrants(connection: mysql.Connection, users: any[]): Promise<any[]> {
     if (!currentConfig?.ObjectNameNeed?.includes("grants")) return [];
     logger.debug("Collecting grants for users...");
-    const users = await collectUsers(connection);
     const allGrants: any[] = [];
     for (const user of users) {
         const safeUser = sanitizeIdentifier(user.User);

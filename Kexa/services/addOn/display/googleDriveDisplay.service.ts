@@ -1,4 +1,5 @@
 import type { Rules } from "../../../models/settingFile/rules.models";
+import { escapeHtml } from "../../../helpers/escapeHtml";
 
 export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false): string {
     let beginLink = "https://docs.google.com/document/d/";
@@ -6,12 +7,21 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
     let beginLinkHTML = `<a href="`;
     let endLinkHTML = `">`;
     let fullLink;
-    fullLink = (isSms ? ' ' : beginLinkHTML) + beginLink + objectContent?.id + endLink + (isSms ? ' ' : endLinkHTML);
+    if (isSms) {
+        fullLink = ' ' + beginLink + objectContent?.id + endLink + ' ';
+        switch (rule?.objectName) {
+            case "files":
+                return "Title : " + objectContent?.name + "\n" + "Link : " + fullLink + "\n";
+            default:
+                return 'Drive Scan : Id : ' + objectContent?.id;
+        }
+    }
+    fullLink = beginLinkHTML + beginLink + encodeURIComponent(objectContent?.id ?? "") + endLink + endLinkHTML;
     switch (rule?.objectName) {
         case "files":
-            return "Title : " + objectContent?.name + (isSms?"\n":"</br>") + "Link : " + fullLink + (isSms?"\n":"</br>");
+            return "Title : " + escapeHtml(objectContent?.name) + "</br>" + "Link : " + fullLink + "</br>";
         default:
-            return 'Drive Scan : Id : ' + objectContent?.id;
+            return 'Drive Scan : Id : ' + escapeHtml(objectContent?.id);
     }
 }
 

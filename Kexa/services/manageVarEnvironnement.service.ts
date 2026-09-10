@@ -1,6 +1,5 @@
 import axios from "axios";
 import {getNewLogger} from "./logger.service";
-import { jsonStringify } from "../helpers/jsonStringify";
 import {getEnvVarFromApi} from "./api/loaderApi.service";
 
 const logger = getNewLogger("KubernetesLogger");
@@ -71,6 +70,18 @@ function possibleWithAwsSecretManager(){
 import { fromNodeProviderChain } from "@aws-sdk/credential-providers";
 import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-secrets-manager";
 
+// data.SecretString is already a JSON string (e.g. '{"MY_KEY":"value"}');
+// re-encoding it with jsonStringify() before JSON.parse() double-encodes it,
+// so parsing yields back a plain string instead of an object, and
+// secretData[name] always resolves to undefined -- the manager silently
+// never returns any value, and getEnvVar() falls through to process.env[name]
+// with no error raised.
+export function extractSecretValue(secretString: string | undefined, name: string): any {
+    if (!secretString) return undefined;
+    const secretData = JSON.parse(secretString);
+    return secretData[name];
+}
+
 async function getEnvVarWithAwsSecretManager(name:string){
 
     const credentials = fromNodeProviderChain();
@@ -81,9 +92,7 @@ async function getEnvVarWithAwsSecretManager(name:string){
     try {
         const input = { SecretId: secName };
         const data = await secretsmanager.send(new GetSecretValueCommand(input));
-        const secretData = JSON.parse(jsonStringify(data.SecretString));
-        const value = secretData[name];
-        return (value);
+        return extractSecretValue(data.SecretString, name);
     } catch (e) {
         logger.error("Error fetching secret from AWS", e);
     }
@@ -93,8 +102,31 @@ function possibleWithHashipcorpVault() {
     return (Boolean(process.env.HCP_CLIENT_ID && process.env.HCP_CLIENT_SECRET && process.env.HCP_API_URL));
 }
 
-function possibleWithBitwarden(){
-    return (Boolean(process.env.BITWARDEN_CLIENTID && process.env.BITWARDEN_CLIENTSECRET));
+let cachedHcpToken: { token: string; expiresAt: number } | null = null;
+
+async function getHcpAccessToken(hcpClientId: string | undefined, hcpClientSecret: string | undefined): Promise<string> {
+    if (cachedHcpToken && cachedHcpToken.expiresAt > Date.now()) {
+        return cachedHcpToken.token;
+    }
+    const authData = {
+        audience: 'https://api.hashicorp.cloud',
+        grant_type: 'client_credentials',
+        client_id: hcpClientId,
+        client_secret: hcpClientSecret,
+    };
+    const response = await axios.post('https://auth.hashicorp.com/oauth/token', authData, {
+        headers: { 'Content-Type': 'application/json' },
+    });
+    const accessToken = response.data.access_token;
+    const expiresInMs = (Number(response.data.expires_in) || 3600) * 1000;
+    cachedHcpToken = { token: accessToken, expiresAt: Date.now() + expiresInMs - 60000 };
+    return accessToken;
+}
+
+/** Format an axios error for logging without leaking Authorization headers/tokens or request bodies. */
+function formatAxiosErrorForLog(error: any): string {
+    const status = error?.response?.status ? `HTTP ${error.response.status} ` : '';
+    return status + (error?.message ?? String(error));
 }
 
 async function getEnvVarWithHashicorpVault(name:string) {
@@ -102,90 +134,22 @@ async function getEnvVarWithHashicorpVault(name:string) {
     let hcpClientSecret = process.env.HCP_CLIENT_SECRET;
     let hcpApiUrl = process.env.HCP_API_URL;
 
-    const authData = {
-        audience: 'https://api.hashicorp.cloud',
-        grant_type: 'client_credentials',
-        client_id: hcpClientId,
-        client_secret: hcpClientSecret,
-    };
-
-    const authHeaders = {
-        'Content-Type': 'application/json',
-    };
     try {
-        const response = await axios.post('https://auth.hashicorp.com/oauth/token', authData, {
-            headers: authHeaders,
-        });
-        const accessToken = response.data.access_token;
+        const accessToken = await getHcpAccessToken(hcpClientId, hcpClientSecret);
         const apiHeaders = {
             Authorization: `Bearer ${accessToken}`,
         };
-        try {
-            const secretUrl = hcpApiUrl + '/' + name;
-            const responseSecret = await axios.get(secretUrl, {
-                headers: apiHeaders,
-            });
-            if (responseSecret.status != 200)
-                return;
-            return responseSecret.data.secret.version.value;
-        } catch (error) {
-            throw error;
-        }
+        const secretUrl = hcpApiUrl + '/' + name;
+        const responseSecret = await axios.get(secretUrl, {
+            headers: apiHeaders,
+        });
+        if (responseSecret.status != 200)
+            return;
+        return responseSecret.data.secret.version.value;
     } catch (error) {
-        logger.debug('Error fetching hashicorp secret:', error);
+        logger.debug('Error fetching hashicorp secret: ' + formatAxiosErrorForLog(error));
         return ;
     }
-}
-
-import { BitwardenClient, ClientSettings, DeviceType, LogLevel } from "@bitwarden/sdk-napi";
-
-async function getEnvVarWithBitwarden(){
-    let bitwardenClientId = process.env.BITWARDEN_CLIENTID;
-    let bitwtardenClientSecret = process.env.BITWARDEN_CLIENTSECRET;
-
-    /* not available yet, maintenance from Bitwarden      */
-
-    /*   const postData = {
-         grant_type: 'client_credentials',
-         scope: 'api',
-         client_id: bitwardenClientId as string,
-         client_secret: bitwtardenClientSecret as string
-     };
-
-   axios.post('https://identity.bitwarden.com/connect/token',
-         new URLSearchParams(postData), {
-             headers: {
-                 'Content-Type': 'application/x-www-form-urlencoded'
-             }
-         })
-         .then(response => {
-             console.log('Response:', response.data);
-         })
-         .catch(error => {
-             console.error('Error:', error);
-         });*/
-
-}
-
-
-
-import {listSecrets} from "./addOn/gcpGathering.service";
-import {deleteFile, writeStringToJsonFile} from "../helpers/files";
-import {Storage} from "@google-cloud/storage";
-async function possibleWithGoogleSecretManager(projectId: any): Promise<boolean> {
-    if ((process.env["GOOGLE_APPLICATION_CREDENTIALS"]
-        && process.env["GOOGLE_STORAGE_PROJECT_ID"]))
-    {
-        return false;
-    }
-    else {
-        return false;
-    }
-}
-async function getEnvVarWithGoogleSecretManager(name:string, projectId: any) {
-
-    const usrScrt = process.env.GOOGLE_SECRET_NAME;
-
 }
 
 export async function setEnvVar(name:string, value:string){

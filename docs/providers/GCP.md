@@ -20,10 +20,13 @@
 
 ### Default.json
 
-For each of your environments, the following keys are mandatory:
+For each of your environments, the following key is mandatory:
 
 - `rules`: This refers to the set of rules files you want to apply to this environment.
-- `prefix`: the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).
+
+The following key is optional but strongly recommended:
+
+- `prefix`: the particle placed in front of the environment variables listed [here](#environment). If omitted, Kexa falls back to the zero-based index of the environment entry (`0`, `1`, ...) as the prefix.
 
 The following keys are recommended to ensure better readability when re-reading the configuration:
 
@@ -42,8 +45,9 @@ Example of [configuration for 2 GCP environments](../../config/demo/gcp.default.
 There are several ways to identify yourself in an Google Cloud environment. Obviously, you can only scan the environment for which you are at least a `reader` role:
 
 ```bash
-GOOGLE_PROJECT_ID=XXXXXXXXXX            # Google Project ID
-GOOGLE_APPLICATION_CREDENTIALS=XXXXXXXX # Content of credentials.json
+<prefix>GOOGLE_PROJECT_ID=XXXXXXXXXX    # Google Project ID, must be prefixed
+GOOGLE_APPLICATION_CREDENTIALS=XXXXXXXX # Content of credentials.json — bare fallback shared across
+                                         # every GCP environment whose own <prefix>GOOGLE_APPLICATION_CREDENTIALS is unset
 ```
 
 ## Additional documentation

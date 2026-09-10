@@ -342,8 +342,6 @@ async function listCharts(isPathKubeFile: boolean) : Promise<Array<any> | null> 
     (isPathKubeFile)?kc.loadFromFile("./config/kubernetes.json"):kc.loadFromDefault();
     const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
 
-    let results = new Array<any>();
-
     try {
         const res = await k8sApi.listSecretForAllNamespaces();
         const secrets = res.body.items;
@@ -379,12 +377,10 @@ async function listCharts(isPathKubeFile: boolean) : Promise<Array<any> | null> 
                 chart.details.versionDifference = versionDifference;
               }
             } catch (error) {
-              logger.debug('Error getting Helm release info:', error);  
+              logger.debug('Error getting Helm release info:', error);
             }
-            results.push(chart);
           }
-        results = helmCharts;
-        return results;
+        return helmCharts;
 
       } catch (error) {
         logger.debug('Error listing Helm charts:', error);

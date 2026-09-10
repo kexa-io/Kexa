@@ -23,13 +23,16 @@ Here's a basic example of a rule:
 
 ### Required Fields
 
-- `name`: Unique identifier for the rule
-- `description`: Description of what the rule checks
 - `applied`: Whether the rule is active
-- `level`: Severity level (0: info, 1: warn, 2: error, 3: fatal)
+- `level`: Severity level (0: info, 1: warning, 2: error, 3: fatal)
 - `cloudProvider`: Provider to check (azure, aws, gcp, etc.)
 - `objectName`: Type of resource to check
 - `conditions`: List of conditions to check
+
+### Optional Fields
+
+- `name`: Unique identifier for the rule
+- `description`: Description of what the rule checks
 
 ### Objects Names
 
@@ -51,14 +54,28 @@ Conditions are the core comparison operators used to evaluate resources in your 
 1. **Basic Comparisons**:
    - `EQUAL`: Checks if the property exactly matches the value
    - `DIFFERENT`: Checks if the property is not equal to the value
-   - `CONTAINS`: Checks if the property contains the specified value
-   - `NOT_CONTAINS`: Checks if the property does not contain the value
+   - `INCLUDE`: Checks if the property contains the specified value
+   - `NOT_INCLUDE`: Checks if the property does not contain the value
+   - `INCLUDE_NOT_SENSITIVE`: Case-insensitive version of `INCLUDE`
+   - `NOT_INCLUDE_NOT_SENSITIVE`: Case-insensitive version of `NOT_INCLUDE`
+   - `STARTS_WITH`: Checks if the property starts with the value
+   - `NOT_STARTS_WITH`: Checks if the property does not start with the value
+   - `ENDS_WITH`: Checks if the property ends with the value
+   - `NOT_ENDS_WITH`: Checks if the property does not end with the value
+   - `REGEX`: Checks if the property matches the given regular expression
+   - `IN`: Checks if the property is one of the values in a list
+   - `NOT_IN`: Checks if the property is not one of the values in a list
 
 2. **Numeric Comparisons**:
    - `SUP`: Greater than
    - `INF`: Less than
    - `SUP_OR_EQUAL`: Greater than or equal to
    - `INF_OR_EQUAL`: Less than or equal to
+   - `COUNT`: Checks the number of elements in a list
+   - `COUNT_SUP`: List length greater than the value
+   - `COUNT_INF`: List length less than the value
+   - `COUNT_SUP_OR_EQUAL`: List length greater than or equal to the value
+   - `COUNT_INF_OR_EQUAL`: List length less than or equal to the value
 
 3. **Date & Time Comparisons**:
    - `DATE_EQUAL`: Exact date match
@@ -149,6 +166,10 @@ Conditions can be combined using logical operators:
 
 - `AND`: All conditions must be true
 - `OR`: At least one condition must be true
+- `XOR`: Exactly one condition must be true
+- `NAND`: Not all conditions are true
+- `NOR`: No condition is true
+- `XNOR`: All conditions have the same truth value
 - `NOT`: Inverts the result of a condition
 
 Example with logical operators:
@@ -198,7 +219,7 @@ alert:
     to:
       - admin@example.com
       - https://webhook.example.com
-  warn:
+  warning:
     enabled: true
     type:
       - email

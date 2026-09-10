@@ -44,7 +44,9 @@ import type { KubernetesConfig } from "../../models/kubernetes/config.models";
 import * as yaml from 'js-yaml';
 
 import {getNewLogger} from "../logger.service";
+import { mapWithConcurrency } from "../../helpers/concurrencyLimit";
 const logger = getNewLogger("KubernetesLogger");
+const POD_LOGS_CONCURRENCY = 10;
 
 import * as k8s from '@kubernetes/client-node';
 import * as https from "https";
@@ -133,22 +135,30 @@ export async function collectData(kubernetesConfig:KubernetesConfig[]): Promise<
     return resources??null;
 }
 
+/** Writes `content` to `tempPath` (mode 0o600 -- this carries the same
+ * cluster credentials, client cert/key/tokens, as the source kubeconfig, so
+ * it must never be left world-readable), invokes `load(tempPath)`, and
+ * deletes the temp file in all cases, including when `load` throws --
+ * previously the file was left on disk indefinitely on that path. */
+export function writeCleanedKubeconfigAndLoad(tempPath: string, content: string, load: (tempPath: string) => void): void {
+    const fs = require('fs');
+    fs.writeFileSync(tempPath, content, { encoding: 'utf8', mode: 0o600 });
+    try {
+        load(tempPath);
+    } finally {
+        fs.unlinkSync(tempPath);
+    }
+}
+
 export async function kubernetesListing(pathKubeFile: string): Promise<any> {
     logger.info("starting kubernetesListing");
 
-    // WORKAROUND: Bun's fetch does not forward TLS options (cert/key/ca) from
-    // node:https Agent, breaking @kubernetes/client-node mTLS authentication.
-    // This is a known Bun bug open since Nov 2023, assigned but no fix in sight:
-    //   https://github.com/oven-sh/bun/issues/7332
-    // The community PR #26964 that attempted to fix this was closed without merge
-    // on 2026-03-24 with no explanation.
-    // Disabling TLS verification is process-wide and affects ALL HTTPS connections
-    // for the lifetime of the process — this is a security risk (MITM).
-    // We restore it to '1' after Kubernetes gathering to limit the blast radius.
-    // TODO: remove this workaround when Bun fixes #7332 or when we migrate to Node.
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-    process.env.HTTPS_PROXY = '';
-    process.env.HTTP_PROXY = '';
+    // Bun's https.request used to ignore the custom `ca` option forwarded by
+    // @kubernetes/client-node's https.Agent, breaking mTLS (oven-sh/bun#7332).
+    // Fixed upstream and verified fixed as of Bun 1.4.0 (issue closed
+    // 2026-08-07); this file previously worked around it by disabling TLS
+    // verification process-wide, which was itself a MITM risk. See the
+    // `engines.bun` requirement in package.json.
 
     try {
         const kc = new k8s.KubeConfig();
@@ -163,10 +173,7 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
                     const fs = require('fs');
                     let content = fs.readFileSync(pathKubeFile, 'utf8');
                     content = content.replace(/\0/g, '').trim();
-                    const tempPath = pathKubeFile + '.clean';
-                    fs.writeFileSync(tempPath, content, 'utf8');
-                    kc.loadFromFile(tempPath);
-                    fs.unlinkSync(tempPath);
+                    writeCleanedKubeconfigAndLoad(pathKubeFile + '.clean', content, (tempPath) => kc.loadFromFile(tempPath));
                 }
             } catch (error) {
                 logger.error(`Failed to load kubeconfig, falling back to default:`, error);
@@ -348,9 +355,6 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
     } catch (error) {
         logger.error("Error in kubernetesListing:", error);
         throw error;
-    } finally {
-        // Restore TLS verification to limit the blast radius of the workaround above.
-        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
     }
 }
 
@@ -577,11 +581,28 @@ async function collectPersistentvolumeclaim(k8sApiCore: any, namespace: string):
     }
 }
 
+/** Kubernetes Secret objects carry the actual secret material in `.data`
+ * (base64) / `.stringData` (plaintext) -- unlike e.g. GCP's Secret Manager
+ * list call, which never returns secret values at all. Keep the key names
+ * (rules can still check "does this secret have a TLS_CERT key") but
+ * replace every value so the actual credential material never ends up in
+ * scan results, logs, or alert emails. */
+export function redactSecretData(secret: any): any {
+    const redacted = { ...secret };
+    if (redacted.data && typeof redacted.data === 'object') {
+        redacted.data = Object.fromEntries(Object.keys(redacted.data).map((k) => [k, '[REDACTED]']));
+    }
+    if (redacted.stringData && typeof redacted.stringData === 'object') {
+        redacted.stringData = Object.fromEntries(Object.keys(redacted.stringData).map((k) => [k, '[REDACTED]']));
+    }
+    return redacted;
+}
+
 async function collectSecret(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("secret")) return [];
     try {
         const secrets = await k8sApiCore.listNamespacedSecret({namespace: namespace});
-        return secrets?.items;
+        return (secrets?.items ?? []).map(redactSecretData);
     } catch (e) {
         logger.debug(e);
         return [];
@@ -920,7 +941,12 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
         const logsData: any[] = [];
         const delay = (ms: any) => new Promise((resolve: any) => setTimeout(resolve, ms));
 
-        await Promise.all((pods?.items).map(async (pod: any) => {
+        // One log-stream request per container, for every running pod, with
+        // no cap -- combined with namespaces themselves also being processed
+        // concurrently, a large cluster could fire thousands of simultaneous
+        // connections against the API server in a single scan. Cap how many
+        // pods are processed at once (POD_LOGS_CONCURRENCY below).
+        await mapWithConcurrency((pods?.items ?? []), POD_LOGS_CONCURRENCY, async (pod: any) => {
             if (pod.status.phase !== 'Running') {
                 return;
             }
@@ -968,7 +994,7 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
                 }
                 await delay(100);
             }));
-        }));
+        });
         return logsData;
     } catch (e) {
         logger.debug(e);

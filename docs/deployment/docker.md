@@ -14,7 +14,7 @@ This guide explains how to deploy and run Kexa using Docker containers.
 
 ```bash
 # Pull the latest image
-docker pull innovtech/kexa:latest
+docker pull kexa/kexa:latest
 
 # By default, the container will run in the background and check the website "kexa.io"
 docker run -d \
@@ -22,7 +22,7 @@ docker run -d \
   -v $(pwd)/output:/app/output \
   -v $(pwd)/rules:/app/rules \
   -v $(pwd)/config:/app/config \
-  innovtech/kexa:latest
+  kexa/kexa:latest
 
 # The result will be inside the "output" folder on your computer
 ```
@@ -36,7 +36,7 @@ version: "3.8"
 
 services:
   kexa:
-    image: innovtech/kexa:latest
+    image: kexa/kexa:latest
     container_name: kexa
     volumes:
       - ./output:/app/output
@@ -130,7 +130,7 @@ docker inspect kexa
 
 ```bash
 # Pull latest image
-docker pull innovtech/kexa:latest
+docker pull kexa/kexa:latest
 
 # Stop and remove old container
 docker stop kexa
@@ -142,7 +142,7 @@ docker run -d \
   -v $(pwd)/output:/app/output \
   -v $(pwd)/rules:/app/rules \
   -v $(pwd)/config:/app/config \
-  innovtech/kexa:latest
+  kexa/kexa:latest
 ```
 
 ### Backup

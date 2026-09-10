@@ -212,27 +212,29 @@ export async function performScan(settings: SettingFile[], scanId: string): Prom
 }
 
 export async function processGlobalAlerts(settings: SettingFile[], allScanResults: ResultScan[][]): Promise<boolean> {
+    // These are derived only from allScanResults, not from any individual
+    // setting, so they're computed once up front instead of once per
+    // enabled setting in the loop below.
+    const resultsWithErrors = allScanResults.map(scan => scan.filter(value => value.error.length > 0));
+    const loudResults = allScanResults.map(scan => scan.filter(value => value.loud));
+
+    const errorCounts = [0, 0, 0, 0];
     let hasCriticalError = false;
+    allScanResults.flat().forEach(scan => {
+        if (scan.error.length > 0) {
+            const level = scan.rule?.level ?? 3;
+            errorCounts[level]++;
+            if (level >= 2) {
+                hasCriticalError = true;
+            }
+        }
+    });
+
+    const tableRender = renderTableAllScan(resultsWithErrors);
+    const loudTableRender = renderTableAllScanLoud(loudResults);
 
     for (const setting of settings) {
         if (!setting.alert.global.enabled) continue;
-
-        const resultsWithErrors = allScanResults.map(scan => scan.filter(value => value.error.length > 0));
-        const loudResults = allScanResults.map(scan => scan.filter(value => value.loud));
-
-        const errorCounts = [0, 0, 0, 0];
-        allScanResults.flat().forEach(scan => {
-            if (scan.error.length > 0) {
-                const level = scan.rule?.level ?? 3;
-                errorCounts[level]++;
-                if (level >= 2) {
-                    hasCriticalError = true;
-                }
-            }
-        });
-
-        const tableRender = renderTableAllScan(resultsWithErrors);
-        const loudTableRender = renderTableAllScanLoud(loudResults);
 
         const emailContent = Emails.Recap(errorCounts, tableRender, loudTableRender, setting.alert.global);
         const timestamp = new Date().toISOString().slice(0, 16).replace(/[-T:/]/g, '');

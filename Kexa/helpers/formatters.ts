@@ -1,5 +1,6 @@
 import type { ResultScan } from "../models/resultScan.models";
 import { groupBy } from "./groupBy";
+import { escapeHtml } from "./escapeHtml";
 
 const levelLabels = ["INFO", "WARNING", "ERROR", "FATAL"];
 const levelColors = ["\x1b[32m", "\x1b[33m", "\x1b[31m", "\x1b[31;1m"]; // green, yellow, red, red bold
@@ -102,6 +103,20 @@ export function formatJson(allScanResults: ResultScan[][]): string {
     return JSON.stringify(alertsJson, null, 2);
 }
 
+/**
+ * Quote a CSV field and neutralize spreadsheet formula injection: a field
+ * starting with =, +, -, @, tab or CR is interpreted as a formula by
+ * Excel/Sheets when the CSV is opened there, so such fields are prefixed
+ * with a leading apostrophe (the standard CSV-injection mitigation).
+ */
+function csvField(value: string | number | undefined): string {
+    let str = String(value ?? '');
+    if (/^[=+\-@\t\r]/.test(str)) {
+        str = "'" + str;
+    }
+    return `"${str.replace(/"/g, '""')}"`;
+}
+
 export function formatCsv(allScanResults: ResultScan[][]): string {
     const rules = extractAlertRules(allScanResults);
     const lines: string[] = [];
@@ -110,8 +125,14 @@ export function formatCsv(allScanResults: ResultScan[][]): string {
 
     rules.sort((a, b) => b.level - a.level);
     rules.forEach(rule => {
-        const desc = rule.description.replace(/"/g, '""');
-        lines.push(`${levelLabels[rule.level]},${rule.name},${rule.cloudProvider},${rule.objectName},${rule.resourceCount},"${desc}"`);
+        lines.push([
+            csvField(levelLabels[rule.level]),
+            csvField(rule.name),
+            csvField(rule.cloudProvider),
+            csvField(rule.objectName),
+            csvField(rule.resourceCount),
+            csvField(rule.description),
+        ].join(","));
     });
 
     return lines.join("\n");
@@ -124,15 +145,17 @@ export function formatToml(allScanResults: ResultScan[][]): string {
     lines.push(`timestamp = "${new Date().toISOString()}"`);
     lines.push("");
 
+    const tomlString = (value: string) => value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+
     rules.sort((a, b) => b.level - a.level);
     rules.forEach(rule => {
         lines.push(`[[rules]]`);
-        lines.push(`name = "${rule.name}"`);
+        lines.push(`name = "${tomlString(rule.name)}"`);
         lines.push(`level = "${levelLabels[rule.level]}"`);
-        lines.push(`provider = "${rule.cloudProvider}"`);
-        lines.push(`resource_type = "${rule.objectName}"`);
+        lines.push(`provider = "${tomlString(rule.cloudProvider)}"`);
+        lines.push(`resource_type = "${tomlString(rule.objectName)}"`);
         lines.push(`count = ${rule.resourceCount}`);
-        lines.push(`description = "${rule.description.replace(/"/g, '\\"')}"`);
+        lines.push(`description = "${tomlString(rule.description)}"`);
         lines.push("");
     });
 
@@ -148,13 +171,12 @@ export function formatHtml(allScanResults: ResultScan[][], rulesetName?: string,
 
     const rows = rules.map(rule => {
         const badge = badgeClass[rule.level] ?? "badge-info";
-        const desc = rule.description.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         return `      <tr>
         <td><span class="badge ${badge}">${levelLabels[rule.level]}</span></td>
-        <td>${rule.name}</td>
-        <td class="provider">${rule.cloudProvider}</td>
+        <td>${escapeHtml(rule.name)}</td>
+        <td class="provider">${escapeHtml(rule.cloudProvider)}</td>
         <td>${rule.resourceCount}</td>
-        <td>${desc}</td>
+        <td>${escapeHtml(rule.description)}</td>
       </tr>`;
     }).join("\n");
 
@@ -186,9 +208,9 @@ th{background:#1c2128;color:#8b949e;text-transform:uppercase;font-size:12px}
 
     const now = new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
     return template
-        .replace(/\{\{RULESET_NAME\}\}/g, rulesetName ?? 'default')
+        .replace(/\{\{RULESET_NAME\}\}/g, escapeHtml(rulesetName ?? 'default'))
         .replace(/\{\{TIMESTAMP\}\}/g, now)
-        .replace(/\{\{VERSION\}\}/g, version ?? '')
+        .replace(/\{\{VERSION\}\}/g, escapeHtml(version ?? ''))
         .replace('{{COUNT_INFO}}', String(counts[0]))
         .replace('{{COUNT_WARNING}}', String(counts[1]))
         .replace('{{COUNT_ERROR}}', String(counts[2]))

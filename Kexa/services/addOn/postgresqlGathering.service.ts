@@ -44,6 +44,20 @@ async function createPostgresConnection(config: PostgresqlConfig): Promise<Clien
     return client;
 }
 
+// A pg Client connects to a single database and cannot switch (unlike MySQL's
+// changeUser). The per-database detail collectors below need to run against
+// each target database, so a dedicated connection is opened per database name.
+async function createPostgresConnectionForDatabase(config: PostgresqlConfig, database: string): Promise<Client> {
+    const host = await getConfigOrEnvVar(config, "PG_HOST", config.prefix);
+    const user = await getConfigOrEnvVar(config, "PG_USER", config.prefix);
+    const password = await getConfigOrEnvVar(config, "PG_PASSWORD", config.prefix);
+    const port = Number(await getConfigOrEnvVar(config, "PG_PORT", config.prefix)) || 5432;
+
+    const client = new Client({ host, user, password, port, database });
+    await client.connect();
+    return client;
+}
+
 export async function collectData(PostgresqlConfigs: PostgresqlConfig[]): Promise<PostgresqlResources[] | null> {
     const allResources = new Array<PostgresqlResources>();
 
@@ -62,19 +76,27 @@ export async function collectData(PostgresqlConfigs: PostgresqlConfig[]): Promis
             const detailedDatabases = [];
             for (const dbName of databaseNames) {
                 logger.debug(`Collecting resources for database: ${dbName}`);
-                const [tables, views, functions, triggers] = await Promise.all([
-                    collectTablesAndDetailsForDB(client, dbName),
-                    collectViewsForDB(client, dbName),
-                    collectFunctionsForDB(client, dbName),
-                    collectTriggersForDB(client, dbName)
-                ]);
-                detailedDatabases.push({
-                    name: dbName,
-                    tables,
-                    views,
-                    functions,
-                    triggers
-                });
+                let dbClient: Client | null = null;
+                try {
+                    dbClient = await createPostgresConnectionForDatabase(config, dbName);
+                    const [tables, views, functions, triggers] = await Promise.all([
+                        collectTablesAndDetailsForDB(dbClient, dbName),
+                        collectViewsForDB(dbClient, dbName),
+                        collectFunctionsForDB(dbClient, dbName),
+                        collectTriggersForDB(dbClient, dbName)
+                    ]);
+                    detailedDatabases.push({
+                        name: dbName,
+                        tables,
+                        views,
+                        functions,
+                        triggers
+                    });
+                } catch (e: any) {
+                    logger.error(`Error collecting details for database ${dbName}: ` + e.message);
+                } finally {
+                    if (dbClient) await dbClient.end();
+                }
             }
 
             const [roles, settings, statActivity, extensions] = await Promise.all([
@@ -152,8 +174,11 @@ async function collectTablesAndDetailsForDB(client: Client, dbName: string): Pro
 
 
 async function collectViewsForDB(client: Client, dbName: string): Promise<any[]> {
+    // dbName is a database name, not a schema; the connection (dbClient) is
+    // already scoped to this database, so no WHERE clause is needed here --
+    // filtering table_schema = dbName never matched a real schema.
     logger.debug(`Collecting views for the database : ${dbName}`);
-    return await executeQuery(client, `SELECT * FROM information_schema.views WHERE table_schema = $1;`, [dbName]);
+    return await executeQuery(client, `SELECT * FROM information_schema.views;`);
 }
 
 async function collectFunctionsForDB(client: Client, dbName: string): Promise<any[]> {
@@ -165,14 +190,14 @@ async function collectFunctionsForDB(client: Client, dbName: string): Promise<an
                pg_get_function_arguments(p.oid) as arguments
         FROM pg_proc p
         JOIN pg_namespace n ON p.pronamespace = n.oid
-        WHERE n.nspname = $1;
+        WHERE n.nspname NOT IN ('pg_catalog', 'information_schema');
     `;
-    return await executeQuery(client, query, [dbName]);
+    return await executeQuery(client, query);
 }
 
 async function collectTriggersForDB(client: Client, dbName: string): Promise<any[]> {
     logger.debug(`Collecting triggers for the database: ${dbName}`);
-    return await executeQuery(client, `SELECT * FROM information_schema.triggers WHERE event_object_schema = $1;`, [dbName]);
+    return await executeQuery(client, `SELECT * FROM information_schema.triggers;`);
 }
 
 async function collectRoles(client: Client): Promise<any[]> {
