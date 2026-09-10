@@ -5478,7 +5478,7 @@
 	*	- KexaAwsCustoms.resourcesTags
 */
 
-import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
+import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { DescribeRegionsCommand } from "@aws-sdk/client-ec2";
 import { AwsConfig } from "../../models/aws/config.models";
 
@@ -5522,15 +5522,9 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
             let awsKeyId = await getConfigOrEnvVar(oneConfig, "AWS_ACCESS_KEY_ID", prefix);
             let awsSecretKey = await getConfigOrEnvVar(oneConfig, "AWS_SECRET_ACCESS_KEY", prefix);
 			let awsSessionToken = await getConfigOrEnvVar(oneConfig, "AWS_SESSION_TOKEN", prefix);
-			if (awsSessionToken)
-				setEnvVar("AWS_SESSION_TOKEN", awsSessionToken);
-            if (awsKeyId)
-                setEnvVar("AWS_ACCESS_KEY_ID", awsKeyId);
-            else
+            if (!awsKeyId)
                 logger.warn(prefix + "AWS_ACCESS_KEY_ID not found");
-            if (awsSecretKey)
-                setEnvVar("AWS_SECRET_ACCESS_KEY", awsSecretKey);
-            else
+            if (!awsSecretKey)
                 logger.warn(prefix + "AWS_SECRET_ACCESS_KEY not found");
 
 			let credentialProvider;
@@ -5544,9 +5538,13 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
 			else {
 				// No explicit (prefixed or bare) credentials resolved for this
 				// account: fall back to the SDK's own provider chain (shared
-				// config, IMDS/instance role, ...). Only reached when this
-				// account has no credentials of its own, so it can't leak a
-				// previous account's still-set bare env vars.
+				// config, IMDS/instance role, ...). This must NOT write
+				// AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY/AWS_SESSION_TOKEN to
+				// process.env (setEnvVar) for any account, explicit-credential
+				// accounts included: fromNodeProviderChain()'s first provider
+				// is fromEnv(), so a previous account's bare env vars would
+				// otherwise be silently inherited here instead of falling
+				// through to the real instance-role/shared-config providers.
             	credentialProvider = fromNodeProviderChain();
 			}
 			const client = new EC2Client({
