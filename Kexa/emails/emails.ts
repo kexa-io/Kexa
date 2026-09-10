@@ -1,5 +1,6 @@
 import type { GlobalConfigAlert } from "../models/settingFile/globalAlert.models";
 import type { Rules } from "../models/settingFile/rules.models";
+import { escapeHtml } from "../helpers/escapeHtml";
 const levelAlert = ["info", "warning", "error", "critical"];
 
 const actualYear = new Date().getFullYear();
@@ -131,10 +132,10 @@ export const Emails = {
             <tbody>
               <tr>
               <td style="direction:ltr;;padding:20px 0;text-align:center"  colspan="1">
-                Name :`+ rule.name +`
+                Name :`+ escapeHtml(rule.name) +`
               </td>
               <td style="direction:ltr;;padding:20px 0;text-align:center"  colspan="3">
-                Info :`+ ((rule.notification)??rule.description) +`
+                Info :`+ escapeHtml((rule.notification)??rule.description) +`
               </td>
             </tr>
           </tbody>
@@ -282,7 +283,7 @@ export const Emails = {
                 <tbody>
                   <tr>
                     <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center" colspan="4">
-                      <div style="font-family:Poppins,Helvetica Neue,Helvetica,Arial,Lucida Grande,sans-serif;font-size:24px;font-weight:bold;line-height:36px;text-align:center;color:#4f5660"> `+ (alert.name??'Uname global alert') +` </div>
+                      <div style="font-family:Poppins,Helvetica Neue,Helvetica,Arial,Lucida Grande,sans-serif;font-size:24px;font-weight:bold;line-height:36px;text-align:center;color:#4f5660"> `+ escapeHtml(alert.name??'Uname global alert') +` </div>
                     </td>
                   </tr>
                 </tbody>
@@ -452,7 +453,7 @@ export const Emails = {
                 <tbody>
                   <tr>
                     <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center" colspan="4">
-                      <div style="font-family:Poppins,Helvetica Neue,Helvetica,Arial,Lucida Grande,sans-serif;font-size:24px;font-weight:bold;line-height:36px;text-align:center;color:#4f5660"> `+ (alert.name??'Uname global alert') +` </div>
+                      <div style="font-family:Poppins,Helvetica Neue,Helvetica,Arial,Lucida Grande,sans-serif;font-size:24px;font-weight:bold;line-height:36px;text-align:center;color:#4f5660"> `+ escapeHtml(alert.name??'Uname global alert') +` </div>
                     </td>
                   </tr>
                 </tbody>
