@@ -13,6 +13,11 @@ RULESDIRECTORY=./rules
 # Remote rules (optional)
 RULESDIRECTORY="https://api.github.com/repos/kexa-io/public-rules/zipball/main"
 RULESAUTHORIZATION="Bearer github_pat_XXXXXXXXXXXXXXXXXXXXXXXX" # Optional
+
+# Pin and verify the downloaded rules bundle's integrity (optional, recommended
+# for remote rules). If set, the downloaded .zip is rejected and Kexa falls
+# back to the local rules directory when its SHA-256 doesn't match.
+RULESSHA256="<sha256 hex digest of the expected .zip>" # Optional
 ```
 
 ### Output Directory
