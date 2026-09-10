@@ -5741,20 +5741,35 @@ let awsGatherDependencies = [
 	}
 ]
 
-async function retrieveAwsClients(): Promise<Array<any>> {
-    const imports = await getAwsImports();
-    let allObjects = [];
+// retrieveAwsClients() reflects over every imported AWS SDK module to
+// discover clients/commands -- an expensive, purely static computation with
+// the same result every time. collectAuto() calls it once per region, and
+// regions run concurrently (Promise.all in collectAWSData), so without
+// caching this scan re-ran per region and its side effect of writing
+// awsGatherDependencies[i].functions was repeated redundantly by every
+// concurrent region call. Caching the in-flight promise (not just the
+// resolved value) means concurrent first-time callers share one computation
+// instead of racing to redo it.
+let cachedAwsClientsPromise: Promise<Array<any>> | null = null;
 
-    for (const key of Object.keys(imports)) {
-        const currentItem = (imports as { [key: string]: unknown })[key];
-		const match = awsGatherDependencies.find(dep => dep.client === key);
-		if (match) {
-			match.functions = extractObjectsOrFunctions(currentItem, true);
+async function retrieveAwsClients(): Promise<Array<any>> {
+	if (cachedAwsClientsPromise) return cachedAwsClientsPromise;
+	cachedAwsClientsPromise = (async () => {
+		const imports = await getAwsImports();
+		let allObjects = [];
+
+		for (const key of Object.keys(imports)) {
+			const currentItem = (imports as { [key: string]: unknown })[key];
+			const match = awsGatherDependencies.find(dep => dep.client === key);
+			if (match) {
+				match.functions = extractObjectsOrFunctions(currentItem, true);
+			}
+			const clientsFromModule = extractObjectsOrFunctions(currentItem, true);
+			allObjects.push(clientsFromModule);
 		}
-		const clientsFromModule = extractObjectsOrFunctions(currentItem, true);
-		allObjects.push(clientsFromModule);
-    }
-	return (allObjects);
+		return allObjects;
+	})();
+	return cachedAwsClientsPromise;
 }
 
 interface ClientResultsInterface {
@@ -5966,6 +5981,18 @@ async function gatherAwsObject(credential: any, region:string, object: ClientRes
 		const retrievingFullName = object.clientName + "." + object.objectName;
 		try {
 			 data = await client.send(command);
+			 let nextToken = (data as any)?.NextToken;
+			 while (nextToken) {
+				 const pageCommand = new object.objectFunc({ ...input, NextToken: nextToken });
+				 const pageData: Record<string, any> = await client.send(pageCommand);
+				 for (const key of Object.keys(pageData)) {
+					 if (key === "$metadata" || key === "NextToken") continue;
+					 if (Array.isArray(pageData[key]) && Array.isArray(data[key])) {
+						 data[key] = data[key].concat(pageData[key]);
+					 }
+				 }
+				 nextToken = (pageData as any)?.NextToken;
+			 }
 		} catch (e) {
 			if (e instanceof Error) {
 				const error = e;
