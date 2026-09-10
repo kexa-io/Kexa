@@ -106,42 +106,52 @@ function possibleWithBitwarden(){
     return (Boolean(process.env.BITWARDEN_CLIENTID && process.env.BITWARDEN_CLIENTSECRET));
 }
 
-async function getEnvVarWithHashicorpVault(name:string) {
-    let hcpClientId = process.env.HCP_CLIENT_ID;
-    let hcpClientSecret = process.env.HCP_CLIENT_SECRET;
-    let hcpApiUrl = process.env.HCP_API_URL;
+let cachedHcpToken: { token: string; expiresAt: number } | null = null;
 
+async function getHcpAccessToken(hcpClientId: string | undefined, hcpClientSecret: string | undefined): Promise<string> {
+    if (cachedHcpToken && cachedHcpToken.expiresAt > Date.now()) {
+        return cachedHcpToken.token;
+    }
     const authData = {
         audience: 'https://api.hashicorp.cloud',
         grant_type: 'client_credentials',
         client_id: hcpClientId,
         client_secret: hcpClientSecret,
     };
+    const response = await axios.post('https://auth.hashicorp.com/oauth/token', authData, {
+        headers: { 'Content-Type': 'application/json' },
+    });
+    const accessToken = response.data.access_token;
+    const expiresInMs = (Number(response.data.expires_in) || 3600) * 1000;
+    cachedHcpToken = { token: accessToken, expiresAt: Date.now() + expiresInMs - 60000 };
+    return accessToken;
+}
 
-    const authHeaders = {
-        'Content-Type': 'application/json',
-    };
+/** Format an axios error for logging without leaking Authorization headers/tokens or request bodies. */
+function formatAxiosErrorForLog(error: any): string {
+    const status = error?.response?.status ? `HTTP ${error.response.status} ` : '';
+    return status + (error?.message ?? String(error));
+}
+
+async function getEnvVarWithHashicorpVault(name:string) {
+    let hcpClientId = process.env.HCP_CLIENT_ID;
+    let hcpClientSecret = process.env.HCP_CLIENT_SECRET;
+    let hcpApiUrl = process.env.HCP_API_URL;
+
     try {
-        const response = await axios.post('https://auth.hashicorp.com/oauth/token', authData, {
-            headers: authHeaders,
-        });
-        const accessToken = response.data.access_token;
+        const accessToken = await getHcpAccessToken(hcpClientId, hcpClientSecret);
         const apiHeaders = {
             Authorization: `Bearer ${accessToken}`,
         };
-        try {
-            const secretUrl = hcpApiUrl + '/' + name;
-            const responseSecret = await axios.get(secretUrl, {
-                headers: apiHeaders,
-            });
-            if (responseSecret.status != 200)
-                return;
-            return responseSecret.data.secret.version.value;
-        } catch (error) {
-            throw error;
-        }
+        const secretUrl = hcpApiUrl + '/' + name;
+        const responseSecret = await axios.get(secretUrl, {
+            headers: apiHeaders,
+        });
+        if (responseSecret.status != 200)
+            return;
+        return responseSecret.data.secret.version.value;
     } catch (error) {
-        logger.debug('Error fetching hashicorp secret:', error);
+        logger.debug('Error fetching hashicorp secret: ' + formatAxiosErrorForLog(error));
         return ;
     }
 }

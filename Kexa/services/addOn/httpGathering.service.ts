@@ -20,60 +20,19 @@ import https from 'https';
 import http from 'http';
 let httpConfig: HttpConfig[] = [];
 
-const jsome = require('jsome');
-jsome.level.show = true;
-
 import {getNewLogger} from "../logger.service";
-import net from 'net';
+import { isPrivateUrl, isPrivateIp } from "../../helpers/isPrivateUrl";
 const logger = getNewLogger("HttpLogger");
 
-/** Is this literal IP address (or an obviously-private hostname) in a
- * private/internal/metadata range? Pure, no DNS involved -- used both as a
- * fast pre-check on the literal config URL and, more importantly, on every
- * address a hostname actually resolves to (see createSsrfSafeLookup below). */
-export function isPrivateIp(hostnameOrIp: string): boolean {
-    let hostname = hostnameOrIp.replace(/^\[|\]$/g, ''); // strip [] from IPv6
-    // Block metadata endpoints
-    if (hostname === "169.254.169.254") return true;
-    // Block localhost (IPv4, IPv6, hostname)
-    if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1") return true;
-    // Block IPv6-mapped IPv4 (::ffff:127.0.0.1 etc.)
-    const v4mapped = hostname.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/i);
-    if (v4mapped) {
-        hostname = v4mapped[1]; // extract the IPv4 and check it below
-    }
-    // Block IPv6 private ranges
-    if (hostname.includes(':')) {
-        const lower = hostname.toLowerCase();
-        if (lower.startsWith('fc') || lower.startsWith('fd')) return true; // unique local
-        if (lower.startsWith('fe80')) return true; // link-local
-        if (lower.startsWith('ff')) return true; // multicast
-    }
-    // Block IPv4 private ranges
-    if (net.isIPv4(hostname)) {
-        const parts = hostname.split('.').map(Number);
-        if (parts[0] === 10) return true;
-        if (parts[0] === 172 && parts[1] >= 16 && parts[1] <= 31) return true;
-        if (parts[0] === 192 && parts[1] === 168) return true;
-        if (parts[0] === 127) return true;
-        if (parts[0] === 0) return true;
-        if (parts[0] === 169 && parts[1] === 254) return true; // link-local
-    }
-    return false;
-}
-
-/** Block requests to private/internal IP ranges (SSRF protection).
- * This only catches an obviously-private literal hostname/IP in the config
- * URL itself -- it is NOT sufficient on its own: a hostname that *resolves*
- * to a private/metadata address (DNS rebinding), or a redirect Location
- * pointing at one, both bypass it. createSsrfSafeLookup() below is what
- * actually closes those gaps, at the socket-connect level. */
-function isPrivateUrl(urlStr: string): boolean {
+/** Strip embedded Basic-Auth credentials (user:pass@host) before logging a URL. */
+function redactUrlCredentials(urlStr: string): string {
     try {
         const parsed = new URL(urlStr);
-        return isPrivateIp(parsed.hostname);
+        parsed.username = '';
+        parsed.password = '';
+        return parsed.toString();
     } catch {
-        return true;
+        return urlStr;
     }
 }
 
@@ -138,7 +97,8 @@ export async function collectData(_httpConfig:HttpConfig[]) {
                         }));
                     }
                 } catch (e:any) {
-                    logger.error("error in collectHttpData with the url: " + ((await getConfigOrEnvVar(config, "URL", prefix)) ?? null));
+                    const rawUrl = (await getConfigOrEnvVar(config, "URL", prefix)) ?? null;
+                    logger.error("error in collectHttpData with the url: " + (rawUrl ? redactUrlCredentials(rawUrl) : null));
                     logger.error(e);
                 }
 
@@ -205,9 +165,10 @@ async function makeHttpRequest<T>(
 
 async function getCertificateFromResponse(response: AxiosResponse<any>): Promise<any> {
     return new Promise((resolve, reject) => {
+        const parsedUrl = urlModule.parse(response.config.url!);
         const socket: TLSSocket = tls.connect({
-            host: urlModule.parse(response.config.url!).hostname!,
-            port: 443,
+            host: parsedUrl.hostname!,
+            port: parsedUrl.port ? Number(parsedUrl.port) : 443,
             socket: response.config.httpsAgent?.keepAliveSocket,
         }, () => {
             const cert = socket.getPeerCertificate();
@@ -274,7 +235,7 @@ async function getDataHttp(url: string, config: HttpConfig): Promise<HttpRequest
         httpResources.tls = TLS
         httpResources.delays = response?.delays;
     }catch(e:any){
-        logger.error("error in getDataHttp with the url: " + url);
+        logger.error("error in getDataHttp with the url: " + redactUrlCredentials(url));
         logger.error(e);
     }
     return httpResources;

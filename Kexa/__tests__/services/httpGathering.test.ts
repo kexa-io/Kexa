@@ -1,4 +1,5 @@
-import { isPrivateIp, createSsrfSafeLookup } from "../../services/addOn/httpGathering.service";
+import { createSsrfSafeLookup } from "../../services/addOn/httpGathering.service";
+import { isPrivateIp } from "../../helpers/isPrivateUrl";
 
 const { expect } = require('chai');
 
