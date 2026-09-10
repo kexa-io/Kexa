@@ -1969,7 +1969,6 @@
 	*	- KexaAzure.appConfiguration
 	*	- KexaAzure.monitor
 	*	- KexaAzure.blobProperties
-	*	- KexaAzure.defender
 	*	- KexaAzure.security
 	*	- KexaAzure.authorization
 	*	- KexaAzure.sqlServers
