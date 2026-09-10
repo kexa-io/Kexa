@@ -1,15 +1,16 @@
 import type { Rules } from "../../../models/settingFile/rules.models";
+import { escapeHtml } from "../../../helpers/escapeHtml";
 
 export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false): string {
     switch (rule?.objectName) {
         case "databases":
-            return `Database: ${objectContent?.name}`;
+            return `Database: ${escapeHtml(objectContent?.name)}`;
         case "users":
-            return `User: ${objectContent?._id} | ID: ${objectContent?.userId}`;
+            return `User: ${escapeHtml(objectContent?._id)} | ID: ${escapeHtml(objectContent?.userId)}`;
         case "serverStatus":
-            return `version: ${objectContent?.version} | Host: ${objectContent?.host}`;
+            return `version: ${escapeHtml(objectContent?.version)} | Host: ${escapeHtml(objectContent?.host)}`;
         case "currentOp":
-            return `description: ${objectContent?.desc}`;
+            return `description: ${escapeHtml(objectContent?.desc)}`;
         case "cmdLineOpts":
             return `MongoDB config`;
         case "parameters":

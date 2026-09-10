@@ -20,10 +20,13 @@
 
 ### Default.json
 
-For each of your environments, the following keys are mandatory:
+For each of your environments, the following key is mandatory:
 
 - `rules`: This refers to the set of rules files you want to apply to this environment.
-- `prefix`: the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).
+
+The following key is optional but strongly recommended:
+
+- `prefix`: the particle placed in front of the environment variables listed [here](#environment). If omitted, Kexa falls back to the zero-based index of the environment entry (`0`, `1`, ...) as the prefix.
 
 The following keys are recommended to ensure better readability when re-reading the configuration:
 
@@ -41,10 +44,13 @@ Example of [configuration for 2 AWS environments](../../config/demo/aws.default.
 There are several ways to identify yourself in an AWS environment. Obviously, you can only scan the environment for which you are at least a `reader` (IAM role):
 
 ```bash
-AWS_ACCESS_KEY_ID=XXXXXXXXX  
-AWS_SECRET_ACCESS_KEY=XXXXXXXXX
-AWS_SESSION_TOKEN=XXXXXX # This one is optionnal, use it if you're using temporary credentials (IAM role)
+<prefix>AWS_ACCESS_KEY_ID=XXXXXXXXX
+<prefix>AWS_SECRET_ACCESS_KEY=XXXXXXXXX
+<prefix>AWS_SESSION_TOKEN=XXXXXX # This one is optionnal, use it if you're using temporary credentials (IAM role)
 ```
+
+Where `<prefix>` is the value of this environment's `prefix` config key (or its zero-based
+index if `prefix` is omitted).
 
 ## Additional documentation
 

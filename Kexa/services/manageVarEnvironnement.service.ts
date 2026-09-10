@@ -1,6 +1,5 @@
 import axios from "axios";
 import {getNewLogger} from "./logger.service";
-import { jsonStringify } from "../helpers/jsonStringify";
 import {getEnvVarFromApi} from "./api/loaderApi.service";
 
 const logger = getNewLogger("KubernetesLogger");
@@ -71,6 +70,18 @@ function possibleWithAwsSecretManager(){
 import { fromNodeProviderChain } from "@aws-sdk/credential-providers";
 import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-secrets-manager";
 
+// data.SecretString is already a JSON string (e.g. '{"MY_KEY":"value"}');
+// re-encoding it with jsonStringify() before JSON.parse() double-encodes it,
+// so parsing yields back a plain string instead of an object, and
+// secretData[name] always resolves to undefined -- the manager silently
+// never returns any value, and getEnvVar() falls through to process.env[name]
+// with no error raised.
+export function extractSecretValue(secretString: string | undefined, name: string): any {
+    if (!secretString) return undefined;
+    const secretData = JSON.parse(secretString);
+    return secretData[name];
+}
+
 async function getEnvVarWithAwsSecretManager(name:string){
 
     const credentials = fromNodeProviderChain();
@@ -81,9 +92,7 @@ async function getEnvVarWithAwsSecretManager(name:string){
     try {
         const input = { SecretId: secName };
         const data = await secretsmanager.send(new GetSecretValueCommand(input));
-        const secretData = JSON.parse(jsonStringify(data.SecretString));
-        const value = secretData[name];
-        return (value);
+        return extractSecretValue(data.SecretString, name);
     } catch (e) {
         logger.error("Error fetching secret from AWS", e);
     }
