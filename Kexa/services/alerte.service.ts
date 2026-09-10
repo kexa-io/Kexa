@@ -487,23 +487,6 @@ async function getTransporter() {
     });
 }
 
-async function SendMail(mail: string, to: string, subject: string): Promise<boolean> {
-    try{
-        let transporter = await getTransporter();
-        await transporter.sendMail({
-            from: await getConfigOrEnvVar(config, "EMAILFROM"), // sender address
-            to,
-            subject,
-            html: mail,
-        });
-        return true;
-    }catch (e) {
-        logger.error("error:");
-        logger.error(e);
-        return false;
-    }
-}
-
 async function SendMailWithAttachment(mail: string, to: string, subject: string, content: any): Promise<boolean> {
     let context = getContext();
     try{
