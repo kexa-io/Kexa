@@ -13,7 +13,7 @@ import { getConfigOrEnvVar } from "./manageVarEnvironnement.service";
 import axios from 'axios';
 import { extractURL } from "../helpers/extractURL";
 import { Teams } from "../emails/teams";
-import {getContext, getNewLogger} from "./logger.service";
+import {getNewLogger} from "./logger.service";
 import { getConfig } from "../helpers/loaderConfig";
 import { jsonStringify, getColorStringHandler } from "../helpers/jsonStringify";
 import {formatAlertCondition} from "./api/formatterApi.service";
@@ -106,28 +106,20 @@ export function alertFromGlobal(alert: GlobalConfigAlert, compteError: number[],
 }
 
 export function alertLogGlobal(alert: GlobalConfigAlert, compteError: number[], allScan: ResultScan[][]) {
-    const context = getContext();
     const mainSeparator = "=".repeat(100);
     const ruleSeparator = "-".repeat(100);
     const resourceSeparator = "·".repeat(100);
 
-    context?.log("\n" + mainSeparator);
     logger.info(mainSeparator);
-    context?.log("Result global scan on ruleset: " + alert.name);
     logger.info("Result global scan on ruleset: " + alert.name);
-    context?.log(mainSeparator);
     logger.info(mainSeparator);
 
     compteError.forEach((value, index) => {
-        context?.log("  " + levelAlert[index] + ": " + value);
         logger.info("  " + levelAlert[index] + ": " + value);
     });
 
-    context?.log(mainSeparator);
     logger.info(mainSeparator);
-    context?.log("Details by rule:");
     logger.info("Details by rule:");
-    context?.log(mainSeparator + "\n");
     logger.info(mainSeparator + "\n");
 
     let allScanOneDimension = [];
@@ -139,61 +131,44 @@ export function alertLogGlobal(alert: GlobalConfigAlert, compteError: number[], 
         const ruleLevel = value[0].rule?.level ?? 0;
         const levelLabel = levelAlert[ruleLevel];
 
-        context?.log(ruleSeparator);
         logger.info(ruleSeparator);
-        context?.log("Rule " + (ruleIndex + 1) + " of " + ruleEntries.length + " : " + key);
         logger.info("Rule " + (ruleIndex + 1) + " of " + ruleEntries.length + " : " + key);
-        context?.log("  Level: " + levelLabel);
         logger.info("  Level: " + levelLabel);
-        context?.log("  Resource Type: " + (value[0].rule?.objectName));
         logger.info("  Resource Type: " + (value[0].rule?.objectName));
-        context?.log("  Description: " + (value[0].rule?.description));
         logger.info("  Description: " + (value[0].rule?.description));
         const errorsResources = value.filter(v => v.error.length > 0);
         if (errorsResources.length > 0) {
-            context?.log("  Non-compliant resources: " + errorsResources.length);
             logger.info("  Non-compliant resources: " + errorsResources.length);
-        context?.log(ruleSeparator);
         logger.info(ruleSeparator);
             errorsResources.forEach((scan: ResultScan, index) => {
                 logger.info("");
-                context?.log("== > Resource " + (index + 1) + "/" + errorsResources.length + ":");
                 logger.info("==> Resource " + (index + 1) + "/" + errorsResources.length + ":");
                 alertLog(scan.rule, scan.error, scan.objectContent, false);
             });
-            context?.log("\n");
             logger.info("\n");
         }
 
         if(value[0].rule?.loud){
             const loudResources = value.filter(v => v.loud);
             if (loudResources.length > 0) {
-                context?.log("  Compliant resources: " + loudResources.length);
                 logger.info("  Compliant resources: " + loudResources.length);
-                context?.log("  " + resourceSeparator);
                 logger.info("  " + resourceSeparator);
 
                 loudResources.forEach((scan: ResultScan, index) => {
-                    context?.log("\n  Resource " + (index + 1) + "/" + loudResources.length + ":");
                     logger.info("\n  Resource " + (index + 1) + "/" + loudResources.length + ":");
                     alertLog(scan.rule, scan.error, scan.objectContent, false);
                 });
-                context?.log("\n");
                 logger.info("\n");
             }
         }
 
         if (ruleIndex < ruleEntries.length - 1) {
-            context?.log("");
             logger.info("");
         }
     });
 
-    context?.log(mainSeparator);
     logger.info(mainSeparator);
-    context?.log("End result global scan ");
     logger.info("End result global scan ");
-    context?.log(mainSeparator + "\n");
     logger.info(mainSeparator + "\n");
 }
 
@@ -332,19 +307,14 @@ const sentenceConditionLog = (resource : string) => {
 }
 
 export function alertLog(rule: Rules, conditions: SubResultScan[], objectResource: any, fullDetail:boolean = true) {
-    const context = getContext();
     switch(rule.level){
         case LevelEnum.INFO:
             if(fullDetail){
-                context?.log("info name:"+rule.name);
                 logger.info("info name:"+rule.name);
-                context?.log("info description:"+rule?.description);
                 logger.info("info description:"+rule?.description);
-                context?.log(sentenceConditionLog(objectResource.id));
                 logger.info(sentenceConditionLog(objectResource.id));
             }
             logger.debug(getColorStringHandler(conditions));
-            context?.log(propertyToSend(rule, objectResource, true, conditions));
             logger.info(propertyToSend(rule, objectResource, true, conditions));
             break;
         case LevelEnum.WARNING:
@@ -352,28 +322,20 @@ export function alertLog(rule: Rules, conditions: SubResultScan[], objectResourc
             break;
         case LevelEnum.ERROR:
             if(fullDetail){
-                context?.log("error name:"+rule.name);
                 logger.error("error name:"+rule.name);
-                context?.log("error description:"+rule?.description);
                 logger.error("error description:"+rule?.description);
-                context?.log(sentenceConditionLog(objectResource.id));
                 logger.error(sentenceConditionLog(objectResource.id));
             }
             logger.debug(getColorStringHandler(conditions));
-            context?.log(propertyToSend(rule, objectResource, true, conditions));
             logger.error(propertyToSend(rule, objectResource, true, conditions));
             break;
         case LevelEnum.FATAL:
             if(fullDetail){
-                context?.log("critical name:"+rule.name);
                 logger.alert("critical name:"+rule.name);
-                context?.log("critical description:"+rule?.description);
                 logger.alert("critical description:"+rule?.description);
-                context?.log(sentenceConditionLog(objectResource.id));
                 logger.alert(sentenceConditionLog(objectResource.id));
             }
             logger.debug(getColorStringHandler(conditions));
-            context?.log(propertyToSend(rule, objectResource, true, conditions));
             logger.alert(propertyToSend(rule, objectResource, true, conditions));
             break;
         default:
@@ -383,15 +345,11 @@ export function alertLog(rule: Rules, conditions: SubResultScan[], objectResourc
 }
 
 export function warnLog(rule: Rules, conditions:SubResultScan[], objectResource:any, fullDetail:boolean = true){
-    const context = getContext();
     if(fullDetail){
-        context?.log("warning:"+rule.name);
         logger.warn("warning:"+rule.name);
-        context?.log(sentenceConditionLog(objectResource.id));
         logger.warn(sentenceConditionLog(objectResource.id));
     }
     logger.debug(getColorStringHandler(conditions));
-    context?.log(propertyToSend(rule, objectResource, true, conditions));
     logger.warn(propertyToSend(rule, objectResource, true, conditions));
 }
 
@@ -490,7 +448,6 @@ async function getTransporter() {
 }
 
 async function SendMailWithAttachment(mail: string, to: string, subject: string, content: any): Promise<boolean> {
-    let context = getContext();
     try{
         const jsonContent = jsonStringify(content);
 
@@ -510,7 +467,6 @@ async function SendMailWithAttachment(mail: string, to: string, subject: string,
                 }
             ]
         });
-        context?.log(`Email sent: ${subject} to ${to} with attachment`);
         logger.info(`Email sent: ${subject} to ${to} with attachment`);
         return true;
     }catch (e) {
@@ -537,7 +493,6 @@ ${content}`,
 }
 
 async function sendWebhook(alert: ConfigAlert, subject: string, content: any, rule?: Rules, objectResource?: any) {
-    const context = getContext();
     logger.debug("send webhook");
     for (const webhook_to of alert.to) {
         if(!isValidWebhookUrl(webhook_to)) continue;
@@ -573,7 +528,6 @@ async function sendWebhook(alert: ConfigAlert, subject: string, content: any, ru
         try {
             const response = await axios.post(webhook_to, payload);
             if (response.status === 200) {
-                context?.log('Webhook sent successfully!');
                 logger.info('Webhook sent successfully!');
             } else {
                 logger.error('Failed to send Webhook.');
@@ -589,7 +543,6 @@ import { Jira } from "../emails/jira";
 import { searchExistingIssue, createJiraIssue, updateIssueDate } from "./alerting/jiraAlerting.service";
 
 export async function sendJiraTicket(alert: ConfigAlert, subject: string, receivedContent: any, rule: Rules | null, objectResource: any | null): Promise<void> {
-    const context = getContext();
     const jiraUrl = 'https://' + await getConfigOrEnvVar(config, 'JIRA_DOMAIN') + '/rest/api/3/issue/';
     const auth = Buffer.from(await getConfigOrEnvVar(config, 'JIRA_API_KEY')).toString('base64');
 
@@ -642,7 +595,6 @@ export async function sendJiraTicket(alert: ConfigAlert, subject: string, receiv
 
     const isIssueAlreadyExisting = await searchExistingIssue(auth, subject, JSON.stringify(content), JSON.parse(finalContent), issueType);
     if (isIssueAlreadyExisting) {
-        context?.log('Jira issue not sent because it already exists and is neither done nor ignored!');
         logger.info('Jira issue not sent because it already exists and is neither done nor ignored!');
         return;
     }
@@ -652,7 +604,6 @@ export async function sendJiraTicket(alert: ConfigAlert, subject: string, receiv
 
 
 export async function sendCardMessageToTeamsChannel(channelWebhook: string, payload:string): Promise<void> {
-    const context = getContext();
     if (!channelWebhook) {
         logger.error("Cannot retrieve TEAMS_CHANNEL_WEBHOOK_URL from env");
         throw("Error on TEAMS_CHANNEL_WEBHOOK_URL retrieve");
@@ -669,10 +620,8 @@ export async function sendCardMessageToTeamsChannel(channelWebhook: string, payl
     try {
         const response = await axios.request(config);
         if (response.status === 200) {
-            context?.log('Card sent successfully!');
             logger.info('Card sent successfully!');
         } else {
-            context?.log('Failed to send card.');
             logger.info('Failed to send card.');
         }
     } catch (error) {

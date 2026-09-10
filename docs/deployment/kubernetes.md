@@ -238,6 +238,5 @@ kubectl cp kexa/<pod-name>:/app/output ./output-backup
 
 ## Next Steps
 
-- [Azure Functions Deployment](./azure-function.md)
 - [Docker Deployment](./docker.md)
 - [Local Deployment](./local.md)

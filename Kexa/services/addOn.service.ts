@@ -4,7 +4,7 @@ import type { Provider, ProviderResource } from "../models/providerResource.mode
 import type { Header } from "../models/settingFile/header.models";
 import { writeStringToJsonFile } from "../helpers/files"
 import type { Capacity } from "../models/settingFile/capacity.models";
-import {getContext, getNewLogger} from "./logger.service";
+import {getNewLogger} from "./logger.service";
 import type { SettingFile } from "../models/settingFile/settingFile.models";
 import { getConfig } from "../helpers/loaderConfig";
 import { jsonStringify } from "../helpers/jsonStringify";
@@ -39,9 +39,7 @@ export async function loadAddOns(): Promise<ProviderResource>{
         }
     }
     let resources: ProviderResource = {};
-    let context = getContext();
     logger.info("Loading addOns");
-    context?.log("Loading addOns");
 
     let addOnNeed = JSON.parse('{}');
     try {
@@ -82,12 +80,10 @@ export async function loadAddOns(): Promise<ProviderResource>{
         }
         if((result?.delta)??0 > 15){
             logger.info(`AddOn ${result.key} collect in ${result.delta}ms`);
-            context?.log(`AddOn ${result.key} collect in ${result.delta}ms`);
         }else if(result?.delta) addOnShortCollect.push(result.key);
     });
     if(addOnShortCollect.length > 0){
         logger.info(`AddOn ${addOnShortCollect} load in less than 15ms; No data has been collected for these addOns`);
-        context?.log(`AddOn ${addOnShortCollect} load in less than 15ms; No data has been collected for these addOns`);
     }
     return resources;
 }

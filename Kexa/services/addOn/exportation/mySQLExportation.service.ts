@@ -1,12 +1,11 @@
 import type { ProviderResource } from '../../../models/providerResource.models';
 import { getEnvVar } from "../../manageVarEnvironnement.service";
-import { getContext, getNewLogger } from "../../logger.service";
+import { getNewLogger } from "../../logger.service";
 import type { MySQLSaveConfig } from '../../../models/export/mysql/config.models';
 import { MySQLClass } from '../../saving/mySQL.service';
 import { getConfig } from '../../../helpers/loaderConfig';
 
 const logger = getNewLogger("mySQLExportLogger");
-const context = getContext();
 
 export async function exportation(save: MySQLSaveConfig, resources: ProviderResource): Promise<void>{
     let mySQL = new MySQLClass();

@@ -20,7 +20,6 @@ Welcome to the Kexa documentation! This documentation will help you understand a
    - [Local](./deployment/local.md)
    - [Docker](./deployment/docker.md)
    - [Kubernetes](./deployment/kubernetes.md)
-   - [Azure Function](./deployment/azure-function.md)
    - [GitHub Actions](./deployment/github-actions.md)
 
 4. [Contributing](./contributing/README.md)

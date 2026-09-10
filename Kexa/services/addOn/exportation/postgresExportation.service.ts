@@ -1,12 +1,11 @@
 import type { ProviderResource } from '../../../models/providerResource.models';
 import { getEnvVar } from "../../manageVarEnvironnement.service";
-import { getContext, getNewLogger } from "../../logger.service";
+import { getNewLogger } from "../../logger.service";
 import type { PostgreSQLSaveConfig } from '../../../models/export/postgre/config.models';
 import { PostgreSQLClass } from '../../saving/postgresSQL.service';
 import { getConfig } from '../../../helpers/loaderConfig';
 
 const logger = getNewLogger("pgSQLExportLogger");
-const context = getContext();
 
 export async function exportation(save: PostgreSQLSaveConfig, resources: ProviderResource): Promise<void>{
     let pgSQL = new PostgreSQLClass();

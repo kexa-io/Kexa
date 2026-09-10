@@ -16,7 +16,7 @@
 
 import mysql from 'mysql2/promise';
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
-import { getContext, getNewLogger } from "../logger.service";
+import { getNewLogger } from "../logger.service";
 import type { MySqlResources } from "../../models/mysql/resource.models";
 import type { MySqlConfig } from "../../models/mysql/config.models";
 
@@ -46,7 +46,6 @@ async function createMySqlConnection(config: MySqlConfig): Promise<mysql.Connect
 }
 
 export async function collectData(mysqlConfigs: MySqlConfig[]): Promise<MySqlResources[] | null> {
-    const context = getContext();
     const allResources = new Array<MySqlResources>();
 
     for (const config of mysqlConfigs ?? []) {
@@ -54,7 +53,6 @@ export async function collectData(mysqlConfigs: MySqlConfig[]): Promise<MySqlRes
         let connection: mysql.Connection | null = null;
 
         try {
-            context?.log("Start collection for MySQL configuration with prefix :" + config.prefix);
             logger.debug("Start collection for MySQL configuration with prefix :" + config.prefix);
 
             connection = await createMySqlConnection(config);
@@ -104,7 +102,6 @@ export async function collectData(mysqlConfigs: MySqlConfig[]): Promise<MySqlRes
 
         } catch (e: any) {
             logger.error("Error during MySQL data collection: " + e.message);
-            context?.log("Error during MySQL data collection: " + e.message);
         } finally {
             if (connection) {
                 logger.debug("Closing MySQL connection.");

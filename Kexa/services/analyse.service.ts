@@ -25,7 +25,7 @@ import { extractHeaders } from './addOn.service';
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import {getContext, getNewLogger} from "./logger.service";
+import {getNewLogger} from "./logger.service";
 import { splitProperty } from '../helpers/spliter';
 import { downloadFile, unzipFile } from '../helpers/dowloadFile';
 import { getConfig } from '../helpers/loaderConfig';
@@ -446,7 +446,6 @@ function checkMatchConfigAndResource(rule:Rules, resources:ProviderResource, ind
 }
 
 export function checkRules(rules:any[], resources:ProviderResource, alert: Alert, configFuzz?: any): ResultScan[][] {
-    const context = getContext();
     logger.debug("check rules");
     let result: ResultScan[][] = [];
     const configuration = configFuzz ?? config;
@@ -466,7 +465,6 @@ export function checkRules(rules:any[], resources:ProviderResource, alert: Alert
             rule.cloudProvider = rule.cloudProvider.name as string;
         }
         if(!rule.applied) return;
-        context?.log("check rule:"+rule.name);
         logger.debug("check rule:"+rule.name);
 
         if(!configuration.hasOwnProperty(rule.cloudProvider)){

@@ -5488,7 +5488,7 @@ import { ResourceGroupsTaggingAPIClient, GetTagKeysCommand, GetResourcesCommand,
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { getContext, getNewLogger } from "../logger.service";
+import { getNewLogger } from "../logger.service";
 const logger = getNewLogger("AWSLogger");
 
 let currentConfig: AwsConfig;
@@ -5514,7 +5514,6 @@ interface AwsClient {
 /* ****************************************** */
 
 export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null> {
-    let context = getContext();
     let resources = new Array<Object>();
     for (let oneConfig of awsConfig ?? []) {
         currentConfig = oneConfig;
@@ -5580,13 +5579,11 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
             }
             else {
                 gatherAll = true;
-                context?.log("AWS - No Regions found, gathering all regions...");
                 logger.info("AWS - No Regions found, gathering all regions...");
             }
             if (skip)
                 continue;
             else if (!gatherAll){
-                context?.log("AWS - Config n°" + awsConfig.indexOf(oneConfig) + " correctly loaded user regions.");
                 logger.info("AWS - Config n°" + awsConfig.indexOf(oneConfig) + " correctly loaded user regions.");
             }
             if (response.Regions) {
@@ -5599,7 +5596,6 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
                             if (!(userRegions.includes(region.RegionName as string)))
                                 return;
                         }
-						context?.log("Retrieving AWS Region : " + region.RegionName);
 						let newResources = await collectAuto(credentialProvider, region.RegionName as string);
 						const newCustomResources = await collectCustom(credentialProvider, region.RegionName as string);
 						newCustomResources.forEach((customRes: any) => {
@@ -5613,7 +5609,6 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
                 });
 				await Promise.all(promises);
      
-                context?.log("- Listing AWS resources done -");
                 logger.info("- Listing AWS resources done -");
 				
 				const concatedResults = concatAllObjects(collectedResults);
@@ -5621,7 +5616,6 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
                 resources.push(concatedResults);
             }
         } catch (e) {
-            context?.log("error in AWS connect for config: " + (oneConfig["name"] ?? "unnamed"));
             logger.error("error in AWS connect for config: " + (oneConfig["name"] ?? "unnamed"));
             logger.error(e instanceof Error ? e.message : e);
         }

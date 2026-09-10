@@ -198,5 +198,4 @@ docker cp kexa:/app/output ./output-backup
 ## Next Steps
 
 - [Kubernetes Deployment](./kubernetes.md)
-- [Azure Functions Deployment](./azure-function.md)
 - [Local Deployment](./local.md)

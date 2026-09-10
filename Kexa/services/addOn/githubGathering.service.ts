@@ -24,7 +24,7 @@ import { GitResources } from "../../models/git/resource.models";
 import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
 import { GitConfig } from "../../models/git/config.models";
 
-import {getContext, getNewLogger} from "../logger.service";
+import {getNewLogger} from "../logger.service";
 import { mapWithConcurrency } from "../../helpers/concurrencyLimit";
 const logger = getNewLogger("GithubLogger");
 
@@ -39,7 +39,6 @@ let githubToken = "";
 let currentConfig:GitConfig
 
 export async function collectData(gitConfig:GitConfig[]): Promise<GitResources[]|null>{
-    let context = getContext();
     let resources = new Array<GitResources>();
     for(let config of gitConfig??[]){
         currentConfig = config;
@@ -50,7 +49,6 @@ export async function collectData(gitConfig:GitConfig[]): Promise<GitResources[]
         }
         await setEnvVar("GITHUBTOKEN", githubToken)
         try {
-            context?.log("Gathering github data");
             logger.info("Gathering github data");
             const promisesPrimaryData:any[] = [collectRepo(), collectOrganizations()]
             let [allRepo, allOrganizations] = await Promise.all(promisesPrimaryData);
