@@ -19,6 +19,10 @@
     *     - persistentvolumeclaim
     *     - secret
     *     - serviceaccount
+    *     - role
+    *     - rolebinding
+    *     - clusterrole
+    *     - clusterrolebinding
     *     - storageclass
     *     - networkpolicy
     *     - event
@@ -26,9 +30,6 @@
     *     - apiservice
     *     - lease
     *     - componentstatus
-    *     - limitrange
-    *     - resourcequota
-    *     - podtemplate
     *     - hpa
     *     - podLogs
     *     - podsConsumption
@@ -49,8 +50,68 @@ const logger = getNewLogger("KubernetesLogger");
 const POD_LOGS_CONCURRENCY = 10;
 
 import * as k8s from '@kubernetes/client-node';
+import { createConfiguration, ServerConfiguration, ResponseContext, Observable } from '@kubernetes/client-node';
 import * as https from "https";
 let currentConfig:KubernetesConfig;
+
+// @kubernetes/client-node's built-in IsomorphicFetchHttpLibrary (used by
+// every client from kc.makeApiClient()) calls fetch(url, {agent, ...}) with
+// a Node https.Agent carrying the cluster's CA. Bun's native fetch() does
+// not honor the standard `agent`/`ca` fetch options for TLS trust -- it
+// silently falls back to its default trust store, causing
+// UNABLE_TO_VERIFY_LEAF_SIGNATURE against any cluster with a private/
+// self-signed CA (i.e. almost every real Kubernetes cluster: GKE, EKS,
+// AKS, kubeadm, ...). Bun instead expects a non-standard `tls` fetch
+// option. This HttpLibrary re-implements the same request/response shape
+// but forwards the agent's CA via Bun's `tls` option, so cluster TLS
+// verification actually works. Verified empirically against a real GKE
+// cluster before landing this fix.
+//
+// Wrapping the global fetch instead (simpler, would also cover
+// Metrics/Log below) does NOT work: Bun's node-fetch shim binds its
+// fetch reference once, at import time, not via a live globalThis.fetch
+// lookup per call -- reassigning globalThis.fetch later has no effect on
+// already-imported callers (verified empirically). Metrics/Log (used by
+// collectPodsConsumption/collectPodLogs) have no equivalent
+// custom-httpApi injection point, so they remain affected by this Bun
+// limitation; unlike every other collector in this file, they will still
+// fail TLS verification against a private-CA cluster.
+class BunSafeK8sHttpLibrary {
+    send(request: any) {
+        const agent: any = request.getAgent();
+        const fetchOpts: any = {
+            method: request.getHttpMethod().toString(),
+            body: request.getBody(),
+            headers: request.getHeaders(),
+            signal: request.getSignal(),
+        };
+        if (agent?.options?.ca || agent?.options?.rejectUnauthorized !== undefined) {
+            fetchOpts.tls = {};
+            if (agent.options.ca) fetchOpts.tls.ca = agent.options.ca;
+            if (agent.options.rejectUnauthorized !== undefined) fetchOpts.tls.rejectUnauthorized = agent.options.rejectUnauthorized;
+        }
+        const resultPromise = fetch(request.getUrl(), fetchOpts).then(async (resp) => {
+            const headers: any = {};
+            resp.headers.forEach((value: string, name: string) => { headers[name] = value; });
+            const body = { text: () => resp.text(), binary: () => resp.arrayBuffer() };
+            return new ResponseContext(resp.status, headers, body as any);
+        });
+        return new Observable(resultPromise as any);
+    }
+}
+
+function makeBunSafeApiClient<T>(kc: k8s.KubeConfig, apiClientType: new (config: any) => T): T {
+    const cluster = kc.getCurrentCluster();
+    if (!cluster) {
+        throw new Error('No active cluster!');
+    }
+    const config = createConfiguration({
+        baseServer: new ServerConfiguration(cluster.server, {}),
+        authMethods: { default: kc },
+        httpApi: new BunSafeK8sHttpLibrary() as any,
+    });
+    return new apiClientType(config);
+}
 
 // let globalConfiguration = getConfig().global ?? {};
 
@@ -185,17 +246,17 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
 
         const metricsClient = new k8s.Metrics(kc);
         let autoscalingV1Api: any;
-        if (!currentConfig?.ObjectNameNeed?.includes("hpa")) {
-             autoscalingV1Api = kc.makeApiClient(k8s.AutoscalingV1Api);
+        if (currentConfig?.ObjectNameNeed?.includes("hpa")) {
+             autoscalingV1Api = makeBunSafeApiClient(kc, k8s.AutoscalingV1Api);
         }
-        const k8sApiCore = kc.makeApiClient(k8s.CoreV1Api);
-        const k8sAppsV1Api = kc.makeApiClient(k8s.AppsV1Api);
-        const k8sNetworkingV1Api = kc.makeApiClient(k8s.NetworkingV1Api);
-        const k8sStorageV1Api = kc.makeApiClient(k8s.StorageV1Api);
-        const k8sBatchV1Api = kc.makeApiClient(k8s.BatchV1Api);
-        const k8sApiregistrationV1Api = kc.makeApiClient(k8s.ApiregistrationV1Api);
-        const k8CoordinationV1Api = kc.makeApiClient(k8s.CoordinationV1Api);
-        const k8sRbacAuthorizationV1Api = kc.makeApiClient(k8s.RbacAuthorizationV1Api);
+        const k8sApiCore = makeBunSafeApiClient(kc, k8s.CoreV1Api);
+        const k8sAppsV1Api = makeBunSafeApiClient(kc, k8s.AppsV1Api);
+        const k8sNetworkingV1Api = makeBunSafeApiClient(kc, k8s.NetworkingV1Api);
+        const k8sStorageV1Api = makeBunSafeApiClient(kc, k8s.StorageV1Api);
+        const k8sBatchV1Api = makeBunSafeApiClient(kc, k8s.BatchV1Api);
+        const k8sApiregistrationV1Api = makeBunSafeApiClient(kc, k8s.ApiregistrationV1Api);
+        const k8CoordinationV1Api = makeBunSafeApiClient(kc, k8s.CoordinationV1Api);
+        const k8sRbacAuthorizationV1Api = makeBunSafeApiClient(kc, k8s.RbacAuthorizationV1Api);
         const k8sLog = new k8s.Log(kc);
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -1009,7 +1070,7 @@ async function collectHorizontalPodAutoscaler(autoscalingV1Api: any, namespace: 
        const hpa = await autoscalingV1Api.listNamespacedHorizontalPodAutoscaler({namespace: namespace});
         return hpa?.items;
     } catch (error) {
-      logger.warn("Error getting Pod:", error);
+      logger.warn("Error getting HPA:", error);
       return null;
     }
   }
