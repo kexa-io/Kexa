@@ -1,3 +1,34 @@
+# [2.11.0](https://github.com/kexa-io/Kexa/compare/v2.10.2...v2.11.0) (2026-09-10)
+
+
+### Bug Fixes
+
+* assorted correctness/perf/security cleanup (helm, http, alerte, analyse, groupBy, vault) ([d93ee72](https://github.com/kexa-io/Kexa/commit/d93ee7217618c95f8a4a991918ca9a4e1bedd0ec))
+* AWS pagination/perf issues + PostgreSQL per-database collection bug ([19e2a0c](https://github.com/kexa-io/Kexa/commit/19e2a0c92afa2a72f6ed33a3534ae19da9d640a5)), closes [#735](https://github.com/kexa-io/Kexa/issues/735) [#736](https://github.com/kexa-io/Kexa/issues/736)
+* AWS Secrets Manager integration always returned undefined ([fe5f569](https://github.com/kexa-io/Kexa/commit/fe5f5692daf2f00c400ada1a5a115af4b8524b00))
+* bound REGEX condition execution to prevent ReDoS ([9810908](https://github.com/kexa-io/Kexa/commit/9810908953dc58385b57c170f86bce7909be5375))
+* close Azure multi-account credential leak (same class as AWS [#747](https://github.com/kexa-io/Kexa/issues/747)) ([e4427a2](https://github.com/kexa-io/Kexa/commit/e4427a22a33d926b722463c0c525250c055fc7d1))
+* close remaining AWS multi-account credential leak (env-var fallback path) ([1b6e65f](https://github.com/kexa-io/Kexa/commit/1b6e65f6c4b46be6b17f4cc2a38ea949550af4c4)), closes [#722](https://github.com/kexa-io/Kexa/issues/722)
+* close SSRF bypass and stop disabling TLS verification in HTTP addon ([0e88ada](https://github.com/kexa-io/Kexa/commit/0e88ada28fddeb2b1635497723d683c6702bbcf6))
+* CSV/TOML injection, inconsistent HTML escaping, redundant per-setting alert work ([4488bfe](https://github.com/kexa-io/Kexa/commit/4488bfe946f583312aa923e4ed0b81b686b3f07c))
+* escape untrusted resource data before interpolating into alert HTML ([4ae4887](https://github.com/kexa-io/Kexa/commit/4ae488733c3da01e189c328a9eb381a9a6521949))
+* **github:** repair gathering for accounts that belong to organizations ([d895e32](https://github.com/kexa-io/Kexa/commit/d895e32e27c37c3589daa08bf43461df9bc66c70))
+* **k8s:** remove process-wide TLS-disable workaround, now fixed upstream in Bun ([11ba9aa](https://github.com/kexa-io/Kexa/commit/11ba9aa3561f69c7f263dd12e5e32e90345de5c2)), closes [oven-sh/bun#7332](https://github.com/oven-sh/bun/issues/7332)
+* **k8s:** stop leaving the cleaned kubeconfig temp file world-readable/orphaned ([7a33bb4](https://github.com/kexa-io/Kexa/commit/7a33bb4e9855591c237669cd79224e9229426c7e))
+* O365/Google Workspace/Drive collector bugs (crash, data loss, missing pagination) ([4e0bf76](https://github.com/kexa-io/Kexa/commit/4e0bf766225e6b3c5d2a6a2d9fea1446e13206e4))
+* redact Kubernetes Secret data and cap pod-log fan-out concurrency ([bfdc929](https://github.com/kexa-io/Kexa/commit/bfdc929e5f92525a6359ce92ce0b697837f4a64a))
+* several broken/wasteful Azure and GCP resource collectors ([a765606](https://github.com/kexa-io/Kexa/commit/a76560618c0b4f016fdf1d5c3753283306186f5b)), closes [#729](https://github.com/kexa-io/Kexa/issues/729)
+* stop discarding already-gathered data on one partial failure ([2cb1f8c](https://github.com/kexa-io/Kexa/commit/2cb1f8cab5bc75e0479e23ee1dd46f36be8ca1d5))
+* stop leaking credentials between accounts in AWS/GCP multi-config scans ([2be7082](https://github.com/kexa-io/Kexa/commit/2be7082421fd7e5b4704c35dba3f497b3b51896a))
+* stop logging secrets in plaintext (Azure config dump, O365 token error) ([754c48a](https://github.com/kexa-io/Kexa/commit/754c48addcdffb65a3064f9917969ab4095d1cee))
+* throttle unbounded per-repo/org GitHub API fan-out ([64f04c4](https://github.com/kexa-io/Kexa/commit/64f04c496b7cc6ccc03b1ed51f0d1d0e6888f396))
+
+
+### Features
+
+* **k8s:** wire up the RBAC collectors (Role/RoleBinding/ClusterRole/ClusterRoleBinding) ([546e4f8](https://github.com/kexa-io/Kexa/commit/546e4f8107cd030b461d51930adbe8c2559e3965))
+* verify SHA-256 checksum of remote rules bundle before loading it ([8538de8](https://github.com/kexa-io/Kexa/commit/8538de80bfd0973046119f72fe7a1bacfa682659))
+
 # Changelog
 
 ## [v2.10.2] - 2026-07-08
