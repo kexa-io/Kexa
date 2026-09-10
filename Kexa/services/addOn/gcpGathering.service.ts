@@ -169,7 +169,7 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
             const promises = [
                 listTasks(projectId, regionsList, credentialsObject),
                 listAllComputes(projectId, credentialsObject),
-                listAllBucket(credentialsObject),
+                listAllBucket(projectId, credentialsObject),
                 listAllProject(credentialsObject),
                 getBillingAccount(projectId, credentialsObject),
                 listAllClusters(credentialsObject),
@@ -274,11 +274,16 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
 }
 
 
-function createClientWithCredentials(ClientClass: any, credentialsObject?: any) {
+function createClientWithCredentials(ClientClass: any, credentialsObject?: any, projectId?: string) {
     if (credentialsObject) {
         return new ClientClass({
             credentials: credentialsObject,
-            projectId: credentialsObject.project_id
+            // credentialsObject.project_id only exists for service_account-type
+            // credential JSON; authorized_user-type credentials (e.g. from
+            // `gcloud auth application-default login`) never carry it, so the
+            // explicitly-resolved projectId (already known by every caller from
+            // GOOGLE_PROJECT_ID/config) must be preferred when available.
+            projectId: projectId ?? credentialsObject.project_id
         });
     }
     return new ClientClass();
@@ -483,19 +488,20 @@ async function listPersistentDisks(projectId: string, credentialsObject?: any) {
     }
 }
 
-async function listAllBucket(credentialsObject?: any): Promise<Array<any>|null> {
+async function listAllBucket(projectId?: string, credentialsObject?: any): Promise<Array<any>|null> {
     if(!currentConfig.ObjectNameNeed?.includes("bucket")) return null;
     let jsonData = [];
 
     try {
         logger.info("Starting GCP Buckets listing...");
-        if (!credentialsObject || !credentialsObject.project_id) {
+        const resolvedProjectId = projectId ?? credentialsObject?.project_id;
+        if (!credentialsObject || !resolvedProjectId) {
             logger.error("No credentials or project_id provided for bucket listing");
             return null;
         }
         const storage = new Storage({
             credentials: credentialsObject,
-            projectId: credentialsObject.project_id
+            projectId: resolvedProjectId
         });
         const [buckets] = await storage.getBuckets();
         if (buckets.length === 0) {
