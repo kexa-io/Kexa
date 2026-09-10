@@ -44,7 +44,9 @@ import type { KubernetesConfig } from "../../models/kubernetes/config.models";
 import * as yaml from 'js-yaml';
 
 import {getNewLogger} from "../logger.service";
+import { mapWithConcurrency } from "../../helpers/concurrencyLimit";
 const logger = getNewLogger("KubernetesLogger");
+const POD_LOGS_CONCURRENCY = 10;
 
 import * as k8s from '@kubernetes/client-node';
 import * as https from "https";
@@ -579,11 +581,28 @@ async function collectPersistentvolumeclaim(k8sApiCore: any, namespace: string):
     }
 }
 
+/** Kubernetes Secret objects carry the actual secret material in `.data`
+ * (base64) / `.stringData` (plaintext) -- unlike e.g. GCP's Secret Manager
+ * list call, which never returns secret values at all. Keep the key names
+ * (rules can still check "does this secret have a TLS_CERT key") but
+ * replace every value so the actual credential material never ends up in
+ * scan results, logs, or alert emails. */
+export function redactSecretData(secret: any): any {
+    const redacted = { ...secret };
+    if (redacted.data && typeof redacted.data === 'object') {
+        redacted.data = Object.fromEntries(Object.keys(redacted.data).map((k) => [k, '[REDACTED]']));
+    }
+    if (redacted.stringData && typeof redacted.stringData === 'object') {
+        redacted.stringData = Object.fromEntries(Object.keys(redacted.stringData).map((k) => [k, '[REDACTED]']));
+    }
+    return redacted;
+}
+
 async function collectSecret(k8sApiCore: any, namespace: string): Promise<any> {
     if(!currentConfig?.ObjectNameNeed?.includes("secret")) return [];
     try {
         const secrets = await k8sApiCore.listNamespacedSecret({namespace: namespace});
-        return secrets?.items;
+        return (secrets?.items ?? []).map(redactSecretData);
     } catch (e) {
         logger.debug(e);
         return [];
@@ -922,7 +941,12 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
         const logsData: any[] = [];
         const delay = (ms: any) => new Promise((resolve: any) => setTimeout(resolve, ms));
 
-        await Promise.all((pods?.items).map(async (pod: any) => {
+        // One log-stream request per container, for every running pod, with
+        // no cap -- combined with namespaces themselves also being processed
+        // concurrently, a large cluster could fire thousands of simultaneous
+        // connections against the API server in a single scan. Cap how many
+        // pods are processed at once (POD_LOGS_CONCURRENCY below).
+        await mapWithConcurrency((pods?.items ?? []), POD_LOGS_CONCURRENCY, async (pod: any) => {
             if (pod.status.phase !== 'Running') {
                 return;
             }
@@ -970,7 +994,7 @@ async function collectPodLogs(k8sLog: any, k8sApiCore: any, namespace: string): 
                 }
                 await delay(100);
             }));
-        }));
+        });
         return logsData;
     } catch (e) {
         logger.debug(e);
