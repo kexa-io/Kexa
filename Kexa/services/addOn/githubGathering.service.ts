@@ -25,7 +25,16 @@ import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service"
 import { GitConfig } from "../../models/git/config.models";
 
 import {getContext, getNewLogger} from "../logger.service";
+import { mapWithConcurrency } from "../../helpers/concurrencyLimit";
 const logger = getNewLogger("GithubLogger");
+
+// Firing 4 GitHub API calls per repo (or org) for every repo/org at once has
+// no cap, so a large org's fan-out can send hundreds of simultaneous
+// requests and hit GitHub's rate limits -- each collector already fails soft
+// (returns []) on error, so this doesn't crash, it just silently loses data
+// for whichever repos got rate-limited. Throttling the fan-out reduces how
+// often that happens in the first place.
+const GITHUB_FANOUT_CONCURRENCY = 10;
 let githubToken = "";
 let currentConfig:GitConfig
 
@@ -83,7 +92,7 @@ async function collectRepoRelaidInfo(allRepo: any): Promise<any>{
     logger.info("Collecting github issues");
     logger.info("Collecting github packages");
     logger.info("Collecting github pull request package changes");
-    await Promise.all(allRepo.map(async (repo: any) => {
+    await mapWithConcurrency(allRepo, GITHUB_FANOUT_CONCURRENCY, async (repo: any) => {
         const [issues, branches, packages, prPackageChanges] = await Promise.all([
             collectIssues(repo.name, repo.owner.login),
             collectBranch(repo.name, repo.owner.login),
@@ -95,7 +104,7 @@ async function collectRepoRelaidInfo(allRepo: any): Promise<any>{
         allBranches.push(...addInfoRepo(repo, branches));
         allPackages.push(...addInfoRepo(repo, packages));
         allPullRequestPackageChanges.push(...addInfoRepo(repo, prPackageChanges));
-    }));
+    });
     return {
         allIssues,
         allBranches,
@@ -114,7 +123,7 @@ async function collectOrganizationRelaidInfo(allOrganizations: any): Promise<any
     let allRunners: any[] = [];
     logger.info("Collecting github members");
     logger.info("Collecting github outside collaborators");
-    await Promise.all(allOrganizations.map(async (org: any) => {
+    await mapWithConcurrency(allOrganizations, GITHUB_FANOUT_CONCURRENCY, async (org: any) => {
         const [members, outsideCollaborators, teamsData, runners] = await Promise.all([
             collectMembers(org.login),
             collectOutsideCollaborators(org.login),
@@ -128,7 +137,7 @@ async function collectOrganizationRelaidInfo(allOrganizations: any): Promise<any
         allTeamRepos.push(...teamsData.allTeamRepos);
         allTeamProjects.push(...teamsData.allTeamProjects);
         allRunners.push(...runners);
-    }));
+    });
 
     return {
         allMembers,
