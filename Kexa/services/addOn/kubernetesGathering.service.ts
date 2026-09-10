@@ -195,6 +195,7 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
         const k8sBatchV1Api = kc.makeApiClient(k8s.BatchV1Api);
         const k8sApiregistrationV1Api = kc.makeApiClient(k8s.ApiregistrationV1Api);
         const k8CoordinationV1Api = kc.makeApiClient(k8s.CoordinationV1Api);
+        const k8sRbacAuthorizationV1Api = kc.makeApiClient(k8s.RbacAuthorizationV1Api);
         const k8sLog = new k8s.Log(kc);
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -218,10 +219,10 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
             collectPersistentvolumeclaim(k8sApiCore, item.metadata.name),
             collectSecret(k8sApiCore, item.metadata.name),
             collectServiceaccount(k8sApiCore, item.metadata.name),
-            //collectRole(k8sRbacAuthorizationV1Api, item.metadata.name),
-            //collectRolebinding(k8sRbacAuthorizationV1Api, item.metadata.name),
-            //collectClusterrole(k8sRbacAuthorizationV1Api, item.metadata.name),
-            //collectClusterrolebinding(k8sRbacAuthorizationV1Api, item.metadata.name),
+            collectRole(k8sRbacAuthorizationV1Api, item.metadata.name),
+            collectRolebinding(k8sRbacAuthorizationV1Api, item.metadata.name),
+            collectClusterrole(k8sRbacAuthorizationV1Api, item.metadata.name),
+            collectClusterrolebinding(k8sRbacAuthorizationV1Api, item.metadata.name),
             collectStorageclass(k8sStorageV1Api, item.metadata.name),
             collectNetworkpolicy(k8sNetworkingV1Api, item.metadata.name),
             //collectPodsecuritypolicy(k8sApiCore, item.metadata.name),
@@ -264,10 +265,10 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
             persistentvolumeclaimData,
             secretData,
             serviceaccountData,
-            //roleData,
-            //rolebindingData,
-            //clusterroleData,
-            //clusterrolebindingData,
+            roleData,
+            rolebindingData,
+            clusterroleData,
+            clusterrolebindingData,
             storageclassData,
             networkpolicyData,
             //podsecuritypolicyData,
@@ -311,10 +312,10 @@ export async function kubernetesListing(pathKubeFile: string): Promise<any> {
             [persistentvolumeclaimData, "persistentvolumeclaim"], // work
             [secretData, "secret"], // work
             [serviceaccountData, "serviceaccount"], // work
-            //[roleData, "role"],
-            //[rolebindingData, "rolebinding"],
-            //[clusterroleData, "clusterrole"],
-            //[clusterrolebindingData, "clusterrolebinding"],
+            [roleData, "role"],
+            [rolebindingData, "rolebinding"],
+            [clusterroleData, "clusterrole"],
+            [clusterrolebindingData, "clusterrolebinding"],
             [storageclassData, "storageclass"], // work
             [networkpolicyData, "networkpolicy"], // work
             //[podsecuritypolicyData, "podsecuritypolicy"],
