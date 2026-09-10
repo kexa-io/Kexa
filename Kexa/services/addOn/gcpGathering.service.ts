@@ -116,9 +116,16 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 logger.warn("GCP - Could not parse credentials file, will rely on GOOGLE_APPLICATION_CREDENTIALS env var");
             }
         }
-        else if (projectId && googleCred) {
+        else if (googleCred) {
+            // Previously required projectId to already be set to even try
+            // this branch, so an account configured with inline JSON
+            // credentials but no separately-set GOOGLE_PROJECT_ID fell
+            // through to the shared/default credential below instead of
+            // using its own credentials at all -- mirror the path-based
+            // branch above and derive projectId from the credential JSON.
             try {
                 credentialsObject = JSON.parse(googleCred);
+                if (!projectId) projectId = credentialsObject?.project_id;
                 setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", "");
             } catch (e) {
                 logger.error("GCP - Failed to parse credential JSON");
@@ -890,6 +897,7 @@ async function listIdentitiesDomain(projectId: string, credentialsObject?: any):
 }
 
 async function listLineageProcesses(projectId: string, credentialsObject?: any): Promise<Array<any> | null> {
+    if(!currentConfig.ObjectNameNeed?.includes("lineage_process")) return null;
     const {LineageClient} = require('@google-cloud/lineage').v1;
     const parent = 'projects/' + projectId + '/locations/global';
     let jsonData = [];
@@ -1060,8 +1068,15 @@ async function listWorkloads(projectId: string, credentialsObject?: any): Promis
     const {ProjectsClient} = require('@google-cloud/resource-manager').v3;
     let jsonData;
 
+    // The real implementation below is disabled (kept for reference, not
+    // verified to actually work against the live Assured Workloads API) --
+    // rather than silently returning null with no explanation whenever a
+    // rule asks for "workload" data, say so explicitly so this doesn't look
+    // like a working, empty-result collector.
+    logger.warn("GCP Workloads collector ('workload') is not currently implemented; no data will be returned for this object type.");
+    /*
     try {
-     /*   const resource = new ProjectsClient();
+        const resource = new ProjectsClient();
         const response = await resource.getProject(projectId);
         const client = new AssuredWorkloadsServiceClient();
         const [workloads] = await client.listWorkloads({
@@ -1069,10 +1084,11 @@ async function listWorkloads(projectId: string, credentialsObject?: any): Promis
         });
         for (const workload of workloads) {
             jsonData = JSON.parse(jsonStringify(workload));
-        }*/
+        }
     } catch (e) {
         logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
+    */
     logger.info("GCP Workloads Listing Done");
     return jsonData ?? null;
 }
