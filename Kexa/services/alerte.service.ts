@@ -17,18 +17,17 @@ import {getContext, getNewLogger} from "./logger.service";
 import { getConfig } from "../helpers/loaderConfig";
 import { jsonStringify, getColorStringHandler } from "../helpers/jsonStringify";
 import {formatAlertCondition} from "./api/formatterApi.service";
-
-const jsome = require('jsome');
-jsome.level.show = true;
+import { isPrivateUrl } from "../helpers/isPrivateUrl";
 
 const nodemailer = require("nodemailer");
 const levelAlert = ["info", "warning", "error", "fatal"];
 
-/** Validate a webhook URL: must be a valid https:// URL. */
+/** Validate a webhook URL: must be http(s) and not point at a private/internal address (SSRF protection). */
 function isValidWebhookUrl(url: string): boolean {
     try {
         const parsed = new URL(url);
-        return parsed.protocol === "https:" || parsed.protocol === "http:";
+        if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return false;
+        return !isPrivateUrl(url);
     } catch {
         return false;
     }
@@ -475,8 +474,10 @@ export function alertSMS(detailAlert: ConfigAlert|GlobalConfigAlert ,rule: Rules
     });
 }
 
+let cachedTransporter: any = null;
 async function getTransporter() {
-    return nodemailer.createTransport({
+    if (cachedTransporter) return cachedTransporter;
+    cachedTransporter = nodemailer.createTransport({
         host: await getConfigOrEnvVar(config, "EMAILHOST"),
         port: await getConfigOrEnvVar(config, "EMAILPORT"),
         secure: Number(await getConfigOrEnvVar(config, "EMAILPORT")) == 465, // true for 465, false for other ports
@@ -485,6 +486,7 @@ async function getTransporter() {
             pass: await getConfigOrEnvVar(config, "EMAILPWD"),
         },
     });
+    return cachedTransporter;
 }
 
 async function SendMailWithAttachment(mail: string, to: string, subject: string, content: any): Promise<boolean> {

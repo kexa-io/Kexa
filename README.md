@@ -26,7 +26,7 @@ sidebar_position: 1
 ## Try Kexa in 30 seconds
 
 ```bash
-docker run --rm -v $(pwd)/config:/app/config ghcr.io/kexa-io/kexa:latest
+docker run --rm -v $(pwd)/config:/app/config kexa/kexa:latest
 ```
 
 > See [kexa-samples](https://github.com/kexa-io/kexa-samples) for ready-to-use configurations per provider.

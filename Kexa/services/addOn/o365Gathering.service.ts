@@ -152,7 +152,12 @@ export async function collectData(o365Config:o365Config[]): Promise<o365Resource
 
 import axios from "axios";
 
-async function getToken(tenantId: string, clientId: string, clientSecret: string) {
+export function formatTokenErrorForLog(error: any): string {
+    const status = error?.response?.status ? `HTTP ${error.response.status} ` : '';
+    return 'O365 - Error fetching token: ' + status + (error?.message ?? String(error));
+}
+
+export async function getToken(tenantId: string, clientId: string, clientSecret: string) {
     const requestBody = new URLSearchParams();
     if (clientId && clientSecret) {
         requestBody.append('grant_type', 'client_credentials');
@@ -169,8 +174,11 @@ async function getToken(tenantId: string, clientId: string, clientSecret: string
             logger.error("O365 - Error on token retrieve.");
             return null;
         }
-    } catch (error) {
-        logger.error('O365 - Error fetching token:', error);
+    } catch (error: any) {
+        // Do not log the raw axios error: on a failed token request it carries
+        // error.config.data, which is this same request body and therefore
+        // contains client_secret in plaintext.
+        logger.error(formatTokenErrorForLog(error));
         throw error;
     }
     return accessToken ?? null;
@@ -285,7 +293,13 @@ async function genericListing(endpoint: string, accessToken: string, queryEndpoi
                 jsonData = JSON.parse(jsonStringify(response.data));
         }
     } catch (e: any) {
-        logger.error(e.response.data);
+        // e.response is only set for an HTTP-level failure; a network-level
+        // error (timeout, DNS, connection reset) has no .response at all, so
+        // reading .data off it here threw a second, uncaught error inside
+        // this catch block -- which aborted whatever Promise.all this
+        // function's result was part of, discarding every other
+        // already-collected O365 resource for the tenant.
+        logger.error(e?.response?.data ?? e?.message ?? e);
     }
     return jsonData ?? null;
 }
@@ -413,6 +427,7 @@ async function listGroups(endpoint: string, accessToken: string, headers: Header
     if (jsonData) {
         for (let i = 0; i < jsonData.length; i++) {
             jsonDataOwners = await genericListing(endpoint, accessToken, "groups/" + jsonData[i].id + "/owners", "Groups");
+            jsonData[i].owners = jsonDataOwners;
         }
     }
     return jsonData ?? null;
