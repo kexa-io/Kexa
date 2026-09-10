@@ -19,7 +19,7 @@ import { toISOFormat } from "../../helpers/time";
 //////   INITIALIZATION   //////
 ////////////////////////////////
 
-import {getContext, getNewLogger} from "../logger.service";
+import {getNewLogger} from "../logger.service";
 const logger = getNewLogger("helmLogger");
 let currentConfig:HelmConfig;
 
@@ -29,7 +29,6 @@ let currentConfig:HelmConfig;
 import helm from 'helm-ts';
 
 export async function collectData(helmConfig:HelmConfig[]): Promise<HelmResources[] | null> {
-    let context = getContext();
     let resources = new Array<HelmResources>();
     
     for (let config of helmConfig??[]) {
@@ -46,7 +45,6 @@ export async function collectData(helmConfig:HelmConfig[]): Promise<HelmResource
             if (getFile("./config/kubernetes.json") == null) {
               writeStringToJsonFile(JSON.stringify(yaml.load(getFile(pathKubeFile??"")), null, 2), "./config/kubernetes.json");
             }
-            context?.log("- listing Helm resources -");
             logger.info("- listing Helm resources -");
 
             const promises = [
@@ -60,7 +58,6 @@ export async function collectData(helmConfig:HelmConfig[]): Promise<HelmResource
             helmResources = {
                 chart: chartList
             };
-            context?.log("- listing Helm resources done -");
             logger.info("- listing Helm resources done -");
       
         } catch (e) {

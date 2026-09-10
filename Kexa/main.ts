@@ -15,7 +15,7 @@ import { alertGlobal, alertFromGlobal } from "./services/alerte.service";
 import { AsciiArtText, renderTableAllScan, renderTableAllScanLoud, initAddOnPropertyToSend } from "./services/display.service";
 import { getEnvVar } from "./services/manageVarEnvironnement.service";
 import { loadAddOns } from "./services/addOn.service";
-import { getContext, getNewLogger } from "./services/logger.service";
+import { getNewLogger } from "./services/logger.service";
 import { saveResult } from "./services/save.service";
 import { exportationData } from "./services/exportation.service";
 import { Memoisation } from "./services/memoisation.service";
@@ -78,8 +78,6 @@ const ARGS = yargs(hideBin(process.argv))
 
 
 async function initializeApplication(): Promise<{ logger: Log<string, unknown>, settings: SettingFile[] }> {
-    const context = getContext();
-    context?.log("Initializing application...");
 
     if (ARGS.silent || ARGS.s) {
         const store = setupLogger({

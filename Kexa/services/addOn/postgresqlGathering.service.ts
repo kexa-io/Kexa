@@ -13,7 +13,7 @@
 
 import { Client } from 'pg';
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
-import { getContext, getNewLogger } from "../logger.service";
+import { getNewLogger } from "../logger.service";
 import type { PostgresqlResources } from "../../models/postgresql/resource.models";
 import type { PostgresqlConfig } from "../../models/postgresql/config.models";
 
@@ -45,7 +45,6 @@ async function createPostgresConnection(config: PostgresqlConfig): Promise<Clien
 }
 
 export async function collectData(PostgresqlConfigs: PostgresqlConfig[]): Promise<PostgresqlResources[] | null> {
-    const context = getContext();
     const allResources = new Array<PostgresqlResources>();
 
     for (const config of PostgresqlConfigs ?? []) {
@@ -53,7 +52,6 @@ export async function collectData(PostgresqlConfigs: PostgresqlConfig[]): Promis
         let client: Client | null = null;
 
         try {
-            context?.log("Starting collection for PostgreSQL configuration with prefix: " + config.prefix);
             logger.debug("Starting collection for PostgreSQL configuration with prefix: " + config.prefix);
 
             client = await createPostgresConnection(config);
@@ -96,7 +94,6 @@ export async function collectData(PostgresqlConfigs: PostgresqlConfig[]): Promis
 
         } catch (e: any) {
             logger.error("Error during PostgreSQL data collection: " + e.message);
-            context?.log("Error during PostgreSQL data collection: " + e.message);
         } finally {
             if (client) {
                 logger.debug("Close PostgreSQL connection.");

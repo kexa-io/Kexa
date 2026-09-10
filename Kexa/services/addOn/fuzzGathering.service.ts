@@ -17,7 +17,7 @@ import { fuzzConfig } from "../../models/fuzzing/config.models";
 //////   INITIALIZATION   //////
 ////////////////////////////////
 
-import {getContext, getNewLogger} from "../logger.service";
+import {getNewLogger} from "../logger.service";
 const logger = getNewLogger("FuzzLogger");
 let currentConfig: fuzzConfig;
 
@@ -34,7 +34,6 @@ interface fuzzData1 {
 }
 
 export async function collectData(fuzzConfig:fuzzConfig[], fuzzData: Buffer): Promise<fuzzResources[] | null> {
-    let context = getContext();
     let resources = new Array<fuzzResources>();
 
     for (let config of fuzzConfig??[]) {
@@ -46,7 +45,6 @@ export async function collectData(fuzzConfig:fuzzConfig[], fuzzData: Buffer): Pr
         } as fuzzResources;
 
         try {
-            context?.log("- listing Fuzz resources -");
             logger.info("- listing Fuzz resources -");
             const promises = [
                 listFunc1(fuzzData),
@@ -54,7 +52,6 @@ export async function collectData(fuzzConfig:fuzzConfig[], fuzzData: Buffer): Pr
             ];
             const [fuzzData1, fuzzData2] = await Promise.all(promises);
             
-            context?.log("- listing fuzz resources done -");
             logger.info("- listing fuzz resources done -");
 
             fuzzResources = {

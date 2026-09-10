@@ -1,5 +1,5 @@
 import { getEnvVar } from "../../manageVarEnvironnement.service";
-import { getContext, getNewLogger } from "../../logger.service";
+import { getNewLogger } from "../../logger.service";
 import type { ProviderResource } from "../../../models/providerResource.models";
 import { getConfig } from "../../../helpers/loaderConfig";
 import type { KexaSaveConfig } from "../../../models/export/kexa/config.model";
@@ -7,7 +7,6 @@ import { propertyToSend } from "../../display.service";
 
 const axios = require('axios');
 const logger = getNewLogger("KexaExportationLogger");
-const context = getContext();
 //const addOnPropertyToSend: { [key: string]: Function; } = loadAddOnsCustomUtility("display", "propertyToSend");
 
 export async function exportation(save: KexaSaveConfig, resources: ProviderResource): Promise<void>{
@@ -15,7 +14,6 @@ export async function exportation(save: KexaSaveConfig, resources: ProviderResou
     let name = (await getEnvVar(save.name))??save.name;
     let token = (await getEnvVar(save.token))??save.token;
     logger.info(`Exportation to Kexa API`);
-    context?.log(`Exportation to Kexa API`);
     const config = await getConfig();
     let configSend:any = {};
     Object.keys(resources).forEach((providerName) => {

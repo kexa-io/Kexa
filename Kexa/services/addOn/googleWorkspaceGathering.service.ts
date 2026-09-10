@@ -27,7 +27,7 @@ import { jsonStringify } from '../../helpers/jsonStringify';
 //////   INITIALIZATION   //////
 ////////////////////////////////
 
-import {getContext, getNewLogger} from "../logger.service";
+import {getNewLogger} from "../logger.service";
 const logger = getNewLogger("googleWorkspaceLogger");
 
 const fs = require('fs').promises;
@@ -58,7 +58,6 @@ const TOKEN_PATH = path.join(process.cwd(), '/config/token_workspace.json');
 let CREDENTIALS_PATH: string;
 
 export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[]): Promise<googleWorkspaceResources[] | null> {
-    let context = getContext();
     let resources = new Array<googleWorkspaceResources>();
 
     for (let config of googleWorkspaceConfig??[]) {
@@ -116,7 +115,6 @@ export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[])
                     file: fileList,
                     drive: driveList
                 };
-                context?.log("- listing googleWorkspace resources done -");
                 logger.info("- listing googleWorkspace resources done -");
             }
             catch (e)

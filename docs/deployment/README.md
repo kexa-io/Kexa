@@ -47,17 +47,6 @@ Run Kexa as a GitHub Action in your CI/CD pipeline:
 
 See [GitHub Actions Deployment](./github-actions.md) for details.
 
-## Azure Function Deployment
-
-Run Kexa as an Azure Function:
-
-- Serverless architecture
-- Pay-per-use
-- Automatic scaling
-- Easy integration with Azure services
-
-See [Azure Function Deployment](./azure-function.md) for details.
-
 ## Deployment Considerations
 
 When choosing a deployment method, consider:

@@ -15,7 +15,7 @@
 
 import { MongoClient, Db } from 'mongodb';
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
-import { getContext, getNewLogger } from "../logger.service";
+import { getNewLogger } from "../logger.service";
 import type { MongoDbResources } from "../../models/mongodb/resource.models";
 import type { MongoDbConfig } from "../../models/mongodb/config.models";
 
@@ -38,7 +38,6 @@ async function createMongoDbConnection(config: MongoDbConfig): Promise<MongoClie
 }
 
 export async function collectData(mongoDbConfigs: MongoDbConfig[]): Promise<MongoDbResources[] | null> {
-    const context = getContext();
     const allResources = new Array<MongoDbResources>();
 
     for (const config of mongoDbConfigs ?? []) {
@@ -46,7 +45,6 @@ export async function collectData(mongoDbConfigs: MongoDbConfig[]): Promise<Mong
         let client: MongoClient | null = null;
 
         try {
-            context?.log("Starting collection for MongoDB configuration with prefix: " + config.prefix);
             logger.debug("Starting collection for MongoDB configuration with prefix: " + config.prefix);
 
             client = await createMongoDbConnection(config);
@@ -71,7 +69,6 @@ export async function collectData(mongoDbConfigs: MongoDbConfig[]): Promise<Mong
 
         } catch (e: any) {
             logger.error("Error occurred while collecting MongoDB data: " + e.message);
-            context?.log("Error occurred while collecting MongoDB data: " + e.message);
         } finally {
             if (client) {
                 logger.debug("Closing MongoDB connection.");
