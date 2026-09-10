@@ -36,24 +36,6 @@ export function updateVersion(){
     fs.writeFileSync("./package.json", jsonStringify(packageJson, 4));
 }
 
-export function updateREADME(){
-    let readme = fs.readFileSync("./README.md", "utf8");
-    let capacityJson = require("../../capacity.json");
-    const tab = "    ";
-    let goal = "\n\n"
-    Object.keys(capacityJson).forEach((key: string) => {
-        goal += `<details>\n<summary>✅ ${key.charAt(0).toUpperCase() + key.slice(1)} check in:</summary>\n\n`
-        capacityJson[key]["resources"].forEach((resource: string) => {
-            goal += `- ✅ ${resource}\n`
-        });
-        goal += `</details>\n`
-    });
-    readme = readme.split("<div class='spliter_code'></div>")
-    readme[1] = goal + "\n";
-    readme = readme.join("<div class='spliter_code'></div>")
-    fs.writeFileSync("./README.md", readme);
-}
-
 /* ************************************ */
 /*        GENERIC PACKAGE FETCH         */
 /*  this can be used by many addons for */
@@ -380,12 +362,6 @@ export function extractClientsAws(module: any): AzureClients {
 }
 
 
-export const extractObjectFromOutputCommand  = (listingCommand: string): string | null => {
-    const outputCommand = listingCommand + "Output";
-    logger.info(outputCommand);
-    return null;
-}
-
 import { extractObjectBetween } from "../helpers/extractAddonName";
 
 
@@ -416,7 +392,6 @@ export function extractObjectsOrFunctionsAws(module: any, isObject: Boolean): Aw
         if ((module[key] instanceof Function && module[key].prototype !== undefined 
             && module[key].name.endsWith(endString) && startStrings.some(startString => module[key].name.startsWith(startString)))) {
                 if (isObject) {
-                    //extractObjectFromOutputCommand(module[key].name);
                     const objectName = extractObjectBetween(module[key].name, startStrings, endString);
                     if (clientsMatch.length < 1)
                         clients[key] = objectName;

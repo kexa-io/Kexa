@@ -5478,7 +5478,7 @@
 	*	- KexaAwsCustoms.resourcesTags
 */
 
-import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
+import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { DescribeRegionsCommand } from "@aws-sdk/client-ec2";
 import { AwsConfig } from "../../models/aws/config.models";
 
@@ -5488,7 +5488,7 @@ import { ResourceGroupsTaggingAPIClient, GetTagKeysCommand, GetResourcesCommand,
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import { getContext, getNewLogger } from "../logger.service";
+import { getNewLogger } from "../logger.service";
 const logger = getNewLogger("AWSLogger");
 
 let currentConfig: AwsConfig;
@@ -5514,7 +5514,6 @@ interface AwsClient {
 /* ****************************************** */
 
 export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null> {
-    let context = getContext();
     let resources = new Array<Object>();
     for (let oneConfig of awsConfig ?? []) {
         currentConfig = oneConfig;
@@ -5523,29 +5522,29 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
             let awsKeyId = await getConfigOrEnvVar(oneConfig, "AWS_ACCESS_KEY_ID", prefix);
             let awsSecretKey = await getConfigOrEnvVar(oneConfig, "AWS_SECRET_ACCESS_KEY", prefix);
 			let awsSessionToken = await getConfigOrEnvVar(oneConfig, "AWS_SESSION_TOKEN", prefix);
-			if (awsSessionToken)
-				setEnvVar("AWS_SESSION_TOKEN", awsSessionToken);
-            if (awsKeyId)
-                setEnvVar("AWS_ACCESS_KEY_ID", awsKeyId);
-            else
+            if (!awsKeyId)
                 logger.warn(prefix + "AWS_ACCESS_KEY_ID not found");
-            if (awsSecretKey)
-                setEnvVar("AWS_SECRET_ACCESS_KEY", awsSecretKey);
-            else
+            if (!awsSecretKey)
                 logger.warn(prefix + "AWS_SECRET_ACCESS_KEY not found");
 
-			const credentials = {
-				accessKeyId: awsKeyId,
-				secretAccessKey: awsSecretKey
-			};
 			let credentialProvider;
-			if (process.env.INTERFACE_CONFIGURATION_ENABLED == "true") {
+			if (process.env.INTERFACE_CONFIGURATION_ENABLED == "true" || (awsKeyId && awsSecretKey)) {
 				credentialProvider = {
 					accessKeyId: awsKeyId,
 					secretAccessKey: awsSecretKey,
+					...(awsSessionToken ? { sessionToken: awsSessionToken } : {}),
 				}
 			}
 			else {
+				// No explicit (prefixed or bare) credentials resolved for this
+				// account: fall back to the SDK's own provider chain (shared
+				// config, IMDS/instance role, ...). This must NOT write
+				// AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY/AWS_SESSION_TOKEN to
+				// process.env (setEnvVar) for any account, explicit-credential
+				// accounts included: fromNodeProviderChain()'s first provider
+				// is fromEnv(), so a previous account's bare env vars would
+				// otherwise be silently inherited here instead of falling
+				// through to the real instance-role/shared-config providers.
             	credentialProvider = fromNodeProviderChain();
 			}
 			const client = new EC2Client({
@@ -5578,13 +5577,11 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
             }
             else {
                 gatherAll = true;
-                context?.log("AWS - No Regions found, gathering all regions...");
                 logger.info("AWS - No Regions found, gathering all regions...");
             }
             if (skip)
                 continue;
             else if (!gatherAll){
-                context?.log("AWS - Config n°" + awsConfig.indexOf(oneConfig) + " correctly loaded user regions.");
                 logger.info("AWS - Config n°" + awsConfig.indexOf(oneConfig) + " correctly loaded user regions.");
             }
             if (response.Regions) {
@@ -5597,7 +5594,6 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
                             if (!(userRegions.includes(region.RegionName as string)))
                                 return;
                         }
-						context?.log("Retrieving AWS Region : " + region.RegionName);
 						let newResources = await collectAuto(credentialProvider, region.RegionName as string);
 						const newCustomResources = await collectCustom(credentialProvider, region.RegionName as string);
 						newCustomResources.forEach((customRes: any) => {
@@ -5611,7 +5607,6 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
                 });
 				await Promise.all(promises);
      
-                context?.log("- Listing AWS resources done -");
                 logger.info("- Listing AWS resources done -");
 				
 				const concatedResults = concatAllObjects(collectedResults);
@@ -5619,7 +5614,6 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
                 resources.push(concatedResults);
             }
         } catch (e) {
-            context?.log("error in AWS connect for config: " + (oneConfig["name"] ?? "unnamed"));
             logger.error("error in AWS connect for config: " + (oneConfig["name"] ?? "unnamed"));
             logger.error(e instanceof Error ? e.message : e);
         }
@@ -5739,20 +5733,35 @@ let awsGatherDependencies = [
 	}
 ]
 
-async function retrieveAwsClients(): Promise<Array<any>> {
-    const imports = await getAwsImports();
-    let allObjects = [];
+// retrieveAwsClients() reflects over every imported AWS SDK module to
+// discover clients/commands -- an expensive, purely static computation with
+// the same result every time. collectAuto() calls it once per region, and
+// regions run concurrently (Promise.all in collectAWSData), so without
+// caching this scan re-ran per region and its side effect of writing
+// awsGatherDependencies[i].functions was repeated redundantly by every
+// concurrent region call. Caching the in-flight promise (not just the
+// resolved value) means concurrent first-time callers share one computation
+// instead of racing to redo it.
+let cachedAwsClientsPromise: Promise<Array<any>> | null = null;
 
-    for (const key of Object.keys(imports)) {
-        const currentItem = (imports as { [key: string]: unknown })[key];
-		const match = awsGatherDependencies.find(dep => dep.client === key);
-		if (match) {
-			match.functions = extractObjectsOrFunctions(currentItem, true);
+async function retrieveAwsClients(): Promise<Array<any>> {
+	if (cachedAwsClientsPromise) return cachedAwsClientsPromise;
+	cachedAwsClientsPromise = (async () => {
+		const imports = await getAwsImports();
+		let allObjects = [];
+
+		for (const key of Object.keys(imports)) {
+			const currentItem = (imports as { [key: string]: unknown })[key];
+			const match = awsGatherDependencies.find(dep => dep.client === key);
+			if (match) {
+				match.functions = extractObjectsOrFunctions(currentItem, true);
+			}
+			const clientsFromModule = extractObjectsOrFunctions(currentItem, true);
+			allObjects.push(clientsFromModule);
 		}
-		const clientsFromModule = extractObjectsOrFunctions(currentItem, true);
-		allObjects.push(clientsFromModule);
-    }
-	return (allObjects);
+		return allObjects;
+	})();
+	return cachedAwsClientsPromise;
 }
 
 interface ClientResultsInterface {
@@ -5941,10 +5950,6 @@ async function collectAuto(credential: any, region: string) {
 }
 
 
-function gatherDependenciesResources(credential: any, region:string, object: ClientResultsInterface) {
-
-}
-
 async function gatherAwsObject(credential: any, region:string, object: ClientResultsInterface) {
 	let alreadyStructured = false;
 	let customJsonObjectBef;
@@ -5964,6 +5969,18 @@ async function gatherAwsObject(credential: any, region:string, object: ClientRes
 		const retrievingFullName = object.clientName + "." + object.objectName;
 		try {
 			 data = await client.send(command);
+			 let nextToken = (data as any)?.NextToken;
+			 while (nextToken) {
+				 const pageCommand = new object.objectFunc({ ...input, NextToken: nextToken });
+				 const pageData: Record<string, any> = await client.send(pageCommand);
+				 for (const key of Object.keys(pageData)) {
+					 if (key === "$metadata" || key === "NextToken") continue;
+					 if (Array.isArray(pageData[key]) && Array.isArray(data[key])) {
+						 data[key] = data[key].concat(pageData[key]);
+					 }
+				 }
+				 nextToken = (pageData as any)?.NextToken;
+			 }
 		} catch (e) {
 			if (e instanceof Error) {
 				const error = e;

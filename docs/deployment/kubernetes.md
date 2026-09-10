@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
       - name: kexa
-        image: innovtech/kexa:latest
+        image: kexa/kexa:latest
         volumeMounts:
         - name: rules
           mountPath: /app/rules
@@ -133,7 +133,7 @@ spec:
         spec:
           containers:
           - name: kexa
-            image: innovtech/kexa:latest
+            image: kexa/kexa:latest
             volumeMounts:
             - name: rules
               mountPath: /app/rules
@@ -186,7 +186,7 @@ kubectl get cronjob kexa-scan -n kexa
 
 ```bash
 # Update deployment
-kubectl set image deployment/kexa kexa=innovtech/kexa:latest -n kexa
+kubectl set image deployment/kexa kexa=kexa/kexa:latest -n kexa
 
 # Update Helm release
 helm upgrade kexa kexa/kexa -f values.yaml -n kexa
@@ -238,6 +238,5 @@ kubectl cp kexa/<pod-name>:/app/output ./output-backup
 
 ## Next Steps
 
-- [Azure Functions Deployment](./azure-function.md)
 - [Docker Deployment](./docker.md)
 - [Local Deployment](./local.md)

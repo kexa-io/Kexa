@@ -350,6 +350,19 @@ describe('analyse service', () => {
                 const result = checkRegex({property: "date", condition: ConditionEnum.REGEX, value: "/[0-9]/gm"}, "abc");
                 expect(result).to.equal(false);
             });
+
+            it("should not hang on a catastrophically-backtracking pattern (ReDoS guard)", () => {
+                const evilPattern = "(a+)+$";
+                const evilInput = "a".repeat(35) + "!";
+                const start = Date.now();
+                const result = checkRegex({property: "date", condition: ConditionEnum.REGEX, value: evilPattern}, evilInput);
+                const elapsed = Date.now() - start;
+                expect(result).to.equal(false);
+                // The pattern would otherwise backtrack for an effectively
+                // unbounded amount of time; the timeout guard must cut it
+                // off well before it could hang the whole process.
+                expect(elapsed).to.be.below(15000);
+            }, 20000);
         });
 
         describe("count", () => {

@@ -154,4 +154,3 @@ bun run build
 
 - [Docker Deployment](./docker.md)
 - [Kubernetes Deployment](./kubernetes.md)
-- [Azure Functions Deployment](./azure-function.md)

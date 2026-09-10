@@ -1,10 +1,28 @@
 import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios';
 import fs from "fs";
+import crypto from "crypto";
 import { getNewLogger } from '../services/logger.service';
 import path from 'path';
 import { getEnvVar } from '../services/manageVarEnvironnement.service';
 
 const logger = getNewLogger("DownloadLogger");
+
+/** Compute the SHA-256 hex digest of a file, streamed (no full-file buffering). */
+export async function computeSha256(filePath: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const hash = crypto.createHash('sha256');
+        const stream = fs.createReadStream(filePath);
+        stream.on('data', (chunk) => hash.update(chunk));
+        stream.on('end', () => resolve(hash.digest('hex')));
+        stream.on('error', reject);
+    });
+}
+
+/** Compare a file's SHA-256 against an expected digest (case-insensitive, whitespace-tolerant). */
+export async function verifyFileSha256(filePath: string, expectedSha256: string): Promise<boolean> {
+    const actual = await computeSha256(filePath);
+    return actual.toLowerCase() === expectedSha256.trim().toLowerCase();
+}
 
 export async function downloadFile(url: string, destinationPath: string, type:string): Promise<void> {
     try {
@@ -17,12 +35,29 @@ export async function downloadFile(url: string, destinationPath: string, type:st
         };
         if(authorization) axiosConfig.headers = { "Authorization": authorization };
         const response: AxiosResponse = await axios(axiosConfig);
-        const fileStream = fs.createWriteStream(destinationPath+".zip");
+        const zipPath = destinationPath + ".zip";
+        const fileStream = fs.createWriteStream(zipPath);
         response.data.pipe(fileStream);
         return new Promise<void>((resolve, reject) => {
-            fileStream.on('finish', () => {
+            fileStream.on('finish', async () => {
                 fileStream.close();
-                resolve();
+                try {
+                    const expectedSha256 = await getEnvVar("RULESSHA256");
+                    if (expectedSha256) {
+                        const matches = await verifyFileSha256(zipPath, expectedSha256);
+                        if (!matches) {
+                            fs.unlinkSync(zipPath);
+                            reject(new Error(`Downloaded rules bundle failed SHA-256 verification (expected ${expectedSha256}). Refusing to load it.`));
+                            return;
+                        }
+                        logger.info("Rules bundle SHA-256 checksum verified.");
+                    } else {
+                        logger.warn("RULESSHA256 not set -- skipping integrity verification of the downloaded rules bundle. Set RULESSHA256 to a trusted checksum to enable it.");
+                    }
+                    resolve();
+                } catch (err) {
+                    reject(err);
+                }
             });
 
             fileStream.on('error', (err:any) => {

@@ -24,13 +24,21 @@ import { GitResources } from "../../models/git/resource.models";
 import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
 import { GitConfig } from "../../models/git/config.models";
 
-import {getContext, getNewLogger} from "../logger.service";
+import {getNewLogger} from "../logger.service";
+import { mapWithConcurrency } from "../../helpers/concurrencyLimit";
 const logger = getNewLogger("GithubLogger");
+
+// Firing 4 GitHub API calls per repo (or org) for every repo/org at once has
+// no cap, so a large org's fan-out can send hundreds of simultaneous
+// requests and hit GitHub's rate limits -- each collector already fails soft
+// (returns []) on error, so this doesn't crash, it just silently loses data
+// for whichever repos got rate-limited. Throttling the fan-out reduces how
+// often that happens in the first place.
+const GITHUB_FANOUT_CONCURRENCY = 10;
 let githubToken = "";
 let currentConfig:GitConfig
 
 export async function collectData(gitConfig:GitConfig[]): Promise<GitResources[]|null>{
-    let context = getContext();
     let resources = new Array<GitResources>();
     for(let config of gitConfig??[]){
         currentConfig = config;
@@ -41,7 +49,6 @@ export async function collectData(gitConfig:GitConfig[]): Promise<GitResources[]
         }
         await setEnvVar("GITHUBTOKEN", githubToken)
         try {
-            context?.log("Gathering github data");
             logger.info("Gathering github data");
             const promisesPrimaryData:any[] = [collectRepo(), collectOrganizations()]
             let [allRepo, allOrganizations] = await Promise.all(promisesPrimaryData);
@@ -83,7 +90,7 @@ async function collectRepoRelaidInfo(allRepo: any): Promise<any>{
     logger.info("Collecting github issues");
     logger.info("Collecting github packages");
     logger.info("Collecting github pull request package changes");
-    await Promise.all(allRepo.map(async (repo: any) => {
+    await mapWithConcurrency(allRepo, GITHUB_FANOUT_CONCURRENCY, async (repo: any) => {
         const [issues, branches, packages, prPackageChanges] = await Promise.all([
             collectIssues(repo.name, repo.owner.login),
             collectBranch(repo.name, repo.owner.login),
@@ -95,7 +102,7 @@ async function collectRepoRelaidInfo(allRepo: any): Promise<any>{
         allBranches.push(...addInfoRepo(repo, branches));
         allPackages.push(...addInfoRepo(repo, packages));
         allPullRequestPackageChanges.push(...addInfoRepo(repo, prPackageChanges));
-    }));
+    });
     return {
         allIssues,
         allBranches,
@@ -114,7 +121,7 @@ async function collectOrganizationRelaidInfo(allOrganizations: any): Promise<any
     let allRunners: any[] = [];
     logger.info("Collecting github members");
     logger.info("Collecting github outside collaborators");
-    await Promise.all(allOrganizations.map(async (org: any) => {
+    await mapWithConcurrency(allOrganizations, GITHUB_FANOUT_CONCURRENCY, async (org: any) => {
         const [members, outsideCollaborators, teamsData, runners] = await Promise.all([
             collectMembers(org.login),
             collectOutsideCollaborators(org.login),
@@ -128,7 +135,7 @@ async function collectOrganizationRelaidInfo(allOrganizations: any): Promise<any
         allTeamRepos.push(...teamsData.allTeamRepos);
         allTeamProjects.push(...teamsData.allTeamProjects);
         allRunners.push(...runners);
-    }));
+    });
 
     return {
         allMembers,
@@ -141,8 +148,9 @@ async function collectOrganizationRelaidInfo(allOrganizations: any): Promise<any
     }
 }
 
-async function collectRunnersInfo(org: string): Promise<any>{
-    let allRunners = [];
+async function collectRunnersInfo(org: string): Promise<any[]>{
+    if(!currentConfig?.ObjectNameNeed?.includes("runners")) return [];
+    let allRunners: any[] = [];
     logger.info("Collecting github runners");
     try{
         let octokit = await getOctokit();
@@ -160,9 +168,7 @@ async function collectRunnersInfo(org: string): Promise<any>{
     }catch(e){
         logger.debug(e);
     }
-    return {
-        allRunners
-    }
+    return allRunners;
 }
 
 async function collectTeamsRelaidInfo(org: string): Promise<any>{
@@ -339,13 +345,44 @@ export async function collectOrganizations(): Promise<any>{
     }
 }
 
+/** Marks each member's `mfa` field from a *complete* set of logins known to
+ * have 2FA disabled (built by fully paginating the 2fa_disabled filter
+ * independently of the full member list's own pagination -- see the note in
+ * collectMembers). Extracted as a pure function so the cross-referencing
+ * logic itself is testable without mocking Octokit. */
+export function annotateMfaStatus(members: any[], loginsWithoutMFA: Set<string>): void {
+    members.forEach((_member: any) => {
+        _member["mfa"] = !loginsWithoutMFA.has(_member.login);
+    });
+}
+
 export async function collectMembers(org: string): Promise<any>{
     if(!currentConfig?.ObjectNameNeed?.includes("members")) return [];
-    let page = 1;
     try{
         let octokit = await getOctokit();
         let members = [];
 
+        // The full member list and the 2fa_disabled-filtered list paginate
+        // *independently* (the filtered list is a subset, so it can run out
+        // of pages long before the full list does). Fetching "page N" of
+        // both in lockstep meant any org whose filtered list was shorter
+        // than its full list got an empty page for every later page of
+        // members -- silently marking every one of those members as
+        // MFA-enabled (a false negative), including genuinely 2FA-disabled
+        // ones. Fetch the complete filtered list once, then cross-reference.
+        const loginsWithoutMFA = new Set<string>();
+        for (let mfaPage = 1; ; mfaPage++) {
+            let memberWithoutMFA = (await (octokit).request('GET /orgs/{org}/members?filter=2fa_disabled&page=' + mfaPage, {
+                org: org,
+                headers: {
+                    'X-GitHub-Api-Version': '2022-11-28'
+                }
+            })).data;
+            if (memberWithoutMFA.length == 0) break;
+            memberWithoutMFA.forEach((_member: any) => loginsWithoutMFA.add(_member.login));
+        }
+
+        let page = 1;
         while(true){
             let member = (await (octokit).request('GET /orgs/{org}/members?page=' + page, {
                 org: org,
@@ -356,15 +393,7 @@ export async function collectMembers(org: string): Promise<any>{
             if(member.length == 0){
                 break;
             }
-            let memberWithoutMFA = (await (octokit).request('GET /orgs/{org}/members?filter=2fa_disabled&page=' + page + '&filter=2fa_disabled', {
-                org: org,
-                headers: {
-                    'X-GitHub-Api-Version': '2022-11-28'
-                }
-            })).data;
-            member.forEach((_member: any) => {
-                _member["mfa"] = ((memberWithoutMFA.filter((memberWithoutMFA: any) => memberWithoutMFA.login == _member.login).length == 0) ? true : false);
-            });
+            annotateMfaStatus(member, loginsWithoutMFA);
             page++;
             members.push(...member);
         }

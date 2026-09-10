@@ -26,7 +26,7 @@ sidebar_position: 1
 ## Try Kexa in 30 seconds
 
 ```bash
-docker run --rm -v $(pwd)/config:/app/config ghcr.io/kexa-io/kexa:latest
+docker run --rm -v $(pwd)/config:/app/config kexa/kexa:latest
 ```
 
 > See [kexa-samples](https://github.com/kexa-io/kexa-samples) for ready-to-use configurations per provider.
@@ -192,7 +192,6 @@ see [https://github.com/kexa-io/kexa-samples](https://github.com/kexa-io/kexa-sa
 - **Docker**: Use our [Docker image](./docs/deployment/docker.md)
 - **GitHub Action**: Use our [GitHub Action](./docs/deployment/github-action.md)
 - **Kubernetes**: Deploy using our [Kubernetes manifests](./docs/deployment/kubernetes.md)
-- **Azure Function**: Deploy as an [Azure Function](./docs/deployment/azure-function.md)
 
 ## Features
 

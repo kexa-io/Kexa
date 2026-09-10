@@ -1,12 +1,11 @@
 import { AnonymousCredential, BlobServiceClient, type BlockBlobParallelUploadOptions, StorageSharedKeyCredential } from "@azure/storage-blob";
 import type { AzureBlobStorageSaveConfig } from "../../models/export/azureBlobStorage/config.models";
 import { getEnvVar } from "../manageVarEnvironnement.service";
-import { getContext, getNewLogger } from "../logger.service";
+import { getNewLogger } from "../logger.service";
 import { DefaultAzureCredential } from "@azure/identity";
 import { jsonStringify } from '../../helpers/jsonStringify';
 
 const logger = getNewLogger("AzureBlobStorageLogger");
-const context = getContext();
 
 export async function saveJsonToAzureBlobStorage(connectionString: string, save: AzureBlobStorageSaveConfig, json: object): Promise<void> {
     let blobServiceClient: BlobServiceClient;
@@ -31,7 +30,6 @@ export async function saveJsonToAzureBlobStorage(connectionString: string, save:
     if(save?.tags) uploadOptions.tags = save?.tags;
     await blockBlobClient.upload(jsonString, jsonString.length, uploadOptions);
     logger.info("Saved to Azure Blob Storage");
-    context?.log("Saved to Azure Blob Storage");
 }
 
 function getBlobServiceClientFromConnectionString(urlConnection:string): BlobServiceClient {

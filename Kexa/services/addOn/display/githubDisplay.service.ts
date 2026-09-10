@@ -1,35 +1,42 @@
 import type { Rules } from "../../../models/settingFile/rules.models";
 import type { SubResultScan } from "../../../models/resultScan.models";
+import { escapeHtml } from "../../../helpers/escapeHtml";
+
+function safeHref(url: any, fallback: string = "https://github.com/"): string {
+    const s = String(url ?? "");
+    return /^https?:\/\//i.test(s) ? s : fallback;
+}
 
 export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=false, conditions?: SubResultScan[]): string {
     let link = "https://github.com/";
     let webLink = `Link : <a href="`;
     let fullLink;
+    const v = (val: any) => isSms ? val : escapeHtml(val);
     if (isSms)
         fullLink = link;
     else
         fullLink = webLink.concat(link.toString());
     switch (rule?.objectName) {
         case "repositories":
-            return fullLink + objectContent?.full_name + (isSms ? ' ' : '">') + 'Repo : ' + objectContent?.name + (isSms ? `.` : `</a>`)
+            return fullLink + (isSms ? objectContent?.full_name : encodeURIComponent(objectContent?.full_name ?? "")) + (isSms ? ' ' : '">') + 'Repo : ' + v(objectContent?.name) + (isSms ? `.` : `</a>`)
         case "branches":
-            return (isSms ? '' : webLink) + objectContent?.repoUrl + (isSms ? ' ' : '">') + 'Repo : ' + objectContent?.repo + ' Branch name : ' + objectContent?.name + (isSms ? `.` : `</a>`)
+            return (isSms ? '' : webLink) + (isSms ? objectContent?.repoUrl : safeHref(objectContent?.repoUrl)) + (isSms ? ' ' : '">') + 'Repo : ' + v(objectContent?.repo) + ' Branch name : ' + v(objectContent?.name) + (isSms ? `.` : `</a>`)
         case "issues":
-            return (isSms ? '' : webLink) + objectContent?.html_url + (isSms ? ' ' : '">') + 'Issue id : ' + objectContent?.id + (isSms ? `.` : `</a>`)
+            return (isSms ? '' : webLink) + (isSms ? objectContent?.html_url : safeHref(objectContent?.html_url)) + (isSms ? ' ' : '">') + 'Issue id : ' + v(objectContent?.id) + (isSms ? `.` : `</a>`)
         case "organizations":
-            return (isSms ? '' : webLink) + "https://github.com/" + objectContent?.login + (isSms ? ' ' : '">') + 'Organization : ' + objectContent?.login + (isSms ? `.` : `</a>`)
+            return (isSms ? '' : webLink) + "https://github.com/" + (isSms ? objectContent?.login : encodeURIComponent(objectContent?.login ?? "")) + (isSms ? ' ' : '">') + 'Organization : ' + v(objectContent?.login) + (isSms ? `.` : `</a>`)
         case "members":
-            return (isSms ? '' : webLink) + objectContent?.html_url + (isSms ? ' ' : '">') + 'Name : ' + objectContent?.login + (isSms ? `.` : `</a>`)
+            return (isSms ? '' : webLink) + (isSms ? objectContent?.html_url : safeHref(objectContent?.html_url)) + (isSms ? ' ' : '">') + 'Name : ' + v(objectContent?.login) + (isSms ? `.` : `</a>`)
         case "outsideCollaborators":
-            return (isSms ? '' : webLink) + objectContent?.html_url + (isSms ? ' ' : '">') + 'Name : ' + objectContent?.login + (isSms ? `.` : `</a>`)
+            return (isSms ? '' : webLink) + (isSms ? objectContent?.html_url : safeHref(objectContent?.html_url)) + (isSms ? ' ' : '">') + 'Name : ' + v(objectContent?.login) + (isSms ? `.` : `</a>`)
         case "teams":
-            return (isSms ? '' : webLink) + objectContent?.html_url + (isSms ? ' ' : '">') + 'Team : ' + objectContent?.name + (isSms ? `.` : `</a>`)
+            return (isSms ? '' : webLink) + (isSms ? objectContent?.html_url : safeHref(objectContent?.html_url)) + (isSms ? ' ' : '">') + 'Team : ' + v(objectContent?.name) + (isSms ? `.` : `</a>`)
         case "teamProjects":
-            return (isSms ? '' : webLink) + objectContent?.html_url + (isSms ? ' ' : '">') + 'Project : ' + objectContent?.name + ' Team : ' + objectContent?.team + (isSms ? `.` : `</a>`)
+            return (isSms ? '' : webLink) + (isSms ? objectContent?.html_url : safeHref(objectContent?.html_url)) + (isSms ? ' ' : '">') + 'Project : ' + v(objectContent?.name) + ' Team : ' + v(objectContent?.team) + (isSms ? `.` : `</a>`)
         case "teamMembers":
-            return (isSms ? '' : webLink) + objectContent?.html_url + (isSms ? ' ' : '">') + 'Member : ' + objectContent?.login + ' Team : ' + objectContent?.team + (isSms ? `.` : `</a>`)
+            return (isSms ? '' : webLink) + (isSms ? objectContent?.html_url : safeHref(objectContent?.html_url)) + (isSms ? ' ' : '">') + 'Member : ' + v(objectContent?.login) + ' Team : ' + v(objectContent?.team) + (isSms ? `.` : `</a>`)
         case "teamRepositories":
-            return (isSms ? '' : webLink) + objectContent?.html_url + (isSms ? ' ' : '">') + 'Repo : ' + objectContent?.name + ' Team : ' + objectContent?.team + (isSms ? `.` : `</a>`)
+            return (isSms ? '' : webLink) + (isSms ? objectContent?.html_url : safeHref(objectContent?.html_url)) + (isSms ? ' ' : '">') + 'Repo : ' + v(objectContent?.name) + ' Team : ' + v(objectContent?.team) + (isSms ? `.` : `</a>`)
         case "packages":
             const repoName = objectContent?.repo || "unknown-repo";
             const repoUrl = objectContent?.repoUrl || `https://github.com/${repoName}`;
@@ -81,11 +88,11 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
             }
 
             if (maliciousDeps.length > 0) {
-                packageDetails = ` - Malicious: ${maliciousDeps.join(', ')}`;
+                packageDetails = ` - Malicious: ${v(maliciousDeps.join(', '))}`;
             }
 
-            return (isSms ? '' : webLink) + repoUrl + (isSms ? ' ' : '">') +
-                   `Repo: ${repoName} - Package: ${packageName}@${packageVersion}${packageDetails}` +
+            return (isSms ? '' : webLink) + (isSms ? repoUrl : safeHref(repoUrl)) + (isSms ? ' ' : '">') +
+                   `Repo: ${v(repoName)} - Package: ${v(packageName)}@${v(packageVersion)}${packageDetails}` +
                    (isSms ? `.` : `</a>`);
         case "pullRequestPackageChanges":
             const prUrl = objectContent?.prUrl || "#";
@@ -96,16 +103,20 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
             const detectionReasons = objectContent?.sha1huludIndicators?.detectionReasons || [];
             const suspiciousFiles = objectContent?.maliciousPatterns?.suspiciousFilesAdded || [];
 
-            let prDetails = `PR #${prNumber}: ${prTitle} by ${prAuthor}`;
+            // These fields (PR title/author, detection reasons, file names) can
+            // be attacker-controlled by design -- this case exists specifically
+            // to surface malicious/typosquat package and PR content, so it must
+            // never be trusted to render as-is.
+            let prDetails = `PR #${v(prNumber)}: ${v(prTitle)} by ${v(prAuthor)}`;
             if (isInfected) {
-                prDetails += ` - SHA1HULUD DETECTED: ${detectionReasons.join(', ')}`;
+                prDetails += ` - SHA1HULUD DETECTED: ${v(detectionReasons.join(', '))}`;
                 if (suspiciousFiles.length > 0) {
-                    prDetails += ` - Files: ${suspiciousFiles.join(', ')}`;
+                    prDetails += ` - Files: ${v(suspiciousFiles.join(', '))}`;
                 }
             }
 
-            return (isSms ? '' : webLink) + prUrl + (isSms ? ' ' : '">') + prDetails + (isSms ? `.` : `</a>`);
+            return (isSms ? '' : webLink) + (isSms ? prUrl : safeHref(prUrl, "#")) + (isSms ? ' ' : '">') + prDetails + (isSms ? `.` : `</a>`);
         default:
-            return 'GIT Scan : Id : ' + objectContent?.id;
+            return 'GIT Scan : Id : ' + v(objectContent?.id);
     }
 }

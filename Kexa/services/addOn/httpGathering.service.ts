@@ -17,50 +17,47 @@ import { HttpConfig } from "../../models/http/config.models";
 import { isEmpty } from "../../helpers/isEmpty";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import https from 'https';
+import http from 'http';
 let httpConfig: HttpConfig[] = [];
 
-const jsome = require('jsome');
-jsome.level.show = true;
-
 import {getNewLogger} from "../logger.service";
-import net from 'net';
+import { isPrivateUrl, isPrivateIp } from "../../helpers/isPrivateUrl";
 const logger = getNewLogger("HttpLogger");
 
-/** Block requests to private/internal IP ranges (SSRF protection). */
-function isPrivateUrl(urlStr: string): boolean {
+/** Strip embedded Basic-Auth credentials (user:pass@host) before logging a URL. */
+function redactUrlCredentials(urlStr: string): string {
     try {
         const parsed = new URL(urlStr);
-        let hostname = parsed.hostname.replace(/^\[|\]$/g, ''); // strip [] from IPv6
-        // Block metadata endpoints
-        if (hostname === "169.254.169.254") return true;
-        // Block localhost (IPv4, IPv6, hostname)
-        if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1") return true;
-        // Block IPv6-mapped IPv4 (::ffff:127.0.0.1 etc.)
-        const v4mapped = hostname.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/i);
-        if (v4mapped) {
-            hostname = v4mapped[1]; // extract the IPv4 and check it below
-        }
-        // Block IPv6 private ranges
-        if (hostname.includes(':')) {
-            const lower = hostname.toLowerCase();
-            if (lower.startsWith('fc') || lower.startsWith('fd')) return true; // unique local
-            if (lower.startsWith('fe80')) return true; // link-local
-            if (lower.startsWith('ff')) return true; // multicast
-        }
-        // Block IPv4 private ranges
-        if (net.isIPv4(hostname)) {
-            const parts = hostname.split('.').map(Number);
-            if (parts[0] === 10) return true;
-            if (parts[0] === 172 && parts[1] >= 16 && parts[1] <= 31) return true;
-            if (parts[0] === 192 && parts[1] === 168) return true;
-            if (parts[0] === 127) return true;
-            if (parts[0] === 0) return true;
-            if (parts[0] === 169 && parts[1] === 254) return true; // link-local
-        }
-        return false;
+        parsed.username = '';
+        parsed.password = '';
+        return parsed.toString();
     } catch {
-        return true;
+        return urlStr;
     }
+}
+
+/** A custom dns lookup (Node's `net.connect`/http(s).Agent `lookup` option)
+ * that rejects the connection if the hostname resolves to a private/internal/
+ * metadata address. Passed to the agent used for every request axios makes,
+ * including ones it issues automatically to follow a redirect -- so unlike a
+ * one-off check of the initial URL string, this also blocks DNS-rebinding
+ * (a public hostname whose DNS answer is a private IP) and redirect-based
+ * SSRF (a 3xx Location pointing at a private/metadata address). */
+export function createSsrfSafeLookup() {
+    return (hostname: string, options: any, callback: any) => {
+        const cb = typeof options === "function" ? options : callback;
+        const opts = typeof options === "function" ? {} : (options ?? {});
+        dns.lookup(hostname, { ...opts, all: true }, (err: any, addresses: any) => {
+            if (err) return cb(err);
+            const list = Array.isArray(addresses) ? addresses : [addresses];
+            const blocked = list.find((a: any) => isPrivateIp(a.address ?? a));
+            if (blocked) {
+                return cb(new Error(`Blocked request to ${hostname}: resolves to private/internal address ${blocked.address ?? blocked}`));
+            }
+            if (opts.all) return cb(null, list);
+            return cb(null, list[0].address, list[0].family);
+        });
+    };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,7 +97,8 @@ export async function collectData(_httpConfig:HttpConfig[]) {
                         }));
                     }
                 } catch (e:any) {
-                    logger.error("error in collectHttpData with the url: " + ((await getConfigOrEnvVar(config, "URL", prefix)) ?? null));
+                    const rawUrl = (await getConfigOrEnvVar(config, "URL", prefix)) ?? null;
+                    logger.error("error in collectHttpData with the url: " + (rawUrl ? redactUrlCredentials(rawUrl) : null));
                     logger.error(e);
                 }
 
@@ -137,18 +135,24 @@ async function makeHttpRequest<T>(
     method: string,
     url: string,
     body?: any,
-    headers?: Record<string, string>
+    headers?: Record<string, string>,
+    insecureTLS: boolean = false
 ): Promise<AxiosResponse<T>> {
-    const agent = new https.Agent({
-        rejectUnauthorized: false,
-    });
+    const lookup = createSsrfSafeLookup();
+    const httpsAgent = new https.Agent({
+        rejectUnauthorized: !insecureTLS,
+        lookup,
+    } as any);
+    const httpAgent = new http.Agent({ lookup } as any);
     const requestConfig: AxiosRequestConfig = {
         method : method as any,
         url,
         data: body,
         headers,
         validateStatus: (status) => status >= 0 && status < 1000,
-        httpsAgent: agent,
+        httpsAgent,
+        httpAgent,
+        maxRedirects: 5,
     };
 
     try {
@@ -161,9 +165,10 @@ async function makeHttpRequest<T>(
 
 async function getCertificateFromResponse(response: AxiosResponse<any>): Promise<any> {
     return new Promise((resolve, reject) => {
+        const parsedUrl = urlModule.parse(response.config.url!);
         const socket: TLSSocket = tls.connect({
-            host: urlModule.parse(response.config.url!).hostname!,
-            port: 443,
+            host: parsedUrl.hostname!,
+            port: parsedUrl.port ? Number(parsedUrl.port) : 443,
             socket: response.config.httpsAgent?.keepAliveSocket,
         }, () => {
             const cert = socket.getPeerCertificate();
@@ -201,8 +206,9 @@ async function doRequest(url: string, config: HttpConfig): Promise<any> {
     const body = getBody(config);
     const start = Date.now();
     let result = null;
-    if(!header) result = await makeHttpRequest<any>(method, url, body);
-    else result = await makeHttpRequest<any>(method, url, body, header);
+    const insecureTLS = Boolean(config.insecureTLS);
+    if(!header) result = await makeHttpRequest<any>(method, url, body, undefined, insecureTLS);
+    else result = await makeHttpRequest<any>(method, url, body, header, insecureTLS);
     const delays = Date.now() - start;
     return {
         ...result,
@@ -229,7 +235,7 @@ async function getDataHttp(url: string, config: HttpConfig): Promise<HttpRequest
         httpResources.tls = TLS
         httpResources.delays = response?.delays;
     }catch(e:any){
-        logger.error("error in getDataHttp with the url: " + url);
+        logger.error("error in getDataHttp with the url: " + redactUrlCredentials(url));
         logger.error(e);
     }
     return httpResources;

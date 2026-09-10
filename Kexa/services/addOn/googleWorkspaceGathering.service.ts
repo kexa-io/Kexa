@@ -27,7 +27,7 @@ import { jsonStringify } from '../../helpers/jsonStringify';
 //////   INITIALIZATION   //////
 ////////////////////////////////
 
-import {getContext, getNewLogger} from "../logger.service";
+import {getNewLogger} from "../logger.service";
 const logger = getNewLogger("googleWorkspaceLogger");
 
 const fs = require('fs').promises;
@@ -58,7 +58,6 @@ const TOKEN_PATH = path.join(process.cwd(), '/config/token_workspace.json');
 let CREDENTIALS_PATH: string;
 
 export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[]): Promise<googleWorkspaceResources[] | null> {
-    let context = getContext();
     let resources = new Array<googleWorkspaceResources>();
 
     for (let config of googleWorkspaceConfig??[]) {
@@ -94,15 +93,19 @@ export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[])
             }
             let auth = await authorizeSP(workspaceAdmin);
 
+            // Each call below used to be individually `await`ed while building
+            // this array, so by the time Promise.all() ran, every promise was
+            // already resolved -- all 8 collectors ran one after another
+            // instead of concurrently, with no benefit from Promise.all at all.
             const promises = [
-                    await listUsers(auth),
-                    await listDomains(auth),
-                    await listGroups(auth),
-                    await listRoles(auth),
-                    await listOrganizationalUnits(auth),
-                    await listCalendars(auth),
-                    await listFiles(auth),
-                    await listDrive(auth)
+                    listUsers(auth),
+                    listDomains(auth),
+                    listGroups(auth),
+                    listRoles(auth),
+                    listOrganizationalUnits(auth),
+                    listCalendars(auth),
+                    listFiles(auth),
+                    listDrive(auth)
                 ];
                 const [userList, domainList, groupList, roleList, orgaunitList, calendarList, fileList, driveList] = await Promise.all(promises);
 
@@ -116,7 +119,6 @@ export async function collectData(googleWorkspaceConfig:googleWorkspaceConfig[])
                     file: fileList,
                     drive: driveList
                 };
-                context?.log("- listing googleWorkspace resources done -");
                 logger.info("- listing googleWorkspace resources done -");
             }
             catch (e)
@@ -218,8 +220,12 @@ async function listUsers(auth: any): Promise<Array<any> | null> {
             });
 
         } catch (error) {
-            logger.debug('Error listing user roles:', error);
-            return [];
+            // A per-user roles lookup failing (rate limit, permission edge
+            // case for that one account...) used to discard the entire,
+            // already-fetched user directory. Skip just this user's admin
+            // status (left unknown/false) and keep processing the rest.
+            logger.debug('Error listing user roles for ' + jsonData[i]?.primaryEmail + ':', error);
+            continue;
         }
         if (isSuperAdmin) {
             nbSuperAdmin = nbSuperAdmin + 1;
@@ -364,8 +370,13 @@ async function listFiles(auth: any): Promise<Array<any> | null> {
     try {
         const drive = google.drive({ version: 'v3', auth });
 
-        const response = await drive.files.list();
-        const files = response.data.files;
+        let files: any[] = [];
+        let pageToken: string | undefined = undefined;
+        do {
+            const response: any = await drive.files.list({ pageToken });
+            files = files.concat(response.data.files ?? []);
+            pageToken = response.data.nextPageToken ?? undefined;
+        } while (pageToken);
         for (let i = 0; i < files.length; i++) {
             const res = await drive.files.get({
                 fileId: files[i].id,
@@ -388,8 +399,13 @@ async function listDrive(auth: any): Promise<Array<any> | null> {
     try {
         const drive = google.drive({ version: 'v3', auth });
 
-        const response = await drive.drives.list();
-        const drives = response.data.drives;
+        let drives: any[] = [];
+        let pageToken: string | undefined = undefined;
+        do {
+            const response: any = await drive.drives.list({ pageToken });
+            drives = drives.concat(response.data.drives ?? []);
+            pageToken = response.data.nextPageToken ?? undefined;
+        } while (pageToken);
         for (let i = 0; i < drives.length; i++) {
             const res = await drive.drives.get({
                 driveId: drives[i].id,

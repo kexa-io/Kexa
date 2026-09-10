@@ -2067,12 +2067,12 @@ const clientConstructors: Record<string, any> = {
 };
 
 
-import { DefaultAzureCredential } from "@azure/identity";
-import { getConfigOrEnvVar, setEnvVar } from "../manageVarEnvironnement.service";
+import { DefaultAzureCredential, ClientSecretCredential } from "@azure/identity";
+import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
 import { AzureConfig } from "../../models/azure/config.models";
 import axios from "axios";
 
-import {getContext, getNewLogger} from "../logger.service";
+import {getNewLogger} from "../logger.service";
 const logger = getNewLogger("AzureLogger");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2080,32 +2080,43 @@ const logger = getNewLogger("AzureLogger");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function collectData(azureConfig:AzureConfig[]): Promise<Object[]|null>{
 
-    let context = getContext();
     let resources = new Array<Object>();
     for(let config of azureConfig??[]){
         logger.debug("config: ");
-        logger.debug(jsonStringify(config, 4));
+        logger.debug(jsonStringify(redactSecrets(config), 4));
         let prefix = config.prefix??(azureConfig.indexOf(config).toString());
         try {
             logger.debug("prefix: " + prefix);
             let subscriptionId = await getConfigOrEnvVar(config, "SUBSCRIPTIONID", prefix);
             let azureClientId = await getConfigOrEnvVar(config, "AZURECLIENTID", prefix);
-            if(azureClientId) setEnvVar("AZURE_CLIENT_ID", azureClientId);
-            else logger.warn(prefix + "AZURECLIENTID not found");
+            if(!azureClientId) logger.warn(prefix + "AZURECLIENTID not found");
             let azureClientSecret = await getConfigOrEnvVar(config, "AZURECLIENTSECRET", prefix);
-            if(azureClientSecret) setEnvVar("AZURE_CLIENT_SECRET", azureClientSecret);
-            else logger.warn(prefix + "AZURECLIENTSECRET not found");
+            if(!azureClientSecret) logger.warn(prefix + "AZURECLIENTSECRET not found");
             let azureTenantId = await getConfigOrEnvVar(config, "AZURETENANTID", prefix);
-            if(azureTenantId) setEnvVar("AZURE_TENANT_ID", azureTenantId);
-            else logger.warn(prefix + "AZURETENANTID not found");
-            let UAI = {}
-            let useAzureIdentity = await getConfigOrEnvVar(config, "USERAZUREIDENTITYID", prefix);
-            if(useAzureIdentity) UAI = {managedIdentityClientId: useAzureIdentity};
-            const credential = new DefaultAzureCredential(UAI);
+            if(!azureTenantId) logger.warn(prefix + "AZURETENANTID not found");
+
+            let credential;
+            if (azureClientId && azureClientSecret && azureTenantId) {
+                credential = new ClientSecretCredential(azureTenantId, azureClientId, azureClientSecret);
+            } else {
+                // No explicit (prefixed or bare) credentials resolved for this
+                // account: fall back to DefaultAzureCredential's own provider
+                // chain (managed identity, Azure CLI, ...). This must NOT
+                // write AZURE_CLIENT_ID/AZURE_CLIENT_SECRET/AZURE_TENANT_ID to
+                // process.env for any account, explicit-credential accounts
+                // included: DefaultAzureCredential tries EnvironmentCredential
+                // before ManagedIdentityCredential, so a previous account's
+                // bare env vars would otherwise be silently inherited here
+                // instead of falling through to the intended managed identity
+                // (same class of bug fixed for AWS in PR #747).
+                let UAI = {}
+                let useAzureIdentity = await getConfigOrEnvVar(config, "USERAZUREIDENTITYID", prefix);
+                if(useAzureIdentity) UAI = {managedIdentityClientId: useAzureIdentity};
+                credential = new DefaultAzureCredential(UAI);
+            }
             if(!subscriptionId) {
                 throw new Error("- Please pass "+ prefix + "SUBSCRIPTIONID in your config file");
             } else {
-                context?.log("- loading client microsoft azure done-");
                 logger.info("- loading client microsoft azure done-");
                 
 				const [ autoFlatResources, dataComplementaryFlat ] = await Promise.all([
@@ -2341,7 +2352,6 @@ const customGatherFunctions: FunctionMap = {
 
 	'KexaAzure.blob': (name: string, credential: any, subscriptionId: any) => {
         logger.debug("Starting " + name + " listing...");
-		//listAllBlob();
 		return [];
     },
 
@@ -2672,6 +2682,7 @@ async function getVMDetails(VMSize:string): Promise<any> {
     try {
         let capabilities = (await axios.post("https://api.thecloudprices.com/api/props/sku", {"name": VMSize})).data.message.CommonCapabilities;
         capabilities.MemoryGb = parseFloat(capabilities.MemoryGb.$numberDecimal);
+        VMSizeMemory[VMSize] = capabilities;
         return capabilities;
     } catch (err) {
         logger.debug("error in getVMDetails:"+err);
@@ -2720,36 +2731,12 @@ function getMinMaxMeanMedian(array: Array<number>): any {
     }
 }
 
-// verify
-async function listAllBlob(client:StorageManagementClient, credentials: any): Promise<Array<StorageAccount>> {
-    logger.info("starting listAllBlob");
-    try {
-        const resultList = new Array<ResourceGroup>;
-        for await (let item of client.storageAccounts.list()){
-            resultList.push(item);
-            const blobServiceClient = new BlobServiceClient(
-                `https://${item.name}.blob.core.windows.net`,
-                credentials
-            );
-            for await (const container of blobServiceClient.listContainers()) {
-                for await (const blob of blobServiceClient.getContainerClient(container.name).listBlobsFlat()) {
-                    // Process each blob as needed
-                }
-            }
-        }
-        return resultList ?? [];
-    } catch (err) {
-        logger.debug("error in resourceGroupListing:"+err);
-        return [];
-    }
-}
-
-
 import {MachineLearningWorkspacesManagementClient } from "@azure/arm-workspaces";
 import { AzureMachineLearningServicesManagementClient } from "@azure/arm-machinelearning";
 
 import { convertMinMaxMeanMedianToPercentage } from "../../helpers/statsNumbers";
 import { jsonStringify } from "../../helpers/jsonStringify";
+import { redactSecrets } from "../../helpers/redactSecrets";
 
 async function workspacesListing(mlClient: MachineLearningWorkspacesManagementClient): Promise<any> {
 	let workspacesResult: any[] = [];
@@ -2929,6 +2916,7 @@ async function appConfigurationListing(client: ApplicationInsightsManagementClie
 	} catch (e) {
 		logger.debug("Error on graph services listing:", e);
 	}
+	return resultGraph;
 }
 
 async function monitorListing(client: MonitorClient, resClient: ResourceManagementClient): Promise<any> {
@@ -2958,32 +2946,36 @@ async function monitorListing(client: MonitorClient, resClient: ResourceManageme
 }
 
 async function blobPropertiesListing(client: BlobServiceClient): Promise<any> {
-	let resultMonitor:any = [];
 	const properties = await client.getProperties();
-	return resultMonitor;
+	return properties ?? [];
 }
 
 async function storageListing(client: StorageManagementClient): Promise<any> {
 	let resultStorage:any = [];
 	for await (let item of client.storageAccounts.list()) {
 		item = addingResourceGroups(item);
-		let result:any = item;
+		let result:any = item as any;
 		try {
-			const properties = await client.storageAccounts.getProperties(result.resourceGroupName, result.name);
+			result.properties = await client.storageAccounts.getProperties(result.resourceGroupName, result.name);
 		} catch (e) {
 			logger.debug("Failed to retrieve storage informations", e);
 		}
 		try {
+			// Only recording *whether* keys could be listed (a permission/
+			// rotation signal), never the key material itself -- listKeys()
+			// returns live storage account keys, which is credential
+			// material and must not be persisted into scan results.
 			const accountSAS = await client.storageAccounts.listKeys(result.resourceGroupName, result.name);
+			result.hasAccessibleKeys = Boolean(accountSAS?.keys?.length);
 		} catch (e) {
 			logger.debug("Failed to retrieve storage informations", e);
 		}
 		try {
-			const polciies = await client.managementPolicies.get(result.resourceGroupName, result.name, "default");
+			result.managementPolicy = await client.managementPolicies.get(result.resourceGroupName, result.name, "default");
 		} catch (e) {
 			logger.debug("Failed to retrieve storage informations", e);
 		}
-		resultStorage.push(item);
+		resultStorage.push(result);
 	}
 	return resultStorage;
 }
@@ -3189,7 +3181,11 @@ async function notificationsListing(client: NotificationHubsManagementClient): P
 			if (namespace.name) {
 				for await (let hub of client.notificationHubs.list(result.resourceGroupName, namespace.name)) {
 					if (hub.name) {
-					
+						resultsNotifications.push({
+							resourceGroupName: result.resourceGroupName,
+							namespace: namespace.name,
+							hub: hub.name,
+						});
 					}
 				}
 			}
@@ -3251,7 +3247,7 @@ async function groupsListing(client: Client): Promise<any> {
 				groups = groups.concat(response.value);
 			}
 		}
-		groups.forEach(async (group:any) => {
+		await Promise.all(groups.map(async (group:any) => {
 			try {
 				//const res2 = await client.api(`/groups/${group.id}/settings`).get();
 			//	groups/{group-id}/permissionGrants
@@ -3261,7 +3257,7 @@ async function groupsListing(client: Client): Promise<any> {
 			} catch (error) {
 				logger.debug("error:",error);
 			}
-		});
+		}));
 	} catch (error) {
 		logger.debug("error:",error);
 	}

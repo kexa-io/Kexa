@@ -16,7 +16,7 @@
 
 import oracledb from 'oracledb';
 import { getConfigOrEnvVar } from "../manageVarEnvironnement.service";
-import { getContext, getNewLogger } from "../logger.service";
+import { getNewLogger } from "../logger.service";
 import type { OracleResources } from "../../models/oracle/resource.models";
 import type { OracleConfig } from "../../models/oracle/config.models";
 
@@ -54,7 +54,6 @@ async function createOracleConnection(config: OracleConfig): Promise<oracledb.Co
 }
 
 export async function collectData(oracleConfigs: OracleConfig[]): Promise<OracleResources[] | null> {
-    const context = getContext();
     const allResources = new Array<OracleResources>();
 
     for (const config of oracleConfigs ?? []) {
@@ -62,7 +61,6 @@ export async function collectData(oracleConfigs: OracleConfig[]): Promise<Oracle
         let connection: oracledb.Connection | null = null;
 
         try {
-            context?.log(`Start collecting for Oracle configuration with prefix: ${config.prefix}`);
             logger.info(`Start collecting for Oracle configuration with prefix: ${config.prefix}`);
 
             connection = await createOracleConnection(config);
@@ -89,7 +87,6 @@ export async function collectData(oracleConfigs: OracleConfig[]): Promise<Oracle
 
         } catch (e: any) {
             logger.error("Error during Oracle data collection: " + e.message);
-            context?.log("Error during Oracle data collection: " + e.message);
         } finally {
             if (connection) {
                 logger.debug("Close Oracle connection.");

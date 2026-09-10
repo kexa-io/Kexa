@@ -1,4 +1,3 @@
-import { Context } from "@azure/functions";
 import {DebugEnum} from "../enum/debug.enum";
 import adze, { setup }  from 'adze';
 
@@ -24,28 +23,4 @@ export function getNewLogger(name: string) {
         isSetupCalled = true;
     }
     return adze.timestamp.namespace('kexa').seal();
-}
-
-export function getContext(): Context | null {
-    return LoggerAzure.getContext();
-}
-
-export function setContext(context: Context) {
-    LoggerAzure.setContext(context);
-}
-
-class LoggerAzure{
-    private static context:Context | null = null;
-
-    static setContext(context:Context){
-        LoggerAzure.context = context;
-    }
-
-    static getContext(){
-        return LoggerAzure.context;
-    }
-
-    LoggerAzure(context:Context){
-        LoggerAzure.setContext(context);
-    }
 }

@@ -20,10 +20,13 @@
 
 ### Default.json
 
-For each of your environments, the following keys are mandatory:
+For each of your environments, the following key is mandatory:
 
 - `rules`: This refers to the set of rules files you want to apply to this environment.
-- `prefix`: the prefix is the particle to be placed in front of the environment variables to be quoted [here](#environment).
+
+The following key is optional but strongly recommended:
+
+- `prefix`: the particle placed in front of the environment variables listed [here](#environment). If omitted, Kexa falls back to the zero-based index of the environment entry (`0`, `1`, ...) as the prefix.
 
 The following keys are recommended to ensure better readability when re-reading the configuration:
 

@@ -46,7 +46,7 @@ import { jsonStringify } from '../../helpers/jsonStringify';
 //////   INITIALIZATION   //////
 ////////////////////////////////
 
-import {getContext, getNewLogger} from "../logger.service";
+import {getNewLogger} from "../logger.service";
 const logger = getNewLogger("GcpLogger");
 let currentConfig: GcpConfig;
 
@@ -55,7 +55,6 @@ let currentConfig: GcpConfig;
 /////////////////////////////////////////
 
 export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[] | null> {
-    let context = getContext();
     let resources = new Array<GCPResources>();
     let defaultPathCred = await getEnvVar("GOOGLE_APPLICATION_CREDENTIALS");
     for (let config of gcpConfig??[]) {
@@ -116,9 +115,16 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 logger.warn("GCP - Could not parse credentials file, will rely on GOOGLE_APPLICATION_CREDENTIALS env var");
             }
         }
-        else if (projectId && googleCred) {
+        else if (googleCred) {
+            // Previously required projectId to already be set to even try
+            // this branch, so an account configured with inline JSON
+            // credentials but no separately-set GOOGLE_PROJECT_ID fell
+            // through to the shared/default credential below instead of
+            // using its own credentials at all -- mirror the path-based
+            // branch above and derive projectId from the credential JSON.
             try {
                 credentialsObject = JSON.parse(googleCred);
+                if (!projectId) projectId = credentialsObject?.project_id;
                 setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", "");
             } catch (e) {
                 logger.error("GCP - Failed to parse credential JSON");
@@ -126,6 +132,14 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
             }
         }
         else {
+            // Falling back to the single shared/default credential is only
+            // safe for a single-account config: with 2+ GCP accounts
+            // configured, silently reusing it here would scan this account
+            // under a DIFFERENT account's identity/project with no error.
+            if ((gcpConfig?.length ?? 0) > 1) {
+                logger.error("GCP - " + prefix + "GOOGLE_APPLICATION_CREDENTIALS not found for this account, and multiple GCP accounts are configured: refusing to silently reuse another account's credentials. Please set " + prefix + "GOOGLE_APPLICATION_CREDENTIALS for this entry.");
+                continue;
+            }
             setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", defaultPathCred);
             if (defaultPathCred) {
                 const credentials = JSON.parse(getFile(defaultPathCred)??"");
@@ -139,7 +153,6 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
         if ('regions' in config) {
             const userRegions = config.regions as Array<string>;
             if (userRegions.length <= 0) {
-                context?.log("GCP - No Regions found in Config, gathering all regions...")
                 logger.info("GCP - No Regions found in Config, gathering all regions...");
             }
             else if (!(compareUserAndValidRegions(userRegions as Array<string>, regionsList, gcpConfig, config)))
@@ -148,12 +161,10 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 regionsList = userRegions as Array<string>;
             }
         } else {
-            context?.log("GCP - No Regions found in Config, gathering all regions...");
             logger.info("GCP - No Regions found in Config, gathering all regions...");
             await retrieveAllRegions(projectId, regionsList, credentialsObject); 
         }
         try {
-            context?.log("- listing GCP resources -");
             logger.info("- listing GCP resources -");
             const promises = [
                 listTasks(projectId, regionsList, credentialsObject),
@@ -206,7 +217,6 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 app_gatewayList, diskList, compute_itemList, tags_keysList, bigqueryList,
                 loggingList, sqlList] = await Promise.all(promises);
             
-            context?.log("- listing cloud resources done -");
             logger.info("- listing cloud resources done -");
 
             gcpResources = {
@@ -425,39 +435,52 @@ async function listSSHKey(projectId: string, credentialsObject?: any): Promise<A
     if(!currentConfig.ObjectNameNeed?.includes("compute_item")) return null;
     let jsonData = [];
 
-    const instancesClient = createClientWithCredentials(compute.InstancesClient, credentialsObject);
-    const aggListRequest = await instancesClient.aggregatedListAsync({
-        project: projectId
-    });
-    for await (const [zone, instancesObject] of aggListRequest) {
-        const instances = instancesObject.instances;
-        if (instances && instances.length > 0) {
-            for (let i = 0; i < instances.length; i++) {
-                jsonData.push(JSON.parse(jsonStringify(instances[i].metadata?.items)));
+    try {
+        const instancesClient = createClientWithCredentials(compute.InstancesClient, credentialsObject);
+        const aggListRequest = await instancesClient.aggregatedListAsync({
+            project: projectId
+        });
+        for await (const [zone, instancesObject] of aggListRequest) {
+            const instances = instancesObject.instances;
+            if (instances && instances.length > 0) {
+                for (let i = 0; i < instances.length; i++) {
+                    jsonData.push(JSON.parse(jsonStringify(instances[i].metadata?.items)));
+                }
             }
         }
+        return jsonData ?? null;
+    } catch (e: any) {
+        // Un-caught, this rejects the shared Promise.all in collectData()
+        // and discards every other resource type already gathered for this
+        // account, for a transient failure in just this one collector.
+        logger.warn(`Could not list SSH keys/compute instances for project ${projectId}: ${e?.message ?? e}`);
+        return null;
     }
-    return jsonData ?? null;
 }
 
 async function listPersistentDisks(projectId: string, credentialsObject?: any) {
     if(!currentConfig.ObjectNameNeed?.includes("disk")) return null;
     let jsonData = [];
-    const disksClient = createClientWithCredentials(compute.DisksClient, credentialsObject);
-    const aggListRequest =  await disksClient.aggregatedListAsync({
-        project: projectId
-    });
-    for await (const [zone, diskObject] of aggListRequest) {
-        const disks = diskObject.disks;
+    try {
+        const disksClient = createClientWithCredentials(compute.DisksClient, credentialsObject);
+        const aggListRequest =  await disksClient.aggregatedListAsync({
+            project: projectId
+        });
+        for await (const [zone, diskObject] of aggListRequest) {
+            const disks = diskObject.disks;
 
-        if (disks && disks.length > 0) {
-            for (let i = 0; i < disks.length; i++) {
-                jsonData.push(JSON.parse(jsonStringify(disks[i])));
+            if (disks && disks.length > 0) {
+                for (let i = 0; i < disks.length; i++) {
+                    jsonData.push(JSON.parse(jsonStringify(disks[i])));
+                }
             }
         }
+        logger.info("GCP Persistent Disks Listing Done");
+        return jsonData ?? null;
+    } catch (e: any) {
+        logger.warn(`Could not list persistent disks for project ${projectId}: ${e?.message ?? e}`);
+        return null;
     }
-    logger.info("GCP Persistent Disks Listing Done");
-    return jsonData ?? null;
 }
 
 async function listAllBucket(credentialsObject?: any): Promise<Array<any>|null> {
@@ -869,6 +892,7 @@ async function listIdentitiesDomain(projectId: string, credentialsObject?: any):
 }
 
 async function listLineageProcesses(projectId: string, credentialsObject?: any): Promise<Array<any> | null> {
+    if(!currentConfig.ObjectNameNeed?.includes("lineage_process")) return null;
     const {LineageClient} = require('@google-cloud/lineage').v1;
     const parent = 'projects/' + projectId + '/locations/global';
     let jsonData = [];
@@ -1039,8 +1063,15 @@ async function listWorkloads(projectId: string, credentialsObject?: any): Promis
     const {ProjectsClient} = require('@google-cloud/resource-manager').v3;
     let jsonData;
 
+    // The real implementation below is disabled (kept for reference, not
+    // verified to actually work against the live Assured Workloads API) --
+    // rather than silently returning null with no explanation whenever a
+    // rule asks for "workload" data, say so explicitly so this doesn't look
+    // like a working, empty-result collector.
+    logger.warn("GCP Workloads collector ('workload') is not currently implemented; no data will be returned for this object type.");
+    /*
     try {
-     /*   const resource = new ProjectsClient();
+        const resource = new ProjectsClient();
         const response = await resource.getProject(projectId);
         const client = new AssuredWorkloadsServiceClient();
         const [workloads] = await client.listWorkloads({
@@ -1048,10 +1079,11 @@ async function listWorkloads(projectId: string, credentialsObject?: any): Promis
         });
         for (const workload of workloads) {
             jsonData = JSON.parse(jsonStringify(workload));
-        }*/
+        }
     } catch (e) {
         logger.debug(e instanceof Error ? e.message : "Unknown error");
     }
+    */
     logger.info("GCP Workloads Listing Done");
     return jsonData ?? null;
 }

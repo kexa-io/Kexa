@@ -1,6 +1,6 @@
 import { Storage } from '@google-cloud/storage';
 import type { ResultScan } from '../models/resultScan.models';
-import { getContext, getNewLogger } from "./logger.service";
+import { getNewLogger } from "./logger.service";
 import { loadAddOnsCustomUtility } from './addOn.service';
 import type { SaveConfig } from '../models/export/config.models';
 import { getConfig } from '../helpers/loaderConfig';
@@ -15,7 +15,6 @@ const configReady: Promise<void> = (async () => {
         logger.error("Failed to load config", error);
     }
 })();
-const context = getContext();
 
 export async function saveResult(result: ResultScan[][]): Promise<void> {
     await configReady;
@@ -35,12 +34,10 @@ export async function saveResult(result: ResultScan[][]): Promise<void> {
                 await saveFn(save, dataToSave[save.onlyErrors ?? false ? 1 : 0]);
             } catch (e: any) {
                 logger.error("Error in save " + save.type + " : " + e.message);
-                context?.log("Error in save " + save.type + " : " + e.message);
                 logger.debug(e);
             }
         } else {
             logger.warn('Unknown save type: ' + save.type);
-            context?.log('Unknown save type: ' + save.type);
         }
         return Promise.resolve();
     })).then(() => {});

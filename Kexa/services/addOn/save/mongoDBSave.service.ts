@@ -1,11 +1,10 @@
 import type { ResultScan } from "../../../models/resultScan.models";
-import { getContext, getNewLogger } from "../../logger.service";
+import { getNewLogger } from "../../logger.service";
 import type { MongoDBSaveConfig } from "../../../models/export/mongoDB/config.models";
 import { closeConnection, saveData, setConnection } from "../../saving/mongoDB.service";
 import { getConfigOrEnvVar } from "../../manageVarEnvironnement.service";
 const mongoose = require("mongoose")
 const logger = getNewLogger("mongoDBSavingLogger");
-const context = getContext();
 
 const resultScanMongoose = new mongoose.Schema({
     objectContent: {
@@ -53,7 +52,6 @@ export async function save(save: MongoDBSaveConfig, result: ResultScan[][]): Pro
         url = await getConfigOrEnvVar(config, save.type, save.prefix);
     }
     logger.info(`Saving to MongoDB`);
-    context?.log(`Saving to MongoDB`);
     let { dataModel, connectionMongoDB } = await setConnection(url, save.collectionName, resultScanMongoose);
     await Promise.all(result.flat().map(async (resultScan) => {
         await saveData(save, dataModel, resultScan);

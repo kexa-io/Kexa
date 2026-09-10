@@ -1,4 +1,5 @@
 import type { Rules } from "../../../models/settingFile/rules.models";
+import { escapeHtml } from "../../../helpers/escapeHtml";
 
 function getGCPRegionFromUrl(url: string): string | null {
     try {
@@ -28,28 +29,49 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
     let toRet : string;
     let link : string;
 
-    if (isSms)
+    if (isSms) {
         link = `Resource : ` + objectContent?.name +  ` : https://console.cloud.google.com/`;
-    else
-        link = `Resource : ` + objectContent?.name + ` : <a href="https://console.cloud.google.com/`;
+        switch (rule?.objectName) {
+            case "bucket":
+                toRet = link + `storage/browser/` + objectContent?.id + ' ' + objectContent?.name + `.`;
+                break;
+            case "compute":
+                toRet = link + `compute/instancesDetail/zones/` + zone + `/instances/` + objectContent?.name + `?authuser=1&project=` + project + ' ' + objectContent?.name + `.`;
+                break;
+            case "secret": {
+                let parts = objectContent?.name.split('/');
+                let secretName = parts[parts.length - 1];
+                let projId = parts[1];
+                toRet = link + `security/secret-manager/secret/` + secretName + `/versions?authuser=2&project=` + projId + ' ' + objectContent?.name + `.`;
+                break;
+            }
+            default:
+                toRet = link + `"> Id : ` +  objectContent?.id + `.`;
+                break;
+        }
+        return toRet;
+    }
+
+    link = `Resource : ` + escapeHtml(objectContent?.name) + ` : <a href="https://console.cloud.google.com/`;
     switch (rule?.objectName) {
         case "bucket":
-            toRet = link + `storage/browser/` + objectContent?.id + (isSms ? ' ' : '">') + ' ' + objectContent?.name + (isSms ? `.` : `</a>`)
+            toRet = link + `storage/browser/` + encodeURIComponent(objectContent?.id ?? "") + '">' + ' ' + escapeHtml(objectContent?.name) + `</a>`;
             break;
         case "compute":
-            toRet = link + `compute/instancesDetail/zones/` + zone + `/instances/` + objectContent?.name + `?authuser=1&project=` + project + (isSms ? ' ' : '">') + ' ' + objectContent?.name + (isSms ? `.` : `</a>`)
+            toRet = link + `compute/instancesDetail/zones/` + encodeURIComponent(zone ?? "") + `/instances/` + encodeURIComponent(objectContent?.name ?? "") + `?authuser=1&project=` + encodeURIComponent(project ?? "") + '">' + ' ' + escapeHtml(objectContent?.name) + `</a>`;
             break;
-        case "secret":
+        case "secret": {
             let parts = objectContent?.name.split('/');
             let secretName = parts[parts.length - 1];
             let projId = parts[1];
-            toRet = link + `security/secret-manager/secret/` + secretName + `/versions?authuser=2&project=` + projId + (isSms ? ' ' : '">') + ' ' + objectContent?.name + (isSms ? `.` : `</a>`)
+            toRet = link + `security/secret-manager/secret/` + encodeURIComponent(secretName ?? "") + `/versions?authuser=2&project=` + encodeURIComponent(projId ?? "") + '">' + ' ' + escapeHtml(objectContent?.name) + `</a>`;
             break;
+        }
         case "tasks_queue":
-            toRet = link + `"> Id : ` +  objectContent?.id + (isSms ? `.` : `</a>`)
+            toRet = link + `"> Id : ` +  escapeHtml(objectContent?.id) + `</a>`;
             break;
         default:
-            toRet = link + `"> Id : ` +  objectContent?.id + (isSms ? `.` : `</a>`)
+            toRet = link + `"> Id : ` +  escapeHtml(objectContent?.id) + `</a>`;
             break;
     }
     return toRet;

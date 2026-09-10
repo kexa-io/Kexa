@@ -262,21 +262,6 @@ export async function getAddOnModule(type: string, filename: string): Promise<an
     }
 }
 
-export function hasAddOnModule(type: string, filename: string): boolean {
-    switch(type) {
-        case 'gathering':
-            return gatheringFiles.includes(filename);
-        case 'display':
-            return displayFiles.includes(filename);
-        case 'save':
-            return saveFiles.includes(filename);
-        case 'exportation':
-            return exportationFiles.includes(filename);
-        default:
-            return false;
-    }
-}
-
 export function getAllAddOnFiles(type: string): string[] {
     switch(type) {
         case 'gathering':

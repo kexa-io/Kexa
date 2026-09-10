@@ -19,7 +19,7 @@ import { toISOFormat } from "../../helpers/time";
 //////   INITIALIZATION   //////
 ////////////////////////////////
 
-import {getContext, getNewLogger} from "../logger.service";
+import {getNewLogger} from "../logger.service";
 const logger = getNewLogger("helmLogger");
 let currentConfig:HelmConfig;
 
@@ -29,7 +29,6 @@ let currentConfig:HelmConfig;
 import helm from 'helm-ts';
 
 export async function collectData(helmConfig:HelmConfig[]): Promise<HelmResources[] | null> {
-    let context = getContext();
     let resources = new Array<HelmResources>();
     
     for (let config of helmConfig??[]) {
@@ -46,7 +45,6 @@ export async function collectData(helmConfig:HelmConfig[]): Promise<HelmResource
             if (getFile("./config/kubernetes.json") == null) {
               writeStringToJsonFile(JSON.stringify(yaml.load(getFile(pathKubeFile??"")), null, 2), "./config/kubernetes.json");
             }
-            context?.log("- listing Helm resources -");
             logger.info("- listing Helm resources -");
 
             const promises = [
@@ -60,7 +58,6 @@ export async function collectData(helmConfig:HelmConfig[]): Promise<HelmResource
             helmResources = {
                 chart: chartList
             };
-            context?.log("- listing Helm resources done -");
             logger.info("- listing Helm resources done -");
       
         } catch (e) {
@@ -345,8 +342,6 @@ async function listCharts(isPathKubeFile: boolean) : Promise<Array<any> | null> 
     (isPathKubeFile)?kc.loadFromFile("./config/kubernetes.json"):kc.loadFromDefault();
     const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
 
-    let results = new Array<any>();
-
     try {
         const res = await k8sApi.listSecretForAllNamespaces();
         const secrets = res.body.items;
@@ -382,12 +377,10 @@ async function listCharts(isPathKubeFile: boolean) : Promise<Array<any> | null> 
                 chart.details.versionDifference = versionDifference;
               }
             } catch (error) {
-              logger.debug('Error getting Helm release info:', error);  
+              logger.debug('Error getting Helm release info:', error);
             }
-            results.push(chart);
           }
-        results = helmCharts;
-        return results;
+        return helmCharts;
 
       } catch (error) {
         logger.debug('Error listing Helm charts:', error);

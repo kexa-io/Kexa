@@ -85,6 +85,12 @@ the continuous run mode for Kexa.
 }
 ```
 
+All four fields are optional. `checkInterval` is what actually switches Kexa from a
+single run to continuous mode: if it is omitted (or `0`), Kexa performs exactly one
+scan and exits; any value greater than `0` enables the loop. Defaults when a field is
+omitted: `timeout` = 15 minutes, `maxRetry` = 3, `checkInterval` = 0 (single run,
+disabled), `alertInterval` = 0 (disabled).
+
 You can also add save and/or export modules in this configuration file, save will save all scans results
 and ressources, while export is made to only export your cloud ressources states.
 
