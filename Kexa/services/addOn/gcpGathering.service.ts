@@ -126,6 +126,14 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
             }
         }
         else {
+            // Falling back to the single shared/default credential is only
+            // safe for a single-account config: with 2+ GCP accounts
+            // configured, silently reusing it here would scan this account
+            // under a DIFFERENT account's identity/project with no error.
+            if ((gcpConfig?.length ?? 0) > 1) {
+                logger.error("GCP - " + prefix + "GOOGLE_APPLICATION_CREDENTIALS not found for this account, and multiple GCP accounts are configured: refusing to silently reuse another account's credentials. Please set " + prefix + "GOOGLE_APPLICATION_CREDENTIALS for this entry.");
+                continue;
+            }
             setEnvVar("GOOGLE_APPLICATION_CREDENTIALS", defaultPathCred);
             if (defaultPathCred) {
                 const credentials = JSON.parse(getFile(defaultPathCred)??"");

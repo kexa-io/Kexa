@@ -5534,18 +5534,20 @@ export async function collectData(awsConfig: AwsConfig[]): Promise<Object[]|null
             else
                 logger.warn(prefix + "AWS_SECRET_ACCESS_KEY not found");
 
-			const credentials = {
-				accessKeyId: awsKeyId,
-				secretAccessKey: awsSecretKey
-			};
 			let credentialProvider;
-			if (process.env.INTERFACE_CONFIGURATION_ENABLED == "true") {
+			if (process.env.INTERFACE_CONFIGURATION_ENABLED == "true" || (awsKeyId && awsSecretKey)) {
 				credentialProvider = {
 					accessKeyId: awsKeyId,
 					secretAccessKey: awsSecretKey,
+					...(awsSessionToken ? { sessionToken: awsSessionToken } : {}),
 				}
 			}
 			else {
+				// No explicit (prefixed or bare) credentials resolved for this
+				// account: fall back to the SDK's own provider chain (shared
+				// config, IMDS/instance role, ...). Only reached when this
+				// account has no credentials of its own, so it can't leak a
+				// previous account's still-set bare env vars.
             	credentialProvider = fromNodeProviderChain();
 			}
 			const client = new EC2Client({
