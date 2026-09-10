@@ -395,7 +395,7 @@ async function listIncidents(endpoint: string, accessToken: string, headers: Hea
 async function listAppAccessPolicy(endpoint: string, accessToken: string, headers: Headers, userList: any): Promise<Array<any> | null> {
     if(!currentConfig?.ObjectNameNeed?.includes("app_access_policy")) return null;
     const axios = require("axios");
-    let jsonData: any | [];
+    let jsonData: any[] = [];
     for (let i = 0; i < userList.length; i++) {
         try {
             const licenseResponse = await axios.get(`${endpoint}/users/${userList[i].id}/memberOf`, {
@@ -404,16 +404,16 @@ async function listAppAccessPolicy(endpoint: string, accessToken: string, header
                 }
             });
             if (licenseResponse.status != 200) {
-                logger.warn("O365 - Error when calling graph API for user " + jsonData[i].displayName);
+                logger.warn("O365 - Error when calling graph API for user " + userList[i].displayName);
                 continue;
             }
-            jsonData = licenseResponse.data.value;
+            jsonData.push(...(licenseResponse.data.value ?? []));
         } catch (e) {
             logger.error('O365 - Error fetching user ');
             logger.error(e);
         }
     }
-    return jsonData ?? null;
+    return jsonData;
 }
 
 async function listGroups(endpoint: string, accessToken: string, headers: Headers): Promise<Array<any> | null> {
