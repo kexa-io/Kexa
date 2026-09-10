@@ -433,39 +433,52 @@ async function listSSHKey(projectId: string, credentialsObject?: any): Promise<A
     if(!currentConfig.ObjectNameNeed?.includes("compute_item")) return null;
     let jsonData = [];
 
-    const instancesClient = createClientWithCredentials(compute.InstancesClient, credentialsObject);
-    const aggListRequest = await instancesClient.aggregatedListAsync({
-        project: projectId
-    });
-    for await (const [zone, instancesObject] of aggListRequest) {
-        const instances = instancesObject.instances;
-        if (instances && instances.length > 0) {
-            for (let i = 0; i < instances.length; i++) {
-                jsonData.push(JSON.parse(jsonStringify(instances[i].metadata?.items)));
+    try {
+        const instancesClient = createClientWithCredentials(compute.InstancesClient, credentialsObject);
+        const aggListRequest = await instancesClient.aggregatedListAsync({
+            project: projectId
+        });
+        for await (const [zone, instancesObject] of aggListRequest) {
+            const instances = instancesObject.instances;
+            if (instances && instances.length > 0) {
+                for (let i = 0; i < instances.length; i++) {
+                    jsonData.push(JSON.parse(jsonStringify(instances[i].metadata?.items)));
+                }
             }
         }
+        return jsonData ?? null;
+    } catch (e: any) {
+        // Un-caught, this rejects the shared Promise.all in collectData()
+        // and discards every other resource type already gathered for this
+        // account, for a transient failure in just this one collector.
+        logger.warn(`Could not list SSH keys/compute instances for project ${projectId}: ${e?.message ?? e}`);
+        return null;
     }
-    return jsonData ?? null;
 }
 
 async function listPersistentDisks(projectId: string, credentialsObject?: any) {
     if(!currentConfig.ObjectNameNeed?.includes("disk")) return null;
     let jsonData = [];
-    const disksClient = createClientWithCredentials(compute.DisksClient, credentialsObject);
-    const aggListRequest =  await disksClient.aggregatedListAsync({
-        project: projectId
-    });
-    for await (const [zone, diskObject] of aggListRequest) {
-        const disks = diskObject.disks;
+    try {
+        const disksClient = createClientWithCredentials(compute.DisksClient, credentialsObject);
+        const aggListRequest =  await disksClient.aggregatedListAsync({
+            project: projectId
+        });
+        for await (const [zone, diskObject] of aggListRequest) {
+            const disks = diskObject.disks;
 
-        if (disks && disks.length > 0) {
-            for (let i = 0; i < disks.length; i++) {
-                jsonData.push(JSON.parse(jsonStringify(disks[i])));
+            if (disks && disks.length > 0) {
+                for (let i = 0; i < disks.length; i++) {
+                    jsonData.push(JSON.parse(jsonStringify(disks[i])));
+                }
             }
         }
+        logger.info("GCP Persistent Disks Listing Done");
+        return jsonData ?? null;
+    } catch (e: any) {
+        logger.warn(`Could not list persistent disks for project ${projectId}: ${e?.message ?? e}`);
+        return null;
     }
-    logger.info("GCP Persistent Disks Listing Done");
-    return jsonData ?? null;
 }
 
 async function listAllBucket(credentialsObject?: any): Promise<Array<any>|null> {
