@@ -1,6 +1,7 @@
 import type { ResultScan } from "../models/resultScan.models";
 import type { Rules } from "../models/settingFile/rules.models";
 import { loadAddOnsCustomUtility } from "./addOn.service";
+import { escapeHtml } from "../helpers/escapeHtml";
 
 const colors = ["#4f5660", "#ffcc00", "#cc3300", "#cc3300"];
 import {getNewLogger} from "./logger.service";
@@ -32,10 +33,10 @@ export function renderTableAllScan(allScan: ResultScan[][]): string{
                                     <tbody>
                                         <tr>
                                             <td style="direction:ltr;padding:20px 0;text-align:center;color:`+ color +`"  colspan="1">
-                                                Name : `+ resultScan?.rule?.name +`
+                                                Name : `+ escapeHtml(resultScan?.rule?.name) +`
                                             </td>
                                             <td style="direction:ltr;padding:20px 0;text-align:center;color:`+ color +`"  colspan="2">
-                                            &nbspDescription : `+ resultScan?.rule?.description +`
+                                            &nbspDescription : `+ escapeHtml(resultScan?.rule?.description) +`
                                             </td>
                                         </tr>`;
             }
@@ -66,10 +67,10 @@ export function renderTableAllScanLoud(allScan: ResultScan[][]): string{
                                     <tbody>
                                         <tr>
                                             <td style="direction:ltr;padding:20px 0;text-align:center;"  colspan="1">
-                                                Name : `+ resultScan?.rule?.name +`
+                                                Name : `+ escapeHtml(resultScan?.rule?.name) +`
                                             </td>
                                             <td style="direction:ltr;padding:20px 0;text-align:center;"  colspan="2">
-                                            &nbspDescription : `+ resultScan?.loud?.message +`
+                                            &nbspDescription : `+ escapeHtml(resultScan?.loud?.message) +`
                                             </td>
                                         </tr>
                                         <tr>
@@ -98,7 +99,7 @@ export function propertyToSend(rule: Rules, objectContent: any, isSms: boolean=f
         return fn(rule, objectContent, isSms, conditions);
     } else {
         logger.warn("Error while loading addOn display for rule :" + rule?.cloudProvider);
-        return `Id : ` + objectContent.id;
+        return `Id : ` + escapeHtml(objectContent?.id);
     }
 }
 

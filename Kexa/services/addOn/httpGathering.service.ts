@@ -17,10 +17,11 @@ import { HttpConfig } from "../../models/http/config.models";
 import { isEmpty } from "../../helpers/isEmpty";
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import https from 'https';
+import http from 'http';
 let httpConfig: HttpConfig[] = [];
 
 import {getNewLogger} from "../logger.service";
-import { isPrivateUrl } from "../../helpers/isPrivateUrl";
+import { isPrivateUrl, isPrivateIp } from "../../helpers/isPrivateUrl";
 const logger = getNewLogger("HttpLogger");
 
 /** Strip embedded Basic-Auth credentials (user:pass@host) before logging a URL. */
@@ -33,6 +34,30 @@ function redactUrlCredentials(urlStr: string): string {
     } catch {
         return urlStr;
     }
+}
+
+/** A custom dns lookup (Node's `net.connect`/http(s).Agent `lookup` option)
+ * that rejects the connection if the hostname resolves to a private/internal/
+ * metadata address. Passed to the agent used for every request axios makes,
+ * including ones it issues automatically to follow a redirect -- so unlike a
+ * one-off check of the initial URL string, this also blocks DNS-rebinding
+ * (a public hostname whose DNS answer is a private IP) and redirect-based
+ * SSRF (a 3xx Location pointing at a private/metadata address). */
+export function createSsrfSafeLookup() {
+    return (hostname: string, options: any, callback: any) => {
+        const cb = typeof options === "function" ? options : callback;
+        const opts = typeof options === "function" ? {} : (options ?? {});
+        dns.lookup(hostname, { ...opts, all: true }, (err: any, addresses: any) => {
+            if (err) return cb(err);
+            const list = Array.isArray(addresses) ? addresses : [addresses];
+            const blocked = list.find((a: any) => isPrivateIp(a.address ?? a));
+            if (blocked) {
+                return cb(new Error(`Blocked request to ${hostname}: resolves to private/internal address ${blocked.address ?? blocked}`));
+            }
+            if (opts.all) return cb(null, list);
+            return cb(null, list[0].address, list[0].family);
+        });
+    };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,18 +135,24 @@ async function makeHttpRequest<T>(
     method: string,
     url: string,
     body?: any,
-    headers?: Record<string, string>
+    headers?: Record<string, string>,
+    insecureTLS: boolean = false
 ): Promise<AxiosResponse<T>> {
-    const agent = new https.Agent({
-        rejectUnauthorized: false,
-    });
+    const lookup = createSsrfSafeLookup();
+    const httpsAgent = new https.Agent({
+        rejectUnauthorized: !insecureTLS,
+        lookup,
+    } as any);
+    const httpAgent = new http.Agent({ lookup } as any);
     const requestConfig: AxiosRequestConfig = {
         method : method as any,
         url,
         data: body,
         headers,
         validateStatus: (status) => status >= 0 && status < 1000,
-        httpsAgent: agent,
+        httpsAgent,
+        httpAgent,
+        maxRedirects: 5,
     };
 
     try {
@@ -175,8 +206,9 @@ async function doRequest(url: string, config: HttpConfig): Promise<any> {
     const body = getBody(config);
     const start = Date.now();
     let result = null;
-    if(!header) result = await makeHttpRequest<any>(method, url, body);
-    else result = await makeHttpRequest<any>(method, url, body, header);
+    const insecureTLS = Boolean(config.insecureTLS);
+    if(!header) result = await makeHttpRequest<any>(method, url, body, undefined, insecureTLS);
+    else result = await makeHttpRequest<any>(method, url, body, header, insecureTLS);
     const delays = Date.now() - start;
     return {
         ...result,
