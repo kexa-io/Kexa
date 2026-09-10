@@ -499,7 +499,7 @@ export function checkRules(rules:any[], resources:ProviderResource, alert: Alert
                     case BeHaviorEnum.CONTINUE:
                         continue;
                 }
-                objectResources = [...objectResources, ...resources[rule.cloudProvider]?.[i]?.[rule.objectName]]
+                objectResources.push(...(resources[rule.cloudProvider]?.[i]?.[rule.objectName] ?? []))
             }
         }
         let subResult: ResultScan[] = [];
