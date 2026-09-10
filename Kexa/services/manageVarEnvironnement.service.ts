@@ -93,10 +93,6 @@ function possibleWithHashipcorpVault() {
     return (Boolean(process.env.HCP_CLIENT_ID && process.env.HCP_CLIENT_SECRET && process.env.HCP_API_URL));
 }
 
-function possibleWithBitwarden(){
-    return (Boolean(process.env.BITWARDEN_CLIENTID && process.env.BITWARDEN_CLIENTSECRET));
-}
-
 async function getEnvVarWithHashicorpVault(name:string) {
     let hcpClientId = process.env.HCP_CLIENT_ID;
     let hcpClientSecret = process.env.HCP_CLIENT_SECRET;
@@ -135,57 +131,6 @@ async function getEnvVarWithHashicorpVault(name:string) {
         logger.debug('Error fetching hashicorp secret:', error);
         return ;
     }
-}
-
-import { BitwardenClient, ClientSettings, DeviceType, LogLevel } from "@bitwarden/sdk-napi";
-
-async function getEnvVarWithBitwarden(){
-    let bitwardenClientId = process.env.BITWARDEN_CLIENTID;
-    let bitwtardenClientSecret = process.env.BITWARDEN_CLIENTSECRET;
-
-    /* not available yet, maintenance from Bitwarden      */
-
-    /*   const postData = {
-         grant_type: 'client_credentials',
-         scope: 'api',
-         client_id: bitwardenClientId as string,
-         client_secret: bitwtardenClientSecret as string
-     };
-
-   axios.post('https://identity.bitwarden.com/connect/token',
-         new URLSearchParams(postData), {
-             headers: {
-                 'Content-Type': 'application/x-www-form-urlencoded'
-             }
-         })
-         .then(response => {
-             console.log('Response:', response.data);
-         })
-         .catch(error => {
-             console.error('Error:', error);
-         });*/
-
-}
-
-
-
-import {listSecrets} from "./addOn/gcpGathering.service";
-import {deleteFile, writeStringToJsonFile} from "../helpers/files";
-import {Storage} from "@google-cloud/storage";
-async function possibleWithGoogleSecretManager(projectId: any): Promise<boolean> {
-    if ((process.env["GOOGLE_APPLICATION_CREDENTIALS"]
-        && process.env["GOOGLE_STORAGE_PROJECT_ID"]))
-    {
-        return false;
-    }
-    else {
-        return false;
-    }
-}
-async function getEnvVarWithGoogleSecretManager(name:string, projectId: any) {
-
-    const usrScrt = process.env.GOOGLE_SECRET_NAME;
-
 }
 
 export async function setEnvVar(name:string, value:string){

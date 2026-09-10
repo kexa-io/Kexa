@@ -2341,7 +2341,6 @@ const customGatherFunctions: FunctionMap = {
 
 	'KexaAzure.blob': (name: string, credential: any, subscriptionId: any) => {
         logger.debug("Starting " + name + " listing...");
-		//listAllBlob();
 		return [];
     },
 
@@ -2719,31 +2718,6 @@ function getMinMaxMeanMedian(array: Array<number>): any {
         "median": array[Math.floor(array.length/2)],
     }
 }
-
-// verify
-async function listAllBlob(client:StorageManagementClient, credentials: any): Promise<Array<StorageAccount>> {
-    logger.info("starting listAllBlob");
-    try {
-        const resultList = new Array<ResourceGroup>;
-        for await (let item of client.storageAccounts.list()){
-            resultList.push(item);
-            const blobServiceClient = new BlobServiceClient(
-                `https://${item.name}.blob.core.windows.net`,
-                credentials
-            );
-            for await (const container of blobServiceClient.listContainers()) {
-                for await (const blob of blobServiceClient.getContainerClient(container.name).listBlobsFlat()) {
-                    // Process each blob as needed
-                }
-            }
-        }
-        return resultList ?? [];
-    } catch (err) {
-        logger.debug("error in resourceGroupListing:"+err);
-        return [];
-    }
-}
-
 
 import {MachineLearningWorkspacesManagementClient } from "@azure/arm-workspaces";
 import { AzureMachineLearningServicesManagementClient } from "@azure/arm-machinelearning";

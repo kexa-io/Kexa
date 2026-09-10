@@ -8,8 +8,7 @@ import {getContext, getNewLogger} from "./logger.service";
 import type { SettingFile } from "../models/settingFile/settingFile.models";
 import { getConfig } from "../helpers/loaderConfig";
 import { jsonStringify } from "../helpers/jsonStringify";
-import  {formatProviderNeededData} from "./api/formatterApi.service";
-import { getAddOnModule, hasAddOnModule, getAllAddOnFiles } from "./addOnRegistry";
+import { getAddOnModule, getAllAddOnFiles } from "./addOnRegistry";
 import { setHeaders, getHeaders } from "./headers.service";
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // test import static for cli 
