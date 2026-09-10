@@ -1,5 +1,17 @@
 # Changelog
 
+## [v2.10.2] - 2026-07-08
+
+
+
+### Bug Fixes
+
+* **aws:** make AWS gathering work in compiled binaries ([6f6fbb1](https://github.com/kexa-io/Kexa/commit/6f6fbb1e5457fd8d07082f87e4289a4f06f47217))
+* **azure:** make Azure gathering work in compiled binaries ([9b0fa2c](https://github.com/kexa-io/Kexa/commit/9b0fa2c4e79e5708c1d44d8a4bd384977f90304a))
+* **build:** halve bundle size and cut release binaries by 86% ([c036cc3](https://github.com/kexa-io/Kexa/commit/c036cc3e9d2c84404cd52fc303ed936640221a5d))
+
+# Changelog
+
 ## [v2.10.1] - 2026-07-08
 
 
