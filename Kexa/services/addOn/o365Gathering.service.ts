@@ -293,7 +293,13 @@ async function genericListing(endpoint: string, accessToken: string, queryEndpoi
                 jsonData = JSON.parse(jsonStringify(response.data));
         }
     } catch (e: any) {
-        logger.error(e.response.data);
+        // e.response is only set for an HTTP-level failure; a network-level
+        // error (timeout, DNS, connection reset) has no .response at all, so
+        // reading .data off it here threw a second, uncaught error inside
+        // this catch block -- which aborted whatever Promise.all this
+        // function's result was part of, discarding every other
+        // already-collected O365 resource for the tenant.
+        logger.error(e?.response?.data ?? e?.message ?? e);
     }
     return jsonData ?? null;
 }
@@ -421,6 +427,7 @@ async function listGroups(endpoint: string, accessToken: string, headers: Header
     if (jsonData) {
         for (let i = 0; i < jsonData.length; i++) {
             jsonDataOwners = await genericListing(endpoint, accessToken, "groups/" + jsonData[i].id + "/owners", "Groups");
+            jsonData[i].owners = jsonDataOwners;
         }
     }
     return jsonData ?? null;

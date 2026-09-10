@@ -76,12 +76,18 @@ async function authorizeServiceAccount() {
 async function listFiles(authClient:any) {
     const driveService = google.drive({ version: 'v3', auth: authClient });
     try {
-        const response = await driveService.files.list({
-            fields: "files(*)",
-            includeItemsFromAllDrives: true,
-            supportsAllDrives: true,
-        });
-        const files = response.data.files;
+        let files: any[] = [];
+        let pageToken: string | undefined = undefined;
+        do {
+            const response: any = await driveService.files.list({
+                fields: "nextPageToken, files(*)",
+                includeItemsFromAllDrives: true,
+                supportsAllDrives: true,
+                pageToken,
+            });
+            files = files.concat(response.data.files ?? []);
+            pageToken = response.data.nextPageToken ?? undefined;
+        } while (pageToken);
         if (files && files.length) {
             logger.debug(`Found ${files.length} files`);
             return files;
