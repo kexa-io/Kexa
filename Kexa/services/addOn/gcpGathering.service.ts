@@ -11,10 +11,10 @@
     *     - project
     *     - billingAccount
     *     - cluster
-    *     - workflows
+    *     - workflow
     *     - websecurity
     *     - connector
-    *     - vmware-engine
+    *     - vmware_engine
     *     - namespace
     *     - certificate
     *     - secret
@@ -24,6 +24,15 @@
     *     - os_config
     *     - org_policy_constraint
     *     - airflow_image_version
+    *     - notebook
+    *     - lineage_process
+    *     - dashboard
+    *     - identity_domain
+    *     - domain_registration
+    *     - pipeline
+    *     - batch_job
+    *     - artifact_repository
+    *     - app_gateway
     *     - disk
     *     - compute_item
     *     - tags_keys
@@ -77,7 +86,7 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
             "resource_settings": null,
             "redis_instance": null,
             "os_config": null,
-            "org_policy_contraint": null,
+            "org_policy_constraint": null,
             "airflow_image_version": null,
             "notebook": null,
             "lineage_process": null,
@@ -210,7 +219,7 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 clusterList, workflowList, webSecurityList, connectorList,
                 engineList, namespaceList, secretList,
                 connectivityTestList, resourceSettingsList, redisIntanceList,
-                os_configList, org_policy_contraintList, airflow_image_versionList,
+                os_configList, org_policy_constraintList, airflow_image_versionList,
                 notebookList, lineage_processList, dashboardList, identity_domainList,
                 kms_crypto_keyList, kms_key_ringList, domain_registrationList, dns_zoneList,
                 pipelineList, certificateList, batchJobList, workloadList, artifactRepoList,
@@ -236,7 +245,7 @@ export async function collectData(gcpConfig:GcpConfig[]): Promise<GCPResources[]
                 resource_settings: resourceSettingsList,
                 redis_instance: redisIntanceList,
                 os_config: os_configList,
-                org_policy_contraint: org_policy_contraintList,
+                org_policy_constraint: org_policy_constraintList,
                 airflow_image_version: airflow_image_versionList,
                 notebook: notebookList,
                 lineage_process: lineage_processList,
