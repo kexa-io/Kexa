@@ -152,7 +152,12 @@ export async function collectData(o365Config:o365Config[]): Promise<o365Resource
 
 import axios from "axios";
 
-async function getToken(tenantId: string, clientId: string, clientSecret: string) {
+export function formatTokenErrorForLog(error: any): string {
+    const status = error?.response?.status ? `HTTP ${error.response.status} ` : '';
+    return 'O365 - Error fetching token: ' + status + (error?.message ?? String(error));
+}
+
+export async function getToken(tenantId: string, clientId: string, clientSecret: string) {
     const requestBody = new URLSearchParams();
     if (clientId && clientSecret) {
         requestBody.append('grant_type', 'client_credentials');
@@ -169,8 +174,11 @@ async function getToken(tenantId: string, clientId: string, clientSecret: string
             logger.error("O365 - Error on token retrieve.");
             return null;
         }
-    } catch (error) {
-        logger.error('O365 - Error fetching token:', error);
+    } catch (error: any) {
+        // Do not log the raw axios error: on a failed token request it carries
+        // error.config.data, which is this same request body and therefore
+        // contains client_secret in plaintext.
+        logger.error(formatTokenErrorForLog(error));
         throw error;
     }
     return accessToken ?? null;
