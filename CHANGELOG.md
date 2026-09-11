@@ -1,3 +1,15 @@
+## [2.11.1](https://github.com/kexa-io/Kexa/compare/v2.11.0...v2.11.1) (2026-09-11)
+
+
+### Bug Fixes
+
+* **azure:** remove KexaAzure.defender -- declared valid, crashes the whole account scan if referenced ([4bccb5b](https://github.com/kexa-io/Kexa/commit/4bccb5be985e5a5d55fff31cf97bb8fd024a77da))
+* **gcp:** bucket listing fails for authorized_user (ADC) credentials ([673797d](https://github.com/kexa-io/Kexa/commit/673797d4a282676e16edebd575d99acb13d98c5a))
+* **gcp:** resource-manifest name mismatches make 12 resource types unreachable or lose data ([cd095b7](https://github.com/kexa-io/Kexa/commit/cd095b7fb8891b971f42955d2cb67a863e006440))
+* **k8s:** RBAC objectNames rejected by rule validation, Bun fetch TLS failure, inverted HPA condition ([aad7e70](https://github.com/kexa-io/Kexa/commit/aad7e708d08aa8f277ead3455c4b1378c66d3f4a)), closes [#745](https://github.com/kexa-io/Kexa/issues/745) [#745](https://github.com/kexa-io/Kexa/issues/745) [oven-sh/bun#7332](https://github.com/oven-sh/bun/issues/7332) [#723](https://github.com/kexa-io/Kexa/issues/723)
+* **o365:** listAppAccessPolicy discards every user's data except the last ([521b7da](https://github.com/kexa-io/Kexa/commit/521b7daf9b2f8b69d4b0cd82455da09a7e367433))
+* **rules:** ALL/SOME/ONE/COUNT crash on a null property, silently reported as a violation ([#757](https://github.com/kexa-io/Kexa/issues/757)) ([cc7016b](https://github.com/kexa-io/Kexa/commit/cc7016b502a8fc89556fab3a201973aa7b41da30))
+
 # Changelog
 
 ## [v2.11.0] - 2026-09-10
