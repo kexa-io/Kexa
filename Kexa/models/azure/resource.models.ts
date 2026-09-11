@@ -15,7 +15,6 @@ export interface AzureResources {
     'KexaAzure.appConfiguration': Array<any>|null;
     'KexaAzure.monitor': Array<any>|null;
     'KexaAzure.blobProperties': Array<any>|null;
-    'KexaAzure.defender': Array<any>|null;
     'KexaAzure.security': Array<any>|null;
     'KexaAzure.authorization': Array<any>|null;
     'KexaAzure.sqlServers': Array<any>|null;
@@ -47,7 +46,6 @@ export const stringKeys: Array<String> = [
     'KexaAzure.appConfiguration',
     'KexaAzure.monitor',
     'KexaAzure.blobProperties',
-    'KexaAzure.defender',
     'KexaAzure.security',
     'KexaAzure.authorization',
     'KexaAzure.sqlServers',

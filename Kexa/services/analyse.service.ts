@@ -647,15 +647,15 @@ export function checkCondition(condition:RulesConditions, resource:any): SubResu
             case ConditionEnum.ONE:
                 return resultScan(condition, value, [checkOne]);
             case ConditionEnum.COUNT:
-                return resultScan(condition, value.length, [checkEqual]);
+                return resultScan(condition, (value ?? []).length, [checkEqual]);
             case ConditionEnum.COUNT_SUP:
-                return resultScan(condition, value.length, [checkGreaterThan]);
+                return resultScan(condition, (value ?? []).length, [checkGreaterThan]);
             case ConditionEnum.COUNT_SUP_OR_EQUAL:
-                return resultScan(condition, value.length, [checkGreaterThan, checkEqual]);
+                return resultScan(condition, (value ?? []).length, [checkGreaterThan, checkEqual]);
             case ConditionEnum.COUNT_INF:
-                return resultScan(condition, value.length, [checkLessThan]);
+                return resultScan(condition, (value ?? []).length, [checkLessThan]);
             case ConditionEnum.COUNT_INF_OR_EQUAL:
-                return resultScan(condition, value.length, [checkLessThan, checkEqual]);
+                return resultScan(condition, (value ?? []).length, [checkLessThan, checkEqual]);
             case ConditionEnum.DATE_EQUAL:
                 return resultScan(condition, value, [checkEqualDate]);
             case ConditionEnum.DATE_SUP:
@@ -807,7 +807,7 @@ export function checkEndsWith(condition:RulesConditions, value:any): boolean {
 export function checkAll(condition:RulesConditions, value:any): boolean {
     logger.debug("check any");
     let result:SubResultScan[][] = [];
-    value.forEach((v:any) => {
+    (value ?? []).forEach((v:any) => {
         result.push(checkRule(condition.value as RulesConditions[]|ParentRules[], v));
     });
     let finalResult:boolean[] = [];
@@ -818,7 +818,7 @@ export function checkAll(condition:RulesConditions, value:any): boolean {
 export function checkSome(condition:RulesConditions, value:any): boolean {
     logger.debug("check some");
     let result:SubResultScan[][] = [];
-    value.forEach((v:any) => {
+    (value ?? []).forEach((v:any) => {
         result.push(checkRule(condition.value as RulesConditions[]|ParentRules[], v));
     });
     let finalResult:boolean[] = [];
@@ -829,7 +829,7 @@ export function checkSome(condition:RulesConditions, value:any): boolean {
 export function checkOne(condition:RulesConditions, value:any): boolean {
     logger.debug("check one");
     let result:SubResultScan[][] = [];
-    value.forEach((v:any) => {
+    (value ?? []).forEach((v:any) => {
         result.push(checkRule(condition.value as RulesConditions[]|ParentRules[], v));
     });
     let finalResult:boolean[] = [];

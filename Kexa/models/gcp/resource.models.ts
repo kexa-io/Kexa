@@ -21,7 +21,7 @@ export interface GCPResources {
     resource_settings: Array<any> | null;
     redis_instance: Array<any> | null;
     os_config: Array<any> | null;
-    org_policy_contraint: Array<any> | null;
+    org_policy_constraint: Array<any> | null;
     airflow_image_version: Array<any> | null;
     notebook: Array<any> | null;
 
@@ -44,5 +44,8 @@ export interface GCPResources {
 
     compute_item: Array<any> | null;
     tags_keys: Array<any> | null;
+    bigquery: Array<any> | null;
+    logging: Array<any> | null;
+    sql: Array<any> | null;
 
 }
