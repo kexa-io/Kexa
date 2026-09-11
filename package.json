@@ -3,7 +3,7 @@
   "description": "Open-source multi-cloud compliance management tool",
   "module": "main.ts",
   "type": "module",
-  "version": "2.11.0",
+  "version": "2.11.1",
   "private": true,
   "engines": {
     "bun": ">=1.4.0"
